@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI Canonical Diagram v1.0 — Temporal Resilience Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f5f0e8;
+  --paper-2: #ede7d8;
+  --paper-3: #e4dccb;
+  --rule: #c8bfad;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --serif: 'EB Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  font-family: var(--serif);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 5rem;
+}
+
+.doc-header {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.doc-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.doc-id {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .15em;
+  color: var(--accent);
+}
+
+.diagram-title {
+  text-align: center;
+  margin-bottom: .5rem;
+}
+
+.diagram-title h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+
+.diagram-subtitle {
+  font-style: italic;
+  color: var(--muted);
+  font-size: .95rem;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* ── DIAGRAM CANVAS ── */
+.diagram {
+  width: 100%;
+  max-width: 860px;
+  position: relative;
+}
+
+svg.main-diagram {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── LEGEND ── */
+.legend {
+  max-width: 860px;
+  width: 100%;
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.legend-item {
+  border: 1px solid var(--rule);
+  padding: 1rem 1.25rem;
+}
+
+.legend-label {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .5rem;
+}
+
+.legend-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: .3rem;
+}
+
+.legend-body {
+  font-size: .88rem;
+  color: #3a3530;
+  line-height: 1.6;
+}
+
+/* ── CAPTION ── */
+.caption {
+  max-width: 860px;
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  color: var(--muted);
+  line-height: 1.9;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <span class="doc-label">ACI · Canonical Diagram · v1.0 · 2026</span>
+  <span class="doc-id">TRT — Temporal Resilience Theory</span>
+</div>
+
+<div class="diagram-title">
+  <h1>Temporal Resilience Theory</h1>
+</div>
+<p class="diagram-subtitle">Hierarchical structure of decision-capacity limits across strategic and institutional systems</p>
+
+<div class="diagram">
+<svg class="main-diagram" viewBox="0 0 860 640" xmlns="http://www.w3.org/2000/svg" font-family="'DM Mono', monospace">
+
+  <defs>
+    <!-- Arrow markers -->
+    <marker id="arrow-down" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto">
+      <path d="M2,2 L4,7 L6,2" fill="none" stroke="#0e0d0b" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto">
+      <path d="M2,2 L4,7 L6,2" fill="none" stroke="#8b4513" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrow-muted" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto">
+      <path d="M2,2 L4,7 L6,2" fill="none" stroke="#c8bfad" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrow-right-accent" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M2,2 L7,4 L2,6" fill="none" stroke="#8b4513" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrow-right-ink" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M2,2 L7,4 L2,6" fill="none" stroke="#0e0d0b" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 0: TRT root -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="230" y="20" width="400" height="82" fill="#0e0d0b" rx="0"/>
+  <text x="430" y="52" text-anchor="middle" fill="#f5f0e8" font-size="9" letter-spacing="3" font-family="'DM Mono',monospace">FOUNDATIONAL THEORY</text>
+  <text x="430" y="73" text-anchor="middle" fill="#f5f0e8" font-size="17" font-family="'EB Garamond',serif" font-style="normal">Temporal Resilience Theory</text>
+  <text x="430" y="92" text-anchor="middle" fill="#7a7468" font-size="8.5" letter-spacing="1.5" font-family="'DM Mono',monospace">TRT</text>
+
+  <!-- TRT axiom -->
+  <text x="430" y="118" text-anchor="middle" fill="#7a7468" font-size="9" font-family="'EB Garamond',serif" font-style="italic">
+    All complex systems have a finite decision window —
+  </text>
+  <text x="430" y="131" text-anchor="middle" fill="#7a7468" font-size="9" font-family="'EB Garamond',serif" font-style="italic">
+    beyond which choices no longer alter outcomes.
+  </text>
+
+  <!-- Branch lines from TRT -->
+  <line x1="430" y1="102" x2="430" y2="138" stroke="#c8bfad" stroke-width="1"/>
+  <line x1="430" y1="138" x2="195" y2="138" stroke="#c8bfad" stroke-width="1"/>
+  <line x1="430" y1="138" x2="665" y2="138" stroke="#c8bfad" stroke-width="1"/>
+  <line x1="195" y1="138" x2="195" y2="158" stroke="#c8bfad" stroke-width="1" marker-end="url(#arrow-muted)"/>
+  <line x1="665" y1="138" x2="665" y2="158" stroke="#c8bfad" stroke-width="1" marker-end="url(#arrow-muted)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 1a: STT (left) -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="60" y="160" width="270" height="100" fill="#ede7d8" stroke="#c8bfad" stroke-width="1" rx="0"/>
+  <text x="90" y="183" fill="#8b4513" font-size="8" letter-spacing="2.5">STT · STRATEGIC DOMAIN</text>
+  <text x="90" y="203" fill="#0e0d0b" font-size="14.5" font-family="'EB Garamond',serif">Strategic Termination Time</text>
+  <line x1="90" y1="212" x2="310" y2="212" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="90" y="228" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Exogenous temporal collapse.</text>
+  <text x="90" y="241" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Adversary-driven decision closure.</text>
+
+  <!-- STT tags -->
+  <rect x="90" y="248" width="56" height="13" fill="none" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="118" y="258" text-anchor="middle" fill="#7a7468" font-size="7.5" letter-spacing="1">MILITARY</text>
+  <rect x="154" y="248" width="52" height="13" fill="none" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="180" y="258" text-anchor="middle" fill="#7a7468" font-size="7.5" letter-spacing="1">KINETIC</text>
+
+  <!-- STT measures block -->
+  <rect x="60" y="270" width="270" height="52" fill="#e4dccb" stroke="#c8bfad" stroke-width=".8" rx="0"/>
+  <text x="90" y="285" fill="#7a7468" font-size="7.5" letter-spacing="1.8">MEASURES</text>
+  <text x="90" y="300" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Adversary tempo · Escalation rate</text>
+  <text x="90" y="313" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Operational closure · AIW / APTT / IPT</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 1b: ITT (right) -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="530" y="160" width="270" height="100" fill="#ede7d8" stroke="#c8bfad" stroke-width="1" rx="0"/>
+  <text x="560" y="183" fill="#8b4513" font-size="8" letter-spacing="2.5">ITT · INSTITUTIONAL DOMAIN</text>
+  <text x="560" y="203" fill="#0e0d0b" font-size="14.5" font-family="'EB Garamond',serif">Institutional Termination Time</text>
+  <line x1="560" y1="212" x2="780" y2="212" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="560" y="228" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Endogenous temporal collapse.</text>
+  <text x="560" y="241" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Governance-driven decision closure.</text>
+
+  <!-- ITT tags -->
+  <rect x="560" y="248" width="70" height="13" fill="none" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="595" y="258" text-anchor="middle" fill="#7a7468" font-size="7.5" letter-spacing="1">GOVERNANCE</text>
+  <rect x="638" y="248" width="60" height="13" fill="none" stroke="#c8bfad" stroke-width=".8"/>
+  <text x="668" y="258" text-anchor="middle" fill="#7a7468" font-size="7.5" letter-spacing="1">POLITICAL</text>
+
+  <!-- ITT measures block -->
+  <rect x="530" y="270" width="270" height="52" fill="#e4dccb" stroke="#c8bfad" stroke-width=".8" rx="0"/>
+  <text x="560" y="285" fill="#7a7468" font-size="7.5" letter-spacing="1.8">MEASURES</text>
+  <text x="560" y="300" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Institutional latency · Acceptance delay</text>
+  <text x="560" y="313" fill="#3a3530" font-size="9" font-family="'EB Garamond',serif">Governance coherence · Decision lag</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- CAUSAL COUPLING: STT → ITT pressure -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Arrow from STT to ITT (curved, accent) -->
+  <path d="M 330 210 C 390 210, 430 210, 530 210"
+        fill="none" stroke="#8b4513" stroke-width="1.2"
+        stroke-dasharray="5,3" marker-end="url(#arrow-right-accent)"/>
+  <rect x="362" y="194" width="136" height="20" fill="#f5f0e8"/>
+  <text x="430" y="207" text-anchor="middle" fill="#8b4513" font-size="8.5" letter-spacing="1.5" font-family="'DM Mono',monospace">PRESSURE TRANSFER</text>
+
+  <!-- Causal chain below coupling -->
+  <rect x="310" y="340" width="240" height="76" fill="#f5f0e8" stroke="#8b4513" stroke-width=".8"/>
+  <text x="430" y="358" text-anchor="middle" fill="#8b4513" font-size="7.5" letter-spacing="2">CAUSAL SEQUENCE</text>
+  <text x="430" y="374" text-anchor="middle" fill="#0e0d0b" font-size="9" font-family="'EB Garamond',serif">STT pressure → Institutional overload</text>
+  <text x="430" y="389" text-anchor="middle" fill="#0e0d0b" font-size="9" font-family="'EB Garamond',serif">→ ITT collapse → LR detects C-class</text>
+  <text x="430" y="406" text-anchor="middle" fill="#7a7468" font-size="8.5" font-family="'EB Garamond',serif" font-style="italic">coupling is causal, not diagnostic</text>
+
+  <!-- Lines from STT and ITT down to causal box -->
+  <line x1="195" y1="322" x2="195" y2="353" stroke="#c8bfad" stroke-width=".8"/>
+  <line x1="195" y1="353" x2="310" y2="378" stroke="#c8bfad" stroke-width=".8"/>
+  <line x1="665" y1="322" x2="665" y2="353" stroke="#c8bfad" stroke-width=".8"/>
+  <line x1="665" y1="353" x2="550" y2="378" stroke="#c8bfad" stroke-width=".8"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 2: Lex Resiliens (under ITT) -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Connector from ITT down to LR -->
+  <line x1="665" y1="322" x2="665" y2="450" stroke="#c8bfad" stroke-width="1" marker-end="url(#arrow-muted)"/>
+
+  <rect x="530" y="452" width="270" height="110" fill="#0e0d0b" rx="0"/>
+  <text x="560" y="474" fill="#7a7468" font-size="8" letter-spacing="2.5">DIAGNOSTIC INSTRUMENT</text>
+  <text x="560" y="494" fill="#f5f0e8" font-size="14.5" font-family="'EB Garamond',serif">Lex Resiliens</text>
+  <text x="560" y="510" fill="#7a7468" font-size="8.5" letter-spacing="1.5">LR()</text>
+  <line x1="560" y1="518" x2="780" y2="518" stroke="#3a3530" stroke-width=".8"/>
+  <text x="560" y="532" fill="#c8bfad" font-size="9" font-family="'EB Garamond',serif">Detects ITT collapse threshold.</text>
+  <text x="560" y="546" fill="#c8bfad" font-size="9" font-family="'EB Garamond',serif">Classifies: A · B · C (governance failure).</text>
+
+  <!-- LR scope label -->
+  <rect x="530" y="570" width="270" height="28" fill="#1a1916" rx="0"/>
+  <text x="665" y="588" text-anchor="middle" fill="#7a7468" font-size="8" letter-spacing="1.5">SCOPE: INSTITUTIONAL ONLY · endogenous</text>
+
+  <!-- Explicit NOT-arrow: LR does NOT connect to STT -->
+  <line x1="530" y1="507" x2="380" y2="507" stroke="#c8bfad" stroke-width=".8" stroke-dasharray="3,3"/>
+  <text x="455" y="502" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1" font-family="'DM Mono',monospace">does not</text>
+  <text x="455" y="514" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1" font-family="'DM Mono',monospace">diagnose STT</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Observer-System separation line -->
+  <!-- ═══════════════════════════════════════ -->
+  <line x1="430" y1="430" x2="430" y2="610" stroke="#c8bfad" stroke-width=".6" stroke-dasharray="2,4"/>
+  <text x="245" y="445" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1.5" font-family="'DM Mono',monospace">EXOGENOUS</text>
+  <text x="245" y="456" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1.5" font-family="'DM Mono',monospace">system observes world</text>
+  <text x="615" y="445" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1.5" font-family="'DM Mono',monospace">ENDOGENOUS</text>
+  <text x="615" y="456" text-anchor="middle" fill="#c8bfad" font-size="8" letter-spacing="1.5" font-family="'DM Mono',monospace">system observes itself</text>
+
+  <!-- Separation label -->
+  <text x="430" y="620" text-anchor="middle" fill="#c8bfad" font-size="7.5" letter-spacing="2" font-family="'DM Mono',monospace">OBSERVER – SYSTEM SEPARATION</text>
+
+</svg>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-label">STT — Strategic Termination Time</div>
+    <div class="legend-title">Exogenous temporal collapse</div>
+    <div class="legend-body">The time an adversary requires to achieve a politically decisive outcome. Pressure originates outside the system — from adversary tempo, kinetic operations, and escalation dynamics. The defending system observes the world.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-label">ITT — Institutional Termination Time</div>
+    <div class="legend-title">Endogenous temporal collapse</div>
+    <div class="legend-body">The time before an institution loses causal agency over outcomes due to internal coordination failure, legitimacy friction, or decision latency. Pressure originates inside the system. The system observes itself.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-label">Lex Resiliens — LR()</div>
+    <div class="legend-title">Diagnostic instrument for ITT</div>
+    <div class="legend-body">Identifies the transition point at which institutional decision capacity ceases to influence outcomes. Classifies situations as A (technical necessity), B (value choice), or C (governance failure). Scope is institutional only — LR does not diagnose STT.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-label">Pressure Transfer</div>
+    <div class="legend-title">Causal coupling, not diagnostic symmetry</div>
+    <div class="legend-body">STT pressure can trigger ITT collapse — operational tempo generates institutional overload, which accelerates governance failure. This coupling is causal and directional. It does not make LR a diagnostic for strategic systems.</div>
+  </div>
+</div>
+
+<div class="caption">
+  ACI Canonical Diagram v1.0 · Temporal Resilience Theory · 2026<br>
+  Reproduced as Figure 1 in ACI Working Paper No. 003<br>
+  Aether Continuity Institute · Strategic Studies Programme
+</div>
+
+</body>
+</html>

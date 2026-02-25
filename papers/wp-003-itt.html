@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-003 — Institutional Termination Time and Temporal Decision Capacity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b7a3a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .callout-accent { margin: 2rem 0; border-left: 3px solid var(--accent); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout-accent p { font-size: 0.95rem; font-style: italic; margin: 0; color: var(--ink); }
+
+  .definition-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--ink); background: var(--paper-3); }
+  .definition-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .definition-term { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .definition-body { font-size: 0.95rem; line-height: 1.75; color: #2a2520; }
+
+  /* Comparison table */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.85rem 1.1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.85rem 1.1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
+
+  /* Diagram embed */
+  .diagram-block { margin: 2.5rem 0; border: 1px solid var(--rule); background: var(--paper-2); }
+  .diagram-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--rule); }
+  .diagram-inner { padding: 2rem; }
+
+  /* Classification boxes */
+  .class-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); margin: 2rem 0; border: 1px solid var(--rule); }
+  .class-item { background: var(--paper); padding: 1.25rem; }
+  .class-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 0.5rem; }
+  .class-title { font-weight: 500; font-size: 1rem; margin-bottom: 0.5rem; }
+  .class-body { font-size: 0.88rem; color: #3a3530; line-height: 1.65; }
+  .class-item.c-class { background: var(--paper-3); }
+
+  /* LR components */
+  .lr-components { margin: 2rem 0; }
+  .lr-row { display: grid; grid-template-columns: 100px 1fr; border-top: 1px solid var(--rule); padding: 0.9rem 0; gap: 1.25rem; align-items: baseline; }
+  .lr-row:last-child { border-bottom: 1px solid var(--rule); }
+  .lr-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--accent); }
+  .lr-desc { font-size: 0.95rem; color: #2a2520; }
+
+  /* Conclusion */
+  .conclusion-block { margin-top: 3.5rem; background: var(--ink); color: var(--paper); padding: 2.5rem; }
+  .conclusion-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7a7468; margin-bottom: 1rem; }
+  .conclusion-block p { color: #d8d0c0; font-size: 1rem; line-height: 1.8; margin-bottom: 0.75rem; }
+  .conclusion-block h3 { color: var(--paper); font-size: 1.05rem; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+
+  /* Further reading */
+  .further-reading { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .fr-intro { font-size: 0.92rem; color: #3a3530; font-style: italic; margin-bottom: 1.5rem; }
+  .fr-list { display: flex; flex-direction: column; }
+  .fr-item { border-top: 1px solid var(--rule); padding: 1rem 0; display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; align-items: baseline; }
+  .fr-item:last-child { border-bottom: 1px solid var(--rule); }
+  .fr-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); }
+  .fr-title { font-size: 0.95rem; }
+  .fr-link { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; white-space: nowrap; }
+  .fr-link:hover { color: var(--ink); }
+
+  .changelog { border-top: 1px solid var(--rule); padding-top: 1.5rem; margin-top: 3rem; }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; font-size: 0.85rem; color: #4a4540; margin-bottom: 0.4rem; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Defence Studies · <span class="series-accent">Working Paper Series</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>WP-003</strong> · February 2026<br>
+      Domain D-3 · Strategic Studies<br>
+      Version <strong>1.0</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/papers/">Publications</a>
+  <span class="nav-id">ACI · WP-003 · 2026</span>
+</nav>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">Working Paper No. 003 · Theory Note · Foundational Series</div>
+    <h1 class="paper-title">Institutional Termination Time and Temporal Decision Capacity: Toward a Unified Framework for System Continuity Analysis</h1>
+    <p class="paper-subtitle">Why critical systems fail not from exhausted capacity, but from exhausted decision windows — and what a formal description of this failure mode requires</p>
+    <div class="citation-box">
+      Aether Continuity Institute. (2026). <em>Institutional Termination Time and Temporal Decision Capacity: Toward a Unified Framework for System Continuity Analysis.</em> ACI Working Paper No. 003. Theory Note.
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">
+      Critical systems rarely fail because solutions are unknown. More often, failure occurs when technically identified solutions become actionable only after the decision window has already closed. This paper formalizes that failure mode. We introduce <em>temporal decision capacity</em> as a state variable distinct from physical or institutional resource capacity, and argue that its exhaustion — rather than capability exhaustion — constitutes the primary mechanism of governance failure under compound stress. We derive two manifestations of this phenomenon: Strategic Termination Time (STT), which describes exogenous temporal collapse in strategic systems, and Institutional Termination Time (ITT), which describes endogenous temporal collapse in governance systems. Together, these form the basis of Temporal Resilience Theory (TRT). We further introduce Lex Resiliens as the necessary diagnostic instrument for ITT — an analytic framework that identifies the transition point at which institutional decision capacity ceases to influence outcomes. The paper presents a canonical structural diagram and derives implications for continuity analysis across strategic, institutional, and sociotechnical domains.
+    </p>
+    <div class="keywords">Keywords: temporal decision capacity · institutional termination time · strategic termination time · governance failure · irreversibility · continuity analysis · Lex Resiliens</div>
+  </div>
+
+  <!-- ─── SECTION 1 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">The Failure Mode That Lacks a Name</h2>
+    </div>
+
+    <p>Consider the following sequence, observed across domains as varied as energy infrastructure, pandemic response, and institutional fiscal governance. A complex system enters a period of accumulating stress. Independent analyses, using different methodologies and institutional perspectives, begin converging on the same structural finding: a specific intervention is technically necessary, its logic is clear, and the window for effective action is measurable but finite. The intervention is not adopted. Time passes. At some point — often without a visible triggering event — the window closes. The intervention that was once capable of altering the outcome is now incapable of doing so, not because conditions have changed dramatically, but because the physical or operational timelines of the system have advanced beyond the point where human decisions retain causal force.</p>
+
+    <p>The system then experiences the outcome that the analysis predicted. Retrospective accounts often describe this as a failure of foresight, a deficit of political will, or the consequence of insufficient information. These descriptions are not wrong, but they are incomplete. They describe the phenomenology without identifying the underlying structural mechanism.</p>
+
+    <div class="callout">
+      <p>Critical systems rarely fail because solutions are unknown. They fail when solutions become actionable only after the remaining decision window has already closed.</p>
+    </div>
+
+    <p>This paper argues that the mechanism described above — the temporal exhaustion of institutional decision capacity under conditions of known and convergent technical constraint — constitutes a distinct failure mode that existing theoretical frameworks do not adequately capture. Resilience frameworks describe capacity. Crisis management frameworks describe response. Governance theory describes process. None of them formally models the moment at which decision-making ceases to be causally relevant to outcomes, irrespective of whether physical capacity, analytical knowledge, or formal authority remains intact.</p>
+
+    <p>The absence of this model has practical consequences. It leaves institutions without a shared vocabulary for the specific condition in which analysis has converged but action has not followed. It makes systematic comparison across cases difficult. And it forecloses a class of diagnostic questions that would allow practitioners to identify — in real time, not retrospectively — when a system is approaching the boundary of its decision window.</p>
+
+    <p>The purpose of this paper is to provide that model.</p>
+  </div>
+
+  <!-- ─── SECTION 2 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Irreversibility and the Topology of Decision Windows</h2>
+    </div>
+
+    <h3 class="subsection">2.1 Two Kinds of Capacity</h3>
+    <p>Standard frameworks for assessing system robustness conflate two analytically distinct properties. The first is <em>resource capacity</em> — the stock of physical, financial, organizational, or informational assets available to a system. The second is <em>decision capacity</em> — the ability of the system's governance to make choices that retain causal influence over outcomes. These properties can diverge substantially. A system may retain significant resource capacity after its decision capacity has been exhausted: reserves exist, personnel are available, authority is formally intact — yet no decision made at this point can alter the trajectory of the outcome, because the operational timelines of the physical system have advanced beyond the reach of governance action.</p>
+
+    <p>This divergence is not exceptional. It is structurally predictable in any system where operational inertia — the time required for interventions to produce effects — exceeds the residual decision horizon available before outcomes are determined. In high-complexity systems with long investment cycles, slow physical response times, or strong path dependencies, this condition is not rare. It is the normal end-state of delayed governance under accumulating constraint.</p>
+
+    <h3 class="subsection">2.2 Irreversibility as a Temporal Phenomenon</h3>
+    <p>Decision windows close because of irreversibility — the progressive foreclosure of outcome branches as a system evolves through time. Not all points on a system's trajectory are equal with respect to intervention: early interventions have a wide causal reach, while late interventions operate in an increasingly narrow possibility space. At the limit, the space contracts to zero: a decision made after this point has no causal consequence, because all accessible outcomes are already determined by prior system states.</p>
+
+    <p>This structure is familiar in physical systems. What is less often recognized is that it applies with equal force to governance systems, where irreversibility is produced not by physical dynamics alone but by the interaction of physical timelines with institutional processes: procurement cycles, legislative calendars, regulatory procedures, coordination requirements, and political legitimacy constraints. In governance systems, the decision window is the intersection of two independently evolving timelines — the physical system's development and the institution's capacity to produce authorized action — and it closes when the physical timeline advances beyond the reach of the institutional timeline.</p>
+
+    <div class="definition-block">
+      <div class="definition-label">Core Proposition</div>
+      <div class="definition-term">Temporal Decision Capacity</div>
+      <div class="definition-body">Temporal decision capacity is the property of a governance system describing its ability to produce authorized action that retains causal influence over system outcomes. It is a time-bounded state variable, not a stock: it is constituted by the remaining intersection of the physical decision window and the institutional action capacity, and it is exhausted when this intersection becomes empty — regardless of whether resource capacity, formal authority, or analytical knowledge remains intact.</div>
+    </div>
+
+    <h3 class="subsection">2.3 The Missing Variable in Resilience Analysis</h3>
+    <p>The resilience literature has developed sophisticated accounts of system capacity, adaptive capacity, and transformative capacity. What it has not formalized is the temporal boundary condition under which these capacities become causally irrelevant. Engineering resilience frameworks measure bounce-back speed; socio-ecological resilience frameworks measure adaptive potential; organizational resilience frameworks measure recovery capability. All of these implicitly assume that governance action retains causal force — that decisions made in response to disruption can, in principle, alter outcomes. This assumption fails precisely at the boundary we are trying to characterize.</p>
+
+    <p>The consequence is that standard resilience assessments may systematically misclassify the condition we are studying. A system approaching temporal decision exhaustion will appear — by standard measures — to be functional: resources are available, institutions are operating, analyses are being produced. The deficit is invisible to frameworks that do not model decision capacity as a bounded temporal variable. It becomes visible only retrospectively, when outcomes are determined and the question is asked: at what point did governance lose causal reach?</p>
+  </div>
+
+  <!-- ─── SECTION 3 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Two Manifestations: Strategic and Institutional</h2>
+    </div>
+
+    <p>Temporal decision capacity exhaustion manifests in structurally different ways depending on whether the primary source of the closing decision window is exogenous or endogenous to the system under analysis. We identify two canonical manifestations, each corresponding to a distinct domain of application.</p>
+
+    <h3 class="subsection">3.1 Strategic Termination Time — Exogenous Temporal Collapse</h3>
+    <p>In strategic systems — particularly military and security domains — the decision window is primarily determined by an adversary's operational tempo. The defending system faces a horizon set from outside: the time before an adversary achieves a politically decisive outcome at acceptable cost. We term this the <em>Strategic Termination Time</em> (STT): the adversary's estimated time-to-decision, which constitutes the outer boundary of the defender's decision window.</p>
+
+    <p>STT collapse is exogenous: the closing of the window is driven by an external actor's actions, not by the defending system's internal governance. The defending institution's decision capacity may be entirely functional — coherent analysis, clear authority, adequate resources — and yet the decision window closes because external tempo has advanced beyond the point where internal responses retain military or political relevance. STT analysis has been developed in prior work in this series and is not the primary subject of this paper. It is presented here to establish the structural parallel that motivates the theoretical generalization.</p>
+
+    <h3 class="subsection">3.2 Institutional Termination Time — Endogenous Temporal Collapse</h3>
+    <p>In governance systems, the primary mechanism of decision window closure is endogenous: it is produced by the interaction of the physical system's timeline with the institution's own coordination and action latency. We term this <em>Institutional Termination Time</em> (ITT): the point at which an institution's decision capacity — its ability to produce authorized action that retains causal influence over outcomes — is exhausted, not by external tempo but by the accumulated effect of institutional friction operating against a finite physical timeline.</p>
+
+    <div class="definition-block">
+      <div class="definition-label">Definition</div>
+      <div class="definition-term">Institutional Termination Time (ITT)</div>
+      <div class="definition-body">ITT is the point in time at which an institution's governance capacity ceases to be causally relevant to system outcomes, because the remaining intersection of the physical decision window and the institutional action capacity has become empty. ITT is a property of the interaction between physical system dynamics and institutional process timelines. It is distinct from resource exhaustion, capacity failure, or authority loss — each of which may be absent when ITT is reached.</div>
+    </div>
+
+    <p>ITT collapse has a characteristic phenomenology. The institution retains formal authority; analyses have been produced; resources nominally exist. What is absent is the structural condition that makes governance action causally effective: the physical system's timeline still within reach of the institution's action horizon. When this condition is absent, the institution is formally governing a system whose outcomes are already determined. Decisions continue to be made, but they are causally inert with respect to the outcome in question.</p>
+
+    <h3 class="subsection">3.3 Structural Isomorphism</h3>
+    <p>STT and ITT are not analogous constructs. They are instances of the same underlying phenomenon — temporal decision capacity exhaustion — operating through structurally identical mechanisms in different domains. Both describe the closure of a decision window. Both produce the same end-state: governance action that retains formal form but has lost causal substance. Both are invisible to frameworks that do not model decision capacity as a bounded temporal variable.</p>
+
+    <p>The difference between them is the source of the closing force: exogenous (adversary tempo) in the strategic domain, endogenous (institutional friction against physical inertia) in the governance domain. This difference has important implications for diagnostic methodology but does not alter the theoretical structure.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>STT · Strategic</th>
+            <th>ITT · Institutional</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Domain</td><td>Military / security</td><td>Governance / sociotechnical</td></tr>
+          <tr><td>Closing force</td><td>Exogenous (adversary tempo)</td><td>Endogenous (institutional friction)</td></tr>
+          <tr><td>System orientation</td><td>Observes world</td><td>Observes itself</td></tr>
+          <tr><td>Collapse mechanism</td><td>Operational tempo exceeds response</td><td>Action latency exceeds physical window</td></tr>
+          <tr><td>Diagnostic requirement</td><td>Tempo and intervention window analysis</td><td>Institutional latency and convergence analysis</td></tr>
+          <tr><td>Causal coupling</td><td>STT pressure can trigger ITT overload</td><td>ITT failure can accelerate STT closure</td></tr>
+          <tr><td>Position in TRT</td><td>Exogenous manifestation</td><td>Endogenous manifestation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">3.4 Causal Coupling Between STT and ITT</h3>
+    <p>Although STT and ITT are analytically distinct, they are causally coupled. Strategic tempo pressure — the narrowing of STT — generates institutional overload through information compression, decision frequency demand, and legitimacy strain. This overload accelerates ITT collapse by degrading the institution's coordination capacity precisely when coordination demand is highest. Conversely, ITT failure — the loss of effective governance agency — undermines the operational continuity required to sustain resistance, thereby accelerating STT closure.</p>
+
+    <p>This coupling is directional and causal, not diagnostic. Lex Resiliens, as a diagnostic instrument for ITT, does not and cannot diagnose STT. The coupling is important because it means that sustained strategic pressure is not only a military problem but an institutional one: adversaries who understand the ITT mechanism can design pressure campaigns that exploit institutional friction rather than (or in addition to) military attrition. Recognition of this dynamic is essential for continuity planning that integrates military and governance dimensions.</p>
+  </div>
+
+  <!-- ─── SECTION 4 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Temporal Resilience Theory: The Canonical Structure</h2>
+    </div>
+
+    <p>The constructs developed above — temporal decision capacity, STT, and ITT — are unified under what we term <em>Temporal Resilience Theory</em> (TRT). TRT is not a framework for building resilient systems. It is a theoretical structure for analyzing the conditions under which governance systems lose causal agency over outcomes.</p>
+
+    <div class="definition-block">
+      <div class="definition-label">Foundational Axiom</div>
+      <div class="definition-term">Temporal Resilience Theory</div>
+      <div class="definition-body">All complex sociotechnical systems possess a finite decision window — a bounded interval during which governance action retains causal influence over outcomes. Survivability is determined not by resource capacity alone but by the system's ability to produce causally relevant decisions within this window. Decision capacity, not resource capacity, defines the effective boundary of governance.</div>
+    </div>
+
+    <p>TRT's canonical structure is hierarchical. At the apex stands the foundational axiom — the claim that decision windows are finite and that their exhaustion constitutes the primary mechanism of governance failure under constraint. From this axiom derive two domain-specific manifestations: STT in the strategic domain and ITT in the institutional domain. Attached to ITT, as its necessary diagnostic consequence, is Lex Resiliens.</p>
+
+    <p>The structure is presented in Figure 1 (ACI Canonical Diagram v1.0), which should be read as a theoretical map rather than an organizational chart. The diagram encodes the following commitments: the asymmetry of LR's diagnostic scope (institutional only); the directional and causal — not symmetric — nature of the STT–ITT coupling; and the Observer–System separation that distinguishes exogenous from endogenous temporal collapse.</p>
+
+    <div class="diagram-block">
+      <div class="diagram-label">Figure 1 — ACI Canonical Diagram v1.0 · See: trt-canonical-diagram-v1.html</div>
+      <div class="diagram-inner">
+        <!-- Embedded SVG version of the canonical diagram (simplified for inline) -->
+        <svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" font-family="'DM Mono', monospace" style="width:100%;height:auto;">
+          <defs>
+            <marker id="a" markerWidth="7" markerHeight="7" refX="3.5" refY="6" orient="auto"><path d="M1.5,1.5 L3.5,6 L5.5,1.5" fill="none" stroke="#0e0d0b" stroke-width="1.2"/></marker>
+            <marker id="b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M1.5,1.5 L6,3.5 L1.5,5.5" fill="none" stroke="#8b4513" stroke-width="1.2"/></marker>
+            <marker id="c" markerWidth="7" markerHeight="7" refX="3.5" refY="6" orient="auto"><path d="M1.5,1.5 L3.5,6 L5.5,1.5" fill="none" stroke="#c8bfad" stroke-width="1.2"/></marker>
+          </defs>
+          <!-- TRT Root -->
+          <rect x="175" y="10" width="350" height="58" fill="#0e0d0b"/>
+          <text x="350" y="33" text-anchor="middle" fill="#f5f0e8" font-size="7.5" letter-spacing="2.5">FOUNDATIONAL THEORY</text>
+          <text x="350" y="52" text-anchor="middle" fill="#f5f0e8" font-size="13" font-family="'EB Garamond',serif">Temporal Resilience Theory · TRT</text>
+          <!-- Axiom text -->
+          <text x="350" y="80" text-anchor="middle" fill="#7a7468" font-size="8" font-family="'EB Garamond',serif" font-style="italic">Decision capacity, not resource capacity, defines survivability.</text>
+          <!-- Branch lines -->
+          <line x1="350" y1="68" x2="350" y2="92" stroke="#c8bfad" stroke-width="1"/>
+          <line x1="350" y1="92" x2="140" y2="92" stroke="#c8bfad" stroke-width="1"/>
+          <line x1="350" y1="92" x2="560" y2="92" stroke="#c8bfad" stroke-width="1"/>
+          <line x1="140" y1="92" x2="140" y2="106" stroke="#c8bfad" stroke-width="1" marker-end="url(#c)"/>
+          <line x1="560" y1="92" x2="560" y2="106" stroke="#c8bfad" stroke-width="1" marker-end="url(#c)"/>
+          <!-- STT -->
+          <rect x="40" y="108" width="200" height="88" fill="#ede7d8" stroke="#c8bfad" stroke-width="1"/>
+          <text x="60" y="126" fill="#8b4513" font-size="7" letter-spacing="2">STT · STRATEGIC</text>
+          <text x="60" y="144" fill="#0e0d0b" font-size="12" font-family="'EB Garamond',serif">Strategic Termination Time</text>
+          <line x1="60" y1="151" x2="220" y2="151" stroke="#c8bfad" stroke-width=".7"/>
+          <text x="60" y="165" fill="#3a3530" font-size="8" font-family="'EB Garamond',serif">Exogenous · adversary-driven</text>
+          <text x="60" y="178" fill="#3a3530" font-size="8" font-family="'EB Garamond',serif">System observes world</text>
+          <!-- ITT -->
+          <rect x="460" y="108" width="200" height="88" fill="#ede7d8" stroke="#c8bfad" stroke-width="1"/>
+          <text x="480" y="126" fill="#8b4513" font-size="7" letter-spacing="2">ITT · INSTITUTIONAL</text>
+          <text x="480" y="144" fill="#0e0d0b" font-size="12" font-family="'EB Garamond',serif">Institutional Termination Time</text>
+          <line x1="480" y1="151" x2="640" y2="151" stroke="#c8bfad" stroke-width=".7"/>
+          <text x="480" y="165" fill="#3a3530" font-size="8" font-family="'EB Garamond',serif">Endogenous · governance friction</text>
+          <text x="480" y="178" fill="#3a3530" font-size="8" font-family="'EB Garamond',serif">System observes itself</text>
+          <!-- Pressure Transfer -->
+          <path d="M 240 152 C 295 152, 345 152, 460 152" fill="none" stroke="#8b4513" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#b)"/>
+          <rect x="268" y="140" width="124" height="16" fill="#f5f0e8"/>
+          <text x="330" y="151" text-anchor="middle" fill="#8b4513" font-size="7.5" letter-spacing="1.2">PRESSURE TRANSFER</text>
+          <!-- ITT down to LR -->
+          <line x1="560" y1="196" x2="560" y2="306" stroke="#c8bfad" stroke-width="1" marker-end="url(#c)"/>
+          <!-- LR -->
+          <rect x="460" y="308" width="200" height="90" fill="#0e0d0b"/>
+          <text x="480" y="328" fill="#7a7468" font-size="7" letter-spacing="2">DIAGNOSTIC INSTRUMENT</text>
+          <text x="480" y="348" fill="#f5f0e8" font-size="13" font-family="'EB Garamond',serif">Lex Resiliens · LR()</text>
+          <line x1="480" y1="356" x2="640" y2="356" stroke="#3a3530" stroke-width=".7"/>
+          <text x="480" y="370" fill="#c8bfad" font-size="8" font-family="'EB Garamond',serif">Detects ITT collapse threshold.</text>
+          <text x="480" y="383" fill="#c8bfad" font-size="8" font-family="'EB Garamond',serif">Classifies: A · B · C</text>
+          <!-- Scope -->
+          <rect x="460" y="400" width="200" height="22" fill="#1a1916"/>
+          <text x="560" y="414" text-anchor="middle" fill="#7a7468" font-size="7" letter-spacing="1.2">SCOPE: INSTITUTIONAL ONLY</text>
+          <!-- Does not diagnose STT -->
+          <line x1="460" y1="353" x2="340" y2="353" stroke="#c8bfad" stroke-width=".7" stroke-dasharray="3,3"/>
+          <text x="400" y="346" text-anchor="middle" fill="#c8bfad" font-size="7">does not</text>
+          <text x="400" y="358" text-anchor="middle" fill="#c8bfad" font-size="7">diagnose STT</text>
+          <!-- Observer-System separation -->
+          <line x1="350" y1="310" x2="350" y2="430" stroke="#c8bfad" stroke-width=".6" stroke-dasharray="2,4"/>
+          <text x="200" y="325" text-anchor="middle" fill="#c8bfad" font-size="7" letter-spacing="1.2">EXOGENOUS</text>
+          <text x="200" y="337" text-anchor="middle" fill="#c8bfad" font-size="7">system observes world</text>
+          <text x="200" y="438" text-anchor="middle" fill="#c8bfad" font-size="7" letter-spacing="1.5">OBSERVER – SYSTEM SEPARATION</text>
+          <text x="560" y="438" text-anchor="middle" fill="#c8bfad" font-size="7" letter-spacing="1.2">ENDOGENOUS</text>
+        </svg>
+        <p style="font-family:var(--mono);font-size:.58rem;color:var(--muted);text-align:center;margin-top:1rem;letter-spacing:.1em;">Figure 1 — ACI Canonical Diagram v1.0 · Temporal Resilience Theory · 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 5 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Lex Resiliens as the Necessary Diagnostic Consequence of ITT</h2>
+    </div>
+
+    <p>If ITT is a real phenomenon — if governance systems do lose causal agency over outcomes through temporal exhaustion of decision capacity — then a diagnostic requirement follows necessarily: there must exist a method for identifying, in advance and not only retrospectively, when a system is approaching this boundary. Without such a diagnostic, ITT remains a post-hoc analytical category rather than an operational concept.</p>
+
+    <p>The diagnostic instrument for ITT is Lex Resiliens. It is not introduced here as a framework that has been independently developed and subsequently found to be compatible with TRT. It is presented as the instrument that TRT requires — the measuring device made necessary by the theory. Its value does not derive from its design but from the prior demonstration that the phenomenon it measures is real and that its measurement matters.</p>
+
+    <h3 class="subsection">5.1 The Diagnostic Structure</h3>
+    <p>Lex Resiliens operates by subjecting a decision situation to parallel independent analysis with a constrained diagnostic structure. Each analysis is required to identify: the first uncontrollable failure event; the point of no return and its measurable indicators; the time window beyond which decisions no longer alter the outcome; one — and only one — bounded intervention capable of preventing that failure; and, critically, what that intervention does not resolve.</p>
+
+    <p>The constraint against multiple simultaneous interventions is not methodological conservatism. It is a structural forcing function: it prevents the analysis from deferring the classification question by distributing it across many partial responses. A system that requires ten simultaneous interventions to avoid failure is, in practice, a system that has already lost coherent governance agency. Requiring the analysis to identify one intervention forces the question of whether a tractable decision exists.</p>
+
+    <h3 class="subsection">5.2 The Three-Class Diagnostic Output</h3>
+    <p>When parallel analyses have been conducted, their convergence or divergence determines the diagnostic classification:</p>
+
+    <div class="class-grid">
+      <div class="class-item">
+        <div class="class-label">A-Class</div>
+        <div class="class-title">Technical Necessity</div>
+        <div class="class-body">Analyses converge on the same first failure and the same intervention. The decision is technically forcing. Residual question is political: whether the intervention will be adopted. ITT has not been reached.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-title">B-Class</div>
+        <div class="class-label">Value Choice</div>
+        <div class="class-body">Analyses identify different first failures and different interventions. The decision is a political priority choice. Multiple technically coherent paths exist. ITT has not been reached; governance agency is intact but contested.</div>
+      </div>
+      <div class="class-item c-class">
+        <div class="class-label">C-Class</div>
+        <div class="class-title">Governance Failure</div>
+        <div class="class-body">Analyses converge on technical necessity, but the required decision is not being produced by the institutional system. The technical path is clear; institutional capacity to take it has collapsed. This is ITT. Decision capacity has been exhausted.</div>
+      </div>
+    </div>
+
+    <p>The C-class is the ITT detection event. It does not diagnose the cause of institutional failure — that is a separate analytical question involving the specific friction mechanisms that produced the latency. It diagnoses the structural condition: convergent technical constraint, known intervention, absent governance action. When this condition is identified before the physical window closes, it is an early warning. When it is identified after the window has closed, it is a post-mortem.</p>
+
+    <div class="callout-accent">
+      <p>When analysis converges and decision does not follow, the condition is no longer a crisis of information or capacity. It is a collapse of governance agency. Lex Resiliens does not resolve this condition — it makes it visible before the window closes.</p>
+    </div>
+
+    <h3 class="subsection">5.3 The Weakest-Link Structure</h3>
+    <p>Lex Resiliens formalizes the intuition that institutional resilience cannot be accumulated asymmetrically: improvements in one dimension cannot compensate for a critical failure in another. This is encoded in the mathematical structure of the LR index through a dampening function that penalizes the minimum component score super-linearly. A system with high average performance but one critically deficient dimension does not receive the average score — it receives a substantially discounted score that reflects the structural vulnerability introduced by that deficiency. This formalization prevents institutions from presenting composite scores that conceal governance failure by distributing it below the average.</p>
+
+    <p>The philosophical principle underlying this structure is significant: resilience cannot be built on the exploitation of strong components to mask weak ones. An institution that delegates its weakest governance function to its strongest is not more resilient — it is more fragile at the point where that function is stress-tested.</p>
+  </div>
+
+  <!-- ─── SECTION 6 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Implications for Continuity Analysis</h2>
+    </div>
+
+    <h3 class="subsection">6.1 Reframing the Analytical Question</h3>
+    <p>The primary practical implication of TRT is a reframing of the central question in continuity analysis. Standard frameworks ask: does the system have sufficient capacity to survive disruption? TRT asks: does the system retain decision capacity throughout the period during which governance action remains causally relevant to outcomes?</p>
+
+    <p>These are different questions. A system can have abundant physical capacity and exhausted decision capacity simultaneously. A system can have intact formal authority and zero causal agency simultaneously. Standard continuity assessments that focus on resource stocks, platform inventories, or institutional mandates will systematically fail to detect the condition that TRT characterizes — because they are measuring the wrong variable.</p>
+
+    <h3 class="subsection">6.2 The Integration of Military and Governance Continuity</h3>
+    <p>TRT provides a unified analytical vocabulary for a challenge that has historically been addressed in separate disciplinary silos: strategic resilience (focused on STT-type pressures) and governance resilience (focused on ITT-type pressures). The causal coupling between STT and ITT means that these cannot be analyzed in isolation without risk of systematic error. An institution that plans its governance continuity without modeling the ITT implications of strategic pressure will underestimate its own fragility. A military planning process that does not model the ITT consequences of sustained operational tempo will overestimate its own endurance.</p>
+
+    <p>Integrated continuity analysis — analysis that treats STT and ITT as coupled variables within a shared temporal framework — is a methodological requirement that follows from TRT rather than a matter of analytical preference.</p>
+
+    <h3 class="subsection">6.3 What This Analysis Does Not Prescribe</h3>
+    <p>TRT, ITT, and Lex Resiliens are diagnostic constructs. They identify conditions; they do not recommend interventions. The C-class classification does not prescribe a governance response — it identifies that governance response capacity has been exhausted. What follows from a C-class diagnosis is a political and institutional question that lies outside the scope of this framework. The framework's value is precisely its diagnostic neutrality: it can be applied to identify ITT conditions across ideologically and institutionally diverse contexts without becoming an instrument of particular governance prescriptions.</p>
+
+    <p>This neutrality is not a limitation. It is the condition of the framework's applicability across domains and its accessibility to institutions that would reject a normative governance framework while accepting a diagnostic one.</p>
+  </div>
+
+  <!-- ─── SECTION 7 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">A Research Programme</h2>
+    </div>
+
+    <p>The theoretical structure developed in this paper opens several directions for further analytical work. Each represents a gap between the current conceptual formalization and the empirical or methodological development required for full operationalization.</p>
+
+    <p>The most pressing analytical priority is the formal operationalization of ITT. The construct has been defined and its diagnostic logic described, but a rigorous measurement framework — analogous to the STT component analysis developed in prior work — remains to be built. This requires specifying the component variables of institutional action latency, identifying measurable proxies, and developing a methodology for estimating ITT in real-time planning contexts rather than retrospectively.</p>
+
+    <p>A second priority is the empirical validation of the causal coupling between STT and ITT. The theoretical argument for this coupling is coherent, but systematic empirical investigation of historical cases — examining whether and how strategic tempo pressure accelerated institutional decision failure — would substantially strengthen the framework's standing and identify the conditions under which the coupling is most consequential.</p>
+
+    <p>Third, the LR diagnostic structure warrants formal testing against historical C-class cases to assess sensitivity and specificity: does the three-class taxonomy successfully distinguish ITT-proximate conditions from conditions that appear similar but involve different failure mechanisms? This validation would require access to institutional records of decision processes in cases where retrospective analysis confirms ITT-consistent outcomes — a methodological challenge that points toward collaboration with institutional actors willing to subject their own governance processes to diagnostic scrutiny.</p>
+
+    <p>Finally, the relationship between TRT and existing bodies of theory in complex systems, decision theory, and institutional economics merits systematic development. Several concepts in these literatures — critical transitions, irreversibility in dynamic systems, path dependence, coordination failure — map onto TRT constructs in ways that have not been formally explored. This theoretical integration would both strengthen TRT's foundations and extend its analytical reach beyond the domains in which it has been initially developed.</p>
+  </div>
+
+  <!-- ─── SECTION 8 ─── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Conclusions</h2>
+    </div>
+
+    <p>This paper has argued that a distinct failure mode — the temporal exhaustion of institutional decision capacity — exists, is structurally predictable, and lacks adequate formal description in existing theoretical frameworks. We have proposed temporal decision capacity as a state variable distinct from resource capacity, introduced Institutional Termination Time as the governance-domain manifestation of its exhaustion, and situated both constructs within Temporal Resilience Theory as the foundational framework that unifies strategic and institutional dimensions of system continuity.</p>
+
+    <p>The diagnostic consequence of this theoretical structure is Lex Resiliens: the instrument for identifying, in real time, when a governance system is approaching the ITT boundary — when analysis has converged and decision capacity has not followed. Its three-class taxonomy distinguishes technical necessity from value choice from governance failure with a structural precision that standard resilience frameworks do not offer.</p>
+
+    <p>The contribution of this paper is not the introduction of new empirical findings. It is the introduction of a new conceptual object — temporal decision capacity — and a theoretical structure for analyzing its exhaustion. The significance of this object is that it makes visible a condition that is currently invisible to most governance assessment frameworks, and that this invisibility is itself a governance risk: institutions that cannot detect ITT-proximate conditions cannot prepare for them, cannot communicate about them with shared vocabulary, and cannot distinguish — in real time — between a crisis that remains tractable and one that has already closed.</p>
+  </div>
+
+  <div class="conclusion-block">
+    <div class="conclusion-label">Core Contribution</div>
+    <h3>The New Conceptual Object</h3>
+    <p>Temporal decision capacity is not resource capacity. It is not formal authority. It is the bounded intersection of physical system timeline and institutional action horizon — and it exhausts independently of all the variables that standard resilience frameworks measure. Recognizing this exhaustion as a first-class governance phenomenon is the precondition for detecting it, communicating about it, and — where the window remains open — acting on it.</p>
+    <h3>The Seismograph Principle</h3>
+    <p>Lex Resiliens does not prevent institutional failure. It does not prescribe governance reform. It does what a seismograph does: it detects a structural condition — ITT collapse — at the moment when that condition can still distinguish tractable from intractable situations. The value of detection is not that it resolves the problem. It is that it forecloses the option of pretending the problem has not yet arrived.</p>
+  </div>
+
+  <!-- Further reading -->
+  <div class="further-reading">
+    <div class="fr-label">Distributed Resilience Doctrine Series · Related Papers</div>
+    <p class="fr-intro">This paper introduces the theoretical foundations of Temporal Resilience Theory. The following papers in the DRD series develop adjacent constructs in the strategic domain.</p>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">WP-001</span>
+        <span class="fr-title">Duration Adequacy and Continuity Risk in High-Electrification Power Systems</span>
+        <a class="fr-link" href="/papers/wp-001-duration-adequacy-2.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP-002</span>
+        <span class="fr-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</span>
+        <a class="fr-link" href="/papers/wp-002-drd.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">Diagram</span>
+        <span class="fr-title">ACI Canonical Diagram v1.0 — Temporal Resilience Theory (full resolution)</span>
+        <a class="fr-link" href="/papers/trt-canonical-diagram-v1.html">View →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial working draft</span></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-col">
+    Aether Continuity Institute<br>
+    Defence Studies · Working Paper Series<br>
+    aethercontinuity.github.io
+  </div>
+  <div class="footer-col">
+    WP-003 · Version 1.0<br>
+    February 2026<br>
+    Theory Note
+  </div>
+  <div class="footer-col">
+    Foundational Series<br>
+    Strategic Studies Programme<br>
+    Working Draft
+  </div>
+</footer>
+
+</body>
+</html>
