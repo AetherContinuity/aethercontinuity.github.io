@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DIH-1 — Document Identity Header Specification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .nav-home::before { content: '← '; }
+  .nav-id {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .doc {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 5rem 2rem 8rem;
+  }
+  .page-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .subtitle {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #2a2520;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin: 2.5rem 0 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  h2 .num {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* ═══════════════════════════════════════
+     THE DIH-1 COMPONENT — live demo
+  ═══════════════════════════════════════ */
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 0 1.25rem;
+    margin: 2rem 0 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .dih-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .dih-institute {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .dih-series {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: 0.2rem;
+  }
+
+  .dih-series .series-accent {
+    color: var(--accent);
+  }
+
+  .dih-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+
+  .dih-meta {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+    text-align: right;
+  }
+
+  .dih-meta strong {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .dih-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--rule);
+    padding: 0.25rem 0.7rem;
+    margin-top: 0.4rem;
+  }
+
+  .dih-status-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #5a8a5a;
+  }
+
+  .dih-status-text {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  /* ═══════════════════════════════════════
+     END DIH-1
+  ═══════════════════════════════════════ */
+
+  /* Demo frame */
+  .demo-frame {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 2rem 2rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .demo-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Code block */
+  pre {
+    background: var(--ink);
+    color: #c8c0b0;
+    padding: 1.75rem 2rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .code-comment { color: #6a6560; }
+  .code-tag { color: #a08060; }
+  .code-attr { color: #8a9a78; }
+  .code-val { color: #b09070; }
+
+  /* Variant grid */
+  .variants {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .variant-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  /* TN variant — lighter */
+  .dih.tn .dih-series .series-accent { color: #5a7a8a; }
+  .dih.tn .dih-status-dot { background: #5a7a8a; }
+
+  /* DA variant — warmer */
+  .dih.da .dih-series .series-accent { color: #7a6a3a; }
+  .dih.da .dih-status-dot { background: #9a8a4a; }
+  .dih.da { border-top-color: var(--rule); border-top-width: 1px; border-bottom: 2px solid var(--ink); }
+
+  .callout {
+    border-left: 3px solid var(--ink);
+    padding: 1rem 1.5rem;
+    background: var(--paper-2);
+    margin: 1.5rem 0;
+  }
+  .callout p { font-style: italic; font-size: 0.95rem; margin: 0; }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .footer-col {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .doc { padding: 3rem 1.5rem 5rem; }
+    .dih { grid-template-columns: 1fr; }
+    .dih-right { align-items: flex-start; }
+    .dih-meta { text-align: left; }
+    footer { flex-direction: column; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">DIH-1 · Specification</span>
+</nav>
+
+<main class="doc">
+
+  <div class="page-label">ACI Internal Standard · DIH-1</div>
+  <h1>Document Identity Header</h1>
+  <p class="subtitle">A fixed, reusable header component that makes every ACI document institutionally identifiable at first glance — before the reader has processed a single word of content.</p>
+
+  <!-- Section 1 -->
+  <h2><span class="num">1</span> What It Is</h2>
+  <p>The Document Identity Header (DIH-1) is a small, standardized block placed at the top of every ACI publication — above the title, below the navigation bar. It answers four questions instantly and without ambiguity:</p>
+  <p style="padding-left:1.5rem; border-left: 3px solid var(--rule); font-style: italic; color: var(--muted);">
+    Who published this? &nbsp;·&nbsp; What type of document is this? &nbsp;·&nbsp; What is its number and version? &nbsp;·&nbsp; What is its current status?
+  </p>
+  <p>These four facts are the minimum required for a document to function as a citable, institutional artifact. Without them, a document may contain excellent analysis and still be uncitable — because the reader has no stable reference point.</p>
+
+  <!-- Section 2: Live demo -->
+  <h2><span class="num">2</span> Live Examples</h2>
+
+  <div class="variants">
+
+    <div>
+      <div class="variant-label">WP — Working Paper</div>
+      <div class="demo-frame">
+        <div class="demo-label">Rendered component ↓</div>
+        <div class="dih">
+          <div class="dih-left">
+            <span class="dih-institute">Aether Continuity Institute</span>
+            <span class="dih-series"><span class="series-accent">Working Paper</span> &nbsp;·&nbsp; No. 001</span>
+          </div>
+          <div class="dih-right">
+            <div class="dih-meta">
+              Year &nbsp;<strong>2026</strong><br>
+              Version &nbsp;<strong>1.0</strong><br>
+              Series &nbsp;<strong>WP</strong>
+            </div>
+            <div class="dih-status">
+              <span class="dih-status-dot"></span>
+              <span class="dih-status-text">Open Working Draft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="variant-label">TN — Technical Note</div>
+      <div class="demo-frame">
+        <div class="demo-label">Rendered component ↓</div>
+        <div class="dih tn">
+          <div class="dih-left">
+            <span class="dih-institute">Aether Continuity Institute</span>
+            <span class="dih-series"><span class="series-accent">Technical Note</span> &nbsp;·&nbsp; TN-001-A</span>
+          </div>
+          <div class="dih-right">
+            <div class="dih-meta">
+              Year &nbsp;<strong>2026</strong><br>
+              Version &nbsp;<strong>1.0</strong><br>
+              Ref &nbsp;<strong>WP-001</strong>
+            </div>
+            <div class="dih-status">
+              <span class="dih-status-dot" style="background:#5a7a8a;"></span>
+              <span class="dih-status-text">Supporting Note</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="variant-label">DA — Diagnostic Assessment</div>
+      <div class="demo-frame">
+        <div class="demo-label">Rendered component ↓</div>
+        <div class="dih da">
+          <div class="dih-left">
+            <span class="dih-institute">Aether Continuity Institute</span>
+            <span class="dih-series"><span class="series-accent">Diagnostic Assessment</span> &nbsp;·&nbsp; DA-001</span>
+          </div>
+          <div class="dih-right">
+            <div class="dih-meta">
+              Issued &nbsp;<strong>2026-02-25</strong><br>
+              Version &nbsp;<strong>1.0</strong><br>
+              Status &nbsp;<strong>Timestamped</strong>
+            </div>
+            <div class="dih-status">
+              <span class="dih-status-dot" style="background:#9a8a4a;"></span>
+              <span class="dih-status-text">Provisional</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Section 3: Copy-paste code -->
+  <h2><span class="num">3</span> Implementation — Copy-Paste Block</h2>
+  <p>Paste this block into any ACI document directly after the <code style="font-family:var(--mono);font-size:0.85em;background:var(--paper-3);padding:0.1em 0.4em;">&lt;nav&gt;</code> element, before the title. Change only the values in CAPS.</p>
+
+<pre><span class="code-comment">&lt;!-- ACI Document Identity Header (DIH-1) --&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-val">"dih"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-val">"dih-left"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;span</span> <span class="code-attr">class</span>=<span class="code-val">"dih-institute"</span><span class="code-tag">&gt;</span>Aether Continuity Institute<span class="code-tag">&lt;/span&gt;</span>
+    <span class="code-tag">&lt;span</span> <span class="code-attr">class</span>=<span class="code-val">"dih-series"</span><span class="code-tag">&gt;</span>
+      <span class="code-tag">&lt;span</span> <span class="code-attr">class</span>=<span class="code-val">"series-accent"</span><span class="code-tag">&gt;</span>SERIES TYPE<span class="code-tag">&lt;/span&gt;</span>
+      &amp;nbsp;·&amp;nbsp; No. NUMBER
+    <span class="code-tag">&lt;/span&gt;</span>
+  <span class="code-tag">&lt;/div&gt;</span>
+  <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-val">"dih-right"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-val">"dih-meta"</span><span class="code-tag">&gt;</span>
+      Year &amp;nbsp;<span class="code-tag">&lt;strong&gt;</span>YEAR<span class="code-tag">&lt;/strong&gt;</span><span class="code-tag">&lt;br&gt;</span>
+      Version &amp;nbsp;<span class="code-tag">&lt;strong&gt;</span>VERSION<span class="code-tag">&lt;/strong&gt;</span><span class="code-tag">&lt;br&gt;</span>
+      Series &amp;nbsp;<span class="code-tag">&lt;strong&gt;</span>WP / TN / DA<span class="code-tag">&lt;/strong&gt;</span>
+    <span class="code-tag">&lt;/div&gt;</span>
+    <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-val">"dih-status"</span><span class="code-tag">&gt;</span>
+      <span class="code-tag">&lt;span</span> <span class="code-attr">class</span>=<span class="code-val">"dih-status-dot"</span><span class="code-tag">&gt;&lt;/span&gt;</span>
+      <span class="code-tag">&lt;span</span> <span class="code-attr">class</span>=<span class="code-val">"dih-status-text"</span><span class="code-tag">&gt;</span>STATUS<span class="code-tag">&lt;/span&gt;</span>
+    <span class="code-tag">&lt;/div&gt;</span>
+  <span class="code-tag">&lt;/div&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span>
+<span class="code-comment">&lt;!-- /DIH-1 --&gt;</span></pre>
+
+  <div class="callout">
+    <p>DIH-1 requires 14 lines of HTML and ~40 lines of CSS already present in the ACI stylesheet. No new dependencies. No JavaScript.</p>
+  </div>
+
+  <!-- Section 4 -->
+  <h2><span class="num">4</span> Retrofit</h2>
+  <p>WP-001 was published before DIH-1 was formalized. It should be retrofitted — a v1.1 update adding the header, with a single changelog line: <em>"DIH-1 header added per ACI institutional standard."</em> Content unchanged.</p>
+  <p>This is the versioning principle in action. The document gains traceability without pretending the standard existed before it did.</p>
+
+</main>
+
+<footer>
+  <div class="footer-col">
+    ACI Internal Standard<br>
+    DIH-1 · Version 1.0<br>
+    2026
+  </div>
+  <div class="footer-col">
+    Applies to: WP, TN, DA<br>
+    Required from: WP-002<br>
+    Retrofit: WP-001 v1.1
+  </div>
+  <div class="footer-col">
+    Cross-reference:<br>
+    Publishing Model v1.0<br>
+    Foundational Note v1.0
+  </div>
+</footer>
+
+</body>
+</html>
