@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-002 — Distributed Resilience Doctrine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* DIH Header */
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  /* Nav */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  /* Paper */
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+
+  /* Abstract */
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+
+  /* Sections */
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* Callout */
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  /* Formula / principle box */
+  .formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); }
+  .formula-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .principle { margin-bottom: 1.1rem; }
+  .principle-num { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+  .principle-title { font-weight: 500; font-size: 1rem; margin-bottom: 0.3rem; }
+  .principle-body { font-size: 0.92rem; color: #3a3530; line-height: 1.7; }
+
+  /* Table */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.85rem 1.1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.85rem 1.1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
+
+  /* Pillar cards */
+  .pillars { margin: 2rem 0; display: flex; flex-direction: column; gap: 1.25rem; }
+  .pillar { border: 1px solid var(--rule); padding: 1.5rem; }
+  .pillar-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .pillar-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.75rem; }
+  .pillar-body { font-size: 0.92rem; color: #3a3530; line-height: 1.7; }
+  .pillar-budget { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.75rem; }
+
+  /* Conclusion */
+  .conclusion-block { margin-top: 3.5rem; background: var(--ink); color: var(--paper); padding: 2.5rem; }
+  .conclusion-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7a7468; margin-bottom: 1rem; }
+  .conclusion-block p { color: #d8d0c0; font-size: 1rem; line-height: 1.8; }
+  .conclusion-block h3 { color: var(--paper); font-size: 1.05rem; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+
+  /* Further reading */
+  .further-reading { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .fr-intro { font-size: 0.92rem; color: #3a3530; font-style: italic; margin-bottom: 1.5rem; }
+  .fr-list { display: flex; flex-direction: column; gap: 0; }
+  .fr-item { border-top: 1px solid var(--rule); padding: 1rem 0; display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; align-items: baseline; }
+  .fr-item:last-child { border-bottom: 1px solid var(--rule); }
+  .fr-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 0.1em; }
+  .fr-title { font-size: 0.95rem; }
+  .fr-link { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; white-space: nowrap; }
+  .fr-link:hover { color: var(--ink); }
+
+  /* Changelog */
+  .changelog { border-top: 1px solid var(--rule); padding-top: 1.5rem; margin-top: 3rem; }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; font-size: 0.85rem; color: #4a4540; margin-bottom: 0.4rem; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- DIH Header -->
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Defence Studies · <span class="series-accent">Working Paper Series</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>WP-002</strong> · February 2026<br>
+      Domain D-2 · Strategic Studies<br>
+      Version <strong>1.0</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Published</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/papers/">Publications</a>
+  <span class="nav-id">ACI · WP-002 · 2026</span>
+</nav>
+
+<div class="paper">
+
+  <!-- Title block -->
+  <div class="title-block">
+    <div class="paper-label">Working Paper No. 002 · Distributed Resilience Doctrine Series · Paper I of VI</div>
+    <h1 class="paper-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence in the Era of Long-Range Precision Strike</h1>
+    <p class="paper-subtitle">Why denial-based, system-centric defence offers a more coherent strategic posture than platform-centric models for resource-constrained nations facing existential threats</p>
+    <div class="citation-box">
+      Aether Continuity Institute. (2026). <em>Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence in the Era of Long-Range Precision Strike.</em> ACI Working Paper No. 002. Defence Studies Series.
+    </div>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">
+      This paper examines the viability of a resilience-centric defence doctrine for small states facing existential threats from larger neighbours in the contemporary security environment. Using Finland as a primary case study, we argue that traditional platform-centric defence models — predicated on qualitative technological superiority — are becoming strategically untenable for resource-constrained nations in an era characterized by ubiquitous surveillance, long-range precision strike, and rapid targeting cycles. We propose an alternative framework: the Distributed Resilience Doctrine (DRD), which prioritizes system survivability, societal endurance, and deterrence by denial over concentrated strike capabilities. Through historical analysis, strategic theory, and operational assessment, we demonstrate that DRD offers a more cost-effective and strategically coherent approach to existential deterrence for small states in high-threat environments.
+    </p>
+    <div class="keywords">Keywords: deterrence theory · resilience · small-state security · defence doctrine · Finland · NATO · A2/AD</div>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">Introduction</h2>
+    </div>
+
+    <h3 class="subsection">1.1 The Strategic Problem</h3>
+    <p>Small states facing security threats from vastly larger neighbours confront an enduring strategic dilemma: how to generate credible deterrence despite fundamental asymmetries in population, industrial capacity, and military resources. This challenge has intensified in the post-2014 security environment, characterized by the proliferation of long-range precision strike capabilities, the compression of decision-making timelines through advanced ISR integration, the expanded targeting of critical civilian infrastructure as a primary operational objective, and hybrid operations that blur traditional distinctions between peace and war.</p>
+    <p>For Finland — a nation of 5.6 million bordering a revanchist Russia with 144 million inhabitants and demonstrated willingness to use military force against neighbours — these trends pose existential questions about the sustainability of current defence planning assumptions.</p>
+
+    <h3 class="subsection">1.2 The Current Paradigm and Its Limitations</h3>
+    <p>Contemporary Finnish defence planning, like that of many small NATO members, prioritizes investment in high-end platforms — particularly the €10 billion F-35A acquisition — as the cornerstone of national deterrence. This approach rests on three core assumptions: that qualitative superiority compensates for quantitative inferiority, that air superiority enables operational success across other domains, and that integration with NATO frameworks provides force multiplication and extended deterrence.</p>
+    <p>While these assumptions held considerable validity in the post-Cold War era of Western technological dominance, recent conflicts — particularly Russia's invasion of Ukraine (2022–present) — suggest they may be eroding. Platform attrition rates exceed Cold War models, fixed infrastructure shows vulnerability to long-range strike, and sustained high-intensity conflict rewards mass and regeneration over initial qualitative edge.</p>
+
+    <h3 class="subsection">1.3 Research Question and Argument</h3>
+    <div class="callout">
+      <p>Does a resilience-centric defence doctrine offer a more strategically coherent framework for small-state deterrence than traditional platform-centric models in the contemporary threat environment?</p>
+    </div>
+    <p>We argue that for small states in high-threat environments, deterrence credibility increasingly derives from the adversary's inability to achieve rapid strategic decision rather than from the defender's capacity to impose unacceptable costs through offensive strikes. This necessitates a fundamental reorientation from platform-centric to system-centric defence planning — what we term the Distributed Resilience Doctrine (DRD).</p>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Theoretical Framework</h2>
+    </div>
+
+    <h3 class="subsection">2.1 Deterrence Theory: From Punishment to Denial</h3>
+    <p>Classical deterrence theory distinguishes between deterrence by punishment (threatening unacceptable costs) and deterrence by denial (convincing an adversary they cannot achieve their objectives). Small states typically cannot credibly threaten punishment against larger neighbours; thus, denial-based deterrence becomes paramount. Denial-based deterrence for small states requires not battlefield victory but the credible threat of protracted, costly conflict without rapid resolution.</p>
+
+    <h3 class="subsection">2.2 Strategic Asymmetry and Cost Imposition</h3>
+    <p>Analysis of asymmetric conflicts demonstrates that materially weaker actors succeed by imposing strategic interaction effects — forcing stronger opponents into modes of conflict where their advantages diminish. For small-state defence, this implies avoiding decisive battles that leverage adversary mass, extending conflict duration beyond adversary political tolerance, and targeting adversary operational assumptions rather than forces directly.</p>
+
+    <h3 class="subsection">2.3 Resilience as Strategic Concept</h3>
+    <p>Recent strategic literature increasingly emphasizes resilience — the capacity to absorb disruption and maintain essential functions — as central to national security. For small states, resilience operates at three interacting levels: military resilience (force survivability and regeneration under fire), societal resilience (critical infrastructure continuity despite disruption), and political resilience (sustained national will despite costs). These interact synergistically: societal resilience extends military endurance, which reinforces political resolve, which sustains societal cohesion.</p>
+
+    <h3 class="subsection">2.4 The Vulnerability-Resilience Trade-off</h3>
+    <p>Traditional platform-centric models maximize capability but often increase vulnerability through concentration of value in few high-cost platforms, infrastructure dependencies, and cognitive focus on protecting scarce assets rather than achieving objectives. The DRD framework prioritizes distributed, redundant, recoverable systems over concentrated high-performance platforms, deliberately trading some offensive capability for enhanced survivability.</p>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Historical Precedents</h2>
+    </div>
+
+    <h3 class="subsection">3.1 Finland 1939–1940: The Winter War</h3>
+    <p>The Soviet-Finnish Winter War provides the foundational historical validation for resilience-based defence. The USSR possessed a 3:1 personnel advantage, 30:1 tank advantage, and 100:1 aircraft advantage. Conventional deterrence through capability matching was impossible. The Finnish approach — dispersed mobile infantry tactics avoiding decisive engagement, exploitation of terrain to negate Soviet advantages, and integrated civilian-military operations — imposed prohibitive costs on the attacker. The USSR achieved its territorial objectives but at the cost of 126,875 dead against 25,904 Finnish casualties, and critically failed to impose a puppet government or eliminate Finnish sovereignty.</p>
+    <p>The analytical significance is precise: Finnish success derived not from superior platforms but from making rapid Soviet victory impossible, thereby imposing costs disproportionate to Soviet gains.</p>
+
+    <h3 class="subsection">3.2 Switzerland 1940–1945: The Réduit Strategy</h3>
+    <p>Swiss defence planning under General Guisan provides a second model of denial-based deterrence against overwhelming force. Surrounded by Axis powers from 1940 to 1943, Switzerland adopted withdrawal to an Alpine fortress, preparation for comprehensive infrastructure denial, and credible commitment to protracted resistance — explicitly accepting the loss of the economic heartland in exchange for the adversary's strategic failure. Germany never invaded despite operational capability; Wehrmacht planning documents cited anticipated costs and duration as deterrents.</p>
+
+    <h3 class="subsection">3.3 Synthesis: Common Patterns</h3>
+    <p>Across successful small-state defence cases, consistent patterns emerge: acceptance of initial adversary gains rather than attempting to prevent all territorial intrusion; focus on adversary strategic failure rather than tactical victory; integration of civilian endurance with military operations as force multiplier; deliberate cost-benefit manipulation making conquest prohibitively expensive relative to value; and the use of protraction as a strategic weapon extending conflict beyond adversary political tolerance. These patterns form the empirical foundation for the Distributed Resilience Doctrine.</p>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">The Contemporary Threat Environment</h2>
+    </div>
+
+    <h3 class="subsection">4.1 Russian Military Doctrine and Practice</h3>
+    <p>Russian operational art, refined through Syrian and Ukrainian campaigns, exhibits distinct characteristics relevant to Finnish defence planning. Targeting priorities follow a coherent logic: decapitation of leadership and command nodes, paralysis of energy infrastructure and logistics, demoralization through civilian infrastructure attacks, and air defence suppression for operational freedom. Tempo preferences favour rapid initial offensives to create <em>faits accomplis</em> before Western response, with maximalist objectives if resistance is weak and openness to settlement if resistance proves credible.</p>
+    <p>The critical finding from Ukraine 2022–present: initial assumptions of rapid political collapse proved incorrect. Infrastructure campaigns failed to break Ukrainian will. Protracted conflict forced Russia into unfavourable attrition. Ukrainian resilience — military and societal — created strategic failure despite Russian material advantages.</p>
+
+    <h3 class="subsection">4.2 The Precision Strike Dilemma</h3>
+    <p>Modern long-range precision weapons fundamentally alter defensive calculations. Russia possesses Kalibr cruise missiles (2,500 km range), Iskander-M ballistic missiles (500 km range), Kinzhal hypersonic missiles (2,000 km range), and an extensive UAV inventory. All Finnish territory lies within range from Russian territory. Fixed high-value targets — airfields, headquarters, depots — are highly vulnerable. Warning time is compressed; sanctuary basing is impossible. Platform concentration creates targeting economy for the adversary.</p>
+    <div class="callout">
+      <p>This environment rewards target proliferation and dispersion over hardening and concentration. A system with 500 distributed targets imposes radically different planning requirements on an adversary than one with 10 concentrated high-value targets.</p>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">The Distributed Resilience Doctrine: Conceptual Architecture</h2>
+    </div>
+
+    <div class="formula-block">
+      <div class="formula-label">Core Principles</div>
+      <div class="principle">
+        <div class="principle-num">Principle I</div>
+        <div class="principle-title">Survivability over Capability</div>
+        <div class="principle-body">A 70% effective system that survives is superior to a 95% effective system destroyed in the first hours. Traditional procurement emphasizes platform performance; DRD emphasizes system survivability under attack.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle II</div>
+        <div class="principle-title">Denial-Based Deterrence</div>
+        <div class="principle-body">The adversary must calculate not "Can I win?" but "Can I win quickly enough, at acceptable cost, with sufficient certainty?" Success is measured not by battlefield victory but by adversary strategic frustration.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle III</div>
+        <div class="principle-title">Whole-of-Society Integration</div>
+        <div class="principle-body">National defence extends beyond military forces to encompass all elements of societal functionality that enable sustained resistance. Societal resilience is not supplementary — it is central to defence strategy.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle IV</div>
+        <div class="principle-title">Distributed Redundancy</div>
+        <div class="principle-body">No single point of failure should enable adversary strategic success. System architecture emphasizes multiple parallel capabilities over optimized single solutions.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">5.2 The Three Pillars</h3>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-label">Pillar I</div>
+        <div class="pillar-title">Multi-Layered Territorial Air Defence</div>
+        <div class="pillar-body">In a denial-based strategy, preventing adversary air superiority is not necessary; complicating and degrading it suffices. Layered, geographically distributed air defence forces the adversary to allocate disproportionate resources to SEAD/DEAD, protects military and civilian infrastructure, and creates targeting complexity: hundreds of mobile launchers versus 4–5 fixed air bases. Implementation spans long-range fixed assets protecting strategic points, mobile medium SAMs with rapid relocation, man-portable short-range systems, and counter-UAS coverage at critical nodes.</div>
+        <div class="pillar-budget">Estimated resource allocation: €3–4 billion · vs. €10 billion for F-35 programme</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-label">Pillar II</div>
+        <div class="pillar-title">Distributed Multi-Domain Land Effects</div>
+        <div class="pillar-body">Conventional corps-level operations play into adversary mass advantages. Instead, small autonomous units with organic fires, dispersion preventing massed targeting, mobility avoiding positional warfare, and cross-domain integration. The organizational model treats small combined-arms teams at platoon/company level as the basic manoeuvre element. Mission command with minimal higher-echelon coordination: loss of higher HQ does not paralyze subordinate units. Resilience through autonomy. Operational attrition continues even if tactical engagements go to the adversary.</div>
+        <div class="pillar-budget">Estimated resource allocation: €2–3 billion in mobile, dispersed systems</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-label">Pillar III</div>
+        <div class="pillar-title">Societal Resilience Infrastructure</div>
+        <div class="pillar-body">Modern warfare targets societal cohesion as much as military forces. A society that continues functioning despite disruption extends military endurance exponentially. Implementation encompasses energy grid decentralization and islanding capability, satellite backup and distributed mesh communications, transportation infrastructure redundancy and rapid repair, maintained population shelter systems with medical surge capacity, and industrial mobilization stockpiles enabling rapid production switching.</div>
+        <div class="pillar-budget">Estimated resource allocation: €2 billion in critical infrastructure hardening</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">5.3 The Role of Air Power in DRD</h3>
+    <p>DRD does not eliminate air power but redefines its role and prioritization. The traditional model assumes air superiority enables joint operations, making the air force the decisive arm justifying maximum investment. The DRD model treats air power as one element in a distributed system, with investment proportional to contribution. Practical implications: quantitative reduction from 64 to 32–40 aircraft, cost savings of €5–6 billion over a 30-year lifecycle, and operational adjustment toward survivable dispersed basing focused on defensive counter-air and maritime strike. The strategic logic: ground-based systems provide greater survivability per euro.</p>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Strategic Analysis: DRD vs. Platform-Centric Model</h2>
+    </div>
+
+    <h3 class="subsection">6.1 Adversary Decision Calculus</h3>
+    <p>Under a platform-centric model, Russian planning offers a coherent rapid-victory sequence: destroy 4–5 major air bases to neutralize the air threat in hours; target 10–15 command and logistics nodes to degrade C2 in hours to days; strike energy and transport infrastructure to begin societal paralysis within days; then launch a ground offensive against a degraded, demoralized defence. Assessment: rapid victory is plausible, and invasion may be a rational gamble.</p>
+    <p>Under DRD, the same adversary planner faces a fundamentally different problem: strikes against dispersed targets require high sortie rates with uncertain battle damage assessment; hundreds of mobile air defence systems demand sustained SEAD with expected losses; no decisive battle is possible against dispersed ground forces; society continues functioning despite strikes; an international intervention window opens as conflict extends. Assessment: rapid victory is implausible — invasion is a high-risk, uncertain-return proposition.</p>
+
+    <h3 class="subsection">6.2 Cost-Benefit Comparison</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Platform-Centric</th>
+            <th>DRD</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Acquisition cost (10y)</td><td>€10–12B</td><td>€7–9B</td><td>25–30% savings</td></tr>
+          <tr><td>Lifecycle cost (30y)</td><td>€25–30B</td><td>€15–20B</td><td>35–40% savings</td></tr>
+          <tr><td>Targets presented to adversary</td><td>~50 high-value</td><td>~500+ dispersed</td><td>10× complexity</td></tr>
+          <tr><td>Single-point failures</td><td>Air bases, major HQs</td><td>None systemic</td><td>Qualitative advantage</td></tr>
+          <tr><td>Time to reconstitution</td><td>Weeks–months</td><td>Hours–days</td><td>Operational advantage</td></tr>
+          <tr><td>Societal endurance</td><td>Weeks</td><td>Months</td><td>Strategic advantage</td></tr>
+          <tr><td>Deterrent threshold</td><td>"Can I destroy the air force?"</td><td>"Can I occupy and hold?"</td><td>Significantly higher bar</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">6.3 Alliance Integration</h3>
+    <p>From NATO's perspective, the platform-centric approach offers "Finland has 64 F-35s" — impressive but transitory if lost early. The DRD approach offers "Finland can sustain resistance for months" — strategic depth for alliance response. DRD potentially delivers greater alliance value by ensuring Finland remains a viable theatre for allied operations rather than rapidly overrun territory requiring liberation.</p>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Operational Feasibility Assessment</h2>
+    </div>
+    <p>All DRD components rely on mature, proven technologies. Air defence systems (NASAMS, Patriot, IRIS-T, CAMM, Stinger) have been in global service for decades. Land systems (HIMARS/M270, Javelin, NLAW) are extensively combat-proven, particularly in Ukraine from 2022. Commercial UAS platforms are readily available and low-cost. Resilience infrastructure relies on established engineering disciplines.</p>
+    <p>DRD emphasizes a smaller professional cadre with high autonomy, cross-domain competence, and decentralized decision-making. This aligns well with Finland's conscription system and its emphasis on motivated, trained reserves. Training shifts from platform-centric to system-centric at lower cost, enabling more personnel to reach higher proficiency. The required command culture — trust in decentralized execution — is already a Finnish military tradition. Wartime sustainability is enhanced: distributed systems use common ammunition types versus specialized F-35 requirements, and components can be sourced from multiple suppliers, reducing single-source dependency.</p>
+  </div>
+
+  <!-- Section 8 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Critiques and Limitations</h2>
+    </div>
+
+    <h3 class="subsection">8.1 Principal Objections and Responses</h3>
+    <p><strong>Critique: DRD abandons offensive capability.</strong> Response: DRD does not abandon offensive capability but prioritizes sustainable offensive capability. Distributed land-based fires (HIMARS, coastal defence cruise missiles) provide strike options without concentration vulnerability. Ukraine demonstrates that dispersed ground-based fires can achieve strategic effects previously assumed to require air superiority.</p>
+    <p><strong>Critique: DRD concedes air superiority.</strong> Response: Finland cannot realistically contest air superiority against the VKS regardless of platform choice — Russian aerospace forces possess 10× the aircraft inventory. The strategic question is whether modest air forces contribute more through attempting contested air superiority they cannot sustain, or through contributing to layered denial while resources flow to more survivable systems.</p>
+    <p><strong>Critique: DRD lowers deterrent visibility.</strong> Response: Deterrence operates through adversary assessment of success probability, not showroom appeal. F-35s photograph impressively; distributed resilience does not. But Russian general staff planning focuses on operational analysis. DRD makes their operational problem demonstrably harder — which is what actually deters.</p>
+    <p><strong>Critique: DRD is difficult to communicate politically.</strong> Acknowledgment: This is DRD's genuine political vulnerability. "We bought fewer fighters to invest in infrastructure resilience" is harder to communicate than "We have the Nordic region's most advanced fighter." This is a political marketing problem, not a strategic validity problem — but it is real and consequential.</p>
+
+    <h3 class="subsection">8.2 Genuine Strategic Limitations</h3>
+    <p>DRD explicitly accepts that adversary ground forces will likely make initial territorial gains, trading space for time and adversary cost. It requires sustained societal will — if social cohesion breaks quickly, military resilience becomes irrelevant. And it assumes eventual allied intervention: pure DRD cannot deliver battlefield victory; it creates conditions where the adversary cannot achieve strategic decision before allied response. Each of these limitations is real, acknowledged, and must inform implementation.</p>
+  </div>
+
+  <!-- Section 9 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Policy Implications and Recommendations</h2>
+    </div>
+
+    <h3 class="subsection">9.1 Strategic Recommendations</h3>
+    <p><strong>Adopt DRD as conceptual framework.</strong> Shift procurement priorities from platform optimization to system resilience. Reduce F-35 acquisition from 64 to 32–40 aircraft or an alternative 4.5-generation platform. Reallocate €5–6 billion to distributed air defence, mobile fires, and critical infrastructure. Measure capability by "time to strategic decision" rather than "number of advanced platforms."</p>
+    <p><strong>Establish resilience as National Security Council priority.</strong> Elevate societal resilience to strategic priority equal with military capability. Create a dedicated funding stream for critical infrastructure redundancy. Implement cross-ministry coordination spanning Defence, Interior, Economic Affairs, and Transport. Conduct regular resilience exercises integrating civilian and military elements.</p>
+    <p><strong>Revise operational doctrine.</strong> Update Finnish Defence Forces doctrinal publications to reflect distributed operations as primary mode, acceptance of initial territorial loss in exchange for sustained resistance, integration of civilian continuity with military operations, and time-based victory conditions over space-based ones.</p>
+
+    <h3 class="subsection">9.2 Procurement Priorities</h3>
+    <p>High priority (Years 1–3): mobile medium SAM systems, long-range rocket artillery, counter-UAS systems, critical infrastructure hardening. Medium priority (Years 3–7): limited long-range air defence, loitering munitions and tactical UAS, distributed EW systems, transportation infrastructure redundancy. Lower priority (Years 7–10): moderate air combat capability (32–40 aircraft), naval modernization, advanced C4ISR compatible with distributed operations.</p>
+  </div>
+
+  <!-- Section 10 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 10</span>
+      <h2 class="section-title">Conclusions</h2>
+    </div>
+    <p>This analysis demonstrates that platform-centric defence models face increasing vulnerability in an era of ubiquitous surveillance and long-range precision strike; that small states cannot achieve existential deterrence through qualitative superiority alone; that deterrence by denial — making rapid adversary victory implausible — offers a more credible strategy; and that DRD provides a conceptual framework aligning force structure with denial-based deterrence requirements. Historical precedent, contemporary conflict observation, and strategic analysis all support DRD's viability for the Finnish context. Resource allocation under DRD offers superior strategic return per euro compared to platform-centric alternatives.</p>
+    <p>The Distributed Resilience Doctrine framework is strategically superior in that it better aligns resources with achievable deterrent objectives; operationally feasible, relying on mature technologies and organizational models compatible with Finnish military culture; and economically efficient, offering higher strategic return per euro invested. It is politically challenging — difficult to communicate to public and policymakers — psychologically demanding in requiring acceptance of initial adversary gains, and alliance-dependent, unable to deliver victory alone but able to prevent defeat until allies intervene.</p>
+    <div class="callout">
+      <p>The question facing defence planners is not whether DRD is theoretically elegant, but whether the strategic situation demands the intellectual courage to embrace doctrine optimized for denial over doctrine optimized for prestige.</p>
+    </div>
+  </div>
+
+  <!-- Conclusion block -->
+  <div class="conclusion-block">
+    <div class="conclusion-label">Core Finding</div>
+    <h3>On Broader Applicability</h3>
+    <p>While this analysis uses Finland as primary case study, the DRD framework has direct relevance for Baltic states (similar threat profile, more extreme resource constraints), Taiwan (island defence against a vastly larger neighbour), South Korea (resilience against North Korean strike capabilities), and Poland (frontline NATO state requiring credible denial capability). The common thread is states facing existential threats from larger neighbours in precision-strike environments.</p>
+    <h3>The Fundamental Reorientation</h3>
+    <p>For Finland specifically, adoption of DRD would represent not abandonment of defence but evolution toward a defence strategy optimized for the actual threat environment rather than inherited assumptions from earlier eras. Whether those assumptions should be revised is a question this paper has attempted to make unavoidable.</p>
+  </div>
+
+  <!-- Further reading -->
+  <div class="further-reading">
+    <div class="fr-label">Distributed Resilience Doctrine Series · Further Reading</div>
+    <p class="fr-intro">This paper establishes the strategic framework of the DRD series. Readers wishing to explore the analytical and operational dimensions in depth may consult the following companion papers, available in the ACI supplements archive.</p>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-02</span>
+        <span class="fr-title">Strategic Termination Time as an Analytical Framework for Small-State Deterrence</span>
+        <a class="fr-link" href="/supplements/drd-02-stt.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-03</span>
+        <span class="fr-title">Command-and-Control Continuity Index: Operationalizing Cognitive Resilience</span>
+        <a class="fr-link" href="/supplements/drd-03-c2ci.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-04</span>
+        <span class="fr-title">Distributed Resilience as a Dynamic Denial System: The Adversary Tempo Model</span>
+        <a class="fr-link" href="/supplements/drd-04-atm.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-05</span>
+        <span class="fr-title">C2-CI Operationalization Toolkit: Measuring and Developing Command Continuity in Peacetime</span>
+        <a class="fr-link" href="/supplements/drd-05-toolkit.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-06</span>
+        <span class="fr-title">Theory Note: Nonlinear Dynamics and Phase Transitions in C2-CI Structure</span>
+        <a class="fr-link" href="/supplements/drd-06-theory.html">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Changelog -->
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial publication</span></div>
+  </div>
+
+</div><!-- .paper -->
+
+<footer>
+  <div class="footer-col">
+    Aether Continuity Institute<br>
+    Defence Studies · Working Paper Series<br>
+    aethercontinuity.github.io
+  </div>
+  <div class="footer-col">
+    WP-002 · Version 1.0<br>
+    February 2026<br>
+    Domain D-2
+  </div>
+  <div class="footer-col">
+    DRD Series · Paper I of VI<br>
+    Strategic Studies Programme<br>
+    Published
+  </div>
+</footer>
+
+</body>
+</html>
