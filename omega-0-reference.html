@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ω-0 — Recovery Capacity Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f7f4ee;
+    --rule: #ccc8be;
+    --muted: #7a7468;
+    --accent: #8b4513;
+    --mono: 'DM Mono', 'Courier New', monospace;
+    --serif: 'EB Garamond', Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    line-height: 1.7;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 6rem;
+  }
+
+  /* Header strip */
+  .doc-header {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 0;
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .doc-id {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .doc-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* Title */
+  h1 {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .tagline {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+  }
+
+  /* Body text */
+  p {
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #2a2520;
+    margin-bottom: 0.9rem;
+  }
+
+  /* Sections */
+  .section { margin-bottom: 2.2rem; }
+
+  .section-id {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.4rem;
+  }
+
+  /* Three variables — compact */
+  .vars {
+    margin: 1rem 0 1.2rem;
+    border: 1px solid var(--rule);
+  }
+
+  .var-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.7rem 1rem;
+    gap: 1rem;
+  }
+
+  .var-row:last-child { border-bottom: none; }
+
+  .var-id {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .var-text {
+    font-family: var(--serif);
+    font-size: 0.92rem;
+    color: #2a2520;
+    line-height: 1.6;
+  }
+
+  /* Signals — numbered list, compact */
+  .signals { margin: 1rem 0; }
+
+  .sig {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sig:last-child { border-bottom: 1px solid var(--rule); }
+
+  .sig-n {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    padding-top: 0.15rem;
+  }
+
+  .sig-body {
+    font-family: var(--serif);
+    font-size: 0.92rem;
+    color: #2a2520;
+    line-height: 1.6;
+  }
+
+  .sig-name { font-weight: 500; }
+
+  /* Zones — minimal */
+  .zones { margin: 1rem 0; border: 1px solid var(--rule); }
+
+  .zone {
+    display: grid;
+    grid-template-columns: 110px 60px 1fr;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.65rem 1rem;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .zone:last-child { border-bottom: none; }
+
+  .zone-n { font-family: var(--serif); font-size: 0.92rem; font-weight: 500; }
+  .z-s { color: #4a7a4a; }
+  .z-c { color: #8b7a3a; }
+  .z-d { color: #8b4513; }
+  .z-i { color: #5a1a1a; }
+  .zone-g { font-size: 0.65rem; color: var(--muted); }
+  .zone-desc { font-family: var(--serif); font-size: 0.88rem; color: #3a3530; line-height: 1.55; }
+
+  /* Core rule box */
+  .rule-box {
+    border-left: 3px solid var(--ink);
+    padding: 0.9rem 1.2rem;
+    margin: 1.2rem 0;
+    background: #f0ece4;
+  }
+
+  .rule-box p {
+    font-size: 0.95rem;
+    font-style: italic;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  /* Limits */
+  .limits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 1rem 0;
+  }
+
+  .limit-col { background: var(--paper); padding: 0.9rem 1rem; }
+
+  .limit-head {
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .lh-can { color: #4a7a4a; }
+  .lh-not { color: #8b4513; }
+
+  .limit-col p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+    color: #3a3530;
+  }
+
+  .limit-col p:last-child { margin-bottom: 0; }
+
+  /* Footer */
+  .doc-footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.2rem;
+    margin-top: 3rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <span class="doc-id">Ω-0 · Recovery Capacity Reference</span>
+  <div class="doc-meta">
+    Version 1.0 · 2026<br>
+    Open use · No attribution required
+  </div>
+</div>
+
+<h1>Ω-0</h1>
+<p class="tagline">A reference for identifying when recovery capacity is quietly disappearing</p>
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-id">§ 1</div>
+  <h2>What This Is</h2>
+  <p>Systems rarely fail because solutions are unknown. They fail when the conditions enabling effective response deteriorate — gradually, without obvious threshold — until the point at which response would have been sufficient has passed.</p>
+  <p>This document provides a minimal vocabulary for identifying that deterioration before it becomes irreversible. It is not a theory. It is a working reference derived from observed patterns across independent cases. Use it as a lens, not a rulebook.</p>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-id">§ 2</div>
+  <h2>Three Variables</h2>
+  <p>Recovery capacity deterioration consistently appears along three observable dimensions:</p>
+
+  <div class="vars">
+    <div class="var-row">
+      <span class="var-id">I · Variation</span>
+      <span class="var-text">Diversity of available response options. Contracts when systems optimise toward single configurations; when alternative pathways are not maintained; when dissenting interpretations are suppressed.</span>
+    </div>
+    <div class="var-row">
+      <span class="var-id">II · Redundancy</span>
+      <span class="var-text">Spare capacity and buffer availability. Contracts when reserves are reclassified as operational capacity; when redundant systems are deployed routinely; when buffers are treated as inefficiency.</span>
+    </div>
+    <div class="var-row">
+      <span class="var-id">III · Recovery Time</span>
+      <span class="var-text">Time to restore function after disruption. Elongates when buffers erode; when each disruption consumes more reserve than the previous; when intervention requirements escalate for equivalent recovery.</span>
+    </div>
+  </div>
+
+  <p>The variables interact. Loss of redundancy elongates recovery time. Suppressed variation prevents redundancy from being recognised as absent. Reductions below threshold in any variable produce disproportionate effects on the others.</p>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-id">§ 3</div>
+  <h2>The Direction Rule</h2>
+
+  <div class="rule-box">
+    <p>The direction of movement along the three variables is more diagnostically significant than the current level. A system with moderate capacity and a stable trajectory is less at risk than a system with higher current capacity and a declining trajectory.</p>
+  </div>
+
+  <p>Ask not: <em>where is the system?</em> Ask: <em>which direction is it moving, and how fast?</em></p>
+  <p>Recovery does not restore symmetrically. Deterioration occurs incidentally under normal efficiency pressure. Restoration requires deliberate intervention and extended time. Prevention costs less than recovery.</p>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-id">§ 4</div>
+  <h2>Five Early Signals</h2>
+  <p>Observable before deterioration reaches critical levels. Each requires domain-specific operationalisation. Treat as hypotheses, not rules.</p>
+
+  <div class="signals">
+    <div class="sig">
+      <span class="sig-n">S-1</span>
+      <div class="sig-body"><span class="sig-name">Recovery Delay Drift.</span> Standard disruptions take progressively longer to resolve. Each recovery event requires more intervention than the previous equivalent event. The system is consuming reserves to maintain apparent function.</div>
+    </div>
+    <div class="sig">
+      <span class="sig-n">S-2</span>
+      <div class="sig-body"><span class="sig-name">Redundancy Consumption Without Replacement.</span> Reserve systems deployed in routine operations. Temporary measures persist as permanent configurations. The boundary between operational capacity and contingency capacity becomes indistinct.</div>
+    </div>
+    <div class="sig">
+      <span class="sig-n">S-3</span>
+      <div class="sig-body"><span class="sig-name">Suppression of Weak Signals.</span> Observations from system peripheries deprioritised or reframed as noise. Anomaly escalation declining. Information environment narrows toward confirmation of current operational assumptions. The system begins to lose sight of its own trajectory.</div>
+    </div>
+    <div class="sig">
+      <span class="sig-n">S-4</span>
+      <div class="sig-body"><span class="sig-name">Local Optimisation Proliferation.</span> Efficiency initiatives multiply simultaneously. Each is rational locally; their aggregate effect on system-level redundancy is not assessed. Optimisation accelerates when disruption frequency is already increasing.</div>
+    </div>
+    <div class="sig">
+      <span class="sig-n">S-5</span>
+      <div class="sig-body"><span class="sig-name">Decision Irreversibility Accumulation.</span> Proportion of decisions foreclosing future options is increasing. Reversible configurations replaced by irreversible ones. Commitment horizon extends further into the future. The system loses the ability to change course.</div>
+    </div>
+  </div>
+
+  <p>Working threshold: three or more signals simultaneously present with declining trajectories indicates active deterioration requiring attention. Four or more indicates probable transition toward irreversibility without deliberate intervention. These numbers are indicative, not validated.</p>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-id">§ 5</div>
+  <h2>Four Zones</h2>
+
+  <div class="zones">
+    <div class="zone">
+      <span class="zone-n z-s">Stable</span>
+      <span class="zone-g">dΩ ≥ 0</span>
+      <span class="zone-desc">Variables maintained or improving. No active signal cluster. Low-cost intervention available if trajectory changes.</span>
+    </div>
+    <div class="zone">
+      <span class="zone-n z-c">Concern</span>
+      <span class="zone-g">dΩ &lt; 0</span>
+      <span class="zone-desc">One or two signals present. Capacity declining but above threshold. Intervention feasible without systemic disruption. Act now at low cost or later at high cost.</span>
+    </div>
+    <div class="zone">
+      <span class="zone-n z-d">Danger</span>
+      <span class="zone-g">dΩ ≪ 0</span>
+      <span class="zone-desc">Three or more signals. Capacity approaching threshold. Required interventions now structurally significant — redundancy and variation have been operationally integrated. Decision window narrowing.</span>
+    </div>
+    <div class="zone">
+      <span class="zone-n z-i">Irreversible</span>
+      <span class="zone-g">Ω → 0</span>
+      <span class="zone-desc">Recovery capacity exhausted for the disruption scenario in question. Decisions retain formal form but have lost causal influence over the outcome. The window has closed. Outcomes determined by prior system states.</span>
+    </div>
+  </div>
+
+  <p>The Irreversible zone is the hardest to detect from inside. The system continues to analyse, decide, and allocate resources — but its actions no longer alter the outcome in question. External observation is required.</p>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-id">§ 6</div>
+  <h2>Limits</h2>
+
+  <div class="limits">
+    <div class="limit-col">
+      <div class="limit-head lh-can">This reference can</div>
+      <p>Provide structured language for trajectory discussion.</p>
+      <p>Enable comparison across otherwise unrelated systems.</p>
+      <p>Generate diagnostic questions before formal analysis begins.</p>
+      <p>Identify where closer investigation is warranted.</p>
+    </div>
+    <div class="limit-col">
+      <div class="limit-head lh-not">This reference cannot</div>
+      <p>Predict system failure.</p>
+      <p>Replace domain expertise or operational risk assessment.</p>
+      <p>Justify decisions directly.</p>
+      <p>Claim validity in domains not yet examined.</p>
+    </div>
+  </div>
+
+  <div class="rule-box">
+    <p>This document describes recurring structural relationships, not universal laws. All propositions are subject to falsification. Similarity across domains is not equivalence. Use accordingly.</p>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-id">§ 7</div>
+  <h2>How to Use This</h2>
+  <p>Use it before formal analysis, not after. It is most valuable in the stage when a situation is being named — when the question is still "what kind of problem is this?" rather than "what is the solution?"</p>
+  <p>Apply it to the system you are observing, including the institution doing the observing. Institutions themselves exhibit the same three variables, the same five signals, and the same four zones. A deteriorating institution cannot reliably diagnose a deteriorating system.</p>
+  <p>Do not use it to rank, certify, or assign blame. Use it to generate questions that would otherwise not be asked: <em>Is recovery time elongating? Where has redundancy been consumed? What signals are no longer reaching the centre?</em></p>
+  <p>If the framework is useful, the questions it generates will be more valuable than any score it produces.</p>
+</div>
+
+<div class="doc-footer">
+  Ω-0 · Recovery Capacity Reference · Version 1.0 · 2026<br>
+  Open use without attribution required · No certification · No ownership<br>
+  This document may be reproduced, adapted, and shared freely
+</div>
+
+</body>
+</html>
