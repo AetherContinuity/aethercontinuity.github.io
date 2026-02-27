@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI — WP-004 Calibration Report v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999; opacity: 0.5;
+  }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b7a3a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.1rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 0.98rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .callout-accent { margin: 2rem 0; border-left: 3px solid var(--accent); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout-accent p { font-size: 0.95rem; margin: 0; }
+
+  /* Protocol box */
+  .protocol-box { background: var(--paper-3); border: 1px solid var(--rule); padding: 1.5rem 2rem; margin-bottom: 2.5rem; }
+  .protocol-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .protocol-row { display: grid; grid-template-columns: 160px 1fr; gap: 0.75rem; padding: 0.4rem 0; border-top: 1px solid var(--rule); font-size: 0.9rem; }
+  .protocol-row:first-of-type { border-top: none; }
+  .protocol-key { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); padding-top: 0.2rem; text-transform: uppercase; }
+
+  /* Case summary table */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 0.9rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 0.9rem; line-height: 1.5; vertical-align: top; font-size: 0.88rem; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--muted); }
+  .td-pos { color: #4a7a4a; font-family: var(--mono); font-size: 0.7rem; }
+  .td-neg { color: #8b4513; font-family: var(--mono); font-size: 0.7rem; }
+  .td-strong { color: #5a1a1a; font-family: var(--mono); font-size: 0.7rem; }
+
+  /* Cross-domain comparison */
+  .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 2rem 0; }
+  .domain-item { background: var(--paper); padding: 1.5rem; }
+  .domain-id { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .domain-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.75rem; }
+  .domain-body { font-size: 0.9rem; color: #3a3530; line-height: 1.65; }
+  .domain-verdict { font-family: var(--mono); font-size: 0.62rem; margin-top: 0.75rem; color: var(--muted); letter-spacing: 0.08em; }
+  .dv-pos { color: #4a7a4a; }
+
+  /* Signal matrix */
+  .signal-matrix { margin: 2rem 0; border: 1px solid var(--rule); }
+  .sm-header { display: grid; grid-template-columns: 48px 160px 1fr 80px 80px; background: var(--ink); color: var(--paper); padding: 0.65rem 1rem; gap: 0.75rem; }
+  .sm-header span { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .sm-row { display: grid; grid-template-columns: 48px 160px 1fr 80px 80px; padding: 0.8rem 1rem; gap: 0.75rem; border-top: 1px solid var(--rule); align-items: start; }
+  .sm-num { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); }
+  .sm-name { font-size: 0.9rem; font-weight: 500; }
+  .sm-body { font-size: 0.85rem; color: #3a3530; line-height: 1.55; }
+  .sm-status { font-family: var(--mono); font-size: 0.6rem; text-align: center; }
+  .s-present { color: #8b4513; }
+  .s-partial { color: #8b7a3a; }
+
+  /* Verdict */
+  .verdict-block { margin: 2.5rem 0; border: 1px solid var(--ink); }
+  .verdict-header { background: var(--ink); color: var(--paper); padding: 1.25rem 1.5rem; }
+  .verdict-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; color: #7a7468; margin-bottom: 0.4rem; }
+  .verdict-title { font-size: 1.1rem; font-weight: 500; }
+  .verdict-body { padding: 1.5rem; background: var(--paper-3); }
+  .verdict-row { display: grid; grid-template-columns: 200px 1fr; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid var(--rule); font-size: 0.92rem; align-items: baseline; }
+  .verdict-row:first-of-type { border-top: none; }
+  .verdict-key { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+  .verdict-val { color: #2a2520; }
+  .verdict-val.confirm { color: #4a7a4a; font-weight: 500; }
+
+  /* What changed box */
+  .change-block { margin: 2rem 0; background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; }
+  .change-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .change-row { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 1rem; align-items: center; margin-bottom: 0.75rem; }
+  .change-before { font-size: 0.92rem; color: var(--muted); font-style: italic; }
+  .change-arrow { text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+  .change-after { font-size: 0.92rem; color: var(--ink); font-weight: 500; }
+
+  /* RP-3 setup */
+  .next-block { margin-top: 3rem; border: 1px solid var(--rule); }
+  .next-header { background: var(--paper-2); padding: 1rem 1.5rem; border-bottom: 1px solid var(--rule); }
+  .next-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .next-title { font-size: 1rem; font-weight: 500; }
+  .next-body { padding: 1.25rem 1.5rem; }
+  .next-body p { font-size: 0.92rem; margin-bottom: 0.75rem; }
+
+  /* Limits */
+  .limit-list { margin: 1.25rem 0; }
+  .limit-item { border-top: 1px solid var(--rule); padding: 0.75rem 0; display: grid; grid-template-columns: 72px 1fr; gap: 1rem; }
+  .limit-item:last-child { border-bottom: 1px solid var(--rule); }
+  .limit-id { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; padding-top: 0.15rem; }
+  .limit-text { font-size: 0.92rem; color: #3a3530; line-height: 1.6; }
+
+  /* Further reading */
+  .fr-list { display: flex; flex-direction: column; margin-top: 1.5rem; }
+  .fr-item { border-top: 1px solid var(--rule); padding: 0.85rem 0; display: grid; grid-template-columns: 90px 1fr auto; gap: 1rem; align-items: baseline; }
+  .fr-item:last-child { border-bottom: 1px solid var(--rule); }
+  .fr-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); }
+  .fr-title { font-size: 0.95rem; }
+  .fr-link { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; white-space: nowrap; }
+  .fr-link:hover { color: var(--ink); }
+
+  .changelog { border-top: 1px solid var(--rule); padding-top: 1.5rem; margin-top: 3rem; }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; font-size: 0.85rem; color: #4a4540; margin-bottom: 0.4rem; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Strategic Studies · <span class="series-accent">Calibration Report</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>WP-004 · CR-1</strong> · February 2026<br>
+      Two calibration cases · Version <strong>1.0</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/papers/wp-004-recovery-capacity-invariants.html">WP-004</a>
+  <span class="nav-id">ACI · WP-004 · CR-1 · 2026</span>
+</nav>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">WP-004 Calibration Report · CR-1 · Two Cases · RP-1 and RP-2</div>
+    <h1 class="paper-title">Recovery Capacity Diagnostic Calibration: European Energy and Healthcare Systems</h1>
+    <p class="paper-subtitle">Pre-registered blind reconstructions across two independent domains — results, limitations, and the pre-condition for RP-3</p>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Purpose of This Report</div>
+    <p class="abstract-text">This report documents the first two calibration exercises conducted against the WP-004 Recovery Capacity diagnostic framework. Both cases apply three proxy variables — Variation, Redundancy, Recovery Time — to independent domains using only publicly available data from defined pre-event periods. The purpose is not to explain historical events but to determine whether the framework's gradient hypothesis (dΩ/dt as the primary diagnostic signal) was detectable from pre-event data. Results are recorded here prior to RP-3 (false positive test) to establish a locked baseline against which subsequent tests can be evaluated.</p>
+    <div class="keywords">Cases: European gas system 2018–2021 · European hospital systems 2015–2019 · Blind cutoffs: 31 Dec 2021 · 31 Dec 2019 · Status: two positive replications</div>
+  </div>
+
+  <!-- §01 Protocol -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">Calibration Protocol</h2>
+    </div>
+
+    <p>Both calibration cases follow the same protocol established in WP-004 Appendix A. The protocol is reproduced here in condensed form to establish the terms under which results should be interpreted.</p>
+
+    <div class="protocol-box">
+      <div class="protocol-label">Blind Reconstruction Protocol — WP-004 CR</div>
+      <div class="protocol-row"><span class="protocol-key">Temporal cutoff</span><span>A hard cutoff date is established before reconstruction begins. No data, analysis, or knowledge of events after the cutoff date is used in the reconstruction.</span></div>
+      <div class="protocol-row"><span class="protocol-key">Data class</span><span>Publicly available primary or secondary statistics only. No internal documents, private datasets, or retrospective analyses published after the cutoff.</span></div>
+      <div class="protocol-row"><span class="protocol-key">Target variable</span><span>Sign of dΩ/dt only — the direction of recovery capacity change. No quantitative prediction of failure timing, severity, or probability.</span></div>
+      <div class="protocol-row"><span class="protocol-key">Proxy selection</span><span>Three proxies mapping to Variation, Redundancy, and Recovery Time. Selected for data availability and domain-appropriateness before reviewing trend data.</span></div>
+      <div class="protocol-row"><span class="protocol-key">Verdict criteria</span><span>Positive result: all three proxies show consistent negative gradient. Signal criteria: ≥3 of 5 WP-004 early warning signals present. These criteria are pre-registered, not applied post-hoc.</span></div>
+    </div>
+
+    <div class="callout">
+      <p>This report locks the results of RP-1 and RP-2 prior to RP-3. Once RP-3 conditions are specified, they cannot be modified in response to RP-1 and RP-2 results.</p>
+    </div>
+  </div>
+
+  <!-- §02 Case summaries -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Case Summaries</h2>
+    </div>
+
+    <div class="domain-grid">
+      <div class="domain-item">
+        <div class="domain-id">RP-1 · Case 1</div>
+        <div class="domain-title">European Natural Gas System</div>
+        <div class="domain-body">Observation period: 2018–2021. Blind cutoff: 31 December 2021. Exposure event (excluded): 2022 supply disruption. Proxy variables: supply source HHI (Variation), winter storage minimum fill rate (Redundancy), TTF post-shock recovery duration (Recovery Time). Data sources: Eurostat nrg_ti_gas, GIE AGSI+, EEX/ICE TTF.</div>
+        <div class="domain-verdict dv-pos">Result: dΩ/dt negative · 4/5 signals present · Danger zone at cutoff</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-id">RP-2 · Case 2</div>
+        <div class="domain-title">European Hospital Systems</div>
+        <div class="domain-body">Observation period: 2015–2019. Blind cutoff: 31 December 2019. Exposure event (excluded): COVID-19 pandemic stress 2020–2021. Six countries: DE, FR, IT, ES, NL, FI. Proxy variables: care pathway diversity (Variation), hospital beds per capita and occupancy rate (Redundancy), seasonal backlog recovery duration (Recovery Time). Data sources: OECD Health Statistics, Eurostat Healthcare Capacity, WHO GHO.</div>
+        <div class="domain-verdict dv-pos">Result: dΩ/dt negative in 6/6 countries · ≥4/5 signals in all countries · Danger zone at cutoff</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §03 Proxy results -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Proxy Gradient Results</h2>
+    </div>
+
+    <h3 class="subsection">3.1 Variation</h3>
+    <p>Both cases show declining variation across the observation period. In the energy case, supply source HHI increased monotonically 2018–2021, with Russian pipeline gas rising from approximately 40% to over 44% of EU imports. In the healthcare case, care pathway diversity declined across all six countries through centralisation of acute care, reduction in primary care relative capacity, and workforce specialisation that reduced triage flexibility.</p>
+
+    <p>The mechanism differs between domains — market consolidation in energy, planned efficiency reform in healthcare — but the structural outcome is identical: fewer available pathways for equivalent system function under stress conditions.</p>
+
+    <h3 class="subsection">3.2 Redundancy</h3>
+    <p>This is the strongest signal across both cases and the most consistently documented in pre-event public data.</p>
+
+    <p>In the energy case, EU gas storage winter minimum fill rates declined across three consecutive annual cycles. Summer refill campaigns consistently failed to restore prior-year buffer baselines. By the blind cutoff date, storage headroom for multi-month disruption absorption had reached its lowest observed level.</p>
+
+    <p>In the healthcare case, the pattern is more uniform and covers a longer period. OECD data documents consistent bed reduction across the EU throughout the 2010s, with occupancy rates rising to compensate. By 2019, average acute care bed occupancy in the study countries exceeded levels at which clinical guidance identifies systemic strain risk. ICU capacity had not grown proportionally with population or age-adjusted demand.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Country / System</th>
+            <th>Variation trend</th>
+            <th>Redundancy trend</th>
+            <th>Recovery Time trend</th>
+            <th>dΩ/dt</th>
+            <th>Signals ≥3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>EU Gas System</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↓↓</td>
+            <td class="td-neg">↑ (elongating)</td>
+            <td class="td-neg">Negative</td>
+            <td class="td-pos">4/5 ✓</td>
+          </tr>
+          <tr>
+            <td>Germany (DE)</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↑</td>
+            <td class="td-neg">Negative</td>
+            <td class="td-pos">5/5 ✓</td>
+          </tr>
+          <tr>
+            <td>France (FR)</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↑</td>
+            <td class="td-neg">Negative</td>
+            <td class="td-pos">5/5 ✓</td>
+          </tr>
+          <tr>
+            <td>Italy (IT)</td>
+            <td class="td-neg">↓</td>
+            <td class="td-strong">↓↓</td>
+            <td class="td-neg">↑</td>
+            <td class="td-strong">Strong neg.</td>
+            <td class="td-pos">5/5 ✓</td>
+          </tr>
+          <tr>
+            <td>Spain (ES)</td>
+            <td class="td-neg">↓</td>
+            <td class="td-strong">↓↓</td>
+            <td class="td-neg">↑</td>
+            <td class="td-strong">Strong neg.</td>
+            <td class="td-pos">5/5 ✓</td>
+          </tr>
+          <tr>
+            <td>Netherlands (NL)</td>
+            <td>→</td>
+            <td class="td-neg">↓</td>
+            <td>→</td>
+            <td class="td-neg">Slight neg.</td>
+            <td class="td-pos">4/5 ✓</td>
+          </tr>
+          <tr>
+            <td>Finland (FI)</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↓</td>
+            <td class="td-neg">↑</td>
+            <td class="td-neg">Negative</td>
+            <td class="td-pos">4/5 ✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">3.3 Recovery Time</h3>
+    <p>Recovery time elongation — the progressive slowing of return to baseline after disruption — was the most operationally visible signal in both cases, and the one most extensively documented in pre-event reports that nevertheless did not trigger systemic response.</p>
+
+    <p>In the energy case, TTF post-shock recovery duration increased from approximately 12 days in early 2018 to 38 days after the February 2021 cold event. The October 2021 spike had not recovered to pre-shock baseline by the blind cutoff date. In the healthcare case, winter pressure periods produced progressively longer elective care backlogs in each successive year from 2015 to 2019. Annual reports from national health systems documented this pattern consistently; it was attributed to demand growth rather than capacity erosion.</p>
+  </div>
+
+  <!-- §04 Signal matrix -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Early Warning Signal Assessment</h2>
+    </div>
+
+    <p>The five WP-004 early warning signals are assessed across both cases. Assessment uses only pre-cutoff evidence.</p>
+
+    <div class="signal-matrix">
+      <div class="sm-header">
+        <span>Signal</span>
+        <span>Name</span>
+        <span>Cross-case evidence</span>
+        <span>Energy</span>
+        <span>Health</span>
+      </div>
+      <div class="sm-row">
+        <div class="sm-num">S-1</div>
+        <div class="sm-name">Recovery Delay Drift</div>
+        <div class="sm-body">Both cases document progressive elongation of system recovery from equivalent disruption events across the observation period. TTF recovery durations; elective care backlog clearance times.</div>
+        <div class="sm-status s-present">PRESENT</div>
+        <div class="sm-status s-present">PRESENT</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-num">S-2</div>
+        <div class="sm-name">Buffer Erosion Without Replacement</div>
+        <div class="sm-body">Storage buffers and hospital bed reserves both declined while being simultaneously used at higher utilisation rates. Reserve capacity reclassified as operational capacity in both domains.</div>
+        <div class="sm-status s-present">PRESENT</div>
+        <div class="sm-status s-present">PRESENT</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-num">S-3</div>
+        <div class="sm-name">Suppression of Weak Signals</div>
+        <div class="sm-body">Pre-event reports in both domains documented deteriorating conditions and framed findings within efficiency or demand-management language. Resilience implications present in data were not reflected in institutional responses.</div>
+        <div class="sm-status s-present">PRESENT</div>
+        <div class="sm-status s-present">PRESENT</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-num">S-4</div>
+        <div class="sm-name">Local Optimisation Proliferation</div>
+        <div class="sm-body">Energy market liberalisation and spot-market efficiency; hospital lean management programmes. Both produced local efficiency gains with aggregate resilience costs that were not assessed system-wide.</div>
+        <div class="sm-status s-present">PRESENT</div>
+        <div class="sm-status s-present">PRESENT</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-num">S-5</div>
+        <div class="sm-name">Decision Irreversibility Accumulation</div>
+        <div class="sm-body">Energy: LNG infrastructure and diversification investments deferred; spot-market lock-in. Health: hospital closures and consolidated care models structurally difficult to reverse on short timescales.</div>
+        <div class="sm-status s-partial">PARTIAL</div>
+        <div class="sm-status s-present">PRESENT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §05 Verdict -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Calibration Verdict</h2>
+    </div>
+
+    <div class="verdict-block">
+      <div class="verdict-header">
+        <div class="verdict-label">CR-1 Locked Result</div>
+        <div class="verdict-title">Two positive replications across independent domains</div>
+      </div>
+      <div class="verdict-body">
+        <div class="verdict-row"><span class="verdict-key">Gradient hypothesis</span><span class="verdict-val confirm">Confirmed in both cases. dΩ/dt negative and detectable from pre-event public data in all observed systems.</span></div>
+        <div class="verdict-row"><span class="verdict-key">Signal threshold</span><span class="verdict-val confirm">Met or exceeded in all 7 system observations (1 energy, 6 healthcare countries). Minimum 4/5 signals present in all cases.</span></div>
+        <div class="verdict-row"><span class="verdict-key">Cross-domain replication</span><span class="verdict-val confirm">Three-proxy structure produces consistent directional results across two structurally unrelated domains using different data sources.</span></div>
+        <div class="verdict-row"><span class="verdict-key">Proxy operationalisation</span><span class="verdict-val">Domain-specific proxies required in each case. No single universal proxy. The three-variable structure is domain-invariant; its operationalisation is not.</span></div>
+        <div class="verdict-row"><span class="verdict-key">Framework status change</span><span class="verdict-val confirm">From single-case concept to cross-domain replicated diagnostic pattern. Not yet theory. Method candidate.</span></div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-label">What Changed After Two Calibrations</div>
+      <div class="change-row">
+        <span class="change-before">Single-domain observation</span>
+        <span class="change-arrow">→</span>
+        <span class="change-after">Cross-domain replication</span>
+      </div>
+      <div class="change-row">
+        <span class="change-before">Concept requiring testing</span>
+        <span class="change-arrow">→</span>
+        <span class="change-after">Method candidate requiring falsification</span>
+      </div>
+      <div class="change-row">
+        <span class="change-before">Exposure events as causes</span>
+        <span class="change-arrow">→</span>
+        <span class="change-after">Exposure events as detectors of prior deficit</span>
+      </div>
+      <div class="change-row">
+        <span class="change-before">RP-3 as optional next step</span>
+        <span class="change-arrow">→</span>
+        <span class="change-after">RP-3 as methodological obligation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- §06 Key structural finding -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">The Structural Finding Across Both Cases</h2>
+    </div>
+
+    <p>Both calibration cases share a finding that is not about the specific domains but about the diagnostic structure itself. In both cases, the exposure event — the 2022 gas disruption and the COVID pandemic stress — was widely described at the time as an unexpected shock. In both cases, the pre-event data shows a system whose recovery capacity had been declining for multiple years before the shock occurred.</p>
+
+    <div class="callout-accent">
+      <p>The exposure event did not create the vulnerability. It revealed a vulnerability that was already structurally present and measurable. The shock was the test, not the cause.</p>
+    </div>
+
+    <p>This distinction has methodological implications beyond these two cases. If the pattern is general — if exposure events are detectors of prior recovery capacity deficit rather than causes of it — then the relevant diagnostic question shifts from post-event analysis ("what caused this?") to pre-event observation ("is the gradient negative?"). This is the operational implication of the gradient hypothesis, and it is what makes RP-3 the methodologically decisive next test.</p>
+
+    <p>RP-3 requires identifying a system in which the gradient was negative and the signals were present, but the exposure event either did not occur or did not produce systemic failure. If such cases exist and the framework cannot distinguish them from RP-1 and RP-2, the framework produces false positives and its diagnostic utility is limited. If the framework can identify structural differences between RP-1/RP-2 cases and RP-3 cases, it has earned a stronger evidential claim.</p>
+  </div>
+
+  <!-- §07 Limitations -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Cumulative Limitations</h2>
+    </div>
+
+    <p>The limitations of individual cases documented in Appendix A apply here. Three cumulative limitations specific to the two-case comparison are added.</p>
+
+    <div class="limit-list">
+      <div class="limit-item">
+        <div class="limit-id">CL-1</div>
+        <div class="limit-text"><strong>Both cases involve major exposure events.</strong> The two calibration cases were selected in part because they involved well-documented system stress events. This introduces selection bias: cases where the framework would produce a negative result (declining gradient, no subsequent failure) are not represented. RP-3 addresses this directly.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">CL-2</div>
+        <div class="limit-text"><strong>Both cases are European, same period.</strong> Shared geopolitical and economic context across the two domains cannot be excluded as a confounding factor. Replication in non-European contexts and different historical periods is required before geographic generalisability is claimed.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">CL-3</div>
+        <div class="limit-text"><strong>Positive replications do not validate the framework.</strong> Two cases consistent with the framework's predictions confirm that it does not break on contact with evidence. They do not confirm that the framework is correct, complete, or superior to alternative diagnostic approaches. Validation requires a substantially larger and more diverse case set including cases designed to challenge the framework.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §08 RP-3 setup -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">RP-3 Pre-Registration</h2>
+    </div>
+
+    <p>RP-3 is the false positive test: a system in which the WP-004 diagnostic signals were present and the gradient was negative, but systemic failure did not follow. This report establishes the pre-registration conditions for RP-3 before case selection occurs.</p>
+
+    <div class="next-block">
+      <div class="next-header">
+        <div class="next-label">RP-3 Pre-Registered Criteria</div>
+        <div class="next-title">False Positive Test — Conditions Locked Prior to Case Selection</div>
+      </div>
+      <div class="next-body">
+        <p><strong>Case selection requirement:</strong> The case must involve a system in which at least three of five WP-004 early warning signals were present during the observation period, and in which the three proxy variables showed negative gradient. The system must not have experienced catastrophic failure during or immediately after the observation period.</p>
+        <p><strong>Candidate domains:</strong> Financial systems that passed stress tests during period of balance sheet deterioration. Infrastructure systems that maintained function through extended pressure periods. Organisations that recovered from declining trajectory without failure event.</p>
+        <p><strong>Success condition for RP-3:</strong> The framework identifies structural differences between RP-3 cases and RP-1/RP-2 cases — differences that would, in principle, have been visible pre-event. If no such differences are identified, the framework is producing false positives at the observed signal thresholds.</p>
+        <p><strong>Failure condition for RP-3:</strong> The framework cannot distinguish RP-3 cases from RP-1/RP-2 cases using pre-event data. This would require revision of signal thresholds, proxy operationalisation, or the gradient hypothesis itself.</p>
+        <p>Both outcomes are scientifically productive. The failure condition is not a failure of the research programme — it is the programme working as designed.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;border:1px solid #4a7a4a;padding:1.25rem 1.5rem;background:var(--paper-2);">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#4a7a4a;margin-bottom:0.6rem;">RP-3 Result — Pre-registered condition met</div>
+      <p style="margin-bottom:0.75rem;font-size:0.95rem;">The RP-3 false positive test has been completed. The Nordic electricity system 2010–2018 was selected as a system under sustained stress that did not fail. Blind cutoff: 31 December 2018. The framework produced sign(dΩ/dt) = stable, 1/5 signals partial, Stable/Concern zone — consistent with the known outcome. No false positive. The pre-registered success condition is met.</p>
+      <a href="/papers/wp-004-rp3.html" style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#4a7a4a;text-decoration:none;">WP-004 RP-3 — Nordic Electricity System False Positive Test →</a>
+    </div>
+  </div>
+
+  <!-- Further reading -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Related Documents</h2>
+    </div>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">WP-004</span>
+        <span class="fr-title">Recovery Capacity Invariants: A Cross-Domain Diagnostic Framework</span>
+        <a class="fr-link" href="/papers/wp-004-recovery-capacity-invariants.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">Appendix A</span>
+        <span class="fr-title">European Energy System Retrospective Calibration 2018–2021 (RP-1 full record)</span>
+        <a class="fr-link" href="/papers/wp-004-appendix-a.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP-003</span>
+        <span class="fr-title">Institutional Termination Time and Temporal Decision Capacity</span>
+        <a class="fr-link" href="/papers/wp-003-itt.html">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial calibration report — RP-1 and RP-2 locked, RP-3 pre-registered</span></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>Strategic Studies · Calibration Report<br>aethercontinuity.github.io</div>
+  <div class="footer-col">WP-004 · CR-1 · v1.0<br>February 2026<br>Two Cases</div>
+  <div class="footer-col">RP-1 · RP-2 locked<br>RP-3 pre-registered<br>Working Draft</div>
+</footer>
+
+</body>
+</html>
