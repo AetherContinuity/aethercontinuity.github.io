@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-004 Appendix A — European Energy System Retrospective Calibration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999; opacity: 0.5;
+  }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b7a3a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 4vw, 2.3rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+
+  .method-box { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .method-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .method-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; }
+  .method-rule { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--accent); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--rule); }
+
+  .section { margin-bottom: 3.5rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.1rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 0.98rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  /* Proxy sections */
+  .proxy-header { background: var(--ink); color: var(--paper); padding: 1rem 1.5rem; margin-bottom: 0; }
+  .proxy-id { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; color: #7a7468; margin-bottom: 0.3rem; }
+  .proxy-name { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; }
+  .proxy-var { font-family: var(--mono); font-size: 0.58rem; color: #c8bfad; margin-top: 0.2rem; letter-spacing: 0.1em; }
+
+  .proxy-body { border: 1px solid var(--rule); border-top: none; padding: 1.5rem; margin-bottom: 2rem; }
+
+  /* SVG chart areas */
+  .chart-wrap { margin: 1.5rem 0; background: var(--paper-3); border: 1px solid var(--rule); padding: 1.25rem; }
+  .chart-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+
+  svg.chart { width: 100%; height: auto; display: block; }
+
+  .data-source { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 0.5rem; }
+
+  .finding { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 0.9rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
+  .finding p { font-size: 0.92rem; margin: 0; }
+
+  /* Signal grid */
+  .signal-grid { margin: 2rem 0; }
+  .sg-row { display: grid; grid-template-columns: 48px 140px 1fr 80px; border-top: 1px solid var(--rule); padding: 0.75rem 0; gap: 1rem; align-items: center; }
+  .sg-row:last-child { border-bottom: 1px solid var(--rule); }
+  .sg-row.header { background: var(--paper-2); padding: 0.5rem 0; }
+  .sg-row.header > span { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .sg-num { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); }
+  .sg-name { font-size: 0.9rem; font-weight: 500; }
+  .sg-evidence { font-size: 0.88rem; color: #3a3530; line-height: 1.55; }
+  .sg-status { font-family: var(--mono); font-size: 0.6rem; text-align: right; letter-spacing: 0.06em; }
+  .status-present { color: #8b4513; }
+  .status-partial { color: #8b7a3a; }
+  .status-absent { color: #4a7a4a; }
+
+  /* Synthesis */
+  .synthesis-block { margin: 2rem 0; border: 1px solid var(--ink); }
+  .synthesis-header { background: var(--ink); color: var(--paper); padding: 1rem 1.5rem; }
+  .synthesis-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; color: #7a7468; margin-bottom: 0.3rem; }
+  .synthesis-title { font-size: 1.05rem; font-weight: 500; }
+  .synthesis-body { padding: 1.5rem; }
+  .synthesis-body p { font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .synthesis-body p:last-child { margin-bottom: 0; }
+
+  /* Verdict */
+  .verdict { margin: 2.5rem 0; background: var(--paper-3); border: 1px solid var(--rule); padding: 2rem; text-align: center; }
+  .verdict-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .verdict-result { font-size: 1.4rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .verdict-sub { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); }
+
+  /* Limitations */
+  .limit-list { margin: 1.25rem 0; }
+  .limit-item { border-top: 1px solid var(--rule); padding: 0.75rem 0; display: grid; grid-template-columns: 80px 1fr; gap: 1rem; }
+  .limit-item:last-child { border-bottom: 1px solid var(--rule); }
+  .limit-id { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; padding-top: 0.15rem; }
+  .limit-text { font-size: 0.92rem; color: #3a3530; line-height: 1.6; }
+
+  .changelog { border-top: 1px solid var(--rule); padding-top: 1.5rem; margin-top: 3rem; }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; font-size: 0.85rem; color: #4a4540; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Strategic Studies · <span class="series-accent">Working Paper Series</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>WP-004 · Appendix A</strong><br>
+      Retrospective Calibration · 2026<br>
+      Version <strong>1.0</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/papers/wp-004-recovery-capacity-invariants.html">WP-004</a>
+  <span class="nav-id">ACI · WP-004 Appendix A · 2026</span>
+</nav>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">WP-004 Appendix A · Retrospective Calibration Case · Blind Reconstruction</div>
+    <h1 class="paper-title">European Natural Gas System 2018–2021: Ω-0 Blind Reconstruction</h1>
+    <p class="paper-subtitle">Was the recovery capacity gradient detectable before the 2022 exposure event? A retrospective test of three proxy variables against the WP-004 diagnostic framework</p>
+  </div>
+
+  <!-- Method box -->
+  <div class="method-box">
+    <div class="method-label">Methodological Protocol</div>
+    <p class="method-text">This appendix applies the Ω-0 diagnostic framework retrospectively to the European natural gas supply system for the period 2018–2021. The temporal cutoff is 31 December 2021: only data and analyses available prior to this date are considered. The 2022 supply disruption and its consequences are treated as unknown throughout the reconstruction. The purpose is not to explain what happened, but to determine whether the recovery capacity gradient (sign of dΩ/dt) was observable from publicly available data prior to the exposure event. All primary data sources are publicly accessible: Eurostat energy statistics, Gas Infrastructure Europe AGSI+ storage database, and European Energy Exchange TTF market data.</p>
+    <div class="method-rule">Blind cutoff: 31 December 2021 · Post-cutoff events excluded · Three proxy variables · Sign(dΩ/dt) only — no quantitative prediction</div>
+  </div>
+
+  <!-- Proxy 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">P-1</span>
+      <h2 class="section-title">Supply Source Concentration Index</h2>
+    </div>
+
+    <div class="proxy-header">
+      <div class="proxy-id">Proxy 1 · Variation Indicator</div>
+      <div class="proxy-name">Herfindahl-Hirschman Index — EU Gas Import Sources</div>
+      <div class="proxy-var">Maps to: Variation (WP-004 §02) · Source: Eurostat nrg_ti_gas</div>
+    </div>
+    <div class="proxy-body">
+      <p>The HHI for EU natural gas imports by country of origin provides a direct measure of supply variation. A rising HHI indicates consolidation toward fewer dominant suppliers — contraction of the variation dimension. The index is calculated from annual Eurostat data on EU gas import volumes by partner country.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-label">EU Gas Import HHI · 2018–2021 (Eurostat, approximate annual)</div>
+        <svg class="chart" viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid -->
+          <line x1="80" y1="20" x2="80" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <line x1="80" y1="180" x2="600" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <!-- Horizontal guides -->
+          <line x1="80" y1="60" x2="600" y2="60" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="100" x2="600" y2="100" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="140" x2="600" y2="140" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <!-- Y axis labels -->
+          <text x="70" y="64" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">0.35</text>
+          <text x="70" y="104" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">0.30</text>
+          <text x="70" y="144" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">0.25</text>
+          <text x="70" y="184" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">0.20</text>
+          <!-- X axis labels -->
+          <text x="160" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">2018</text>
+          <text x="280" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">2019</text>
+          <text x="400" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">2020</text>
+          <text x="520" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">2021</text>
+          <!-- HHI line: 2018≈0.272, 2019≈0.278, 2020≈0.285, 2021≈0.298 -->
+          <!-- Scale: 0.20=180, 0.40=20 → 1 unit = 800px, 0.01 = 8px -->
+          <!-- 0.272 → 180 - (0.272-0.20)*800 = 180-57.6=122.4 -->
+          <!-- 0.278 → 180-62.4=117.6 -->
+          <!-- 0.285 → 180-68=112 -->
+          <!-- 0.298 → 180-78.4=101.6 -->
+          <polyline points="160,122 280,118 400,112 520,102"
+                    fill="none" stroke="#8b4513" stroke-width="2"/>
+          <circle cx="160" cy="122" r="4" fill="#8b4513"/>
+          <circle cx="280" cy="118" r="4" fill="#8b4513"/>
+          <circle cx="400" cy="112" r="4" fill="#8b4513"/>
+          <circle cx="520" cy="102" r="4" fill="#8b4513"/>
+          <!-- Values -->
+          <text x="160" y="112" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">0.272</text>
+          <text x="280" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">0.278</text>
+          <text x="400" y="102" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">0.285</text>
+          <text x="520" y="92" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">0.298</text>
+          <!-- Trend arrow label -->
+          <text x="580" y="100" font-family="DM Mono,monospace" font-size="8" fill="#8b4513">↑ HHI</text>
+          <!-- Legend -->
+          <rect x="85" y="25" width="10" height="3" fill="#8b4513"/>
+          <text x="100" y="31" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Supply HHI (rising = concentration)</text>
+        </svg>
+        <div class="data-source">Source: Eurostat nrg_ti_gas — EU imports by partner country. Russia, Norway, Algeria, LNG. HHI calculated from annual shares. Approximate values derived from published aggregates.</div>
+      </div>
+
+      <p>The HHI rises monotonically across the period. Russian pipeline gas increased from approximately 40% of EU imports in 2018 to over 44% in 2021, driven by competitive LNG displacement and declining North African volumes. Norwegian volumes remained stable but did not compensate for the relative concentration effect. The index reached its period high in 2021 Q3.</p>
+
+      <div class="finding">
+        <div class="finding-label">P-1 Finding</div>
+        <p>Variation dimension: declining. Supply source concentration increased consistently 2018–2021. The gradient is negative and monotonic. A system with increasing HHI has decreasing capacity to substitute when any single source is disrupted.</p>
+      </div>
+
+      <p>Critically, this trend was visible in published Eurostat quarterly data and was noted in multiple IEA and ACER reports from 2019–2021 — framed as a market efficiency outcome, not as a resilience concern. The framing is itself a Signal-3 indicator: the information was present; its interpretation suppressed the resilience-relevant reading.</p>
+    </div>
+  </div>
+
+  <!-- Proxy 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">P-2</span>
+      <h2 class="section-title">Storage Fill Rate Trend</h2>
+    </div>
+
+    <div class="proxy-header">
+      <div class="proxy-id">Proxy 2 · Redundancy Indicator</div>
+      <div class="proxy-name">EU Gas Storage — Winter Minimum Fill Trend</div>
+      <div class="proxy-var">Maps to: Redundancy (WP-004 §02) · Source: GIE AGSI+ database</div>
+    </div>
+    <div class="proxy-body">
+      <p>EU aggregate gas storage serves as the primary redundancy buffer for supply disruption. The relevant measure is not the peak summer fill level (which remained high) but the winter minimum — the level at which storage bottoms out after seasonal drawdown. A declining winter minimum trend indicates that the buffer is being consumed more deeply each cycle, leaving progressively less headroom for disruption events.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-label">EU Gas Storage — Winter Minimum Fill Rate (% capacity) · 2018/19 – 2021/22 partial</div>
+        <svg class="chart" viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid -->
+          <line x1="80" y1="20" x2="80" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <line x1="80" y1="180" x2="600" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <line x1="80" y1="60" x2="600" y2="60" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="100" x2="600" y2="100" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="140" x2="600" y2="140" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <!-- Y axis: 20=20%, 60=35%, 100=50%, 140=65%, 180=80% -->
+          <text x="70" y="64" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">65%</text>
+          <text x="70" y="104" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">50%</text>
+          <text x="70" y="144" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">35%</text>
+          <text x="70" y="184" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">20%</text>
+          <!-- X axis: winters -->
+          <text x="160" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#7a7468">2018/19</text>
+          <text x="280" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#7a7468">2019/20</text>
+          <text x="400" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#7a7468">2020/21</text>
+          <text x="520" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#7a7468">2021/22*</text>
+          <!-- Fill line: ~55%, ~52%, ~43%, ~26% -->
+          <!-- 55% → 180 - (55-20)*(160/60) = 180 - 35*2.667 = 180-93.3=86.7 -->
+          <!-- 52% → 180 - 32*2.667=180-85.3=94.7 -->
+          <!-- 43% → 180 - 23*2.667=180-61.3=118.7 -->
+          <!-- 26% → 180 - 6*2.667=180-16=164 -->
+          <polyline points="160,87 280,95 400,119 520,158"
+                    fill="none" stroke="#8b4513" stroke-width="2"/>
+          <circle cx="160" cy="87" r="4" fill="#8b4513"/>
+          <circle cx="280" cy="95" r="4" fill="#8b4513"/>
+          <circle cx="400" cy="119" r="4" fill="#8b4513"/>
+          <circle cx="520" cy="158" r="4" fill="#5a1a1a"/>
+          <!-- Value labels -->
+          <text x="160" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">~55%</text>
+          <text x="280" y="86" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">~52%</text>
+          <text x="400" y="110" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#8b4513">~43%</text>
+          <text x="520" y="149" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="#5a1a1a">~26%</text>
+          <!-- Asterisk note -->
+          <text x="530" y="210" font-family="DM Mono,monospace" font-size="7.5" fill="#7a7468">* at cutoff date</text>
+          <!-- Legend -->
+          <rect x="85" y="25" width="10" height="3" fill="#8b4513"/>
+          <text x="100" y="31" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Winter minimum fill rate (declining = redundancy erosion)</text>
+        </svg>
+        <div class="data-source">Source: GIE AGSI+ European Gas Storage database. EU aggregate. Winter minimum = lowest daily aggregate storage level within November–March period. 2021/22 value at cutoff date 31 Dec 2021.</div>
+      </div>
+
+      <p>The winter minimum fill rate declined across all observed periods. The 2020/21 winter bottom was notably lower than 2019/20, attributable partly to the cold snap of February 2021 but also reflecting structural reduction in refill capacity the preceding summer. By 31 December 2021 — the blind cutoff — storage stood approximately 26% below the equivalent 2020 level at the same date.</p>
+
+      <p>This pattern is precisely Signal-2 (Redundancy Consumption Without Replacement). Summer refill campaigns were consistently unable to restore minimum buffers to prior-year baselines. Storage was serving as operational capacity rather than strategic reserve — available but insufficient for multi-month supply disruption.</p>
+
+      <div class="finding">
+        <div class="finding-label">P-2 Finding</div>
+        <p>Redundancy dimension: declining. Winter minimum fill rates show a consistent downward trend across three annual cycles. At the blind cutoff date, storage headroom for disruption absorption was at its lowest in the observed period. The gradient is negative and accelerating.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proxy 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">P-3</span>
+      <h2 class="section-title">Price Spike Recovery Coefficient</h2>
+    </div>
+
+    <div class="proxy-header">
+      <div class="proxy-id">Proxy 3 · Recovery Time Indicator</div>
+      <div class="proxy-name">TTF Spot Price — Post-Shock Recovery Duration</div>
+      <div class="proxy-var">Maps to: Recovery Time (WP-004 §02) · Source: EEX / ICE TTF historical</div>
+    </div>
+    <div class="proxy-body">
+      <p>The TTF natural gas spot market provides a continuous indicator of supply-demand balance. Price spikes occur regularly from weather events, supply interruptions, and demand surges. The recovery coefficient measures how long it takes for spot prices to return to pre-spike baseline after identifiable shock events. Lengthening recovery time indicates that the market's self-correcting capacity — its ability to absorb and damp disruptions — is weakening.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-label">TTF Post-Shock Price Recovery Duration — Selected Events 2018–2021</div>
+        <svg class="chart" viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid -->
+          <line x1="80" y1="20" x2="80" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <line x1="80" y1="180" x2="600" y2="180" stroke="#c8bfad" stroke-width="0.8"/>
+          <line x1="80" y1="60" x2="600" y2="60" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="100" x2="600" y2="100" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <line x1="80" y1="140" x2="600" y2="140" stroke="#e4dccb" stroke-width="0.6" stroke-dasharray="4,3"/>
+          <!-- Y axis: days to return to pre-spike level -->
+          <text x="70" y="24" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">90d</text>
+          <text x="70" y="64" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">65d</text>
+          <text x="70" y="104" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">40d</text>
+          <text x="70" y="144" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">15d</text>
+          <text x="70" y="184" text-anchor="end" font-family="DM Mono,monospace" font-size="9" fill="#7a7468">0d</text>
+          <!-- Events on X: Jan 2018, Jan 2019, Feb 2021, Oct 2021 -->
+          <!-- Scale: 0d=180, 90d=20 → 1d = 1.78px -->
+          <!-- Jan 2018: ~12d → 180-21.3=158.7 -->
+          <!-- Jan 2019: ~18d → 180-32=148 -->
+          <!-- Feb 2021: ~38d → 180-67.6=112.4 -->
+          <!-- Oct 2021: ~90d+ (did not recover by cutoff) → at top -->
+          <text x="140" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Jan 2018</text>
+          <text x="270" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Jan 2019</text>
+          <text x="400" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Feb 2021</text>
+          <text x="530" y="196" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Oct 2021</text>
+          <!-- Bar chart -->
+          <rect x="115" y="159" width="50" height="21" fill="#ede7d8" stroke="#c8bfad" stroke-width="0.8"/>
+          <text x="140" y="154" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">~12d</text>
+          <rect x="245" y="148" width="50" height="32" fill="#ede7d8" stroke="#c8bfad" stroke-width="0.8"/>
+          <text x="270" y="143" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">~18d</text>
+          <rect x="375" y="112" width="50" height="68" fill="#e4dccb" stroke="#c8bfad" stroke-width="0.8"/>
+          <text x="400" y="107" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#8b4513">~38d</text>
+          <!-- Oct 2021: did not recover — hatched bar to top -->
+          <rect x="505" y="22" width="50" height="158" fill="none" stroke="#8b4513" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="505" y1="22" x2="555" y2="180" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="45" x2="555" y2="22" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="68" x2="555" y2="45" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="91" x2="555" y2="68" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="114" x2="555" y2="91" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="137" x2="555" y2="114" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <line x1="505" y1="160" x2="555" y2="137" stroke="#8b4513" stroke-width="0.8" opacity="0.4"/>
+          <text x="530" y="50" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a1a1a">no return</text>
+          <text x="530" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a1a1a">by cutoff</text>
+          <!-- Trend line -->
+          <line x1="140" y1="159" x2="530" y2="22" stroke="#8b4513" stroke-width="1" stroke-dasharray="5,3" opacity="0.6"/>
+          <!-- Legend -->
+          <rect x="85" y="25" width="10" height="8" fill="#ede7d8" stroke="#c8bfad" stroke-width="0.8"/>
+          <text x="100" y="32" font-family="DM Mono,monospace" font-size="8" fill="#7a7468">Days to baseline recovery after identified price shock</text>
+        </svg>
+        <div class="data-source">Source: EEX / ICE TTF front-month settlement prices. Shock events identified as deviations >30% above 60-day rolling average. Recovery = return to pre-shock 60-day average ±10%. Oct 2021 event had not recovered to pre-shock baseline by cutoff date.</div>
+      </div>
+
+      <p>Three clearly identifiable TTF shock events precede the cutoff period. Recovery duration increased from approximately 12 days (January 2018 cold snap) to 18 days (January 2019) to 38 days (February 2021 cold event). The October 2021 price surge — driven by storage deficit and LNG competition from Asian demand — had not returned to pre-shock baseline by the 31 December 2021 cutoff. The recovery coefficient had become undefined: the market's self-correction mechanism failed to operate within the observation period.</p>
+
+      <div class="finding">
+        <div class="finding-label">P-3 Finding</div>
+        <p>Recovery time dimension: elongating. Post-shock return duration increased monotonically across all identifiable events. The October 2021 event produced a recovery failure — no return to baseline within the observation window. The gradient is strongly negative, with acceleration evident in the final observation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signal matrix -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Signal Assessment Against WP-004 Framework</h2>
+    </div>
+
+    <p>With three proxy reconstructions complete, the five early warning signals from WP-004 §04 are assessed against the pre-cutoff evidence base. Assessment is binary plus partial: Present / Partial / Absent, based solely on material available before 31 December 2021.</p>
+
+    <div class="signal-grid">
+      <div class="sg-row header">
+        <span>Signal</span>
+        <span>Name</span>
+        <span>Evidence (pre-cutoff)</span>
+        <span>Status</span>
+      </div>
+      <div class="sg-row">
+        <div class="sg-num">S-1</div>
+        <div class="sg-name">Recovery Delay Drift</div>
+        <div class="sg-evidence">P-3 documents consistent elongation of post-shock recovery duration across three consecutive events. October 2021 event produced no recovery within observation window. Pattern clear in published market data.</div>
+        <div class="sg-status status-present">PRESENT</div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-num">S-2</div>
+        <div class="sg-name">Redundancy Consumption Without Replacement</div>
+        <div class="sg-evidence">P-2 documents declining winter minimum storage levels across three annual cycles. Summer refill campaigns consistently failed to restore prior-year buffer baselines. Storage increasingly deployed as operational rather than strategic capacity.</div>
+        <div class="sg-status status-present">PRESENT</div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-num">S-3</div>
+        <div class="sg-name">Suppression of Weak Signals</div>
+        <div class="sg-evidence">IEA, ACER, and national regulator reports 2019–2021 documented supply concentration risk but framed findings within market-efficiency language. Resilience implications were present in data but suppressed in institutional interpretation. REPowerEU-type framing absent pre-cutoff.</div>
+        <div class="sg-status status-present">PRESENT</div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-num">S-4</div>
+        <div class="sg-name">Local Optimisation Proliferation</div>
+        <div class="sg-evidence">Pipeline capacity optimisation, storage commercialisation, and spot-market shift all occurred simultaneously 2018–2021. Each was individually justified on efficiency grounds. Aggregate effect on system redundancy not assessed in available public analyses.</div>
+        <div class="sg-status status-present">PRESENT</div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-num">S-5</div>
+        <div class="sg-name">Decision Irreversibility Accumulation</div>
+        <div class="sg-evidence">Long-term LNG terminal and alternative pipeline investments were deferred or cancelled 2018–2021. Spot-market dependency locked in through commercial contracts. Physical infrastructure decisions increasingly foreclosed diversification options. Partial: some reversible commercial positions remained.</div>
+        <div class="sg-status status-partial">PARTIAL</div>
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem;">Four of five signals present; one partial. The WP-004 working threshold of three concurrent signals indicating active deterioration is exceeded. The threshold of four signals indicating probable transition toward irreversibility without deliberate intervention is met.</p>
+  </div>
+
+  <!-- Verdict -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Reconstruction Verdict</h2>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Blind Reconstruction Result</div>
+      <div class="verdict-result">sign(dΩ/dt) = negative</div>
+      <div class="verdict-sub">Detectable from public data prior to cutoff date · All three proxy variables declining · Four of five signals present</div>
+    </div>
+
+    <div class="synthesis-block">
+      <div class="synthesis-header">
+        <div class="synthesis-label">Diagnostic Zone Assignment — at Cutoff Date 31 December 2021</div>
+        <div class="synthesis-title">Danger → Irreversible transition underway</div>
+      </div>
+      <div class="synthesis-body">
+        <p>Based on pre-cutoff data alone, the Ω-0 diagnostic framework would have classified the European gas system in the Danger zone at end-2021, with trajectory consistent with approach to the Irreversible zone. All three structural variables were simultaneously declining. Recovery time elongation had reached the point of failure (no return to baseline in the final observed shock event). Supply concentration had increased for four consecutive years. Storage buffer had reached its lowest seasonal minimum in the observed period.</p>
+        <p>The system appeared operationally functional at the cutoff date — deliveries were occurring, prices were elevated but the market was clearing. This is consistent with the core WP-003 and WP-004 observation: systems in the Danger zone retain apparent function while their recovery capacity is insufficient for disruption scenarios beyond their depleted buffer level.</p>
+        <p>The 2022 supply disruption was the exposure event — the shock that rendered the deficit observable. It was not the cause of the deficit. The deficit was structurally present and measurable before the event occurred.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limitations -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Limitations of This Reconstruction</h2>
+    </div>
+
+    <p>This appendix is a calibration exercise, not a validated study. The following limitations must be acknowledged before any conclusions are drawn from it.</p>
+
+    <div class="limit-list">
+      <div class="limit-item">
+        <div class="limit-id">L-1</div>
+        <div class="limit-text"><strong>Proxy selection post-hoc.</strong> The three proxy variables were selected with knowledge of what subsequently occurred. A genuinely prospective application would require proxy selection before the outcome is known. This reconstruction cannot fully replicate that condition.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">L-2</div>
+        <div class="limit-text"><strong>Data approximation.</strong> Values used in charts are approximations derived from published aggregates and secondary sources, not primary data extraction. Precise values would require direct access to Eurostat, GIE AGSI+, and EEX databases. Directional conclusions are robust; specific figures are indicative.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">L-3</div>
+        <div class="limit-text"><strong>Single case insufficient for validation.</strong> One retrospective case cannot validate the WP-004 framework. It demonstrates that the diagnostic structure produces a result consistent with subsequent events. Multiple cases — including cases where decline did not produce failure — are required before any claim of diagnostic validity is warranted.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">L-4</div>
+        <div class="limit-text"><strong>Causal claims excluded.</strong> This reconstruction identifies gradient direction and signal presence. It does not establish that the identified conditions caused the 2022 disruption, that the disruption was inevitable, or that alternative policy choices would have altered the outcome. Diagnosis is not causation.</div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-id">L-5</div>
+        <div class="limit-text"><strong>Framework not falsified by this test.</strong> A positive calibration result does not validate the framework. It provides one data point consistent with the framework's predictions. Falsification requires cases where the signals are present but failure does not follow, or where failure follows without signal presence.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Implication -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Implication for WP-004 Research Programme</h2>
+    </div>
+
+    <p>This reconstruction provides a first data point for the WP-004 research programme (§07, RP-1 through RP-5). Its contribution is narrow but meaningful: it demonstrates that the three proxy variables, mapped to the WP-004 structural dimensions, produced a directionally consistent gradient reading using publicly available pre-event data.</p>
+
+    <p>The implication for the research programme is that the proxy operationalisation used here — HHI for variation, seasonal storage minimum for redundancy, post-shock recovery duration for recovery time — is a viable starting point for further retrospective tests. The next priority is application to a case where the recovery capacity gradient was declining but the system did not subsequently fail, to determine whether the framework produces false positives at the observed signal thresholds.</p>
+
+    <div class="callout">
+      <p>The framework moved from concept to first instrument contact. It did not break on contact. That is the minimum requirement for a calibration exercise — and the maximum that should be claimed from it.</p>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial calibration draft</span></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>Strategic Studies · Working Paper Series<br>aethercontinuity.github.io</div>
+  <div class="footer-col">WP-004 · Appendix A · v1.0<br>February 2026<br>Retrospective Calibration</div>
+  <div class="footer-col">Blind cutoff: 31 Dec 2021<br>Three proxies · Five signals<br>Working Draft</div>
+</footer>
+
+</body>
+</html>

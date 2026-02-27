@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-004 — Recovery Capacity Invariants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999; opacity: 0.5;
+  }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b7a3a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .definition-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--ink); background: var(--paper-3); }
+  .definition-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .definition-term { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .definition-body { font-size: 0.95rem; line-height: 1.75; color: #2a2520; }
+
+  /* Evidence table */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.85rem 1.1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.85rem 1.1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
+
+  /* Three variables */
+  .var-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); margin: 2rem 0; border: 1px solid var(--rule); }
+  .var-item { background: var(--paper); padding: 1.25rem; }
+  .var-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .var-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .var-body { font-size: 0.88rem; color: #3a3530; line-height: 1.65; }
+  .var-observed { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.6rem; letter-spacing: 0.06em; }
+
+  /* Signals */
+  .signal-list { margin: 2rem 0; }
+  .signal { border-top: 1px solid var(--rule); padding: 1.1rem 0; display: grid; grid-template-columns: 60px 1fr; gap: 1.25rem; }
+  .signal:last-child { border-bottom: 1px solid var(--rule); }
+  .signal-num { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; padding-top: 0.15rem; }
+  .signal-title { font-weight: 500; margin-bottom: 0.3rem; }
+  .signal-body { font-size: 0.92rem; color: #3a3530; line-height: 1.65; }
+  .signal-indicator { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.06em; }
+
+  /* Zones */
+  .zone-table { margin: 2rem 0; border: 1px solid var(--rule); }
+  .zone-row { display: grid; grid-template-columns: 120px 80px 1fr; border-bottom: 1px solid var(--rule); }
+  .zone-row:last-child { border-bottom: none; }
+  .zone-row.header > div { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 1rem; background: var(--paper-2); border-right: 1px solid var(--rule); }
+  .zone-row > div { padding: 0.9rem 1rem; border-right: 1px solid var(--rule); font-size: 0.9rem; }
+  .zone-row > div:last-child { border-right: none; }
+  .zone-name { font-weight: 500; }
+  .zone-indicator { font-family: var(--mono); font-size: 0.72rem; }
+  .z-stable { color: #4a7a4a; }
+  .z-concern { color: #8b7a3a; }
+  .z-danger { color: #8b4513; }
+  .z-irrev { color: #5a1a1a; }
+
+  /* Limits block */
+  .limits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+  .limits-item { border: 1px solid var(--rule); padding: 1.1rem 1.25rem; }
+  .limits-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .limits-label.can { color: #4a7a4a; }
+  .limits-label.cannot { color: #8b4513; }
+  .limits-body { font-size: 0.9rem; color: #3a3530; line-height: 1.7; }
+
+  /* Research programme */
+  .programme-list { margin: 1.5rem 0; }
+  .programme-item { border-top: 1px solid var(--rule); padding: 1rem 0; display: grid; grid-template-columns: 140px 1fr; gap: 1rem; }
+  .programme-item:last-child { border-bottom: 1px solid var(--rule); }
+  .programme-id { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--accent); padding-top: 0.15rem; }
+  .programme-text { font-size: 0.92rem; color: #2a2520; line-height: 1.65; }
+
+  /* Conclusion */
+  .conclusion-block { margin-top: 3.5rem; background: var(--ink); color: var(--paper); padding: 2.5rem; }
+  .conclusion-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7a7468; margin-bottom: 1rem; }
+  .conclusion-block p { color: #d8d0c0; font-size: 1rem; line-height: 1.8; margin-bottom: 0.75rem; }
+  .conclusion-block h3 { color: var(--paper); font-size: 1.05rem; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+
+  /* Further reading */
+  .further-reading { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .fr-intro { font-size: 0.92rem; color: #3a3530; font-style: italic; margin-bottom: 1.5rem; }
+  .fr-list { display: flex; flex-direction: column; }
+  .fr-item { border-top: 1px solid var(--rule); padding: 1rem 0; display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; align-items: baseline; }
+  .fr-item:last-child { border-bottom: 1px solid var(--rule); }
+  .fr-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); }
+  .fr-title { font-size: 0.95rem; }
+  .fr-link { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; white-space: nowrap; }
+  .fr-link:hover { color: var(--ink); }
+
+  .changelog { border-top: 1px solid var(--rule); padding-top: 1.5rem; margin-top: 3rem; }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; font-size: 0.85rem; color: #4a4540; margin-bottom: 0.4rem; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Strategic Studies · <span class="series-accent">Working Paper Series</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>WP-004</strong> · February 2026<br>
+      Domain D-3 · Diagnostic Synthesis<br>
+      Version <strong>1.0</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/papers/">Publications</a>
+  <span class="nav-id">ACI · WP-004 · 2026</span>
+</nav>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">Working Paper No. 004 · Diagnostic Synthesis · Post-Empirical Framework</div>
+    <h1 class="paper-title">Recovery Capacity Invariants: A Cross-Domain Diagnostic Framework</h1>
+    <p class="paper-subtitle">Three structural variables observed across independent resilience cases — and what their recurrence implies for continuity analysis</p>
+    <div class="citation-box">
+      Aether Continuity Institute. (2026). <em>Recovery Capacity Invariants: A Cross-Domain Diagnostic Framework.</em> ACI Working Paper No. 004. Strategic Studies Series.
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">
+      Working Papers 001 through 003 examined independent empirical domains — energy system duration adequacy, small-state defence doctrine, and institutional decision-capacity failure. Each arrived, through distinct analytical paths, at a structurally similar finding: systems do not lose function because solutions are unavailable, but because the conditions enabling effective response deteriorate along three observable dimensions before failure becomes visible. This paper documents that convergence, names the three structural variables through which it operates, and derives a diagnostic framework for identifying their deterioration in real time. The framework makes no claim to universal law. It proposes recurring structural relationships, derived from empirical observation, that are subject to falsification and expected to be revised. A research programme specifying the conditions under which this framework may be validated, restricted, or abandoned is presented as an integral component.
+    </p>
+    <div class="keywords">Keywords: recovery capacity · structural variables · diagnostic framework · cross-domain invariants · resilience · irreversibility · early warning</div>
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">The Recurring Pattern</h2>
+    </div>
+
+    <p>The three preceding papers in this series were not designed as components of a unified theory. They addressed independent questions: the adequacy of energy system duration under compound stress (WP-001), the strategic logic of distributed defence postures under precision-strike threat (WP-002), and the temporal exhaustion of institutional decision capacity under convergent technical constraint (WP-003). Their methodologies differed. Their domains were distinct. Their evidence bases did not overlap.</p>
+
+    <p>Yet each arrived at a structurally similar finding. In each case, failure did not occur because analytical solutions were absent, physical capacity was exhausted, or formal authority was revoked. Failure occurred — or became probable — when the conditions enabling effective response deteriorated along a consistent pattern: options narrowed, buffers eroded, and the time available for intervention contracted faster than the institutional process required to produce it.</p>
+
+    <div class="callout">
+      <p>Three independent analytical paths converged on the same structural observation. That convergence is the subject of this paper — not as a theoretical conclusion, but as an empirical finding requiring a name.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Paper</th>
+            <th>Domain</th>
+            <th>Proximate failure mechanism</th>
+            <th>Structural pattern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>WP-001</td>
+            <td>Energy infrastructure</td>
+            <td>Duration gap under compound cold-weather stress</td>
+            <td>Reserve diversity exhausted; recovery capacity absent when needed</td>
+          </tr>
+          <tr>
+            <td>WP-002</td>
+            <td>Small-state defence</td>
+            <td>Platform concentration enabling rapid adversary decision</td>
+            <td>System redundancy insufficient; reconstitution time exceeds threat window</td>
+          </tr>
+          <tr>
+            <td>WP-003</td>
+            <td>Institutional governance</td>
+            <td>ITT — decision window closes before governance produces action</td>
+            <td>Decision variation suppressed; institutional latency exceeds physical timeline</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The pattern common to all three is not the specific failure mechanism. It is the structural condition enabling the failure: a reduction in the system's ability to respond effectively to disruption, occurring gradually and without obvious threshold, until the point at which response would have been sufficient has passed.</p>
+
+    <p>This paper names that condition <em>recovery capacity</em> and identifies the three variables through which its deterioration is observable across these and analogous cases.</p>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Three Structural Variables</h2>
+    </div>
+
+    <p>Across the cases examined, recovery capacity deterioration consistently coincided with reductions along three observable dimensions. These variables are not derived from a prior theoretical framework. They are abstractions from empirical observation — the minimal common structure visible in independent cases. They are stated here as operational abstractions, not as axiomatic definitions.</p>
+
+    <div class="var-grid">
+      <div class="var-item">
+        <div class="var-label">Variable I</div>
+        <div class="var-title">Variation</div>
+        <div class="var-body">The diversity of available response options, pathways, or system configurations. A system with high variation can respond to disruption through multiple alternative paths when primary responses fail.</div>
+        <div class="var-observed">Observed contraction: option space narrows as systems optimise toward single configurations; alternative interpretations suppressed; contingency pathways not maintained.</div>
+      </div>
+      <div class="var-item">
+        <div class="var-label">Variable II</div>
+        <div class="var-title">Redundancy</div>
+        <div class="var-body">The availability of spare capacity, parallel systems, or reserve buffers that can substitute for primary function under disruption without requiring recovery time.</div>
+        <div class="var-observed">Observed contraction: buffers reclassified as operational capacity; reserve systems deployed routinely; redundancy treated as inefficiency rather than insurance.</div>
+      </div>
+      <div class="var-item">
+        <div class="var-label">Variable III</div>
+        <div class="var-title">Recovery Time</div>
+        <div class="var-body">The time required for the system to restore functional capacity after disruption. Systems with short recovery time can sustain function through sequential disruptions; those with long recovery time cannot.</div>
+        <div class="var-observed">Observed elongation: recovery cycles lengthen as buffers erode; each disruption consumes more reserve; intervention requirements escalate for equivalent recovery outcomes.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">2.1 Relationships Between Variables</h3>
+    <p>The three variables are not independent. Variation supports redundancy by providing alternative operational configurations when primary redundancy is exhausted. Redundancy buffers recovery time by enabling continued function during reconstitution. Recovery time constrains the effective value of variation — options that require more time to activate than the disruption allows do not constitute genuine variation from the system's perspective.</p>
+
+    <p>Critically, the relationships are non-linear. Reductions in any single variable below a threshold level produce disproportionate effects on the others. A system that loses redundancy while maintaining variation and acceptable recovery time may function adequately until a disruption of sufficient magnitude exceeds its remaining recovery capacity — at which point variation becomes irrelevant because no option can be activated within the available window. This threshold behaviour is consistent with the ITT dynamics formalised in WP-003.</p>
+
+    <h3 class="subsection">2.2 Scope of the Abstraction</h3>
+    <p>These three variables are presented as an empirical abstraction from a small number of cases. They are not claimed to be exhaustive, universal, or theoretically necessary. Other variables may operate in cases not examined here. The three identified may decompose differently in other analytical contexts. What is claimed is only this: in the cases examined, these three dimensions consistently appeared as the structural locus of recovery capacity deterioration.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">The Gradient Hypothesis</h2>
+    </div>
+
+    <p>Standard resilience assessment asks: what is the current state of a system's capacity? This is a cross-sectional question — it produces a snapshot. The cases examined suggest that this question, while necessary, is insufficient for identifying the failure mode documented in this series. Systems approaching ITT or the analogous condition in other domains may present adequate current capacity while their capacity trajectory is strongly negative. The snapshot appears acceptable; the direction is critical.</p>
+
+    <div class="definition-block">
+      <div class="definition-label">The Gradient Hypothesis</div>
+      <div class="definition-term">Direction is more diagnostically significant than state</div>
+      <div class="definition-body">The rate of change of recovery capacity — the direction and speed of movement along the three structural variables — is a more reliable early indicator of system vulnerability than the absolute level of any variable at a given point in time. A system with moderate recovery capacity and a stable or improving trajectory presents lower risk than a system with higher current capacity and a deteriorating trajectory.</div>
+    </div>
+
+    <p>This hypothesis has a practical implication for diagnostic methodology. Assessments that measure capacity at a single point in time will systematically underestimate the risk presented by systems with adequate current states but deteriorating trajectories. Useful diagnostics require time-series observation: not "where is the system?" but "which direction is it moving, and how fast?"</p>
+
+    <p>The gradient hypothesis does not claim that declining trajectories inevitably produce failure. Trajectories reverse. Interventions restore capacity. The claim is only that the direction of movement provides information that the current state does not — and that this information is diagnostic of risk before the current state itself becomes alarming.</p>
+
+    <h3 class="subsection">3.1 Asymmetry of Recovery</h3>
+    <p>An additional empirical observation from the cases examined: recovery capacity does not deteriorate and restore symmetrically. The conditions that enable rapid deterioration — optimisation pressure removing buffers, variation narrowing toward efficient configurations, recovery cycles elongating — are not simply reversed by the same forces in the other direction. Restoration typically requires deliberate intervention and extended time; deterioration can occur incidentally as a byproduct of normal operational pressure toward efficiency.</p>
+
+    <p>This asymmetry has a direct implication for the gradient hypothesis: a negative trajectory is more consequential than a positive trajectory of the same magnitude, because the cost of descent exceeds the benefit of equivalent ascent. Prevention of deterioration is structurally more efficient than restoration after it has occurred.</p>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Five Early Warning Signals</h2>
+    </div>
+
+    <p>The gradient hypothesis creates a diagnostic requirement: observable indicators of recovery capacity deterioration that appear before the deterioration reaches critical levels. The following five signals were identified inductively across the cases examined. They are presented as candidates for operational diagnostic use, not as a validated instrument. Each requires domain-specific operationalisation for reliable application.</p>
+
+    <div class="signal-list">
+      <div class="signal">
+        <div class="signal-num">S-1</div>
+        <div>
+          <div class="signal-title">Recovery Delay Drift</div>
+          <div class="signal-body">The time required to recover from standard disruptions increases persistently across observation periods, even when the disruptions themselves are not increasing in severity. Each recovery event requires more intervention than the previous equivalent event.</div>
+          <div class="signal-indicator">Indicator: recovery duration per disruption unit · trend direction · intervention escalation rate</div>
+        </div>
+      </div>
+      <div class="signal">
+        <div class="signal-num">S-2</div>
+        <div>
+          <div class="signal-title">Redundancy Consumption Without Replacement</div>
+          <div class="signal-body">Reserve systems, buffer capacity, or contingency pathways are deployed in routine operations without equivalent replacement or restoration. Temporary measures persist as permanent configurations. The boundary between operational capacity and reserve capacity becomes indistinct.</div>
+          <div class="signal-indicator">Indicator: reserve utilisation rate in non-crisis periods · proportion of "temporary" measures exceeding intended duration</div>
+        </div>
+      </div>
+      <div class="signal">
+        <div class="signal-num">S-3</div>
+        <div>
+          <div class="signal-title">Suppression of Weak Signals</div>
+          <div class="signal-body">Observations from system peripheries — anomalies, outliers, dissenting interpretations — are systematically deprioritised, reframed as noise, or excluded from analytical processes. The information environment narrows toward confirmation of current operational assumptions.</div>
+          <div class="signal-indicator">Indicator: dissent integration rate in decision processes · peripheral observation routing · anomaly escalation frequency</div>
+        </div>
+      </div>
+      <div class="signal">
+        <div class="signal-num">S-4</div>
+        <div>
+          <div class="signal-title">Local Optimisation Proliferation</div>
+          <div class="signal-body">Efficiency improvement initiatives multiply across system components simultaneously, each rationally justified at the local level, producing aggregate effects on system-level redundancy and variation that no single initiative would justify. Optimisation accelerates precisely when disruption frequency is increasing.</div>
+          <div class="signal-indicator">Indicator: concurrent efficiency projects · cross-component redundancy change · timing relative to disruption frequency</div>
+        </div>
+      </div>
+      <div class="signal">
+        <div class="signal-num">S-5</div>
+        <div>
+          <div class="signal-title">Decision Irreversibility Accumulation</div>
+          <div class="signal-body">The proportion of recent decisions that foreclose future options increases. Commitments extend further into the future. Reversible configurations are replaced by irreversible ones. The system's ability to change course in response to new information is progressively reduced.</div>
+          <div class="signal-indicator">Indicator: reversibility profile of recent decisions · option closure rate · future commitment horizon</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">4.1 Signal Interaction</h3>
+    <p>The five signals are not independent. S-3 (suppression of weak signals) impairs detection of S-1, S-2, and S-4 — a system that has suppressed peripheral observation cannot reliably self-diagnose its own recovery delay or redundancy consumption. S-4 (local optimisation proliferation) typically accelerates S-2 (redundancy consumption) and S-5 (decision irreversibility). The diagnostic challenge is that the signals that would identify the condition are among the first to be degraded by the condition itself.</p>
+
+    <p>A working threshold derived from the cases examined: when three or more signals are simultaneously present with deteriorating trajectories, the system is likely in a transition zone requiring active recovery capacity restoration. When four or more are present, the trajectory toward irreversibility is probable without deliberate intervention. These thresholds are indicative, not validated.</p>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Diagnostic Classification</h2>
+    </div>
+
+    <p>The three structural variables and five early warning signals support a four-zone diagnostic classification of system recovery capacity state. This classification is continuous rather than categorical — systems move through zones as trajectories evolve — and is intended to support structured discussion, not to provide automatic decision authority.</p>
+
+    <div class="zone-table">
+      <div class="zone-row header">
+        <div>Zone</div>
+        <div>Gradient</div>
+        <div>Characteristic condition</div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-name z-stable">Stable</div>
+        <div class="zone-indicator z-stable">dΩ ≥ 0</div>
+        <div>Variation and redundancy maintained or improving. Recovery time stable or decreasing. Weak signals integrated into operational awareness. Reversible decision profile. No active signal cluster.</div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-name z-concern">Concern</div>
+        <div class="zone-indicator z-concern">dΩ &lt; 0</div>
+        <div>One or two early warning signals present. Recovery capacity declining but above functional threshold. Intervention to restore trajectory is feasible without systemic disruption. Window for low-cost action remains open.</div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-name z-danger">Danger</div>
+        <div class="zone-indicator z-danger">dΩ ≪ 0</div>
+        <div>Three or more signals simultaneously present. Recovery capacity approaching functional threshold. Interventions required are now structurally significant — they involve restoring redundancy and variation that have been operationally integrated. Decision window narrowing.</div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-name z-irrev">Irreversible</div>
+        <div class="zone-indicator z-irrev">Ω → 0</div>
+        <div>Recovery capacity exhausted with respect to the disruption scenario in question. Corresponds to ITT in the institutional domain (WP-003). Actions that were formerly sufficient are now insufficient — the decision window has closed for this failure mode. Outcomes are determined by prior system states.</div>
+      </div>
+    </div>
+
+    <p>The Irreversible zone is the most consequential and the most difficult to detect from within. As documented in WP-003, a system in this zone retains formal operational appearance — it continues to produce analysis, exercise authority, and allocate resources — while its decisions have lost causal influence over the outcome in question. External diagnostic observation is required to identify this condition, because internal observation capacity is among the variables that deteriorate earliest.</p>
+  </div>
+
+  <!-- §06 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Scope and Limits</h2>
+    </div>
+
+    <p>This framework describes recurring structural relationships observed across a small number of independent cases. The following statements define its epistemic status.</p>
+
+    <div class="limits-grid">
+      <div class="limits-item">
+        <div class="limits-label can">The framework can</div>
+        <div class="limits-body">Provide structured language for identifying recovery capacity deterioration. Support comparison across systems that would otherwise not be compared. Generate diagnostic questions about system trajectory. Enable early discussion of conditions that standard assessments do not capture. Identify where further empirical investigation is warranted.</div>
+      </div>
+      <div class="limits-item">
+        <div class="limits-label cannot">The framework cannot</div>
+        <div class="limits-body">Predict system failure. Establish causal mechanisms without domain-specific investigation. Replace operational risk assessment or domain expertise. Justify decisions directly. Claim validity in domains not yet examined. Serve as a certification or ranking instrument.</div>
+      </div>
+    </div>
+
+    <div class="definition-block">
+      <div class="definition-label">Canonical Constraint — embedded from ACI NOTE-01</div>
+      <div class="definition-body">The framework describes recurring structural relationships, not universal laws. Any apparent similarity across domains reflects shared constraints faced by adaptive systems under pressure, not ontological equivalence between those domains. Similarity is not equivalence. All propositions derived from this framework are subject to falsification and expected to be revised as evidence accumulates.</div>
+    </div>
+
+    <p>The three structural variables — variation, redundancy, recovery time — are named because they appeared consistently in the cases examined. Their appearance may reflect genuine structural invariants, or it may reflect the selection of cases sharing common features not yet identified. Only systematic examination across a substantially broader and more diverse case set can distinguish these possibilities. That examination has not yet been conducted.</p>
+  </div>
+
+  <!-- §07 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Research Programme</h2>
+    </div>
+
+    <p>The framework presented in this paper is most useful if it is testable — and most credible if it specifies in advance the conditions under which it should be abandoned. The following research directions define a programme for validating, restricting, or falsifying the framework's central claims.</p>
+
+    <div class="programme-list">
+      <div class="programme-item">
+        <div class="programme-id">RP-1 · Variable operationalisation</div>
+        <div class="programme-text">Each of the three structural variables requires domain-specific operationalisation before reliable measurement is possible. What constitutes "variation" in an energy grid differs from what constitutes variation in a military force structure or a governance institution. Developing domain-specific measurement instruments and testing their convergent validity is the most immediate empirical priority.</div>
+      </div>
+      <div class="programme-item">
+        <div class="programme-id">RP-2 · Gradient measurement</div>
+        <div class="programme-text">The gradient hypothesis claims that trajectory is more diagnostic than state. This claim requires longitudinal case studies in which recovery capacity variables are measured across time and compared against eventual outcomes. Studies should include cases where declining trajectories were reversed without failure, to avoid survivorship bias in the relationship between gradient and outcome.</div>
+      </div>
+      <div class="programme-item">
+        <div class="programme-id">RP-3 · Signal validation</div>
+        <div class="programme-text">The five early warning signals are inductively derived and have not been validated against a held-out case set. Prospective testing — applying the signal framework to cases before outcomes are known — is required to assess sensitivity and specificity. The threshold of three concurrent signals should be treated as a working hypothesis, not an established criterion.</div>
+      </div>
+      <div class="programme-item">
+        <div class="programme-id">RP-4 · Negative cases</div>
+        <div class="programme-text">The framework was derived from cases exhibiting recovery capacity deterioration. Systematic examination of cases where equivalent pressure did not produce deterioration — where redundancy was maintained despite efficiency pressure, where weak signals were integrated rather than suppressed — is required to identify the conditions under which the pattern does not hold.</div>
+      </div>
+      <div class="programme-item">
+        <div class="programme-id">RP-5 · Falsification conditions</div>
+        <div class="programme-text">The framework should be considered falsified if: (a) systematic case examination reveals no consistent relationship between the three structural variables and recovery capacity outcomes; (b) the gradient hypothesis is shown to have no predictive advantage over cross-sectional state assessment in prospective studies; or (c) the five signals are shown to have diagnostic sensitivity substantially below operational utility thresholds across multiple independent domains.</div>
+      </div>
+    </div>
+
+    <p>The research programme is presented as an integral component of the framework, not an appendix. A diagnostic framework that does not specify its falsification conditions is not a scientific contribution — it is a vocabulary. The programme above is intended to ensure that this framework develops toward the former rather than remaining the latter.</p>
+
+    <div style="margin-top:2rem;border:1px solid var(--rule);padding:1.25rem 1.5rem;background:var(--paper-2);">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">First Calibration Case — Appendix A</div>
+      <p style="margin-bottom:0.75rem;font-size:0.95rem;">A retrospective blind reconstruction applying the three-proxy operationalisation to the European natural gas system 2018–2021 is available as Appendix A. The cutoff date is 31 December 2021; post-cutoff events are excluded throughout. The reconstruction addresses RP-1 (proxy operationalisation) and provides a first data point for RP-2 (gradient measurement).</p>
+      <a href="/papers/wp-004-appendix-a.html" style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;">WP-004 Appendix A — European Energy System Retrospective Calibration →</a>
+    </div>
+  </div>
+
+  <div class="conclusion-block">
+    <div class="conclusion-label">Core Contribution</div>
+    <h3>What the Convergence Means</h3>
+    <p>Three independent analytical paths — energy infrastructure, defence doctrine, institutional governance — arrived at structurally similar findings without having been designed to do so. That convergence is not proof of a unified theory. It is an invitation to investigate whether the pattern is genuine or artefactual. This paper accepts that invitation by naming the pattern, describing its observable dimensions, and specifying what evidence would determine whether the name should be kept.</p>
+    <h3>What It Does Not Mean</h3>
+    <p>The framework does not claim to have discovered a universal law of complex systems. It does not assert that variation, redundancy, and recovery time are the only relevant variables, or that the five signals are the only observable indicators of trajectory deterioration. It claims only that these elements appeared consistently across the cases examined — and that their consistent appearance warrants investigation rather than dismissal.</p>
+  </div>
+
+  <div class="further-reading">
+    <div class="fr-label">ACI Working Paper Series · Empirical Foundation</div>
+    <p class="fr-intro">This paper is a post-empirical synthesis of the findings below. It is dependent on — and should be read after — the papers from which it derives.</p>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">WP-001</span>
+        <span class="fr-title">Duration Adequacy and Continuity Risk in High-Electrification Power Systems</span>
+        <a class="fr-link" href="/papers/wp-001-duration-adequacy-2.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP-002</span>
+        <span class="fr-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</span>
+        <a class="fr-link" href="/papers/wp-002-drd.html">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP-003</span>
+        <span class="fr-title">Institutional Termination Time and Temporal Decision Capacity</span>
+        <a class="fr-link" href="/papers/wp-003-itt.html">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial working draft</span></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>Strategic Studies · Working Paper Series<br>aethercontinuity.github.io</div>
+  <div class="footer-col">WP-004 · Version 1.0<br>February 2026<br>Diagnostic Synthesis</div>
+  <div class="footer-col">Post-Empirical Framework<br>Strategic Studies Programme<br>Working Draft</div>
+</footer>
+
+</body>
+</html>
