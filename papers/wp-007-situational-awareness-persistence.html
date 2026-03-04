@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-007 — Situational Awareness Persistence Under Compound Stress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section p { margin-bottom: 1.25rem; }
+  .section p:last-child { margin-bottom: 0; }
+
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); flex-shrink: 0; }
+  h2.section-title { font-size: 1.3rem; font-weight: 500; letter-spacing: -0.01em; }
+
+  .subsection { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.75rem; }
+
+  .callout { background: var(--paper-3); border-left: 3px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.75rem 0; }
+  .callout p { margin-bottom: 0; font-size: 0.97rem; }
+
+  .definition-block { border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin: 1.75rem 0; background: var(--paper-2); }
+  .definition-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .definition-body { font-size: 0.95rem; line-height: 1.8; color: #3a3530; }
+
+  .table-wrap { overflow-x: auto; margin: 1.75rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  thead tr { border-bottom: 2px solid var(--ink); }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:last-child { border-bottom: none; }
+  th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 0.75rem; text-align: left; font-weight: 400; }
+  td { padding: 0.75rem; color: #3a3530; vertical-align: top; }
+  td:first-child { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); white-space: nowrap; }
+
+  .diagnostic-list { margin: 1.5rem 0; }
+  .diagnostic-item { display: grid; grid-template-columns: auto 1fr; gap: 0 1.5rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--rule); }
+  .diagnostic-item:last-child { border-bottom: none; margin-bottom: 0; }
+  .diagnostic-id { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--accent); white-space: nowrap; padding-top: 0.2rem; }
+  .diagnostic-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; }
+
+  .finding-list { margin: 1.5rem 0; }
+  .finding-item { margin-bottom: 1.25rem; padding: 1.1rem 1.4rem; border: 1px solid var(--rule); background: var(--paper-2); }
+  .finding-id { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .finding-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; }
+
+  .open-question { margin: 1.25rem 0; padding-left: 1.5rem; border-left: 2px solid var(--rule); }
+  .open-question-id { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .open-question-text { font-style: italic; font-size: 0.97rem; color: #3a3530; }
+
+  .conclusion-block { background: var(--paper-2); border: 1px solid var(--rule); border-top: 2px solid var(--ink); padding: 2rem 2.25rem; margin: 4rem 0 3rem; }
+  .conclusion-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .conclusion-block h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; margin-top: 1.5rem; }
+  .conclusion-block h3:first-of-type { margin-top: 0; }
+  .conclusion-block p { margin-bottom: 1rem; font-size: 0.97rem; }
+  .conclusion-block p:last-child { margin-bottom: 0; }
+
+  .further-reading { margin: 3rem 0; padding-top: 2rem; border-top: 1px solid var(--rule); }
+  .fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .fr-intro { font-size: 0.92rem; color: var(--muted); margin-bottom: 1.5rem; font-style: italic; }
+  .fr-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .fr-item { display: flex; align-items: baseline; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--rule); }
+  .fr-item:last-child { border-bottom: none; }
+  .fr-num { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--accent); flex-shrink: 0; }
+  .fr-title { font-size: 0.92rem; flex: 1; }
+
+  .xb { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+  .xl { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .xr { display: grid; grid-template-columns: 80px 1fr; gap: 0.8rem; padding: 0.5rem 0; border-top: 1px solid var(--rule); }
+  .xr:last-child { border-bottom: 1px solid var(--rule); }
+  .xi { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; }
+  .xd { font-family: var(--serif); font-size: 0.88rem; color: #3a3530; line-height: 1.5; }
+
+  .changelog { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+  .changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .changelog-entry { display: flex; gap: 1.5rem; font-size: 0.88rem; color: var(--muted); padding: 0.3rem 0; }
+  .changelog-ver { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); flex-shrink: 0; }
+
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 4rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); line-height: 2; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .paper { padding: 3rem 1.25rem 5rem; }
+    .dih { padding: 1.25rem 1.25rem 1rem; }
+    footer { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <div class="dih-institute">Aether Continuity Institute · ACI</div>
+    <div class="dih-series">Working Paper Series · <span class="series-accent">WP-007</span></div>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      Domain: <strong>D-6</strong><br>
+      Status: <strong>Open Working Draft</strong><br>
+      Version: <strong>1.0 · March 2026</strong><br>
+      Language: <strong>EN</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <div class="dih-status-text">Active · Subject to revision</div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI</a>
+  <span class="nav-id">WP-007</span>
+</nav>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Working Paper · WP-007 · Domain D-6</div>
+    <h1 class="paper-title">Situational Awareness Persistence Under Compound Stress</h1>
+    <p class="paper-subtitle">Structural properties of local intelligence platforms when energy, communications, and institutional decision support fail simultaneously</p>
+    <div class="citation-box">
+      ACI WP-007 · Version 1.0 · March 2026<br>
+      Domain D-6: Situational awareness persistence platforms supporting system awareness<br>
+      Aether Continuity Institute · aethercontinuity.org/papers/wp-007
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">Resilience frameworks routinely address what happens when energy systems, communications networks, or institutional decision structures fail. They rarely address what happens when all three fail simultaneously — and, critically, they treat situational awareness itself as a given rather than as a fragile system with its own failure modes. This paper examines the structural conditions under which local situational awareness persists or collapses under compound stress. We identify a class of failure that we term awareness discontinuity: the moment at which decision-makers lose the common operating picture needed to act — not because the physical situation has become unmanageable, but because the information infrastructure that supports understanding of that situation has ceased to function. We describe the structural properties that distinguish awareness platforms capable of persisting through a critical period from those that degrade in cascade with the infrastructure they are meant to monitor. We conclude that awareness persistence is a design property, not an operational property: it must be specified and built in, not assumed or added after the fact.</p>
+    <div class="keywords">This paper extends the continuity computing framework introduced in WP-006 by examining the persistence of situational awareness under compound stress conditions.
+    Keywords: situational awareness · compound stress · local decision autonomy · awareness discontinuity · critical period · information infrastructure · resilience architecture · D-6</div>
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">The Invisible Assumption</h2>
+    </div>
+    <p>Every resilience framework makes an assumption so fundamental that it is rarely stated: that the actors responding to a crisis can see the crisis. That decision-makers have access to a sufficiently accurate picture of what is happening — where the failure is, how fast it is spreading, what resources remain available, and what actions are still possible.</p>
+    <p>This assumption is so deeply embedded in crisis management doctrine that it has become invisible. Plans describe what to do when power fails. They describe backup communication channels. They describe command structures for degraded conditions. What they rarely describe is what happens when the capacity to perceive the situation itself is compromised — when the information infrastructure that provides the basis for any decision has failed, is failing, or is producing outputs that cannot be trusted.</p>
+    <p>Situational awareness — the shared understanding of a current operational state that makes coordinated action possible — is itself an infrastructure. It depends on sensors, networks, processing capacity, data integrity, and the institutional structures through which information becomes actionable knowledge. Like all infrastructure, it can fail. Unlike most infrastructure, its failure is rarely anticipated in the plans it is supposed to support.</p>
+    <div class="callout">
+      <p>The core question of this paper is not what to do when infrastructure fails. It is what happens to the capacity to know that infrastructure has failed, and to understand the scope and trajectory of that failure, when the systems that support situational awareness are themselves under stress.</p>
+    </div>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Compound Stress and the Awareness Problem</h2>
+    </div>
+    <p>The ACI compound stress framework, developed in WP-005, describes configurations in which multiple stressors interact simultaneously rather than sequentially. The compounding effect is not merely additive: each stressor can amplify the impact of others, and the combination can produce failure modes that would not occur under any single stressor in isolation.</p>
+    <p>In the energy domain, WP-005 identifies a specific configuration relevant to Finland: the simultaneous degradation of dispatchable generation capacity, fuel supply security, cross-border interconnection availability, and institutional response capacity. Each of these stressors has been studied individually; their interaction has received less systematic attention.</p>
+    <p>The present paper applies the same analytical lens to a domain that sits one level above physical infrastructure: the information and intelligence systems that provide situational awareness of that infrastructure. When energy stress occurs simultaneously with communications stress and institutional capacity stress, the awareness systems themselves become part of the failure cascade rather than tools for managing it.</p>
+
+    <div class="definition-block">
+      <div class="definition-label">Definition — Awareness Discontinuity</div>
+      <div class="definition-body">Awareness discontinuity is the condition in which the common operating picture available to decision-makers falls below the minimum threshold required for coordinated action — not because the physical situation has exceeded response capacity, but because the information infrastructure supporting situational awareness has degraded to the point where the picture is absent, fragmented, or actively misleading. Awareness discontinuity may precede, accompany, or follow physical infrastructure failure. It may occur before decision-makers recognise it has occurred.</div>
+    </div>
+
+    <p>The distinction between physical infrastructure failure and awareness discontinuity is analytically important. A physical failure is a fact about the world. Awareness discontinuity is a fact about the relationship between decision-makers and the world. Both require response, but they require different responses, and conflating them — treating awareness discontinuity as simply another consequence of physical failure rather than as a distinct failure mode with its own preconditions, dynamics, and countermeasures — is itself a structural vulnerability.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">How Awareness Collapses: The Cascade Sequence</h2>
+    </div>
+    <p>Awareness discontinuity under compound stress does not typically occur as a single event. It follows a characteristic degradation sequence in which the components of situational awareness fail in a predictable order — though the speed of that sequence and the point at which it becomes irreversible vary with the specific configuration of stressors.</p>
+
+    <p class="subsection">Stage 1 — Peripheral degradation</p>
+    <p>The outermost sensing layer degrades first. Remote sensors, distributed monitoring stations, and network endpoints depend on continuous power and connectivity. When either is interrupted — even briefly, even partially — the data stream from these sources becomes intermittent, delayed, or absent. Decision-makers begin working with an incomplete picture. Gaps are initially small and are often compensated by interpolation from adjacent data sources.</p>
+
+    <p class="subsection">Stage 2 — Transmission failure</p>
+    <p>The communications layer that aggregates sensor data and distributes it to decision support systems depends on the same infrastructure it is meant to monitor. Cellular networks, fixed-line data infrastructure, and internet-dependent cloud services share power dependencies with the systems they serve. Under extended or geographically widespread stress, the communications layer fails not at the edges but at the aggregation nodes — the points where data from multiple sources is consolidated into the common operating picture. The picture does not go dark uniformly; it develops blind spots that are themselves not always visible to those relying on it.</p>
+
+    <p class="subsection">Stage 3 — Processing capacity loss</p>
+    <p>Centralised data processing and decision support systems — whether cloud-hosted or located in large facilities — depend on continuous, high-quality power and communications. Under compound stress, these systems are subject to both direct power failure and to the loss of the input data streams they require to function. A processing system that receives degraded, incomplete, or delayed inputs produces outputs of corresponding quality. Decision-makers relying on automated analysis during this stage may be working with outputs that are technically plausible but operationally misleading.</p>
+
+    <p class="subsection">Stage 4 — Institutional processing failure</p>
+    <p>The final stage of the awareness cascade is the failure of the human and institutional layer that interprets data and converts it into decisions. This layer depends on functional communications between individuals and organisations, on shared reference frameworks that allow distributed actors to coordinate interpretation, and on sufficient cognitive and institutional bandwidth to process uncertainty under stress. Under compound stress, this layer is subject to information overload from degraded, conflicting, or absent data streams — and simultaneously to the resource constraints described in WP-003's Institutional Termination Time framework. Decision-makers may have access to some data but lack the capacity to integrate it into coherent situational understanding.</p>
+
+    <div class="callout">
+      <p>The cascade does not require total failure at any stage. Partial failure at each stage compounds: a 30% reduction in sensor data, combined with 40% reduction in transmission reliability, combined with degraded processing capacity, can produce an effective awareness capability far below what the arithmetic of individual failure rates would suggest.</p>
+    </div>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">The Decision Chain Failure</h2>
+    </div>
+    <p>Awareness discontinuity is not merely an information problem. It is a decision problem. The purpose of situational awareness is to support action: to enable decision-makers to allocate resources, issue instructions, coordinate responses, and adjust plans as the situation develops. When awareness fails, the decision chain fails with it — but in ways that are not always recognised as awareness failures.</p>
+    <p>Three specific failure modes in the decision chain are analytically distinct from physical infrastructure failure and merit attention in their own right.</p>
+
+    <div class="diagnostic-list">
+      <div class="diagnostic-item">
+        <span class="diagnostic-id">DC-1</span>
+        <div class="diagnostic-text"><strong>Invisible decision windows.</strong> Many critical decisions in crisis management are time-bounded: they must be made within a specific window to have effect. The closing of a decision window is not always visible to decision-makers, particularly when situational awareness is degraded. A decision that could have prevented cascading failure at hour two may still appear to be available at hour six — but its actual effect at hour six is negligible or negative. Awareness discontinuity makes decision windows invisible precisely when accurate perception of them matters most.</div>
+      </div>
+      <div class="diagnostic-item">
+        <span class="diagnostic-id">DC-2</span>
+        <div class="diagnostic-text"><strong>Coordination failure without visible cause.</strong> Coordinated response to infrastructure stress depends on distributed actors operating with a shared understanding of the situation. When different actors are receiving different fragments of a degraded picture, they may be operating on incompatible situational models without knowing it. The resulting coordination failure may appear as organisational dysfunction, poor decision-making, or conflicting priorities — when its actual cause is that the actors involved do not share a common operating picture.</div>
+      </div>
+      <div class="diagnostic-item">
+        <span class="diagnostic-id">DC-3</span>
+        <div class="diagnostic-text"><strong>False stability signals.</strong> A partially functional awareness system may produce outputs that suggest greater stability than actually exists. Sensors that are still reporting may be unrepresentative of the areas where failure is accelerating. Processing systems working with degraded inputs may produce outputs that are locally consistent but globally misleading. Decision-makers have limited ability to distinguish between a stable situation and a situation that appears stable because the parts that are destabilising are the parts no longer being observed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Structural Properties of a Persistence-Capable Awareness Platform</h2>
+    </div>
+    <p>The question that follows from the above analysis is structural rather than operational: what properties must an awareness platform possess in order to remain functional — at minimum viable level — through a critical period of compound stress? We identify five structural properties that distinguish persistence-capable platforms from those that degrade with the infrastructure they monitor.</p>
+
+    <div class="finding-list">
+      <div class="finding-item">
+        <div class="finding-id">P-1 · Local energy independence</div>
+        <div class="finding-text">A persistence-capable awareness platform cannot share power dependencies with the infrastructure it monitors. This requirement is stronger than battery backup for brief interruptions: it requires the ability to operate autonomously through a critical period whose duration cannot be predicted in advance and which may extend to days or weeks under severe compound stress. Local energy independence is not a feature to be added to an awareness platform; it is a foundational architectural constraint. A platform that cannot satisfy this constraint cannot be considered persistence-capable regardless of its other properties.</div>
+      </div>
+      <div class="finding-item">
+        <div class="finding-id">P-2 · Local processing sufficiency</div>
+        <div class="finding-text">The analytical functions required to maintain a minimum viable situational picture must be executable locally, without dependence on external processing capacity. This requirement distinguishes persistence-capable platforms from systems that collect data locally but depend on cloud-hosted or centralised processing to produce actionable outputs. Local processing sufficiency does not require that all analytical functions be available locally — only that the subset required for minimum viable situational awareness can execute without external resources. The boundary between minimum-viable and full capability must be specified explicitly as a design parameter.</div>
+      </div>
+      <div class="finding-item">
+        <div class="finding-id">P-3 · Communications independence</div>
+        <div class="finding-text">A persistence-capable awareness platform must be able to maintain a minimum viable picture of its domain without dependence on external communications. This is distinct from the ability to communicate: a platform may retain the ability to communicate when communications are available while also being able to function in a fully disconnected state. Communications independence requires that the platform's sensing domain is local or that it maintains local copies of sufficient reference data to interpret sensor outputs without real-time external data. Platforms that depend on continuous external data feeds — for calibration, for reference, or for interpretation — cannot satisfy this requirement.</div>
+      </div>
+      <div class="finding-item">
+        <div class="finding-id">P-4 · Integrity verification without external authority</div>
+        <div class="finding-text">Under compound stress, the trustworthiness of data becomes as important as its availability. Awareness platforms that depend on external authorities to verify the integrity of data inputs — whether through certificate infrastructure, centralised authentication, or cloud-hosted validation — may find that their data cannot be trusted at the moment it is most needed, because the verification infrastructure itself is unavailable. A persistence-capable platform must be able to verify the integrity of its own data and the authenticity of its own outputs using local mechanisms that do not depend on real-time external connectivity.</div>
+      </div>
+      <div class="finding-item">
+        <div class="finding-id">P-5 · Degradation transparency</div>
+        <div class="finding-text">A persistence-capable awareness platform must be able to communicate the quality and completeness of its own outputs to the decision-makers relying on it. This means that as the platform degrades — as sensors go offline, as processing capacity is reduced, as data quality falls — it must report its own degradation state explicitly and in terms that are actionable by non-technical decision-makers. A platform that presents degraded outputs in the same format as full-quality outputs is more dangerous than one that goes dark: it produces the appearance of situational awareness without the substance. Degradation transparency is a safety property, not a performance metric.</div>
+      </div>
+    </div>
+
+    <p>These five properties are not independent. A platform that satisfies P-1 through P-3 but lacks P-4 may produce locally-generated but unverifiable outputs that cannot be trusted under adversarial conditions. A platform with excellent degradation transparency but insufficient local processing may correctly inform decision-makers that it is failing — but fail to provide the minimum viable picture that would allow them to act on that information. The properties form a coherent set; partial satisfaction of the set does not constitute persistence capability.</p>
+  </div>
+
+  <!-- §06 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">When Persistence-Capable Platforms Still Fail</h2>
+    </div>
+    <p>Satisfying the five structural properties identified in §05 is necessary but not sufficient for awareness persistence through compound stress. Three additional failure conditions can undermine platforms that meet all five structural requirements.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Failure condition</th>
+            <th>Description</th>
+            <th>Distinguishing feature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>F-1</td>
+            <td><strong>Scope mismatch.</strong> The platform's sensing domain does not correspond to the decision domain. A locally persistence-capable platform that monitors a subset of a larger system may correctly describe that subset while the relevant failures are occurring outside its field of view.</td>
+            <td>Platform functions correctly; picture is accurate but incomplete in consequential ways that are not visible to users.</td>
+          </tr>
+          <tr>
+            <td>F-2</td>
+            <td><strong>Interpretive dependency.</strong> The outputs of the platform can only be interpreted by personnel who are themselves unavailable during compound stress — either because they depend on communication to receive outputs, or because the cognitive and institutional context required to interpret outputs is absent under crisis conditions.</td>
+            <td>Platform produces valid outputs; outputs cannot be converted into decisions by available personnel.</td>
+          </tr>
+          <tr>
+            <td>F-3</td>
+            <td><strong>Pre-event optimisation.</strong> The platform has been optimised during normal operations in ways that reduce its performance under stress — for example, by reducing local sensor density in favour of remote monitoring, or by offloading processing to external infrastructure to reduce local hardware costs. The optimisation is rational in normal conditions and represents a structural vulnerability only under compound stress.</td>
+            <td>Platform was persistence-capable at design time; operational optimisation has degraded persistence properties without triggering a formal re-evaluation of capability.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Failure condition F-3 deserves particular attention because it describes a process that is ongoing and largely invisible. Awareness platforms are subject to continuous operational pressure to reduce cost, increase efficiency, and integrate with broader organisational systems. Each individual optimisation decision is reasonable; the cumulative effect may be the progressive elimination of precisely those properties — local redundancy, local processing, independence from external dependencies — that constitute persistence capability. This drift is structural in the same sense that WP-004's recovery capacity invariants describe structural drift: it occurs as the normal consequence of routine optimisation rather than through deliberate choice, and it is only visible when the stress conditions it was protecting against actually occur.</p>
+  </div>
+
+  <!-- §07 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">International Context</h2>
+    </div>
+    <p>The analysis developed in this paper is not specific to Finland. The gap between the assumption of situational awareness and its structural provision is a general feature of resilience planning that has received growing recognition across multiple institutional contexts in recent years — though the conclusions drawn from this recognition have not yet converged on a common structural response.</p>
+    <p>The Nordic region has been among the first to name the problem at a systemic level. A 2025 analysis of digital resilience in Denmark, Norway and Sweden identified what it termed a "Black Sky" scenario — the convergence of physical sabotage, cyberattack, and weak coordination into a digital breakdown lasting days across large geographic areas — as a real and rising risk. Critically, the analysis noted that existing preparedness is fragmented by sector and by national boundary, and that the practical exercise of multi-sector, multi-day disruptions has not been systematically undertaken. The gap between formal resilience commitments and tested operational capability is the gap in which awareness discontinuity lives.</p>
+    <p>A parallel finding emerged from an October 2025 cloud infrastructure outage that caused government agencies and critical enterprises across several European countries to lose primary communication channels simultaneously. The episode illustrated what has been described as the difference between redundancy and autonomy: systems that were formally redundant — operating across multiple cloud environments — failed in concert because they shared authentication dependencies on a single external provider. Redundancy that does not extend to independence from shared dependency structures does not constitute resilience against compound failure.</p>
+    <p>The military domain has engaged this problem more directly, under the concept of operations in contested or communications-degraded environments. The analytical question — how does a forward-deployed unit maintain coherent situational understanding when it cannot rely on communication with centralised systems? — is structurally identical to the civilian infrastructure question, though the operational context differs. The solutions developed in that context — distributed sensing, local processing, integrity verification without external authority, explicit degradation transparency — correspond closely to the structural properties identified in §05 of this paper.</p>
+    <p>The convergence of these findings across different domains and institutional contexts suggests that awareness persistence under compound stress is a general architectural challenge that has been independently identified by practitioners in multiple fields. What has not yet occurred is the translation of that understanding into systematic design requirements for civilian critical infrastructure awareness platforms — requirements that would make persistence capability a specified and auditable property rather than an assumed background condition.</p>
+  </div>
+
+  <!-- §08 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Position Within the ACI Framework</h2>
+    </div>
+    <p>This paper is the first in the ACI Working Paper series to address Domain D-6 directly. Its relationship to the earlier papers in the series is both additive and corrective.</p>
+    <p>It is additive in that it applies the compound stress methodology of WP-005 to a domain — information infrastructure — that WP-005 identified as critical but did not analyse in detail. WP-005 described the conditions under which compound stress produces cascading physical failure; WP-007 describes the conditions under which those same stressors simultaneously undermine the awareness capacity needed to respond to that failure.</p>
+    <p>It is corrective in a specific sense: the recovery capacity framework of WP-004 defines three invariant dimensions — absorption capacity, continuity capacity, and transformation capacity — whose measurement implicitly assumes that decision-makers have access to accurate situational awareness throughout the recovery process. Where awareness discontinuity occurs, WP-004's framework may describe recovery capacity that is technically present but operationally inaccessible: capacity that exists in the physical system but cannot be mobilised because those who would mobilise it cannot see the situation clearly enough to act.</p>
+    <p>The Institutional Termination Time concept developed in WP-003 is directly relevant here. ITT describes the temporal constraint on institutional decision capacity: the window within which a decision must be made to remain effective. Awareness discontinuity compresses the effective ITT without changing the nominal one — it reduces the time during which decision-makers have the situational understanding needed to act, while the physical window during which action would be effective remains unchanged. The result is a systematically shorter decision window than the institutional architecture is designed to accommodate.</p>
+
+    <div class="callout">
+      <p>An institutional architecture calibrated to a nominal decision window of 96 hours may have an effective decision window of 12–18 hours if awareness discontinuity occurs at hour six and is not resolved before hour eighteen. The WP-003 ITT framework remains valid; this paper identifies a mechanism by which the effective ITT departs from the nominal ITT in ways that are not visible to the institutions experiencing the departure.</p>
+    </div>
+  </div>
+
+  <!-- §09 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Open Questions</h2>
+    </div>
+    <p>This paper establishes a framework and identifies structural properties; it does not provide empirical measurements of awareness platform persistence capability in specific operational contexts. The following questions represent the natural development of this framework into applied analysis.</p>
+
+    <div class="open-question">
+      <div class="open-question-id">Q-1</div>
+      <p class="open-question-text">What is the minimum viable situational picture for specific decision types in energy system management — and can that minimum be specified as a formal design requirement for local awareness platforms?</p>
+    </div>
+    <div class="open-question">
+      <div class="open-question-id">Q-2</div>
+      <p class="open-question-text">How does awareness persistence capability vary across different categories of critical infrastructure operator — municipal, regional, national — and does the compound stress configuration of WP-005 produce awareness discontinuity at different rates across these categories?</p>
+    </div>
+    <div class="open-question">
+      <div class="open-question-id">Q-3</div>
+      <p class="open-question-text">Is F-3 (pre-event optimisation) occurring systematically in Finnish critical infrastructure awareness systems, and if so, at what rate and through what operational mechanisms?</p>
+    </div>
+    <div class="open-question">
+      <div class="open-question-id">Q-4</div>
+      <p class="open-question-text">What is the relationship between the structural properties identified in §05 and the regulatory and procurement frameworks currently governing critical infrastructure information systems in Finland and the broader Nordic region?</p>
+    </div>
+    <div class="open-question">
+      <div class="open-question-id">Q-5</div>
+      <p class="open-question-text">Can degradation transparency (P-5) be operationalised as a standardised output format that allows non-technical decision-makers to calibrate their reliance on awareness platform outputs in real time during a compound stress event?</p>
+    </div>
+  </div>
+
+  <!-- Conclusion -->
+  <div class="conclusion-block">
+    <div class="conclusion-label">Conclusion</div>
+    <h3>Awareness as a designed property</h3>
+    <p>Situational awareness is not a background condition that resilience planning can safely assume. It is itself an infrastructure with failure modes, dependencies, and structural requirements — and those requirements are not automatically satisfied by the presence of sensors, networks, and monitoring systems designed for normal operations.</p>
+    <p>The compound stress configurations analysed in the ACI Working Paper series create conditions under which awareness infrastructure degrades in cascade with the physical infrastructure it is meant to monitor. The result is not merely that decision-makers must respond to a difficult situation; it is that they must respond without the common operating picture that coordinated response requires.</p>
+    <h3>The persistence requirement</h3>
+    <p>Awareness persistence through a critical period is achievable, but only if it is treated as a design requirement from the outset. The five structural properties identified in this paper — local energy independence, local processing sufficiency, communications independence, local integrity verification, and degradation transparency — constitute a minimal specification for persistence capability. Platforms that do not satisfy this specification cannot be relied upon to support decision-making under compound stress, regardless of their performance under normal conditions.</p>
+    <h3>The structural gap</h3>
+    <p>The gap identified in this paper is not primarily technical. The individual components of persistence-capable awareness platforms exist and have been deployed in various specialised contexts. The gap is architectural and institutional: the absence of systematic requirements that would make persistence capability a specified, auditable, and maintained property of the awareness systems on which critical infrastructure management depends. Closing that gap is a governance question before it is a technology question.</p>
+  </div>
+
+  <!-- Cross-references -->
+  <div class="xb">
+    <div class="xl">ACI Working Paper Series — Internal References</div>
+    <div class="xr"><div class="xi">WP-001</div><div class="xd">Duration Adequacy and Continuity Risk. The Black Period concept defines the temporal envelope within which awareness persistence must be guaranteed. WP-007 describes the information-layer conditions that determine whether duration-adequate physical systems can be effectively managed through that envelope.</div></div>
+    <div class="xr"><div class="xi">WP-003</div><div class="xd">Institutional Termination Time. WP-007 identifies awareness discontinuity as a mechanism that compresses the effective ITT below the nominal ITT without this compression being visible to the institutions experiencing it.</div></div>
+    <div class="xr"><div class="xi">WP-004</div><div class="xd">Recovery Capacity Invariants. The three recovery capacity dimensions assume decision-makers can perceive the situation they are recovering from. WP-007 describes conditions under which this assumption fails and recovery capacity that is physically present becomes operationally inaccessible.</div></div>
+    <div class="xr"><div class="xi">WP-005</div><div class="xd">Compound Stress Finland 2025–2035. WP-007 applies the compound stress methodology to the information layer, extending WP-005's analysis of physical system cascades to include the awareness cascade that may accompany or precede them.</div></div>
+    <div class="xr"><div class="xi">DA-001</div><div class="xd">Finland Pre-Shortage Phase. The five active signals identified in DA-001 include early-warning indicators of system state that depend on functional awareness infrastructure to remain observable. Signal S-3 (CO₂ utilisation window) and S-5 (institutional response capacity) are directly affected by awareness discontinuity.</div></div>
+    <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node. The local energy independence described in TN-001 is a prerequisite for satisfying P-1 of this paper. A MESA-architecture node provides the power independence that persistence-capable awareness platforms require.</div></div>
+  </div>
+
+  <!-- Further reading -->
+  <div class="further-reading">
+    <div class="fr-label">Selected External References</div>
+    <p class="fr-intro">These references document converging recognition of the awareness persistence problem across different domains and institutional contexts. They are cited for orientation; they do not fully anticipate the structural framework developed in this paper.</p>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">R-1</span>
+        <span class="fr-title">GlobalConnect Group. <em>Nordic Digital Resilience Whitepapers.</em> November 2025. Identifies "Black Sky" multi-day digital disruption as a real and rising risk across the Nordic region; proposes Nordic Digital Resilience Shield and Black Sky Simulation Series.</span>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">R-2</span>
+        <span class="fr-title">Nordic Prime Ministers and Heads of Government. <em>Joint Statement on Enhanced Crisis Preparedness and Resilience.</em> 2025. Establishes political framework for Nordic cooperation on crisis preparedness; identifies digital resilience, energy security, and institutional capacity as interconnected priorities.</span>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">R-3</span>
+        <span class="fr-title">Guttieri, K. (ed.) <em>Cyber Resilience and Power Projection.</em> Cyber Defense Review, Vol. 10, No. 2, 2025. Documents the brittleness introduced by optimisation of civilian and military logistics systems; notes that high-tempo conditions can outpace institutional absorption capacity.</span>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">R-4</span>
+        <span class="fr-title">Blackberry. <em>When Systems Fail: Resilience, Sovereignty, and Secure Communications.</em> December 2025. Articulates the autonomy-redundancy distinction: systems that are formally redundant but share authentication dependencies fail in concert, not independently.</span>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">R-5</span>
+        <span class="fr-title">Pak, H. et al. <em>Situational Awareness as the Imperative Capability for Disaster Resilience in the Era of Complex Hazards and Artificial Intelligence.</em> August 2025. Applies Endsley's three-level SA model (perception, comprehension, projection) to distributed disaster response contexts; argues for SA-centric rather than mitigation-centric resilience frameworks.</span>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">R-6</span>
+        <span class="fr-title">Telecom Review Europe. <em>Edge Intelligence at Scale: Lessons from Early Adopters Who Moved Too Fast.</em> March 2026. Documents structural failure modes in scaled edge intelligence deployments; notes that connectivity proved less reliable than anticipated, forcing systems to operate in partial isolation more often than planned.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry">
+      <span class="changelog-ver">v1.0</span>
+      <span>March 2026 — Initial release. Establishes awareness discontinuity framework, five structural persistence properties, and three additional failure conditions. Opens Q-1 through Q-5 for applied follow-on analysis.</span>
+    </div>
+  </div>
+
+</div><!-- /paper -->
+
+<footer>
+  <div>
+    Aether Continuity Institute<br>
+    Working Paper Series<br>
+    aethercontinuity.org
+  </div>
+  <div>
+    WP-007 · Version 1.0<br>
+    March 2026<br>
+    Domain D-6
+  </div>
+  <div>
+    Open Working Draft<br>
+    Subject to revision<br>
+    aethercontinuity.org/papers/
+  </div>
+</footer>
+
+</body>
+</html>
