@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ACI WP-006 — Continuity Computing</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 7rem;
+}
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id {
+  font-size: .7rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.doc-meta {
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.9;
+}
+h1 {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  margin-bottom: .35rem;
+  line-height: 1.2;
+}
+.tagline {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: .3rem;
+}
+.tagline-fi {
+  font-family: var(--serif);
+  font-size: .92rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 2.4rem;
+}
+.cite-block {
+  border: 1px solid var(--rule);
+  padding: .9rem 1.1rem;
+  margin-bottom: 2.4rem;
+  font-size: .6rem;
+  letter-spacing: .06em;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.cite-block span { color: var(--ink); font-size: .62rem; }
+.section { margin-bottom: 2.5rem; }
+.section-id {
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+h2 {
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-weight: 500;
+  margin-bottom: .75rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .35rem;
+}
+p {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #2a2520;
+  margin-bottom: .85rem;
+}
+.bi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+.bi-col {
+  font-family: var(--serif);
+  font-size: .92rem;
+  line-height: 1.75;
+  color: #2a2520;
+}
+.bi-col p { font-size: .92rem; margin-bottom: .6rem; }
+.lang-label {
+  font-size: .56rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+.tbl {
+  width: 100%;
+  border: 1px solid var(--rule);
+  margin: 1.2rem 0;
+  border-collapse: collapse;
+}
+.tbl th {
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: .5rem .7rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  background: #f0ece4;
+}
+.tbl td {
+  font-family: var(--serif);
+  font-size: .88rem;
+  line-height: 1.55;
+  padding: .6rem .7rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl-key {
+  font-family: var(--mono);
+  font-size: .62rem;
+  color: var(--accent);
+  letter-spacing: .1em;
+}
+.rb {
+  border-left: 3px solid var(--ink);
+  padding: .85rem 1.2rem;
+  margin: 1.2rem 0;
+  background: #f0ece4;
+}
+.rb p {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-style: italic;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.ep-note {
+  border-left: 3px solid var(--accent);
+  padding: .85rem 1.2rem;
+  margin: 1.2rem 0;
+  background: #faf5ee;
+}
+.ep-label {
+  font-size: .56rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .4rem;
+}
+.ep-note p {
+  font-family: var(--serif);
+  font-size: .92rem;
+  margin: 0;
+  color: #3a2510;
+  line-height: 1.7;
+}
+.scope-note {
+  border: 1px solid var(--rule);
+  padding: .9rem 1.1rem;
+  margin: 1rem 0;
+  background: #f0ece4;
+}
+.scope-label {
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+.scope-note p {
+  font-family: var(--serif);
+  font-size: .9rem;
+  line-height: 1.7;
+  margin-bottom: .5rem;
+  color: #2a2520;
+}
+.scope-note p:last-child { margin-bottom: 0; }
+.flow {
+  border: 1px solid var(--rule);
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0;
+  background: #f0ece4;
+  overflow-x: auto;
+}
+.flow pre {
+  font-family: var(--mono);
+  font-size: .7rem;
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre;
+}
+.prop-row {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: .8rem;
+  padding: .75rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+.prop-row:last-child { border-bottom: 1px solid var(--rule); }
+.prop-id {
+  font-family: var(--mono);
+  font-size: .65rem;
+  color: var(--accent);
+  letter-spacing: .1em;
+  padding-top: .15rem;
+}
+.prop-body { }
+.prop-title {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-weight: 500;
+  margin-bottom: .2rem;
+}
+.prop-desc {
+  font-family: var(--serif);
+  font-size: .88rem;
+  color: #3a3530;
+  line-height: 1.6;
+}
+.prop-ref {
+  font-size: .56rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: .25rem;
+}
+.math-block {
+  border: 1px solid var(--rule);
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  background: #f0ece4;
+}
+.math-block pre {
+  font-family: var(--mono);
+  font-size: .72rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.math-label {
+  font-size: .54rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+.limits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 1rem 0;
+}
+.lc { background: var(--paper); padding: 1rem 1.1rem; }
+.lh {
+  font-size: .56rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.lc p {
+  font-family: var(--serif);
+  font-size: .88rem;
+  line-height: 1.6;
+  margin-bottom: .35rem;
+  color: #3a3530;
+}
+.xb {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.xl {
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .8rem;
+}
+.xr {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: .8rem;
+  padding: .5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.xr:last-child { border-bottom: 1px solid var(--rule); }
+.xi {
+  font-family: var(--mono);
+  font-size: .62rem;
+  color: var(--accent);
+  letter-spacing: .1em;
+}
+.xd {
+  font-family: var(--serif);
+  font-size: .88rem;
+  color: #3a3530;
+  line-height: 1.5;
+}
+.final-box {
+  border: 2px solid var(--ink);
+  padding: 1.1rem 1.4rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+.final-box p {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.8;
+}
+.doc-footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.2rem;
+  margin-top: 3.5rem;
+  font-size: .56rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 2.1;
+}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · WP-006 · Working Paper</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-5 · Version 1.0 · March 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Subject to revision<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Continuity Computing</h1>
+<p class="tagline">Decision Capacity as a System Invariant Under Compound Stress</p>
+<p class="tagline-fi">Jatkuvuuslaskenta: Päätöskapasiteetti järjestelmäinvarianttina yhdistelmästressissä</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Continuity Computing: Decision Capacity as a System Invariant Under Compound Stress. ACI Working Paper No. 006, v1.0. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references —</span> WP-001 (Duration Adequacy) · WP-003 (ITT / Lex Resiliens) · WP-004 (Recovery Capacity Invariants) · WP-005 (Compound Stress Finland) · DN-V0–V2 (Continuity Computing, internal notes) · Ω-0 (Reference Document)<br>
+  <span>Companion to —</span> TN-002 (Duration-Capable Edge Intelligence Node). WP-006 establishes the theoretical basis for the structural properties defined in TN-002.
+</div>
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract / Tiivistelmä</div>
+  <h2>Abstract</h2>
+
+  <div class="bi">
+    <div class="bi-col">
+      <div class="lang-label">English</div>
+      <p>This paper introduces <em>Continuity Computing</em> as a formal analytical category: distributed systems whose primary invariant is the preservation of decision capacity under compound stress, rather than the maximisation of performance under normal conditions.</p>
+      <p>We argue that as infrastructure complexity increases and disruption durations extend, a structural selection pressure emerges that favours systems capable of sustained degraded operation over systems optimised for peak efficiency. This pressure is independent of design intent — it operates on systems that encounter it regardless of whether they were built with continuity as an objective.</p>
+      <p>The paper formalises this argument through a control-theoretic model of institutional decision capacity (adapted from IRCM v1.0), identifies five structural failure modes of continuity-oriented systems, and establishes the relationship between computational continuity and the Institutional Termination Time (ITT) framework of WP-003. The resulting vocabulary grounds the architectural specification in TN-002.</p>
+    </div>
+    <div class="bi-col">
+      <div class="lang-label">Suomi</div>
+      <p>Tässä paperissa esitellään <em>jatkuvuuslaskenta</em> muodollisena analyyttisena kategoriana: hajautetut järjestelmät, joiden ensisijainen invariantti on päätöskapasiteetin säilyttäminen yhdistelmästressissä — ei suorituskyvyn maksimointi normaaliolosuhteissa.</p>
+      <p>Väitämme, että infrastruktuurin monimutkaistuessa ja häiriöiden keston pitkittyessä syntyy rakenteellinen valintapaine, joka suosii järjestelmiä, jotka kykenevät ylläpitämään toimintaansa heikentyneessä tilassa — verrattuna huippusuorituskykyyn optimoituihin järjestelmiin. Tämä paine on riippumaton suunnittelutavoitteista.</p>
+      <p>Paperi formalisoi tämän argumentin institutionaalisen päätöskapasiteetin ohjausteoreettisen mallin avulla (mukautettu IRCM v1.0:sta), tunnistaa viisi jatkuvuusorientoituneiden järjestelmien rakenteellista vikamuotoa ja rakentaa yhteyden WP-003:n ITT-kehykseen. Syntyvä käsitteistö luo pohjan TN-002:n arkkitehtuurimääritykselle.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>The Core Claim / Perusväite</h2>
+
+  <div class="bi">
+    <div class="bi-col">
+      <p>WP-001 establishes that continuity risk is not adequately characterised by capacity metrics alone. WP-003 establishes that institutions fail not when resources are exhausted but when decision capacity ceases to be causally relevant to outcomes. WP-004 extends this to technical systems: the structural variables that determine recovery capacity are variation, redundancy, and recovery time — not installed power.</p>
+      <p>This paper extends the argument one layer further: <em>the computational infrastructure on which decisions are made is itself subject to the same failure dynamics as the systems it monitors.</em> A decision layer that depends on centralised infrastructure inherits the fragility of that infrastructure. Under compound stress, the monitoring system and the system being monitored fail together.</p>
+      <p>The implication is architectural: decision-capable systems under stress conditions require a different design invariant than decision-capable systems under normal conditions. This invariant is <em>duration</em> — the ability to sustain function across a disruption window — not throughput, latency, or peak performance.</p>
+    </div>
+    <div class="bi-col">
+      <p>WP-001 osoittaa, että jatkuvuusriski ei kuvaudu riittävästi kapasiteettimittareilla. WP-003 osoittaa, että instituutiot eivät häiriinny resurssien puuttuessa vaan kun päätöskapasiteetti lakkaa olemasta kausaalisesti relevantti. WP-004 laajentaa tämän teknisiin järjestelmiin: palautumiskapasiteettia määrittävät rakenteelliset muuttujat ovat variaatio, redundanssi ja palautumisaika — ei asennettu teho.</p>
+      <p>Tässä paperissa argumenttia laajennetaan yhden kerroksen verran: <em>laskentainfrastruktuuri, jonka varassa päätökset tehdään, on itsessään samojen vikaamisdynamiikkojen alainen kuin se järjestelmä, jota se valvoo.</em> Päätöskerros, joka on riippuvainen keskitetystä infrastruktuurista, perii tuon infrastruktuurin haurauden.</p>
+      <p>Arkkitehtoninen seuraus: stressiolosuhteissa päätöskykyiset järjestelmät vaativat eri suunnitteluinvariantin kuin normaaliolosuhteissa toimivat järjestelmät. Tämä invariantti on <em>kestävyys</em> — kyky ylläpitää toimintaa häiriöikkunan yli — ei suorituskyky.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Working Definition / Toimintamääritelmä</h2>
+
+  <div class="rb">
+    <p>Continuity Computing: Distributed computational systems whose primary design invariant is the preservation of decision capacity under compound stress and sustained disruption — as distinct from systems designed to maximise performance, throughput, or efficiency under nominal operating conditions.</p>
+  </div>
+
+  <div class="rb" style="margin-top:.8rem">
+    <p>Jatkuvuuslaskenta: Hajautetut laskentajärjestelmät, joiden ensisijainen suunnitteluinvariantti on päätöskapasiteetin säilyttäminen yhdistelmästressin ja pitkittyneen häiriön alla — erotuksena järjestelmistä, jotka on suunniteltu maksimoimaan suorituskyky, läpäisykyky tai tehokkuus normaaliolosuhteissa.</p>
+  </div>
+
+  <p>Three properties follow from this definition. First, Continuity Computing systems are evaluated on <em>worst-case endurance</em>, not average-case performance. Second, they are designed to operate in <em>degraded isolation</em> — without guaranteed access to external infrastructure. Third, decision outputs must remain <em>auditable under stress</em>: the system must be able to account for its decisions when external verification is unavailable.</p>
+
+  <p>These properties distinguish Continuity Computing from adjacent categories. Edge computing addresses latency and bandwidth; Continuity Computing addresses duration and isolation. Fault-tolerant computing addresses recovery from component failure; Continuity Computing addresses sustained function under environmental compound stress. Resilient computing addresses the ability to bounce back; Continuity Computing addresses the ability not to stop.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Selection Pressures / Valintapaineet</h2>
+
+  <p>Continuity Computing is not a design school that emerges from intention. It emerges from adaptive pressure. Three structural pressures are identified.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Pressure</th>
+        <th>Mechanism</th>
+        <th>WP-004 Variable</th>
+        <th>Observable indicator</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">P1</span><br>Infrastructure Complexity</td>
+        <td>Interdependence increases failure propagation. Each additional dependency creates a new failure pathway. Systems that buffer dependencies outperform systems that expose them.</td>
+        <td>Variable II · Redundancy</td>
+        <td>Increasing cascade frequency in critical infrastructure incidents.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P2</span><br>Duration Risk</td>
+        <td>Disruption durations are extending beyond the endurance envelope of systems designed for rapid recovery. Fast recovery assumes short disruptions. When disruptions are long, persistence becomes the relevant capability.</td>
+        <td>Variable III · Recovery Time</td>
+        <td>WP-001 Black Period concept; DA-001 S1 signal extending beyond single-hour events.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P3</span><br>Decision Load Concentration</td>
+        <td>Centralised decision infrastructure becomes a single point of failure under stress. Systems that distribute decision capacity reduce their exposure to this failure mode.</td>
+        <td>Variable I · Variation</td>
+        <td>WP-003 ITT precursor patterns; DA-001 S4 institutional substitution signal.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>These pressures operate independently of whether any actor intends to build a Continuity Computing system. A system exposed to all three pressures that survives will have acquired Continuity Computing properties — whether by design or by selection. A system that has not acquired them will not survive extended compound stress events.</p>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Formal Model: Decision Capacity Dynamics / Muodollinen malli: Päätöskapasiteetin dynamiikka</h2>
+
+  <p>The following model formalises decision capacity as a bounded state variable subject to two interacting stressors: structural drift and authority concentration. It is adapted from IRCM v1.0 and applied here to computational decision systems rather than governance institutions — though the structural isomorphism between the two is itself a finding of this paper (§06).</p>
+
+  <div class="math-block">
+    <div class="math-label">State variable and update rule</div>
+    <pre>
+M(t) ∈ [0,1]     Decision capacity / legitimacy of decision output
+
+Inputs:
+  d(t) ∈ [0,1]   Structural drift (degradation of redundancy, connectivity, sensor integrity)
+  r(t) ∈ [0,1]   Authority concentration (degree of centralisation of decision pathways)
+
+Parameters:
+  α              Drift sensitivity
+  β              Concentration penalty (applied when r(t) > r_c)
+  γ              Recovery inertia (rate at which capacity recovers toward 1.0)
+  r_c            Structural safeguard threshold (constitutional / architectural limit)
+  M_crit         Critical capacity floor (below which outputs enter advisory mode)
+
+Discrete update (Δt = 1):
+
+  M_{k+1} = clamp[0,1]( M_k + γ(1 − M_k) − α·d_k − β·max(0, r_k − r_c) )
+
+Recovery term γ(1 − M_k) encodes asymmetric recovery:
+capacity lost rapidly under stress, restored only gradually.
+    </pre>
+  </div>
+
+  <div class="math-block" style="margin-top:.5rem">
+    <div class="math-label">Drift-adjusted concentration boundary (policy diagnostic)</div>
+    <pre>
+Fixed-point for constant inputs:
+
+  M* = 1 − (α·d + β·max(0, r − r_c)) / γ
+
+Setting M* = M_crit yields the safe concentration ceiling as a function of drift:
+
+  r_crit(d) = r_c + ( γ(1 − M_crit) − α·d ) / β
+
+Interpretation:
+  — As drift d increases, r_crit decreases.
+    A more degraded system can tolerate less centralisation.
+  — As recovery capacity γ decreases,
+    r_crit decreases. Slower recovery demands greater distribution.
+  — This boundary is a diagnostic instrument, not a control law.
+    It identifies when the combination of drift and concentration
+    places the system below the critical capacity floor.
+    </pre>
+  </div>
+
+  <p>The model produces two operating regimes. When M(t) ≥ M_crit and r(t) ≤ r_c, the system operates in <em>authoritative mode</em>: decisions are produced with full capacity and are causally effective. When M(t) < M_crit or r(t) > r_c, the system enters <em>advisory mode</em>: outputs are flagged as capacity-constrained and require external acknowledgement before escalation.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Note on scope</div>
+    <p>The IRCM model was originally developed for institutional resilience analysis. Its application here to computational decision systems rests on the structural isomorphism identified in §06: both institutional and computational decision layers exhibit drift, concentration, and asymmetric recovery. The parameter values (α, β, γ, r_c, M_crit) are not calibrated in this paper — calibration requires domain-specific measurement and is outside the scope of a structural working paper. Readers applying the model should treat it as a diagnostic instrument requiring empirical parameter estimation for any specific system.</p>
+  </div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Structural Failure Modes / Rakenteelliset vikamuodot</h2>
+
+  <p>Five structural failure modes of Continuity Computing systems are identified. Each corresponds to a deterioration pathway in the M(t) model.</p>
+
+  <div style="margin: 1.2rem 0;">
+    <div class="prop-row">
+      <div class="prop-id">FM-1</div>
+      <div class="prop-body">
+        <div class="prop-title">Hidden Dependency Accumulation</div>
+        <div class="prop-desc">Continuity layers may buffer dependencies from the systems they serve, making those dependencies invisible until the buffer fails. A system that successfully maintains output continuity through redundant pathways may obscure the progressive degradation of those pathways. The apparent stability of output masks the declining stability of the underlying architecture. This is an increase in d(t) that is not directly observable from M(t) while buffers remain.</div>
+        <div class="prop-ref">Model: d(t) ↑ while M(t) appears stable → sudden threshold crossing · WP-004: Gradient hypothesis — direction more significant than state</div>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-id">FM-2</div>
+      <div class="prop-body">
+        <div class="prop-title">Over-Automation Drift</div>
+        <div class="prop-desc">As automated decision pathways become reliable under normal conditions, human intervention capacity atrophies. Operators lose the skills, situational context, and institutional knowledge required to override automated decisions under stress conditions. When automation fails under compound stress, the human backstop is no longer available. This is a reduction in γ — recovery capacity — that accumulates invisibly during stable periods.</div>
+        <div class="prop-ref">Model: γ ↓ over time under stable automation → r_crit(d) ↓ · WP-003: ITT precursor — decision window and institutional horizon decouple</div>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-id">FM-3</div>
+      <div class="prop-body">
+        <div class="prop-title">Synchronised Behaviour Amplification</div>
+        <div class="prop-desc">Distributed nodes that share decision logic, training data, or update schedules may exhibit correlated responses to environmental signals. Under compound stress, distributed systems intended to provide independent redundancy may instead amplify systemic instability through synchronised action. Distribution of nodes does not guarantee distribution of decision behaviour.</div>
+        <div class="prop-ref">Model: Apparent reduction in r(t) masks correlated d(t) across nodes · WP-004 Variable I: Variation — behavioural independence is the relevant dimension, not node count</div>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-id">FM-4</div>
+      <div class="prop-body">
+        <div class="prop-title">Memory Rigidity</div>
+        <div class="prop-desc">Persistent memory — a core feature of Continuity Computing systems — may inhibit adaptation when environmental conditions change structurally. A system that has successfully navigated prior stress conditions may over-weight historical patterns when novel compound stress configurations emerge. Continuity of decision context and continuity of decision accuracy are not the same property.</div>
+        <div class="prop-ref">Model: Historical M(t) trajectory does not predict M(t) under novel d(t) configurations · WP-004: Falsification condition FC-4 — gradient hypothesis does not replace empirical reassessment</div>
+      </div>
+    </div>
+    <div class="prop-row">
+      <div class="prop-id">FM-5</div>
+      <div class="prop-body">
+        <div class="prop-title">Institutional Displacement</div>
+        <div class="prop-desc">Technical buffering of disruption consequences may delay — and thereby worsen — necessary institutional adaptation. If a Continuity Computing system successfully maintains operational output while the institution it serves deteriorates, the deterioration may reach an irreversible stage before it becomes visible. This is the computational analogue of DA-001 S4: the system resolves the symptom without resolving the cause.</div>
+        <div class="prop-ref">Model: M(t) maintained by technical means while governance d(t) ↑ unobserved · WP-003: ITT — decision capacity retained formally but causally severed · DA-001 S4: Institutional Substitution</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Relationship to ITT / Suhde ITT-kehykseen</h2>
+
+  <p>WP-003 defines Institutional Termination Time (ITT) as the point at which decision capacity ceases to be causally relevant to outcomes — not because resources are exhausted, but because the physical decision window and the institutional action horizon have become disjoint. The ITT framework was developed for governance institutions. This paper argues that the same structure applies to computational decision systems.</p>
+
+  <p>A computational decision system has an effective decision window: the interval during which a decision output can influence the system state it addresses. It has an action horizon: the interval within which the decision layer can produce a verified, auditable output. When the action horizon exceeds the decision window — because drift has slowed the system, because concentration has reduced its pathways, or because isolation has removed its data sources — the system retains the formal structure of a decision system while having lost its causal relevance. This is computational ITT.</p>
+
+  <div class="rb">
+    <p>Computational ITT is not a failure of computation. It is a failure of temporal alignment between the computational layer and the physical system it is intended to influence. The correct diagnostic question is not "is the system producing outputs?" but "are the outputs reaching their decision window?"</p>
+  </div>
+
+  <p>The M(t) model operationalises this: M_crit is the minimum decision capacity required to maintain causal relevance. When M(t) falls below M_crit, the system enters advisory mode — not because it has stopped functioning, but because its outputs cannot be certified as causally effective without external acknowledgement. This is the computational analogue of WP-003's LR-Class B→C transition.</p>
+
+  <p>The structural isomorphism between institutional and computational ITT has a diagnostic implication: the same observable precursor signals apply to both. DA-001's S4 signal (institutional substitution — backup capacity normalised as primary) has a computational equivalent: decision systems designed for contingency operation that are normalised into routine primary decision roles without addressing the underlying capacity deficit that made them necessary.</p>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Duration as the Critical Variable / Kestävyys kriittisenä muuttujana</h2>
+
+  <p>The central claim of WP-001 — that power does not equal persistence — applies to computation as directly as it applies to energy systems. A computational system with high instantaneous throughput but no endurance architecture is not a Continuity Computing system. It is a system whose decision capacity degrades to zero when its power supply, network connectivity, or data sources are disrupted for longer than its buffer duration.</p>
+
+  <p>Duration, in the computational context, has four components:</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Description</th>
+        <th>Failure condition</th>
+        <th>Continuity requirement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">D1</span><br>Power endurance</td>
+        <td>Duration of operational power availability without external supply.</td>
+        <td>Grid failure, supply disruption</td>
+        <td>Local energy independence across Black Period envelope (WP-001)</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D2</span><br>Data endurance</td>
+        <td>Duration of decision-relevant data availability without network access.</td>
+        <td>Connectivity loss, infrastructure failure</td>
+        <td>Locally held sensor data, cached state, offline inference capability</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D3</span><br>Identity endurance</td>
+        <td>Duration of verifiable decision authority without central attestation infrastructure.</td>
+        <td>Trust infrastructure unavailability</td>
+        <td>Local trust anchor with deferred attestation reconciliation</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D4</span><br>Audit endurance</td>
+        <td>Duration of decision auditability without external verification systems.</td>
+        <td>Logging infrastructure loss, synchronisation failure</td>
+        <td>Local immutable decision log with post-event reconciliation protocol</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>A configuration that addresses D1 alone — local power — retains energy but loses decision validity when network connectivity fails. A configuration that addresses D1–D3 but not D4 may retain operational capability but lose the auditability required for the decision outputs to carry institutional weight. Continuity Computing requires all four components to be addressed across the same duration envelope.</p>
+
+  <p>The duration envelope is not a fixed number. It is determined by the compound stress profile of the operating environment — specifically, the expected Black Period length under the WP-001 framework. A system that cannot sustain all four duration components across the worst-case Black Period is not duration-capable for that environment.</p>
+</div>
+
+<!-- §08 -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Scope and Limits / Soveltamisala ja rajoitukset</h2>
+
+  <div class="limits">
+    <div class="lc">
+      <div class="lh">This paper can</div>
+      <p>Define Continuity Computing as a formal analytical category distinct from adjacent fields.</p>
+      <p>Provide a control-theoretic model of decision capacity dynamics under drift and concentration stress.</p>
+      <p>Identify five structural failure modes and map them to the M(t) model.</p>
+      <p>Establish the relationship between computational decision capacity and the WP-003 ITT framework.</p>
+      <p>Define the four components of computational duration and their failure conditions.</p>
+      <p>Ground the architectural vocabulary for TN-002.</p>
+    </div>
+    <div class="lc">
+      <div class="lh">This paper cannot</div>
+      <p>Calibrate model parameters (α, β, γ, r_c, M_crit) for any specific system — this requires domain-specific empirical measurement.</p>
+      <p>Specify which technologies, protocols, or implementations satisfy the duration components — this is TN-002's scope.</p>
+      <p>Evaluate the decision capacity of any existing system — diagnostic application requires instrument development beyond this paper.</p>
+      <p>Predict failure timing for any specific system or environment.</p>
+      <p>Replace engineering feasibility assessment, security evaluation, or operational risk analysis.</p>
+    </div>
+  </div>
+
+  <div class="scope-note">
+    <div class="scope-label">Relationship to DN-V0–V2</div>
+    <p>This paper formalises the structural observations recorded in DN-V0 (convergence observation), DN-V1 (selection pressures), and DN-V2 (failure modes). The DN documents are internal archival records. This paper is the first public working paper in Domain D-5. The DN documents are not cited as sources — they are the prior working notes from which this paper develops. Where DN-V2 identifies failure modes descriptively, this paper maps them to the formal M(t) model.</p>
+    <p>DN-V0 identified a convergence across cognitive, computational, physical, and institutional continuity domains. This paper addresses the computational layer. The broader convergence across all layers is acknowledged but outside the scope of this working paper.</p>
+  </div>
+</div>
+
+<!-- §09 -->
+<div class="section">
+  <div class="section-id">§ 09</div>
+  <h2>Falsification Conditions / Falsifiointiehdot</h2>
+
+  <p>The analytical claims of this paper should be considered falsified if any of the following conditions is demonstrated through empirical evidence:</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Condition</th>
+        <th>Claim falsified</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">FC-1</span><br>Centralised computational systems demonstrate sustained decision capacity across compound stress events at comparable duration to distributed architectures, without the duration components specified in §07.</td>
+        <td>The duration architecture claim — that distributed, locally anchored decision systems are necessary for compound stress environments.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-2</span><br>The M(t) model fails to produce bounded trajectories under empirical parameter estimation for documented system degradation cases, or its fixed-point structure is shown to be structurally incorrect.</td>
+        <td>The formal model's applicability to computational decision capacity dynamics.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-3</span><br>Documented compound stress events show that computational decision capacity degradation does not follow the asymmetric recovery pattern (slow recovery, fast decay) encoded in the γ(1 − M_k) term.</td>
+        <td>The asymmetric recovery assumption — a core structural feature of the model.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-4</span><br>The ITT framework of WP-003, when applied to computational decision systems, produces systematically different diagnostic outputs than when applied to institutional decision systems under comparable structural conditions, undermining the isomorphism claim of §06.</td>
+        <td>The structural isomorphism between institutional and computational ITT.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CROSS-REFERENCES -->
+<div class="xb">
+  <div class="xl">Cross-references / Viittaukset</div>
+  <div class="xr">
+    <div class="xi">WP-001</div>
+    <div class="xd">Duration Adequacy. Establishes the Black Period concept and the power/persistence distinction that grounds §07's duration components.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">WP-003</div>
+    <div class="xd">Institutional Termination Time. Provides the ITT framework extended to computational systems in §06. LR-Class B→C transition is the institutional analogue of the M_crit advisory threshold.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">WP-004</div>
+    <div class="xd">Recovery Capacity Invariants. Three structural variables (Variation, Redundancy, Recovery Time) map directly to the selection pressures in §03 and the duration components in §07.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">WP-005</div>
+    <div class="xd">Compound Stress Finland. Provides the empirical compound stress configuration against which the duration envelope (§07) is calibrated for Finnish operating environments.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">DA-001</div>
+    <div class="xd">Finland Pre-Shortage Phase 2026–2032. S4 signal (Institutional Substitution) is the observable precursor for FM-5 (Institutional Displacement) and computational ITT onset.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">TN-002</div>
+    <div class="xd">Duration-Capable Edge Intelligence Node. Companion Technical Note specifying the structural properties of configurations that satisfy the duration requirements established in §07. WP-006 is the theoretical basis for TN-002's architectural claims.</div>
+  </div>
+  <div class="xr">
+    <div class="xi">Ω-0</div>
+    <div class="xd">Recovery Capacity Reference. Minimal vocabulary applied throughout.</div>
+  </div>
+</div>
+
+<div class="final-box" style="margin-top:2.5rem">
+  <p>Domain D-5 · Continuity Computing · WP-006 v1.0 · ACI · March 2026<br>
+  Decision capacity is not a property of hardware. It is a property of temporal alignment<br>
+  between the computational layer and the physical system it is intended to influence.</p>
+</div>
+
+<div class="doc-footer">
+  ACI Working Paper No. 006 · Continuity Computing: Decision Capacity as a System Invariant Under Compound Stress<br>
+  Version 1.0 · March 2026 · Domain D-5 · Open Working Draft · Subject to revision<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+
+</body>
+</html>
