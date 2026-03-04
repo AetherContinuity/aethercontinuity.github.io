@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DA-001 — Finland Pre-Shortage Phase 2026–2032</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f7f4ee;--rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--mono);line-height:1.7;max-width:720px;margin:0 auto;padding:3.5rem 2rem 7rem}
+.doc-header{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:baseline}
+.doc-id{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.doc-meta{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+h1{font-family:var(--serif);font-size:1.8rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.35rem;line-height:1.2}
+.tagline{font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:.3rem}
+.tagline-fi{font-family:var(--serif);font-size:.92rem;font-style:italic;color:var(--muted);margin-bottom:2.4rem}
+.cite-block{border:1px solid var(--rule);padding:.9rem 1.1rem;margin-bottom:2.4rem;font-size:.6rem;letter-spacing:.06em;color:var(--muted);line-height:1.9}
+.cite-block span{color:var(--ink);font-size:.62rem}
+.section{margin-bottom:2.5rem}
+.section-id{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+h2{font-family:var(--serif);font-size:1.06rem;font-weight:500;margin-bottom:.75rem;border-bottom:1px solid var(--rule);padding-bottom:.35rem}
+p{font-family:var(--serif);font-size:1rem;line-height:1.8;color:#2a2520;margin-bottom:.85rem}
+/* bilingual grid */
+.bi{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem}
+.bi-col{font-family:var(--serif);font-size:.92rem;line-height:1.75;color:#2a2520}
+.bi-col p{font-size:.92rem;margin-bottom:.6rem}
+.lang-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+/* tables */
+.tbl{width:100%;border:1px solid var(--rule);margin:1.2rem 0;border-collapse:collapse}
+.tbl th{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;background:#f0ece4}
+.tbl td{font-family:var(--serif);font-size:.88rem;line-height:1.55;padding:.6rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl-key{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em}
+/* signal rows */
+.sigs{margin:1.2rem 0}
+.sig{display:grid;grid-template-columns:44px 90px 1fr 90px 70px;gap:.5rem;padding:.65rem 0;border-top:1px solid var(--rule);align-items:start}
+.sig:last-child{border-bottom:1px solid var(--rule)}
+.sig-id{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em;padding-top:.1rem}
+.sig-en{font-family:var(--serif);font-size:.88rem;color:#2a2520;line-height:1.55}
+.sig-fi{font-family:var(--serif);font-size:.88rem;color:#2a2520;line-height:1.55;font-style:italic}
+.sig-type{font-family:var(--mono);font-size:.56rem;color:var(--muted);letter-spacing:.06em;line-height:1.5}
+.sig-status{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em}
+.status-active{color:#8b4513;font-weight:400}
+/* NEW signal highlight */
+.sig-new{background:#f5f0e2}
+.sig-new-badge{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem}
+/* zones */
+.zone-row{display:grid;grid-template-columns:110px 60px 1fr;gap:.7rem;padding:.65rem .5rem;border-top:1px solid var(--rule);align-items:baseline}
+.zone-row:last-child{border-bottom:1px solid var(--rule)}
+.zone-name{font-family:var(--serif);font-size:.95rem;font-weight:500}
+.z-s{color:#4a7a4a}.z-c{color:#8b7a3a}.z-d{color:#8b4513}.z-i{color:#5a1a1a}
+.zone-g{font-size:.6rem;color:var(--muted)}
+.zone-desc{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.55}
+/* LR classes */
+.lr-box{border:1px solid var(--rule);margin:1rem 0}
+.lr-row{display:grid;grid-template-columns:110px 1fr 1fr;border-bottom:1px solid var(--rule)}
+.lr-row:last-child{border-bottom:none}
+.lr-cell{padding:.8rem .9rem;border-right:1px solid var(--rule)}
+.lr-cell:last-child{border-right:none}
+.lr-head{font-family:var(--mono);font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.lr-body{font-family:var(--serif);font-size:.88rem;color:#2a2520;line-height:1.55}
+/* rule box */
+.rb{border-left:3px solid var(--ink);padding:.85rem 1.2rem;margin:1.2rem 0;background:#f0ece4}
+.rb p{font-family:var(--serif);font-size:.95rem;font-style:italic;margin:0;color:var(--ink);line-height:1.7}
+/* epistemic note — NEW */
+.ep-note{border-left:3px solid var(--accent);padding:.85rem 1.2rem;margin:1.2rem 0;background:#faf5ee}
+.ep-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+.ep-note p{font-family:var(--serif);font-size:.92rem;margin:0;color:#3a2510;line-height:1.7}
+/* trigger table */
+.trig-header{display:grid;grid-template-columns:90px 1fr 1fr 110px 1fr;gap:0;border:1px solid var(--rule);background:#f0ece4}
+.trig-header>div{padding:.45rem .7rem;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule)}
+.trig-header>div:last-child{border-right:none}
+.trig-row{display:grid;grid-template-columns:90px 1fr 1fr 110px 1fr;gap:0;border:1px solid var(--rule);border-top:none}
+.trig-row>div{padding:.6rem .7rem;font-family:var(--serif);font-size:.86rem;color:#2a2520;line-height:1.5;border-right:1px solid var(--rule);vertical-align:top}
+.trig-row>div:last-child{border-right:none}
+/* metrics */
+.met-header{display:grid;grid-template-columns:36px 1fr 80px 80px 1fr 60px;gap:0;border:1px solid var(--rule);background:#f0ece4}
+.met-header>div{padding:.45rem .6rem;font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule)}
+.met-header>div:last-child{border-right:none}
+.met-row{display:grid;grid-template-columns:36px 1fr 80px 80px 1fr 60px;gap:0;border:1px solid var(--rule);border-top:none}
+.met-row>div{padding:.55rem .6rem;font-family:var(--serif);font-size:.85rem;color:#2a2520;line-height:1.5;border-right:1px solid var(--rule)}
+.met-row>div:last-child{border-right:none}
+/* limits */
+.limits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1rem 0}
+.lc{background:var(--paper);padding:1rem 1.1rem}
+.lh{font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+.lc p{font-family:var(--serif);font-size:.88rem;line-height:1.6;margin-bottom:.35rem;color:#3a3530}
+/* scope exclusion note — NEW */
+.scope-note{border:1px solid var(--rule);padding:.9rem 1.1rem;margin:1rem 0;background:#f0ece4}
+.scope-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.scope-note p{font-family:var(--serif);font-size:.9rem;line-height:1.7;margin-bottom:.5rem;color:#2a2520}
+.scope-note p:last-child{margin-bottom:0}
+/* xref */
+.xb{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.xl{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.xr{display:grid;grid-template-columns:80px 1fr;gap:.8rem;padding:.5rem 0;border-top:1px solid var(--rule)}
+.xr:last-child{border-bottom:1px solid var(--rule)}
+.xi{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em}
+.xd{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.5}
+/* final box */
+.final-box{border:2px solid var(--ink);padding:1.1rem 1.4rem;margin:2rem 0;text-align:center}
+.final-box p{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink);margin:0;line-height:1.8}
+.doc-footer{border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:3.5rem;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:2.1}
+</style>
+</head>
+<body>
+<nav style="border-bottom:1px solid #ccc8be;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;max-width:720px;margin:0 auto">
+  <a href="/" style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#7a7468;text-decoration:none">&#8592; ACI</a>
+  <span style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#7a7468">DA-001 &middot; Diagnostic Assessment</span>
+</nav>
+
+
+<div class="doc-header">
+  <span class="doc-id">ACI · DA-001 · Diagnostic Assessment</span>
+  <div class="doc-meta">
+    Domain D-1 / D-3 / D-4 · Version 1.1 · March 2026<br>
+    Open Working Draft · Subject to revision<br>
+    <span style="color:var(--accent)">v1.1 — three editorial corrections</span>
+  </div>
+</div>
+
+<h1>Finland Pre-Shortage Phase 2026–2032</h1>
+<p class="tagline">Recovery Capacity Externalization and Substitution</p>
+<p class="tagline-fi">Suomen ennakkovajausvaihe 2026–2032: Palautumiskyvyn ulkoistaminen ja korvaaminen</p>
+<p style="font-family:var(--serif);font-size:.9rem;font-style:italic;color:var(--muted);margin-bottom:1.2rem">A diagnostic assessment applying WP-004 recovery capacity invariants to the Finnish energy system 2026–2032</p>
+
+<div class="cite-block">
+  <span>Cite as</span> — Aether Continuity Institute (ACI). (2026). Finland Pre-Shortage Phase 2026–2032: Recovery Capacity Externalization and Substitution. ACI Diagnostic Assessment No. 001, v1.1. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references</span> — WP-001 (Duration Adequacy) · WP-003 (ITT / Lex Resiliens) · WP-004 (Recovery Capacity Invariants) · WP-005 (Compound Stress Finland) · Ω-0 (Reference Document)<br>
+  <span>Companion to</span> — WP-005. This document operationalises WP-005 §04 recovery capacity assessment into an observable signal and trigger framework for the 2026–2032 window.<br>
+  <span>Version note</span> — v1.1 corrects three items in v1.0: (1) §03 adds assessment of WP-004 S-3 signal; (2) §04 clarifies the epistemic status of the S3+S4 ITT-coupling argument; (3) §09 explicitly identifies WP-005 findings outside this assessment's scope.
+</div>
+
+<!-- Abstract -->
+<div class="section">
+  <div class="section-id">Abstract / Tiivistelmä</div>
+  <div class="bi">
+    <div class="bi-col">
+      <div class="lang-label">English</div>
+      <p>WP-004 identifies four diagnostic zones determined by the trajectory of three structural variables: variation, redundancy, and recovery time. This assessment applies that instrument to the Finnish energy system across the 2026–2032 window.</p>
+      <p>The Finnish system presents five simultaneously active early warning signals (S1–S5), a declining gradient on two of three structural variables, and an institutional substitution pattern consistent with WP-003 Institutional Termination Time (ITT) preconditions. Diagnostic zone: Concern trending toward Danger.</p>
+      <p>This document is a diagnostic instrument. It does not predict system failure. It identifies the phase in which failures of this type historically begin to become possible.</p>
+    </div>
+    <div class="bi-col">
+      <div class="lang-label">Suomi</div>
+      <p>WP-004 määrittelee neljä diagnostista vyöhykettä, joita määrittää kolmen rakenteellisen muuttujan kehityssuunta: variaatio, redundanssi ja palautumisaika. Tämä arviointi soveltaa kyseistä instrumenttia Suomen energiajärjestelmään 2026–2032.</p>
+      <p>Suomen järjestelmässä on viisi samanaikaisesti aktiivista varoitussignaalia (S1–S5), laskeva kehityssuunta kahdessa kolmesta rakenteellisesta muuttujasta sekä institutionaalinen korvaamiskuvio, joka vastaa WP-003:n ITT-esivaihetta. Diagnostinen vyöhyke: Huoli kohti Vaaraa.</p>
+      <p>Tämä asiakirja on diagnostinen instrumentti. Se ei ennusta järjestelmän häiriötä. Se tunnistaa vaiheen, jossa tämänkaltaiset häiriöt historiallisesti alkavat tulla mahdollisiksi.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Diagnostic Starting Point / Diagnostinen lähtökohta</h2>
+  <div class="bi">
+    <div class="bi-col">
+      <p>ACI's foundational claim (WP-001, WP-004): continuity risk is not adequately characterised by capacity metrics alone. Systems fail not when capacity is absent but when the temporal structure of demand, supply, and decision capability fall out of alignment under pressure.</p>
+      <p>This document applies the WP-004 diagnostic to a specific compound configuration: the Finnish energy system entering the Concern zone, with signals indicating a trajectory toward Danger across 2026–2032. The compound stress basis is WP-005 §04.</p>
+      <p>The diagnostic question is not whether Finland's energy system will fail. It is whether the structural conditions enabling effective response are deteriorating — and at what rate.</p>
+    </div>
+    <div class="bi-col">
+      <p>ACI:n perusväite (WP-001, WP-004): jatkuvuusriski ei kuvaudu riittävästi pelkillä kapasiteettimittareilla. Järjestelmät eivät häiriinny kapasiteetin puuttuessa vaan silloin, kun kysynnän, tarjonnan ja päätöskyvyn ajallinen rakenne menettää yhteensopivuutensa paineen alla.</p>
+      <p>Tämä asiakirja soveltaa WP-004:n diagnostiikkaa tiettyyn yhdistelmäkonfiguraatioon: Suomen energiajärjestelmään, joka siirtyy Huoli-vyöhykkeelle signaalien osoittaessa kehityssuuntaa kohti Vaaraa 2026–2032.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Three Structural Variables / Kolme rakenteellista muuttujaa</h2>
+  <p style="font-size:.88rem;color:var(--muted);font-family:var(--serif);margin-bottom:1rem;font-style:italic">WP-004 §02 assessment applied to Finnish energy system, March 2026.</p>
+  <table class="tbl">
+    <tr>
+      <th>Variable</th>
+      <th>WP-004 definition</th>
+      <th>Finnish system condition</th>
+      <th>Trajectory</th>
+      <th>Signal</th>
+    </tr>
+    <tr>
+      <td><strong>I · Variation</strong><br><span style="font-size:.8rem;color:var(--muted)">Variaatio</span></td>
+      <td>Diversity of available response options and system configurations.</td>
+      <td>Moderate. Nuclear + CHP + wind + hydro import. Declining as thermal exits and VRE grows without dispatchable offset.</td>
+      <td><strong>Declining ↓</strong></td>
+      <td><span class="tbl-key">Concern</span></td>
+    </tr>
+    <tr>
+      <td><strong>II · Redundancy</strong><br><span style="font-size:.8rem;color:var(--muted)">Redundanssi</span></td>
+      <td>Spare capacity and buffer availabilities substitutable under disruption.</td>
+      <td>Under pressure. Interconnection competing. Dispatchable endurance insufficient for extended Black Period (WP-001).</td>
+      <td><strong>Declining ↓</strong></td>
+      <td><span class="tbl-key" style="color:#8b4513">Concern → Danger</span></td>
+    </tr>
+    <tr>
+      <td><strong>III · Recovery Time</strong><br><span style="font-size:.8rem;color:var(--muted)">Palautumisaika</span></td>
+      <td>Time required to restore functional capacity after disruption.</td>
+      <td>Indeterminate. No public assessment identified for 2030 system configuration. (WP-005 §04)</td>
+      <td><strong>Likely elongating ↗</strong></td>
+      <td><span class="tbl-key" style="color:var(--muted);font-style:italic">Indeterminate — gap is itself a signal</span></td>
+    </tr>
+  </table>
+  <p style="font-family:var(--serif);font-size:.88rem;font-style:italic;color:var(--muted)">Gradient finding (WP-004 §03): Two of three structural variables show declining trajectories. Direction is more diagnostically significant than absolute level.</p>
+</div>
+
+<!-- §03 — CORRECTED: S-3 added -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Signal Assessment S1–S5 / Signaaliarviointi S1–S5</h2>
+  <p style="font-size:.88rem;color:var(--muted);font-family:var(--serif);margin-bottom:1rem;font-style:italic">Five early warning signals from WP-004 §04 assessed against observable Finnish system evidence. Working threshold: ≥3 concurrent signals with declining trajectories indicates active deterioration.</p>
+
+  <div class="sigs">
+
+    <div class="sig">
+      <div class="sig-id">S1</div>
+      <div class="sig-en"><strong>Structural Capacity Warning.</strong> Winter peak structural capacity deficit identified (GW-scale). Price spikes increasing in frequency; duration extending beyond single-hour events.</div>
+      <div class="sig-fi">Talvihuipun rakenteellinen kapasiteettivaje tunnistettu. Hintapiikkien tiheys kasvaa; kesto pitenee.</div>
+      <div class="sig-type">Recovery Delay Drift (S-1)</div>
+      <div class="sig-status status-active">ACTIVE</div>
+    </div>
+
+    <div class="sig">
+      <div class="sig-id">S2</div>
+      <div class="sig-en"><strong>Fast Power Substitution.</strong> Data centre reserves, batteries, and demand response positioned as system-level continuity solutions. Power replaces persistence.</div>
+      <div class="sig-fi">Datakeskusten varavoima, akut ja kysyntäjousto esitetään järjestelmätason jatkuvuusratkaisuna. Teho korvaa kestävyyden.</div>
+      <div class="sig-type">Redundancy Consumption Without Replacement (S-2)</div>
+      <div class="sig-status status-active">ACTIVE</div>
+    </div>
+
+    <!-- S-3 NEW — v1.1 addition -->
+    <div class="sig sig-new">
+      <div class="sig-id">S3<br><span class="sig-new-badge">v1.1</span></div>
+      <div class="sig-en"><strong>Institutional Signal Suppression.</strong> WP-005 findings on household PPA asymmetry (F-6), distributional transition burden (F-3), and negotiation posture deficit (F-4) are absent from official planning discourse. The analytical periphery — where these findings originate — is not integrated into adequacy assessments. The diagnostic question of <em>who bears the residual risk</em> is structurally absent from institutional framing.</div>
+      <div class="sig-fi">WP-005:n kotitalouksien PPA-epäsymmetriaa (F-6), jakautumisepätasapainoa (F-3) ja neuvotteluaseman vajetta (F-4) koskevat löydökset eivät esiinny virallisessa suunnittelukeskustelussa. Analyyttinen periferia, josta nämä löydökset nousevat, ei integroidu riittävyysarviointeihin.</div>
+      <div class="sig-type">Suppression of Weak Signals (S-3)</div>
+      <div class="sig-status status-active">ACTIVE</div>
+    </div>
+
+    <div class="sig">
+      <div class="sig-id">S4</div>
+      <div class="sig-en"><strong>Institutional Substitution.</strong> Permitting frameworks modified to allow backup resources to operate as normal-state capacity. Physical constraint encountered administratively.</div>
+      <div class="sig-fi">Luvituskehyksiä muokataan sallimaan varakapasiteetin käyttö normaalitilakapasiteettina. Fyysinen rajoite kohdataan hallinnollisesti.</div>
+      <div class="sig-type">Local Optimisation Proliferation (S-4)</div>
+      <div class="sig-status status-active">ACTIVE</div>
+    </div>
+
+    <div class="sig">
+      <div class="sig-id">S5</div>
+      <div class="sig-en"><strong>Load Lock-In.</strong> Data centre and industrial electrification investments lock in sustained load growth. New dispatchable capacity does not follow proportionally.</div>
+      <div class="sig-fi">Datakeskus- ja teollisuussähköistyminen lukitsee kuormakasvun. Uusi säädeltävä kapasiteetti ei seuraa samassa tahdissa.</div>
+      <div class="sig-type">Decision Irreversibility Accumulation (S-5)</div>
+      <div class="sig-status status-active">ACTIVE</div>
+    </div>
+
+    <div class="sig" style="background:#f0ece4">
+      <div class="sig-id" style="font-weight:500">⊕</div>
+      <div class="sig-en" style="font-weight:500">Assessment: 5 of 5 signals active. Exceeds WP-004 working thresholds of both ≥3 (active deterioration) and ≥4 (probable irreversibility trajectory). Note: S-3 detection from outside the system depends on the availability of independent analytical observation — the condition that S-3 describes makes internal self-diagnosis unreliable. External assessment is the appropriate instrument. These thresholds are indicative, not validated (WP-004 §04).</div>
+      <div class="sig-fi">5/5 signaalia aktiivisena. Ylittää WP-004:n kummatkin kynnysarvot (≥3 ja ≥4). Kynnysarvot ovat ohjeellisia, ei validoituja.</div>
+      <div class="sig-type"></div>
+      <div class="sig-status"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- §04 — CORRECTED: epistemic note on S3+S4 ITT argument -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>ITT Coupling and LR-Class Justification / ITT-kytkeytyminen ja LR-luokan perustelu</h2>
+
+  <div class="bi">
+    <div class="bi-col">
+      <p>WP-003 §03.2 defines Institutional Termination Time (ITT) as the point at which an institution's decision capacity ceases to be causally relevant to outcomes — not because resources are exhausted, but because the intersection of the physical decision window and the institutional action horizon has become empty.</p>
+      <p>Signal S4 (Institutional Substitution) is the observable ITT precursor identified in WP-003 §05.2. When permitting frameworks are modified to allow backup infrastructure to function as primary capacity, the institution is encountering the physical constraint administratively rather than resolving it structurally.</p>
+      <p>Signal S3 (CO₂ export commitment before domestic utilisation assessment) adds the irreversibility dimension from WP-003 §02.2: export infrastructure commits a 20–30 year investment horizon before domestic utilisation pathways have been assessed. This is the Decision Irreversibility Accumulation pattern (WP-004 S-5) that WP-003 identifies as a direct ITT precursor class.</p>
+    </div>
+    <div class="bi-col">
+      <p>WP-003 §03.2 määrittelee institutionaalisen terminaatioajan (ITT) kohdaksi, jossa instituution päätöskapasiteetti lakkaa olemasta kausaalisesti relevantti — ei koska resurssit ovat loppuneet, vaan koska fyysisen päätösikkunan ja institutionaalisen toimintahorisontin leikkaus on tyhjentynyt.</p>
+      <p>Signaali S4 (institutionaalinen korvaaminen) on WP-003 §05.2:ssa tunnistettu havaittava ITT-esiaste. Kun luvituskehyksiä muokataan sallimaan varainfrastruktuurin toimiminen ensisijaisena kapasiteettina, instituutio kohtaa fyysisen rajoitteen hallinnollisesti eikä ratkaise sitä rakenteellisesti.</p>
+      <p>Signaali S3 (CO₂-vienti ennen kotimaista arviointia) lisää WP-003 §02.2:n peruuttamattomuusdimension.</p>
+    </div>
+  </div>
+
+  <!-- EPISTEMIC NOTE — v1.1 addition -->
+  <div class="ep-note">
+    <div class="ep-label">Epistemic note — v1.1</div>
+    <p>The argument above — that the coupling of S4 and S3 together constitutes an ITT precursor sequence closing the option space defined in WP-003 §05.2 — is DA-001's own interpretive construction. WP-003 §05.2 identifies S4-type institutional substitution as an ITT precursor. WP-004 identifies S-5-type decision irreversibility accumulation as a deterioration signal. DA-001 argues that their specific combination in the Finnish context jointly satisfies the ITT boundary conditions of WP-003. This combination argument does not follow directly from either source document — it is an applied inference. It is presented here as reasoned diagnostic interpretation, not as a deductive consequence of the framework. Readers applying the WP-004 and WP-003 frameworks independently should evaluate the S3+S4 coupling claim on its own merits.</p>
+  </div>
+
+  <div class="lr-box">
+    <div class="lr-row">
+      <div class="lr-cell"><div class="lr-head">LR-Class (WP-003 §05.2)</div></div>
+      <div class="lr-cell"><div class="lr-head">English</div></div>
+      <div class="lr-cell"><div class="lr-head">Suomi</div></div>
+    </div>
+    <div class="lr-row">
+      <div class="lr-cell"><div class="lr-body"><strong>B — Value Choice</strong></div></div>
+      <div class="lr-cell"><div class="lr-body">Multiple technically coherent response paths remain available: duration architecture, institutional capacity mechanisms, domestic CO₂ utilisation pathways. Governance agency is intact. The decision is a political priority choice, not yet a governance failure.</div></div>
+      <div class="lr-cell"><div class="lr-body">Useita teknisesti johdonmukaisia vastetapoja on käytettävissä: duration-arkkitehtuuri, institutionaaliset kapasiteettimekanismit, kotimaiset CO₂-hyödyntämispolut. Hallintovalta on toiminnassa. Päätös on poliittinen prioriteettivalinta, ei vielä hallinnon epäonnistuminen.</div></div>
+    </div>
+    <div class="lr-row">
+      <div class="lr-cell"><div class="lr-body" style="color:#8b4513"><strong>→ C transition risk</strong></div></div>
+      <div class="lr-cell"><div class="lr-body">The B→C transition (ITT onset) is triggered if: (a) CO₂ export infrastructure is committed at scale before domestic utilisation assessment; AND (b) S4 institutional substitution normalises backup resources as primary capacity, closing the window for duration infrastructure. WP-003 identifies this sequence as an ITT precursor pattern. DA-001 argues the conditions for this sequence are currently active — see epistemic note above.</div></div>
+      <div class="lr-cell"><div class="lr-body">B→C-siirtymä käynnistyy jos: (a) CO₂-vienti-infrastruktuuriin sitoudutaan laajamittaisesti ennen kotimaisuusarviointia; JA (b) S4-institutionaalinen korvaaminen normalisoi varakapasiteetin ensisijaiseksi.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Recovery Capacity Zone Assessment / Palautumiskapasiteetin vyöhykearviointi</h2>
+  <div style="margin:1.2rem 0">
+    <div class="zone-row"><span class="zone-name z-s">Stable</span><span class="zone-g">dΩ ≥ 0</span><span class="zone-desc">Variables maintained or improving. No active signal cluster. <em>Not applicable.</em></span></div>
+    <div class="zone-row"><span class="zone-name z-c">Concern</span><span class="zone-g">dΩ &lt; 0</span><span class="zone-desc">One or two signals present. Capacity declining but above threshold. Intervention feasible without systemic disruption. <em>Partially met. Signal count (5/5) and declining gradient on two variables indicate the system is at the upper boundary of Concern, with active trajectory toward Danger.</em></span></div>
+    <div class="zone-row" style="background:#fdf8f2"><span class="zone-name z-d">▶ Danger</span><span class="zone-g">dΩ ≪ 0</span><span class="zone-desc"><strong>CONDITIONS MET: 5/5 signals active. Gradient declining on Variation and Redundancy. System is in the Concern-to-Danger transition. Intervention window remains open but is narrowing. / 5/5 signaalia aktiivisena. Interventioikkuna auki mutta kapenemassa.</strong></span></div>
+    <div class="zone-row"><span class="zone-name z-i">Irreversible</span><span class="zone-g">Ω → 0</span><span class="zone-desc">Recovery capacity exhausted. Decisions retain formal form but have lost causal influence. <em>Not reached. The intervention window for duration architecture and domestic CO₂ utilisation remains open. (WP-004 §05, WP-003 §05.2)</em></span></div>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Historical Reference Cases / Historialliset vertailutapaukset</h2>
+  <p style="font-family:var(--serif);font-size:.88rem;font-style:italic;color:var(--muted);margin-bottom:1rem">Three cases selected for structural comparability with the Finnish 2026 configuration.</p>
+  <table class="tbl">
+    <tr>
+      <th>Case</th>
+      <th>What failed first</th>
+      <th>Response / outcome</th>
+      <th>WP-004 finding</th>
+      <th>Finnish parallel</th>
+    </tr>
+    <tr>
+      <td><strong>Germany 2010–2012</strong></td>
+      <td>VRE growth produced volatility before duration solutions existed.</td>
+      <td>Power-to-Gas and storage investment began; duration gap persisted years.</td>
+      <td><em>Power ≠ Persistence</em></td>
+      <td>S2 active: BESS and demand response as system solutions, not duration solutions.</td>
+    </tr>
+    <tr>
+      <td><strong>United Kingdom 2014–2015</strong></td>
+      <td>Energy market alone did not produce adequate dispatchable capacity.</td>
+      <td>Capacity Market introduced. Institutional response preceded threshold event.</td>
+      <td><em>Capacity requires own value mechanism</em></td>
+      <td>Institutional capacity mechanism not yet established. S4 substitution active instead.</td>
+    </tr>
+    <tr>
+      <td><strong>California 2019–2020</strong></td>
+      <td>Extreme weather + resource adequacy planning + market practice combined. No single cause.</td>
+      <td>Rotating outages. Post-event corrections. Invariant visible in pre-event signal structure.</td>
+      <td><em>Invariant reveals in compound extreme</em></td>
+      <td>WP-001 Black Period = structural equivalent. This document aims to function as the pre-event signal structure.</td>
+    </tr>
+  </table>
+  <div class="rb"><p>Finland 03/2026 position: Germany phase (volatility before duration solutions) + UK question (capacity mechanism absent) — before the California event. Intervention window open.</p></div>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Trigger Events 2026–2028 / Laukaisevat tapahtumat 2026–2028</h2>
+  <p style="font-family:var(--serif);font-size:.88rem;font-style:italic;color:var(--muted);margin-bottom:1rem">Observable conditions providing empirical evidence on the trajectory described above. Diagnostic test events, not predictions.</p>
+  <div class="trig-header">
+    <div>Trigger</div><div>Condition (EN)</div><div>Ehto (FI)</div><div>Observable metric</div><div>Diagnostic meaning</div>
+  </div>
+  <div class="trig-row">
+    <div><strong>T1 Duration Test</strong></div>
+    <div>Low-wind cold period exceeding 72 hours during peak demand season.</div>
+    <div>Yli 72 h heikkotuulinen pakkasjakso huipputuntiaikana.</div>
+    <div>Price spike duration (h/event, not €/MWh peak). Reserve activation hours.</div>
+    <div>Spikes &gt;6 h/event: duration gap manifesting. S1 confirmed empirically.</div>
+  </div>
+  <div class="trig-row">
+    <div><strong>T2 Volatility Infra Lock-in</strong></div>
+    <div>Battery capacity grows; business case anchored to short-duration peak arbitrage, not multi-day endurance.</div>
+    <div>Akkukapasiteetti kasvaa mutta sopimukset perustuvat lyhytkestoisiin hintapiikkeihin.</div>
+    <div>BESS contracted duration profile. PPA structure by duration class.</div>
+    <div>Short-duration concentration confirms S2. Power-persistence gap widening.</div>
+  </div>
+  <div class="trig-row">
+    <div><strong>T3 Institutional Substitution</strong></div>
+    <div>Backup resources enter capacity market through permit exemptions rather than standard market qualification.</div>
+    <div>Varakapasiteettia tulee kapasiteettimarkkinalle lupapäätöksin eikä normaalin markkinakelpoisuuden kautta.</div>
+    <div>Permit exemption volume. Backup utilisation hours in non-crisis periods.</div>
+    <div>Normalisation of backup as primary = S4 confirmed. ITT precursor sequence active.</div>
+  </div>
+</div>
+
+<!-- §08 -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Observable Metrics / Seurattavat mittarit</h2>
+  <div class="met-header">
+    <div>#</div><div>Metric / Mittari</div><div>Source EN</div><div>Lähde FI</div><div>Warning threshold / Varoitusmerkki</div><div>Signal</div>
+  </div>
+  <div class="met-row">
+    <div class="tbl-key">M1</div>
+    <div>mFRR/aFRR activation hours in winter</div>
+    <div>Fingrid</div><div>Fingrid</div>
+    <div>Growing activation duration trend</div>
+    <div class="tbl-key">S1</div>
+  </div>
+  <div class="met-row">
+    <div class="tbl-key">M2</div>
+    <div>Price spike duration per event (h, not €/MWh)</div>
+    <div>NordPool</div><div>NordPool</div>
+    <div>Spikes &gt;6 h/event</div>
+    <div class="tbl-key">S1</div>
+  </div>
+  <div class="met-row">
+    <div class="tbl-key">M3</div>
+    <div>CO₂ export commitments vs. domestic utilisation</div>
+    <div>TEM / project register</div><div>TEM / hankerekisteri</div>
+    <div>Export share &gt;50%</div>
+    <div class="tbl-key">S3</div>
+  </div>
+  <div class="met-row">
+    <div class="tbl-key">M4</div>
+    <div>Dispatchable MW / new load MW ratio</div>
+    <div>Fingrid / project register</div><div>Fingrid / hankerekisteri</div>
+    <div>Ratio &lt;0.5</div>
+    <div class="tbl-key">S2+S5</div>
+  </div>
+  <div class="met-row">
+    <div class="tbl-key">M5</div>
+    <div>Backup resource routine utilisation hours</div>
+    <div>Energy Authority</div><div>Energiavirasto</div>
+    <div>Permit exemptions growing</div>
+    <div class="tbl-key">S4</div>
+  </div>
+</div>
+
+<!-- §09 — CORRECTED: scope exclusion note added -->
+<div class="section">
+  <div class="section-id">§ 09</div>
+  <h2>Scope and Limits / Soveltamisala ja rajoitukset</h2>
+
+  <div class="limits">
+    <div class="lc">
+      <div class="lh" style="color:#4a7a4a">This document can</div>
+      <p>Provide structured language for identifying recovery capacity deterioration.</p>
+      <p>Generate diagnostic questions about trajectory that standard adequacy assessments do not capture.</p>
+      <p>Identify observable metrics and trigger events for empirical monitoring.</p>
+      <p>Justify LR-Class B→C transition risk through explicit ITT coupling (WP-003 §03–05).</p>
+      <p>Serve as companion document to WP-005 for institutional and planning audiences.</p>
+    </div>
+    <div class="lc">
+      <div class="lh" style="color:#8b4513">This document cannot</div>
+      <p>Predict system failure or the timing of threshold events.</p>
+      <p>Replace domain expertise or operational risk assessment.</p>
+      <p>Justify specific infrastructure or policy decisions directly.</p>
+      <p>Claim validity beyond the WP-004 variables and signal structure.</p>
+      <p>Serve as a quantitative model.</p>
+    </div>
+  </div>
+
+  <!-- SCOPE EXCLUSION NOTE — v1.1 addition -->
+  <div class="scope-note">
+    <div class="scope-label">Findings outside this assessment's scope — v1.1</div>
+    <p>This assessment addresses the technical energy system's structural variables (Variation, Redundancy, Recovery Time) and the observable signals that indicate their deterioration. WP-005 produces three findings that are within the WP-004 diagnostic framework but are not assessed here:</p>
+    <p><strong>F-3</strong> — Asymmetric distribution of transition benefits and burdens across income levels and ownership structures generates a political continuity risk operating on the same timescale as technical risks. This is a Variation variable (WP-004 Variable I) operating through institutional, not technical, pathways.</p>
+    <p><strong>F-4</strong> — Finland's historical negotiation posture in comparable structural transitions suggests systematic underperformance in capturing value from domestically-hosted, foreign-owned industrial operations. This is an institutional determinant of recovery capacity introduced in WP-005 §09.</p>
+    <p><strong>F-6</strong> — PPA-driven capacity allocation structurally disadvantages household consumers and places the WP-004 Variation variable for that population segment on a declining trajectory independent of wholesale price levels.</p>
+    <p>These findings are not excluded because they are less significant — WP-005 §09 explicitly frames F-4 as a variable not captured in technical adequacy analysis. They are excluded because their assessment requires a different instrument: one that examines institutional and distributional dynamics rather than technical system signals. They constitute the natural scope of a subsequent Diagnostic Assessment (DA-002).</p>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-id">§ 10</div>
+  <h2>Falsification Conditions / Falsifiointiehdot</h2>
+  <div class="bi">
+    <div class="bi-col">
+      <p>This assessment's diagnostic findings should be considered falsified if any of the following conditions are demonstrated through empirical evidence:</p>
+      <p><strong>FC-1</strong> · The Finnish system traverses multiple Black Period events without requiring backup resource normalisation (S4), demonstrating that the Redundancy variable is not on a declining trajectory.</p>
+      <p><strong>FC-2</strong> · A durable institutional capacity mechanism — explicitly valued for duration, not only peak — is established and operationalised, resolving the UK-question identified in §06.</p>
+      <p><strong>FC-3</strong> · CO₂ export infrastructure commitment is preceded by systematic domestic utilisation pathway assessment, demonstrating that S3 decision irreversibility accumulation has been interrupted before lock-in.</p>
+      <p><strong>FC-4</strong> · Prospective case studies under WP-004 RP-2 demonstrate that the gradient hypothesis has no predictive advantage over cross-sectional state assessment for systems of this type.</p>
+    </div>
+    <div class="bi-col">
+      <p>Tämän arvioinnin diagnostiset löydökset on katsottava falsifioiduiksi, mikäli jokin seuraavista ehdoista osoitetaan empiirisellä näytöllä:</p>
+      <p><strong>FC-1</strong> · Suomen järjestelmä läpäisee useita Black Period -tapahtumia ilman varakapasiteetin normalisointia (S4).</p>
+      <p><strong>FC-2</strong> · Pysyvä institutionaalinen kapasiteettimekanismi — joka arvottaa nimenomaan kestävyyttä — perustetaan ja otetaan käyttöön.</p>
+      <p><strong>FC-3</strong> · CO₂-vienti-infrastruktuurin sitoumus edeltää järjestelmällistä kotimaisen hyödyntämispolun arviointia.</p>
+      <p><strong>FC-4</strong> · WP-004 RP-2:n mukaiset prospektiiviset tapaustutkimukset osoittavat, ettei gradienttihypoteesilla ole ennustavaa etua poikkileikkaustila-arviointiin nähden.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Cross-references -->
+<div class="xb">
+  <div class="xl">Cross-references / Viittaukset</div>
+  <div class="xr"><div class="xi">WP-001</div><div class="xd">Duration Adequacy. Establishes the Black Period concept and continuity gap condition underlying S1.</div></div>
+  <div class="xr"><div class="xi">WP-003</div><div class="xd">Institutional Termination Time. Provides the theoretical basis for LR-Class B→C justification in §04. ITT definition and precursor sequence from WP-003 §03.2 and §05.2.</div></div>
+  <div class="xr"><div class="xi">WP-004</div><div class="xd">Recovery Capacity Invariants. Primary analytical framework. All variables, signals, zones, gradient hypothesis, and falsification programme derive from WP-004.</div></div>
+  <div class="xr"><div class="xi">WP-005</div><div class="xd">Compound Stress Finland. Companion paper providing the compound stress basis. DA-001 operationalises WP-005 §04 into an observable signal and trigger structure. WP-005 F-3, F-4, F-6 are acknowledged but outside this assessment's scope (§09).</div></div>
+  <div class="xr"><div class="xi">Ω-0</div><div class="xd">Recovery Capacity Reference. Minimal vocabulary applied throughout (Ω-0 §07).</div></div>
+  <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node: Structural Properties. Companion Technical Note describing the architectural properties of configurations that address the deficits identified in this assessment.</div></div>
+</div>
+
+<div class="final-box">
+  <p>DIAGNOSTIC ZONE: CONCERN → DANGER · LR-Class: B (→ C transition risk) · DA-001 v1.1 · ACI · March 2026</p>
+  <p style="font-family:var(--serif);font-size:.82rem;font-style:italic;margin-top:.5rem;letter-spacing:0;text-transform:none;color:var(--muted)">This document is a diagnostic instrument. It does not predict crisis. It identifies the phase in which crises of this type historically begin to become possible.</p>
+</div>
+
+<div class="doc-footer">
+  ACI Diagnostic Assessment No. 001 · Finland Pre-Shortage Phase 2026–2032<br>
+  Version 1.1 · March 2026 · Domain D-1 / D-3 / D-4 · Open Working Draft · Subject to revision<br>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  v1.1 changes: §03 S-3 signal added · §04 epistemic note added · §09 scope exclusion note added
+</div>
+
+</body>
+</html>

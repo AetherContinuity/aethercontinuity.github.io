@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI MESA — Municipal Energy Stability Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f7f4ee;--rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--mono);line-height:1.7;max-width:720px;margin:0 auto;padding:3.5rem 2rem 7rem}
+.doc-header{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:baseline}
+.doc-id{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.doc-meta{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+nav{border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:0;display:flex;justify-content:space-between;align-items:center}
+.nav-home{font-family:var(--mono);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-home:hover{color:var(--ink)}
+.nav-home::before{content:'← '}
+.nav-id{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--serif);font-size:1.85rem;font-weight:500;margin-bottom:.35rem;line-height:1.2}
+.sub{font-family:var(--serif);font-size:1.05rem;font-style:italic;color:var(--muted);margin-bottom:.4rem}
+.desc{font-family:var(--serif);font-size:.92rem;color:var(--muted);margin-bottom:2.4rem;padding-bottom:2rem;border-bottom:1px solid var(--rule)}
+.kw{font-size:.6rem;letter-spacing:.08em;color:var(--muted);margin-bottom:2rem}
+.ab{border-left:3px solid var(--ink);padding:1rem 1.4rem;margin:2rem 0 2.5rem;background:#f0ece4}
+.ab-l{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.ab p{font-family:var(--serif);font-size:.95rem;line-height:1.75;color:var(--ink);margin-bottom:.5rem}
+.ab p:last-child{margin-bottom:0}
+.sec{margin-bottom:2.6rem}
+.sec-id{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+h2{font-family:var(--serif);font-size:1.08rem;font-weight:500;margin-bottom:.8rem;border-bottom:1px solid var(--rule);padding-bottom:.4rem}
+h3{font-family:var(--serif);font-size:.98rem;font-weight:500;margin:1.5rem 0 .6rem;color:var(--ink)}
+p{font-family:var(--serif);font-size:1rem;line-height:1.8;color:#2a2520;margin-bottom:.9rem}
+p:last-child{margin-bottom:0}
+ul{margin:1rem 0 1rem 1.2rem}
+ul li{font-family:var(--serif);font-size:.96rem;line-height:1.75;color:#2a2520;margin-bottom:.4rem}
+ul li strong{font-weight:600}
+.rb{border-left:3px solid var(--ink);padding:.85rem 1.2rem;margin:1.3rem 0;background:#f0ece4}
+.rb p{font-size:.95rem;font-style:italic;margin:0}
+/* Layer blocks */
+.ls{margin:1.4rem 0}
+.layer{display:grid;grid-template-columns:42px 1fr;border-top:1px solid var(--rule)}
+.layer:last-child{border-bottom:1px solid var(--rule)}
+.ll{padding:1rem 0;font-size:.65rem;letter-spacing:.15em;color:var(--accent)}
+.lb{padding:1rem 0 1rem 1rem;border-left:1px solid var(--rule)}
+.lt{font-family:var(--serif);font-weight:500;font-size:1rem;margin-bottom:.3rem}
+.ld{font-family:var(--serif);font-size:.9rem;color:#3a3530;line-height:1.6;margin-bottom:.4rem}
+.lr{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:1.2rem 0}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+thead tr{border-bottom:2px solid var(--ink)}
+tbody tr{border-bottom:1px solid var(--rule)}
+tbody tr:last-child{border-bottom:none}
+th{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.55rem .7rem;text-align:left;font-weight:400;background:#f0ece4}
+td{font-family:var(--serif);font-size:.88rem;padding:.65rem .7rem;vertical-align:top;color:#2a2520;line-height:1.5}
+td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.1em;white-space:nowrap}
+/* Process flow */
+.flow{border:1px solid var(--rule);padding:1.4rem 1.6rem;margin:1.2rem 0;background:#f0ece4;overflow-x:auto}
+.flow pre{font-family:var(--mono);font-size:.7rem;line-height:1.9;color:var(--ink);white-space:pre}
+/* Two-column limits */
+.lim{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.2rem 0}
+.lc{background:var(--paper);padding:1rem 1.1rem}
+.lh{font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem}
+.lc p{font-size:.88rem;line-height:1.6;margin-bottom:.35rem;color:#3a3530}
+/* Variant table */
+.vt{margin:1.2rem 0;border:1px solid var(--rule)}
+.vr{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid var(--rule);padding:.75rem 1rem;gap:1rem}
+.vr:last-child{border-bottom:none}
+.vi{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);line-height:1.5}
+.vx{font-family:var(--serif);font-size:.95rem;color:#2a2520;line-height:1.65}
+/* Cross-refs */
+.xb{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.xl{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.xr{display:grid;grid-template-columns:80px 1fr;gap:.8rem;padding:.5rem 0;border-top:1px solid var(--rule)}
+.xr:last-child{border-bottom:1px solid var(--rule)}
+.xi{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em}
+.xd{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.5}
+/* Final box */
+.final-box{border:1px solid var(--rule);border-top:2px solid var(--ink);margin-top:3.5rem;padding:1.25rem 1.5rem;background:#f0ece4;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.final-box strong{color:var(--ink)}
+/* Footer */
+.ft{border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:2.5rem;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:2.1}
+@media(max-width:640px){body{padding:2rem 1.25rem 5rem}.doc-header{flex-direction:column;gap:.5rem}.doc-meta{text-align:left}.lim{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">ACI</a>
+  <span class="nav-id">MESA · Arkkitehtuurikehys</span>
+</nav>
+
+<div style="height:2.5rem"></div>
+
+<div class="doc-header">
+  <span class="doc-id">ACI · MESA · Arkkitehtuurikehys</span>
+  <div class="doc-meta">Versio 1.0 · Joulukuu 2025<br>Domain D-1 / D-4 / D-5<br>Tekninen viitekehys</div>
+</div>
+
+<h1>Municipal Energy Stability Architecture</h1>
+<p class="sub">Kunnallisen energiavakauden arkkitehtuurikehys</p>
+<p class="desc">Hajautettu, teknologianeutraali viitekehys paikalliselle energiajärjestelmän vakauttamiselle ja omavaraisuudelle — laadittu ACI Working Paper -viitekehyksessä (WP-001–WP-005).</p>
+<div class="kw">Avainsanat: kunnallinen energia · CHP · PtX · metanoli · kaukolämpö · VPP · compound stress · recovery capacity · WP-001 · WP-004 · WP-005 · DA-001 · TN-001</div>
+
+<div class="ab">
+  <div class="ab-l">Kehyksen luonne</div>
+  <p>MESA (Municipal Energy Stability Architecture) on tekninen arkkitehtuuriviitekehys, joka kuvaa optimaalisen kunnallisen energiavakauttamislaitoksen rakenteen, toimintaperiaatteet ja talouslogiikan. Se ei ole kaupallinen tuote eikä brändi — se on arkkitehtuurimalli, joka voidaan toteuttaa paikallisiin olosuhteisiin räätälöitynä.</p>
+  <p>MESA on suunniteltu ACI:n compound stress -diagnostiikan pohjalta. Solmu on testattu samanaikaisia stressitekijöitä vastaan, ei vain yksittäisiä riskejä.</p>
+</div>
+
+<!-- §01 -->
+<div class="sec">
+  <div class="sec-id">§ 01</div>
+  <h2>Johdanto: Miksi MESA?</h2>
+  <p>MESA syntyi vastauksena kolmeen rakenteelliseen energiajärjestelmän vajeeseen:</p>
+  <ul>
+    <li><strong>Talven tehopula:</strong> Suomen sähköjärjestelmässä on tunnistettu 2–3 GW:n säätövoiman vajetta talven huipputunneilla, kun tuuli- ja ydinvoima eivät riitä.</li>
+    <li><strong>Lämpöjärjestelmien haavoittuvuus:</strong> Kaukolämpöverkot ovat yhä riippuvaisempia volatileista polttoainemarkkinoista ja tuontienergiasta.</li>
+    <li><strong>CO₂-virtojen hukkakäyttö:</strong> Teollisuuden ja energiantuotannon biogeeniset CO₂-virrat päätyvät ilmakehään sen sijaan, että ne toimisivat kemiallis-energetisen kierron raaka-aineena.</li>
+  </ul>
+  <p>MESA-arkkitehtuuri vastaa näihin vajeisiin yhdistämällä neljä toiminnallista kerrosta yhtenäiseksi, paikallisesti omistetuksi ja operoiduksi energiasolmuksi.</p>
+</div>
+
+<!-- §02 -->
+<div class="sec">
+  <div class="sec-id">§ 02</div>
+  <h2>Historiallinen Konteksti: Todistettu Arkkitehtuurityyppi</h2>
+  <p>MESA ei ole keksitty alusta lähtien. Se vastaa rakenteellisesti kolmea historiallisesti todistettua ja toimivaa mallia, jotka ovat kukin tuottaneet merkittävää kunnallista energiavakautta.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Malli</th><th>Maa / Aikakausi</th><th>Ydinmekanismi</th><th>MESA:n vastaavuus</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Hajautettu CHP</td><td>Tanska, 1990-luku</td><td>Paikalliset CHP-laitokset kaukolämmön peruskuorman tuottajina</td><td>Lämpöjärjestelmän ankkuri + paikallinen säätövoima</td></tr>
+      <tr><td class="key">Stadtwerke-renessanssi</td><td>Saksa, 2000–2020</td><td>Kunnalliset energiayhtiöt investoivat hajautettuun tuotantoon</td><td>Kunnallinen omistus + markkinajoustomalli</td></tr>
+      <tr><td class="key">Local Resilience Hubs</td><td>Kalifornia, 2015–</td><td>Paikalliset energiakeskukset kriisinkestävyyden ytimessä</td><td>Compound stress -resilienssi + kemiallinen varasto</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="rb"><p>Yhteinen piirre kaikissa malleissa: keskitetyn järjestelmän rinnalle on syntynyt kunnallinen stabilointikerros, joka absorboi markkina- ja toimitushäiriöitä ja tuottaa samalla liiketaloudellista hyötyä omistajilleen.</p></div>
+</div>
+
+<!-- §03 -->
+<div class="sec">
+  <div class="sec-id">§ 03</div>
+  <h2>MESA-Arkkitehtuurin Neljä Toimintakerrosta</h2>
+  <p>MESA-solmu koostuu neljästä toiminnallisesta kerroksesta, jotka muodostavat yhtenäisen, itseään vahvistavan systeemin. Jokainen kerros toimii itsenäisesti, mutta kerrosten välinen integraatio on MESA:n taloudellisen logiikan ydin.</p>
+
+  <div class="ls">
+    <div class="layer">
+      <div class="ll">A</div>
+      <div class="lb">
+        <div class="lt">Paikallinen Säätövoima</div>
+        <div class="ld">Moottorivoimalat tai muut nopeat tuotantoyksiköt tarjoavat reservikapasiteettia sähkömarkkinoille (FCR-N/D, aFRR, mFRR). Toimii itsenäisesti muista kerroksista riippumatta.</div>
+        <div class="lr">WP-001 · Keston riittävyys · DA-001 S1–S2</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="ll">B</div>
+      <div class="lb">
+        <div class="lt">Kemiallinen Energiavarasto</div>
+        <div class="ld">Power-to-X -prosessi (elektrolyysi + metanolisynteesi) muuntaa edullisen sähkön polttoaineeksi CHP:lle. CO₂-lähteenä biogeeniset virrat teollisuudesta tai omasta CHP:stä. Tämä kerros on aikasidonnainen: CO₂-ikkunan umpeutuminen tekee sen rakenteellisesti mahdottomaksi.</div>
+        <div class="lr">DA-001 S3 · TN-001 §04 · WP-005 F-5</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="ll">C</div>
+      <div class="lb">
+        <div class="lt">Lämpöjärjestelmän Ankkuri</div>
+        <div class="ld">CHP- ja PtX-prosessien hukkalämpö integroidaan kaukolämpöverkkoon kiinteähintaisella sopimuksella (HPA). Tarjoaa kunnalle ennustettavan lämmöntoimituksen riippumatta polttoaineiden markkinahinnoista.</div>
+        <div class="lr">WP-004 Muuttuja II · DA-001 S1</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="ll">D</div>
+      <div class="lb">
+        <div class="lt">Markkinajouston Lähde</div>
+        <div class="ld">Virtuaalivoimalaitos (VPP) -optimointi yhdistää kaikki kerrokset yhtenäiseksi markkinatoimijaksi. Muuntaa sähkömarkkinoiden volatiliteetin lisätuloksi sen sijaan, että se olisi riski.</div>
+        <div class="lr">WP-004 Muuttuja I · DA-001 S2</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §04 -->
+<div class="sec">
+  <div class="sec-id">§ 04</div>
+  <h2>Prosessiarkkitehtuuri</h2>
+  <p>MESA-solmun energia- ja ainevirrat (tekstuaalinen P&ID-kuvaus):</p>
+
+  <div class="flow">
+<pre>CO₂-lähde (teollisuus/CHP)
+        ↓
+  CO₂-kompressori → Puhdistus
+        ↓
+  Elektrolyysi  ←  Sähköverkko (spot-hinta)
+  (H₂-tuotanto)
+        ↓
+  Metanolisynteesi (CO₂ + H₂ → CH₃OH)
+        ↓
+  Metanolisäiliö
+        ↓
+  CHP-moottorit  →  Sähkö → Verkko / reservimarkkinat
+        ↓
+  Hukkalämpö → Kaukolämpöverkko (HPA-sopimus)</pre>
+  </div>
+
+  <div class="rb"><p>Avainperiaate: CHP-moottorit käyttävät omaa PtX-tuotettua metanolia polttoaineenaan, jolloin fossiilisten polttoaineiden ostokustannus lähestyy nollaa. Tuotto syntyy vältetyistä kustannuksista, ei spekulatiivisesta metanolin ulkoismyynnistä.</p></div>
+</div>
+
+<!-- §05 -->
+<div class="sec">
+  <div class="sec-id">§ 05</div>
+  <h2>Tekninen Perusmitoitus</h2>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Parametri</th><th>Tyypillinen arvo</th><th>Huomio</th></tr></thead>
+    <tbody>
+      <tr><td>Elektrolyysikapasiteetti</td><td>40–80 MWe</td><td>Optimoitu paikallisen CO₂-virran mukaan</td></tr>
+      <tr><td>Moottorikapasiteetti (CHP)</td><td>80–200 MW</td><td>Metanoli- tai biokaasukäyttöinen</td></tr>
+      <tr><td>Metanolituotanto</td><td>15–30 kt/a</td><td>100 % omakäyttö tai ylijäämä myyntiin</td></tr>
+      <tr><td>CO₂-tarve</td><td>30–45 kt/a</td><td>Biogeeninen lähde (CHP, jätepolttolaitos)</td></tr>
+      <tr><td>Lämpöjousto kaukolämpöön</td><td>20–80 MW</td><td>HT-verkko (CHP) + LT-verkko (PtX-hukkalämpö)</td></tr>
+      <tr><td>Kokonaishyötysuhde</td><td>80–88 %</td><td>CHP + PtX + lämpöintegraatio</td></tr>
+      <tr><td>CAPEX per solmu</td><td>120–240 M€</td><td>Riippuu kapasiteetista ja integraatioasteesta</td></tr>
+      <tr><td>EBITDA per solmu</td><td>35–60 M€/a</td><td>Perustuu vältetyille kustannuksille</td></tr>
+      <tr><td>Takaisinmaksuaika</td><td>4–6 vuotta</td><td>Ilman julkista tukea</td></tr>
+      <tr><td>IRR</td><td>14–20 %</td><td>Stressitestatuilla markkinaoletuksilla 8–12 %</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="sec">
+  <div class="sec-id">§ 06</div>
+  <h2>Talousmalli: Tulovirrat ja Riskilattia</h2>
+  <p>MESA:n talousmalli perustuu neljään tulovirtaan, joista tärkein on vältetty kustannus eikä ulkopuolinen myyntituotto. Tämä erottaa sen markkinasijoituksesta.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Tulovirta</th><th>Mekanismi</th><th>Arvio (M€/a, 60 MW)</th><th>Markkinariskitaso</th></tr></thead>
+    <tbody>
+      <tr><td>Fossiilisen polttoaineen korvaus</td><td>Oma metanoli korvaa ostopolttoaineen CHP:ssä</td><td>20–50</td><td>Erittäin matala (sisäinen säästö)</td></tr>
+      <tr><td>Kaukolämpömyynti (HPA)</td><td>Hukkalämpö kiinteähintaisella sopimuksella</td><td>10–25</td><td>Matala (sopimuspohjainen)</td></tr>
+      <tr><td>Reservimarkkina (VPP)</td><td>FCR-N/D, aFRR, mFRR -tulot</td><td>1–6</td><td>Matala-keskitaso</td></tr>
+      <tr><td>Metanolin ylijäämämyynti</td><td>RFNBO-metanoli spotmarkkinoille</td><td>1–8</td><td>Keskitaso (vaihtoehtoinen)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="rb"><p>Riskilattia-periaate: MESA:n kannattavuus on turvattu jo pelkästään fossiilikorvaussäästöillä ja lämpösopimuksella. Reservi- ja metanolimyynnit ovat lisätuloja, joita ei vaadita peruskannattavuuteen.</p></div>
+</div>
+
+<!-- §07 -->
+<div class="sec">
+  <div class="sec-id">§ 07</div>
+  <h2>ACI-Viitekehys: Compound Stress -diagnostiikka</h2>
+  <p>MESA-arkkitehtuuri on suunniteltu ACI:n jatkuvuusdiagnostiikan ja compound stress -metodologian pohjalta. Solmu on testattu samanaikaisia stressitekijöitä vastaan, ei vain yksittäisiä riskejä.</p>
+
+  <h3>7.1 Compound Stress -skenaario: Talvi 2026–2027</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Stressitekijä</th><th>Vaikutus ilman MESA:a</th><th>MESA:n vaimentava mekanismi</th></tr></thead>
+    <tbody>
+      <tr><td>Sähkön hintapiikki (&gt;150 €/MWh)</td><td>CHP:n käyttökustannukset nousevat</td><td>Oma metanoli absorboi, PtX pysähtyy (ei osto)</td></tr>
+      <tr><td>Fossiilipolttoaineen saatavuushäiriö</td><td>Kaukolämpö vaarantuu</td><td>Varastoitu metanoli jatkaa tuotantoa</td></tr>
+      <tr><td>Kylmä jakso + tehopula</td><td>Sähkö- ja lämpökatkojen riski</td><td>CHP tuottaa reservikapasiteettia markkinoille</td></tr>
+      <tr><td>CO₂-syöttöhäiriö</td><td>PtX-tuotanto pysähtyy</td><td>CHP jatkaa normaalisti; PtX palautuu kun CO₂ saatavilla</td></tr>
+      <tr><td>Sähkömarkkinoiden volatiliteetti</td><td>Kustannusten arvaamattomuus</td><td>VPP muuntaa volatiliteetin lisätuloksi</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>7.2 Recovery Capacity Framework: MESA:n palautumisprofiili</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>RSM-dimensio</th><th>MESA:n tulos</th><th>Perustelut</th></tr></thead>
+    <tbody>
+      <tr><td>Absorptiokapasiteetti</td><td>Korkea</td><td>Varastoitu metanoli + VPP-jousto</td></tr>
+      <tr><td>Jatkuvuuskapasiteetti</td><td>Erittäin korkea</td><td>Modulaarinen rakenne, CHP-varmistus</td></tr>
+      <tr><td>Transformaatiokapasiteetti</td><td>Korkea</td><td>PtX-koon skaalautuvuus markkinatilanteen mukaan</td></tr>
+      <tr><td>Taloudellinen resilienssi</td><td>Korkea (stressitestissä IRR 8–12 %)</td><td>Perustuotto ei riipu ulkoisesta metanolin hinnasta</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- §08 -->
+<div class="sec">
+  <div class="sec-id">§ 08</div>
+  <h2>Toteutusmalli ja Kunnallinen Osallistumisrakenne</h2>
+  <p>MESA-arkkitehtuurin toteuttava kunta tai kuntakonsortio rakentaa osallistumisensa kolmeen kerrokseen, joissa riski ja kontrolli ovat tasapainossa:</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Kerros</th><th>Kunnan rooli</th><th>CAPEX-osuus</th><th>Taloudellinen hyöty</th></tr></thead>
+    <tbody>
+      <tr><td>Infrastruktuuri</td><td>Tontti, lämpöliittymät, putkisto</td><td>10–20 %</td><td>Vuokratulot, kiinteistövero, HPA-sopimus</td></tr>
+      <tr><td>Operaattoriyhtiö</td><td>Osakkuus solmuyhtiössä</td><td>Valinnainen</td><td>Osinkotuotto, IRR-osuus</td></tr>
+      <tr><td>Konsortiohallinto</td><td>VPP-keskus, hankintayhteistyö</td><td>Pieni (hallinto)</td><td>Skaalaedut, EU-rahoituspääsy</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Toteutuksen vaiheistus</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Vaihe</th><th>Toimenpide</th><th>Kesto</th></tr></thead>
+    <tbody>
+      <tr><td class="key">1</td><td>Esiselvitys — CO₂-taseen, lämpöverkon ja sähköliitynnän kartoitus</td><td>1–2 kk</td></tr>
+      <tr><td class="key">2</td><td>Poliittinen päätös — Kunnanhallituksen sitoutuminen ja tontinvaraus</td><td>1–3 kk</td></tr>
+      <tr><td class="key">3</td><td>Sopimukset — HPA, maanvuokra, solmuyhtiön perustaminen</td><td>2–4 kk</td></tr>
+      <tr><td class="key">4</td><td>Luvitus — Rakennus- ja ympäristöluvat (priorisoitu)</td><td>3–6 kk</td></tr>
+      <tr><td class="key">5</td><td>FEED / Hankinta — Tekninen esiselvitys, laitetoimittajavalinta</td><td>3–6 kk</td></tr>
+      <tr><td class="key">6</td><td>Rakentaminen — Modulaarinen, vaiheistettu</td><td>12–18 kk</td></tr>
+      <tr><td class="key">7</td><td>Käyttöönotto — VPP-integraatio, optimoinnin aktivointi</td><td>1–2 kk</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- §09 -->
+<div class="sec">
+  <div class="sec-id">§ 09</div>
+  <h2>EU-Rahoituskelpoisuus ja Regulatoriset Ajurit</h2>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Rahoitusinstrumentti</th><th>MESA:n kelpoisuusperuste</th><th>Prioriteetti</th></tr></thead>
+    <tbody>
+      <tr><td>Innovation Fund</td><td>RFNBO-metanolituotanto + CO₂-talteenotto + lisäisyys</td><td>Korkea</td></tr>
+      <tr><td>CEF Energy</td><td>Sähköverkon vakaus, PtX-infrastruktuuri, energiayhteenliitäntä</td><td>Korkea</td></tr>
+      <tr><td>Just Transition Fund</td><td>JTF-alueilla sijaitsevat solmut (energiasiirtymäalueet)</td><td>Kohtalainen</td></tr>
+      <tr><td>InvestEU / EIB</td><td>Kunnallinen infrastruktuuri, pitkä tuottoprofiili, matala luottoriski</td><td>Korkea</td></tr>
+      <tr><td>NIB (Pohjoismaat)</td><td>Pohjoinen infrastruktuuriyhteistyö, energiaomavaraisuus</td><td>Kohtalainen</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Regulatoriset ajurit: RED III:n RFNBO-velvoitteet (2030: 42 % uusiutuva vety teollisuudessa), REPowerEU:n energiaomavaraisuustavoitteet, sekä Suomen kansallinen varautumisvelvoite (huoltovarmuuslaki).</p>
+</div>
+
+<!-- §10 -->
+<div class="sec">
+  <div class="sec-id">§ 10</div>
+  <h2>Yhteenveto: MESA Arkkitehtuurina</h2>
+
+  <div class="vt">
+    <div class="vr"><span class="vi">Tekninen</span><span class="vx">Todistettu teknologia (CHP + elektrolyysi + metanoli); 80–88 % kokonaishyötysuhde.</span></div>
+    <div class="vr"><span class="vi">Taloudellinen</span><span class="vx">IRR 14–20 % ilman tukia; riskilattia perustuu vältetyille kustannuksille.</span></div>
+    <div class="vr"><span class="vi">Kunnallinen</span><span class="vx">Täysi paikallinen omistus; ei vastapuoliriskiä; korkein mahdollinen luottoluokitus kuntarahoitukselle.</span></div>
+    <div class="vr"><span class="vi">Kansallinen</span><span class="vx">Täyttää 2–3 GW:n säätövoiman vajeen; RFNBO-velvoitteiden täyttäminen.</span></div>
+    <div class="vr"><span class="vi">Eurooppalainen</span><span class="vx">Replikoitava malli; korkea EU-rahoituskelpoisuus; energiayhteisöjen paradigma.</span></div>
+    <div class="vr"><span class="vi">Resilienssi (ACI)</span><span class="vx">Compound stress -testattu; korkea RSM-tulos kaikissa kriisiskenaarioissa.</span></div>
+  </div>
+</div>
+
+<!-- Cross-refs -->
+<div class="xb">
+  <div class="xl">Viittaukset</div>
+  <div class="xr"><div class="xi">WP-001</div><div class="xd">Duration Adequacy. Keston riittävyys -käsite ja Black Period -ehto. Kerroksen A mitoituksen teoreettinen perusta.</div></div>
+  <div class="xr"><div class="xi">WP-004</div><div class="xd">Recovery Capacity Invariants. Ensisijainen analyyttinen viitekehys. Kaikki RSM-dimensiot ja compound stress -testaus viittaavat WP-004:n muuttujiin.</div></div>
+  <div class="xr"><div class="xi">WP-005</div><div class="xd">Compound Stress Finland 2025–2035. Kontekstuaalinen perusta. CO₂-ikkuna (F-5) ja neuvotteluasema (F-4) ovat suoraan relevantteja kerrokselle B ja MESA:n omistusrakenteelle.</div></div>
+  <div class="xr"><div class="xi">DA-001</div><div class="xd">Finland Pre-Shortage Phase 2026–2032. MESA on suunniteltu vastaamaan erityisesti DA-001:n tunnistamiin viiteen aktiiviseen varoitussignaaliin.</div></div>
+  <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node. MESA on TN-001:ssä kuvatun arkkitehtuurin täydellinen toteutusviitekehys — TN-001 kuvaa rakenteelliset ominaisuudet, MESA kuvaa toteutuksen logiikan.</div></div>
+</div>
+
+<div class="final-box">
+  <strong>MESA · Municipal Energy Stability Architecture</strong><br>
+  Tekninen Arkkitehtuurikehys v1.0 · Joulukuu 2025 · Domain D-1 / D-4 / D-5<br>
+  Laadittu ACI Working Paper -viitekehyksessä (WP-001–WP-005)<br><br>
+  <span style="text-transform:none;letter-spacing:0;font-size:.62rem;font-style:italic;color:var(--muted)">MESA on arkkitehtuuri, ei tuote. Se kuvaa rakenteen, jonka avulla kunta tai kuntakonsortio voi rakentaa paikallisesti omistetun, taloudellisesti kannattavan ja compound stress -testatun energiavakauttamislaitoksen.</span>
+</div>
+
+<div class="ft">
+  ACI · Municipal Energy Stability Architecture · Tekninen Arkkitehtuurikehys v1.0<br>
+  Joulukuu 2025 · Domain D-1 / D-4 / D-5 · Tekninen viitekehys<br>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Tämä kehys kuvaa arkkitehtuurin rakenteelliset ominaisuudet. Se ei suosittele erityisiä toimittajia, investointiohjelmia tai poliittisia kantoja.
+</div>
+
+</body>
+</html>
