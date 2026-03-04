@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Program — Aether Continuity Institute</title>
+<meta name="description" content="ACI examines how complex systems maintain operational continuity under compound stress — across six domains from energy infrastructure to continuity computing and situational awareness persistence." />
+<link rel="canonical" href="https://aethercontinuity.org/research.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Research Program — Aether Continuity Institute" />
+<meta property="og:description" content="Six-domain research program examining system continuity architecture under compound stress: energy duration, distributed continuity, institutional decision capacity, compound stress dynamics, continuity computing, and situational awareness persistence." />
+<meta property="og:url" content="https://aethercontinuity.org/research.html" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchProject",
+  "name": "ACI Research Program",
+  "description": "A research program examining how complex systems maintain operational continuity under compound stress conditions.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Aether Continuity Institute",
+    "alternateName": "ACI",
+    "url": "https://aethercontinuity.org"
+  },
+  "hasPart": [
+    { "@type": "ResearchProject", "name": "Energy Duration", "identifier": "D-1" },
+    { "@type": "ResearchProject", "name": "Distributed Continuity Doctrines", "identifier": "D-2" },
+    { "@type": "ResearchProject", "name": "Institutional Decision Capacity", "identifier": "D-3" },
+    { "@type": "ResearchProject", "name": "Compound Stress Analysis", "identifier": "D-4" },
+    { "@type": "ResearchProject", "name": "Continuity-Oriented Computing Systems", "identifier": "D-5" },
+    { "@type": "ResearchProject", "name": "Situational Awareness Persistence", "identifier": "D-6" }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aethercontinuity.org" },
+    { "@type": "ListItem", "position": 2, "name": "Research Program", "item": "https://aethercontinuity.org/research.html" }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* Header strip */
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .page { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.1s; }
+
+  /* Title block */
+  .title-block { margin-bottom: 3.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .page-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.page-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.25rem; }
+  .page-intro { font-size: 1.05rem; line-height: 1.85; color: #3a3530; }
+
+  /* Section */
+  .section { margin-bottom: 3.5rem; }
+  .section p { margin-bottom: 1.2rem; font-size: 1rem; line-height: 1.8; color: #3a3530; }
+  .section p:last-child { margin-bottom: 0; }
+
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); flex-shrink: 0; }
+  h2.section-title { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.01em; }
+
+  /* Overview statement */
+  .statement {
+    background: var(--paper-2);
+    border-left: 3px solid var(--ink);
+    padding: 1.5rem 1.75rem;
+    margin: 2rem 0;
+  }
+  .statement p { font-size: 1.05rem; font-style: italic; color: var(--ink); margin: 0; line-height: 1.85; }
+
+  /* Domain table */
+  .domain-list { margin: 2rem 0; }
+
+  .domain-item {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 0 1.75rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .domain-item:first-child { border-top: 1px solid var(--rule); }
+
+  .domain-id {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    padding-top: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .domain-body {}
+  .domain-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+  }
+  .domain-desc {
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: #3a3530;
+    margin-bottom: 0.6rem;
+  }
+  .domain-pubs {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .domain-pubs a { color: var(--accent); text-decoration: none; }
+  .domain-pubs a:hover { text-decoration: underline; }
+
+  /* Layer labels */
+  .layer-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.5rem 0 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Publication list */
+  .pub-list { margin: 1.5rem 0; }
+  .pub-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 0 1.25rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .pub-item:first-child { border-top: 1px solid var(--rule); }
+  .pub-id { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--accent); }
+  .pub-title { font-size: 0.95rem; color: #3a3530; line-height: 1.5; }
+  .pub-title a { color: inherit; text-decoration: none; }
+  .pub-title a:hover { color: var(--accent); }
+  .pub-domain { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+
+  /* Architecture diagram */
+  .arch-block {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 1.75rem 2rem;
+    margin: 2rem 0;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    line-height: 2;
+    color: #3a3530;
+  }
+  .arch-layer { color: var(--muted); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.5rem; }
+  .arch-layer:first-child { margin-top: 0; }
+  .arch-entry { padding-left: 1.5rem; color: var(--ink); }
+  .arch-arrow { color: var(--rule); padding-left: 1.5rem; }
+
+  /* Callout */
+  .callout {
+    background: var(--paper-3);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.75rem 0;
+  }
+  .callout p { font-size: 0.97rem; margin: 0; color: var(--ink); }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 2.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .page { padding: 3rem 1.25rem 5rem; }
+    .dih { padding: 1.25rem 1.25rem 1rem; }
+    .pub-item { grid-template-columns: 70px 1fr; }
+    .pub-domain { display: none; }
+    footer { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <div class="dih-institute">Aether Continuity Institute · ACI</div>
+    <div class="dih-series"><span class="series-accent">Research Program</span> · Overview</div>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      Version: <strong>1.0 · 2026</strong><br>
+      Status: <strong>Active</strong><br>
+      Language: <strong>EN</strong>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI</a>
+  <span class="nav-id">Research Program</span>
+</nav>
+
+<div class="page">
+
+  <div class="title-block">
+    <div class="page-label">Aether Continuity Institute · Research Program</div>
+    <h1 class="page-title">System Continuity Architecture</h1>
+    <p class="page-intro">ACI is an independent diagnostic initiative studying the conditions under which complex systems fail to maintain operational continuity — not because they lack capacity, but because the structural properties required to convert capacity into action under stress are absent. The research program spans six domains, from physical energy infrastructure to the computational and awareness layers that make that infrastructure legible and actionable under compound stress.</p>
+  </div>
+
+  <!-- §01 The core claim -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">The Core Claim</h2>
+    </div>
+
+    <div class="statement">
+      <p>Continuity is not guaranteed by capacity, intent, or optimisation. It emerges only where systems retain decision capability under stress — and decision capability depends on structural properties that are not automatically present in systems designed for normal operation.</p>
+    </div>
+
+    <p>Most resilience frameworks assume that capacity implies continuity: that a system with sufficient installed power, personnel, or institutional mandate will function when required. The ACI research program begins by questioning this assumption. Across energy systems, defence doctrine, institutional decision architecture, and computational infrastructure, the same pattern recurs: systems with nominal capacity fail not because they run out of resources, but because the structural conditions that allow resources to be deployed — decision windows, information integrity, coordination capacity, operational awareness — degrade or disappear under compound stress.</p>
+
+    <p>The program identifies and diagnoses these structural conditions. It does not advocate solutions, optimise systems, or compete with operational authorities. Its objective is diagnostic clarity about failure modes that are structurally underrepresented in operational and institutional frameworks.</p>
+  </div>
+
+  <!-- §02 Research Architecture -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Research Architecture</h2>
+    </div>
+
+    <p>The program is organised as a layered architecture. The foundation domains examine the physical and institutional systems whose continuity is at stake. The computational and awareness domains examine the infrastructure on which any response to failure depends. The layers are analytically distinct but structurally interdependent: failure in the foundation layer creates the compound stress conditions that test the upper layers, and failure in the upper layers makes foundation-layer failure invisible or unresponsive.</p>
+
+    <div class="arch-block">
+      <div class="arch-layer">Awareness Layer</div>
+      <div class="arch-entry">D-6 · Situational Awareness Persistence</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">Computational Layer</div>
+      <div class="arch-entry">D-5 · Continuity-Oriented Computing</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">Foundation Layer</div>
+      <div class="arch-entry">D-4 · Compound Stress Dynamics</div>
+      <div class="arch-entry">D-3 · Institutional Decision Capacity</div>
+      <div class="arch-entry">D-2 · Distributed Continuity Doctrine</div>
+      <div class="arch-entry">D-1 · Energy Duration</div>
+    </div>
+
+    <p>Each domain contributes a distinct analytical layer. Together they constitute a framework for diagnosing system continuity architecture: the set of structural properties that determine whether a system can maintain decision capability from the physical energy layer through the institutional and computational layers to the awareness infrastructure on which all decisions ultimately depend.</p>
+  </div>
+
+  <!-- §03 Domains -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Working Domains</h2>
+    </div>
+
+    <div class="layer-label">Foundation Layer</div>
+
+    <div class="domain-list">
+
+      <div class="domain-item">
+        <span class="domain-id">D-1</span>
+        <div class="domain-body">
+          <div class="domain-title">Energy Duration</div>
+          <div class="domain-desc">Examines the gap between installed generation capacity and the ability to sustain operational continuity through extended disruption. The central concept is the Black Period: the interval during which energy availability falls below the threshold required for critical function — and during which decisions made or not made determine recovery trajectory. Duration adequacy is not a property of peak capacity; it is a property of endurance architecture.</div>
+          <div class="domain-pubs">WP-001 · TN-001</div>
+        </div>
+      </div>
+
+      <div class="domain-item">
+        <span class="domain-id">D-2</span>
+        <div class="domain-body">
+          <div class="domain-title">Distributed Continuity Doctrine</div>
+          <div class="domain-desc">Examines how small states and distributed organisations design and maintain operational continuity under conditions where central authority is degraded or contested. The domain develops the concept of distributed resilience doctrine: a strategic framework that does not depend on centralised command for its operational coherence, but achieves coordination through distributed structural properties rather than hierarchical control.</div>
+          <div class="domain-pubs">WP-002</div>
+        </div>
+      </div>
+
+      <div class="domain-item">
+        <span class="domain-id">D-3</span>
+        <div class="domain-body">
+          <div class="domain-title">Institutional Decision Capacity</div>
+          <div class="domain-desc">Examines the temporal dimension of institutional decision-making under stress. The central concept is Institutional Termination Time (ITT): the point at which decision capacity ceases to be causally relevant to outcomes — not because institutions have run out of resources or authority, but because the decision window has closed. ITT analysis identifies the structural conditions under which institutions retain or lose the ability to influence the outcomes they are responsible for.</div>
+          <div class="domain-pubs">WP-003</div>
+        </div>
+      </div>
+
+      <div class="domain-item">
+        <span class="domain-id">D-4</span>
+        <div class="domain-body">
+          <div class="domain-title">Compound Stress Dynamics</div>
+          <div class="domain-desc">Examines configurations in which multiple stressors interact simultaneously rather than sequentially, producing failure modes that do not occur under any single stressor in isolation. The domain develops evaluation frameworks for compound stress scenarios and applies them to specific operating environments. The interaction effects between stressors — rather than individual stressor severity — are the primary diagnostic focus.</div>
+          <div class="domain-pubs">WP-004 · WP-005 · DA-001</div>
+        </div>
+      </div>
+
+      <div class="layer-label" style="margin-top:2rem;">Computational Layer</div>
+
+      <div class="domain-item">
+        <span class="domain-id">D-5</span>
+        <div class="domain-body">
+          <div class="domain-title">Continuity-Oriented Computing</div>
+          <div class="domain-desc">Examines the computational infrastructure on which decisions are made as itself subject to the same failure dynamics as the systems it monitors. Introduces Continuity Computing as a formal analytical category: distributed systems whose primary design invariant is the preservation of decision capacity under compound stress, rather than the maximisation of performance under normal conditions. The domain formalises decision capacity dynamics through a control-theoretic model and identifies the duration components required for computational systems to remain decision-relevant through a critical period.</div>
+          <div class="domain-pubs">WP-006 · TN-002</div>
+        </div>
+      </div>
+
+      <div class="layer-label" style="margin-top:2rem;">Awareness Layer</div>
+
+      <div class="domain-item">
+        <span class="domain-id">D-6</span>
+        <div class="domain-body">
+          <div class="domain-title">Situational Awareness Persistence</div>
+          <div class="domain-desc">Situational awareness persistence extends the continuity computing framework (D-5) to the sensing and information layer on which decision capacity ultimately depends. The domain examines situational awareness as itself an infrastructure with structural failure modes — and identifies the conditions under which it persists or collapses under compound stress. Introduces the concept of awareness discontinuity: the point at which decision-makers lose the common operating picture needed to act, not because the physical situation is unmanageable, but because the information infrastructure supporting their understanding of that situation has failed. The domain specifies the structural properties that distinguish persistence-capable awareness platforms from those that degrade in cascade with the infrastructure they monitor.</div>
+          <div class="domain-pubs">WP-007 · DA-002</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- §04 Methodology -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Methodological Principles</h2>
+    </div>
+
+    <p>ACI applies a diagnostic-first methodology across all domains. The sequence is consistent: identify the structural constraint or failure condition, determine the weakest-link dynamics, evaluate temporal endurance under compound stress, and distinguish technical necessity from institutional feasibility. The methodology does not begin with solutions and work backward to the problem — it begins with the failure condition and works forward to the structural requirements that would prevent it.</p>
+
+    <p>Publications are issued as Working Papers (theoretical and analytical frameworks), Technical Notes (architectural and structural specifications derived from working paper frameworks), and Diagnostic Assessments (applied analysis of specific systems or environments against established frameworks). Documents are iterative and may be revised as empirical understanding develops.</p>
+
+    <div class="callout">
+      <p>Authority in ACI publications derives from analytical transparency rather than institutional mandate. Claims are stated with falsification conditions. Scope limits are explicit. The framework distinguishes what the analysis can establish from what it cannot.</p>
+    </div>
+  </div>
+
+  <!-- §05 Publications -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Publications</h2>
+    </div>
+
+    <div class="pub-list">
+
+      <div class="pub-item">
+        <span class="pub-id">WP-001</span>
+        <span class="pub-title"><a href="/papers/wp-001-duration-adequacy-2.html">Duration Adequacy and Continuity Risk in High-Electrification Power Systems</a></span>
+        <span class="pub-domain">D-1</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-002</span>
+        <span class="pub-title"><a href="/papers/wp-002-drd.html">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</a></span>
+        <span class="pub-domain">D-2</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-003</span>
+        <span class="pub-title"><a href="/papers/wp-003-itt.html">Institutional Termination Time and Temporal Decision Capacity</a></span>
+        <span class="pub-domain">D-3</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-004</span>
+        <span class="pub-title"><a href="/papers/wp-004-recovery-capacity-invariants.html">Recovery Capacity and System Vulnerability: Trajectory as a Diagnostic Indicator</a></span>
+        <span class="pub-domain">D-4</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-005</span>
+        <span class="pub-title"><a href="/papers/wp-005-compound-stress-finland.html">Compound Stress and System Continuity: Finland 2025–2035</a></span>
+        <span class="pub-domain">D-4</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-006</span>
+        <span class="pub-title"><a href="/papers/wp-006-continuity-computing.html">Continuity Computing: Decision Capacity as a System Invariant Under Compound Stress</a></span>
+        <span class="pub-domain">D-5</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">WP-007</span>
+        <span class="pub-title"><a href="/papers/wp-007-situational-awareness-persistence.html">Situational Awareness Persistence Under Compound Stress</a></span>
+        <span class="pub-domain">D-6</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">TN-001</span>
+        <span class="pub-title"><a href="/papers/tn-001-mesa.html">Duration-Capable Local Energy Node: The MESA Architecture</a></span>
+        <span class="pub-domain">D-1</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">DA-001</span>
+        <span class="pub-title"><a href="/supplements/da-001-finland-pre-shortage.html">Finland Pre-Shortage Phase 2026–2032: Active Signal Cluster</a></span>
+        <span class="pub-domain">D-4</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">DA-002</span>
+        <span class="pub-title"><a href="/supplements/da-002-awareness-infrastructure-readiness.html">Awareness Infrastructure Readiness: Finnish Critical Infrastructure Operators</a></span>
+        <span class="pub-domain">D-6</span>
+      </div>
+
+      <div class="pub-item">
+        <span class="pub-id">Ω-0</span>
+        <span class="pub-title"><a href="/supplements/omega-0-reference.html">Recovery Capacity Reference</a></span>
+        <span class="pub-domain">Ref.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- §06 Non-goals -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Scope and Non-Goals</h2>
+    </div>
+
+    <p>ACI's diagnostic scope is explicitly bounded. The program identifies structural conditions and failure modes. It does not advocate specific policy outcomes, promote investment programs, function as a consultancy, compete with operational authorities, propose comprehensive system redesigns, or optimise systems. These are not accidental omissions — they reflect a deliberate choice to preserve the analytical independence that makes diagnostic clarity possible.</p>
+
+    <p>The program does not claim predictive capacity about specific systems or failure timing. It develops frameworks for identifying structural vulnerability and trajectory. The distinction between prediction and diagnosis is maintained throughout.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    Aether Continuity Institute<br>
+    aethercontinuity.org
+  </div>
+  <div>
+    Research Program · v1.0<br>
+    2026 · Active
+  </div>
+  <div>
+    Open Working Draft<br>
+    Subject to revision
+  </div>
+</footer>
+
+</body>
+</html>
