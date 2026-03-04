@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DA-002 — Awareness Infrastructure Readiness: Finnish Critical Infrastructure Operators 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f7f4ee;--rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--mono);line-height:1.7;max-width:720px;margin:0 auto;padding:3.5rem 2rem 7rem}
+.doc-header{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:baseline}
+.doc-id{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.doc-meta{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+nav{border-bottom:1px solid var(--rule);padding:.9rem 0;margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:center}
+.nav-home{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-home:hover{color:var(--ink)}
+.nav-home::before{content:'← '}
+.nav-id{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--serif);font-size:1.8rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.35rem;line-height:1.2}
+.tagline{font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:.3rem}
+.tagline-fi{font-family:var(--serif);font-size:.92rem;font-style:italic;color:var(--muted);margin-bottom:2.4rem}
+.cite-block{border:1px solid var(--rule);padding:.9rem 1.1rem;margin-bottom:2.4rem;font-size:.6rem;letter-spacing:.06em;color:var(--muted);line-height:1.9}
+.cite-block span{color:var(--ink);font-size:.62rem}
+.section{margin-bottom:2.5rem}
+.section-id{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+h2{font-family:var(--serif);font-size:1.06rem;font-weight:500;margin-bottom:.75rem;border-bottom:1px solid var(--rule);padding-bottom:.35rem}
+p{font-family:var(--serif);font-size:1rem;line-height:1.8;color:#2a2520;margin-bottom:.85rem}
+.bi{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem}
+.bi-col{font-family:var(--serif);font-size:.92rem;line-height:1.75;color:#2a2520}
+.bi-col p{font-size:.92rem;margin-bottom:.6rem}
+.lang-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.tbl{width:100%;border:1px solid var(--rule);margin:1.2rem 0;border-collapse:collapse}
+.tbl th{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;background:#f0ece4}
+.tbl td{font-family:var(--serif);font-size:.88rem;line-height:1.55;padding:.6rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td:first-child{font-family:var(--mono);font-size:.72rem;color:var(--accent)}
+/* Diagnostic criteria rows */
+.crit-list{margin:1.2rem 0}
+.crit{display:grid;grid-template-columns:44px 1fr 100px 70px;gap:.5rem;padding:.7rem 0;border-top:1px solid var(--rule);align-items:start}
+.crit:last-child{border-bottom:1px solid var(--rule)}
+.crit-id{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em;padding-top:.1rem}
+.crit-body{font-family:var(--serif);font-size:.88rem;color:#2a2520;line-height:1.55}
+.crit-body strong{font-weight:500}
+.crit-assessment{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.06em;line-height:1.6}
+.crit-status{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em}
+.status-gap{color:#8b4513}
+.status-partial{color:#8b7a3a}
+.status-present{color:#4a7a4a}
+/* Operator category rows */
+.op-header{display:grid;grid-template-columns:130px 1fr 1fr 1fr;gap:0;border:1px solid var(--rule);background:#f0ece4}
+.op-header>div{padding:.45rem .7rem;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule)}
+.op-header>div:last-child{border-right:none}
+.op-row{display:grid;grid-template-columns:130px 1fr 1fr 1fr;gap:0;border:1px solid var(--rule);border-top:none}
+.op-row>div{padding:.65rem .7rem;font-family:var(--serif);font-size:.86rem;color:#2a2520;line-height:1.5;border-right:1px solid var(--rule)}
+.op-row>div:first-child{font-family:var(--mono);font-size:.62rem;color:var(--accent)}
+.op-row>div:last-child{border-right:none}
+/* Finding blocks */
+.findings{margin:1.2rem 0}
+.find{margin-bottom:1rem;padding:1rem 1.1rem;border:1px solid var(--rule);background:#f7f4ee}
+.find-id{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+.find-body{font-family:var(--serif);font-size:.9rem;line-height:1.7;color:#2a2520}
+/* Drift map */
+.drift-header{display:grid;grid-template-columns:140px 1fr 1fr 100px;gap:0;border:1px solid var(--rule);background:#f0ece4}
+.drift-header>div{padding:.45rem .7rem;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule)}
+.drift-header>div:last-child{border-right:none}
+.drift-row{display:grid;grid-template-columns:140px 1fr 1fr 100px;gap:0;border:1px solid var(--rule);border-top:none}
+.drift-row>div{padding:.65rem .7rem;font-family:var(--serif);font-size:.86rem;color:#2a2520;line-height:1.5;border-right:1px solid var(--rule)}
+.drift-row>div:first-child{font-family:var(--mono);font-size:.62rem;color:var(--accent)}
+.drift-row>div:last-child{border-right:none}
+/* MESA reference block */
+.mesa-block{border:1px solid var(--rule);border-left:3px solid var(--ink);padding:1.1rem 1.4rem;margin:1.5rem 0;background:#f0ece4}
+.mesa-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+.mesa-block p{font-family:var(--serif);font-size:.9rem;line-height:1.7;color:#2a2520;margin-bottom:.5rem}
+.mesa-block p:last-child{margin-bottom:0}
+/* Callout */
+.rb{border-left:3px solid var(--ink);padding:.85rem 1.2rem;margin:1.2rem 0;background:#f0ece4}
+.rb p{font-family:var(--serif);font-size:.95rem;font-style:italic;margin:0;color:var(--ink);line-height:1.7}
+/* Epistemic note */
+.ep-note{border-left:3px solid var(--accent);padding:.85rem 1.2rem;margin:1.2rem 0;background:#faf5ee}
+.ep-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+.ep-note p{font-family:var(--serif);font-size:.92rem;margin:0;color:#3a2510;line-height:1.7}
+/* Zones */
+.zone-row{display:grid;grid-template-columns:110px 60px 1fr;gap:.7rem;padding:.65rem .5rem;border-top:1px solid var(--rule);align-items:baseline}
+.zone-row:last-child{border-bottom:1px solid var(--rule)}
+.zone-name{font-family:var(--serif);font-size:.95rem;font-weight:500}
+.z-c{color:#8b7a3a}.z-d{color:#8b4513}
+.zone-g{font-size:.6rem;color:var(--muted)}
+.zone-desc{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.55}
+/* Scope note */
+.scope-note{border:1px solid var(--rule);padding:.9rem 1.1rem;margin:1rem 0;background:#f0ece4}
+.scope-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.scope-note p{font-family:var(--serif);font-size:.9rem;line-height:1.7;margin-bottom:.5rem;color:#2a2520}
+.scope-note p:last-child{margin-bottom:0}
+/* Cross-refs */
+.xb{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.xl{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.xr{display:grid;grid-template-columns:80px 1fr;gap:.8rem;padding:.5rem 0;border-top:1px solid var(--rule)}
+.xr:last-child{border-bottom:1px solid var(--rule)}
+.xi{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em}
+.xd{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.5}
+/* Final box */
+.final-box{border:2px solid var(--ink);padding:1.1rem 1.4rem;margin:2rem 0;text-align:center}
+.final-box p{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink);margin:0;line-height:1.8}
+/* Footer */
+.doc-footer{border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:3.5rem;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:2.1}
+@media(max-width:640px){
+  body{padding:2rem 1.25rem 5rem}
+  .bi{grid-template-columns:1fr}
+  .op-header,.op-row{grid-template-columns:1fr}
+  .drift-header,.drift-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <span class="doc-id">ACI · DA-002 · Diagnostic Assessment</span>
+  <div class="doc-meta">
+    Domain D-5 · Version 1.0 · March 2026<br>
+    Open Working Draft · Subject to revision
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/supplements/">Supplements</a>
+  <span class="nav-id">DA-002 · v1.0</span>
+</nav>
+
+<h1>Awareness Infrastructure Readiness</h1>
+<p class="tagline">Finnish Critical Infrastructure Operators Under Compound Stress Conditions</p>
+<p class="tagline-fi">Tilannetietoisuusinfrastruktuurin valmius: Suomen kriittisen infrastruktuurin operaattorit yhdistelmästressiolosuhteissa</p>
+<p style="font-family:var(--serif);font-size:.9rem;font-style:italic;color:var(--muted);margin-bottom:1.2rem">A diagnostic assessment applying the WP-007 awareness persistence framework to Finnish critical infrastructure operator categories, 2026</p>
+
+<div class="cite-block">
+  <span>Cite as</span> — Aether Continuity Institute (ACI). (2026). Awareness Infrastructure Readiness: Finnish Critical Infrastructure Operators Under Compound Stress Conditions. ACI Diagnostic Assessment No. 002, v1.0. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references</span> — WP-001 (Duration Adequacy) · WP-003 (ITT) · WP-004 (Recovery Capacity Invariants) · WP-005 (Compound Stress Finland) · WP-007 (Awareness Persistence) · DA-001 (Finland Pre-Shortage Phase)<br>
+  <span>Companion to</span> — WP-007. This document operationalises WP-007's five structural persistence properties (P-1–P-5) and three failure conditions (F-1–F-3) into a diagnostic framework applicable to Finnish critical infrastructure operator categories.<br>
+  <span>Reference architecture</span> — MESA (Municipal Energy Stability Architecture) is referenced as a structural example of a configuration that satisfies P-1 energy independence and P-2 local processing requirements simultaneously.
+</div>
+
+<!-- Abstract -->
+<div class="section">
+  <div class="section-id">Abstract / Tiivistelmä</div>
+  <div class="bi">
+    <div class="bi-col">
+      <div class="lang-label">English</div>
+      <p>WP-007 establishes that situational awareness is itself an infrastructure with structural failure modes — and identifies five properties that distinguish awareness platforms capable of persisting through compound stress from those that degrade in cascade with the systems they monitor.</p>
+      <p>This assessment applies that framework to Finnish critical infrastructure operators across four categories: energy system operators, municipal service authorities, regional coordination bodies, and communications infrastructure operators. The diagnostic question is whether the awareness infrastructure currently in place satisfies the persistence requirements identified in WP-007, and where structural gaps exist.</p>
+      <p>The assessment identifies three active structural gaps and one systemic drift process (F-3 pre-event optimisation) that is likely operating across all operator categories. Diagnostic zone: Concern. The identified gaps are architectural, not operational — they require design responses, not procedural ones.</p>
+    </div>
+    <div class="bi-col">
+      <div class="lang-label">Suomi</div>
+      <p>WP-007 osoittaa, että tilannetietoisuus on itsessään infrastruktuuri, jolla on rakenteelliset vikamekanismit, ja tunnistaa viisi ominaisuutta, jotka erottavat yhdistelmästressin kestävät tietoisuusalustat niistä, jotka hajoavat yhdessä seuraamiensa järjestelmien kanssa.</p>
+      <p>Tämä arviointi soveltaa kyseistä kehystä suomalaisen kriittisen infrastruktuurin operaattoreihin neljässä kategoriassa: energiajärjestelmän operaattorit, kunnalliset palveluviranomaiset, alueelliset koordinaatioelimet ja viestintäinfrastruktuurin operaattorit.</p>
+      <p>Arviointi tunnistaa kolme aktiivista rakenteellista puutetta ja yhden systemaattisen ajautumisprosessin (F-3 ennakkaisoptimointidrifti), joka todennäköisesti toimii kaikissa operaattorikategorioissa. Diagnostinen vyöhyke: Huoli. Tunnistetut puutteet ovat arkkitehtuurisia, ei operatiivisia.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Diagnostic Starting Point</h2>
+  <div class="bi">
+    <div class="bi-col">
+      <p>DA-001 diagnosed the Finnish energy system as operating in the Concern zone trending toward Danger, with five simultaneously active early warning signals and declining trajectories on two of three structural variables. That assessment addressed the physical layer: generation capacity, redundancy, recovery time.</p>
+      <p>DA-002 addresses the layer above: the information infrastructure that makes the physical layer legible to those who must manage it. WP-007 established that this layer has its own failure modes — and that those failure modes are not automatically prevented by the presence of monitoring systems, communications networks, or decision support tools designed for normal operations.</p>
+      <p>The compound stress configuration described in WP-005 and operationalised in DA-001 creates conditions under which awareness infrastructure and physical infrastructure degrade simultaneously. This assessment asks whether Finnish critical infrastructure operators are structurally prepared for that co-degradation — or whether their awareness systems share the dependencies of the infrastructure they are meant to observe.</p>
+    </div>
+    <div class="bi-col">
+      <p>DA-001 diagnosoi Suomen energiajärjestelmän toimivan Huoli-vyöhykkeellä kohti Vaaraa, viidellä samanaikaisesti aktiivisella varoitussignaalilla. Kyseinen arviointi käsitteli fyysistä kerrosta: tuotantokapasiteettia, redundanssia, palautumisaikaa.</p>
+      <p>DA-002 käsittelee ylempää kerrosta: informaatioinfrastruktuuria, joka tekee fyysisen kerroksen luettavaksi niille, joiden on hallittava sitä. WP-007 osoitti, että tällä kerroksella on omat vikamekanisminsa — ja että ne eivät automaattisesti esity normaalioloihin suunniteltujen valvontajärjestelmien, viestintäverkkojen tai päätöstukityökalujen läsnäollessa.</p>
+      <p>Diagnostinen kysymys: ovatko suomalaiset kriittisen infrastruktuurin operaattorit rakenteellisesti valmistautuneita tähän samanaikaiseen hajoamiseen?</p>
+    </div>
+  </div>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>The Five Persistence Properties as Diagnostic Criteria</h2>
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);margin-bottom:1rem;font-style:italic">WP-007 §05 properties applied as diagnostic criteria. Status reflects structural assessment across Finnish operator categories — not individual operator audit.</p>
+
+  <div class="crit-list">
+    <div class="crit">
+      <div class="crit-id">P-1</div>
+      <div class="crit-body"><strong>Local energy independence.</strong> Awareness platform cannot share power dependencies with the infrastructure it monitors. Requires autonomous operation through an unpredictable critical period — not battery backup for brief interruptions.</div>
+      <div class="crit-assessment">Energy system operators: partial — generator backup present but duration-limited. Municipal: variable, often absent at operational system level. Regional coordination: largely absent. Comms operators: present at node level, absent at aggregation level.</div>
+      <div class="crit-status status-partial">PARTIAL</div>
+    </div>
+    <div class="crit">
+      <div class="crit-id">P-2</div>
+      <div class="crit-body"><strong>Local processing sufficiency.</strong> Minimum viable situational picture must be producible locally, without dependence on external processing capacity or cloud-hosted analytics.</div>
+      <div class="crit-assessment">The boundary between minimum-viable and full capability is not explicitly specified in Finnish operator documentation reviewed. Where local processing exists it is typically paired with external processing dependency for interpretation and alerting. No operator category demonstrates documented minimum-viable local processing capability as a standalone specification.</div>
+      <div class="crit-status status-gap">GAP</div>
+    </div>
+    <div class="crit">
+      <div class="crit-id">P-3</div>
+      <div class="crit-body"><strong>Communications independence.</strong> Platform must be able to maintain a minimum viable picture of its domain without real-time external data feeds — for calibration, reference, or interpretation.</div>
+      <div class="crit-assessment">Progressive integration of cloud-hosted monitoring, remote sensor aggregation, and centralised analytics creates increasing communications dependency across all operator categories. Independent operation mode is not a standard specification requirement in NIS2-derived Finnish implementation frameworks.</div>
+      <div class="crit-status status-gap">GAP</div>
+    </div>
+    <div class="crit">
+      <div class="crit-id">P-4</div>
+      <div class="crit-body"><strong>Integrity verification without external authority.</strong> Data integrity and authenticity must be verifiable using local mechanisms — not dependent on real-time external certificate or authentication infrastructure.</div>
+      <div class="crit-assessment">Authentication infrastructure for operational technology systems in energy and municipal sectors relies on external certificate authorities and cloud-hosted identity management in the majority of identified configurations. Local integrity verification capability is not a specified requirement in procurement frameworks reviewed.</div>
+      <div class="crit-status status-gap">GAP</div>
+    </div>
+    <div class="crit">
+      <div class="crit-id">P-5</div>
+      <div class="crit-body"><strong>Degradation transparency.</strong> Platform must actively report its own degradation state in actionable terms for non-technical decision-makers — not present degraded outputs in normal-state format.</div>
+      <div class="crit-assessment">Degradation reporting in reviewed configurations focuses on system availability metrics (uptime, response time) rather than on the quality and completeness of situational picture produced. The distinction between a functioning monitoring system and a monitoring system producing a reliable situational picture is not consistently encoded in operator alerting architectures.</div>
+      <div class="crit-status status-partial">PARTIAL</div>
+    </div>
+  </div>
+
+  <div class="rb"><p>Summary: P-1 is partially present in some operator categories but duration-limited. P-2, P-3, and P-4 present structural gaps across all categories. P-5 is partially present but conflates system availability with situational picture quality. No operator category identified as fully satisfying the five-property persistence specification.</p></div>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Operator Category Assessment</h2>
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Four operator categories assessed against WP-007 persistence requirements. Assessment is structural and categorical — it does not constitute an audit of individual operators.</p>
+
+  <div class="op-header">
+    <div>Operator category</div>
+    <div>Primary awareness dependency</div>
+    <div>Compound stress exposure</div>
+    <div>Persistence gap</div>
+  </div>
+  <div class="op-row">
+    <div>Energy system operators<br><span style="font-size:.75rem;color:var(--muted)">DSOs, TSO, large generators</span></div>
+    <div>SCADA / EMS systems with centralised analytics. Increasing integration of cloud-hosted monitoring for distributed assets (solar, storage, demand response). Real-time data feeds from markets and interconnections.</div>
+    <div>Direct physical exposure to compound stress events (WP-005 scenario). SCADA communications share physical infrastructure with grid under stress. Market data feeds unavailable during interconnection disruption.</div>
+    <div>P-2 gap: minimum viable local picture not specified. P-3 gap: market and interconnection data dependencies not mitigable locally. P-4 gap: certificate dependencies under cloud outage conditions.</div>
+  </div>
+  <div class="op-row">
+    <div>Municipal service authorities<br><span style="font-size:.75rem;color:var(--muted)">District heating, water, emergency coordination</span></div>
+    <div>Centralised municipal IT infrastructure with shared services across departments. Awareness of energy system state typically dependent on DSO communications rather than independent local sensing.</div>
+    <div>Awareness of own infrastructure state depends on communications with third-party operators under stress. No independent sensing of energy system state in typical municipal configuration. DA-001 S4 institutional substitution pattern applies directly here.</div>
+    <div>P-1 gap: operational awareness infrastructure (not just emergency generators) lacks independent power. P-2 gap: local processing of multi-source situational picture absent. P-3 critical gap: municipal awareness is largely derivative of external data.</div>
+  </div>
+  <div class="op-row">
+    <div>Regional coordination bodies<br><span style="font-size:.75rem;color:var(--muted)">Regional state admin., rescue services</span></div>
+    <div>Aggregated picture from multiple sector-specific systems via communications infrastructure. Common operating picture dependent on receiving organisation functioning and communications availability.</div>
+    <div>Aggregation layer fails when communications degrade. Regional coordination bodies are the primary institutional actor for compound stress response — and the actor whose awareness depends most heavily on functioning communications with all other actors simultaneously.</div>
+    <div>P-3 critical gap: the regional coordination layer has no independent sensing capability — it is entirely dependent on data provided by other systems. WP-007 DC-2 coordination failure without visible cause applies directly.</div>
+  </div>
+  <div class="op-row">
+    <div>Communications infrastructure operators<br><span style="font-size:.75rem;color:var(--muted)">Telecom operators, data centre operators</span></div>
+    <div>Network operations centres with centralised monitoring. Redundant power at core nodes but variable at edge nodes. Awareness of own network state is generally strong; awareness of dependencies on external power infrastructure is structurally weaker.</div>
+    <div>Awareness of own network may remain intact while the external dependencies (power, cooling, physical security) that determine network availability degrade outside the awareness perimeter. P-3 boundary condition: the comms operator's awareness stops at its own infrastructure boundary.</div>
+    <div>P-1 partial: core node UPS and generators present; edge node duration limited. P-3 scope gap: awareness perimeter does not extend to critical dependencies outside the operator's own infrastructure boundary.</div>
+  </div>
+
+  <div class="ep-note">
+    <div class="ep-label">Epistemic note</div>
+    <p>This operator category assessment is based on structural analysis of publicly available documentation, regulatory frameworks (NIS2 Finnish implementation, Huoltovarmuuslaki, Fingrid adequacy assessments), and the WP-005 compound stress model. It does not constitute an audit of specific operators. Individual operators within each category may exceed or fall short of the categorical assessment. The assessment identifies structural patterns that are likely present across categories given the regulatory and procurement environment — not confirmed absences at any specific operator.</p>
+  </div>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>The F-3 Drift Process</h2>
+  <p>WP-007 §06 identifies pre-event optimisation (F-3) as a failure condition that can undermine platforms meeting all five structural requirements: the progressive elimination, through rational operational decisions, of precisely those properties that constitute persistence capability.</p>
+  <p>The evidence base for F-3 in Finnish critical infrastructure is structural rather than direct: it is not based on documentation of specific optimisation decisions, but on the observation that the regulatory and procurement environment systematically incentivises the optimisations that produce F-3 drift.</p>
+
+  <div class="drift-header">
+    <div>Optimisation pressure</div>
+    <div>Rational operational decision</div>
+    <div>F-3 effect on persistence</div>
+    <div>Observable indicator</div>
+  </div>
+  <div class="drift-row">
+    <div>Cost reduction in IT infrastructure</div>
+    <div>Migrate monitoring and analytics from local servers to cloud-hosted services. Reduce on-premises processing footprint.</div>
+    <div>P-2 erosion: minimum viable local processing capability diminishes or disappears as local hardware is decommissioned.</div>
+    <div>Increasing proportion of monitoring dashboards requiring internet connectivity to render.</div>
+  </div>
+  <div class="drift-row">
+    <div>Integration with sector-wide platforms</div>
+    <div>Connect to shared data platforms for situational awareness, market data, and grid information. Reduces duplication, improves data quality.</div>
+    <div>P-3 erosion: local awareness becomes derivative of platform availability. Independent local picture fades as the integrated picture becomes operationally primary.</div>
+    <div>Local sensing infrastructure maintained but not used operationally — treated as legacy backup rather than primary awareness source.</div>
+  </div>
+  <div class="drift-row">
+    <div>Security hardening via centralised authentication</div>
+    <div>Migrate operational technology authentication to centralised identity management. Improves security posture and auditability under NIS2.</div>
+    <div>P-4 erosion: local integrity verification capability is replaced by external authentication dependency. Security improvement in normal conditions creates availability dependency in compound stress conditions.</div>
+    <div>OT systems requiring external authentication for operator login. Certificate renewal dependencies on external infrastructure.</div>
+  </div>
+  <div class="drift-row">
+    <div>Standardisation of alerting formats</div>
+    <div>Adopt common alerting standards across operator categories to improve interoperability and coordination under NIS2 incident reporting requirements.</div>
+    <div>P-5 partial erosion: standardised alerting optimised for normal-state incident reporting may not encode degradation-state situational picture quality in terms actionable under compound stress.</div>
+    <div>Alerting systems that report system availability accurately but do not communicate the quality of situational picture being produced from degraded inputs.</div>
+  </div>
+
+  <div class="rb"><p>The F-3 process does not require any decision-maker to choose reduced resilience. It proceeds as the accumulation of individually rational optimisations in an environment that rewards integration, standardisation, and cost reduction — and does not systematically reward persistence capability as an independently specified and audited property.</p></div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>MESA as a Reference Architecture</h2>
+  <p>The Municipal Energy Stability Architecture (MESA) is referenced in this assessment not as a prescription but as an illustrative example of a structural configuration that satisfies the two foundational persistence requirements — P-1 and P-2 — simultaneously and as design properties rather than operational additions.</p>
+
+  <div class="mesa-block">
+    <div class="mesa-label">Reference Architecture — MESA</div>
+    <p>MESA's Layer A (local dispatchable generation) and Layer B (chemical energy storage via Power-to-X) together provide the energy independence that P-1 requires — not as backup duration but as sustained autonomous operation through an indeterminate critical period. The architecture does not share power dependencies with the grid it is intended to stabilise.</p>
+    <p>MESA's local CHP and VPP control layer operates locally by design: the optimisation and dispatch decisions that constitute its core function are executable without external communications. This satisfies P-2 for the awareness functions required to operate the node itself.</p>
+    <p>For the purposes of DA-002, MESA demonstrates one structural approach to resolving the P-1/P-2 gap at the municipal operator level. It does not resolve P-3 (communications independence for awareness of the broader system), P-4 (integrity verification), or P-5 (degradation transparency). A complete persistence-capable awareness platform at the municipal level would require MESA's energy independence as a foundation, plus the remaining three properties specified in WP-007.</p>
+    <p>MESA is referenced here because it represents a class of infrastructure investment where energy resilience and awareness platform resilience requirements converge — and where a single architectural decision can address both simultaneously.</p>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Three Active Structural Findings</h2>
+
+  <div class="findings">
+    <div class="find">
+      <div class="find-id">F-A · The Aggregation Layer Gap</div>
+      <div class="find-body">Regional coordination bodies — the primary actors for compound stress response at the operational level — have no independent sensing capability. Their situational picture is entirely constructed from data provided by operators whose own awareness infrastructure is under stress. This is WP-007's DC-2 failure mode (coordination failure without visible cause) in structural form: the coordination layer can fail to produce a coherent common operating picture not because it is malfunctioning, but because the inputs it depends on are simultaneously degraded across all source categories. The gap is not in the coordination layer itself; it is in the absence of independent sensing that would allow the coordination layer to detect when its inputs are collectively unreliable.</div>
+    </div>
+    <div class="find">
+      <div class="find-id">F-B · The Minimum Viable Picture Specification Gap</div>
+      <div class="find-body">No operator category reviewed has explicitly specified what constitutes a minimum viable situational picture for its critical decision types under compound stress. This specification is the prerequisite for P-2 (local processing sufficiency): without knowing what the minimum picture requires, it is not possible to design local processing capability that provides it. The gap is not primarily technical — it is an analytical gap in the specification of what awareness is actually needed for, under conditions where full awareness is unavailable. This gap makes persistence capability impossible to design for, to test, or to audit.</div>
+    </div>
+    <div class="find">
+      <div class="find-id">F-C · The Dependency Boundary Gap</div>
+      <div class="find-body">The awareness perimeter of Finnish critical infrastructure operators does not systematically extend to the dependencies that determine their operational capability. Communications infrastructure operators are aware of their own network state but not, as a standard capability, of the power infrastructure state on which their network depends. Energy operators monitor grid state but their awareness of the communications infrastructure through which SCADA data travels is structurally weaker. Municipal operators depend on both without independent sensing of either. Under compound stress, failure propagates across these dependency boundaries faster than awareness of the propagation. WP-007's DC-1 failure mode (invisible decision windows) is the direct consequence.</div>
+    </div>
+  </div>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Diagnostic Zone and LR-Class</h2>
+
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Assessment applying WP-004 diagnostic zones to awareness infrastructure layer. This is distinct from DA-001's assessment of the physical energy system — it addresses the information layer specifically.</p>
+
+  <div class="zone-row">
+    <div class="zone-name z-c">Concern</div>
+    <div class="zone-g">Current</div>
+    <div class="zone-desc">Three of five persistence properties present structural gaps across all operator categories. F-3 optimisation drift is actively operating. The compound stress scenario of WP-005 and DA-001 would produce awareness degradation in cascade with physical infrastructure degradation. The institutional architecture does not currently distinguish between availability of monitoring systems and quality of situational picture — a distinction that becomes operationally critical under compound stress.</div>
+  </div>
+  <div class="zone-row">
+    <div class="zone-name z-d">Danger</div>
+    <div class="zone-g">Trajectory</div>
+    <div class="zone-desc">F-3 drift continues unimpeded as cloud integration, centralised authentication, and shared platform integration proceed under NIS2 and cost-reduction incentives. The minimum viable picture specification gap is not addressed, making persistence capability impossible to design or audit. The aggregation layer gap persists as the compound stress window identified in WP-005 / DA-001 approaches.</div>
+  </div>
+
+  <p style="font-family:var(--serif);font-size:.9rem;font-style:italic;color:#2a2520;margin-top:1.2rem">LR-Class assessment: <strong>B — Value Choice.</strong> The structural gaps identified are not technically intractable. Persistence capability as a specified design requirement, minimum viable picture as an explicit analytical output, and F-3 drift monitoring as an ongoing audit function are all achievable within existing regulatory frameworks. The gap is a governance priority choice — the same gap that exists in the physical energy layer (DA-001) now visible in the information layer above it.</p>
+</div>
+
+<!-- §08 -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Open Questions</h2>
+
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Questions arising from this assessment that are not resolvable through structural analysis alone.</p>
+
+  <table class="tbl">
+    <tr>
+      <th>ID</th>
+      <th>Question</th>
+      <th>Required method</th>
+    </tr>
+    <tr>
+      <td>Q-1</td>
+      <td>What is the minimum viable situational picture for each critical decision type in Finnish energy system management — and can this be formally specified as a procurement requirement?</td>
+      <td>Operator workshop + decision analysis</td>
+    </tr>
+    <tr>
+      <td>Q-2</td>
+      <td>At what rate is F-3 optimisation drift proceeding in Finnish DSO and municipal operator awareness infrastructure? Are there observable leading indicators that could be monitored?</td>
+      <td>Operator documentation review + procurement analysis</td>
+    </tr>
+    <tr>
+      <td>Q-3</td>
+      <td>Can the regional coordination aggregation layer gap (F-A) be addressed through independent sensing investment, or does it require architectural redistribution of situational awareness generation to the operator level?</td>
+      <td>Coordination architecture analysis</td>
+    </tr>
+    <tr>
+      <td>Q-4</td>
+      <td>Does the Finnish NIS2 implementation framework create structural incentives for F-3 drift — and if so, can those incentives be rebalanced without reducing the security improvements NIS2 is intended to produce?</td>
+      <td>Regulatory analysis + comparative Nordic review</td>
+    </tr>
+    <tr>
+      <td>Q-5</td>
+      <td>What is the effective decision window compression produced by the awareness cascade sequence (WP-007 §03) under the WP-005 compound stress scenario — and how does this compare to the nominal ITT (WP-003) of Finnish energy management institutions?</td>
+      <td>Scenario modelling + ITT analysis</td>
+    </tr>
+  </table>
+</div>
+
+<!-- §09 Scope exclusion -->
+<div class="section">
+  <div class="section-id">§ 09</div>
+  <h2>Scope and Limitations</h2>
+  <div class="scope-note">
+    <div class="scope-label">Scope exclusion note</div>
+    <p>This assessment does not evaluate the cybersecurity posture of Finnish critical infrastructure operators. The structural gaps identified (P-2, P-3, P-4) have cybersecurity dimensions, but this assessment addresses them as availability and persistence properties under compound stress — not as attack surface or threat exposure questions. The two analyses are complementary but distinct.</p>
+    <p>This assessment does not address the military or defence sector. The edge intelligence concepts developed in the military domain (disconnected operations, reachback-free situational awareness) are referenced as analogues in WP-007 §07 but are outside the scope of ACI's civilian infrastructure focus.</p>
+    <p>The operator category assessment is structural and categorical. It identifies likely gaps based on regulatory frameworks, procurement standards, and publicly available documentation. It does not constitute an audit of any specific operator and should not be interpreted as a finding about any named organisation's capabilities.</p>
+    <p>The MESA reference architecture (§05) is cited as a structural example, not as a recommendation. The determination of whether MESA-type investment is appropriate for any specific municipality or operator is outside the scope of this diagnostic document.</p>
+  </div>
+</div>
+
+<!-- Final box -->
+<div class="final-box">
+  <p>
+    Diagnostic Zone: CONCERN → DANGER<br>
+    LR-Class: B — Value Choice<br>
+    Properties with structural gaps: P-2 · P-3 · P-4 (all operator categories)<br>
+    Active drift process: F-3 across all categories<br>
+    Active structural findings: F-A · F-B · F-C
+  </p>
+</div>
+
+<!-- Cross-references -->
+<div class="xb">
+  <div class="xl">ACI Working Paper and Supplement Series — Internal References</div>
+  <div class="xr"><div class="xi">WP-003</div><div class="xd">Institutional Termination Time. DA-002 F-B (minimum viable picture specification gap) directly affects the effective ITT: without knowing what awareness is required for critical decisions, it is not possible to determine at what point awareness degradation causes the effective decision window to close.</div></div>
+  <div class="xr"><div class="xi">WP-004</div><div class="xd">Recovery Capacity Invariants. The three recovery capacity dimensions (absorption, continuity, transformation) assume decision-makers can perceive the situation they are managing. DA-002 diagnoses the conditions under which this assumption fails across Finnish operator categories.</div></div>
+  <div class="xr"><div class="xi">WP-005</div><div class="xd">Compound Stress Finland 2025–2035. The compound stress scenario provides the stress configuration against which persistence capability must be evaluated. DA-002 diagnoses the awareness layer against the same scenario that DA-001 diagnosed the physical layer against.</div></div>
+  <div class="xr"><div class="xi">WP-007</div><div class="xd">Awareness Persistence Under Compound Stress. DA-002 operationalises WP-007's five structural properties and three failure conditions into a diagnostic framework. The relationship between DA-002 and WP-007 mirrors the relationship between DA-001 and WP-005.</div></div>
+  <div class="xr"><div class="xi">DA-001</div><div class="xd">Finland Pre-Shortage Phase. DA-001's five active signals — particularly S3 (institutional signal suppression) and S4 (institutional substitution) — have direct awareness infrastructure implications. S3's mechanism (absence of weak signals from official planning discourse) is itself an awareness discontinuity at the institutional level.</div></div>
+  <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node. TN-001's structural properties map directly to P-1 and P-2 of WP-007. A node satisfying TN-001's dispatchable generation and chemical storage requirements provides the energy independence that persistence-capable awareness platforms require as their foundational property.</div></div>
+  <div class="xr"><div class="xi">MESA</div><div class="xd">Municipal Energy Stability Architecture. Referenced in §05 as a structural example of a configuration that resolves the P-1 energy independence requirement as a design property. MESA provides the energy foundation on which a complete persistence-capable awareness platform at the municipal level could be built.</div></div>
+</div>
+
+<div class="doc-footer">
+  ACI Diagnostic Assessment — DA-002 · Version 1.0 · March 2026<br>
+  Domain D-5 · Open Working Draft · Subject to revision<br>
+  Aether Continuity Institute · aethercontinuity.org · aethercontinuity.org/supplements/
+</div>
+
+</body>
+</html>
