@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRD Meta-Architecture v1.0 — Aether Continuity Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f5f0e8;
+  --paper-2: #ede7d8;
+  --rule: #c8bfad;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --serif: 'EB Garamond', serif;
+  --mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  font-family: var(--serif);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+header {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left { font-family: var(--mono); font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.header-right a { text-decoration: none; color: var(--muted); font-family: var(--mono); font-size: .65rem; }
+
+main {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 5rem;
+}
+
+.doc-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: .5rem;
+}
+
+.subtitle {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Core premise */
+.premise {
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  font-size: 1.05rem;
+}
+
+.premise .premise-label {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .75rem;
+}
+
+.premise blockquote {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Layer stack */
+.layer-stack {
+  margin: 2.5rem 0;
+}
+
+.layer {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.layer:last-child { border-bottom: 1px solid var(--rule); }
+
+.layer-label {
+  padding: 1.25rem 1rem 1.25rem 0;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.layer-num {
+  font-size: .75rem;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.layer-content {
+  padding: 1.25rem 0 1.25rem 1.5rem;
+  border-left: 1px solid var(--rule);
+}
+
+.layer-title {
+  font-weight: 500;
+  font-size: 1.05rem;
+  margin-bottom: .4rem;
+}
+
+.layer-acronym {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .12em;
+  color: var(--accent);
+  margin-bottom: .6rem;
+}
+
+.layer-body {
+  font-size: .95rem;
+  color: #3a3730;
+  line-height: 1.65;
+}
+
+.layer-question {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-top: .6rem;
+  font-style: italic;
+}
+
+/* Arrow connector */
+.connector {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--rule);
+  padding: .2rem 0;
+  letter-spacing: .1em;
+}
+
+/* Logic chain */
+.logic-chain {
+  background: var(--paper-2);
+  padding: 1.75rem 2rem;
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.logic-chain-label {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  font-size: .9rem;
+}
+
+.chain-item {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: .35rem .8rem;
+  font-style: italic;
+}
+
+.chain-arrow {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: .7rem;
+}
+
+/* Meta-sentence */
+.meta-sentence {
+  margin: 2.5rem 0;
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--rule);
+  text-align: center;
+}
+
+.meta-sentence-label {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .75rem;
+}
+
+.meta-sentence p {
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Coherence table */
+.coherence {
+  margin: 2rem 0;
+}
+
+.coherence-row {
+  display: grid;
+  grid-template-columns: 90px 160px 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  font-size: .9rem;
+  align-items: center;
+}
+
+.coherence-row:last-child { border-bottom: 1px solid var(--rule); }
+
+.coherence-row > div {
+  padding: .8rem .75rem;
+}
+
+.coherence-row > div:not(:last-child) {
+  border-right: 1px solid var(--rule);
+}
+
+.c-num { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .1em; }
+.c-name { font-weight: 500; }
+.c-role { color: #3a3730; }
+
+.coherence-header {
+  display: grid;
+  grid-template-columns: 90px 160px 1fr;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.coherence-header > div {
+  padding: .5rem .75rem;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Series note */
+.series-note {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .08em;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: .6rem;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">ACI — Reference Document</div>
+  <div class="header-right"><a href="/papers/">← Publications</a></div>
+</header>
+
+<main>
+
+  <div class="doc-label">DRD Meta-Architecture · v1.0 · 2026</div>
+  <h1>Distributed Resilience Doctrine</h1>
+  <p class="subtitle">Strategic Denial as Time-Structured Resilience — A Canonical Overview</p>
+
+  <!-- Premise -->
+  <div class="premise">
+    <div class="premise-label">Core Premise</div>
+    <blockquote>
+      Denial-based defence is a time-structured competition. The small state's strategic objective is not rapid victory, but to prevent the adversary from achieving a political–strategic decision before time begins to work in the defender's favour.
+    </blockquote>
+  </div>
+
+  <p style="font-size:.95rem; color:#3a3730; margin-bottom:2rem;">
+    This reframes the foundational question of defence planning — from <em>"What capabilities do we have?"</em> to <em>"How long does the system remain decision-capable under adversary pressure?"</em>
+  </p>
+
+  <!-- Layer stack -->
+  <div class="layer-stack">
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">I</span>Strategy</div>
+      <div class="layer-content">
+        <div class="layer-title">Distributed Resilience Doctrine</div>
+        <div class="layer-acronym">DRD · WP 2026-01</div>
+        <div class="layer-body">Shifts the procurement logic from platform-centrism to system resilience: concentration → dispersion, rapid decision → sustained endurance. Whole-of-society integration as strategic variable.</div>
+        <div class="layer-question">How is rapid strategic defeat prevented?</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">II</span>Metric</div>
+      <div class="layer-content">
+        <div class="layer-title">Strategic Termination Time</div>
+        <div class="layer-acronym">STT · WP 2026-02</div>
+        <div class="layer-body">A single common currency: the time required for an adversary to achieve a politically decisive outcome at acceptable cost. STT integrates military degradation, societal continuity, and command capability into one measurable variable — making strategy assessable.</div>
+        <div class="layer-question">How long until the adversary achieves decision?</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">III</span>Critical mechanism</div>
+      <div class="layer-content">
+        <div class="layer-title">Command-and-Control Continuity Index</div>
+        <div class="layer-acronym">C2-CI · WP 2026-03</div>
+        <div class="layer-body">C2-CI is not one factor among many — it is a multiplier. If C2-CI collapses, Military Degradation Resistance fails to materialize and Societal Continuity fragments. Composed of Decision Lag, Autonomy Quality, and Resynchronization Capacity.</div>
+        <div class="layer-question">What fraction of decision-making capacity is retained under pressure?</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">IV</span>Dynamic competition</div>
+      <div class="layer-content">
+        <div class="layer-title">Adversary Tempo Model</div>
+        <div class="layer-acronym">ATM · WP 2026-04</div>
+        <div class="layer-body">Denial is not static. It is a tempo competition: <em>defender recovery rate</em> vs. <em>adversary disruption rate</em>. If the defender resynchronizes faster than the adversary can impose durable effects, STT extends. If not, STT collapses. The Decision Envelope defines the tempo thresholds at which denial credibility holds.</div>
+        <div class="layer-question">At what adversary tempo does denial stop buying time?</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">V</span>Measurement</div>
+      <div class="layer-content">
+        <div class="layer-title">C2-CI Operationalization Toolkit</div>
+        <div class="layer-acronym">Toolkit · WP 2026-05</div>
+        <div class="layer-body">DRD without measurement remains rhetoric. The Toolkit operationalizes C2-CI into four measurable sub-dimensions, providing exercise protocols and investment prioritization criteria for peacetime development.</div>
+        <div class="layer-question">How is C2-CI measured, reported, and improved?</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="layer">
+      <div class="layer-label"><span class="layer-num">VI</span>Theoretical foundation</div>
+      <div class="layer-content">
+        <div class="layer-title">C2-CI Nonlinear Dynamics</div>
+        <div class="layer-acronym">Theory Note · WP 2026-06</div>
+        <div class="layer-body">C2 does not degrade linearly. It exhibits threshold behaviour: long periods of stability followed by abrupt phase transitions, with asymmetric recovery (hysteresis). This is demonstrated mathematically through bifurcation theory. Consequence: <em>raising the threshold is far cheaper than recovering from collapse.</em></div>
+        <div class="layer-question">Why does C2 fail suddenly — and why is prevention asymmetrically efficient?</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Logic chain -->
+  <div class="logic-chain">
+    <div class="logic-chain-label">Causal chain</div>
+    <div class="chain">
+      <span class="chain-item">Resilience ↑<br>Autonomy ↑<br>Redundancy ↑</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-item">C2-CI ↑</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-item">Tempo threshold<br>(AT<sub>c</sub>) ↑</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-item">STT ↑</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-item">Denial<br>credible</span>
+    </div>
+  </div>
+
+  <!-- Meta-sentence -->
+  <div class="meta-sentence">
+    <div class="meta-sentence-label">The architecture in one sentence</div>
+    <p>Resilience raises the tempo threshold, which extends the strategic time horizon, which makes rapid decision implausible for the adversary.</p>
+  </div>
+
+  <!-- Coherence table -->
+  <div class="coherence-header">
+    <div>Paper</div>
+    <div>Component</div>
+    <div>Contribution to the framework</div>
+  </div>
+  <div class="coherence">
+    <div class="coherence-row">
+      <div class="c-num">WP-01</div>
+      <div class="c-name">DRD</div>
+      <div class="c-role">Strategic direction — defines the objective and reorients procurement logic</div>
+    </div>
+    <div class="coherence-row">
+      <div class="c-num">WP-02</div>
+      <div class="c-name">STT</div>
+      <div class="c-role">Common currency — makes denial-based strategy measurable and comparable</div>
+    </div>
+    <div class="coherence-row">
+      <div class="c-num">WP-03</div>
+      <div class="c-name">C2-CI</div>
+      <div class="c-role">Multiplier — the single variable that amplifies or nullifies all other components</div>
+    </div>
+    <div class="coherence-row">
+      <div class="c-num">WP-04</div>
+      <div class="c-name">ATM</div>
+      <div class="c-role">Dynamics — transforms static capability into a time-competitive model</div>
+    </div>
+    <div class="coherence-row">
+      <div class="c-num">WP-05</div>
+      <div class="c-name">Toolkit</div>
+      <div class="c-role">Operationalization — bridges theory and peacetime institutional practice</div>
+    </div>
+    <div class="coherence-row">
+      <div class="c-num">WP-06</div>
+      <div class="c-name">Theory Note</div>
+      <div class="c-role">Mathematical foundation — proves C2 threshold behaviour and asymmetric recovery cost</div>
+    </div>
+  </div>
+
+  <div class="series-note">
+    This document is a canonical reference for the Distributed Resilience Doctrine research series.<br>
+    It may be reproduced as a prefatory section in any paper of the series without further attribution.<br>
+    Aether Continuity Institute · Strategic Studies Programme · 2026
+  </div>
+
+</main>
+
+<footer>
+  Aether Continuity Institute · DRD Meta-Architecture v1.0 · 2026
+</footer>
+
+</body>
+</html>

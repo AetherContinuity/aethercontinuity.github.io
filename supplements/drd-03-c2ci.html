@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP 2026-03 — Command-and-Control Continuity Index — Aether Continuity Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.dih-series .series-accent { color: var(--accent); }
+.dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; }
+.dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+.dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+.dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home:hover { color: var(--ink); }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+.abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+.abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+.keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: #2a2520; }
+.formula-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+ul.body-list { margin: 0.5rem 0 1rem 1.5rem; }
+ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-bottom: 0.4rem; }
+.references p { font-size: 0.88rem; line-height: 1.75; color: var(--muted); margin-bottom: 0.5rem; }
+.further-reading { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--ink); }
+.fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.fr-intro { font-size: 0.92rem; color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
+.fr-list { display: flex; flex-direction: column; gap: 0; }
+.fr-item { display: flex; align-items: baseline; gap: 1rem; padding: 0.75rem 0; border-top: 1px solid var(--rule); }
+.fr-item:last-child { border-bottom: 1px solid var(--rule); }
+.fr-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--accent); min-width: 5.5rem; }
+.fr-title { font-size: 0.95rem; flex: 1; }
+.fr-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.fr-link:hover { color: var(--ink); }
+.changelog { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.changelog-entry { display: flex; gap: 1.5rem; font-family: var(--mono); font-size: 0.62rem; color: var(--muted); padding: 0.3rem 0; }
+.changelog-ver { color: var(--ink); min-width: 8rem; }
+footer { border-top: 1px solid var(--rule); padding: 2rem; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.58rem; color: var(--muted); line-height: 1.8; }
+@media (max-width: 600px) { nav { padding: 1rem 1.5rem; } .paper { padding: 3rem 1.25rem 5rem; } .dih { padding: 1.25rem 1.25rem; } footer { flex-direction: column; gap: 1rem; } }
+</style>
+</head>
+<body>
+<div class="dih">
+  <div class="dih-left">
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Defence Studies · <span class="series-accent">Distributed Resilience Doctrine Series</span></div>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Working Paper · No. 2026-03<br>March 2026<br>Domain <strong>D-3</strong><br>DRD Series · Paper III of VI</div>
+    <div class="dih-status"><div class="dih-status-dot"></div><div class="dih-status-text">Published · Active</div></div>
+  </div>
+</div>
+<nav>
+  <a class="nav-home" href="/papers/">Publications</a>
+  <span class="nav-id">WP 2026-03 · D-3</span>
+</nav>
+<div class="paper">
+  <div class="title-block">
+    <div class="paper-label">Working Paper No. 2026-03 · Distributed Resilience Doctrine Series</div>
+    <h1 class="paper-title">Command-and-Control Continuity Index</h1>
+    <p class="paper-subtitle">Operationalizing Cognitive Resilience for Small-State Defence</p>
+    <div class="citation-box">Aether Continuity Institute · Defence Studies Working Paper Series · No. 2026-03 · March 2026<br>Third paper in the DRD series — companion to WP 2026-01 and WP 2026-02</div>
+  </div>
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">The Strategic Termination Time framework identifies Command-and-Control Continuity Index (C2-CI) as one of three primary determinants of denial-based deterrence credibility. C2-CI remains the least operationalized of the three STT components. This paper addresses that gap, decomposing C2-CI into three measurable sub-variables—Decision Lag (DL), Autonomy Quality (AQ), and Resynchronization Capacity (RC)—and proposing measurement approaches for each. We demonstrate that C2-CI functions as a force multiplier on the other STT components rather than an additive term, with direct implications for investment priority in DRD implementation.</p>
+    <p class="keywords">Keywords: command and control · cognitive resilience · decision lag · mission command · small-state defence · distributed doctrine · C2 architecture</p>
+  </div>
+  <div class="section">
+  <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Introduction</h2></div>
+  <p>The Strategic Termination Time framework identifies Command-and-Control Continuity Index (C2-CI) as one of three primary determinants of denial-based deterrence credibility. C2-CI is defined as the capacity of a defending state's decision-making system to maintain effective authority under adversary disruption. While the construct has clear theoretical validity, it remains the least operationalized of the three STT components.</p><p>The Distributed Resilience Doctrine differs from platform-centric models not primarily in what equipment it advocates but in the organizational logic it requires. Distributing air defence and land fires across hundreds of autonomous units creates targeting complexity for the adversary—but only if those units can make effective decisions without continuous higher-echelon coordination. Distributed hardware with centralized decision-making is not DRD; it is a distributed target set with a single cognitive point of failure.</p><div class="callout"><p>C2-CI is the metric that captures whether this organizational transformation has occurred and to what degree it is sustained under adversarial pressure.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Theoretical Context</h2></div>
+  <h3 class="subsection">Command and Control in Military Theory</h3><p>The theoretical literature on military command and control distinguishes between two organizing principles: mission command (Auftragstaktik) and detailed command (Befehlstaktik). The superiority of mission command in high-uncertainty, high-tempo environments is well established. For DRD, the relevant point is that distributed physical force structure presupposes a command culture capable of decentralized execution.</p><h3 class="subsection">C2-CI as Force Multiplier</h3><p>Working Paper No. 2026-02 treated MDR, SCI, and C2-CI as three additive STT components. Deeper examination suggests this understates C2-CI's role. High MDR requires that distributed units continue effective military activity under pressure—which requires effective autonomous decision-making. High SCI requires coordinated crisis management—which requires C2 continuity across civilian and military domains. C2-CI is better understood as a coefficient on the other components than as an additive term.</p>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">C2-CI Sub-Variables</h2></div>
+  <h3 class="subsection">Decision Lag (DL)</h3><p>Decision Lag is defined as the ratio of decision time under communication disruption to decision time under normal operating conditions: <em>DL = T_disrupted / T_normal</em>. A DL of 1.0 indicates disruption has no effect on decision timing. A DL approaching infinity indicates operational paralysis.</p><div class="formula-block"><div class="formula-label">DRD Threshold</div><p>DL &lt; 2.5 — decision time under full communication disruption should not exceed 2.5× the normal-conditions baseline for operationally relevant decision categories.</p></div><h3 class="subsection">Autonomy Quality (AQ)</h3><p>Autonomy Quality is defined as the degree to which decisions made under communication disruption align with commander's intent and contribute to overall mission achievement. AQ-A (full alignment) represents ideal mission command execution. AQ-B (adequate) represents decisions that are strategically coherent and tactically appropriate. AQ-C (partial) represents decisions that are tactically rational but strategically incoherent—independent decisions that optimize local outcomes at the expense of overall operational effect.</p><div class="formula-block"><div class="formula-label">DRD Threshold</div><p>Across all tactical units, mean AQ under full communication disruption should be at AQ-B or better. The proportion of units falling to AQ-D or AQ-E should not exceed 15%.</p></div><h3 class="subsection">Resynchronization Capacity (RC)</h3><p>Resynchronization Capacity is defined as the time and accuracy with which units restore shared situational awareness and operational coherence following a period of communication disruption. It has two components: RC_t (time to adequate shared picture) and RC_a (accuracy of restored picture).</p><div class="formula-block"><div class="formula-label">DRD Threshold</div><p>RC_t &lt; 4 hours — adequate shared picture restored within four hours of communication restoration for unit-level disruption. RC_a &gt; 80% — restored situational picture accurate on at least 80% of specified operational parameters.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Measurement Framework</h2></div>
+  <h3 class="subsection">Exercise-Based Measurement Protocol</h3><p>The proposed measurement protocol integrates C2-CI assessment into existing training cycles rather than requiring dedicated assessment events. The protocol has three phases. In the baseline phase, units conduct normal training with full communication; DL baseline, normal AQ patterns, and RC baselines are established. In the disruption phase, communication is degraded or severed according to a specified scenario; DL, AQ, and RC are measured against baselines. In the recovery phase, communication is restored and RC_t and RC_a are measured directly.</p><h3 class="subsection">Simulation-Based Measurement</h3><p>Agent-based simulation provides a complement to exercise-based measurement, enabling systematic exploration of C2 architecture alternatives and disruption scenarios that would be impractical or unsafe to test in the field. The relevant simulation architecture models units as agents with specified decision rules, information states, and communication channels.</p>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Historical Application</h2></div>
+  <h3 class="subsection">The Winter War: C2-CI under Extreme Disruption</h3><p>Finnish command performance during the Winter War exhibited high C2-CI across all three sub-variables in documented unit actions. Decision Lag was compressed by training in autonomous operation: Finnish units were expected and trained to continue mission execution without higher-echelon contact, and DL increased only modestly under Soviet communication disruption attempts.</p><p>Autonomy Quality was notably high in the motti operations that characterized the most successful Finnish defensive actions. Small Finnish units, isolated by Soviet penetrations, made effective tactical decisions—encircling Soviet formations—that were strategically coherent with the overall Finnish defensive objective of maximizing adversary cost while preserving Finnish operational capability.</p><p>Soviet C2-CI provides a contrasting illustration. Initial Soviet operations exhibited high DL at multiple echelons; the centralized Soviet command system required frequent higher-echelon authorization, and when communications failed, units often halted rather than acted independently. Autonomy Quality at the unit level was severely constrained by Soviet doctrine—when communications failed, units frequently chose inaction over autonomous decision-making.</p>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Investment Implications</h2></div>
+  <h3 class="subsection">C2 Architecture Distribution</h3><p>The number of independent command nodes capable of autonomous operation is a primary C2-CI determinant. Concentration of C2 capability at a small number of command posts replicates the platform-centric vulnerability that DRD addresses at the physical level. Distributing command authority requires redundant command infrastructure and cross-training across leadership echelons.</p><h3 class="subsection">Training Culture Investment</h3><p>AQ is a cultural as much as a technical variable. The organizational research literature is consistent that mission command capability requires sustained investment in decentralized decision-making culture, which cannot be purchased off the shelf and takes years to develop. This is the DRD investment with the longest lead time and the least substitutable alternative.</p><div class="callout"><p>C2-CI investment should be treated as foundational rather than discretionary in the DRD force structure: sufficient C2-CI capability enables all other distributed investments to deliver their intended STT contribution; insufficient C2-CI undermines them regardless of platform quality.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">References</h2></div>
+  <div class="references"><p>Alberts, D.S., &amp; Hayes, R.E. (2003). <em>Power to the edge: Command and control in the information age.</em> CCRP Publication Series.</p><p>Klein, G. (1998). <em>Sources of power: How people make decisions.</em> MIT Press.</p><p>van Creveld, M. (1985). <em>Command in war.</em> Harvard University Press.</p><p>Weick, K.E., &amp; Sutcliffe, K.M. (2007). <em>Managing the unexpected: Resilient performance in an age of uncertainty</em> (2nd ed.). Jossey-Bass.</p></div>
+</div>
+  <div class="further-reading">
+  <div class="fr-label">Distributed Resilience Doctrine Series · Further Reading</div>
+  <p class="fr-intro">This paper is part of the DRD series. Companion papers available in the ACI supplements archive.</p>
+  <div class="fr-list"><div class="fr-item"><span class="fr-num">WP 2026-01</span><span class="fr-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</span><a class="fr-link" href="/papers/wp-002-drd.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-02</span><span class="fr-title">Strategic Termination Time as an Analytical Framework for Small-State Deterrence</span><a class="fr-link" href="/supplements/drd-02-stt.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-04</span><span class="fr-title">Distributed Resilience as a Dynamic Denial System: The Adversary Tempo Model</span><a class="fr-link" href="/supplements/drd-04-atm.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-06</span><span class="fr-title">Theory Note: Nonlinear Dynamics and Phase Transitions in C2-CI Structure</span><a class="fr-link" href="/supplements/drd-06-theory.html">Read →</a></div></div>
+</div>
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Mar 2026</span><span>Initial publication</span></div>
+  </div>
+</div>
+<footer>
+  <div>Aether Continuity Institute<br>Defence Studies · Working Paper Series<br>aethercontinuity.org</div><div>WP 2026-03 · Version 1.0<br>March 2026<br>Domain D-3</div><div>DRD Series · Paper III of VI<br>Strategic Studies Programme<br>Published</div>
+</footer>
+</body>
+</html>

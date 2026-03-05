@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP 2026-06 — Theory Note: C2-CI Nonlinear Dynamics — Aether Continuity Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.dih-series .series-accent { color: var(--accent); }
+.dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; }
+.dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+.dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+.dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home:hover { color: var(--ink); }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+.abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+.abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+.keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: #2a2520; }
+.formula-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+ul.body-list { margin: 0.5rem 0 1rem 1.5rem; }
+ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-bottom: 0.4rem; }
+.references p { font-size: 0.88rem; line-height: 1.75; color: var(--muted); margin-bottom: 0.5rem; }
+.further-reading { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--ink); }
+.fr-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.fr-intro { font-size: 0.92rem; color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
+.fr-list { display: flex; flex-direction: column; gap: 0; }
+.fr-item { display: flex; align-items: baseline; gap: 1rem; padding: 0.75rem 0; border-top: 1px solid var(--rule); }
+.fr-item:last-child { border-bottom: 1px solid var(--rule); }
+.fr-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--accent); min-width: 5.5rem; }
+.fr-title { font-size: 0.95rem; flex: 1; }
+.fr-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.fr-link:hover { color: var(--ink); }
+.changelog { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.changelog-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.changelog-entry { display: flex; gap: 1.5rem; font-family: var(--mono); font-size: 0.62rem; color: var(--muted); padding: 0.3rem 0; }
+.changelog-ver { color: var(--ink); min-width: 8rem; }
+footer { border-top: 1px solid var(--rule); padding: 2rem; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.58rem; color: var(--muted); line-height: 1.8; }
+@media (max-width: 600px) { nav { padding: 1rem 1.5rem; } .paper { padding: 3rem 1.25rem 5rem; } .dih { padding: 1.25rem 1.25rem; } footer { flex-direction: column; gap: 1rem; } }
+</style>
+</head>
+<body>
+<div class="dih">
+  <div class="dih-left">
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Defence Studies · <span class="series-accent">Distributed Resilience Doctrine Series</span></div>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Working Paper · No. 2026-06<br>February 2026<br>Domain <strong>D-3</strong><br>DRD Series · Paper VI of VI</div>
+    <div class="dih-status"><div class="dih-status-dot"></div><div class="dih-status-text">Published · Active</div></div>
+  </div>
+</div>
+<nav>
+  <a class="nav-home" href="/papers/">Publications</a>
+  <span class="nav-id">WP 2026-06 · D-3</span>
+</nav>
+<div class="paper">
+  <div class="title-block">
+    <div class="paper-label">Working Paper No. 2026-06 · Theory Note · Distributed Resilience Doctrine Series</div>
+    <h1 class="paper-title">Epälineaarinen dynamiikka ja faasimuutokset C2-CI-rakenteessa</h1>
+    <p class="paper-subtitle">Miksi käskynhallinnan jatkuvuus ei hajoa lineaarisesti — matemaattinen perustelu</p>
+    <div class="citation-box">Aether Continuity Institute · Defence Studies Working Paper Series · No. 2026-06 · February 2026<br>Theory Note — kuudes paperi DRD-sarjassa</div>
+  </div>
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">Tämä Theory Note kehittää matemaattisesti tiukan perustan väittämälle, joka on esiintynyt aiemmissa työpapereissa intuitiivisena: C2-CI ei heikkene lineaarisesti kuormituksen kasvaessa vaan käy läpi bifurkaation — faasimuutoksen — jossa järjestelmä siirtyy äkisti toimivasta tilasta toimimattomaan. Paperissa johdetaan differentiaaliyhtälöpohjainen tilaevoluutiomalli, määritellään kriittinen kynnysehto AT_c = √(R/(1+α)), analysoidaan bifurkaatio saddle-node-tyyppisenä, ja osoitetaan, että palautuminen vaatii huomattavasti enemmän resursseja kuin kynnyksen saavuttaminen.</p>
+    <p class="keywords">Avainsanat: bifurkaatioteoria · epälineaarinen dynamiikka · faasimuutos · C2-CI · hajautettu resilienssi · hysteresis · kriittinen kynnyspiste</p>
+  </div>
+  <div class="section">
+  <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Johdanto ja motivaatio</h2></div>
+  <p>Working Paper -sarjan aiemmissa osissa on rakennettu C2-CI-käsite, identifioitu sen komponenttihierarkia, käsitelty organisatorista resilienssiä sekä operationalisoitu C2-CI:n mittaus. Kaikissa näissä on esiintynyt toistuvasti oletus: järjestelmän degradaatio ei ole lineaarinen prosessi. Sitä on kuitenkin käsitelty narratiivisena väittämänä eikä matemaattisesti perusteltuna.</p><p>Tämä Theory Note korjaa puutteen. Tavoite on kolminkertainen: johdetaan dynaaminen tilamalli, jossa C2-CI:n tila on differentiaaliyhtälön ratkaisu; osoitetaan, että mallissa esiintyy bifurkaatio kun vihollisen tempo ylittää kriittisen arvon; analysoidaan hysteresis — palautuminen romahduksesta vaatii enemmän resursseja kuin romahduksen estäminen.</p><div class="callout"><p>Väite 1: C2-romahdus voi tapahtua äkillisesti ja ennakoimattomasti jopa maltillisesta stressistä, kun se saavuttaa kriittisen tason. Väite 2: Ehkäisevä rakentaminen on epäsymmetrisesti tehokkaampaa kuin reaktiivinen palauttaminen.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Matemaattinen kehys</h2></div>
+  <h3 class="subsection">Tilamuuttujat</h3><div class="formula-block"><div class="formula-label">Tilamuuttujat</div><p>Φ(t) ∈ [0, 1] — C2-CI:n normalisoitu tila hetkellä t (Φ = 1 = täysimääräinen toimintakyky, Φ = 0 = täydellinen romahdus)</p><p>AT(t) ≥ 0 — vihollisen toimintatempo hetkellä t</p><p>R(t) ≥ 0 — järjestelmän resilienssikapasiteetti hetkellä t</p></div><h3 class="subsection">Perusdynaaminen malli</h3><div class="formula-block"><div class="formula-label">Differentiaaliyhtälö</div><p>dΦ/dt = f(Φ, AT, R) = R · G(Φ) − D(Φ, AT)</p><p>G(Φ) = Φ(1 − Φ) — logistinen kasvufunktio (palautumiskapasiteetti)</p><p>D(Φ, AT) = AT² · Φ · (1 + α(1 − Φ)) — degradaatiofunktio</p><p>Täysi tilamalli: dΦ/dt = R · Φ(1 − Φ) − AT² · Φ · (1 + α(1 − Φ))</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Tasapainot ja bifurkaatioanalyysi</h2></div>
+  <h3 class="subsection">Kriittinen kynnyspiste</h3><div class="formula-block"><div class="formula-label">Keskeinen tulos</div><p><strong>AT_c = √(R / (1 + α))</strong></p><p>Kun AT &lt; AT_c: järjestelmällä on toiminnallinen tasapaino Φ* &gt; 0</p><p>Kun AT &gt; AT_c: ainoa tasapaino on Φ* = 0 (romahdus)</p><p>Epätriviaali tasapaino: Φ* = 1 − AT² / (R − α · AT²)</p></div><h3 class="subsection">Bifurkaatiotyyppi: Saddle-Node</h3><p>Tasapisteiden lukumäärän muutos AT_c:ssä on saddle-node-bifurkaatio: toiminnallinen tasapaino ja epävakainen välitaso törmäävät ja katoavat samanaikaisesti. Katoaminen on äkillinen — järjestelmä ei liukunaamioisesti laske kohti nollaa; sen sijaan toiminnallinen tasapaino yksinkertaisesti lakkaa olemasta, ja järjestelmä hyppää romahduspisteeseen.</p><p>Lähellä kynnystä järjestelmä saattaa näyttää stabiililta vaikka se on jo kriittisellä alueella. Tämä ilmiö tunnetaan nimellä <em>critical slowing down</em>: palautumisaika häiriöistä pitenee merkittävästi ennen varsinaista bifurkaatiota — mitattavissa oleva varoitusmerkki.</p>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Hysteresisvaikutus ja palautumisasymmetria</h2></div>
+  <h3 class="subsection">Mekanismi</h3><p>Kun järjestelmä on romahtanut (AT &gt; AT_c), pelkkä tempon laskeminen takaisin AT_c:n alle ei riitä palauttamaan toiminnallista tasapainoa. Syy on siinä, että romahtaneessa tilassa (Φ ≈ 0) kasvufunktio G(Φ) ≈ 0 — järjestelmä ei elpyy itsestään.</p><div class="formula-block"><div class="formula-label">Palautumiskustannusasymmetria</div><p>ΔAT_romahdus = tempon kasvu romahduksen laukaisemiseen lähtötasolta AT_0</p><p>ΔR_palautuminen = lisäresilienssi tarvittu palautumiseen samalla tempotasolla</p><p><strong>Tarvittava resilienssin kasvu palautumiseen on aina suurempi kuin resilienssin lasku joka johti romahdukseen.</strong></p><p>Intuitio: palautuminen edellyttää paitsi saman resilienssin palauttamista myös ulkoisen häiriön tilan nostamiseen yli epävakaan välitason.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Vakauden alueet ja suunnittelukriteerit</h2></div>
+  <h3 class="subsection">Kolme dynamiikkaregiimiä</h3><div class="formula-block"><div class="formula-label">Regiimit</div><p><strong>Regiimi I — Vakaa toiminta (AT ≪ AT_c):</strong> Φ* korkea ja vakaa. Häiriöt vaimenevat luonnostaan.</p><p><strong>Regiimi II — Haavoittuva alue (AT ≈ AT_c):</strong> Φ* matala mutta toiminnallinen. Palautuminen hidasta. Critical slowing down.</p><p><strong>Regiimi III — Romahdus (AT &gt; AT_c):</strong> Toiminnallista tasapainoa ei ole. Palautuminen vaatii massiivisen ulkoisen intervention.</p></div><h3 class="subsection">Kolme suunnittelukriteeriä</h3><div class="formula-block"><div class="formula-label">Operatiiviset kriteerit</div><p><strong>Kriteeri 1 — Kynnysmarginaalin ylläpito:</strong> AT_max ≤ β · AT_c = β · √(R / (1 + α)), missä β = turvallisuusmarginaali (esim. 0.75)</p><p><strong>Kriteeri 2 — Epälineaarisuuden minimointi:</strong> Modulaarinen arkkitehtuuri pienentää α:a, koska paikallinen vikaantuminen ei enää propogoidu ketjureaktion tavoin.</p><p><strong>Kriteeri 3 — Palautumiskapasiteetin mitoittaminen:</strong> Reservikapasiteetti on mitoitettava palautumisskenaarion, ei pelkästään normaalin operaation mukaan.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Doktriinaaliset implikaatiot</h2></div>
+  <h3 class="subsection">Bifurkaatioindeksi BI operatiivisena mittarina</h3><div class="formula-block"><div class="formula-label">Bifurkaatioindeksi</div><p>BI = AT / AT_c = AT · √((1 + α) / R)</p><p>Kun BI → 1, järjestelmä lähestyy kriittistä kynnystä. Kun BI &gt; 1, järjestelmä on romahdusalueella. Tämä on yksinkertainen, laskettavissa oleva indikaattori, joka yhdistää WP 2026-05:n mittarit bifurkaatioanalyysiin.</p></div><h3 class="subsection">Hajautus nostaa kriittistä kynnystä</h3><p>Hajautettu C2-CI-arkkitehtuuri vaikuttaa kynnyskaavaan AT_c = √(R/(1+α)) kahta kautta samanaikaisesti: se nostaa effektiivistä resilienssiä R:ää, koska kapasiteetti on jaettu useammalle solmulle (yksittäisen solmun vikaantuminen ei poista koko kapasiteettia); ja se pienentää α:a, koska modulaarinen rakenne estää ketjureaktiovaikutukset. Yhteisvaikutus on merkittävä: hajautettu järjestelmä voi kestää olennaisesti korkeampaa vihollisen tempoa ennen bifurkaatiota.</p><div class="callout"><p>Matemaattinen perusrakenne on nyt paalutettu. Kynnyksen nostaminen ja hysteresisvaikutuksen pienentäminen ovat strategisia prioriteetteja, ei pelkkiä suunnitteluoptioita.</p></div>
+</div><div class="section">
+  <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Viitteet</h2></div>
+  <div class="references"><p>Strogatz, S.H. (2018). <em>Nonlinear Dynamics and Chaos.</em> 2nd ed. CRC Press.</p><p>Kuznetsov, Y.A. (2004). <em>Elements of Applied Bifurcation Theory.</em> 3rd ed. Springer.</p><p>Scheffer, M. et al. (2009). Early-warning signals for critical transitions. <em>Nature</em>, 461, 53–59.</p><p>Wiener, N. (1948). <em>Cybernetics: Or Control and Communication in the Animal and the Machine.</em> MIT Press.</p><p>Alberts, D.S. &amp; Hayes, R.E. (2003). <em>Power to the Edge.</em> CCRP Publication Series.</p></div>
+</div>
+  <div class="further-reading">
+  <div class="fr-label">Distributed Resilience Doctrine Series · Further Reading</div>
+  <p class="fr-intro">This paper is part of the DRD series. Companion papers available in the ACI supplements archive.</p>
+  <div class="fr-list"><div class="fr-item"><span class="fr-num">WP 2026-01</span><span class="fr-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</span><a class="fr-link" href="/papers/wp-002-drd.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-02</span><span class="fr-title">Strategic Termination Time as an Analytical Framework for Small-State Deterrence</span><a class="fr-link" href="/supplements/drd-02-stt.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-03</span><span class="fr-title">Command-and-Control Continuity Index: Operationalizing Cognitive Resilience</span><a class="fr-link" href="/supplements/drd-03-c2ci.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-04</span><span class="fr-title">Distributed Resilience as a Dynamic Denial System: The Adversary Tempo Model</span><a class="fr-link" href="/supplements/drd-04-atm.html">Read →</a></div><div class="fr-item"><span class="fr-num">WP 2026-05</span><span class="fr-title">C2-CI Operationalization Toolkit: Measuring and Developing Command Continuity in Peacetime</span><a class="fr-link" href="/supplements/drd-05-toolkit.html">Read →</a></div></div>
+</div>
+  <div class="changelog">
+    <div class="changelog-label">Version History</div>
+    <div class="changelog-entry"><span class="changelog-ver">v1.0 · Feb 2026</span><span>Initial publication — Theory Note</span></div>
+  </div>
+</div>
+<footer>
+  <div>Aether Continuity Institute<br>Defence Studies · Working Paper Series<br>aethercontinuity.org</div><div>WP 2026-06 · Version 1.0<br>February 2026<br>Domain D-3</div><div>DRD Series · Paper VI of VI<br>Theory Note<br>Published</div>
+</footer>
+</body>
+</html>
