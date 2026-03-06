@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DA-003 · Fingrid Data Fetch | ACI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0b0d10;
+      --panel: #0f1318;
+      --line: #243040;
+      --ink: #e9eef5;
+      --muted: #a8b3c2;
+      --accent: #9dd6ff;
+      --accent2: #c7ffb5;
+      --warn: #ffd18a;
+      --danger: #ff9aa5;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --r: 12px;
+    }
+    body {
+      background:
+        radial-gradient(1100px 600px at 10% 0%, rgba(157,214,255,.07), transparent 55%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.55;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    header {
+      border-bottom: 1px solid rgba(36,48,64,.7);
+      padding: 14px 20px;
+      background: rgba(11,13,16,.88);
+      backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .h-inner { max-width: 860px; margin: 0 auto; }
+    .kicker { font-family: var(--mono); font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 3px; }
+    h1 { font-size: 1.1rem; font-weight: 600; }
+    .pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 7px; }
+    .pill { font-family: var(--mono); font-size: .65rem; border: 1px solid rgba(36,48,64,.9); padding: 2px 8px; border-radius: 999px; color: var(--muted); }
+    .pill.live { border-color: rgba(199,255,181,.4); color: var(--accent2); }
+    .pill.err  { border-color: rgba(255,154,165,.35); color: var(--danger); }
+
+    main { max-width: 860px; margin: 0 auto; padding: 20px; }
+    .slabel { font-family: var(--mono); font-size: .68rem; color: var(--accent); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+    .card { background: rgba(15,19,24,.68); border: 1px solid rgba(36,48,64,.75); border-radius: var(--r); padding: 18px 20px; margin-bottom: 18px; }
+
+    /* PROXY CONFIG */
+    .proxy-row { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+    .proxy-status { font-family: var(--mono); font-size: .72rem; margin-top: 6px; }
+    .proxy-status.ok  { color: var(--accent2); }
+    .proxy-status.err { color: var(--danger); }
+    .proxy-status.pnd { color: var(--muted); }
+
+    input[type="text"], input[type="password"] {
+      flex: 1; min-width: 180px;
+      background: rgba(0,0,0,.45); border: 1px solid rgba(36,48,64,.9);
+      border-radius: 8px; color: var(--ink);
+      font-family: var(--mono); font-size: .8rem;
+      padding: 9px 13px; outline: none; transition: border-color .2s;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      font-family: var(--mono); font-size: .75rem;
+      padding: 9px 16px; border-radius: 8px; border: none;
+      cursor: pointer; transition: opacity .15s, transform .1s; white-space: nowrap;
+    }
+    button:active { transform: scale(.97); }
+    button:hover { opacity: .85; }
+    .btn-go   { background: var(--accent); color: #0b0d10; font-weight: 700; }
+    .btn-sec  { background: rgba(36,48,64,.7); color: var(--ink); border: 1px solid rgba(36,48,64,.9); }
+    .btn-test { background: rgba(199,255,181,.12); color: var(--accent2); border: 1px solid rgba(199,255,181,.25); }
+    .note { font-size: .75rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+    #sb { display: none; font-family: var(--mono); font-size: .75rem; padding: 9px 14px; border-radius: 8px; margin-bottom: 16px; }
+    #sb.info { background: rgba(157,214,255,.07); border: 1px solid rgba(157,214,255,.2); color: var(--accent); }
+    #sb.ok   { background: rgba(199,255,181,.07); border: 1px solid rgba(199,255,181,.2); color: var(--accent2); }
+    #sb.err  { background: rgba(255,154,165,.07); border: 1px solid rgba(255,154,165,.25); color: var(--danger); }
+
+    .ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .ds-card { background: rgba(15,19,24,.6); border: 1px solid rgba(36,48,64,.65); border-radius: var(--r); overflow: hidden; transition: border-color .25s; }
+    .ds-card.loaded  { border-color: rgba(199,255,181,.28); }
+    .ds-card.loading { border-color: rgba(157,214,255,.2); }
+    .ds-card.errored { border-color: rgba(255,154,165,.25); }
+    .ds-top { padding: 10px 14px; border-bottom: 1px solid rgba(36,48,64,.5); background: rgba(20,28,36,.5); display: flex; justify-content: space-between; align-items: center; }
+    .ds-id-tag { font-family: var(--mono); font-size: .67rem; color: var(--accent); }
+    .ds-st { font-family: var(--mono); font-size: .62rem; }
+    .ds-st.ok  { color: var(--accent2); }
+    .ds-st.err { color: var(--danger); }
+    .ds-st.pnd { color: var(--muted); }
+    .ds-st.lod { color: var(--warn); }
+    .ds-mid { padding: 12px 14px; }
+    .ds-name { font-size: .82rem; font-weight: 600; margin-bottom: 6px; }
+    .ds-val { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+    .ds-val.muted { color: rgba(157,214,255,.25); font-size: .9rem; }
+    .ds-unit { font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-bottom: 6px; }
+    .ds-ts { font-family: var(--mono); font-size: .62rem; color: rgba(168,179,194,.4); }
+    .ds-use { font-family: var(--mono); font-size: .62rem; color: var(--warn); margin-top: 5px; }
+
+    .ind-table { width: 100%; border-collapse: collapse; }
+    .ind-table th { font-family: var(--mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(36,48,64,.6); background: rgba(20,28,36,.4); }
+    .ind-table td { padding: 11px 10px; border-bottom: 1px solid rgba(36,48,64,.3); font-size: .85rem; vertical-align: middle; }
+    .ind-table tr:last-child td { border-bottom: none; }
+    .tag-cell { font-family: var(--mono); font-size: .7rem; color: var(--accent); }
+    .val-cell { font-family: var(--mono); font-size: .92rem; text-align: right; }
+    .val-cell.ok   { color: var(--accent2); }
+    .val-cell.warn { color: var(--warn); }
+    .val-cell.crit { color: var(--danger); }
+    .val-cell.pnd  { color: rgba(168,179,194,.28); }
+    .thr-cell { font-family: var(--mono); font-size: .67rem; color: var(--muted); text-align: right; }
+
+    .log-wrap { background: rgba(0,0,0,.45); border: 1px solid rgba(36,48,64,.5); border-radius: var(--r); overflow: hidden; margin-top: 20px; }
+    .log-top { padding: 9px 14px; border-bottom: 1px solid rgba(36,48,64,.5); display: flex; justify-content: space-between; align-items: center; }
+    #log { padding: 10px 14px; font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 1.8; max-height: 180px; overflow-y: auto; }
+    .ll-ok   { color: var(--accent2); }
+    .ll-err  { color: var(--danger); }
+    .ll-info { color: var(--accent); }
+
+    .export-row { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
+    .spin { display: inline-block; width: 9px; height: 9px; border: 1.5px solid rgba(157,214,255,.25); border-top-color: var(--accent); border-radius: 50%; animation: sp .65s linear infinite; margin-right: 5px; vertical-align: middle; }
+    @keyframes sp { to { transform: rotate(360deg); } }
+
+    @media (max-width: 500px) {
+      .thr-cell { display: none; }
+      .ds-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <div class="kicker">Aether Continuity Institute · DA-003 Data Tool</div>
+    <h1>Fingrid Open Data — Indicator Fetch</h1>
+    <div class="pills">
+      <span class="pill">Finland 2026</span>
+      <span class="pill">WP-008 companion</span>
+      <span class="pill" id="conn-pill">● Awaiting proxy</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PROXY CONFIG -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="slabel">Proxy URL</div>
+    <div class="proxy-row">
+      <input type="text" id="proxy-url"
+        value="https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api"
+        placeholder="https://your-worker.workers.dev/api" />
+      <button class="btn-test" onclick="testProxy()">⚡ Testaa yhteys</button>
+    </div>
+    <div class="proxy-status pnd" id="proxy-status">— yhteys testaamatta</div>
+    <div class="note">
+      Proxy reitittää kutsut Fingridin API:lle palvelinpuolelta — CORS ei ole ongelma.<br>
+      Fingrid API-avain on asetettu Cloudflare Worker -ympäristömuuttujaan, ei tähän tiedostoon.
+    </div>
+  </div>
+
+  <div id="sb"></div>
+
+  <!-- FETCH BUTTON -->
+  <div style="margin-bottom:20px;">
+    <button class="btn-go" style="width:100%; padding:13px;" onclick="fetchAll()">
+      ▶ Hae kaikki Fingrid-datasetit
+    </button>
+  </div>
+
+  <!-- DATASETS -->
+  <div class="slabel">Fingrid Datasets</div>
+  <div class="ds-grid" id="ds-grid"></div>
+
+  <!-- INDICATORS -->
+  <div class="slabel">DA-003 Indikaattorit</div>
+  <div class="card" style="padding:0; overflow:hidden; margin-bottom:18px;">
+    <table class="ind-table">
+      <thead><tr><th>Tag</th><th>Indikaattori</th><th style="text-align:right;">Arvo</th><th style="text-align:right;">Kynnys</th></tr></thead>
+      <tbody id="ind-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="slabel">Export</div>
+  <div class="export-row">
+    <button class="btn-sec" onclick="exportJSON()">⬇ Vie JSON (DA-003 inputs)</button>
+    <button class="btn-sec" onclick="copyLock()">⎘ Kopioi LOCKSIG</button>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-wrap">
+    <div class="log-top">
+      <span class="slabel" style="margin:0;">Fetch Log</span>
+      <button class="btn-sec" style="font-size:.62rem; padding:3px 9px;" onclick="clearLog()">Tyhjennä</button>
+    </div>
+    <div id="log"></div>
+  </div>
+
+</main>
+
+<script>
+const DS = [
+  {id:193, name:"Sähkön kulutus",        unit:"MWh/h", use:"I-4 base consumption"},
+  {id:74,  name:"Ydinvoima",             unit:"MWh/h", use:"I-4 dispatchable (nuclear)"},
+  {id:75,  name:"Vesivoima",             unit:"MWh/h", use:"I-4 dispatchable (hydro)"},
+  {id:181, name:"Tuulivoima",            unit:"MWh/h", use:"Black Period stress"},
+  {id:87,  name:"Siirto → Ruotsi",       unit:"MWh/h", use:"I-3 export SE"},
+  {id:86,  name:"Siirto ← Ruotsi",       unit:"MWh/h", use:"I-3 import SE"},
+  {id:187, name:"Siirto Estlink",        unit:"MWh/h", use:"I-3 Baltic corridor"},
+  {id:1,   name:"FCR-N reservi",         unit:"MW",    use:"Stability reference"},
+  {id:336, name:"Spot-hinta FI",         unit:"€/MWh", use:"EHR / I-2 price"},
+];
+
+const IND = [
+  {id:"i4",  tag:"I–4", name:"Duration Resilience (dispatch)",  thresh:"< 72h → gap"},
+  {id:"i3",  tag:"I–3", name:"Netto siirto (export − import)",  thresh:"< 0 = nettoimport"},
+  {id:"ehr", tag:"EHR", name:"Energy Habitability Ratio (rural)",thresh:"> 10% → breach"},
+  {id:"i1",  tag:"I–1", name:"Capacity Commitment (dc/MESA)",  thresh:"≥ 2.50 → gate"},
+  {id:"i2",  tag:"I–2", name:"Residual Risk Transfer (RRTI)",  thresh:"≥ 40% → review"},
+];
+
+const fetched = {};
+
+function proxyUrl() {
+  return document.getElementById('proxy-url').value.trim().replace(/\/$/, '');
+}
+
+function init() {
+  document.getElementById('ds-grid').innerHTML = DS.map(ds => `
+    <div class="ds-card" id="c${ds.id}">
+      <div class="ds-top">
+        <span class="ds-id-tag">DS·${ds.id}</span>
+        <span class="ds-st pnd" id="st${ds.id}">pending</span>
+      </div>
+      <div class="ds-mid">
+        <div class="ds-name">${ds.name}</div>
+        <div class="ds-val muted" id="v${ds.id}">—</div>
+        <div class="ds-unit">${ds.unit}</div>
+        <div class="ds-ts" id="t${ds.id}">—</div>
+        <div class="ds-use">${ds.use}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('ind-tbody').innerHTML = IND.map(i => `
+    <tr>
+      <td class="tag-cell">${i.tag}</td>
+      <td>${i.name}</td>
+      <td class="val-cell pnd" id="ind-${i.id}">—</td>
+      <td class="thr-cell">${i.thresh}</td>
+    </tr>`).join('');
+}
+
+async function testProxy() {
+  const url = proxyUrl() + '?ds=193&size=1';
+  const ps = document.getElementById('proxy-status');
+  ps.className = 'proxy-status pnd'; ps.textContent = '⟳ Testataan...';
+  addLog('info', 'Proxy-testi: ' + url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    const rows = json.data || [];
+    if (!rows.length) throw new Error('Ei dataa');
+    ps.className = 'proxy-status ok';
+    ps.textContent = `✓ Proxy toimii — DS 193: ${rows[0].value} MWh/h`;
+    setPill('● Proxy OK', 'live');
+    addLog('ok', 'Proxy-testi onnistui: ' + JSON.stringify(rows[0]));
+  } catch(e) {
+    ps.className = 'proxy-status err';
+    ps.textContent = '✕ Virhe: ' + e.message;
+    setPill('● Proxy virhe', 'err');
+    addLog('err', 'Proxy-testi epäonnistui: ' + e.message);
+  }
+}
+
+async function fetchAll() {
+  status('<span class="spin"></span>Haetaan Fingrid dataa proxyn kautta…', 'info');
+  addLog('info', `Fetch — ${DS.length} datasettiä proxyn kautta`);
+
+  const now = new Date();
+  const end   = fmt(now);
+  const start = fmt(new Date(now - 3*3600*1000));
+
+  let ok = 0, fail = 0;
+  for (const ds of DS) {
+    setCard(ds.id, 'loading', '…', '');
+    try {
+      const url = `${proxyUrl()}?ds=${ds.id}&start=${start}&end=${end}&size=1`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const rows = json.data || [];
+      if (!rows.length) throw new Error('Ei dataa');
+      const val = rows[0].value;
+      const ts  = rows[0].startTime || '';
+      fetched[ds.id] = { value: val, startTime: ts, unit: ds.unit };
+      setCard(ds.id, 'loaded', val.toLocaleString('fi-FI',{maximumFractionDigits:1}), ts);
+      addLog('ok', `DS ${ds.id} ${ds.name}: ${val} ${ds.unit}`);
+      ok++;
+    } catch(e) {
+      setCard(ds.id, 'error', e.message, '');
+      addLog('err', `DS ${ds.id} epäonnistui: ${e.message}`);
+      fail++;
+    }
+    await sleep(250);
+  }
+
+  computeIndicators();
+  status(`Valmis — ${ok} onnistui, ${fail} epäonnistui.`, ok > 0 ? 'ok' : 'err');
+  setPill(ok > 0 ? '● Live' : '● Virhe', ok > 0 ? 'live' : 'err');
+}
+
+function computeIndicators() {
+  const g = id => fetched[id]?.value;
+  const cons = g(193), nuc = g(74)||0, hyd = g(75)||0;
+  if (cons && cons > 0) {
+    const h = ((nuc + hyd) / cons * 168).toFixed(1);
+    setInd('i4', h + ' h', h < 72 ? 'crit' : h < 120 ? 'warn' : 'ok');
+  }
+  const expSE = g(87)||0, impSE = g(86)||0, expEE = g(187)||0;
+  const net = (expSE + expEE) - impSE;
+  setInd('i3', (net >= 0 ? '+' : '') + net.toFixed(0) + ' MWh/h', net < 0 ? 'warn' : 'ok');
+  const spot = g(336);
+  if (spot) {
+    const allIn = spot / 10 + 8.0;
+    const ehr = ((22000 * allIn / 100) / 35000 * 100).toFixed(2);
+    setInd('ehr', ehr + '%', ehr > 10 ? 'crit' : ehr > 7 ? 'warn' : 'ok');
+  }
+  setInd('i1', 'syötä DC MW', 'pnd');
+  setInd('i2', 'syötä tariff', 'pnd');
+}
+
+function setCard(id, state, val, ts) {
+  document.getElementById(`c${id}`).className = `ds-card ${state === 'error' ? 'errored' : state}`;
+  const st = document.getElementById(`st${id}`);
+  st.textContent = state === 'loaded' ? '✓ ok' : state === 'error' ? '✕ err' : '⟳';
+  st.className   = `ds-st ${state === 'loaded' ? 'ok' : state === 'error' ? 'err' : 'lod'}`;
+  const ve = document.getElementById(`v${id}`);
+  ve.textContent = val;
+  ve.className   = state === 'loaded' ? 'ds-val' : 'ds-val muted';
+  document.getElementById(`t${id}`).textContent = ts ? new Date(ts).toLocaleString('fi-FI') : '—';
+}
+function setInd(id, txt, cls) {
+  const el = document.getElementById(`ind-${id}`);
+  el.textContent = txt; el.className = `val-cell ${cls}`;
+}
+function exportJSON() {
+  const payload = { da003:'v1.0', fetched: new Date().toISOString(),
+    datasets: Object.fromEntries(DS.map(ds => [ds.id, { name:ds.name, unit:ds.unit, da003_use:ds.use, ...(fetched[ds.id]||{value:null}) }]))
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  a.download = `DA-003-inputs-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function copyLock() {
+  const sig = 'LOCKSIG:' + DS.map(ds=>`DS${ds.id}:${fetched[ds.id]?.value??'N/A'}`).join('.') + `.DA003.v1.0.${new Date().toISOString().slice(0,10)}`;
+  navigator.clipboard.writeText(sig).then(()=>status('LOCKSIG kopioitu.','ok'));
+}
+function status(msg, type) {
+  const b = document.getElementById('sb');
+  b.innerHTML = msg; b.className = type; b.style.display = 'block';
+}
+function setPill(txt, cls) {
+  const p = document.getElementById('conn-pill');
+  p.textContent = txt; p.className = 'pill' + (cls ? ' '+cls : '');
+}
+function addLog(type, msg) {
+  const el = document.getElementById('log');
+  const d = document.createElement('div');
+  d.className = 'll-'+type;
+  d.textContent = `[${new Date().toLocaleTimeString('fi-FI')}] ${msg}`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+}
+function clearLog() { document.getElementById('log').innerHTML = ''; }
+function fmt(d) { return d.toISOString().slice(0,19)+'Z'; }
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+init();
+</script>
+</body>
+</html>
