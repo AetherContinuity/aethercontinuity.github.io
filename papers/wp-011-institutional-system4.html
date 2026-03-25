@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-011 — Institutional System-4 Architecture for Small-State Viability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb; --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad; --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; animation: fadeIn 1s ease both; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+  .abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+  .abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.hyp-title { font-size: 1rem; font-weight: 500; margin: 2rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.85rem 1.1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.85rem 1.1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); white-space: nowrap; }
+  .formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); }
+  .formula { font-family: var(--mono); font-size: 0.88rem; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 0.75rem; line-height: 2; }
+  .formula-caption { font-size: 0.82rem; font-style: italic; color: var(--muted); }
+  .conclusion-block { margin-top: 3.5rem; background: var(--ink); color: var(--paper); padding: 2.5rem 2.5rem; }
+  .conclusion-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7a7468; margin-bottom: 1rem; }
+  .conclusion-block p { color: #d8d0c0; font-size: 1rem; line-height: 1.8; }
+  .sentence-block { margin: 3rem 0; border: 2px solid var(--ink); padding: 2rem 2.5rem; }
+  .sentence-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .sentence-text { font-size: 1.1rem; line-height: 1.75; font-style: italic; color: var(--ink); }
+  .hyp-block { margin: 2rem 0; border: 1px solid var(--rule); padding: 1.5rem 1.75rem; background: var(--paper-2); }
+  .hyp-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .prev-paper { margin-bottom: 1.5rem; border: 1px solid var(--rule); padding: 1rem 1.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .prev-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .prev-title { font-size: 0.95rem; font-weight: 500; }
+  .prev-arrow { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); white-space: nowrap; }
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">WP · 011 · 2026</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Working Paper</span> &nbsp;·&nbsp; No. 011</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>0.2</strong><br>Series &nbsp;<strong>WP</strong></div>
+    <div class="dih-status"><span class="dih-status-dot"></span><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Working Paper No. 011</div>
+    <h1 class="paper-title">Institutional System-4 Architecture for Small-State Viability</h1>
+    <p class="paper-subtitle">Pre-Crisis Learning, Credible Analogy Transmission, and the Cost Internalisation Mechanism</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Working Paper No. 011, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/wp-011-institutional-system4.html<br>
+      Cross-references: WP-006 · WP-009 · WP-010 · DA-005 · TN-002 · TN-003 · TN-004 · TN-005
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Decision Capacity</span>
+      <span class="domain-tag">D-4 · Compound Stress</span>
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">WP-010 establishes that architectural pressure toward viability architecture is a structural consequence of tight coupling between energy and computation infrastructure. It does not establish that institutional response follows from architectural pressure. Historically, it rarely does: infrastructure viability architecture emerges from failure, not from foresight. This paper examines the conditions under which a jurisdiction can make the transition from diagnostic recognition to architectural adoption without requiring a concrete infrastructure failure as the activating mechanism. The central argument is that institutional learning before a forcing event requires four conditions to hold simultaneously: a credible external analogy (H-1), a short institutional translation path (H-2), an available architectural template (H-3), and a mechanism that converts future failure probability into present decision cost (H-4). The fourth condition is where most institutional learning fails. H-4 operates through two distinct mechanisms — political attributability (H-4a) and institutional liability (H-4b) — with different stability properties. H-4b, the formalisation of continuity obligations through regulatory, audit, and procurement frameworks, is the more robust mechanism because it does not depend on the narrative translation of technical risk into political accountability. Applied to Finland, the paper identifies a jurisdiction where H-1, H-2, and H-3 are present but H-4b remains operationally incomplete — a condition that is not a failure of information but a predictable consequence of an unchanged cost structure. The argument therefore reframes institutional foresight not as a cultural or political attribute but as a structural property: foresight produces adoption only when the institutional architecture converts future failure probability into present decision cost. <em>Version 0.2 revises the core mechanism to distinguish feasibility conditions (H-1–H-3) from the adoption trigger (H-4b), introduces temporal capacity decay as a constraint on implementation, and extends the falsification conditions to include H-1 necessity and Successful Deferral.</em></p>
+  </div>
+
+  <div class="prev-paper">
+    <div>
+      <div class="prev-label">Preceded by</div>
+      <div class="prev-title">WP-010 — Why Energy-Bound Computation Inherits Grid Logic</div>
+    </div>
+    <span class="prev-arrow">←</span>
+  </div>
+
+  <!-- § 01 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">The Problem of Pre-Crisis Institutional Learning</h2>
+    </div>
+    <p>Infrastructure viability architecture does not emerge from foresight. It emerges from failure. Power grids acquired N-1 after cascading blackouts. Banking systems acquired capital adequacy requirements after financial crises. Aviation acquired crew resource management after accidents. In each case, the institutional response followed the forcing event — not because decision-makers lacked information before it, but because the cost structure before it did not reward adoption.</p>
+    <p>This pattern is not a failure of intelligence. It is a structural equilibrium. Adoption costs are immediate, concentrated, and attributable to identifiable decision-makers. Failure costs are deferred, probabilistic, and distributed across populations that cannot yet organise to demand action. Rational institutional actors operating within this cost structure will systematically defer adoption until the cost structure changes — which is precisely what forcing events do.</p>
+    <p>WP-010 establishes that architectural pressure toward viability architecture is already present in the coupled energy–computation infrastructure of jurisdictions in the Northern Host zone. It does not establish that institutional response follows from architectural pressure. This paper examines the conditions under which it can.</p>
+    <div class="callout">
+      <p>The central claim is narrow and deliberate: pre-crisis institutional adoption of viability architecture is possible, but it requires a specific structural configuration that changes the cost environment before the forcing event occurs. The paper does not claim this configuration is common. It claims that when the configuration is present, adoption is predictable — and that when it is absent, deferral is predictable even under conditions of complete information.</p>
+    </div>
+  </div>
+
+  <!-- § 02 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">A Four-Condition Model of Pre-Crisis Institutional Learning</h2>
+    </div>
+    <p>Pre-crisis adoption requires four conditions to hold simultaneously. The conditions are ordered by the logical sequence in which each becomes operative: the first concerns whether a relevant signal exists; the second whether it can reach the decision layer; the third whether a response is architecturally available; and the fourth whether the cost structure makes response more rational than deferral. The fourth condition is where most institutional learning fails.</p>
+
+    <div class="hyp-block">
+      <div class="hyp-label">H-1 — Credible Analogy</div>
+      <p>A signal is only actionable if it is recognised as belonging to the same failure class as the target system. This requires three properties simultaneously: <em>technical similarity</em> — the failure mode in the source system must map structurally onto the failure mode being warned against in the target system; <em>geopolitical proximity</em> — the analogy must be perceived as relevant to the jurisdiction's own operating environment, not merely theoretically instructive; and <em>temporal recency</em> — the source failure must remain within the active institutional memory of the decision-making population.</p>
+      <p>When any of the three properties is absent, domain separation occurs: the analogy is acknowledged as interesting but not operative. The most common form is category separation — <em>"that happened in energy systems, we are digital"</em> — which severs the analogy at the technical similarity condition regardless of geopolitical and temporal relevance. Credible analogy is necessary but not sufficient; it determines whether a signal exists, not whether it produces response.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">H-2 — Short Translation Path</div>
+      <p>A credible signal that cannot traverse the institutional distance between diagnosis and mandate produces no adoption. The translation path is the sequence of institutional layers through which a System-4 recognition must pass before it can activate a System-5 mandate — a change in what the system is required to do, rather than merely what it is capable of doing.</p>
+      <p>The operative variable is not state size but the <em>institutionalisation of the S4→S5 channel</em>: whether a formal mechanism exists through which foresight functions can generate binding mandates rather than advisory recommendations. Smaller states often exhibit shorter potential translation paths due to fewer intermediary layers between technical assessment and executive decision — but this is a structural tendency, not a guarantee. A small state with an underdeveloped S-4 function does not benefit from path shortness; it fails faster with less warning. What cannot be compensated for is the absence of the channel itself.</p>
+      <p>A secondary interaction applies: when H-4b is absent, the translation path weakens structurally. Without institutional liability, the question of who bears responsibility for a signal that is not acted upon is never resolved, and responsibility diffusion becomes the default. H-2 and H-4b are partially co-dependent.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">H-3 — Template Availability</div>
+      <p>Institutional adoption of novel architecture under political conditions is rare. Adoption of a known template under political conditions is substantially more common. When a working architectural solution already exists — demonstrated in a comparable jurisdiction, specified in sufficient technical detail to support procurement and regulatory translation — the adoption decision is separated from the design problem.</p>
+      <p>Template availability does not guarantee adoption, and implementation tractability is a distinct constraint: a template may be available and well-documented while procurement frameworks, integration requirements, or organisational capacity create genuine obstacles to deployment. H-3 removes the design burden from an already politically costly decision. It does not remove the cost structure problem that H-4 addresses.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">H-4 — Pre-Crisis Cost Internalisation</div>
+      <p>The first three conditions determine whether adoption is possible. The fourth determines whether it is rational before a forcing event occurs. This is the condition most theories of institutional learning omit, and its omission produces the systematic error of treating adoption failure as an information failure when it is a cost structure failure.</p>
+      <p>Pre-crisis cost internalisation operates through two distinct mechanisms with different stability properties.</p>
+      <p><strong>H-4a — Political Attributability.</strong> Non-adoption becomes politically costly when a credible public analogy is sufficiently concrete and widely understood that failure to act can be attributed to identifiable decision-makers in the present — before system failure occurs. This mechanism is narratively dependent and structurally fragile. It requires that technical risk be successfully translated into political accountability without the clarifying concreteness of an actual failure. This translation usually fails. When it succeeds, it typically does so under near-miss conditions — situations so proximate to a forcing event that the distinction between pre-crisis and post-crisis learning becomes analytically thin.</p>
+      <p><strong>H-4b — Institutional Liability.</strong> Non-adoption becomes structurally costly when formal obligations — regulatory requirements, audit mandates, procurement standards, compliance frameworks — make deferral legally or administratively consequential independent of public salience. This mechanism does not require narrative translation of technical risk into political accountability. It operates through the existing institutional cost structure: an identifiable actor bears a present obligation, and non-compliance produces present consequences.</p>
+      <p>H-4b is the more robust mechanism because it does not depend on the political process that H-4a requires. It is also not binary. Institutional liability exists on a continuum from absent to nominal to operational, and the distinction between nominal and operational is decisive: formal standards without credible enforcement change the informational environment without changing the cost structure. Nominal liability behaves functionally as absent liability, even when its formal existence is widely acknowledged.</p>
+    </div>
+  </div>
+
+  <!-- § 03 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">The Integrated Model</h2>
+    </div>
+    <p>The four conditions address distinct analytical questions. H-1 and H-2 address the epistemics of signal generation and transmission. H-3 addresses the tractability of response. H-4b addresses the rationality of acting before failure. The conditions are not equivalent in function: H-1 through H-3 establish whether adoption is feasible; H-4b determines whether it occurs. This distinction is developed further in §08. The original formulation below remains analytically valid as a first-order description; §08 provides the structural revision.</p>
+
+    <div class="formula-block">
+      <div class="formula">
+        H-1: credible analogy exists<br>
+        H-2: signal reaches decision layer (S4 → S5 channel operative)<br>
+        H-3(t): architectural template available and implementable at time of adoption<br>
+        H-4b: non-adoption produces present institutional cost<br>
+        ─────────────────────────────────────────────────────<br>
+        ∴  pre-crisis adoption is structurally predictable
+      </div>
+      <div class="formula-caption">H-4b is the adoption trigger; H-1 through H-3(t) are feasibility conditions. A jurisdiction satisfying H-1 through H-3 but lacking operative H-4b will defer adoption. A jurisdiction with operative H-4b but with H-3(t) below the implementation threshold will trigger without being able to execute. See §08 for the revised adoption rule.</div>
+    </div>
+
+    <div class="callout">
+      <p>Institutional foresight is not a cultural or political attribute. It is a structural property: foresight produces adoption only when the institutional architecture converts future failure probability into present decision cost.</p>
+    </div>
+
+    <p>The model generates a falsifiable prediction: <em>jurisdictions with operative H-4b adopt viability architecture before forcing events; jurisdictions without it do not — even when H-1, H-2, and H-3 are equivalently present.</em> This prediction can be evaluated comparatively across jurisdictions sharing similar information environments but differing in regulatory architecture. Additional falsification conditions are specified in §07.</p>
+  </div>
+
+  <!-- § 04 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Three Historical Cases</h2>
+    </div>
+    <p>The model is tested against three cases selected to probe different failure modes of the four-condition conjunction. Two cases end in non-adoption; one in adoption. The variation in outcome is mapped to variation in condition satisfaction.</p>
+
+    <h3 class="hyp-title">Case 1 — Aviation CRM Adoption (1981–1985) · Adoption</h3>
+    <p>The Tenerife disaster of 1977 killed 583 people. Technical analysis established that cockpit authority gradient — the social and hierarchical inhibition on co-pilots correcting captains — was a primary causal mechanism. United Airlines developed Crew Resource Management in 1981. The FAA and ICAO subsequently mandated CRM training across the industry. Airlines that had not experienced their own comparable disaster adopted the architecture under regulatory mandate.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Status</th><th>Basis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H-1 Credible analogy</td><td>Present</td><td>Technically identical across operators: same aircraft types, same operational environment, same failure mode structure</td></tr>
+          <tr><td>H-2 Translation path</td><td>Present</td><td>FAA and ICAO held direct mandating authority; no substantive intermediary layers between technical finding and regulatory requirement</td></tr>
+          <tr><td>H-3 Template</td><td>Present</td><td>United Airlines' programme was fully documented and transferable; adoption required training implementation, not architectural design</td></tr>
+          <tr><td>H-4b Institutional liability</td><td>Present (operative)</td><td>Regulatory compliance requirement created immediate, attributable, proportionate cost for non-adoption independent of further incidents</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>All four conditions satisfied. Adoption occurred across operators without individual forcing events. H-4b operated through regulatory mandate, not near-miss pressure. This is the cleanest available case of the model's positive prediction.</p>
+
+    <h3 class="hyp-title">Case 2 — EU Digital Identity Infrastructure (2001–2016) · Non-adoption</h3>
+    <p>Estonia's X-Road federated data exchange architecture was operational from 2001, publicly documented, and technically transferable to other EU jurisdictions. The architecture demonstrated that distributed sovereign digital identity infrastructure was feasible for small-state public administration. Fifteen years elapsed before significant adoption movement appeared elsewhere in the EU. The eIDAS directive (2014, effective 2016) initiated partial convergence, but the pace of adoption remained slow relative to the availability of both analogy and template.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Status</th><th>Basis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H-1 Credible analogy</td><td>Present</td><td>Technical similarity high within EU digital government context; geopolitical proximity established by EU membership; temporal recency maintained across the period</td></tr>
+          <tr><td>H-2 Translation path</td><td>Partial</td><td>Digital infrastructure responsibility distributed across multiple ministries in most member states without a unified S4→S5 channel; responsibility diffusion structurally embedded</td></tr>
+          <tr><td>H-3 Template</td><td>Present</td><td>X-Road fully documented and open; architectural vocabulary available for procurement translation</td></tr>
+          <tr><td>H-4b Institutional liability</td><td>Absent pre-eIDAS; nominal post-eIDAS</td><td>No formal continuity obligation existed before eIDAS. Post-eIDAS implementation requirements were member-state-discretionary, producing nominal rather than operative liability in most jurisdictions</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>H-4b absent through most of the period; H-2 structurally weak. Non-adoption is the predicted outcome. The partial movement following eIDAS is consistent with the model: nominal H-4b produces partial adoption pressure, not the structural shift that operative H-4b would produce. This case also illustrates the H-2/H-4b interaction: responsibility diffusion persisted in part because non-action carried no institutional consequence.</p>
+
+    <h3 class="hyp-title">Case 3 — US Grid Cybersecurity (2015–2021) · Non-adoption</h3>
+    <p>Ukraine's power grid was attacked in December 2015, cutting electricity to approximately 230,000 households. Technical analysis confirmed that the attack vectors — SCADA remote access vulnerabilities — were structurally identical to those present in US grid infrastructure. ICS-CERT published detailed technical assessments. NERC CIP standards covering industrial control system security were in formal effect. The Colonial Pipeline attack occurred in May 2021.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Status</th><th>Basis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H-1 Credible analogy</td><td>Partial</td><td>Technical similarity high; geopolitical proximity acknowledged but partially attenuated by category separation ("Ukraine infrastructure, not US-grade"); temporal recency adequate</td></tr>
+          <tr><td>H-2 Translation path</td><td>Structurally fragmented</td><td>Regulatory responsibility distributed across FERC, NERC, DHS, DOE, and private operators; no single S4→S5 channel with mandating authority over the full system</td></tr>
+          <tr><td>H-3 Template</td><td>Present</td><td>NIST Cybersecurity Framework and ICS-specific guidance available; technical specification not the limiting factor</td></tr>
+          <tr><td>H-4b Institutional liability</td><td>Nominal</td><td>NERC CIP standards formally applicable but enforcement record through 2021 produced penalties not proportionate to adoption costs; effective compliance pressure insufficient to change cost calculus</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This case differs from Case 2 in a diagnostically important way. H-4b was not absent — it was nominal. The distinction matters: nominal institutional liability creates the administrative appearance of accountability without changing the underlying cost structure. NERC CIP's enforcement history through the pre-Colonial Pipeline period is functionally equivalent, in model terms, to the absence of H-4b. This case establishes that H-4b is not binary: the operative question is whether non-compliance produces costs that are concrete, attributable, and proportionate to the adoption cost being avoided.</p>
+  </div>
+
+  <!-- § 05 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Finland as the Live Test Case</h2>
+    </div>
+    <p>DA-005 establishes the Finland paradox: a jurisdiction that may simultaneously be one of Europe's most attractive locations for AI infrastructure investment and one of its most exposed in terms of public institutional continuity under compound stress. WP-011's four-condition model provides a diagnostic account of why the continuity axis is not converging toward viability architecture despite the availability of analogy and template.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Current status</th><th>Diagnostic finding</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H-1 Credible analogy</td><td>Present</td><td>Estonia's X-Road and KSI architecture satisfies all three credibility criteria: technical similarity to Finland's digital government needs is high; geopolitical proximity is immediate; temporal recency is maintained. The analogy is not abstract — it is 200 km from Helsinki and operating at national scale.</td></tr>
+          <tr><td>H-2 Translation path</td><td>Partially operative</td><td>Finland's small-state structure offers a shorter potential S4→S5 path than larger federal systems. The limiting factor is channel institutionalisation: foresight functions relevant to digital continuity architecture exist within government but are not structurally coupled to procurement mandates or regulatory requirements.</td></tr>
+          <tr><td>H-3 Template</td><td>Present (dual form)</td><td>The architectural template exists in two forms: Estonia's national implementation and WP-006/TN-002's D1–D4 endurance specification. The obstacle is not design novelty. Implementation tractability questions exist at the procurement and integration layer but do not constitute a fundamental design barrier.</td></tr>
+          <tr><td>H-4b Institutional liability</td><td>Emerging but not operative</td><td>NIS2 and the Critical Entities Resilience Directive create partial H-4b structure. Enforcement mechanisms are not yet calibrated to make non-adoption of continuity architecture present-costly at the level required to shift the cost calculus. The regulatory architecture is moving toward operative H-4b but has not yet arrived.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The diagnostic finding is precise: Finland's current position is not a failure of information, political will, or institutional intelligence. It is the predicted outcome of a cost structure in which H-4b remains operationally incomplete. H-1, H-2, and H-3 create the conditions for adoption. They do not compel it. H-4b is the missing sufficient condition.</p>
+    <p>The model also generates a trajectory prediction. As NIS2 enforcement matures and as the Critical Entities Resilience Directive implementation proceeds, the H-4b structure will develop. If enforcement remains proportionate to adoption costs, adoption pressure will increase. If enforcement remains nominal — calibrated to compliance documentation rather than architectural outcomes — the cost structure will not shift and deferral will remain rational.</p>
+    <p>Finland is therefore not a falsification of the model. It is the model's active test. The prediction is that adoption of continuity architecture for the public sector decision layer will correlate with the operationalisation of H-4b — not with the arrival of further analogy evidence, template refinement, or changes in the translation path structure, which are already adequate.</p>
+  </div>
+
+  <!-- § 06 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Regulatory Architecture as H-4b Infrastructure</h2>
+    </div>
+    <p>The analysis has a direct implication for how EU regulatory instruments should be evaluated as pre-crisis learning mechanisms. The relevant question is not whether a directive or standard exists, but whether it creates operative institutional liability — whether non-compliance produces costs that are concrete, attributable, and proportionate to adoption costs, independent of whether a failure event has occurred.</p>
+    <p>NIS2 advances the H-4b structure in several respects: it extends the scope of covered entities, strengthens incident reporting obligations, and creates personal liability for senior management in cases of non-compliance. These are moves toward operative H-4b. The residual gap is architectural specificity: NIS2 specifies security process requirements more completely than it specifies endurance architecture requirements. A jurisdiction can be NIS2-compliant while maintaining the single-platform dependencies that WP-006 identifies as the primary continuity vulnerability in the public sector decision layer.</p>
+    <p>The Critical Entities Resilience Directive fills part of this gap for physical infrastructure. The analogous instrument for digital decision layer architecture — procurement standards or certification requirements that make continuity architecture a mandatory property of public sector digital systems, not merely a recommended one — does not yet exist at sufficient specificity to constitute operative H-4b for the WP-006 failure modes.</p>
+    <div class="callout">
+      <p>Regulatory frameworks that formalise continuity obligations are not merely instruments of standard-setting. They are mechanisms for pre-crisis cost internalisation. Their effectiveness as pre-crisis learning mechanisms depends entirely on whether they succeed in making non-compliance present-costly rather than future-probable.</p>
+    </div>
+    <p>This reframing has a practical consequence. The policy question is not "should continuity architecture be required?" but "does the current regulatory instrument produce operative institutional liability for its absence?" If the answer is no, the information environment may be excellent and the templates available — and adoption will still not occur at scale until H-4b is completed.</p>
+  </div>
+
+  <!-- § 07 — Falsification -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Falsification Conditions</h2>
+    </div>
+    <p>The model should be considered substantially revised if any of the following is demonstrated through comparative empirical evidence.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Condition</th><th>Prediction violated</th><th>Implication</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>FC-1</td><td>Jurisdictions satisfying H-1–H-3 but lacking operative H-4b adopt viability architecture at rates comparable to those with operative H-4b</td><td>Cost structure is not the primary determinant; information or political will explanations are rehabilitated</td></tr>
+          <tr><td>FC-2</td><td>Jurisdictions with operative H-4b but weak H-1 or H-2 adopt viability architecture at high rates</td><td>H-4b alone is sufficient without analogy or translation path; model requires restructuring toward single-condition logic</td></tr>
+          <tr><td>FC-3</td><td>Nominal H-4b (formal standards without proportionate enforcement) produces adoption rates indistinguishable from operative H-4b</td><td>The nominal/operative distinction does not hold; enforcement calibration is not the decisive variable</td></tr>
+          <tr><td>FC-4</td><td>Finland adopts continuity architecture for the public sector decision layer before NIS2/CER enforcement becomes operative, without an intervening forcing event</td><td>H-4a (political attributability) can substitute for H-4b under small-state conditions; model requires H-4a to be assigned greater structural weight</td></tr>
+          <tr><td>FC-5</td><td>A jurisdiction without H-1 (credible analogy) but with operative H-4b adopts viability architecture at rates comparable to jurisdictions where H-1 is present</td><td>H-1 is not a necessary condition; the four-condition conjunction requires restructuring — H-4b may be sufficient as a standalone trigger independent of the feasibility conditions</td></tr>
+          <tr><td>FC-6</td><td>A perceived catastrophic risk disappears without adoption and without observable alternative mitigation — threat dissolves, technology becomes obsolete, or dependency structure shifts before a forcing event occurs</td><td>The model's insistence on H-4b as the rational pre-crisis response is not validated; Successful Deferral is an outcome class the model must account for, weakening the explanatory scope of the technical forcing assumption</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §08 Revised Core Mechanism -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Revised Core Mechanism</h2>
+    </div>
+
+    <p>Multi-model review of WP-011 (March 2026) produced a structural clarification of the original four-condition framework. The revision does not reject the model but separates two questions the original formulation conflated: whether institutional adoption is possible, and whether it actually occurs.</p>
+
+    <div class="hyp-block">
+      <div class="hyp-label">8.1 — Feasibility vs. Trigger</div>
+      <p>The original model treated H-1 through H-4 as a conjunctive set of simultaneous conditions. The review indicates a more accurate structure in which the conditions play different functional roles.</p>
+      <p style="margin-top:1rem"><strong>Feasibility conditions</strong> — determine whether adoption <em>can</em> occur:</p>
+      <p style="margin-top:.5rem; font-family:var(--mono); font-size:.85rem; line-height:1.9;">
+        H-1 &nbsp; Credible analogy to a recognised failure class<br>
+        H-2 &nbsp; Institutional translation pathway operative<br>
+        H-3(t) &nbsp; Implementation capacity above threshold at time of adoption
+      </p>
+      <p style="margin-top:1rem"><strong>Trigger condition</strong> — determines whether adoption <em>does</em> occur:</p>
+      <p style="margin-top:.5rem; font-family:var(--mono); font-size:.85rem; line-height:1.9;">
+        H-4b &nbsp; Cost-structure activation: future failure probability converted into present institutional liability
+      </p>
+      <p style="margin-top:1rem">This distinction has direct consequences for policy analysis. Interventions aimed at H-1 through H-3 build institutional readiness. Interventions aimed at H-4b affect the timing of adoption. These are different instruments with different lead times.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">8.2 — Temporal Capacity: H-3(t)</div>
+      <p>The original model treated H-3 (Template Availability) as a static condition. The multi-model review identified a dynamic failure mode: implementation capacity is not a property that, once established, remains available indefinitely.</p>
+      <p style="margin-top:1rem">During extended deferral periods, implementation capacity may atrophy through personnel turnover, institutional drift, or loss of technical expertise in the adopting jurisdiction. The operative variable is therefore:</p>
+      <p style="margin-top:.75rem; font-family:var(--mono); font-size:.85rem; text-align:center; padding: .5rem 0;">
+        H-3(t) = implementation capacity as a function of elapsed deferral time
+      </p>
+      <p style="margin-top:1rem">This produces a failure mode not captured by the original model: all four conditions appear satisfied at time T, but H-3(t) has already fallen below the implementation threshold. H-4b activates correctly; adoption does not follow.</p>
+      <p style="margin-top:.75rem">The implication for Finland is specific: the Estonian X-Road template satisfies H-3 in its architectural form. The question is whether Finnish procurement capacity, integration expertise, and institutional familiarity with the architecture are sufficient at the moment H-4b becomes operative — not merely whether the template exists.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">8.3 — Technical Forcing Condition</div>
+      <p>The original model contained an implicit assumption: that adoption follows naturally from analytical convergence. This assumption must be constrained. Without it, the model risks explaining too many instances of institutional change.</p>
+      <p style="margin-top:1rem">The technical forcing condition is satisfied when:</p>
+      <p style="margin-top:.75rem; font-family:var(--mono); font-size:.85rem; line-height:1.9; padding: .5rem 1rem; border-left: 2px solid var(--rule);">
+        P(catastrophic loss | no adoption) &gt; threshold<br>
+        AND<br>
+        no credible alternative mitigation path exists
+      </p>
+      <p style="margin-top:1rem">Without this constraint, the model cannot distinguish cases where adoption represents a genuine structural necessity from cases where it represents one of multiple acceptable policy equilibria. In political systems with competing priorities, analytical convergence alone does not compel adoption — the forcing condition specifies when it does.</p>
+    </div>
+
+    <div class="hyp-block">
+      <div class="hyp-label">8.4 — Revised Adoption Rule</div>
+      <p>The revised mechanism can be expressed as:</p>
+      <p style="margin-top:.75rem; font-family:var(--mono); font-size:.85rem; line-height:2; padding: 1rem 1.25rem; border: 1px solid var(--rule); background: var(--paper-2);">
+        Adoption occurs when:<br>
+        &nbsp;&nbsp;H-4b operative (trigger)<br>
+        &nbsp;&nbsp;AND H-3(t) &gt; θ<sub>implementation</sub> (capacity not atrophied)<br>
+        &nbsp;&nbsp;AND H-1 credible (analogy perceived as same failure class)<br>
+        &nbsp;&nbsp;AND technical forcing condition satisfied
+      </p>
+      <p style="margin-top:1rem">H-1 through H-3 establish feasibility. H-4b provides the activation trigger. The technical forcing condition constrains the model's scope to cases of genuine structural necessity rather than contested policy choice.</p>
+    </div>
+  </div>
+
+  <div class="sentence-block">
+    <div class="sentence-label">§ 09 · Core claim</div>
+    <p class="sentence-text">Infrastructure viability architecture emerges from failure because failure changes the cost structure of adoption — and pre-crisis institutional learning is possible, but only when a regulatory or institutional mechanism performs the same cost-structure transformation before the forcing event that the forcing event would otherwise perform after it. The trigger is not information. The trigger is cost.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">WP-011 · v0.2 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-3 · D-4<br>Cross-refs: WP-010 · DA-005 · TN-002 · TN-003 · TN-004 · TN-005</div>
+</footer>
+
+</body>
+</html>

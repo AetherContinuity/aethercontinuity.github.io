@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-008 — Institutional Allocation and System Continuity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* DIH-1 */
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dih-series {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: 0.2rem;
+  }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+    text-align: right;
+  }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--rule);
+    padding: 0.25rem 0.7rem;
+    margin-top: 0.4rem;
+  }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Nav */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 1s ease both;
+  }
+  .nav-home {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Paper wrapper */
+  .paper {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 5rem 2rem 8rem;
+    animation: fadeUp 1.2s ease both;
+    animation-delay: 0.15s;
+  }
+
+  /* Title block */
+  .title-block {
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .paper-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  h1.paper-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+  .paper-subtitle {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .citation-box {
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* Domain tags */
+  .domain-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .domain-tag {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.6rem;
+    color: var(--muted);
+  }
+
+  /* Abstract */
+  .abstract-block {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 1.75rem 2rem;
+    margin-bottom: 3.5rem;
+  }
+  .abstract-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .abstract-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #3a3530;
+    font-style: italic;
+  }
+
+  /* Body sections */
+  .section { margin-bottom: 3rem; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    min-width: 2rem;
+  }
+  h2.section-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #2a2520;
+    margin-bottom: 1rem;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* Indicator blocks */
+  .indicator-block {
+    margin: 1.5rem 0;
+    border: 1px solid var(--rule);
+    background: var(--paper-3);
+  }
+  .indicator-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-2);
+  }
+  .indicator-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    min-width: 1.5rem;
+  }
+  .indicator-name {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .indicator-body {
+    padding: 0.9rem 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: #3a3530;
+  }
+
+  /* Category distinction */
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .category-box {
+    border: 1px solid var(--rule);
+    padding: 1.25rem 1.5rem;
+    background: var(--paper-3);
+  }
+  .category-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .category-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .category-examples {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Formula block */
+  .formula-block {
+    margin: 2rem 0;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--rule);
+    background: var(--paper-3);
+    text-align: center;
+  }
+  .formula {
+    font-family: var(--mono);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .formula-caption {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* Callout */
+  .callout {
+    margin: 2rem 0;
+    border-left: 3px solid var(--ink);
+    padding: 1rem 1.5rem;
+    background: var(--paper-2);
+  }
+  .callout p {
+    font-size: 0.95rem;
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* Table */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.1rem;
+    text-align: left;
+    font-weight: 400;
+  }
+  tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.85rem 1.1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Conclusion */
+  .conclusion-block {
+    margin-top: 3.5rem;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 2.5rem;
+  }
+  .conclusion-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a7468;
+    margin-bottom: 1rem;
+  }
+  .conclusion-block p { color: #d8d0c0; font-size: 1rem; line-height: 1.8; }
+
+  /* Next paper box */
+  .next-paper {
+    margin-top: 3rem;
+    border: 1px solid var(--rule);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .next-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .next-title { font-size: 0.95rem; font-weight: 500; }
+  .next-arrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule);
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    animation: fadeIn 2s ease both;
+    animation-delay: 0.5s;
+  }
+  .footer-col {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .paper { padding: 3rem 1.5rem 5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; }
+    .dih { grid-template-columns: 1fr; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .dih-right { align-items: flex-start; }
+    .dih-meta { text-align: left; }
+    .category-grid { grid-template-columns: 1fr; }
+    .next-paper { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">WP · 008 · 2026</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Working Paper</span> &nbsp;·&nbsp; No. 008</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      Year &nbsp;<strong>2026</strong><br>
+      Version &nbsp;<strong>1.0</strong><br>
+      Series &nbsp;<strong>WP</strong>
+    </div>
+    <div class="dih-status">
+      <span class="dih-status-dot"></span>
+      <span class="dih-status-text">Open Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<main class="paper">
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="paper-label">ACI Working Paper No. 008</div>
+    <h1 class="paper-title">Institutional Allocation and System Continuity</h1>
+    <p class="paper-subtitle">Infrastructure Capital Allocation in Electrified Economies</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Working Paper No. 008, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/wp-008-institutional-allocation.html<br>
+      <span style="color:#9a8060;">v1.1 — Added §§ 10–11: Labour Market Allocation Bias and Diagnostic Indicators.</span>
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-1 · Duration Adequacy</span>
+      <span class="domain-tag">D-3 · Temporal Decision Capacity</span>
+      <span class="domain-tag">D-4 · Compound Stress Evaluation</span>
+    </div>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">Modern energy transitions occur under conditions of constrained infrastructure capacity, capital availability, and institutional attention. Under such constraints, infrastructure investment decisions effectively determine how system capacity becomes structurally committed. This paper introduces an analytical framework for examining the allocation of infrastructure capital between consumption-binding investments and stability-providing capacity. Using the contrast between hyperscale datacenter electricity consumption and municipal energy stability architectures (MESA) as a conceptual case, the framework proposes a set of indicators that allow allocation decisions to be evaluated from a system continuity perspective. The objective is not to optimise investment decisions or evaluate individual projects, but to identify the diagnostic indicators required to assess whether infrastructure allocation strengthens or weakens long-term system resilience.</p>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">Introduction: The Allocation Problem</h2>
+    </div>
+    <p>Energy systems undergoing rapid electrification face simultaneous pressures: rising electricity demand, intensifying competition for infrastructure investment, and a growing need for system stability and flexibility. Under such conditions, electricity capacity ceases to function as a purely market-allocated commodity and becomes a strategic resource — one whose structural commitment has long-term consequences for system resilience.</p>
+    <p>Infrastructure investments made today effectively determine how system capacity is distributed across its functions over horizons measured in decades. This temporal dimension of allocation is structurally underrepresented in conventional investment analysis, which tends to evaluate projects individually rather than as contributions to or withdrawals from a shared continuity reserve.</p>
+    <p>This paper addresses a fundamental question: how does the allocation of infrastructure capital influence the long-term continuity and resilience of national energy systems? Rather than evaluating individual technologies or projects, the analysis focuses on the structure of allocation — its distributional logic and its aggregate effects on system robustness.</p>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">System Context: Electrification and Capacity Constraints</h2>
+    </div>
+    <p>Electrified economies increasingly rely on electricity as the primary energy carrier across sectors that were previously served by diverse fuel sources. Heating, transportation, digital infrastructure, and industrial processes are all drawing on a shared electrical system whose structural characteristics differ fundamentally from the multi-fuel systems they replace.</p>
+    <p>This transformation introduces two structural dynamics that define the context for the allocation problem examined here. First, electricity demand is growing not only in volume but in the continuity of its load profile. Second, the need for stabilising capacity — the infrastructure that maintains frequency, voltage, and reserve margins — is growing at least as fast as demand itself.</p>
+    <p>Electricity systems must therefore maintain two distinct infrastructure functions simultaneously: supporting productive consumption and maintaining system stability. These functions are not always served by the same investments. The balance between them is not determined by any single actor or mechanism. It emerges from the cumulative pattern of infrastructure investment decisions made across the system over time.</p>
+    <p>That pattern — and its diagnostic assessment — is the subject of this paper.</p>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Capacity Binding and System Flexibility</h2>
+    </div>
+    <p>The central analytical concept introduced in this paper is <em>capacity binding</em>: the degree to which generation and network capability become structurally committed to a specific load profile. Capacity binding describes a property of infrastructure investments that is distinct from their economic value, their technical performance, or their regulatory classification.</p>
+    <p>Infrastructure investments vary significantly in their binding characteristics. Some investments primarily consume system capacity; others increase system flexibility and resilience. This distinction introduces a diagnostic partition between two investment categories that co-exist within every electrified economy.</p>
+
+    <div class="category-grid">
+      <div class="category-box">
+        <div class="category-label">Category I</div>
+        <div class="category-title">Consumption-Binding Infrastructure</div>
+        <p class="category-examples">Hyperscale datacenters — energy-intensive industrial loads — continuous process facilities</p>
+        <p style="font-size:0.9rem; margin-top:0.75rem;">Creates long-term, continuous electricity demand. Commits system capacity to a fixed load profile over multi-decade horizons.</p>
+      </div>
+      <div class="category-box">
+        <div class="category-label">Category II</div>
+        <div class="category-title">Stability-Providing Infrastructure</div>
+        <p class="category-examples">Storage systems — flexible generation — municipal stability architectures (MESA)</p>
+        <p style="font-size:0.9rem; margin-top:0.75rem;">Increases system flexibility and recovery capacity. Preserves the system's ability to respond to demand variation and stress events.</p>
+      </div>
+    </div>
+
+    <p>Understanding the balance between these categories is essential for diagnosing infrastructure allocation dynamics. A system heavily weighted toward consumption-binding investment may retain strong nominal capacity while losing the temporal flexibility required to traverse sustained stress intervals — the continuity condition identified in earlier ACI working papers.</p>
+
+    <div class="callout">
+      <p>Capacity binding is not synonymous with economic value. Consumption-binding investments may generate substantial economic returns. The diagnostic relevance of binding characteristics is independent of project-level economic evaluation.</p>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Institutional Allocation Dynamics</h2>
+    </div>
+    <p>Infrastructure investments are rarely determined solely by system optimisation. In practice, allocation decisions are shaped by a combination of market incentives, political visibility, sectoral interests, and historical policy frameworks — each of which may pull investment toward or away from stability-providing capacity in ways that are difficult to observe in aggregate.</p>
+    <p>Large infrastructure projects often attract disproportionate institutional attention due to their symbolic or economic visibility. This phenomenon does not necessarily indicate inefficiency or mismanagement. Many such investments generate substantial economic value and serve legitimate social functions. The diagnostic question is not whether individual investments are justified, but whether their cumulative effect on the allocation balance is visible and governed.</p>
+    <p>When infrastructure allocation becomes decoupled from systemic stability considerations — when individual investment decisions are evaluated without reference to their contribution to or withdrawal from the system's continuity reserve — structural imbalances may emerge that are invisible to any single decision-making process but consequential at the system level.</p>
+    <p>These imbalances can affect long-term system continuity, particularly when capacity becomes heavily committed to consumption-binding infrastructure without parallel investment in stabilising capacity. The purpose of the framework proposed in this paper is to make such patterns legible — not to reverse them by prescription, but to ensure they are seen.</p>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Datacenter Electricity Consumption as an Allocation Case</h2>
+    </div>
+    <p>Hyperscale datacenters represent one of the fastest-growing sources of electricity demand in advanced economies and provide a useful analytical case for examining capacity allocation dynamics. Their infrastructure characteristics are well-defined, their load profiles are stable and foreseeable, and their scale is sufficient to produce measurable effects on system-level allocation patterns.</p>
+    <p>Individual hyperscale facilities may require 100–300 MW of continuous load, with annual electricity consumption approaching 1–2 TWh. At the scale of multiple co-located or regionally clustered facilities, the system-level capacity commitment becomes comparable to that of significant generating assets.</p>
+    <p>Datacenters are typically supported by long-term power purchase agreements (PPAs) that stabilise electricity prices for operators. These arrangements serve the commercial objectives of both parties and contribute to investment certainty. They may, however, transfer residual market volatility to other system participants — in particular, to household consumers and smaller commercial users who lack equivalent hedging capacity.</p>
+
+    <div class="callout">
+      <p>Datacenters are economically rational investments that generate significant value through digital services, infrastructure development, and regional investment. Their selection as an analytical case reflects their diagnostic utility, not a normative assessment of their desirability.</p>
+    </div>
+
+    <p>The diagnostic relevance of the datacenter case lies in the combination of high capacity commitment, long investment horizon, and structural separation between the costs borne by the investment and the costs distributed across the system. These characteristics make the case analytically tractable for developing allocation indicators with broader applicability.</p>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Municipal Energy Stability Architectures (MESA)</h2>
+    </div>
+    <p>Municipal energy stability architectures represent infrastructure investments designed primarily to enhance system flexibility and resilience at the local and regional level. As the contrasting case to consumption-binding infrastructure, MESA serves in this analysis as the representative of stability-providing capacity.</p>
+    <p>Such systems may include combinations of dispatchable generation, chemical energy storage, thermal energy storage, and virtual power plant integration. Their defining characteristic is not any specific technology but their functional orientation: rather than committing system capacity to a fixed consumption profile, they contribute to system stability, increase duration resilience, and preserve the operational flexibility required to navigate stress intervals.</p>
+    <p>In the context of electrified economies undergoing rapid demand growth, stability-providing infrastructure plays a growing structural role in maintaining system reliability. Its diagnostic importance is proportional to the degree to which it counterbalances the binding effects of consumption-oriented investment — and to the degree to which its absence from investment portfolios constitutes a measurable continuity risk.</p>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Infrastructure Allocation Indicators</h2>
+    </div>
+    <p>This paper proposes five indicators for diagnosing infrastructure allocation dynamics. These indicators are intended as analytical tools rather than optimisation metrics. Their purpose is to render allocation patterns visible and comparable across contexts, not to prescribe optimal values or benchmark targets.</p>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">I–1</span>
+        <span class="indicator-name">Capacity Commitment Ratio</span>
+      </div>
+      <div class="indicator-body">
+        Electricity consumption committed to continuous industrial load relative to electricity capacity tied to stabilising infrastructure. Expresses the structural balance between binding and stabilising investment at the system level. A rising ratio indicates increasing commitment of system capacity to consumption functions without proportional growth in stabilising capacity.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">I–2</span>
+        <span class="indicator-name">Residual Risk Transfer Index</span>
+      </div>
+      <div class="indicator-body">
+        Distribution of electricity price volatility between protected large consumers and other system participants. Captures the extent to which PPA and hedging arrangements concentrate residual market risk among households and unprotected users. A high index value indicates structural asymmetry in risk distribution between investment categories.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">I–3</span>
+        <span class="indicator-name">Import Substitution Coefficient</span>
+      </div>
+      <div class="indicator-body">
+        Reduction in imported fuels or external energy dependence per unit of stabilising capacity investment. Measures the national energy security contribution of stability-providing infrastructure relative to consumption-binding investment, which typically increases rather than decreases import dependency at the margin.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">I–4</span>
+        <span class="indicator-name">Duration Resilience Contribution</span>
+      </div>
+      <div class="indicator-body">
+        Hours of critical system demand supported by stability-enhancing infrastructure under compound stress conditions. Links the allocation framework directly to the continuity risk concepts developed in ACI Working Papers 001 and 004. A low value indicates that stability-providing investment is insufficient to extend system endurance across a Black Period interval.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">I–5</span>
+        <span class="indicator-name">Infrastructure Reinforcement Burden</span>
+      </div>
+      <div class="indicator-body">
+        Grid reinforcement costs associated with committed load relative to stabilising investments. Consumption-binding infrastructure at high load levels may impose grid upgrade requirements whose costs are socialised across the system. This indicator captures the ratio between such imposed costs and the stabilising investment required to offset them.
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 8 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Allocation Diagnostics</h2>
+    </div>
+    <p>The indicators above allow infrastructure allocation decisions to be examined from a system continuity perspective. Together, they constitute a diagnostic framework whose application produces a structured characterisation of the allocation balance — not a verdict on individual investments.</p>
+    <p>The framework does not assume that any single category of investment is inherently preferable. Consumption-binding infrastructure serves genuine economic and social functions. Stability-providing infrastructure imposes its own costs and constraints. The diagnostic claim is not that one category should be favoured over the other, but that the balance between them has consequences for system continuity that are currently structurally underrepresented in investment governance.</p>
+
+    <div class="formula-block">
+      <div class="formula">Continuity Reserve = f(I–1, I–3, I–4)</div>
+      <div class="formula-caption">System continuity reserve as a function of allocation balance, import substitution, and duration resilience. A declining reserve indicates increasing vulnerability to extended stress intervals.</div>
+    </div>
+
+    <p>Excessive concentration of capital in either category may introduce systemic vulnerabilities. A system invested entirely in stabilising infrastructure without productive consumption represents an implausible extreme. A system invested entirely in consumption-binding infrastructure without stabilising capacity represents a continuity risk that this framework is specifically designed to identify.</p>
+  </div>
+
+  <!-- Section 9 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Institutional Allocation Bias</h2>
+    </div>
+    <p>In practice, infrastructure investment allocation may reflect institutional biases that systematically favour certain project categories independent of their contribution to system continuity. Recognising the existence of such biases is a prerequisite for their diagnosis; it does not constitute an explanation of their origin or a prescription for their correction.</p>
+    <p>Possible drivers of allocation bias include policy visibility, which tends to reward large, legible investments over distributed stabilising infrastructure; sectoral lobbying, which may be more effectively organised around high-value individual projects than around system-level resilience interests; financial structuring preferences, which may favour assets with stable long-term cash flows over stabilising investments whose returns are partially systemic; and procurement frameworks, which may be designed around technologies and project scales that favour consumption-binding categories.</p>
+    <p>Such biases may result in systematic over-representation of specific infrastructure types within national investment portfolios — a pattern that is individually rational and collectively consequential. Diagnosing these patterns is necessary for understanding long-term system stability outcomes.</p>
+  </div>
+
+  <!-- Section 10 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 10</span>
+      <h2 class="section-title">Institutional Allocation Bias in Labour Markets</h2>
+    </div>
+    <p>Modern labour markets exhibit structural allocation dynamics that are analytically parallel to those observed in infrastructure investment systems. Under conditions of global economic competition and institutional inertia, labour supply policies may be influenced not only by genuine skill shortages but by cost-stabilisation incentives operating at the firm and sector level. The allocation mechanism differs in form from infrastructure capital deployment but shares the same diagnostic property: resources are directed according to institutional logics that are individually rational and collectively consequential.</p>
+    <p>Public discourse frequently frames labour migration and workforce expansion in terms of skills shortages, internationalisation imperatives, or demographic necessity. These explanations are often empirically valid. However, labour supply expansion also affects wage formation and collective bargaining dynamics in ways that are structurally predictable. From a diagnostic perspective, the two explanatory frames — genuine shortage and cost-stabilisation incentive — are not mutually exclusive, and their conflation constitutes an analytical gap rather than a settled question.</p>
+
+    <div class="callout">
+      <p>The analytical category is not intent but structure. Labour supply policies that emerge from cost-stabilisation incentives need not be intentionally designed as such. They emerge as systemic properties of labour markets operating under global cost competition — a property identical in form to the allocation biases identified for infrastructure capital in § 09.</p>
+    </div>
+
+    <p>A second structural feature is labour market segmentation. In many advanced economies, labour markets gradually differentiate into two partially separate operational layers. A core workforce operates under stable long-term contracts, higher wage levels, and sustained organisational roles. A mobile or internationally sourced workforce operates under shorter contract horizons, higher labour mobility, and reduced collective bargaining power. The two layers interact through substitution dynamics that affect wage formation across the system, not only within the mobile segment.</p>
+    <p>Such segmentation can increase short-term labour market flexibility while simultaneously altering the long-term wage structure and career trajectory dynamics of the core domestic workforce. Within the analytical framework of this paper, labour supply policies are therefore interpretable as a form of institutional allocation decision: the allocation of economic adjustment pressure between firms, workers, and capital structures. The distributional consequences of this allocation pattern are analogous in form to the distributional consequences of infrastructure capital allocation — structurally present, but underrepresented in the dominant framing of the decisions that produce them.</p>
+
+    <div class="category-grid">
+      <div class="category-box">
+        <div class="category-label">Category I — Labour</div>
+        <div class="category-title">Demand-Binding Workforce Expansion</div>
+        <p class="category-examples">Internationally recruited labour — project-contract employment — high-mobility workforce segments</p>
+        <p style="font-size:0.9rem; margin-top:0.75rem;">Expands labour supply to meet short-term demand. Structurally affects wage formation and domestic bargaining dynamics over medium to long horizons.</p>
+      </div>
+      <div class="category-box">
+        <div class="category-label">Category II — Labour</div>
+        <div class="category-title">Resilience-Building Workforce Investment</div>
+        <p class="category-examples">Domestic skills development — long-term career pathways — wage structure maintenance</p>
+        <p style="font-size:0.9rem; margin-top:0.75rem;">Strengthens the structural durability of the domestic workforce. Preserves wage formation capacity and systemic labour market resilience under compound economic stress.</p>
+      </div>
+    </div>
+
+    <p>This analogy does not imply that labour market and infrastructure investment decisions are identical in mechanism or consequence. The diagnostic claim is more limited: that the same structural underrepresentation of allocation effects — identified for infrastructure in the preceding sections — is observable in labour market governance, and that the indicators required to surface it are of the same diagnostic form.</p>
+  </div>
+
+  <!-- Section 11 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 11</span>
+      <h2 class="section-title">Labour Market Diagnostic Indicators</h2>
+    </div>
+    <p>The following indicators extend the allocation diagnostic framework to labour market systems. They are structured in direct parallel to the infrastructure indicators introduced in § 07, and are subject to the same conditions of measurability and falsifiability described in § 12. Each indicator can in principle be derived from labour force surveys, wage statistics, collective agreement registries, and occupational classification data maintained by statistical authorities.</p>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">L–1</span>
+        <span class="indicator-name">Labour Supply Pressure Index</span>
+      </div>
+      <div class="indicator-body">
+        Rate of growth in labour supply relative to employment demand across economically significant sectors. A sustained excess of supply growth over demand growth — particularly in sectors where skill-shortage rhetoric is active — constitutes a diagnostic signal that supply expansion may be partially serving cost-stabilisation functions independent of genuine scarcity. The indicator does not distinguish intentional from structural drivers; it surfaces the pattern for further analytical examination.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">L–2</span>
+        <span class="indicator-name">Wage Growth Divergence</span>
+      </div>
+      <div class="indicator-body">
+        Differential between wage growth in sectors characterised by high international labour mobility and wage growth in sectors of comparable skill intensity but lower cross-border labour supply. Where divergence is persistent and directionally consistent, it constitutes evidence that labour supply composition is affecting wage formation independently of productivity dynamics. This indicator is directly analogous to I–1 (Consumption-to-Stability Investment Ratio) in its diagnostic function: it reveals distributional asymmetry within the allocation pattern.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">L–3</span>
+        <span class="indicator-name">Domestic Skill Utilisation Rate</span>
+      </div>
+      <div class="indicator-body">
+        Share of occupational demand in high-skill categories met by domestically trained labour, relative to the share met by internationally sourced workers. A declining domestic utilisation rate in sectors with active public skills investment is a diagnostic indicator of allocation mismatch: the system is simultaneously investing in domestic skill formation and importing substitutes, suggesting that short-term supply-side dynamics are not being governed in conjunction with long-term workforce development commitments.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">L–4</span>
+        <span class="indicator-name">Labour Market Segmentation Index</span>
+      </div>
+      <div class="indicator-body">
+        Degree to which the labour market is structurally differentiated between a core stable-contract workforce and a mobile or project-contract workforce segment, measured by contract duration distribution, sector concentration of non-standard employment, and collective agreement coverage rates across segments. High segmentation values indicate that the labour market is operating with two partially disconnected wage formation mechanisms — a structural condition with implications for social cohesion resilience under compound economic stress, directly within the scope of ACI domain D-4.
+      </div>
+    </div>
+
+    <div class="indicator-block">
+      <div class="indicator-head">
+        <span class="indicator-num">L–5</span>
+        <span class="indicator-name">Institutional Narrative Gap</span>
+      </div>
+      <div class="indicator-body">
+        Distance between the dominant institutional framing of labour supply policy — typically expressed in terms of skills shortage, demographic necessity, or competitiveness — and the observable structural effects of that policy on wage formation, segmentation, and domestic workforce utilisation. A large and persistent narrative gap is itself a governance condition: it indicates that the allocation logic operationally active in labour market decisions is not the logic articulated in the policy justifications offered for them. This gap functions as a leading indicator of institutional allocation bias, applicable both to labour markets and to infrastructure investment governance.
+      </div>
+    </div>
+
+    <div class="formula-block">
+      <div class="formula">Labour Continuity Reserve = f(L–1, L–3, L–4)</div>
+      <div class="formula-caption">Structural labour market resilience as a function of supply pressure, domestic skill utilisation, and segmentation intensity. A declining reserve indicates increasing systemic vulnerability under compound economic or political stress — relevant to ACI domains D-3 and D-4.</div>
+    </div>
+
+    <p>As with the infrastructure indicators, the labour market diagnostic framework does not evaluate individual policy decisions or individual firms. Its purpose is to characterise the aggregate allocation pattern and its relationship to long-term system continuity — a prior analytical step that is necessary before policy prescription or institutional redesign can be properly scoped.</p>
+  </div>
+
+  <!-- Section 12 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 12</span>
+      <h2 class="section-title">Scope and Falsifiability</h2>
+    </div>
+    <p>The framework proposed in this paper is diagnostic rather than predictive. It does not attempt to model future electricity demand, simulate system behaviour under stress, or optimise infrastructure portfolios. Its domain is the characterisation of allocation patterns and their relationship to system continuity — a prior analytical step that is necessary before any modelling or optimisation exercise can be properly scoped.</p>
+    <p>The indicators proposed are falsifiable in the sense that they are defined in terms of measurable quantities. Each indicator can be computed from data that is in principle available from electricity market operators, grid companies, investment registries, and statistical authorities. Where that data is unavailable or incomplete, the indicator itself constitutes a diagnostic signal — the absence of data on system-level allocation patterns is a governance condition that the framework is designed to surface.</p>
+    <p>Future analyses may apply these indicators to specific national contexts. The empirical application to Finland — using datacenter load data, grid capacity statistics, and MESA deployment figures — forms the basis for the Diagnostic Assessment that follows this working paper.</p>
+  </div>
+
+  <!-- Conclusion -->
+  <div class="conclusion-block">
+    <div class="conclusion-label">Conclusion — § 12</div>
+    <p>Electrified economies face growing competition for infrastructure capital and electricity system capacity. Investment decisions therefore shape not only economic development trajectories but the structural conditions under which systems can maintain operational continuity under stress.</p>
+    <p style="margin-top:1rem;">This paper proposes a conceptual framework for analysing infrastructure capital allocation through the lens of system continuity. By distinguishing between consumption-binding and stability-providing infrastructure, and by introducing five diagnostic indicators, the framework provides a basis for assessing how investment patterns influence the long-term robustness of electrified systems.</p>
+    <p style="margin-top:1rem;">The framework is prior to and independent of questions about optimal investment levels, appropriate policy instruments, or regulatory design. Its purpose is diagnostic: to ensure that allocation patterns are visible before they become consequential, and to establish the analytical foundation for more detailed empirical assessments.</p>
+  </div>
+
+  <!-- Next paper pointer -->
+  <div class="next-paper">
+    <div>
+      <div class="next-label">Next in series</div>
+      <div class="next-title">DA-003 — Infrastructure Allocation Diagnostic: Finland 2026</div>
+    </div>
+    <div class="next-arrow">→ DA-003</div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">
+    Aether Continuity Institute<br>
+    Working Paper No. 008<br>
+    Version 1.1 · 2026
+  </div>
+  <div class="footer-col">
+    Status: Open Working Draft<br>
+    Subject to revision<br>
+    Authority: Analytical transparency
+  </div>
+  <div class="footer-col">
+    Domains: D-1 · D-3 · D-4<br>
+    Follows: WP-007<br>
+    Companion: DA-003
+  </div>
+</footer>
+
+</body>
+</html>

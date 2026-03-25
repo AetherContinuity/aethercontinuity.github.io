@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ACI WP-009 — Coupled Infrastructure</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 7rem;
+}
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id {
+  font-size: .7rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.doc-meta {
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.9;
+}
+h1 {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  margin-bottom: .35rem;
+  line-height: 1.2;
+}
+.tagline {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: .3rem;
+}
+.tagline-fi {
+  font-family: var(--serif);
+  font-size: .92rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 2.4rem;
+}
+.cite-block {
+  border: 1px solid var(--rule);
+  padding: .9rem 1.1rem;
+  margin-bottom: 2.4rem;
+  font-size: .6rem;
+  letter-spacing: .06em;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.cite-block span { color: var(--ink); font-size: .62rem; }
+.section { margin-bottom: 2.5rem; }
+.section-id {
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+h2 {
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-weight: 500;
+  margin-bottom: .75rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .35rem;
+}
+p {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #2a2520;
+  margin-bottom: .85rem;
+}
+.rb {
+  border-left: 3px solid var(--ink);
+  padding: .85rem 1.2rem;
+  margin: 1.2rem 0;
+  background: #f0ece4;
+}
+.rb p {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-style: italic;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.ep-note {
+  border-left: 3px solid var(--accent);
+  padding: .85rem 1.2rem;
+  margin: 1.2rem 0;
+  background: #faf5ee;
+}
+.ep-label {
+  font-size: .56rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .4rem;
+}
+.ep-note p {
+  font-family: var(--serif);
+  font-size: .92rem;
+  margin: 0;
+  color: #3a2510;
+  line-height: 1.7;
+}
+.flow {
+  border: 1px solid var(--rule);
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0;
+  background: #f0ece4;
+}
+.flow pre {
+  font-family: var(--mono);
+  font-size: .7rem;
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre;
+}
+.tbl {
+  width: 100%;
+  border: 1px solid var(--rule);
+  margin: 1.2rem 0;
+  border-collapse: collapse;
+}
+.tbl th {
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: .5rem .7rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  background: #f0ece4;
+}
+.tbl td {
+  font-family: var(--serif);
+  font-size: .88rem;
+  line-height: 1.55;
+  padding: .6rem .7rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl-key {
+  font-family: var(--mono);
+  font-size: .62rem;
+  color: var(--accent);
+  letter-spacing: .1em;
+}
+.doc-footer {
+  border-top: 1px solid var(--rule);
+  margin-top: 4rem;
+  padding-top: 1rem;
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  line-height: 2;
+}
+  .next-paper { margin-top: 3rem; border: 1px solid var(--rule); padding: 1.5rem 1.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .next-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .next-title { font-size: 0.95rem; font-weight: 500; }
+  .next-arrow { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · WP-009 · Working Paper</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-1 · D-4 · D-5 · Version 0.2 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Pre-publication<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Coupled Infrastructure</h1>
+<p class="tagline">When Computation Becomes Energy-Bound</p>
+<p class="tagline-fi">Kytketty infrastruktuuri: kun laskenta sitoutuu energiaan</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Coupled Infrastructure: When Computation Becomes Energy-Bound. ACI Working Paper No. 009, v0.2. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references —</span> WP-006 (Continuity Computing) · WP-007 (Situational Awareness Persistence) · WP-008 (Institutional Allocation) · RQM-001 (Correlated Blindspot) · DA-003 (Finland Allocation) · DA-004 (Europe Allocation Proxy)<br>
+  <span>Companion to —</span> DA-005 (Digital Infrastructure Allocation Diagnostic). WP-009 establishes the theoretical basis for the empirical test conducted in DA-005. Their relationship mirrors WP-008 / DA-003 in the ACI series.
+</div>
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract / Tiivistelmä</div>
+  <h2>Abstract</h2>
+
+  <p>WP-006 establishes that decision capacity — not throughput or latency — is the critical invariant of computational systems under compound stress. WP-008 establishes that infrastructure capital allocation exhibits a systematic bias toward consumption-binding investments and away from stability-providing capacity. RQM-001 proposes that this bias is not a national policy failure but a transnational correlation produced by shared capital architecture operating across OECD systems simultaneously.</p>
+
+  <p>This paper extends these three arguments one layer further. As computation becomes physically bound to energy infrastructure — through the continuous electricity demand of large-scale AI systems and hyperscale datacenters — a new strategic infrastructure category emerges. It is not energy infrastructure, not digital infrastructure, and not institutional infrastructure in isolation. It is their coupling.</p>
+
+  <p>The central claim is that capital structure begins to shape national digital capability when computation becomes energy-bound. Countries whose digital infrastructure investment follows a public or strategic capital logic will develop different long-run infrastructure trajectories than countries whose investment follows a private hyperscale market logic — not because the technologies differ, but because the allocation decisions that govern them differ.</p>
+
+  <p>The paper formalises this claim as a mechanism, identifies three institutional zones visible in European infrastructure investment data, and derives a falsifiable hypothesis tested in DA-005. It does not constitute empirical proof — that is DA-005's scope.</p>
+
+  <h2 style="margin-top:1.4rem">Tiivistelmä</h2>
+
+  <p>WP-006 osoittaa, että päätöskapasiteetti on laskentajärjestelmien kriittinen invariantti yhdistelmästressissä. WP-008 osoittaa, että infrastruktuuripääoman allokaatio on systemaattisesti vinoutunut. RQM-001 ehdottaa, että tämä vinouma on ylikansallinen korrelaatioilmiö — ei kansallinen politiikkavirhe.</p>
+
+  <p>Tässä paperissa näitä kolmea argumenttia laajennetaan yhden kerroksen verran. Kun laskenta sitoutuu fyysisesti energiainfrastruktuuriin, syntyy uusi strateginen infrastruktuuriluokka: energia-, digitaalisen ja institutionaalisen infrastruktuurin kytkentä. Paperi formalisoi tämän mekanismina, tunnistaa kolme institutionaalista vyöhykettä eurooppalaisessa investointidatassa ja johtaa falsifioitavan hypoteesin jonka DA-005 testaa.
+</p>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>The Coupling Problem / Kytkentäongelma</h2>
+
+  <p>Infrastructure systems are usually analysed in isolation. Energy infrastructure has its own policy community, its own investment logic, and its own diagnostic vocabulary. Digital infrastructure has another. This separation is analytically convenient — but it increasingly misrepresents the structure of the systems it describes.</p>
+
+  <p>The reason is physical. Large-scale computation consumes electricity continuously, at high density, and at a scale now significant relative to national grid capacity. A single hyperscale datacenter facility can add a continuous load commitment that exceeds the energy reserve of the largest concurrent battery storage project by a factor of several hundred (DA-003). This is not a marginal effect. It is a structural one.</p>
+
+  <p>When this physical coupling is sustained, the two systems begin to share failure modes. A decision made in the energy allocation layer affects the computational layer. A decision made in the digital procurement layer affects the energy layer. They are no longer analytically separable.</p>
+
+  <p>The coupling creates a new object of analysis: a joined infrastructure system whose behaviour is determined not by either component alone but by the allocation decisions that govern how capital flows between them.</p>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Three Institutional Zones / Kolme institutionaalista vyöhykettä</h2>
+
+  <p>European infrastructure investment data (DA-004) reveals three distinct institutional logics, each representing a different response to the same underlying energy–computation coupling.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Zone</th>
+        <th>Countries</th>
+        <th>Capital logic</th>
+        <th>Characteristic pattern</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">Z-1</span><br>Northern Host</td>
+        <td>FI · SE · NO · DK</td>
+        <td>Private foreign capital dominant</td>
+        <td>Category I grows rapidly; Category II gap widens; AI value chain sits largely outside the zone.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">Z-2</span><br>Western Strategic</td>
+        <td>FR · NL · UK</td>
+        <td>Active state capital participation</td>
+        <td>Category II investment actively constructed; domestic AI ecosystem formation visible.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">Z-3</span><br>Central Hybrid</td>
+        <td>DE · AT · BE</td>
+        <td>Regulatory governance</td>
+        <td>GAIA-X / data sovereignty frameworks slow Category I without generating proportional Category II capacity.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>These three zones are not geographic clusters. They are institutional strategies — three distinct answers to how a state should position itself relative to the energy–computation coupling.</p>
+
+  <p>The France–Finland pair is particularly significant for the empirical analysis in DA-005: both countries share low-carbon energy endowment, high datacenter attractiveness, and EU regulatory context — but represent different institutional logics, making the pair a near-natural experiment for isolating the effect of capital structure.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Mechanism / Mekanismi</h2>
+
+  <p>The institutional zones are different outcomes generated by the same structural mechanism operating under different capital allocation regimes. The mechanism proceeds in three steps.</p>
+
+  <p>First, a technological shift increases the energy intensity of computation. AI training systems and hyperscale facilities operate under continuous electrical load at densities that materially affect grid planning. Computation becomes energy-bound.</p>
+
+  <p>Second, once computation becomes energy-bound, infrastructure investment ceases to be purely digital. Datacenter construction, grid interconnection, and siting become energy allocation decisions. The digital and energy layers become coupled.</p>
+
+  <p>Third, capital structure begins to shape the development path of the coupled system. Private hyperscale logic produces infrastructure that follows computational throughput demand. Strategic or public capital logic produces infrastructure that incorporates system stability and long-run capability objectives.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Causal order</div>
+    <p>This paper does not claim that capital determines technological possibility. The causal order is the reverse: technological possibility expands first, and capital structure shapes the trajectory within that possibility space.</p>
+  </div>
+
+  <div class="flow">
+    <pre>technology shift
+→  energy–computation coupling
+→  capital allocation regime
+→  infrastructure trajectory</pre>
+  </div>
+
+  <p>The three institutional zones represent different equilibrium states produced by the same mechanism under different capital allocation regimes.</p>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Hypothesis / Hypoteesi</h2>
+
+  <p>If the mechanism is correct, a testable implication follows.</p>
+
+  <div class="rb">
+    <p>When computation becomes energy-bound infrastructure, national digital capability will begin to correlate with the capital structure governing infrastructure investment.</p>
+  </div>
+
+  <p>Countries dominated by private hyperscale capital will tend to develop large compute-hosting capacity while externalising higher layers of the AI value chain. Countries with strategic or public capital participation will tend to retain a larger share of the computational value chain domestically.</p>
+
+  <p>The hypothesis does not predict which model is superior. It predicts that trajectories will diverge even when technological inputs are similar.</p>
+
+  <p>The hypothesis is falsified if countries with equivalent energy endowments show no systematic relationship between capital structure and value chain retention — suggesting that technological and market forces dominate capital allocation logic.</p>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Empirical Test / Empiirinen testi</h2>
+
+  <p>Testing the hypothesis requires comparison across national systems with variation in capital structure. This is conducted in DA-005 — Digital Infrastructure Allocation Diagnostic.</p>
+
+  <p>DA-005 examines three OECD comparison pairs:</p>
+
+  <div class="flow">
+    <pre>P-1  France – Finland       Western Strategic vs Northern Host
+P-2  United States – Germany  Pure hyperscale vs Central Hybrid
+P-3  Estonia – Sweden       Small-state variants</pre>
+  </div>
+
+  <p>The FR–FI pair is particularly significant: both countries share low-carbon energy endowment, high datacenter attractiveness, and EU regulatory context, but represent different institutional logics — making the pair a near-natural experiment for isolating the effect of capital structure.</p>
+
+  <p>DA-005 uses a six-dimension indicator set: infrastructure capacity, capital structure, ecosystem development, energy allocation (economic axis); and duration capability, awareness persistence (continuity axis). This breadth prevents analysis from being dominated by individual national exemplars and connects the economic hypothesis to the WP-006 / WP-007 decision-endurance framework.</p>
+
+  <p>WP-009 establishes the mechanism. DA-005 evaluates the hypothesis. Their relationship mirrors the WP-008 / DA-003 structure in the ACI series.</p>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Falsification Conditions / Falsifiointiehdot</h2>
+
+  <p>The mechanism proposed in this paper should be considered falsified if the empirical test conducted in DA-005 produces any of the following outcomes.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Condition</th>
+        <th>Claim falsified</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">FC-1</span></td>
+        <td>Countries with substantially different capital structures exhibit no systematic difference in digital value-chain retention or compute ecosystem development.</td>
+        <td>The institutional zone framework cannot be sustained as an explanatory model.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-2</span></td>
+        <td>Digital infrastructure trajectories correlate primarily with energy endowment rather than capital allocation structure.</td>
+        <td>The coupling mechanism: endowment alone explains trajectory; capital structure is not a significant variable.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-3</span></td>
+        <td>Infrastructure trajectories converge across institutional zones despite persistent differences in capital allocation regimes.</td>
+        <td>The trajectory divergence claim: convergence forces dominate allocation logic.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-4</span></td>
+        <td>The FR–FI pair shows no measurable difference in value-chain structure despite documented differences in capital allocation regime.</td>
+        <td>The near-natural experiment construct and the zone classification of both countries.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>These conditions are stated at the level of the mechanism, not at the level of individual data points. Partial non-results — one pair showing divergence, another showing convergence — would require refined analysis rather than outright falsification. Full falsification requires systematic absence of the predicted correlation across all three comparison pairs in DA-005.</p>
+</div>
+
+<div class="next-paper">
+  <div>
+    <div class="next-label">Continues in</div>
+    <div class="next-title">WP-010 — Why Energy-Bound Computation Inherits Grid Logic</div>
+  </div>
+  <span class="next-arrow">→</span>
+</div>
+
+<div class="doc-footer">
+  ACI Working Paper No. 009 · Coupled Infrastructure: When Computation Becomes Energy-Bound<br>
+  Version 0.2 · Pre-publication draft · 2026 · Domain D-1 · D-4 · D-5<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+
+</body>
+</html>

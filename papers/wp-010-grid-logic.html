@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ACI WP-010 — Why Energy-Bound Computation Inherits Grid Logic</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 7rem;
+}
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink); }
+.doc-meta { font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:right; line-height:1.9; }
+h1 { font-family:var(--serif); font-size:1.8rem; font-weight:500; letter-spacing:-.01em; margin-bottom:.35rem; line-height:1.2; }
+.tagline { font-family:var(--serif); font-size:1rem; font-style:italic; color:var(--muted); margin-bottom:.3rem; }
+.tagline-fi { font-family:var(--serif); font-size:.92rem; font-style:italic; color:var(--muted); margin-bottom:2.4rem; }
+.cite-block { border:1px solid var(--rule); padding:.9rem 1.1rem; margin-bottom:2.4rem; font-size:.6rem; letter-spacing:.06em; color:var(--muted); line-height:1.9; }
+.cite-block span { color:var(--ink); font-size:.62rem; }
+.section { margin-bottom:2.5rem; }
+.section-id { font-size:.58rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+h2 { font-family:var(--serif); font-size:1.06rem; font-weight:500; margin-bottom:.75rem; border-bottom:1px solid var(--rule); padding-bottom:.35rem; }
+p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; margin-bottom:.85rem; }
+.rb { border-left:3px solid var(--ink); padding:.85rem 1.2rem; margin:1.2rem 0; background:#f0ece4; }
+.rb p { font-family:var(--serif); font-size:.95rem; font-style:italic; margin:0; color:var(--ink); line-height:1.7; }
+.ep-note { border-left:3px solid var(--accent); padding:.85rem 1.2rem; margin:1.2rem 0; background:#faf5ee; }
+.ep-label { font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:.4rem; }
+.ep-note p { font-family:var(--serif); font-size:.92rem; margin:0; color:#3a2510; line-height:1.7; }
+.flow { border:1px solid var(--rule); padding:1.2rem 1.4rem; margin:1.2rem 0; background:#f0ece4; overflow-x:auto; }
+.flow pre { font-family:var(--mono); font-size:.7rem; line-height:1.9; color:var(--ink); white-space:pre; }
+.tbl { width:100%; border:1px solid var(--rule); margin:1.2rem 0; border-collapse:collapse; }
+.tbl th { font-family:var(--mono); font-size:.56rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:.5rem .7rem; border-bottom:1px solid var(--rule); text-align:left; background:#f0ece4; }
+.tbl td { font-family:var(--serif); font-size:.88rem; line-height:1.55; padding:.6rem .7rem; border-bottom:1px solid var(--rule); vertical-align:top; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl-key { font-family:var(--mono); font-size:.62rem; color:var(--accent); letter-spacing:.1em; }
+.doc-footer { border-top:1px solid var(--rule); margin-top:4rem; padding-top:1rem; font-size:.58rem; letter-spacing:.1em; color:var(--muted); line-height:2; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · WP-010 · Working Paper</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-1 · D-4 · D-5 · Version 0.1 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Pre-publication<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Why Energy-Bound Computation Inherits Grid Logic</h1>
+<p class="tagline">Architectural Pressure, Epistemic Latency, and the Viability Threshold</p>
+<p class="tagline-fi">Miksi energiasidottu laskenta perii verkkologiikan: arkkitehtuurinen paine ja viabiliteettikynnys</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Why Energy-Bound Computation Inherits Grid Logic. ACI Working Paper No. 010, v0.1. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references —</span> WP-006 (Continuity Computing) · WP-007 (Situational Awareness Persistence) · WP-008 (Institutional Allocation) · WP-009 (Coupled Infrastructure) · DA-003 (Finland Allocation) · DA-005 (Digital Infrastructure Allocation Diagnostic) · TN-002 (Duration-Capable Edge Intelligence Node)<br>
+  <span>Position in series —</span> WP-010 is a synthesis paper. It does not introduce new empirical findings but draws out an architectural implication present across WP-009, DA-003, and DA-005 that has not been stated explicitly: that tight energy–computation coupling creates the same viability architecture pressure that produced the N-1 design logic of power grids.
+</div>
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract</div>
+  <h2>Abstract</h2>
+
+  <p>Power grids converged toward a specific architecture — distributed physical layer, layered coordination, institutionalised redundancy norm (N-1), real-time feedback between operational and anticipatory layers — not because engineers applied systems theory, but because the physics of AC networks punishes epistemic latency immediately and visibly. Measurement delay, coordination delay, and decision delay translate within seconds into physical instability. The architecture was forced by the failure mode.</p>
+
+  <p>WP-009 establishes that large-scale AI computation is becoming physically bound to energy infrastructure. This paper argues that tight coupling carries an architectural implication that WP-009 does not state explicitly: when computation becomes energy-bound, digital infrastructure begins to inherit the grid's viability architecture pressure. The same forcing function — physics that punishes weak coupling assumptions in real time — will increasingly apply to the digital layer.</p>
+
+  <p>The implication for small states is structural. Finland's power grid exhibits a viability architecture designed around failure assumptions. Finland's digital decision infrastructure does not. These two systems are becoming physically coupled. The asymmetry between them is not a policy gap — it is an architectural debt that compounds as coupling tightens.</p>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>How Power Grids Acquired Their Architecture</h2>
+
+  <p>Power grid architecture was not designed from first principles. It was produced by a sequence of failures that revealed, each time, that the existing architecture had made an assumption the physics would not permit.</p>
+
+  <p>The Northeast blackout of 1965 cascaded across eight US states and two Canadian provinces, cutting power to 30 million people in 12 minutes. The New York blackout of 1977 followed a similar cascade pattern. In each case, the proximate cause was local. The systemic cause was the same: the architecture assumed that a local failure could be absorbed locally. The AC network's shared frequency space meant it could not. A fault anywhere propagated everywhere — not because anyone failed to respond, but because the response time required was shorter than any institutional process could achieve.</p>
+
+  <p>The architectural response was the N-1 criterion: the network must be planned such that it can survive the loss of any single component without cascading failure. N-1 is not a target. It is a design floor — a Weakest Link Rule institutionalised as a mandatory planning standard. The criterion does not guarantee against all failure; it guarantees against the class of failure that the 1965 and 1977 events represented.</p>
+
+  <div class="rb">
+    <p>Power grids did not acquire their viability architecture because engineers read systems theory. They acquired it because the physics punished — immediately, visibly, and unambiguously — every architecture that failed to treat redundancy as a design requirement rather than an operational aspiration.</p>
+  </div>
+
+  <p>This is the general principle: <em>architectural pressure follows failure mode speed and visibility.</em> When failures are fast, concrete, and causally unambiguous, the pressure to build viability architecture into the system is immediate and sustained. When failures are slow, distributed, and interpretively ambiguous, the pressure is weak even when the cumulative risk is large.</p>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>The Grid as a Viable System</h2>
+
+  <p>Beer's Viable System Model (VSM) describes the architecture required for a system to maintain its identity and function under environmental perturbation. When the VSM's five layers are mapped to a modern power grid, the correspondence is nearly exact — not because grid designers used the VSM, but because the physics of grid operation produces the same structural requirements that Beer derived from cybernetic first principles.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>VSM layer</th><th>Grid instantiation</th><th>Key property</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">S-1</span> Operations</td>
+        <td>Generation, transmission, load — physically distributed</td>
+        <td>No single point of failure in the physical substrate</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">S-2</span> Coordination</td>
+        <td>Automatic frequency response, protection relays, reserve activation</td>
+        <td>Sub-second response without human decision — coordination faster than communication</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">S-3</span> Control</td>
+        <td>Control room operations, real-time dispatch, balancing</td>
+        <td>Operational stability maintained within current planning horizon</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">S-4</span> Intelligence</td>
+        <td>Load forecasting, fault simulation, investment planning, scenario modelling</td>
+        <td>Anticipatory — models future states, not only current state</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">S-5</span> Policy</td>
+        <td>N-1 criterion, reliability standards, system operator mandate</td>
+        <td>Normative — defines what the system must be able to do, not just what it currently does</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Two features of this architecture deserve emphasis. First, the S-2 layer — automatic coordination — operates below the speed of human decision. Protection relays trip in milliseconds. Frequency response begins in seconds. This is not an optimisation; it is a requirement. Human decision loops are too slow to prevent cascade at grid timescales. The architecture must act before it can decide.</p>
+
+  <p>Second, S-4 and S-5 are institutionally separated from S-3. The control room manages today's grid. The planning function models tomorrow's. The reliability standard defines what constraints both must respect. When S-3 dominates — when operational optimisation crowds out anticipatory planning — the grid degrades toward the failure modes that produced the 1965 and 1977 events: infrastructure that performs well under normal conditions but has no reserve against the unexpected.</p>
+
+  <p>DA-003 established the same S-3 / S-4 imbalance in the energy allocation layer: Category I (consumption-binding) investment growing faster than Category II (stabilising) investment, at a structural level that compounds over planning cycles. The grid architecture pressure produced N-1. The allocation pattern described in DA-003 is working against it.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Epistemic Latency as the Forcing Variable</h2>
+
+  <p>The concept that connects grid physics to institutional architecture is <em>epistemic latency</em>: the delay between a state change in the physical system and a valid representation of that change available to the decision layer.</p>
+
+  <p>In a power grid, epistemic latency has a hard upper bound imposed by physics. Frequency deviation propagates at the speed of the electromagnetic wave — effectively instantaneous across grid scale. A measurement delay of one second, a coordination delay of five seconds, and a decision delay of ten seconds compound to a total latency of sixteen seconds. At grid scale, sixteen seconds of uncompensated deviation can move a system from manageable perturbation to irreversible cascade.</p>
+
+  <p>This is why the grid architecture stratifies response times so precisely: S-2 operates in milliseconds because nothing else is fast enough; S-3 operates in minutes because the seconds-scale is handled below it; S-4 operates over hours and days because it is modelling future states that S-3 cannot anticipate.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">The epistemic latency principle</div>
+    <p>In tightly coupled physical systems, measurement delay + coordination delay + decision delay translates directly into physical instability. Architecture that does not account for this latency budget will fail at the timescale set by the physics — not at the timescale assumed by the planners.</p>
+  </div>
+
+  <p>This principle is absent from most digital infrastructure planning. The assumption is that failures in the digital layer are recoverable — that a service outage, an authentication failure, or a data pipeline interruption can be addressed through operational response. This assumption holds when digital infrastructure is loosely coupled to physical systems. It begins to fail when computation becomes energy-bound.</p>
+
+  <p>A hyperscale datacenter consuming 100 MW continuously is not loosely coupled to the grid. Its loss is a 100 MW step change — instantaneous, not recoverable through operational response. Its startup is a 100 MW ramp that must be absorbed by grid reserve capacity that may or may not exist. The datacenter's operational decisions — load scheduling, cooling profiles, batch job timing — are now decisions that affect grid stability, whether or not the datacenter operator models them that way.</p>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>The Inheritance Mechanism</h2>
+
+  <p>WP-009 establishes the coupling. This paper argues for a specific consequence of that coupling: as computation becomes energy-bound, the digital infrastructure layer begins to <em>inherit the grid's viability architecture requirements</em>.</p>
+
+  <p>The inheritance mechanism operates in three stages, each contingent on the previous.</p>
+
+  <p><strong>Stage 1 — Physical coupling.</strong> Continuous high-density electrical load creates physical interdependency between the digital and energy layers. This is already the current state for large hyperscale facilities in Finland and across the Northern Host zone.</p>
+
+  <p><strong>Stage 2 — Failure mode propagation.</strong> Once coupling is tight, the failure modes of the energy layer propagate into the digital layer and vice versa. A grid frequency event affects compute. A large datacenter outage affects grid balance. The two systems now share failure modes that neither can address in isolation.</p>
+
+  <p><strong>Stage 3 — Architectural pressure.</strong> Shared failure modes create pressure toward shared architectural responses. The same logic that produced N-1 in the grid — that a single-component failure must not cascade — now applies to the coupled system. A digital decision layer that depends on a single cloud region, a single authentication service, or a single audit platform has violated the equivalent of the N-1 criterion for the coupled system it is part of.</p>
+
+  <div class="flow">
+    <pre>physical coupling
+    → shared failure modes
+    → same architectural pressure
+    → viability architecture required
+    
+Power grids: pressure arrived in 1965–1977 via blackouts
+Digital layer: pressure is arriving now via coupling,
+               but failure modes are slower and less visible</pre>
+  </div>
+
+  <p>The critical difference between grid and digital infrastructure is the failure mode visibility. Blackouts are immediate, unambiguous, and politically salient. Digital infrastructure failures under coupling — authentication loss during a grid event, audit chain interruption, loss of situational awareness when connectivity to external platforms is disrupted — are slower, distributed, and interpretively ambiguous. They do not produce the forcing event that drove N-1 into grid standards.</p>
+
+  <p>This is the structural reason why the digital layer has not yet converged toward viability architecture despite tightening coupling: the failure mode has not yet been concrete enough, fast enough, or unambiguous enough to produce institutional S-4 recognition and S-5 response.</p>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>The Asymmetry in Finland</h2>
+
+  <p>Finland's power system and Finland's digital decision infrastructure are both present in the same physical geography, connected to the same energy layer, and increasingly operationally interdependent. They were designed under different architectural assumptions.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Property</th><th>Power system (Fingrid)</th><th>Digital decision infrastructure</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design assumption</td>
+        <td>Failures will occur; architecture must contain them</td>
+        <td>Services will be available; architecture optimises for that state</td>
+      </tr>
+      <tr>
+        <td>N-1 equivalent</td>
+        <td>Mandatory; any single component loss must be survivable</td>
+        <td>Not systematically required; single-platform dependency permitted</td>
+      </tr>
+      <tr>
+        <td>S-4 → S-5 channel</td>
+        <td>Institutionalised; scenario planning feeds reliability standards</td>
+        <td>Partial; foresight functions exist but are not structurally coupled to procurement standards</td>
+      </tr>
+      <tr>
+        <td>Failure mode timescale</td>
+        <td>Seconds to minutes; immediate visibility</td>
+        <td>Hours to months; slow and partially invisible</td>
+      </tr>
+      <tr>
+        <td>Weakest link handling</td>
+        <td>Explicit; N-1 is a floor, not a target</td>
+        <td>Implicit; performance metrics dominate over endurance metrics</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>DA-005 §04 documents the consequence: Finland's public sector digital infrastructure — Kela, Verohallinto, THL — is migrating toward hyperscale cloud dependency for core decision functions at a pace that outstrips continuity architecture development. Under the framework of this paper, this is not primarily a policy failure. It is an architectural asymmetry: the digital layer is being built to a different design standard than the physical layer it is coupled to.</p>
+
+  <p>The asymmetry compounds as coupling increases. Each new hyperscale facility added to the Finnish grid tightens the physical coupling between energy and computation. Each new government workload migrated to external cloud tightens the dependency of the digital decision layer on infrastructure that does not carry the N-1 obligation. The two trends run in opposite directions: physical coupling toward grid logic, institutional dependency away from it.</p>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Viable System Architecture for Coupled Infrastructure</h2>
+
+  <p>The grid architecture that emerged from the 1965–1977 blackout sequence was not a comprehensive redesign. It was a targeted architectural response to a specific failure class: cascade propagation from single-component failure. N-1 does not prevent all failures. It prevents the class of failure where the architecture itself amplifies a local event into a system-wide collapse.</p>
+
+  <p>The equivalent architectural response for coupled energy–computation infrastructure would be correspondingly targeted. It does not require rebuilding all digital infrastructure on local hardware. It requires identifying the components whose failure would violate the coupled system's N-1 equivalent — and applying viability architecture specifically to those components.</p>
+
+  <p>WP-006 identifies those components through the D1–D4 endurance framework: power endurance, data endurance, identity endurance, and audit endurance. TN-002 specifies the architectural properties of a node satisfying all four. DA-005 §04 identifies which layer of Finland's digital infrastructure is currently failing to satisfy them: the public sector decision layer, specifically the identity and audit components whose continuity depends on external platform availability.</p>
+
+  <div class="rb">
+    <p>The analogy is precise. A grid that meets N-1 for transmission lines but has a single unprotected substation is not N-1 compliant. A digital decision infrastructure that maintains local hardware for some functions but depends on a single external provider for identity attestation or audit logging is not compliant with the equivalent standard. The weakest component sets the floor.</p>
+  </div>
+
+  <p>For small states, this architectural requirement cannot be met through redundancy at scale — there is not enough scale. It must be met through architectural design: distributed, locally anchored components that satisfy the endurance requirements independently of platform availability. Estonia's X-Road and KSI infrastructure approximate this for the identity and audit dimensions. The DCEIN architecture specified in TN-002 provides a reference implementation for the computational layer.</p>
+
+  <p>The political economy of this transition differs from the grid transition in one important respect. The 1965 blackout produced a forcing event — a failure concrete enough to generate immediate political and regulatory response. The coupled infrastructure failure mode is slower and less visible. The architectural pressure is real but has not yet produced the institutional event that would drive it into standards and procurement requirements.</p>
+
+  <p>This is the practical implication of the analysis: the viability architecture for coupled energy–computation infrastructure will either be designed proactively, through deliberate application of grid logic to the digital layer, or reactively, following a failure event that makes the coupling concrete. The grid transition took approximately fifteen years from the 1965 event to mature N-1 standards. The question is whether the digital layer will wait for the equivalent event.</p>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>One Sentence / Yksi lause</h2>
+
+  <div class="rb">
+    <p>Electricity systems did not acquire their viability architecture because engineers read systems theory — they acquired it because physics punished immediately and unambiguously every architecture that treated redundancy as optional; as computation becomes energy-bound, the same physics will apply the same pressure to the digital layer, and the question is only whether the institutional response arrives before or after the forcing event.</p>
+  </div>
+</div>
+
+<div class="doc-footer">
+  ACI Working Paper No. 010 · Why Energy-Bound Computation Inherits Grid Logic<br>
+  Version 0.1 · Pre-publication draft · 2026 · Domain D-1 · D-4 · D-5<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+
+</body>
+</html>
