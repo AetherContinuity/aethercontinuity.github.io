@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DA-006 — Labour Market Allocation Diagnostic</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --blue: #185fa5;
+  --green: #0f6e56;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 7rem;
+}
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink); }
+.doc-meta { font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:right; line-height:1.9; }
+h1 { font-family:var(--serif); font-size:1.8rem; font-weight:500; letter-spacing:-.01em; margin-bottom:.35rem; line-height:1.2; }
+.tagline { font-family:var(--serif); font-size:1rem; font-style:italic; color:var(--muted); margin-bottom:.3rem; }
+.tagline-fi { font-family:var(--serif); font-size:.92rem; font-style:italic; color:var(--muted); margin-bottom:2.4rem; }
+.cite-block { border:1px solid var(--rule); padding:.9rem 1.1rem; margin-bottom:2.4rem; font-size:.6rem; letter-spacing:.06em; color:var(--muted); line-height:1.9; }
+.cite-block span { color:var(--ink); font-size:.62rem; }
+.section { margin-bottom:2.5rem; }
+.section-id { font-size:.58rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+h2 { font-family:var(--serif); font-size:1.06rem; font-weight:500; margin-bottom:.75rem; border-bottom:1px solid var(--rule); padding-bottom:.35rem; }
+h3 { font-family:var(--serif); font-size:.98rem; font-weight:500; margin:1.4rem 0 .6rem; color:var(--ink); }
+p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; margin-bottom:.85rem; }
+.rb { border-left:3px solid var(--ink); padding:.85rem 1.2rem; margin:1.2rem 0; background:#f0ece4; }
+.rb p { font-family:var(--serif); font-size:.95rem; font-style:italic; margin:0; color:var(--ink); line-height:1.7; }
+.ep-note { border-left:3px solid var(--accent); padding:.85rem 1.2rem; margin:1.2rem 0; background:#faf5ee; }
+.ep-label { font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:.4rem; }
+.ep-note p { font-family:var(--serif); font-size:.92rem; margin:0; color:#3a2510; line-height:1.7; }
+.ep-note p + p { margin-top:.6rem; }
+.scope-note { border:1px solid var(--rule); padding:.9rem 1.1rem; margin:1rem 0; background:#f0ece4; }
+.scope-label { font-family:var(--mono); font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+.scope-note p { font-family:var(--serif); font-size:.9rem; line-height:1.7; margin-bottom:.5rem; color:#2a2520; }
+.scope-note p:last-child { margin-bottom:0; }
+.tbl { width:100%; border:1px solid var(--rule); margin:1.2rem 0; border-collapse:collapse; }
+.tbl th { font-family:var(--mono); font-size:.56rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:.5rem .7rem; border-bottom:1px solid var(--rule); text-align:left; background:#f0ece4; }
+.tbl td { font-family:var(--serif); font-size:.88rem; line-height:1.55; padding:.6rem .7rem; border-bottom:1px solid var(--rule); vertical-align:top; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl-key { font-family:var(--mono); font-size:.62rem; color:var(--accent); letter-spacing:.1em; }
+.tbl-key-b { font-family:var(--mono); font-size:.62rem; color:var(--blue); letter-spacing:.1em; }
+.tbl-hl td { background:#f0ece4; font-weight:500; }
+.axis-lab { font-family:var(--mono); font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+.axis-cont { font-family:var(--mono); font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; color:var(--blue); }
+.flow { border:1px solid var(--rule); padding:1.2rem 1.4rem; margin:1.2rem 0; background:#f0ece4; }
+.flow pre { font-family:var(--mono); font-size:.7rem; line-height:1.9; color:var(--ink); white-space:pre; }
+.finding-strong { color:var(--green); font-style:italic; }
+.finding-weak { color:var(--accent); font-style:italic; }
+.doc-footer { border-top:1px solid var(--rule); margin-top:4rem; padding-top:1rem; font-size:.58rem; letter-spacing:.1em; color:var(--muted); line-height:2; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · DA-006 · Diagnostic Assessment</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-3 · D-4 · Version 0.3 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Pre-publication<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Labour Market Allocation Diagnostic</h1>
+<p class="tagline">Workforce Segmentation, Continuity Reserve, and the +55 Cohort in Finland</p>
+<p class="tagline-fi">Työmarkkinoiden allokaatiodiagnostiikka: segmentaatio, jatkuvuusreservi ja +55-vuotiaat Suomessa</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Labour Market Allocation Diagnostic. ACI Diagnostic Assessment No. 006, v0.3. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references —</span> WP-008 §§10–11 (Labour Market Allocation Bias and Diagnostic Indicators) · DA-001 (Finland Pre-Shortage Phase) · DA-004 (Europe Allocation Proxy) · DA-005 (Digital Infrastructure Allocation)<br>
+  <span>Companion to —</span> WP-008. Operationalises indicators L–1 through L–5 introduced in WP-008 §11 and applies the Labour Continuity Reserve formula to the Finnish labour market. The Stakhanov parallel (§08) provides an empirical instance of the L–5 Institutional Narrative Gap mechanism.
+</div>
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract</div>
+  <h2>Abstract</h2>
+
+  <p>Tämä diagnostiikka-arvio operationalisoi WP-008 §§10–11:ssä esitetyn allokaatiokehyksen Suomen työmarkkinoihin. WP-008 tunnisti, että kehittyneiden talouksien työmarkkinoilla esiintyy sama rakenteellinen allokaatiovääristymä kuin infrastruktuuripääoman kohdentamisessa: resurssit ohjautuvat institutionaalisten logiikoiden mukaan, jotka ovat yksilötasolla rationaalisia mutta joiden kumulatiiviset seuraukset heikentävät järjestelmän pitkäaikaista jatkuvuusreserviä.</p>
+
+  <p>Tässä arviossa testataan kahta WP-008:sta johdettua hypoteesia Suomen kontekstissa. Ensimmäinen hypoteesi: Suomen työmarkkinat ovat segmentoituneet kahteen osittain erilliseen kerrokseen — korkean kysynnän segmenttiin (Kategoria I, työvoimapula) ja alhaisen integraation segmenttiin (Kategoria II, pitkäaikaistyöttömyys) — ja liikkuvuus segmenttien välillä on institutionaalisesti rajoittunutta. Toinen hypoteesi: yli 55-vuotiaat ammattilaiset ovat rakenteellisesti yliedustettuina Kategoria II -segmentissä riippumatta heidän tuottavuudestaan tai osaamisestaan, ja tämä edustaa mitattavissa olevaa <em>Labour Continuity Reserve</em> -vajetta (L–1, L–3, L–4 yhdistettynä).</p>
+
+  <p>Merkittävin löydös koskee L–5-indikaattoria (Institutional Narrative Gap): hallitseva institutionaalinen kehys kuvaa +55-vuotiaiden heikkoa asemaa demografisena tai osaamistarpeena, kun rakenteelliset indikaattorit osoittavat, että allokointilogiikka on ensisijaisesti kulttuurinen ja rekrytointikäytäntöihin liittyvä. Kehysten välinen etäisyys — sankarikulttuuri-narratiivi vs. mitattu tuottavuus — on WP-008:n ennustaman L–5-mekanismin empiirinen ilmentymä.</p>
+</div>
+
+<!-- SCOPE NOTE -->
+<div class="scope-note">
+  <div class="scope-label">Scope — Soveltamisala</div>
+  <p>This diagnostic assessment does not evaluate labour market policies directly. Its purpose is to identify allocation mechanisms affecting system continuity — specifically, whether workforce allocation patterns reduce the Labour Continuity Reserve in ways that are relevant to ACI domains D-3 (Temporal Decision Capacity) and D-4 (Compound Stress Evaluation).</p>
+  <p>Tämä arvio ei arvioi työmarkkinapolitiikkaa suoraan. Sen tarkoitus on tunnistaa allokointimekanismit, jotka vaikuttavat järjestelmän jatkuvuuteen — erityisesti se, heikentävätkö työvoimaallokointimallit Labour Continuity Reserve -arvoa tavalla, joka on relevantti ACI:n D-3- ja D-4-domaineille.</p>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Historical Context / Historiallinen konteksti</h2>
+
+  <p>Nykyinen allokointiongelma ei syntynyt yhdellä päätöksellä eikä yhden toimijan virheestä. Se on kolmen eri tason ja kolmen eri aikajakson kerrostuma. Jokainen ajanjakso tuotti muutoksen omalla tasollaan — ja sen vaikutukset välittyivät muille tasoille viiveellä. Tämä tekee ongelmasta vaikeasti havaittavan: kukin toimija näkee vain oman aikakautensa ja oman tasonsa.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ajanjakso</th><th>Ensisijainen taso</th><th>Keskeinen muutos</th><th>Vaikutus +55-kohorttiin</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1990-luku</strong></td>
+        <td>Rakenteet</td>
+        <td>Lama, irtisanomiset, Neuvostoliiton kaupan romahdus</td>
+        <td>Ikä opitaan riskiksi — kollektiivinen muisti syntyy</td>
+      </tr>
+      <tr style="background:#faf9f6;">
+        <td><strong>2000–2015</strong></td>
+        <td>Instituutiot</td>
+        <td>Rekrytointikäytännöt, digitalisaatio, eläkeuudistukset</td>
+        <td>Kokemus alkaa jäädä verkostojen ja näkyvyyden varjoon</td>
+      </tr>
+      <tr>
+        <td><strong>2015–2025</strong></td>
+        <td>Kulttuuri</td>
+        <td>Sankarikulttuuri, narratiivikuilu, sosiaalinen media</td>
+        <td>Allokoidaan rakenteellisesti Kategoria II:een, vaikka osaaminen vastaa Kategoria I:n kysyntää — L–5-mekanismi lukittuu</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1990-luku: Rakenteiden murtuminen</h3>
+
+  <p>Suomen 1990-luvun lama ja Neuvostoliiton kaupan romahdus muuttivat työmarkkinoiden rakenteen pysyvästi. Työttömyys nousi kolmesta prosentista yli 16 prosenttiin. Teollisuus rakennettiin uudelleen — vanhat työpaikat eivät palanneet. Irtisanomiset kohdistuivat ensimmäisinä iäkkäämpiin työntekijöihin — ilmiö, jonka Statistics Finlandin pitkittäisaineistot ja Böckerman &amp; Ilmakunnasen (2012) seurantatutkimukset ovat dokumentoineet toistuvaksi laskusuhdannemalliksi. Tästä syntyi kollektiivinen muisti, joka ei kadonnut suhdanteen parantuessa: <em>ikä on työvoimariski, ei voimavara.</em></p>
+
+  <p>Vaikutus instituutioihin oli välitön: organisaatiot oppivat, että henkilöstöä voidaan sopeuttaa nopeasti. Työsuhteen uudet muodot yleistyivät. Työmarkkinajärjestöt menettivät otettaan. Vaikutus kulttuuriin tuli viiveellä: turvallisuuden tunne murtui, ja ensimmäinen siemen "itsensä markkinoinnin" tarpeelle kylvettiin — vaikka se ei vielä näkynyt käytännössä.</p>
+
+  <h3>2000–2015: Instituutioiden hiljainen muutos</h3>
+
+  <p>Eläkeuudistukset (2005 ja 2017) nostivat tarjontaa — enemmän iäkkäämpiä ihmisiä pysyi työvoimassa pidempään. Samaan aikaan rekrytointikäytännöt muuttuivat rakenteellisesti: suorahaku ja verkostot syrjäyttivät avoimen haun Kategoria I -aloilla. HR-järjestelmät digitalisoituivat ja hakemusten seulonta standardoitui. Globalisaatio toi kansainvälistä työvoimaa, joka lisäsi kilpailua — ja DA-006:n L–3-indikaattorin heikkeneminen alkoi.</p>
+
+  <p>"Kulttuurinen fit" nousi rekrytointikriteeriksi. Tämä suosi samankaltaisuutta — ja alkoi rakenteellisesti suosia nuorempia hakijoita, ei osaamisen vaan kulttuurisen tunnistettavuuden perusteella. <em>Työnantaja voi valita, joten se valitsee tutun ja turvallisen.</em></p>
+
+  <h3>2015–2025: Kulttuurin lukkiutuminen</h3>
+
+  <p>Sosiaalisen median kypsyminen ja algoritmien arkipäiväistyminen institutionalisoivat rekrytointikulttuurin. Verkostot, näkyvyys ja henkilöbrändi tulivat pysyviksi normeiksi Kategoria I:n aloilla. Työn arvostus siirtyi lopullisesti kokemuksesta esittämiseen. Tässä vaiheessa syntyi DA-006:n kuvaama L–5-narratiivikuilu: ongelma puhutaan teknisenä — osaamisvaje, demografia, koulutus — vaikka mekanismi on kulttuurinen allokointilogiikka.</p>
+
+  <p>Politiikka jäi jälkeen. Se tarjosi edelleen 2000-luvun alun ratkaisuja, vaikka ongelma oli jo siirtynyt kulttuuriselle tasolle. Työnantajien oli vaikea nähdä omaa rooliaan ongelmassa, koska toiminta oli markkinaehtoista ja kulttuurisesti normaalistunutta. <em>Työmarkkina ei enää mittaa sitä, mihin se väittää uskovansa.</em></p>
+
+  <div class="ep-note">
+    <div class="ep-label">Diagnostinen implikaatio</div>
+    <p>Kolmen tason kerrostuma selittää, miksi yksittäiset interventiot eivät toimi: 1990-luvun rakenteisiin ei enää voi vaikuttaa; 2000-luvun instituutiot on jo rakennettu. Ainoa muuttuva taso on kulttuuri (L–5) — tai rakennetta on muutettava uudella institutionaalisella interventiolla, joka muuttaa allokointilogiikan kustannusrakennetta. Eläkeuudistukset osoittivat, että tämä on mahdollista tarjontapuolella. Kysyntäpuoli odottaa vastaavaa.</p>
+  </div>
+</div>
+
+<!-- §02 (ent. §01) -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Research Design / Tutkimusasetelma</h2>
+
+  <p>Tässä arviossa testattava hypoteesi johdetaan suoraan WP-008 §10:stä:</p>
+
+  <div class="rb">
+    <p>Labour supply policies that emerge from cost-stabilisation incentives need not be intentionally designed as such. They emerge as systemic properties of labour markets operating under global cost competition — a property identical in form to the allocation biases identified for infrastructure capital.</p>
+  </div>
+
+  <p>Arvio soveltaa <strong>kaksitasoista tutkimusasetelmaa.</strong> Ensimmäinen taso — allokointitaso — testaa WP-008:n hypoteesia suoraan: onko havaittavissa rakenteellinen jako Kategoria I (kysyntää sitova) ja Kategoria II (jatkuvuutta rakentava) -työvoimaresurssien välillä, ja korreloiko jako institutionaalisten allokointilogiikoiden kanssa. Toinen taso — jatkuvuustaso — arvioi Suomen <em>Labour Continuity Reserve</em> -arvoa WP-008 §11:n L–1, L–3 ja L–4 -indikaattoreilla.</p>
+
+  <p>Tarkastelun kohteena on Suomen työmarkkina vuosina 2019–2024. Ensisijaisena aineistona käytetään Statistics Finlandin työvoimatutkimusta, Eurostatin ikäryhmäkohtaisia tietoja sekä EURES:n ja Nordregion sektorikohtaisia raportteja. Sekundäärisenä aineistona toimii WP-008 §§10–11:n teoreettinen kehys, jonka indikaattorit ohjautuvat L–1:stä L–5:een.</p>
+
+  <p>Yksi tarkoituksellinen rajaus: arvio ei arvioi yksittäisiä politiikkapäätöksiä eikä pyri kausaaliseen estimointiin. Sen tavoite on tunnistaa institutionaalisen allokointimekanismin rakenne ja mitata sen vaikutus jatkuvuusreserviin — välttämätön analyyttinen askel ennen kuin toimenpidesuosituksia voidaan perustellusti esittää.</p>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Indicator Framework / Indikaattorikehys</h2>
+
+  <p>Indikaattorikehys perustuu WP-008 §11:n L–1–L–5 -rakenteeseen. Indikaattorit on suunniteltu suoraan rinnakkaiseksi §07:n infrastruktuuri-indikaattoreille ja ovat periaatteessa johdettavissa työvoimatutkimusten, palkkatilastojen ja toimialakohtaisten rekisterien datasta.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ind.</th><th>Nimi</th><th>Mittarit</th><th>Rooli tässä arviossa</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">L–1</span><br><span class="axis-lab">allokointitaso</span></td>
+        <td>Labour Supply Pressure Index</td>
+        <td>Työtarjonnan kasvu suhteessa työvoimakysyntään sektoreittain; pula-retorian aktiivisuus vs. mitattu palkkakehitys</td>
+        <td>Ensisijainen allokointivääristymän signaali. Tunnistaa, missä tarjontaexpansio palvelee kustannusstabilisaatiofunktiota todellisen niukkuuden sijaan.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">L–2</span><br><span class="axis-lab">allokointitaso</span></td>
+        <td>Wage Growth Divergence</td>
+        <td>Palkkakasvu korkean kansainvälisen liikkuvuuden sektoreilla vs. vastaavan osaamistason sektoreilla alhaisella rajat ylittävällä tarjonnalla</td>
+        <td>Suora analogia DA-004:n I–1 -indikaattorille: paljastaa distributiivisen epäsymmetrian allokointimallissa.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">L–3</span><br><span class="axis-lab">allokointitaso</span></td>
+        <td>Domestic Skill Utilisation Rate</td>
+        <td>Osuus korkean osaamisen työvoimakysyntää, jonka täyttää kotimaisesti koulutettu työvoima; muutos 2015–2024</td>
+        <td>Allokointimismatch: järjestelmä investoi kotimaiseen osaamiseen ja tuo samanaikaisesti substituutteja. Kriittinen L–4:n rinnalla +55-kohortissa.</td>
+      </tr>
+      <tr class="tbl-hl">
+        <td><span class="tbl-key">L–4</span><br><span class="axis-lab">allokointitaso</span></td>
+        <td>Labour Market Segmentation Index</td>
+        <td>Segmenttijakauma: ydinsopimukset vs. liikkuva/projektikohortti; sektorikonsentraatio epätyypillisissä työsuhteissa; TES-kattavuus segmenteittäin</td>
+        <td><strong>Päätulos indikaattori.</strong> Korkeat segmentaatioarvot osoittavat kaksi osittain erillään toimivaa palkanmuodostusmekanismia — D-4-jatkuvuusehto (sosiaalinen koheesio compound stress -tilanteessa).</td>
+      </tr>
+      <tr class="tbl-hl">
+        <td><span class="tbl-key">L–5</span><br><span class="axis-lab">allokointitaso</span></td>
+        <td>Institutional Narrative Gap</td>
+        <td>Etäisyys hallitsevan institutionaalisen kehyksen ja todettavien rakenteellisten vaikutusten välillä; sankarikulttuuri-indeksi rekrytointikäytännöissä</td>
+        <td><strong>Johtava indikaattori.</strong> Suuri ja pysyvä narratiivikuilu on itsessään hallintoehdollinen signaali — viittaa siihen, että operationaalisesti aktiivinen allokointilogiikka eroaa poliittisissa perusteluissa artikuloidusta.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">LCR</span><br><span class="axis-cont">jatkuvuustaso</span></td>
+        <td>Labour Continuity Reserve</td>
+        <td>LCR = f(L–1, L–3, L–4); yhdistetty reservimittari</td>
+        <td>WP-008 §11:n synteesi-indikaattori. Laskeva arvo merkitsee kasvavaa systeemistä haavoittuvuutta compound taloudellisessa tai poliittisessa stressissä — D-3 ja D-4 -alueet.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>L–4 ja L–5 ovat tämän arvion ensisijaiset indikaattorit. L–4 tuottaa rakenteellisen löydöksen; L–5 selittää mekanismin, joka estää sen korjaamisen. L–3 toimii L–4:n validointimuuttujana: jos kotimaisesti koulutettu osaaminen aliutilisoidaan samanaikaisesti kun työvoimapulaa raportoidaan, allokointilogiikka ei noudata ilmoitettua kehystä.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Data Sources / Datalähteet</h2>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ind.</th><th>Ensisijaiset lähteet</th><th>Rajoitukset</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">L–1 / L–2</span></td>
+        <td>Statistics Finland, työvoimatutkimus 2023–2024; Eurostat ikäryhmäkohtaiset tiedot; Statista 2025 (Finland unemployment by age group)</td>
+        <td>Palkkatilastojen kansainvälinen vertailtavuus rajoittunutta toimialojen määrittelyerojen takia. L–2:n divergenssimittaus vaatii pitkittäistiedon, jota tässä arviossa ei ole täysimääräisesti saatavilla.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">L–3</span></td>
+        <td>Statistics Finland, Finland in Figures 2024; Eurostat labour force participation 55–64 2010–2024; Suomen Pankki 2025 (labour market flows)</td>
+        <td>Kotimaisesti koulutetun työvoiman osuus korkean osaamisen tehtävissä ei ole suoraan rekisteristä saatavilla; proxy-indikaattori (työllistymisaste ikäryhmittäin) käytetään.</td>
+      </tr>
+      <tr class="tbl-hl">
+        <td><span class="tbl-key">L–4</span></td>
+        <td>Statistics Finland 2024 (employment rate by age); TEM lyhyen aikavälin ennuste 2023; EURES Labour Market Information Finland 2024; Työvoimabarometri syksy 2024</td>
+        <td>Segmentaatioindeksiä ei julkaista suoraan yhdistettynä mittarina. Tässä arviossa käytetään kolmea proxy-komponenttia: työllistymisasteiden ikäero, pitkäaikaistyöttömyyden osuus, TES-kattavuusero.</td>
+      </tr>
+      <tr class="tbl-hl">
+        <td><span class="tbl-key">L–5</span></td>
+        <td>Rekrytointikäytäntöjen kvalitatiivinen analyysi; Nätti, Pyöriä & Ojala (2021); Böckerman & Ilmakunnas (2012); Nordregio 2024 (rural workforce ageing)</td>
+        <td>Institutionaalisen narratiivikuilun suora mittaaminen vaatii laadullista aineistoa. Tässä arviossa käytetään strukturaalista proxy-mittaria: etäisyys raportoitujen työvoimapula-alojen ja +55-kohortin työllistymisasteen välillä.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">LCR</span></td>
+        <td>Yhdistetty yllä mainituista lähteistä; Vihinen ym. (2024) / Nordregio sektorikohtainen ikäprofiili</td>
+        <td>LCR on tässä arviossa laadullinen yhdistelmämittari, ei laskennallinen indeksi. Kvantitatiivinen kalibrointi edellyttää jatkoarviota pitkittäisaineistolla.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Segmentation Finding / Segmentaatiohavainto</h2>
+
+  <p>L–4-indikaattori: Suomen työmarkkinat osoittavat rakenteellisen segmentaation, joka on analyyttisesti yhdenmukainen WP-008 §10:n kaksikerrosmallin kanssa.</p>
+
+  <h3>Kategoria I — kysyntää sitova työvoimaresurssi</h3>
+
+  <p>Korkean osaamisen segmentti, jossa työvoimapula on aktiivinen. Sote-ala kasvatti työllistettynä 23 000 henkilöllä vuonna 2024 — eniten mistään toimialasta (Statistics Finland 2024) — mutta pula on edelleen kriittinen. ICT-sektori, rakennus ja teollisuuden tekniset ammatit osoittavat samaa rakennetta: kasvava kysyntä, suppea tarjonta, palkanmuodostuspaine. Tähän segmenttiin hakeutuminen vaatii sekä muodollisen pätevyyden että rekrytointiverkostoihin pääsyn.</p>
+
+  <h3>Kategoria II — jatkuvuutta rakentava työvoimareservi</h3>
+
+  <p>Pitkäaikaistyöttömyyden, osatyökykyisyyden ja vaikeasti työllistyvien segmentti. Vuonna 2024 pitkäaikaistyöttömiä oli arviolta 91 000–94 000 (TEM-ennuste 2023). Tässä segmentissä yli 55-vuotiaat ovat rakenteellisesti yliedustettuina suhteessa heidän työvoimaosuuteensa.</p>
+
+  <!-- Visual segmentation diagram -->
+  <div style="margin:1.4rem 0; border:1px solid var(--rule);">
+
+    <!-- Header row -->
+    <div style="display:grid; grid-template-columns:1fr 72px 1fr; background:#f0ece4;">
+      <div style="padding:.7rem 1rem; border-right:1px solid var(--rule);">
+        <div style="font-family:var(--mono); font-size:.52rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:.3rem;">Kategoria I</div>
+        <div style="font-family:var(--serif); font-size:.95rem; font-weight:500;">Kysyntää sitova</div>
+      </div>
+      <div></div>
+      <div style="padding:.7rem 1rem; border-left:1px solid var(--rule);">
+        <div style="font-family:var(--mono); font-size:.52rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem;">Kategoria II</div>
+        <div style="font-family:var(--serif); font-size:.95rem; font-weight:500;">Jatkuvuutta rakentava</div>
+      </div>
+    </div>
+
+    <!-- Content rows -->
+    <div style="display:grid; grid-template-columns:1fr 72px 1fr; border-top:1px solid var(--rule);">
+      <div style="padding:.55rem 1rem; border-right:1px solid var(--rule);">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Korkean osaamisen työpaikat</p>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; background:#f7f4ee; border-right:1px solid var(--rule);">
+        <span style="font-family:var(--mono); font-size:.6rem; color:var(--rule);">——</span>
+      </div>
+      <div style="padding:.55rem 1rem;">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Pitkäaikaistyöttömyys</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 72px 1fr; border-top:1px solid var(--rule); background:#faf9f6;">
+      <div style="padding:.55rem 1rem; border-right:1px solid var(--rule);">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Työvoimapula — aktiivinen</p>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; background:#f7f4ee; border-right:1px solid var(--rule);">
+        <span style="font-family:var(--mono); font-size:.6rem; color:var(--rule);">——</span>
+      </div>
+      <div style="padding:.55rem 1rem;">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Osatyökykyisyys</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 72px 1fr; border-top:1px solid var(--rule);">
+      <div style="padding:.55rem 1rem; border-right:1px solid var(--rule);">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Verkostopohjainen rekrytointi</p>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; background:#f7f4ee; border-right:1px solid var(--rule);">
+        <span style="font-family:var(--mono); font-size:.6rem; color:var(--rule);">——</span>
+      </div>
+      <div style="padding:.55rem 1rem;">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Avoin haku dominoi</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 72px 1fr; border-top:1px solid var(--rule); background:#faf9f6;">
+      <div style="padding:.55rem 1rem; border-right:1px solid var(--rule);">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Korkea tuottavuus, vakaat sopimukset</p>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; background:#f7f4ee; border-right:1px solid var(--rule);">
+        <span style="font-family:var(--mono); font-size:.6rem; color:var(--rule);">——</span>
+      </div>
+      <div style="padding:.55rem 1rem;">
+        <p style="margin:0; font-size:.88rem; color:#2a2520;">Heikko integraatio, lyhyet sopimukset</p>
+      </div>
+    </div>
+
+    <!-- Barrier row -->
+    <div style="border-top:2px solid var(--ink); padding:.75rem 1rem; background:#f0ece4; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:1rem;">
+      <div style="font-family:var(--mono); font-size:.58rem; letter-spacing:.1em; color:var(--muted); text-align:right;">Rekrytointiriski · ikäennakkoluulo</div>
+      <div style="font-family:var(--serif); font-size:.95rem; color:var(--ink); text-align:center; white-space:nowrap;">↕ rajoitettu liikkuvuus</div>
+      <div style="font-family:var(--mono); font-size:.58rem; letter-spacing:.1em; color:var(--muted);">L–5 narratiivikuilu · institutionaaliset esteet</div>
+    </div>
+
+    <!-- +55 callout -->
+    <div style="border-top:1px solid var(--rule); padding:.7rem 1rem; background:#faf5ee; display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-family:var(--mono); font-size:.56rem; letter-spacing:.15em; text-transform:uppercase; color:var(--accent);">+55-kohortti</div>
+      <div style="font-family:var(--serif); font-size:.88rem; font-style:italic; color:#3a2510;">Teknisesti K-I -pätevä · Rakenteellisesti K-II -positioitu · L–4 päämittari</div>
+    </div>
+
+  </div>
+
+  <p>Segmentaation rakenteellinen todiste: 55–64-vuotiaiden työllistymisaste on 71,7 % (2023) — 13,6 prosenttiyksikköä alle 35–54-vuotiaiden ydintyövoiman (85,3 %). Samanaikaisesti 55–64-vuotiaiden työttömyysaste (8,6 %) on lähes yhtä korkea kuin koko työvoimaa koskeva kokonaistyöttömyys (8,4 %, 2024). Tämä epäjatkuvuus ei selity tuottavuuseroilla — se selittyy allokointilogiikalla.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Rakenteellinen löydös — L–4</div>
+    <p>Työvoimapula ja rakenteellinen työttömyys eivät ole toisistaan riippumattomia muuttujia, jotka vaativat erillisiä ratkaisuja. Ne ovat saman allokointimekanismin kaksi seuraamusta: institutionaalinen logiikka ohjaa resurssit segmenttiin I samalla kun se estää siirtymistä segmentistä II. Paradoksi on rakenteellinen, ei markkinahäiriö.</p>
+  </div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Quantitative Evidence / Kvantitatiivinen näyttö</h2>
+
+  <h3>Työllistymisaste ikäryhmittäin (L–3 proxy)</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ikäryhmä</th><th>Työllistymisaste 2024</th><th>Vertailu 2010</th><th>Huomio</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>25–34</td><td>82,1 %</td><td>—</td><td>Pääikäryhmä, korkein aktiivisuus</td></tr>
+      <tr><td>35–54</td><td>85,3 %</td><td>—</td><td>Ydintyövoima, vakain segmentti</td></tr>
+      <tr class="tbl-hl"><td><strong>55–64</strong></td><td><strong>71,7 %</strong></td><td>~58 %</td><td><strong>−13,6 pp alle ydintyövoiman; L–4 päämuuttuja</strong></td></tr>
+      <tr><td>60–64</td><td>71,0 %</td><td>43,0 %</td><td>Nousi +28 pp — eläkeuudistuksen vaikutus</td></tr>
+      <tr><td>20–64 (kaikki)</td><td>76,7 %</td><td>—</td><td>−1,2 pp vuodesta 2023</td></tr>
+    </tbody>
+  </table>
+
+  <p><em>Lähde: Statistics Finland, työvoimatutkimus; Eurostat; Suomen Pankki (2025).</em></p>
+
+  <h3>Työvoimapula-alat 2024 (L–1 proxy)</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ala</th><th>Pulatilanne</th><th>Yhteys +55-kohorttiin</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Sosiaali- ja terveydenhuolto</td><td>Kriittinen</td><td>Korkea: hoiva- ja hoitokokemus kertyy vuosikymmenillä</td></tr>
+      <tr><td>Rakennus ja asennus</td><td>Korkea</td><td>Korkea: käytännön ammattitaito, ei korvattavissa nopeasti</td></tr>
+      <tr><td>ICT ja sovelluskehitys</td><td>Korkea</td><td>Osittainen: vanhemmat järjestelmät, legacy-osaaminen</td></tr>
+      <tr><td>Varhaiskasvatus ja opetus</td><td>Kohtalainen</td><td>Kohtalainen: pedagoginen kokemus arvokasta</td></tr>
+      <tr><td>Teollisuus ja teknologia</td><td>Kohtalainen</td><td>Korkea: prosessiosaaminen, koneistus, hitsaus</td></tr>
+    </tbody>
+  </table>
+
+  <p><em>Lähde: EURES Labour Market Information Finland 2024; Työvoimabarometri syksy 2024.</em></p>
+
+  <h3>Ikääntyvän työvoiman sektoriprofiili (LCR-komponentti)</h3>
+
+  <p>Nordregion aineistossa (Vihinen ym. 2024) 55–74-vuotiaat muodostivat harvaan asutuilla alueilla seuraavat osuudet työvoimasta toimialoittain:</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Toimiala</th><th>55–74 v. osuus</th><th>LCR-implikaatio</th></tr>
+    </thead>
+    <tbody>
+      <tr class="tbl-hl"><td>Kiinteistöpalvelut ja kunnossapito</td><td>47,8 %</td><td>Kriittinen: lähes puolet poistuu 10 v. sisällä</td></tr>
+      <tr class="tbl-hl"><td>Julkinen hallinto</td><td>39,3 %</td><td>Korkea: institutionaalinen muisti ja päätöskapasiteetti</td></tr>
+      <tr><td>Rahoitus ja vakuutus</td><td>37,4 %</td><td>Korkea: systeemitieto vaikeasti siirrettävissä</td></tr>
+      <tr><td>Alkutuotanto</td><td>36,8 %</td><td>Korkea: maaseutualueet erityisen alttiita</td></tr>
+      <tr><td>ICT ja tietointensiiviset alat</td><td>19,2 %</td><td>Matala: nuori rakenne</td></tr>
+    </tbody>
+  </table>
+
+  <p><em>Lähde: Vihinen ym. (2024) / Nordregio Report 2024:23.</em></p>
+
+  <p>Tämä profiili on D-3- ja D-4-relevantilta merkitykseltään keskeinen: juuri ne alat, joilla ikääntyville ammattilaisille kertyy korvaamatonta institutionaalista osaamista (julkinen hallinto, kriittinen infrastruktuuri, kunnossapito), ovat lähellä rakenteellista kynnyspistettä, jossa poistuvan osaamisen korvaaminen ei enää ole lineaarinen rekrytointiongelma vaan systeeminen jatkuvuusvaje.</p>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>The +55 Cohort / +55-kohortti</h2>
+
+  <p>Yli 55-vuotiaiden ammattilaisten asema Suomen työmarkkinoilla on L–4-segmentaation konkreettisin ilmentymä. Kohortti täyttää Kategoria II:n rakenteelliset ehdot: teknisesti korkeasti pätevä, mutta institutionaalisesti vaikeutuneessa asemassa Kategoria I -segmentissä.</p>
+
+  <h3>Tapaus: Kokenut insinööri, 58 v.</h3>
+
+  <div class="scope-note">
+    <div class="scope-label">Tapausesimerkki — Mekanismin havainnollistus</div>
+    <p>58-vuotias konetekniikan insinööri, 30 vuoden kokemus prosessiteollisuudesta. Työnantajan toiminnan lopettaminen 2022. 40 avointa hakemusta — 2 haastattelukutsua.</p>
+    <p>Työllistyminen tapahtui epävirallisen verkoston kautta: entisen kollegan suositus alihankkijayritykseen, joka haki täsmälleen hänen osaamisprofiiliaan. Kolmen kuukauden projektiluonteinen konsultointi → vakinainen työsuhde kuuden kuukauden kuluttua.</p>
+    <p>Tapaus ei ole poikkeus. Se kuvaa mekanismia, jossa muodollinen rekrytointijärjestelmä — Kategoria I:n pääasiallinen kanava — tuottaa systemaattisesti alioptimaalisen tuloksen +55-kohortissa riippumatta työnhakijan tosiasiallisesta osaamisesta. Verkostopohjainen polku toimii vaihtoehtoisena markkinana, mutta se on rakenteellisesti sattumanvarainen eikä institutionaalisesti tuettu.</p>
+  </div>
+
+  <p>60–64-vuotiaiden työvoimaosuuden kasvu 43 prosentista (2010) 71 prosenttiin (2024) osoittaa, että institutionaaliset muutokset — eläkeuudistukset 2005 ja 2017 — vaikuttavat rakenteellisesti. Tämä on WP-008:n allokointiteorian kannalta merkittävä havainto: se osoittaa, että L–4-segmentaatio ei ole pysyvä ominaisuus vaan institutionaalisesti muutettavissa oleva tila.</p>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Labour Continuity Reserve / Työvoimajatkuvuusreservi</h2>
+
+  <p>WP-008 §11 määrittelee Labour Continuity Reserve -arvon: LCR = f(L–1, L–3, L–4). Tässä arviossa arvo on laadullinen, kolmeen proxy-komponenttiin perustuva arvio.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Komponentti</th><th>Arvo (proxy)</th><th>Suunta</th><th>Perustelu</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">L–1</span> Supply Pressure</td>
+        <td>Kohtalainen–korkea</td>
+        <td class="finding-weak">↓ heikentyvä</td>
+        <td>Pitkäaikaistyöttömyys kasvanut +34 000 (2024 vs. 2023); työvoimapulaa esiintyy samanaikaisesti samoilla aloilla</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">L–3</span> Domestic Utilisation</td>
+        <td>Osittain heikentynyt</td>
+        <td class="finding-weak">↓ heikentyvä</td>
+        <td>+55-kohortin työllistymisaste 13,6 pp alle ydintyövoiman; kotimaisesti koulutettu kokemusosaaminen aliutilisoitu</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">L–4</span> Segmentation Index</td>
+        <td>Korkea</td>
+        <td class="finding-weak">↓ syvenevä</td>
+        <td>Segmentaatio mitattavissa työllistymisaste- ja työttömyyseroissa; verkostopohjainen rekrytointi vahvistaa eriytymistä</td>
+      </tr>
+      <tr class="tbl-hl">
+        <td><span class="tbl-key-b">LCR</span> Composite</td>
+        <td><strong>Matala ja laskeva</strong></td>
+        <td class="finding-weak">↓ ↓ kriittinen</td>
+        <td>Kaikki kolme komponenttia osoittavat samaan suuntaan. Erityinen riski: sektorikohtainen poistumaprofiili (§05) ilman rakenteellista korvaamismekanismia.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ep-note">
+    <div class="ep-label">LCR-löydös — D-3 ja D-4 relevanssi</div>
+    <p>Labour Continuity Reserve -vaje ei ole pelkästään sosiaalipolitiikan kysymys. Aloilla, joissa ikääntyvä työvoima muodostaa 35–48 % työvoimasta (§05), reservivaje on D-3-ehdollinen: se heikentää yhteiskunnan päätöskapasiteettia compound stressitilanteessa, jossa samanaikaiset häiriöt osuvat aloille, joiden toiminta riippuu vuosikymmenten kokemuksesta rakentuvasta institutionaalisesta tiedosta.</p>
+    <p>Tämä on suora yhteys ACI:n D-3-domainiin (Temporal Decision Capacity) ja D-4-domainiin (Compound Stress Evaluation). Työvoimajatkuvuusreservi on järjestelmäjatkuvuuden muuttuja — ei vain talouskasvun indikaattori.</p>
+  </div>
+
+  <h3>Sektorikohtainen LCR-arvio</h3>
+
+  <p>LCR-arvio voidaan laskea sektorikohtaisesti yhdistämällä §05:n poistumaprofiili (Vihinen ym. 2024) ja työvoimapulaindikaattori (EURES 2024). Tuloksena on sektorikohtainen haavoittuvuusluokitus D-3/D-4-relevanssin näkökulmasta.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Toimiala</th><th>55–74 v. osuus</th><th>Työvoimapula</th><th>LCR-taso</th><th>D-3/D-4-relevanssi</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fdf0ec;">
+        <td><strong>Julkinen hallinto</strong></td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:#8b1a00;">39,3 %</span></td>
+        <td>Kohtalainen</td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:#8b1a00;">KRIITTINEN</span></td>
+        <td>D-3 ensisijainen: institutionaalinen päätösmuisti, kriisikoordinaatio</td>
+      </tr>
+      <tr style="background:#fdf0ec;">
+        <td><strong>Kiinteistöpalvelut / kunnossapito</strong></td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:#8b1a00;">47,8 %</span></td>
+        <td>Kohtalainen–korkea</td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:#8b1a00;">KRIITTINEN</span></td>
+        <td>D-4: kriittisen infrastruktuurin ylläpito compound stressissä</td>
+      </tr>
+      <tr>
+        <td>Sosiaali- ja terveydenhuolto</td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:var(--accent);">34–36 %</span></td>
+        <td><strong>Kriittinen</strong></td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:var(--accent);">KORKEA</span></td>
+        <td>D-4: palvelukapasiteetti poistuu nopeammin kuin korvautuu</td>
+      </tr>
+      <tr style="background:#faf9f6;">
+        <td>Alkutuotanto</td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:var(--accent);">36,8 %</span></td>
+        <td>Kohtalainen</td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:var(--accent);">KORKEA</span></td>
+        <td>D-4: ruokajärjestelmän resilienssi, maaseutualueet erityisen alttiita</td>
+      </tr>
+      <tr>
+        <td>Rakennus ja asennus</td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:var(--muted);">~25 %</span></td>
+        <td><strong>Korkea</strong></td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:var(--muted);">KOHTALAINEN</span></td>
+        <td>D-4: kriittisen infrastruktuurin rakentamis- ja korjauskapasiteetti</td>
+      </tr>
+      <tr style="background:#faf9f6;">
+        <td>ICT ja tietointensiiviset alat</td>
+        <td><span style="font-family:var(--mono);font-size:.8rem;color:var(--muted);">19,2 %</span></td>
+        <td><strong>Korkea</strong></td>
+        <td><span style="font-family:var(--mono);font-size:.72rem;color:var(--muted);">MATALA</span></td>
+        <td>Nuori rakenne — LCR-riski on tarjontapuolella, ei poistumaprofiilissa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:.82rem; color:var(--muted); margin-top:-.3rem;"><em>Lähde: Vihinen ym. (2024) / Nordregio; EURES (2024); Statistics Finland (2024). LCR-luokitus: laadullinen yhdistelmäarvio poistumaprofiilin ja työvoimapulaindikaattorin perusteella.</em></p>
+
+  <p>Julkinen hallinto ja kiinteistöpalvelut/kunnossapito muodostavat erityisen riskin: poistumaprofiili on korkein (39–48 %), mutta ne eivät esiinny aktiivisessa työvoimapuladiskurssissa samalla intensiteetillä kuin sote tai ICT. Tämä on itsessään L–5-signaali: institutionaalinen huomio ohjautuu näkyviin pula-aloihin, ei rakenteellisesti haavoittuvimpiin.</p>
+</div>
+
+<!-- §08 -->
+<div class="section">
+  <div class="section-id">§ 09</div>
+  <h2>Institutional Narrative Gap / Institutionaalinen narratiivikuilu (L–5)</h2>
+
+  <p>L–5-indikaattori mittaa etäisyyttä hallitsevan institutionaalisen kehyksen ja todettavien rakenteellisten vaikutusten välillä. Tässä arviossa L–5:n ilmentymä on selvästi tunnistettavissa — ja se on erityisen kiinnostava WP-008:n teorian kannalta, koska se operoi kulttuurisella mekanismilla, ei vain toimialakohtaisella allokointilogiikalla.</p>
+
+  <h3>Sankarikulttuuri rekrytointimarkkinoilla</h3>
+
+  <p>Länsimaisissa — ja erityisesti pohjoismaisissa — työmarkkinoissa on tapahtunut 2000-luvulla rakenteellinen siirtymä: työ on yhä useammin identiteetin, kutsumuksen ja itsensä toteuttamisen lähde. Hallitseva institutionaalinen kehys kuvaa tätä positiivisena kehityksenä — työtekijät ovat motivoituneempia, yrittäjähenkisempiä, sitoutuneempia. Startup-kulttuuri, portfolioura ja henkilöbrändi ovat tämän kehyksen symboleita.</p>
+
+  <p>Tämä kehys tuottaa kuitenkin implisiittisen hierarkian: "merkityksellinen" työ arvostetaan korkeammalle kuin toistuva, vuosikymmenillä kertyvä ammattitaito. Rekrytointimarkkinoilla se näkyy mitattavissa olevana rakenteellisena vinoumana +55-kohorttia vastaan — ei osaamisperusteena vaan narratiiviperusteena.</p>
+
+  <div class="rb">
+    <p>Työtä ei enää vain tehdä — sitä esitetään. Tämä performatiivinen ulottuvuus muuttaa rekrytointimarkkinoita tavalla, joka asettaa eri sukupolvien edustajat epätasa-arvoiseen asemaan ei osaamisen, vaan narratiivin perusteella.</p>
+  </div>
+
+  <h3>Stakhanov-paralleli: strukturaalinen analogia</h3>
+
+  <p>L–5-mekanismin historialliset analogit ovat diagnostisesti valaisevat. Neuvostoliitossa Aleksei Stakhanovin 1935 louhima 102 tonnia hiiltä 14-kertaisena normina ei ollut vain rekordiyritys — se oli narratiivinen instrumentti, josta rakennettiin välittömästi poliittinen allokointilogiikka. Stakhanovismi ei optimoinut tuotantoa: se rakensi hierarkian, jossa "sankariteos" legitimoi järjestelmän muita palvelevat allokointipäätökset.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th></th><th>Stakhanovismi (1935–)</th><th>Moderni sankarikulttuuri</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Narratiivin rakentaja</td><td>Valtio / puolue</td><td>Yksilö / työnantaja / media</td></tr>
+      <tr><td>Ylisuorituksen kohde</td><td>Kollektiivi</td><td>Henkilöbrändi</td></tr>
+      <tr><td>Normaali työ</td><td>Näkymätöntä, riittämätöntä</td><td>"Ei tarpeeksi" / ei esitettävää</td></tr>
+      <tr><td>Paine</td><td>Ideologinen, ylhäältä</td><td>Markkinapaine, alhaalta</td></tr>
+      <tr class="tbl-hl"><td>Yhteinen rakenne</td><td colspan="2">Työn tosiasiallinen arvo eriytyy työn esittämisen arvosta. Se, joka ei pysty tai halua <em>esittää</em>, menettää asemaansa — vaikka tekisi saman työn yhtä hyvin.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Analogia ei ole historiallinen kuriositeetti. Se kuvaa L–5:n mekanismin rakenteen: institutionaalinen narratiivi legitimoi allokointipäätöksen, joka palvelee eri funktiota kuin narratiivi väittää. Stakhanovismissa funktio oli poliittinen kontrolli; modernissa sankarikulttuuri-rekrytoinnissa funktio on kustannusstabilisaatio ja riskinhallinta — juuri WP-008 §10:n kuvaama rakenne.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">L–5 löydös — Institutionaalinen narratiivikuilu</div>
+    <p>Suomen +55-kohortin heikko asema työvoimapula-aloilla ei selity pätevyysvajeella (L–3 osoittaa kokemusosaamisen olevan korkea) eikä halukkuusvajeella (ikääntyvien työvoimaosuus on kasvanut). Se selittyy L–5-mekanismilla: rekrytointijärjestelmä toimii sankarikulttuuri-narratiivin sisällä, joka suosii esittämistä kokemuksen sijaan.</p>
+    <p>Tämä on hallinnollisesti merkittävä löydös: se tarkoittaa, että pelkät tukiohjelmat tai koulutusinterventiot eivät korjaa vajetta, jos allokointilogiikka pysyy muuttumattomana. L–5-kuilu on strukturaalinen este, jonka poistaminen vaatii institutionaalisen kehyksen muutosta — ei vain resurssien lisäämistä.</p>
+  </div>
+</div>
+
+<!-- §09 -->
+<div class="section">
+  <div class="section-id">§ 10</div>
+  <h2>Findings / Löydökset</h2>
+
+  <p><strong>Löydös 1 — Segmentaatio (L–4):</strong> <span class="finding-weak">Suomen työmarkkinat osoittavat rakenteellisen kaksikerrossegmentaation, joka on mitattavissa työllistymisaste- ja työttömyyseroina ikäryhmittäin ja sektoreittain. Segmentaatio ei ole markkinahäiriö vaan institutionaalinen allokointitulos.</span></p>
+
+  <p><strong>Löydös 2 — Mismatch (L–3):</strong> <span class="finding-weak">+55-kohortin kokemusosaaminen on rakenteellisesti aliutilisoitu juuri niillä aloilla, joilla työvoimapula on akuutein. Mismatch ei selity osaamisvajeella vaan allokointilogiikalla, joka suosii muodollista rekrytointikanavaa epävirallisen verkoston sijaan.</span></p>
+
+  <p><strong>Löydös 3 — LCR-vaje (D-3/D-4):</strong> <span class="finding-weak">Labour Continuity Reserve on matala ja laskeva. Sektorikohtainen ikäprofiili osoittaa, että useilla kriittisillä aloilla lähestytään rakenteellista kynnyspistettä, jossa poistuvan institutionaalisen osaamisen korvaaminen ei enää ole lineaarinen rekrytointitehtävä.</span></p>
+
+  <p><strong>Löydös 4 — Narratiivikuilu (L–5):</strong> <span class="finding-strong">Hallitseva institutionaalinen kehys kuvaa ongelman demografisena tai osaamistarpeena. Rakenteelliset indikaattorit osoittavat, että ensisijainen mekanismi on kulttuurinen allokointilogiikka (sankarikulttuuri-bias rekrytoinnissa). Tämä on WP-008:n ennustaman L–5-mekanismin empiirinen vahvistus Suomen kontekstissa.</span></p>
+
+  <p><strong>Löydös 5 — Institutionaalinen muutettavuus:</strong> <span class="finding-strong">60–64-vuotiaiden työvoimaosuuden kasvu +28 pp vuodesta 2010 osoittaa, että L–4-segmentaatio on institutionaalisesti muutettavissa. Eläkeuudistukset tuottivat mitattavan rakennemuutoksen ilman, että työnantajien allokointilogiikkaa muutettiin suoraan. Tämä validoi intervention mahdollisuuden mutta osoittaa myös sen rajoitteen: uudistukset vaikuttivat tarjontapuoleen, eivät L–5-kysyntäpuolen narratiiviin.</span></p>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-id">§ 11</div>
+  <h2>Falsification Conditions / Falsifiointiehdot</h2>
+
+  <p>Kehys on katsottava olennaisesti revisioitavaksi, jos jokin seuraavista osoitetaan vertailevalla empiirisellä evidenssillä.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Ehto</th><th>Ennuste, jonka falsifiointi kumoaa</th><th>Implikaatio</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FC-1</strong></td>
+        <td>+55-vuotiaiden työllistymisaste nousee yli 80 %:iin ilman institutionaalisia interventioita viiden vuoden sisällä</td>
+        <td>Segmentaatio korjaantuu markkinamekanismilla; L–4-allokointiteoria ei päde Suomen kontekstissa</td>
+      </tr>
+      <tr>
+        <td><strong>FC-2</strong></td>
+        <td>Työvoimapula-alojen rekrytoinnissa +55-kohortin osuus vastaa heidän työvoimaosuuttaan ilman erikoistoimenpiteitä</td>
+        <td>Mismatch selittyy osaamisvajeella (L–3 ei päde), ei allokointilogiikalla; koulutusinterventio on riittävä ratkaisu</td>
+      </tr>
+      <tr>
+        <td><strong>FC-3</strong></td>
+        <td>Sankarikulttuuri-bias rekrytoinnissa ei ole mitattavissa rekrytointikokeiluissa (CV-audit-tutkimukset), joissa ikä on kontrolloitu</td>
+        <td>L–5-narratiivikuilu on väärä selitys; allokointilogiikka on muodollinen pätevyyspohjainen eikä kulttuurinen</td>
+      </tr>
+      <tr>
+        <td><strong>FC-4</strong></td>
+        <td>LCR-vaje ei korreloi mitattavissa olevan palvelukyvyn heikkenemisen kanssa kriittisillä aloilla 2025–2030 Suomessa</td>
+        <td>Labour Continuity Reserve ei ole D-3/D-4-relevantti muuttuja; ACI-kehyksen soveltaminen työmarkkinoihin ei tuota lisäarvoa infrastruktuuridiagnostiikan yli</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>FC-4 on erityisesti merkittävä: sen testaaminen on mahdollista rekisteripohjaisen seurantatutkimuksen avulla 2027–2030. Jos poistuvan +55-kohortin sektorikohtainen vaikutus palvelukykyyn on havaittavissa kriittisillä aloilla mutta ei selity muilla tekijöillä, LCR:n D-3-relevanssi vahvistuu. Jos vaikutusta ei ole, kehys vaatii revision.</p>
+
+  <div class="rb">
+    <p>Tämä arvio on diagnostinen eikä prediktiivinen. Se tunnistaa allokointimekanismin rakenteen ja mittaa sen vaikutuksen jatkuvuusreserviin — välttämätön analyyttinen askel ennen kuin politiikkainterventioita voidaan perustellusti kohdentaa.</p>
+  </div>
+</div>
+
+<!-- REFERENCES -->
+<div class="section">
+  <div class="section-id">Viitteet</div>
+  <h2>References / Lähteet</h2>
+  <p style="font-size:.82rem; line-height:1.9; color:#3a3530;">
+    Statistics Finland (2024). Labour Force Survey — Annual results 2024. Helsinki: Tilastokeskus.<br>
+    Statistics Finland (2024). Finland in Figures 2024. Helsinki: Tilastokeskus.<br>
+    Statista (2025). Unemployment rate in Finland from 2014 to 2024, by age group. Based on Statistics Finland data. Retrieved February 2026.<br>
+    Työvoimabarometri syksy 2024. Helsinki: Työ- ja elinkeinoministeriö.<br>
+    Suomen Pankki (2025). Labour market flows run deeper. Bank of Finland Bulletin. Helsinki.<br>
+    EURES (2024). Labour Market Information: Finland. European Employment Services, December 2024.<br>
+    Vihinen, H. ym. (2024). Strategies to address Nordic rural labour shortage — Finland. Nordregio Report 2024:23.<br>
+    Työ- ja elinkeinoministeriö (2023). Lyhyen aikavälin työmarkkinaennuste. Helsinki: TEM.<br>
+    Böckerman, P. &amp; Ilmakunnas, P. (2012). The Job Satisfaction-Productivity Nexus. <em>ILRR</em> 65(2), 244–262.<br>
+    Nätti, J., Pyöriä, P. &amp; Ojala, S. (2021). Työelämän muutos Suomessa 2000-luvulla. Gaudeamus.<br>
+    OECD (2023). OECD Employment Outlook 2023. Paris: OECD Publishing.<br>
+    European Commission (2023). Employment and Social Developments in Europe 2023. Luxembourg.<br>
+    ACI WP-008 (2026). Institutional Allocation and System Continuity. §§10–11. aethercontinuity.org.<br>
+    ACI DA-001 (2026). Finland Pre-Shortage Phase 2026–2032. aethercontinuity.org.<br>
+    ACI DA-004 (2026). European Energy Investment: Category I / II Proxy Analysis. aethercontinuity.org.
+  </p>
+</div>
+
+<div class="doc-footer">
+  ACI Diagnostic Assessment No. 006 · Labour Market Allocation Diagnostic<br>
+  Version 0.3 · Pre-publication draft · 2026 · Domain D-3 · D-4<br>
+  Companion to WP-008 §§10–11 · Operationalises L–1 through L–5<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+
+</body>
+</html>

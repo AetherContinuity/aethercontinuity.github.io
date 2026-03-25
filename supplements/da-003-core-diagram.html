@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA-003 — Stability vs Endurance Divergence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f7f4ee;--rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--ok:#4a7a4a;--warn:#8b7a3a;--mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--mono);max-width:720px;margin:0 auto;padding:3rem 2rem 5rem}
+.hdr{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:.8rem 0;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:baseline}
+.hdr-id{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase}
+.hdr-meta{font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+h1{font-family:var(--serif);font-size:1.45rem;font-weight:500;margin-bottom:.25rem}
+.sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--muted);margin-bottom:2rem}
+
+/* ── MAIN DIVERGENCE DIAGRAM ── */
+.diagram{margin:0 0 2.5rem;position:relative}
+.d-title{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem}
+
+.chart-area{position:relative;height:260px;border-left:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+
+/* y-axis label */
+.y-label{position:absolute;left:-2.2rem;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+/* x-axis ticks */
+.x-axis{display:flex;justify-content:space-between;padding:.3rem 0 0;font-size:.5rem;letter-spacing:.06em;color:var(--muted)}
+
+/* SVG lines */
+.chart-svg{position:absolute;inset:0;width:100%;height:100%}
+
+/* annotations */
+.ann{position:absolute;font-family:var(--mono);font-size:.55rem;letter-spacing:.04em;line-height:1.5}
+.ann-ok{color:var(--ok)}
+.ann-hi{color:var(--accent)}
+.ann-muted{color:var(--muted)}
+
+/* gap annotation */
+.gap-brace{position:absolute;right:2%;top:18%;width:60px;border-right:1px solid var(--accent);border-top:1px solid var(--accent);border-bottom:1px solid var(--accent)}
+.gap-label{position:absolute;right:2%;font-size:.54rem;color:var(--accent);font-family:var(--mono);letter-spacing:.04em;line-height:1.5;text-align:right}
+
+/* ── LAYER TABLE ── */
+.layers{border:1px solid var(--rule);margin-bottom:2rem}
+.l-head{background:#f0ece4;display:grid;grid-template-columns:80px 110px 1fr 1fr 90px;border-bottom:1px solid var(--rule)}
+.l-head div{padding:.42rem .65rem;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule)}
+.l-head div:last-child{border-right:none}
+.l-row{display:grid;grid-template-columns:80px 110px 1fr 1fr 90px;border-bottom:1px solid var(--rule)}
+.l-row:last-child{border-bottom:none}
+.l-row div{padding:.5rem .65rem;font-size:.78rem;font-family:var(--serif);line-height:1.4;border-right:1px solid var(--rule);color:#2a2520;vertical-align:top}
+.l-row div:last-child{border-right:none}
+.l-id{font-family:var(--mono);font-size:.6rem;color:var(--accent)}
+.improving{color:var(--ok);font-family:var(--mono);font-size:.58rem}
+.unchanged{color:var(--accent);font-family:var(--mono);font-size:.58rem}
+.external{color:var(--warn);font-family:var(--mono);font-size:.58rem}
+.l-row.highlight{background:#faf5ee}
+
+/* ── SIGNATURE SENTENCE ── */
+.sig{border:2px solid var(--ink);padding:1.2rem 1.5rem;margin-bottom:2rem}
+.sig-label{font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.sig-text{font-family:var(--serif);font-size:1.15rem;font-weight:500;line-height:1.55;color:var(--ink)}
+.sig-sub{font-family:var(--serif);font-style:italic;font-size:.88rem;color:var(--muted);margin-top:.5rem;line-height:1.6}
+
+/* ── ALLOCATION FLOW ── */
+.flow{border:1px solid var(--rule);margin-bottom:2rem}
+.f-head{background:#f0ece4;padding:.42rem .8rem;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)}
+.f-body{padding:.9rem 1rem;display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr;gap:.3rem;align-items:center}
+.f-node{border:1px solid var(--rule);padding:.5rem .6rem;text-align:center}
+.f-node-id{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}
+.f-node-val{font-family:var(--serif);font-size:.85rem;line-height:1.35}
+.f-node.ok{background:#eef3ee;border-color:#b8d4b8}
+.f-node.hi{background:#faf0e8;border-color:#d4b888}
+.f-arr{text-align:center;font-size:.9rem;color:var(--rule)}
+.f-time{font-size:.46rem;letter-spacing:.06em;color:var(--muted);text-align:center;margin-top:.25rem}
+
+.src-note{font-size:.54rem;color:var(--muted);letter-spacing:.04em;line-height:1.75;margin-top:1.5rem;padding-top:.8rem;border-top:1px solid var(--rule)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <span class="hdr-id">DA-003 · Core Diagram · March 2026</span>
+  <div class="hdr-meta">ACI Diagnostic Assessment 003<br>Finland · Allocation Diagnostic</div>
+</div>
+
+<h1>Stability is improving faster than endurance</h1>
+<p class="sub">The Finnish electricity system's investment trajectory strengthens L1–L2 stability while L3 multi-day endurance remains structurally tied to legacy assets and external reservoirs</p>
+
+
+<!-- DIVERGENCE CHART -->
+<div class="diagram">
+  <div class="d-title">Figure A — Trajectory divergence: stability investment vs endurance capacity (schematic)</div>
+
+  <div style="position:relative;padding-left:2.5rem">
+    <div class="y-label">system capability</div>
+    <div class="chart-area">
+      <svg class="chart-svg" viewBox="0 0 700 260" preserveAspectRatio="none">
+        <!-- grid lines -->
+        <line x1="0" y1="65" x2="700" y2="65" stroke="#e0dcd4" stroke-width="0.8"/>
+        <line x1="0" y1="130" x2="700" y2="130" stroke="#e0dcd4" stroke-width="0.8"/>
+        <line x1="0" y1="195" x2="700" y2="195" stroke="#e0dcd4" stroke-width="0.8"/>
+
+        <!-- stability line — rising (ok green) -->
+        <polyline points="0,210 120,185 250,155 400,110 560,72 700,45"
+          fill="none" stroke="#4a7a4a" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- endurance line — flat/slow (accent) -->
+        <polyline points="0,200 120,195 250,192 400,188 560,182 700,178"
+          fill="none" stroke="#8b4513" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="6,3"/>
+
+        <!-- gap indicator at right -->
+        <line x1="660" y1="45" x2="660" y2="178" stroke="#8b4513" stroke-width="1" stroke-dasharray="3,3"/>
+        <polygon points="660,45 655,55 665,55" fill="#4a7a4a"/>
+        <polygon points="660,178 655,168 665,168" fill="#8b4513"/>
+
+        <!-- origin dot -->
+        <circle cx="0" cy="205" r="3.5" fill="#7a7468"/>
+      </svg>
+
+      <!-- stability label -->
+      <div class="ann ann-ok" style="top:12%;left:52%">
+        L1–L2 stability<br>
+        <span style="font-size:.48rem;opacity:.8">BESS · grid services · frequency</span>
+      </div>
+
+      <!-- endurance label -->
+      <div class="ann ann-hi" style="top:62%;left:52%">
+        L3 endurance<br>
+        <span style="font-size:.48rem;opacity:.8">nuclear · hydro · Nordic reservoirs</span>
+      </div>
+
+      <!-- gap label -->
+      <div class="gap-label" style="top:26%;right:.8%">
+        divergence<br>gap
+      </div>
+
+      <!-- origin annotation -->
+      <div class="ann ann-muted" style="bottom:4%;left:.5%">2025</div>
+    </div>
+    <div class="x-axis">
+      <span>2025</span><span>2026</span><span>2027</span><span>2028</span><span>2029</span><span>2030</span>
+    </div>
+  </div>
+
+  <p style="font-family:var(--serif);font-size:.75rem;font-style:italic;color:var(--muted);margin-top:.6rem">Schematic — illustrates trajectory direction, not precise measured values. The stability line reflects BESS and grid service investment growth. The endurance line reflects the near-static dispatchable generation base relative to growing DC load commitments.</p>
+</div>
+
+
+<!-- LAYER TABLE -->
+<div class="layers">
+  <div class="l-head">
+    <div>Layer</div>
+    <div>Timescale</div>
+    <div>Primary assets</div>
+    <div>Finland trajectory</div>
+    <div>DA-003 finding</div>
+  </div>
+  <div class="l-row">
+    <div><span class="l-id">L1</span><br>Stability</div>
+    <div>Seconds → hours</div>
+    <div>BESS · FCR/aFRR · inertia</div>
+    <div><span class="improving">↑ improving</span> — 1,050 MW BESS connected; investment pipeline active</div>
+    <div>Adequate. Not the diagnostic layer.</div>
+  </div>
+  <div class="l-row">
+    <div><span class="l-id">L2</span><br>Operational</div>
+    <div>Hours → days</div>
+    <div>Reserves · interconnectors · flexible generation</div>
+    <div><span class="improving">↑ improving</span> — wind expansion, market coupling</div>
+    <div>Adequate. Not the diagnostic layer.</div>
+  </div>
+  <div class="l-row highlight">
+    <div><span class="l-id">L3</span><br>Endurance</div>
+    <div>Days → weeks</div>
+    <div>Nuclear · hydro · Nordic reservoir</div>
+    <div><span class="unchanged">→ largely unchanged</span> — dispatchable base static; Nordic buffer uncertain under BP-3</div>
+    <div><strong>Duration gap. Primary diagnostic layer.</strong></div>
+  </div>
+  <div class="l-row">
+    <div><span class="l-id">L4</span><br>Allocation</div>
+    <div>Years → decades</div>
+    <div>Infrastructure commitment — DC load · BESS · grid</div>
+    <div><span class="unchanged">↑ DC load growing</span> — 285 MW → 1,500 MW by 2030; L3 assets not growing proportionally</div>
+    <div>Allocation gap. The gap widens at L4 pace.</div>
+  </div>
+</div>
+
+
+<!-- SIGNATURE SENTENCE -->
+<div class="sig">
+  <div class="sig-label">DA-003 — Core finding</div>
+  <div class="sig-text">Stability is improving faster than endurance.</div>
+  <div class="sig-sub">Finland's electricity investments are strengthening L1–L2 short-duration stability while multi-day endurance (L3) remains structurally tied to legacy nuclear, hydro, and external Nordic hydro reservoirs — assets that are not expanding proportionally to new continuous load commitments. The two layers are diverging.</div>
+</div>
+
+
+<!-- ALLOCATION FLOW -->
+<div class="flow">
+  <div class="f-head">How allocation decisions reach the endurance layer — with time lags</div>
+  <div class="f-body">
+    <div class="f-node hi">
+      <div class="f-node-id">L4 decision</div>
+      <div class="f-node-val">DC investment committed</div>
+      <div class="f-time">2025–2026</div>
+    </div>
+    <div class="f-arr">→</div>
+    <div class="f-node hi">
+      <div class="f-node-id">L4 → L3</div>
+      <div class="f-node-val">Continuous load enters grid</div>
+      <div class="f-time">+2–3 years</div>
+    </div>
+    <div class="f-arr">→</div>
+    <div class="f-node hi">
+      <div class="f-node-id">L3 pressure</div>
+      <div class="f-node-val">BP energy integral grows</div>
+      <div class="f-time">+50,400 MWh per 300 MW DC</div>
+    </div>
+    <div class="f-arr">→</div>
+    <div class="f-node ok">
+      <div class="f-node-id">L3 response needed</div>
+      <div class="f-node-val">Long-duration capacity — nuclear expansion or equivalent</div>
+      <div class="f-time">7–15 years lead time</div>
+    </div>
+  </div>
+  <p style="font-family:var(--serif);font-size:.8rem;font-style:italic;color:var(--muted);padding:.5rem 1rem .8rem">The mismatch is temporal: DC load commits on a 2–3 year timeline; the L3 infrastructure required to sustain it against a Black Period operates on a 7–15 year planning horizon. This is not a failure of any single decision — it is a structural property of the allocation pattern.</p>
+</div>
+
+
+<div class="src-note">
+  DA-003 · Core Diagram · March 2026 · ACI Diagnostic Assessment 003<br>
+  Figure A is schematic — trajectory direction only, not measured values.<br>
+  Layer table and allocation flow use structural data from DA-003 v6.0 §02–§05.<br>
+  Companion documents: WP-001 (Black Period) · WP-008 (allocation indicators) · TN-001 (risk distribution)
+</div>
+
+</body>
+</html>

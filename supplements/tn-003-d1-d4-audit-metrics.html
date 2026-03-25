@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI TN-003 — D1–D4 Architectural Audit Metrics</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --paper-2: #ede7d8;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --blue: #185fa5;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 2rem 7rem;
+}
+nav {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.4rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+.nav-home { font-family: var(--mono); font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: '← '; }
+.nav-home:hover { color: var(--ink); }
+.nav-id { font-family: var(--mono); font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+.doc-meta { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.9; }
+
+h1 { font-family: var(--serif); font-size: 1.75rem; font-weight: 500; letter-spacing: -.01em; margin-bottom: .35rem; line-height: 1.2; }
+.tagline { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--muted); margin-bottom: .3rem; }
+.tagline-fi { font-family: var(--serif); font-size: .92rem; font-style: italic; color: var(--muted); margin-bottom: 2.2rem; }
+
+.cite-block { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin-bottom: 2.2rem; font-size: .6rem; letter-spacing: .06em; color: var(--muted); line-height: 1.9; }
+.cite-block span { color: var(--ink); font-size: .62rem; }
+
+.section { margin-bottom: 2.5rem; }
+.section-id { font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+h2 { font-family: var(--serif); font-size: 1.06rem; font-weight: 500; margin-bottom: .75rem; border-bottom: 1px solid var(--rule); padding-bottom: .35rem; }
+h3 { font-family: var(--serif); font-size: .98rem; font-weight: 500; margin: 1.4rem 0 .6rem; }
+p { font-family: var(--serif); font-size: 1rem; line-height: 1.8; color: #2a2520; margin-bottom: .85rem; }
+
+.scope-note { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1rem 0; background: #f0ece4; }
+.scope-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.scope-note p { font-family: var(--serif); font-size: .9rem; line-height: 1.7; margin-bottom: .5rem; color: #2a2520; }
+.scope-note p:last-child { margin-bottom: 0; }
+
+.rb { border-left: 3px solid var(--ink); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #f0ece4; }
+.rb p { font-family: var(--serif); font-size: .95rem; font-style: italic; margin: 0; color: var(--ink); line-height: 1.7; }
+
+.ep-note { border-left: 3px solid var(--accent); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #faf5ee; }
+.ep-label { font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ep-note p { font-family: var(--serif); font-size: .92rem; margin: 0; color: #3a2510; line-height: 1.7; }
+.ep-note p + p { margin-top: .6rem; }
+
+/* Metric blocks */
+.metric-block { border: 1px solid var(--rule); margin: 1.4rem 0; }
+.metric-header {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  padding: .65rem 1rem;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: baseline;
+  gap: .75rem;
+}
+.metric-dim { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; color: var(--accent); font-weight: 500; }
+.metric-name { font-family: var(--serif); font-size: .95rem; font-weight: 500; color: var(--ink); }
+.metric-domain { font-family: var(--mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.metric-body { padding: .85rem 1rem; }
+.metric-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-bottom: 1px solid var(--rule); }
+.metric-row:last-child { border-bottom: none; }
+.metric-cell { padding: .55rem .7rem; font-family: var(--serif); font-size: .86rem; line-height: 1.55; color: #2a2520; }
+.metric-cell:first-child { border-right: 1px solid var(--rule); background: #faf9f7; }
+.metric-head { font-family: var(--mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: .35rem .7rem; background: #f0ece4; display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--rule); }
+.metric-head span:first-child { border-right: 1px solid var(--rule); }
+.pass { font-family: var(--mono); font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; color: #0f6e56; }
+.fail { font-family: var(--mono); font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; color: #8b0000; }
+
+/* Comparison table */
+.tbl { width: 100%; border: 1px solid var(--rule); margin: 1.2rem 0; border-collapse: collapse; }
+.tbl th { font-family: var(--mono); font-size: .56rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: .5rem .7rem; border-bottom: 1px solid var(--rule); text-align: left; background: #f0ece4; }
+.tbl td { font-family: var(--serif); font-size: .88rem; line-height: 1.55; padding: .6rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl-key { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .1em; }
+.tbl-key-b { font-family: var(--mono); font-size: .62rem; color: var(--blue); letter-spacing: .1em; }
+
+/* Open questions */
+.oq { margin: 1rem 0; padding: .75rem 1rem; border-left: 2px solid var(--rule); }
+.oq-label { font-family: var(--mono); font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
+.oq p { font-family: var(--serif); font-size: .9rem; margin: 0; line-height: 1.65; color: #2a2520; }
+
+/* Cross-references */
+.xref-block { border-top: 1px solid var(--rule); margin-top: 2rem; padding-top: 1.5rem; }
+.xref-row { display: grid; grid-template-columns: 5rem 1fr; gap: .75rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+.xref-row:last-child { border-bottom: none; }
+.xref-id { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .1em; padding-top: .1rem; }
+.xref-text { font-family: var(--serif); font-size: .88rem; line-height: 1.6; color: #2a2520; }
+
+footer { border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1rem; font-size: .58rem; letter-spacing: .1em; color: var(--muted); line-height: 2; display: flex; justify-content: space-between; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">TN · 003 · 2026</span>
+</nav>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · TN-003 · Technical Note</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-3 · D-4 · Version 1.0 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Subject to revision<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>D1–D4 Architectural Audit Metrics</h1>
+<p class="tagline">Criteria for Distinguishing Nominal from Operative H-4b in Public Sector Digital Infrastructure</p>
+<p class="tagline-fi">D1–D4 arkkitehtuuriauditoinnin mittarit: nimellisen ja operationaalisen H-4b:n erottaminen julkisen sektorin digitaalisessa infrastruktuurissa</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). D1–D4 Architectural Audit Metrics: Criteria for Distinguishing Nominal from Operative H-4b in Public Sector Digital Infrastructure. ACI Technical Note No. 003, v1.0. Available at: https://aethercontinuity.org<br>
+  <span>Theoretical basis —</span> WP-011 §06 (Regulatory Architecture as H-4b Infrastructure) and §08 (Revised Core Mechanism). This note specifies the audit criteria WP-011 identifies as necessary but does not provide. WP-006 §07 defines the D1–D4 components this note operationalises.<br>
+  <span>Cross-references —</span> WP-006 (Continuity Computing) · WP-011 (Institutional System-4 Architecture) · TN-002 (Duration-Capable Edge Intelligence Node) · DA-005 (Digital Infrastructure Allocation) · DA-006 (Labour Market Allocation Diagnostic)
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Purpose and Scope</h2>
+
+  <div class="scope-note">
+    <div class="scope-label">Note on scope</div>
+    <p>This note specifies the minimum audit criteria that distinguish nominal H-4b (process compliance) from operative H-4b (architectural compliance) for public sector digital infrastructure. It does not recommend specific technologies, procurement approaches, or implementation programmes. It identifies what structural properties must be demonstrably present — and how their presence can be verified — given the WP-011 analytical finding that process-level regulation does not constitute operative institutional liability.</p>
+    <p>The criteria are applicable to any jurisdiction evaluating its H-4b status under the WP-011 framework. The Finnish context is used as the primary reference case throughout.</p>
+  </div>
+
+  <p>WP-011 §06 identifies an Architectural Specificity Gap in current EU regulatory instruments. NIS2 and the Critical Entities Resilience Directive specify security process requirements more completely than they specify endurance architecture requirements. A jurisdiction can satisfy NIS2 in full while retaining the single-platform dependencies that WP-006 identifies as the primary continuity vulnerability in the public sector decision layer.</p>
+
+  <p>WP-011 §08.3 establishes a revised adoption rule in which H-4b operationalisation is the trigger condition for institutional adoption of viability architecture. But the model does not specify what H-4b operationalisation requires in concrete terms. This Technical Note provides that specification.</p>
+
+  <div class="rb">
+    <p>The diagnostic question this note answers: does the current regulatory and procurement framework make non-adoption of D1–D4 endurance architecture present-costly — or does it make non-adoption administratively acknowledged but consequence-free?</p>
+  </div>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>The Nominal / Operative Distinction</h2>
+
+  <p>WP-011 §04 establishes that nominal institutional liability behaves functionally as absent liability, even when formally acknowledged. The distinction between nominal and operative H-4b is therefore the decisive variable — not the existence of regulatory frameworks but whether they change the adoption cost calculus.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th><span class="tbl-key">Nominal H-4b</span> — Process compliance</th>
+        <th><span class="tbl-key-b">Operative H-4b</span> — Architectural compliance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Primary question</td>
+        <td>Who is responsible?</td>
+        <td>Does it work under stress?</td>
+      </tr>
+      <tr>
+        <td>Audit object</td>
+        <td>Documentation, policies, best-practice adherence</td>
+        <td>D1–D4 structural properties — demonstrably present and measurable</td>
+      </tr>
+      <tr>
+        <td>Compliance vehicle</td>
+        <td>Cloud-provider SLAs, security certifications, management declarations</td>
+        <td>Sovereign hardware, independent logic, out-of-band capability</td>
+      </tr>
+      <tr>
+        <td>Enforcement trigger</td>
+        <td>Incident occurrence or documentation failure</td>
+        <td>Architectural specification absence — independent of incident history</td>
+      </tr>
+      <tr>
+        <td>Cost structure effect</td>
+        <td>Compliance costs are incurred; adoption cost calculus unchanged</td>
+        <td>Non-adoption produces present, attributable, proportionate institutional cost</td>
+      </tr>
+      <tr>
+        <td>Result</td>
+        <td>Compliance</td>
+        <td>Viability</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The structural gap between these two columns is the Architectural Specificity Gap. Closing it requires that audit frameworks specify D1–D4 properties as mandatory architectural requirements — not as process management obligations.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>D1–D4 Audit Metrics</h2>
+
+  <p>WP-006 §07 defines four duration components. This section specifies the minimum audit criteria for each. Each criterion is expressed as a verifiable property: either present and demonstrable, or absent. Where a property is absent, H-4b is nominal for that dimension regardless of process compliance status.</p>
+
+  <!-- D1 -->
+  <div class="metric-block">
+    <div class="metric-header">
+      <span class="metric-dim">D-1</span>
+      <span class="metric-name">Power Endurance</span>
+      <span class="metric-domain">WP-006 §07 · D1</span>
+    </div>
+    <div class="metric-body">
+      <p style="font-family:var(--serif);font-size:.88rem;color:#2a2520;margin-bottom:.85rem;">Decision-critical systems must sustain function across the reference compound stress duration without dependency on external grid availability or external fuel supply chains.</p>
+      <div class="metric-head">
+        <span><span class="pass">■ operative</span> — property present</span>
+        <span><span class="fail">■ nominal</span> — property absent</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Local UPS or generation capacity with documented duration ≥ 72h for decision-critical systems, independent of grid availability.</div>
+        <div class="metric-cell">Reliance on commercial grid continuity, generator fuel subject to external supply chains, or UPS rated below 72h for decision-critical systems.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Fuel or energy source physically on-site or in jurisdiction-controlled reserve, not dependent on real-time procurement.</div>
+        <div class="metric-cell">Energy supply dependent on cloud-provider continuity guarantees or third-party datacenter SLAs without jurisdiction verification rights.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Annual endurance test documented: systems operated on local power without grid input for minimum 8 hours under normal load.</div>
+        <div class="metric-cell">No endurance test conducted; continuity assumed from provider documentation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D2 -->
+  <div class="metric-block">
+    <div class="metric-header">
+      <span class="metric-dim">D-2</span>
+      <span class="metric-name">Data Endurance</span>
+      <span class="metric-domain">WP-006 §07 · D2</span>
+    </div>
+    <div class="metric-body">
+      <p style="font-family:var(--serif);font-size:.88rem;color:#2a2520;margin-bottom:.85rem;">Decision-critical data — registers, operative information, situational awareness data — must remain accessible under conditions of network separation, provider unavailability, or jurisdictional stress.</p>
+      <div class="metric-head">
+        <span><span class="pass">■ operative</span> — property present</span>
+        <span><span class="fail">■ nominal</span> — property absent</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Primary registers for decision-critical functions held in jurisdiction-controlled storage, physically accessible without external network connectivity.</div>
+        <div class="metric-cell">Primary registers held exclusively in hyperscale cloud infrastructure without jurisdiction-controlled local copy or offline access capability.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Offline operational mode tested annually: decision-critical functions can be executed using locally held data for minimum 72h without external data access.</div>
+        <div class="metric-cell">Offline mode not tested or not possible; decision-critical functions require real-time external data access for operation.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Data sovereignty verified: jurisdiction holds cryptographic control of decision-critical data — provider cannot unilaterally revoke, encrypt, or withhold access.</div>
+        <div class="metric-cell">Data access dependent on provider contractual continuity; no cryptographic sovereignty mechanism in place.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D3 -->
+  <div class="metric-block">
+    <div class="metric-header">
+      <span class="metric-dim">D-3</span>
+      <span class="metric-name">Identity Endurance</span>
+      <span class="metric-domain">WP-006 §07 · D3 · WP-003 ITT</span>
+    </div>
+    <div class="metric-body">
+      <p style="font-family:var(--serif);font-size:.88rem;color:#2a2520;margin-bottom:.85rem;">Authentication and authorisation for decision-critical functions must remain operative when external identity infrastructure is unavailable. This is directly linked to the WP-003 Institutional Termination Time concept: identity failure terminates institutional decision capacity irrespective of data and power availability.</p>
+      <div class="metric-head">
+        <span><span class="pass">■ operative</span> — property present</span>
+        <span><span class="fail">■ nominal</span> — property absent</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Local identity authority operative for decision-critical systems: authentication possible without dependency on external PKI, cloud identity provider, or internet connectivity.</div>
+        <div class="metric-cell">Authentication for decision-critical systems dependent on external cloud identity provider (Azure AD, Okta, etc.) with no local fallback.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Credential management for compound stress scenarios documented: who holds fallback credentials, under what conditions they are activated, and how they are cryptographically secured.</div>
+        <div class="metric-cell">Fallback credential procedure undocumented or dependent on provider recovery service with unknown activation time.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Post-quantum cryptographic attestation or equivalent long-duration integrity mechanism in place for decision-critical audit chains. (Reference: TN-002 §03.)</div>
+        <div class="metric-cell">Identity integrity dependent on provider-managed certificate infrastructure with no jurisdiction-controlled long-duration integrity mechanism.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D4 -->
+  <div class="metric-block">
+    <div class="metric-header">
+      <span class="metric-dim">D-4</span>
+      <span class="metric-name">Audit Endurance</span>
+      <span class="metric-domain">WP-006 §07 · D4</span>
+    </div>
+    <div class="metric-body">
+      <p style="font-family:var(--serif);font-size:.88rem;color:#2a2520;margin-bottom:.85rem;">The decision audit trail for actions taken under compound stress must be preserved, tamper-evident, and accessible to post-event accountability processes — even if the primary systems that generated the decisions are no longer available.</p>
+      <div class="metric-head">
+        <span><span class="pass">■ operative</span> — property present</span>
+        <span><span class="fail">■ nominal</span> — property absent</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Decision-critical audit logs held in jurisdiction-controlled storage physically separated from primary systems; cannot be modified or deleted by primary system administrators.</div>
+        <div class="metric-cell">Audit logs held in same cloud environment as primary systems; provider with system access also has audit log access.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Audit log integrity verifiable without access to primary systems: cryptographic hash chain or equivalent mechanism allows post-event verification of log completeness and authenticity.</div>
+        <div class="metric-cell">Audit log integrity depends on primary system availability; no independent verification mechanism in place.</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-cell">Audit log retention covers minimum 5 years in jurisdiction-controlled storage, accessible to oversight authorities without provider intermediation.</div>
+        <div class="metric-cell">Audit log retention dependent on provider contract continuity; oversight access mediated by provider.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Operative H-4b: The Procurement Standard Threshold</h2>
+
+  <p>WP-011 §08 establishes that H-4b becomes operative when non-adoption produces costs that are concrete, attributable, and proportionate to the adoption cost being avoided — independent of whether a failure event has occurred. The D1–D4 metrics in §03 specify what must be present. This section specifies the procurement standard that makes absence of these properties institutionally costly.</p>
+
+  <p>An operative H-4b procurement standard for public sector digital infrastructure has three structural properties:</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Property 1 — Mandatory specification</div>
+    <p>D1–D4 endurance properties are specified as mandatory requirements in public procurement frameworks for decision-critical digital systems — not as optional "best practice" or "security recommendation" elements. A system that does not satisfy D1–D4 criteria cannot be procured for decision-critical functions, regardless of other compliance status.</p>
+  </div>
+
+  <div class="ep-note">
+    <div class="ep-label">Property 2 — Verifiable demonstration</div>
+    <p>Compliance with D1–D4 requirements is demonstrated through auditable evidence of the properties described in §03, not through provider declarations, SLA documentation, or security certifications alone. The audit must be performable by the procuring jurisdiction without provider intermediation.</p>
+  </div>
+
+  <div class="ep-note">
+    <div class="ep-label">Property 3 — Proportionate consequence</div>
+    <p>Non-compliance with D1–D4 requirements produces consequences proportionate to the adoption cost avoided: contract termination rights, procurement exclusion, or regulatory sanction sufficient to make the cost of non-compliance exceed the cost of compliance. Without this property, the standard is nominal regardless of its technical specificity.</p>
+  </div>
+
+  <p>A jurisdiction whose procurement framework satisfies all three properties has operative H-4b for the D1–D4 scope. A jurisdiction whose framework satisfies Properties 1 and 2 but not 3 has a well-specified but nominal standard — the Architectural Specificity Gap is closed but the cost structure is unchanged.</p>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Finland Test: Operative H-4b by 2028</h2>
+
+  <p>WP-011 §05 identifies Finland as a live test case in which H-1, H-2, and H-3 are present but H-4b remains operationally incomplete. DA-005 establishes that Finland is simultaneously among the most attractive physical locations for AI infrastructure in Europe and among the most structurally exposed in terms of public decision-infrastructure continuity.</p>
+
+  <p>The falsification condition FC-4 from WP-011 §07 specifies the test: if Finland adopts continuity architecture for the public sector decision layer before NIS2/CER enforcement becomes operative, without an intervening forcing event, H-4a (political attributability) has demonstrated substitution capacity. If adoption occurs only after enforcement is operative, H-4b is confirmed as the necessary mechanism.</p>
+
+  <p>For this test to be evaluable, the following must be observable by 2028:</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Criterion</th><th>Observable indicator</th><th>H-4b status if present</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Procurement standard</td>
+        <td>VM (Finnish Government ICT Centre) or equivalent central procurement authority has published D1–D4 minimum requirements for new decision-critical system contracts</td>
+        <td>Property 1 satisfied — specification present</td>
+      </tr>
+      <tr>
+        <td>Audit mechanism</td>
+        <td>At least one decision-critical system has undergone independent D1–D4 audit without provider intermediation; methodology documented and repeatable</td>
+        <td>Property 2 satisfied — verification mechanism present</td>
+      </tr>
+      <tr>
+        <td>Enforcement record</td>
+        <td>At least one procurement decision has been affected by D1–D4 non-compliance — either contract modified, delayed, or declined on architectural grounds</td>
+        <td>Property 3 satisfied — cost structure changed</td>
+      </tr>
+      <tr>
+        <td>H-3(t) status</td>
+        <td>Finnish procurement expertise for sovereign D1–D4 infrastructure is documentably available: at least one qualified supplier per dimension in the Finnish or directly accessible Nordic market</td>
+        <td>WP-011 §08.2 H-3(t) above threshold</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>If all four indicators are present by 2028, Finland has operative H-4b for public sector digital infrastructure and the WP-011 prediction is on track. If the procurement standard exists but the enforcement record does not, Finland has nominal H-4b — Property 3 is the residual gap. If neither procurement standard nor audit mechanism exists, H-4b remains absent and NIS2/CER implementation has not closed the Architectural Specificity Gap.</p>
+
+  <div class="rb">
+    <p>The H-3(t) indicator is time-sensitive independently of H-4b. If Finnish procurement expertise for sovereign digital infrastructure is not documentably available by 2028, the H-3(t) atrophy risk identified in WP-011 §08.2 is materialising. This is a separate diagnostic from H-4b status — a jurisdiction can have operative H-4b but an H-3(t) below threshold, producing the trigger-without-execution failure mode.</p>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>What Current EU Regulation Does and Does Not Provide</h2>
+
+  <p>NIS2 advances the H-4b structure in several respects: extended scope, strengthened incident reporting, and management personal liability provisions. These are moves toward operative H-4b. The residual gap is architectural specificity.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Regulatory instrument</th><th>What it specifies</th><th>What it does not specify</th><th>H-4b assessment</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>NIS2 (Directive 2022/2555)</td>
+        <td>Risk management measures, incident reporting, supply chain security, management accountability</td>
+        <td>D1–D4 endurance architecture properties; does not prohibit hyperscale single-platform dependency for decision-critical functions</td>
+        <td><span style="font-family:var(--mono);font-size:.6rem;color:var(--accent);">NOMINAL</span> for D1–D4 scope</td>
+      </tr>
+      <tr>
+        <td>CER Directive (2022/2557)</td>
+        <td>Physical resilience of critical entities; business continuity, risk assessment, incident reporting</td>
+        <td>Digital decision-layer endurance architecture; D1–D4 specifications not referenced</td>
+        <td><span style="font-family:var(--mono);font-size:.6rem;color:var(--accent);">NOMINAL</span> for D1–D4 scope</td>
+      </tr>
+      <tr>
+        <td>DORA (Regulation 2022/2554)</td>
+        <td>ICT risk management for financial sector; resilience testing, third-party risk</td>
+        <td>Sector-specific; does not apply to general public sector decision infrastructure</td>
+        <td><span style="font-family:var(--mono);font-size:.62rem;color:#555;">SECTOR-LIMITED</span></td>
+      </tr>
+      <tr>
+        <td>Procurement standard (hypothetical operative H-4b)</td>
+        <td>D1–D4 mandatory for decision-critical systems; verifiable audit; proportionate enforcement</td>
+        <td>—</td>
+        <td><span style="font-family:var(--mono);font-size:.6rem;color:#0f6e56;">OPERATIVE</span> if Properties 1–3 satisfied</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The instrument that would close the gap does not yet exist at the EU level or in Finnish national procurement frameworks at the specificity required. This is not a failure of the existing instruments — NIS2 and CER were designed to address different failure modes. The D1–D4 architectural requirement falls in the space between them.</p>
+</div>
+
+<!-- §07 Open Questions -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Open Questions</h2>
+
+  <div class="oq">
+    <div class="oq-label">Q-1</div>
+    <p><strong>Duration threshold calibration.</strong> What is the minimum duration for D1 (power endurance) that constitutes the compound stress reference event? WP-001 establishes the Black Period concept; its quantitative calibration to the Finnish public sector load profile has not been conducted in available public analysis. The 72-hour threshold used in §03 is a working minimum derived from DA-001 S2 — it requires domain-specific stress scenario analysis to confirm.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-2</div>
+    <p><strong>H-3(t) atrophy rate.</strong> At what rate is Finnish procurement expertise in sovereign digital infrastructure developing or degrading? This is the critical variable for the §05 H-3(t) indicator. If the talent pool is not documentably growing, the trigger-without-execution failure mode may already be approaching. Quantitative assessment requires labour market data on ICT procurement expertise in Finnish public administration, which is outside the scope of this note.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-3</div>
+    <p><strong>Successful Deferral boundary.</strong> WP-011 §08 FC-6 introduces the Successful Deferral falsification condition: if the threat dissolves before a forcing event, H-4b investment was not required. The technical forcing condition (§8.3) bounds when D1–D4 adoption is structurally necessary. Defining the probability threshold P(catastrophic loss | no adoption) in quantitative terms for the Finnish public sector decision layer requires a risk quantification exercise not attempted in the WP or TN series to date.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-4</div>
+    <p><strong>Minimum viable scope.</strong> Not all public sector systems require D1–D4 compliance. The criteria in §03 apply to decision-critical functions. Defining the boundary between decision-critical and non-decision-critical in Finnish government architecture — i.e. which systems, if unavailable under compound stress, constitute an Institutional Termination Time event in WP-003 terms — is a scoping exercise this note does not resolve.</p>
+  </div>
+</div>
+
+<!-- Cross-references -->
+<div class="xref-block section">
+  <div class="section-id">Viitteet</div>
+  <h2>Cross-references</h2>
+
+  <div class="xref-row">
+    <div class="xref-id">WP-006</div>
+    <div class="xref-text">Continuity Computing: Decision Capacity as a System Invariant Under Compound Stress. Defines the D1–D4 duration components this note operationalises. WP-006 §07 is the required prior reading for the metric specification in §03.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-011</div>
+    <div class="xref-text">Institutional System-4 Architecture for Small-State Viability. §06 identifies the Architectural Specificity Gap this note addresses. §08 (v0.2) establishes the revised adoption rule from which the H-4b operationalisation criteria derive.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-003</div>
+    <div class="xref-text">Institutional Termination Time. The D3 identity endurance criterion (§03) connects directly to the ITT framework: identity failure terminates institutional decision capacity independently of data and power availability.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">TN-002</div>
+    <div class="xref-text">Duration-Capable Edge Intelligence Node. The reference implementation architecture for D1–D4 compliance at the edge computing layer. D3 post-quantum attestation criterion in §03 references TN-002 §03.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">DA-005</div>
+    <div class="xref-text">Digital Infrastructure Allocation Diagnostic. Establishes the Finland paradox: high physical AI infrastructure attractiveness combined with high public decision-infrastructure exposure. Provides the empirical context for the §05 Finland test.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-001</div>
+    <div class="xref-text">Duration Adequacy. Black Period concept and duration threshold basis for the 72-hour working minimum in D1 (§03).</div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    ACI Technical Note No. 003<br>
+    D1–D4 Architectural Audit Metrics<br>
+    Version 1.0 · 2026 · Domain D-3 · D-4
+  </div>
+  <div>
+    Open Working Draft · Subject to revision<br>
+    Aether Continuity Institute<br>
+    aethercontinuity.org
+  </div>
+  <div>
+    Cross-refs: WP-006 · WP-011<br>
+    WP-003 · TN-002 · DA-005<br>
+    &nbsp;
+  </div>
+</footer>
+
+</body>
+</html>

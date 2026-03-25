@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI TN-004 — Decision-Critical System Scoping Tool</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --paper-2: #ede7d8;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --blue: #185fa5;
+  --green: #0f6e56;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 2rem 7rem;
+}
+nav {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.4rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+.nav-home { font-family: var(--mono); font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: '← '; }
+.nav-home:hover { color: var(--ink); }
+.nav-id { font-family: var(--mono); font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.doc-header { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1rem 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: baseline; }
+.doc-id { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+.doc-meta { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.9; }
+h1 { font-family: var(--serif); font-size: 1.75rem; font-weight: 500; letter-spacing: -.01em; margin-bottom: .35rem; line-height: 1.2; }
+.tagline { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--muted); margin-bottom: .3rem; }
+.tagline-fi { font-family: var(--serif); font-size: .92rem; font-style: italic; color: var(--muted); margin-bottom: 2.2rem; }
+.cite-block { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin-bottom: 2.2rem; font-size: .6rem; letter-spacing: .06em; color: var(--muted); line-height: 1.9; }
+.cite-block span { color: var(--ink); font-size: .62rem; }
+.section { margin-bottom: 2.5rem; }
+.section-id { font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+h2 { font-family: var(--serif); font-size: 1.06rem; font-weight: 500; margin-bottom: .75rem; border-bottom: 1px solid var(--rule); padding-bottom: .35rem; }
+h3 { font-family: var(--serif); font-size: .98rem; font-weight: 500; margin: 1.4rem 0 .6rem; }
+p { font-family: var(--serif); font-size: 1rem; line-height: 1.8; color: #2a2520; margin-bottom: .85rem; }
+
+.scope-note { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1rem 0; background: #f0ece4; }
+.scope-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.scope-note p { font-family: var(--serif); font-size: .9rem; line-height: 1.7; margin-bottom: .5rem; color: #2a2520; }
+.scope-note p:last-child { margin-bottom: 0; }
+.rb { border-left: 3px solid var(--ink); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #f0ece4; }
+.rb p { font-family: var(--serif); font-size: .95rem; font-style: italic; margin: 0; color: var(--ink); line-height: 1.7; }
+.ep-note { border-left: 3px solid var(--accent); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #faf5ee; }
+.ep-label { font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ep-note p { font-family: var(--serif); font-size: .92rem; margin: 0; color: #3a2510; line-height: 1.7; }
+.ep-note p + p { margin-top: .6rem; }
+
+/* Tier cards */
+.tier-card { border: 1px solid var(--rule); margin: 1.2rem 0; }
+.tier-header { padding: .65rem 1rem; border-bottom: 1px solid var(--rule); display: flex; align-items: baseline; gap: .8rem; }
+.tier-a .tier-header { background: #fdf0ec; }
+.tier-b .tier-header { background: #f0ece4; }
+.tier-c .tier-header { background: var(--paper-2); }
+.tier-label { font-family: var(--mono); font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 500; }
+.tier-a .tier-label { color: #8b0000; }
+.tier-b .tier-label { color: var(--accent); }
+.tier-c .tier-label { color: var(--muted); }
+.tier-name { font-family: var(--serif); font-size: .98rem; font-weight: 500; color: var(--ink); }
+.tier-body { padding: .85rem 1rem; }
+.tier-body p { font-family: var(--serif); font-size: .9rem; line-height: 1.7; color: #2a2520; margin-bottom: .6rem; }
+.tier-body p:last-child { margin-bottom: 0; }
+.tier-req { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; color: var(--muted); margin-top: .7rem; }
+
+/* Scoping questions */
+.sq-block { border: 1px solid var(--rule); margin: 1rem 0; }
+.sq-header { background: var(--paper-2); border-bottom: 1px solid var(--rule); padding: .55rem 1rem; display: flex; align-items: baseline; gap: .75rem; }
+.sq-id { font-family: var(--mono); font-size: .65rem; letter-spacing: .15em; color: var(--accent); font-weight: 500; }
+.sq-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.sq-body { padding: .75rem 1rem; }
+.sq-q { font-family: var(--serif); font-size: .95rem; font-weight: 500; color: var(--ink); margin-bottom: .4rem; }
+.sq-sub { font-family: var(--serif); font-size: .86rem; color: #3a3530; line-height: 1.65; }
+.sq-tier { font-family: var(--mono); font-size: .52rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .5rem; }
+.sq-tier strong { color: #8b0000; }
+
+/* Flow diagram */
+.flow { border: 1px solid var(--rule); padding: 1.2rem 1.4rem; margin: 1.2rem 0; background: #f0ece4; }
+.flow pre { font-family: var(--mono); font-size: .72rem; line-height: 2; color: var(--ink); white-space: pre; }
+
+/* Tables */
+.tbl { width: 100%; border: 1px solid var(--rule); margin: 1.2rem 0; border-collapse: collapse; }
+.tbl th { font-family: var(--mono); font-size: .56rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: .5rem .7rem; border-bottom: 1px solid var(--rule); text-align: left; background: #f0ece4; }
+.tbl td { font-family: var(--serif); font-size: .88rem; line-height: 1.55; padding: .6rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl-a { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: #8b0000; }
+.tbl-b { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.tbl-c { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* Open questions */
+.oq { margin: 1rem 0; padding: .75rem 1rem; border-left: 2px solid var(--rule); }
+.oq-label { font-family: var(--mono); font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
+.oq p { font-family: var(--serif); font-size: .9rem; margin: 0; line-height: 1.65; color: #2a2520; }
+
+/* Cross-references */
+.xref-block { border-top: 1px solid var(--rule); margin-top: 2rem; padding-top: 1.5rem; }
+.xref-row { display: grid; grid-template-columns: 5rem 1fr; gap: .75rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+.xref-row:last-child { border-bottom: none; }
+.xref-id { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .1em; padding-top: .1rem; }
+.xref-text { font-family: var(--serif); font-size: .88rem; line-height: 1.6; color: #2a2520; }
+
+footer { border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1rem; font-size: .58rem; letter-spacing: .1em; color: var(--muted); line-height: 2; display: flex; justify-content: space-between; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">TN · 004 · 2026</span>
+</nav>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · TN-004 · Technical Note</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-3 · D-4 · Version 1.0 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Subject to revision<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Decision-Critical System Scoping Tool</h1>
+<p class="tagline">Criteria for Determining Which Public Sector Systems Require D1–D4 Audit Control</p>
+<p class="tagline-fi">Päätöksentekokriittisyyden luokittelutyökalu: perusteet julkisen sektorin järjestelmien D1–D4-auditoinnin piiriin asettamiselle</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Decision-Critical System Scoping Tool: Criteria for Determining Which Public Sector Systems Require D1–D4 Audit Control. ACI Technical Note No. 004, v1.0. Available at: https://aethercontinuity.org<br>
+  <span>Theoretical basis —</span> WP-003 (Institutional Termination Time), WP-011 §08 (Revised Core Mechanism). This note operationalises the Q-4 open question from TN-003: defining the boundary between decision-critical and non-decision-critical in public sector digital architecture.<br>
+  <span>Cross-references —</span> WP-003 · WP-006 · WP-011 · TN-003 (D1–D4 Architectural Audit Metrics) · DA-006 (Labour Market Allocation Diagnostic)
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Purpose and Scope</h2>
+
+  <div class="scope-note">
+    <div class="scope-label">Note on scope</div>
+    <p>This note specifies the classification criteria for determining which public sector digital systems fall within the D1–D4 audit control requirement established in TN-003. It does not assess any specific system or recommend specific procurement exclusions. It provides a replicable scoping methodology applicable to any jurisdiction evaluating its D1–D4 audit scope.</p>
+    <p>The scoping tool is designed to be applied before procurement decisions, not after. Its purpose is to establish, at the architecture design stage, whether a system's failure under compound stress conditions would constitute an Institutional Termination Time event in the sense of WP-003.</p>
+  </div>
+
+  <p>TN-003 Q-4 identifies the boundary problem: not all public sector systems require D1–D4 compliance. Applying the full TN-003 audit framework universally produces two failure modes with opposite costs. Over-scoping makes the framework administratively unworkable — every system becomes "critical" and the framework loses discriminative power. Under-scoping leaves genuinely decision-critical systems under standard ICT governance, producing NIS2-compliant but structurally vulnerable infrastructure.</p>
+
+  <div class="rb">
+    <p>The scoping question is not: is this system important? The scoping question is: does loss of this system under compound stress conditions terminate, paralyse, or permanently compromise the institution's decision-making capacity or the accountability trail for decisions already made?</p>
+  </div>
+
+  <p>Importance and decision-criticality are not the same property. A payroll system may be important; its loss does not terminate institutional decision capacity. An authentication layer for classified executive communications may serve few users; its loss terminates decision capacity immediately and irreversibly for those functions.</p>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Why Scope Matters: The Two Scoping Errors</h2>
+
+  <p>The two scoping errors have asymmetric consequences. Understanding their structure is necessary before applying the classification criteria.</p>
+
+  <div class="tier-card tier-a" style="margin-bottom:1rem;">
+    <div class="tier-header">
+      <span class="tier-label">Error A</span>
+      <span class="tier-name">Over-securitisation</span>
+    </div>
+    <div class="tier-body">
+      <p>Too many systems are classified as decision-critical. D1–D4 audit requirements are imposed on systems whose loss would be disruptive but not institutionally terminal. Consequences: high procurement cost, slow procurement cycles, administrative resistance, and eventual framework abandonment as the compliance burden exceeds political tolerance. The framework retains formal existence but loses operative effect — a nominal standard in the sense of WP-011 §04.</p>
+    </div>
+  </div>
+
+  <div class="tier-card tier-c">
+    <div class="tier-header">
+      <span class="tier-label">Error B</span>
+      <span class="tier-name">False normality</span>
+    </div>
+    <div class="tier-body">
+      <p>Genuinely decision-critical systems remain under standard ICT governance. The system satisfies NIS2 process requirements, holds security certifications, and is managed by a reputable provider. Under compound stress, the D1–D4 endurance properties are absent. The institution is fully compliant and structurally exposed simultaneously — the Architectural Specificity Gap in operational form.</p>
+    </div>
+  </div>
+
+  <p>The scoping tool is the mechanism that holds these two errors apart. Its discriminative power depends entirely on the precision of the decision-criticality criteria — which is why the criteria must be expressed in structural terms, not in terms of operational importance, strategic value, or political sensitivity.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Tier Classification</h2>
+
+  <p>Three tiers are defined. Tier assignment determines audit requirement, not organisational priority. A Tier C system may be operationally important; it is not subject to D1–D4 audit control because its loss does not satisfy the termination criteria.</p>
+
+  <div class="tier-card tier-a">
+    <div class="tier-header">
+      <span class="tier-label">Tier A</span>
+      <span class="tier-name">Decision-Critical</span>
+    </div>
+    <div class="tier-body">
+      <p>A system is Tier A if its loss under compound stress satisfies at least one of the following terminal conditions:</p>
+      <p><strong>TC-1 Decision termination:</strong> loss prevents a legally or operationally authorised decision-maker from issuing, recording, or transmitting a binding decision for the duration of the stress event.</p>
+      <p><strong>TC-2 Execution termination:</strong> loss prevents the implementation of decisions already made — blocking the command, authentication, or authorisation pathway through which decisions are acted upon.</p>
+      <p><strong>TC-3 Accountability termination:</strong> loss permanently destroys or renders inaccessible the audit trail required to verify, after the fact, who decided what, with what authority, and under what conditions.</p>
+      <div class="tier-req">Requirements: D1 · D2 · D3 · D4 full audit · TN-003 operative H-4b · procurement veto on non-compliance</div>
+    </div>
+  </div>
+
+  <div class="tier-card tier-b">
+    <div class="tier-header">
+      <span class="tier-label">Tier B</span>
+      <span class="tier-name">Mission-Critical — not Decision-Critical</span>
+    </div>
+    <div class="tier-body">
+      <p>A system is Tier B if its loss causes significant operational disruption but does not satisfy TC-1, TC-2, or TC-3. The institution retains the ability to make, execute, and audit decisions, but service delivery to populations or internal administrative functions is degraded. Recovery is necessary but not immediate for institutional function.</p>
+      <p>Tier B systems require NIS2/CER compliance plus partial D1/D2 endurance assessment. They do not require the full TN-003 audit framework and are not subject to automatic procurement veto for D3/D4 non-compliance.</p>
+      <div class="tier-req">Requirements: NIS2 · CER · D1/D2 partial assessment · standard procurement governance</div>
+    </div>
+  </div>
+
+  <div class="tier-card tier-c">
+    <div class="tier-header">
+      <span class="tier-label">Tier C</span>
+      <span class="tier-name">Administrative — Non-Critical</span>
+    </div>
+    <div class="tier-body">
+      <p>A system is Tier C if its loss produces administrative inconvenience or delays routine processes but has no effect on institutional decision capacity, service execution for critical populations, or audit trail integrity. Recovery can be deferred without institutional consequence during a compound stress event.</p>
+      <div class="tier-req">Requirements: standard ICT governance · standard information security · no D1–D4 mandate</div>
+    </div>
+  </div>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Five-Question Scoping Test</h2>
+
+  <p>The following five questions operationalise the Tier A terminal conditions. A system is assigned Tier A if it answers Yes to Q-1 alone, or Yes to any three of five questions, or Yes to Q-1 plus Yes to Q-4 or Q-5. Any other combination indicates Tier B or C.</p>
+
+  <div class="sq-block">
+    <div class="sq-header">
+      <span class="sq-id">Q-1</span>
+      <span class="sq-label">Decision dependency</span>
+    </div>
+    <div class="sq-body">
+      <div class="sq-q">Is this system required for a legally or operationally authorised decision-maker to issue a binding decision?</div>
+      <div class="sq-sub">Binding decisions include: executive orders, regulatory determinations, emergency declarations, procurement authorisations, and any decision whose legal effect depends on an authenticated, recorded act by an identified official. The question is not whether the system is normally used for such decisions — it is whether the decision cannot be made or recorded without the system under stress conditions when alternative channels are also degraded.</div>
+      <div class="sq-tier"><strong>Yes alone → Tier A (TC-1).</strong> Yes is the highest-weight response in the test.</div>
+    </div>
+  </div>
+
+  <div class="sq-block">
+    <div class="sq-header">
+      <span class="sq-id">Q-2</span>
+      <span class="sq-label">Time sensitivity</span>
+    </div>
+    <div class="sq-body">
+      <div class="sq-q">Does loss of this system produce decision-relevant degradation within the 72-hour compound stress reference window?</div>
+      <div class="sq-sub">Degradation is decision-relevant if it affects the ability to make, execute, or audit decisions — not merely to deliver services. The 72-hour window is the D1 reference duration from TN-003. A system whose loss produces decision degradation after 72 hours is Tier B in this dimension; degradation within 72 hours is a Tier A signal.</div>
+      <div class="sq-tier">Yes contributes to Tier A threshold. Yes + Q-1 → Tier A confirmed.</div>
+    </div>
+  </div>
+
+  <div class="sq-block">
+    <div class="sq-header">
+      <span class="sq-id">Q-3</span>
+      <span class="sq-label">Identity dependency</span>
+    </div>
+    <div class="sq-body">
+      <div class="sq-q">Is authentication, authorisation, or identity verification for decision-critical functions dependent on this system or its external provider chain?</div>
+      <div class="sq-sub">This question targets the D3 dimension. A system need not itself be a decision system to satisfy TC-1 via identity dependency: if its loss causes the authentication layer for decision systems to fail, the downstream effect is terminal in the TC-1 sense. The provider chain question is material: if the system depends on an external identity provider (cloud SSO, PKI authority) whose availability is not jurisdiction-controlled, the answer is Yes even if the system itself is locally hosted.</div>
+      <div class="sq-tier">Yes contributes to Tier A threshold. Yes + Q-1 → Tier A (TC-1 via D3 pathway).</div>
+    </div>
+  </div>
+
+  <div class="sq-block">
+    <div class="sq-header">
+      <span class="sq-id">Q-4</span>
+      <span class="sq-label">Audit dependency</span>
+    </div>
+    <div class="sq-body">
+      <div class="sq-q">Would loss of this system permanently destroy or render inaccessible the audit trail required to verify decisions made during the stress event?</div>
+      <div class="sq-sub">This question targets TC-3 directly. Permanent loss is the key qualifier: if the audit trail can be reconstructed from other sources within a reasonable post-event period, the loss is disruptive but not terminal. If the trail is irretrievably gone — because logs were held exclusively in the failed system, or because the cryptographic integrity chain is broken — TC-3 is satisfied. "Decisions made during the stress event" includes decisions made in the period before the system failed, if those logs were held in the failed system.</div>
+      <div class="sq-tier">Yes contributes to Tier A threshold. Yes + Q-1 → Tier A (TC-3 pathway).</div>
+    </div>
+  </div>
+
+  <div class="sq-block">
+    <div class="sq-header">
+      <span class="sq-id">Q-5</span>
+      <span class="sq-label">Compound stress amplification</span>
+    </div>
+    <div class="sq-body">
+      <div class="sq-q">Does loss of this system increase the failure probability or degradation severity of other systems that satisfy Q-1, Q-3, or Q-4?</div>
+      <div class="sq-sub">This question captures cascade dependencies. A system may not itself be decision-critical by TC-1 through TC-3, but its failure may remove a load-bearing dependency that causes directly decision-critical systems to fail. Cascade effects are structurally similar to the compound stress amplification mechanism in WP-004 Variable I. A Yes answer here makes the system decision-critical by structural position even if not by function — its loss triggers downstream terminal conditions.</div>
+      <div class="sq-tier">Yes + Q-1 → Tier A (cascade pathway). Yes alone with two other Yes answers → Tier A.</div>
+    </div>
+  </div>
+
+  <div class="ep-note" style="margin-top:1.4rem;">
+    <div class="ep-label">Scoping rule summary</div>
+    <p>Tier A: Q-1 alone; or any three of five; or Q-1 + (Q-4 or Q-5).</p>
+    <p>Tier B: Q-2 or Q-3 alone without Q-1; or exactly two Yes answers without Q-1. Q-4 alone — without Q-1 or a three-question convergence — indicates elevated review but does not trigger Tier A. Audit trail loss is terminal only when decision-critical functions (Q-1) are at stake; standalone audit dependency without decision dependency is a serious governance risk but not an ITT condition.</p>
+    <p>Tier C: Zero or one Yes answer with no Q-1. Standard governance applies.</p>
+  </div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Finland Reference Cases</h2>
+
+  <p>The following examples apply the scoping test to system categories typical of Finnish public sector digital architecture. These are structural observations, not assessments of specific systems. Actual classification requires the scoping test to be applied to the specific technical and operational configuration of each system.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>System category</th><th>Q-1</th><th>Q-2</th><th>Q-3</th><th>Q-4</th><th>Q-5</th><th>Probable tier</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Government executive authentication layer (suomi.fi identity, strong authentication for ministerial systems)</td>
+        <td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+        <td><span class="tbl-a">Tier A</span> — TC-1, TC-3 via D3 cascade</td>
+      </tr>
+      <tr>
+        <td>Cabinet decision documentation and registry (secure communications for government decisions)</td>
+        <td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td>
+        <td><span class="tbl-a">Tier A</span> — TC-1, TC-3 direct</td>
+      </tr>
+      <tr>
+        <td>Critical infrastructure command authorisation (system through which emergency powers are issued and authenticated)</td>
+        <td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+        <td><span class="tbl-a">Tier A</span> — TC-1, TC-2</td>
+      </tr>
+      <tr>
+        <td>Wellbeing area critical operational situational picture (system guiding immediate resource allocation decisions)</td>
+        <td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td>
+        <td><span class="tbl-a">Tier A</span> — three Yes including Q-1</td>
+      </tr>
+      <tr>
+        <td>State payment execution system (core layer — loss blocks implementation of authorised decisions)</td>
+        <td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td>
+        <td><span class="tbl-a">Tier A</span> — TC-2, TC-3 partial</td>
+      </tr>
+      <tr>
+        <td>Public service case management systems (permit processing, benefits administration)</td>
+        <td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td>
+        <td><span class="tbl-b">Tier B</span> — operationally significant, not terminal</td>
+      </tr>
+      <tr>
+        <td>HR and personnel administration systems</td>
+        <td>No</td><td>No</td><td>No</td><td>No</td><td>No</td>
+        <td><span class="tbl-c">Tier C</span> — administrative, no decision dependency</td>
+      </tr>
+      <tr>
+        <td>Internal intranets, communication portals, non-critical reporting tools</td>
+        <td>No</td><td>No</td><td>No</td><td>No</td><td>No</td>
+        <td><span class="tbl-c">Tier C</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The authentication layer (row 1) illustrates the cascade dependency mechanism: it is not itself a decision system, but its loss terminates Q-1 systems downstream. This is the Q-5 amplification pathway — the system is Tier A by structural position, not by direct function.</p>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>RKOM Governance Interface</h2>
+
+  <p>The scoping tool is the entry point for the institutional governance mechanism that WP-011 requires for operative H-4b. Without a defined scope, an H-4b enforcement mechanism either lacks a target (nominal) or expands without boundary (operationally unworkable). The Tier A/B/C classification provides the scope boundary.</p>
+
+  <div class="flow">
+    <pre>
+System identified for procurement or renewal
+        │
+        ▼
+Scoping test applied (Q-1 through Q-5)
+        │
+        ├─ Tier C → Standard ICT governance proceeds
+        │
+        ├─ Tier B → NIS2/CER + partial D1/D2 assessment required
+        │
+        └─ Tier A → TN-003 D1–D4 full audit required
+                        │
+                        ├─ Audit PASS → procurement proceeds
+                        │
+                        └─ Audit FAIL → procurement blocked
+                                │
+                                └─ Override requires:
+                                   explicit government-level decision
+                                   named accountable authority
+                                   documented risk acceptance
+                                   time-bounded remediation plan</pre>
+  </div>
+
+  <p>The override pathway is structurally necessary. There will be cases where a Tier A system cannot satisfy D1–D4 requirements within procurement timelines — because H-3(t) is below threshold (TN-003 §05 Q-4), because no compliant supplier exists, or because transition costs are prohibitive in the short term. The override mechanism allows government-level political decision to accept documented architectural risk explicitly, rather than allowing nominal compliance to obscure the gap.</p>
+
+  <p>The named accountable authority requirement is the H-4a/H-4b interface. When operative H-4b cannot be established through procurement enforcement (Property 3 of TN-003 §04), the override mechanism converts the architectural gap into a political liability: a named individual or body has explicitly accepted documented risk on behalf of the institution. This does not resolve the technical exposure — it ensures that the exposure is not invisible. The named authority bears personal or institutional accountability if the documented risk materialises. This is the mechanism through which H-4a (political attributability) can function as a partial substitute for H-4b under conditions where operative H-4b is temporarily unachievable.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">RKOM scope boundary</div>
+    <p>An RKOM or equivalent resilience oversight function applying this scoping tool should expect that Tier A systems will constitute a small fraction of total public sector digital systems — likely under 5% by count, but representing the systems whose failure under compound stress would produce the WP-003 Institutional Termination Time condition. The scoping tool's value is precisely that it concentrates enforcement resources on this small fraction rather than distributing them across the full ICT estate.</p>
+  </div>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Open Questions</h2>
+
+  <div class="oq">
+    <div class="oq-label">Q-1</div>
+    <p><strong>Dynamic reclassification.</strong> System architecture changes over time. A system initially classified as Tier C may become Tier A if other systems are deprecated and their decision-critical functions migrate to it. The scoping tool specifies criteria for classification at a point in time; a governance mechanism for periodic reclassification is outside the scope of this note and has not been specified in the ACI series.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-2</div>
+    <p><strong>Provider dependency inheritance.</strong> Q-3 asks whether identity dependency extends through the external provider chain. The full chain may be several layers deep — a locally hosted system may authenticate through a cloud identity provider, which authenticates through a third-party certificate authority, which relies on a root certificate managed by a foreign entity. The scoping test treats the answer as Yes if any link in the chain is not jurisdiction-controlled. Tracing the full chain in practice may require technical analysis not available at procurement design stage.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-3</div>
+    <p><strong>Municipal and regional boundary.</strong> The reference cases in §05 focus on central government. The scoping criteria are structurally identical at municipal and wellbeing area level — a municipal authentication layer serving emergency services satisfies TC-1 for municipal decision capacity. Whether the same D1–D4 audit mandate applies to municipal Tier A systems, or whether a proportionality adjustment is warranted for smaller institutions, is a governance design question not resolved in this note.</p>
+  </div>
+
+  <div class="oq">
+    <div class="oq-label">Q-4</div>
+    <p><strong>Interaction with DA-006 Labour Continuity Reserve.</strong> DA-006 identifies that decision-critical public sector functions face a structural workforce risk from the atrophy of experienced personnel — the L-4 segmentation finding. A Tier A system with adequate D1–D4 architectural compliance may still fail if the human operators required to run it under stress conditions are unavailable. The intersection of the TN-004 technical scoping tool and the DA-006 workforce reserve diagnostic has not been addressed in the ACI series.</p>
+  </div>
+</div>
+
+<!-- Cross-references -->
+<div class="xref-block section">
+  <div class="section-id">Viitteet</div>
+  <h2>Cross-references</h2>
+
+  <div class="xref-row">
+    <div class="xref-id">WP-003</div>
+    <div class="xref-text">Institutional Termination Time. The TC-1 through TC-3 terminal conditions in §03 derive from the ITT framework. A system whose loss produces a TC-1 event terminates the institution's decision capacity in the sense WP-003 defines.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">TN-003</div>
+    <div class="xref-text">D1–D4 Architectural Audit Metrics. Primary companion note. TN-004 answers TN-003 Q-4: which systems fall within the D1–D4 audit scope. Tier A classification in TN-004 triggers the full TN-003 audit requirement.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-011</div>
+    <div class="xref-text">Institutional System-4 Architecture. The RKOM governance interface in §06 is the H-4b enforcement mechanism WP-011 identifies as the missing operative component. TN-004 provides the scope boundary that makes that mechanism workable rather than boundless.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-006</div>
+    <div class="xref-text">Continuity Computing. D1–D4 definitions. The Q-2 72-hour reference window derives from the D1 power endurance parameter in WP-006 §07.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">DA-006</div>
+    <div class="xref-text">Labour Market Allocation Diagnostic. Q-4 open question above identifies the unresolved intersection between TN-004 technical scoping and the DA-006 Labour Continuity Reserve finding: a technically compliant Tier A system may still fail if the workforce to operate it under stress is unavailable.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-004</div>
+    <div class="xref-text">Recovery Capacity Invariants. Q-5 (compound stress amplification) maps to WP-004 Variable I (Variation): cascade failure through dependency chains reduces the institution's range of available responses under stress.</div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    ACI Technical Note No. 004<br>
+    Decision-Critical System Scoping Tool<br>
+    Version 1.0 · 2026 · Domain D-3 · D-4
+  </div>
+  <div>
+    Open Working Draft · Subject to revision<br>
+    Aether Continuity Institute<br>
+    aethercontinuity.org
+  </div>
+  <div>
+    Cross-refs: WP-003 · WP-006 · WP-011<br>
+    TN-003 · DA-006 · WP-004<br>
+    &nbsp;
+  </div>
+</footer>
+
+</body>
+</html>

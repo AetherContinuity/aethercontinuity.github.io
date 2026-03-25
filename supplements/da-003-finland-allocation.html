@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DA-003 — Infrastructure Allocation Diagnostic: Finland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f7f4ee;--rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--mono);line-height:1.7;max-width:720px;margin:0 auto;padding:3.5rem 2rem 7rem}
+.doc-header{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:baseline}
+.doc-id{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+.doc-meta{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+h1{font-family:var(--serif);font-size:1.8rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.35rem;line-height:1.2}
+.tagline{font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:.3rem}
+.tagline-fi{font-family:var(--serif);font-size:.92rem;font-style:italic;color:var(--muted);margin-bottom:2.4rem}
+.cite-block{border:1px solid var(--rule);padding:.9rem 1.1rem;margin-bottom:2.4rem;font-size:.6rem;letter-spacing:.06em;color:var(--muted);line-height:1.9}
+.cite-block span{color:var(--ink);font-size:.62rem}
+.section{margin-bottom:2.5rem}
+.section-id{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+h2{font-family:var(--serif);font-size:1.06rem;font-weight:500;margin-bottom:.75rem;border-bottom:1px solid var(--rule);padding-bottom:.35rem}
+p{font-family:var(--serif);font-size:1rem;line-height:1.8;color:#2a2520;margin-bottom:.85rem}
+.bi{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem}
+.bi-col p{font-family:var(--serif);font-size:.92rem;line-height:1.75;color:#2a2520;margin-bottom:.6rem}
+.lang-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.tbl{width:100%;border:1px solid var(--rule);margin:1.2rem 0;border-collapse:collapse}
+.tbl th{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;background:#f0ece4}
+.tbl td{font-family:var(--serif);font-size:.88rem;line-height:1.55;padding:.6rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl-key{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.08em}
+.tbl-ok{font-family:var(--mono);font-size:.62rem;color:#4a7a4a}
+.tbl-warn{font-family:var(--mono);font-size:.62rem;color:#8b7a3a}
+.tbl-hi{font-family:var(--mono);font-size:.62rem;color:#8b4513}
+.rb{border-left:3px solid var(--ink);padding:.85rem 1.2rem;margin:1.2rem 0;background:#f0ece4}
+.rb p{font-family:var(--serif);font-size:.95rem;font-style:italic;margin:0;color:var(--ink);line-height:1.7}
+.ep-note{border-left:3px solid var(--accent);padding:.85rem 1.2rem;margin:1.2rem 0;background:#faf5ee}
+.ep-label{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+.ep-note p{font-family:var(--serif);font-size:.92rem;margin:0;color:#3a2510;line-height:1.7}
+/* indicator */
+.ind{border:1px solid var(--rule);margin:1.4rem 0}
+.ind-h{display:grid;grid-template-columns:80px 1fr 120px;background:#f0ece4;border-bottom:1px solid var(--rule)}
+.ind-h>div{padding:.5rem .8rem;border-right:1px solid var(--rule)}
+.ind-h>div:last-child{border-right:none}
+.i-id{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.1em}
+.i-name{font-family:var(--mono);font-size:.6rem;color:var(--ink);letter-spacing:.05em;line-height:1.5}
+.i-verd{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-align:right;line-height:1.5}
+.ok{color:#4a7a4a}.warn{color:#8b7a3a}.breach{color:#8b4513}.pnd{color:var(--muted)}
+.ind-b{padding:.9rem 1rem}
+.ind-b p{font-family:var(--serif);font-size:.9rem;line-height:1.7;color:#2a2520;margin-bottom:.6rem}
+.ind-b p:last-child{margin-bottom:0}
+/* calc */
+.calc{border:1px solid var(--rule);margin:.8rem 0}
+.cr{display:grid;grid-template-columns:210px 1fr;padding:.4rem .7rem;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:.63rem}
+.cr:last-child{border-bottom:none}
+.cl{color:var(--muted)}
+.cv{color:var(--ink)}.cv.ok{color:#4a7a4a}.cv.warn{color:#8b7a3a}.cv.hi{color:#8b4513}
+/* findings */
+.find{border:1px solid var(--rule);margin:1.2rem 0}
+.find-h{display:grid;grid-template-columns:110px 1fr 90px;background:#f0ece4;border-bottom:1px solid var(--rule)}
+.find-h>div{padding:.5rem .8rem;font-family:var(--mono);font-size:.6rem;border-right:1px solid var(--rule)}
+.find-h>div:last-child{border-right:none}
+.f-id{color:var(--accent);letter-spacing:.08em}
+.find-b{padding:.9rem 1rem}
+.find-b p{font-family:var(--serif);font-size:.9rem;line-height:1.7;color:#2a2520;margin-bottom:.6rem}
+.find-b p:last-child{margin-bottom:0}
+/* verdict */
+.verdict{border:2px solid var(--ink);padding:1.4rem 1.6rem;margin:2.5rem 0}
+.v-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.v-zone{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin-bottom:.6rem}
+.v-body{font-family:var(--serif);font-size:.92rem;line-height:1.75;color:#2a2520}
+/* appendix */
+.app-head{font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule)}
+/* xref */
+.xb{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.xl{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.xr{display:grid;grid-template-columns:80px 1fr;gap:.8rem;padding:.5rem 0;border-top:1px solid var(--rule)}
+.xr:last-child{border-bottom:1px solid var(--rule)}
+.xi{font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.1em}
+.xd{font-family:var(--serif);font-size:.88rem;color:#3a3530;line-height:1.5}
+.doc-footer{border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:3.5rem;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:2.1}
+@media(max-width:580px){.bi{grid-template-columns:1fr}.ind-h{grid-template-columns:65px 1fr 90px}.find-h{grid-template-columns:90px 1fr 70px}}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <span class="doc-id">ACI · DA-003 · Diagnostic Assessment</span>
+  <div class="doc-meta">Domain D-1 · D-4 · Version 6.0 · March 2026<br>Open Working Draft · Subject to revision<br>Companion to WP-008</div>
+</div>
+
+<h1>Infrastructure Allocation Diagnostic: Finland</h1>
+<p class="tagline">A structural assessment of electricity infrastructure allocation between consumption-binding and stability-providing capacity</p>
+<p class="tagline-fi">Rakenteellinen arviointi sähköinfrastruktuurin allokaatiosta kulutussitovan ja vakaustuottavan kapasiteetin välillä</p>
+
+<div class="cite-block">
+  <span>Cite as</span> — Aether Continuity Institute (ACI). (2026). Infrastructure Allocation Diagnostic: Finland. ACI Diagnostic Assessment No. 003, v3.0. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references</span> — WP-001 (Duration Adequacy) · WP-004 (Recovery Capacity Invariants) · WP-005 (Compound Stress Finland) · WP-008 (Institutional Allocation) · DA-001 · Ω-0<br>
+  <span>Companion to</span> — WP-008. Operationalises WP-008 indicators I–1 through I–5 using structural Finnish energy system data.<br>
+  <span>Evidence basis</span> — Structural parameters: FDCA capacity registries · Fingrid annual statistics · published project specifications · LCP Delta · Energy Storage News. Real-time operational data is not used as primary evidence; see Appendix A.
+</div>
+
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract / Tiivistelmä</div>
+  <div class="bi">
+    <div class="bi-col">
+      <div class="lang-label">English</div>
+      <p>WP-008 establishes that electrified economies must simultaneously support consumption and system stability, and that the balance between these functions emerges from cumulative infrastructure investment decisions. This assessment applies WP-008's five allocation indicators to Finland using structural capacity data.</p>
+      <p>Electricity systems operate across multiple temporal layers. Short-duration stability (seconds to hours) is the domain of frequency response and battery storage. Multi-day endurance — the layer relevant to this diagnostic — depends on dispatchable generation and regional energy reservoirs. These layers are physically distinct; infrastructure adequate at one layer is not necessarily adequate at another.</p>
+      <p>Aggregate capacity indicators measured in megawatts suggest a balanced allocation. When corrected for duration — the energy integral required to sustain demand across a Black Period — the balance changes fundamentally. Finland's battery storage fleet, classified as stability-providing infrastructure, can sustain system demand for approximately nine minutes at the scale of a Black Period energy requirement. Each new hyperscale datacenter facility adds an energy commitment that exceeds the largest concurrent battery storage project by a factor of 360.</p>
+      <p>This is an allocation finding. It concerns the structural relationship between long-horizon load commitments and short-duration flexibility assets — not the adequacy of dispatchable generation, which remains substantial.</p>
+    </div>
+    <div class="bi-col">
+      <div class="lang-label">Suomi</div>
+      <p>WP-008 osoittaa, että elektrifioituneiden talouksien on ylläpidettävä samanaikaisesti sekä kulutusta tukevaa että järjestelmän vakautta tuottavaa infrastruktuuria. Tämä arviointi soveltaa WP-008:n viittä allokaatioindikaattoria Suomeen käyttäen rakenteellista kapasiteettidataa.</p>
+      <p>Aggregoitu megawattipohjainen tarkastelu antaa tasapainoiselta näyttävän kuvan. Kun arviointi korjataan kestoisuudella — Black Period -jakson läpi tarvittavalla energiaintegraatilla — tasapaino muuttuu oleellisesti. Suomen akkuvarasto, joka luokitellaan vakaustuottavaksi infrastruktuuriksi, kattaa noin yhdeksän minuuttia Black Period -vaatimuksesta.</p>
+      <p>Tämä on allokaatiolöydös, ei kapasiteettilöydös. Se koskee pitkäaikaisten kuormitussitoumusten ja lyhytkestoisten joustavuusresurssien rakenteellista suhdetta.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="section">
+  <div class="section-id">Executive Summary</div>
+  <h2>Summary</h2>
+  <p>This diagnostic applies the infrastructure allocation framework from ACI Working Paper 008 to the Finnish electricity system. The analysis distinguishes between two structural infrastructure functions: consumption-binding investments that create long-term continuous electricity demand, and stability-providing assets that increase system flexibility and resilience.</p>
+  <p>Aggregate capacity comparisons in megawatts suggest the Finnish system maintains a relatively balanced relationship between new datacenter demand and stability infrastructure. When evaluated using energy duration — the quantity required to sustain demand through a prolonged stress interval — the picture changes.</p>
+  <p>Battery storage systems provide valuable short-duration operational stability services. Their total stored energy remains very small relative to the multi-day energy requirement implied by continuous load growth. This produces an indicator contradiction: MW-based allocation metrics appear adequate; duration-corrected metrics reveal a widening endurance gap between short-duration flexibility assets and long-horizon load commitments.</p>
+  <p>This finding does not indicate an immediate operational deficit. Finland retains substantial dispatchable generation capacity and strong Nordic interconnections. The diagnostic observation concerns allocation trajectory: stability infrastructure primarily operates at the timescale of minutes to hours rather than days, while new continuous load commitments extend across decades. Whether this gap requires a response — and what kind — is outside the scope of this diagnostic. This diagnostic therefore identifies a duration allocation gap, not an adequacy failure.</p>
+</div>
+
+
+<!-- §01 PURPOSE -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Purpose and Methodological Scope</h2>
+
+  <p>This diagnostic evaluates the structural allocation of electricity infrastructure in Finland between consumption-binding load and stability-providing capacity. The objective is not to assess momentary system operation, but the long-term allocation balance that determines system continuity across extended stress intervals.</p>
+
+  <p>The distinction is methodological. Momentary operational snapshots capture the instantaneous balance between generation and load. Structural allocation analysis captures how infrastructure investment decisions cumulatively shape the system's endurance properties — properties that become relevant only during sustained stress, not during normal operation.</p>
+
+  <div class="rb"><p>DA-003 is not a Fingrid dashboard. It is a structural diagnostic. The evidence base is infrastructure capacity registries, system statistics, and published project pipelines — not real-time API readings.</p></div>
+
+  <p>The five allocation indicators (I–1 through I–5) operate on two analytical layers:</p>
+  <table class="tbl">
+    <tr><th>Layer</th><th>Indicators</th><th>What they measure</th></tr>
+    <tr><td>Physical system allocation</td><td><span class="tbl-key">I–1, I–4</span></td><td>Capacity and duration ratios derived from infrastructure physics — reproducible from public data</td></tr>
+    <tr><td>Institutional allocation dynamics</td><td><span class="tbl-key">I–2, I–3, I–5</span></td><td>Market structure, energy security, and planning timelines — structural estimates requiring interpretive judgment</td></tr>
+  </table>
+
+  <p>The indicators operate within a four-layer temporal framework that maps the distinct timescales of electricity system function:</p>
+  <table class="tbl">
+    <tr><th>Layer</th><th>Timescale</th><th>Primary assets</th><th>DA-003 scope</th></tr>
+    <tr><td>L1 · Stability</td><td>Seconds → hours</td><td>BESS, synchronous inertia, FCR / aFRR</td><td>Contextual only — not the diagnostic layer</td></tr>
+    <tr><td>L2 · Operational energy</td><td>Hours → days</td><td>Dispatchable generation, interconnectors</td><td>Partial — I–1, I–3, I–5</td></tr>
+    <tr><td><strong>L3 · Strategic endurance</strong></td><td><strong>Days → weeks</strong></td><td><strong>Nuclear, hydro, Nordic reservoir</strong></td><td><strong>Primary — I–4, Black Period</strong></td></tr>
+    <tr><td>L4 · Investment horizon</td><td>Years → decades</td><td>Infrastructure commitment, allocation trajectory</td><td>Primary — I–1 trajectory, I–2, WP-008 framework</td></tr>
+  </table>
+
+  <p>DA-003 operates primarily at L3 and L4. Its diagnostic finding — the indicator contradiction between I–1 (MW) and I–4 (MWh) — is only visible when the L3 timescale is used as the endurance reference. At L1 timescales, BESS performs exactly as designed. The gap is not a BESS failure; it is a classification boundary that becomes diagnostically relevant at L3.</p>
+
+  <p>The two layers address different questions. The operational layer asks: what is the system doing now? The allocation layer asks: what endurance properties has the system accumulated through its investment history, and what trajectory is it on? DA-001 and DA-002 assessed the operational and awareness layers respectively. This document assesses the allocation layer.</p>
+</div>
+
+
+<!-- §02 SYSTEM CONTEXT -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>System Context — Structural Parameters</h2>
+
+  <p>Finland's electricity system operates within the Nordic synchronous grid. The following structural parameters define the diagnostic context. These values represent system-level characteristics, not instantaneous operational states.</p>
+
+  <table class="tbl">
+    <tr><th>Parameter</th><th>Value</th><th>Basis</th></tr>
+    <tr><td>Annual electricity consumption</td><td>~85–90 TWh</td><td>Fingrid annual statistics 2024</td></tr>
+    <tr><td>Winter peak demand (historical)</td><td>~14–15 GW</td><td>Fingrid historical peaks</td></tr>
+    <tr><td>Nuclear installed capacity</td><td>~4,300 MW</td><td>OL1, OL2, OL3, LO1, LO2</td></tr>
+    <tr><td>Hydro capacity (domestic)</td><td>~3,100 MW</td><td>Finnish hydro fleet</td></tr>
+    <tr><td>Wind capacity (installed 2025)</td><td>~7,000–8,000 MW</td><td>Finnish Wind Power Association</td></tr>
+    <tr><td>Cross-border: Sweden</td><td>~3,500 MW</td><td>ENTSO-E NTC</td></tr>
+    <tr><td>Cross-border: Estonia (Estlink)</td><td>~1,000 MW</td><td>Elering / Fingrid</td></tr>
+  </table>
+
+  <p>Finland's endurance position at L3 (strategic, multi-day) is materially shaped by Nordic system integration — specifically by Swedish and Norwegian hydropower reservoirs. Nordic hydro functions as a regional energy buffer: reservoir levels accumulated over spring snowmelt and autumn rain are drawn down during winter stress periods. Finland as a net electricity exporter under normal conditions can draw on this buffer via interconnection during constrained periods.</p>
+
+  <table class="tbl">
+    <tr><th>Nordic endurance asset</th><th>Approximate scale</th><th>Relevance to Finland</th></tr>
+    <tr><td>Swedish hydro reservoir (annual stock)</td><td>~60–75 TWh</td><td>Primary Nordic buffer — accessible via SE interconnectors</td></tr>
+    <tr><td>Norwegian hydro reservoir (annual stock)</td><td>~80–90 TWh</td><td>Larger buffer — indirect via SE grid</td></tr>
+    <tr><td>Fingrid Aurora Line (planned)</td><td>New 400 kV north-south</td><td>Increases Finnish domestic transmission capacity for northern wind / potential future hydro</td></tr>
+    <tr><td>BP-3 constraint (WP-001)</td><td>Cross-border capacity limited under simultaneous regional stress</td><td><span class="tbl-hi">Nordic buffer unavailable precisely under Black Period conditions</span></td></tr>
+  </table>
+
+  <p>The critical constraint is BP-3: cross-border capacity becomes restricted when Nordic stress is simultaneous and regional. Under single-country stress, Nordic integration is a genuine endurance asset. Under compound regional stress — the Black Period scenario — the interconnection buffer that Finland relies on under normal conditions may not be available at full capacity. WP-005 Q-4 identifies simultaneous regional compound stress as the defining characteristic of the Black Period scenario. This does not mean the Nordic buffer is absent; it means it is reduced and uncertain precisely when it would be most needed.</p>
+
+  <p>The diagnostic baseline uses 12,000 MW demand reference and 168-hour duration (WP-001 §3). These are structural references, not operational snapshots.</p>
+</div>
+
+
+<!-- §03 CONSUMPTION-BINDING INFRASTRUCTURE -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Consumption-Binding Infrastructure — Category I</h2>
+
+  <p>WP-008 §03 defines consumption-binding infrastructure as investments that create long-term, continuous electricity demand, committing system capacity to a fixed load profile over multi-decade horizons. In Finland, hyperscale datacenters are the primary current case.</p>
+
+  <p>Datacenter infrastructure operates at high utilisation rates — typically above 90% annual load factor. A 300 MW facility therefore commits approximately 2,630 GWh of annual electricity demand, constituting a structural load on generation and transmission assets for the full lifetime of the investment.</p>
+
+  <table class="tbl">
+    <tr><th>Tier</th><th>Capacity</th><th>Horizon</th><th>Source</th></tr>
+    <tr><td>Operational (2025)</td><td><span class="tbl-key">~285 MW</span></td><td>Current</td><td>Finnish Data Center Association</td></tr>
+    <tr><td>Committed near-term</td><td><span class="tbl-warn">~600 MW</span></td><td>2026 go-live</td><td>FDCA · DCD · Pexapark</td></tr>
+    <tr><td>Announced pipeline</td><td><span class="tbl-warn">~3,100 MW</span></td><td>To 2029</td><td>Arizton / DCD registry</td></tr>
+    <tr><td>FDCA 2030 trajectory</td><td><span class="tbl-hi">~1,500 MW</span></td><td>2030</td><td>FDCA projection</td></tr>
+  </table>
+
+  <p>The allocation property of this infrastructure is its irreversibility on the planning horizon. Once a datacenter is operational, its electricity demand commitment extends for 20–30 years. The investment decisions being made in 2025–2026 will shape the Finnish system's load profile through the 2040s and 2050s.</p>
+</div>
+
+
+<!-- §04 STABILITY-PROVIDING INFRASTRUCTURE -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>Stability-Providing Infrastructure — Category II</h2>
+
+  <p>WP-008 §06 defines stability-providing infrastructure as investments that increase system flexibility and recovery capacity, preserving the operational flexibility required to navigate stress intervals. Battery energy storage systems constitute the primary measurable category in the Finnish context.</p>
+
+  <table class="tbl">
+    <tr><th>Parameter</th><th>Value</th><th>Source</th></tr>
+    <tr><td>BESS connected to grid (Feb 2026)</td><td><span class="tbl-ok">1,050 MW</span></td><td>Fingrid public statement</td></tr>
+    <tr><td>Fleet-weighted average duration</td><td><span class="tbl-warn">~1.8 h</span></td><td>Published project specs (LCP Delta, ESS-News)</td></tr>
+    <tr><td>Total fleet energy content</td><td><span class="tbl-warn">~1,890 MWh</span></td><td>Derived: 1,050 MW × 1.8 h</td></tr>
+    <tr><td>Largest single project (Nivala)</td><td>70 MW / 140 MWh</td><td>Ingrid Capacity / Locus Energy</td></tr>
+    <tr><td>OX2 pipeline (two projects, 2028)</td><td>235 MW / 470 MWh</td><td>Statkraft PPA Feb 2026</td></tr>
+  </table>
+
+  <p>Battery storage systems contribute meaningfully to short-duration system stability: frequency response, intraday balancing, and peak shaving. These are real and valuable system services — battery storage is highly effective at the timescale it is designed for, which spans seconds to hours. The diagnostic question addressed here concerns a different temporal scale: the multi-day energy integral that defines Black Period endurance. At that scale, the relevant property of a BESS system shifts from its MW output rating to its total stored energy in MWh.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">MW versus MWh — the classification boundary</div>
+    <p>A BESS system rated at 100 MW provides 100 MW of instantaneous response capability. If its duration is 2 hours, it provides 200 MWh of energy. These are different physical properties serving different system functions at different timescales. MW-denominated adequacy assessment captures the former. Duration adequacy assessment requires the latter. This distinction is the methodological core of DA-003.</p>
+  </div>
+</div>
+
+
+<!-- §05 DURATION REFERENCE -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>Duration Reference — Black Period Energy Integral</h2>
+
+  <p>WP-001 §3 defines the Black Period as a multi-day interval characterised by simultaneous low renewable output (BP-1), extreme thermal demand (BP-2), constrained cross-border capacity (BP-3), and limited dispatchable endurance (BP-4). The 168-hour reference is not a prediction of a specific event but a stress interval for evaluating system endurance.</p>
+
+  <table class="tbl">
+    <tr><th>Parameter</th><th>Value</th><th>Basis</th></tr>
+    <tr><td>Demand reference</td><td>12,000 MW</td><td>Conservative mid-winter sustained load</td></tr>
+    <tr><td>Black Period duration</td><td>168 h</td><td>WP-001 §3</td></tr>
+    <tr><td>Black Period energy integral</td><td><span class="tbl-hi">2,016,000 MWh</span></td><td>12,000 × 168</td></tr>
+    <tr><td>Energy added by one 300 MW DC</td><td><span class="tbl-hi">+50,400 MWh per Black Period</span></td><td>300 MW × 168 h</td></tr>
+    <tr><td>Energy added by entire 2026 pipeline</td><td><span class="tbl-hi">+100,800 MWh per Black Period</span></td><td>600 MW × 168 h</td></tr>
+  </table>
+
+  <p>The energy integral is the quantity that must be sustained across the full duration of the event. Different infrastructure categories contribute to this integral in fundamentally different ways:</p>
+
+  <table class="tbl">
+    <tr><th>Asset category</th><th>Contribution mechanism</th><th>BP-3 availability</th><th>Duration layer</th></tr>
+    <tr><td>Nuclear generation</td><td>Continuous output at rated capacity</td><td><span class="tbl-ok">Not affected by BP-3</span></td><td>L3 · full endurance</td></tr>
+    <tr><td>Domestic hydro</td><td>Dispatchable within reservoir limits</td><td><span class="tbl-ok">Not affected by BP-3</span></td><td>L3 · reservoir-limited</td></tr>
+    <tr><td>Nordic hydro (via interconnectors)</td><td>Regional reservoir drawdown</td><td><span class="tbl-warn">Reduced under simultaneous regional stress</span></td><td>L3 · uncertain under BP-3</td></tr>
+    <tr><td>Wind generation</td><td>Variable — low under BP-1</td><td>Not applicable</td><td>L1–L2 only under BP-1</td></tr>
+    <tr><td>BESS</td><td>Stored energy discharge (1.8h duration)</td><td><span class="tbl-ok">Not affected by BP-3</span></td><td><span class="tbl-hi">L1 only — 9.5 min at L3 scale</span></td></tr>
+  </table>
+
+  <p>BESS is not designed to contribute to L3 endurance — that is not its engineering purpose, and this table does not imply a deficiency in BESS design. The diagnostic observation is that when BESS is classified as stability-providing infrastructure in an allocation framework, that classification spans both L1 (where BESS contributes substantially) and L3 (where its contribution is near-zero). A classification that does not distinguish between these layers will produce the indicator contradiction documented in I–4.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Definition — Duration Gap</div>
+    <p>A duration gap exists when the growth rate of continuous load commitments exceeds the growth rate of infrastructure capable of sustaining system demand across the Black Period energy integral. The gap is a property of allocation trajectory, not of current system state. It is measured in MWh, not MW, and is not visible in conventional capacity-based adequacy assessments.</p>
+  </div>
+</div>
+
+
+<!-- §06 INDICATOR COMPUTATION -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>Indicator Computation — I–1 through I–5</h2>
+
+
+  <div class="ind">
+    <div class="ind-h">
+      <div><span class="i-id">I–1</span></div>
+      <div><span class="i-name">Capacity Commitment Ratio<br>dc / stability-providing (MW)</span></div>
+      <div><span class="i-verd warn">Ambiguous<br>unit-dependent</span></div>
+    </div>
+    <div class="ind-b">
+      <p>Ratio of consumption-binding load to stability-providing capacity in instantaneous power terms. Threshold ≥ 2.50.</p>
+      <div class="calc">
+        <div class="cr"><span class="cl">Aggregate: DC live / BESS fleet</span><span class="cv ok">285 ÷ 1,050 = 0.27 — below threshold</span></div>
+        <div class="cr"><span class="cl">2026 committed pipeline</span><span class="cv warn">600 ÷ 1,050 = 0.57 — below threshold</span></div>
+        <div class="cr"><span class="cl">2030 FDCA trajectory</span><span class="cv warn">1,500 ÷ 1,050 = 1.43 — approaching</span></div>
+        <div class="cr"><span class="cl">Canonical new allocation unit: 300 MW DC / 70 MW BESS</span><span class="cv hi">300 ÷ 70 = 4.29 — threshold breach</span></div>
+      </div>
+      <p>The aggregate ratio passes. The per-allocation ratio breaches. Both are computed correctly from the same data. The divergence between them indicates that the existing BESS stock is large relative to the existing DC fleet, but new capacity additions are not balanced. The trajectory, not the current level, is the diagnostic signal. I–1 in MW terms cannot detect the duration gap examined in I–4 — this is a structural limitation of the MW formulation, not a measurement error.</p>
+    </div>
+  </div>
+
+
+  <div class="ind">
+    <div class="ind-h">
+      <div><span class="i-id">I–2</span></div>
+      <div><span class="i-name">Residual Risk Transfer Index<br>price volatility distribution</span></div>
+      <div><span class="i-verd breach">Breach<br>~55% est.</span></div>
+    </div>
+    <div class="ind-b">
+      <p>Distribution of electricity price volatility between protected large consumers and unprotected system participants. Threshold ≥ 40%.</p>
+      <div class="calc">
+        <div class="cr"><span class="cl">DC consumer PPA hedging (est.)</span><span class="cv ok">~85% of DC load price-protected — consistent with published hyperscale PPA prevalence in Nordic market</span></div>
+        <div class="cr"><span class="cl">Household spot exposure</span><span class="cv hi">~100% structurally unhedged — Finnish retail tariff structure</span></div>
+        <div class="cr"><span class="cl">Residual Risk Transfer Index (indicative)</span><span class="cv hi">~55% — indicative estimate based on PPA prevalence and retail exposure structure; not derived from transaction data</span></div>
+      </div>
+      <p>The 55% figure is an indicative structural estimate, not a transaction-level calculation. The underlying observation is categorical rather than precise: large industrial consumers systematically hold long-term price hedges; household consumers systematically do not. The resulting asymmetry is structural, not incidental, and its direction is unambiguous even if the precise magnitude is uncertain.
+      <p>Finnish households are structurally spot-exposed. Datacenter operators hold long-term PPAs. The resulting asymmetry is not a market dysfunction — both arrangements reflect rational behaviour. Its diagnostic relevance is that the infrastructure generating the continuous load does not bear the price risk that load creates under constrained supply conditions. The proposed electricity tax reform (HE 156/2025 vp, effective 1 July 2026) is an unresolved first-order policy response. WP-005 CS-2 (value extraction asymmetry) applies directly.</p>
+    </div>
+  </div>
+
+
+  <div class="ind">
+    <div class="ind-h">
+      <div><span class="i-id">I–3</span></div>
+      <div><span class="i-name">Import Substitution Coefficient<br>energy security contribution</span></div>
+      <div><span class="i-verd warn">Concern<br>asymmetric</span></div>
+    </div>
+    <div class="ind-b">
+      <p>Whether stability-providing investment reduces external energy dependence relative to the import effect of consumption-binding load. Positive: MESA reduces imports. Zero or negative: DC load increases import dependency at the margin.</p>
+      <div class="calc">
+        <div class="cr"><span class="cl">DC load import effect (Black Period conditions)</span><span class="cv hi">Each 100 MW new DC increases BP import requirement under BP-3</span></div>
+        <div class="cr"><span class="cl">BESS import substitution</span><span class="cv warn">Near zero — BESS stores grid energy, does not reduce import dependency</span></div>
+        <div class="cr"><span class="cl">Nuclear / hydro dispatchable contribution</span><span class="cv ok">Substantial — reduces import dependency at duration</span></div>
+      </div>
+      <p>BESS does not substitute imports; it stores grid energy which may itself originate from imports. True import substitution at duration requires dispatchable domestic generation, which is not expanding proportionally to new DC load. Under normal conditions Finland is a net exporter. Under Black Period conditions (BP-3: constrained cross-border capacity), the import buffer is unavailable — precisely when I–3 is most relevant. WP-005 Q-4 identifies simultaneous regional compound stress as the condition under which cross-border redundancy disappears.</p>
+    </div>
+  </div>
+
+
+  <div class="ind">
+    <div class="ind-h">
+      <div><span class="i-id">I–4</span></div>
+      <div><span class="i-name">Duration Resilience Contribution<br>stability-providing MWh / BP integral</span></div>
+      <div><span class="i-verd breach">Duration gap<br>BESS: 0.094%</span></div>
+    </div>
+    <div class="ind-b">
+      <p>Fraction of Black Period energy requirement coverable by stability-providing infrastructure. WP-001 §4 continuity condition: Available Capacity × Endurance Time &lt; Required Energy Integral. Threshold: BESS contribution &lt; 1% of BP integral indicates duration classification gap.</p>
+
+      <div class="calc">
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">FORMULA</span><span class="cv" style="font-style:italic">I₄ = Stability infrastructure MWh ÷ Black Period energy integral (MWh)</span></div>
+      </div>
+
+      <div class="calc" style="margin-top:.5rem">
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">DATA — DISPATCHABLE</span><span class="cv"></span></div>
+        <div class="cr"><span class="cl">Nuclear installed capacity</span><span class="cv ok">~4,300 MW (OL1, OL2, OL3, LO1, LO2)</span></div>
+        <div class="cr"><span class="cl">Hydro installed capacity</span><span class="cv ok">~3,100 MW (Finnish fleet)</span></div>
+        <div class="cr"><span class="cl">BP energy integral — dispatchable</span><span class="cv ok">(4,300 + 3,100) × 168h = 1,243,200 MWh</span></div>
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">RESULT — DISPATCHABLE</span><span class="cv ok">I₄ = 1,243,200 ÷ 2,016,000 = 61.7% · Endurance: 103h · Above 72h threshold ✔</span></div>
+      </div>
+
+      <div class="calc" style="margin-top:.5rem">
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">DATA — BESS</span><span class="cv"></span></div>
+        <div class="cr"><span class="cl">BESS installed capacity</span><span class="cv">1,050 MW (Fingrid Feb 2026)</span></div>
+        <div class="cr"><span class="cl">Fleet-weighted average duration</span><span class="cv">~1.8h (published project specs)</span></div>
+        <div class="cr"><span class="cl">BESS total energy content</span><span class="cv hi">1,050 × 1.8 = 1,890 MWh</span></div>
+        <div class="cr"><span class="cl">Black Period energy integral</span><span class="cv hi">12,000 MW × 168h = 2,016,000 MWh</span></div>
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">RESULT — BESS</span><span class="cv hi">I₄ = 1,890 ÷ 2,016,000 = 0.094% · Endurance: 9.5 minutes</span></div>
+      </div>
+
+      <div class="calc" style="margin-top:.5rem">
+        <div class="cr"><span class="cl" style="color:#8b4513;font-size:.55rem;letter-spacing:.1em">MARGINAL IMPACT OF NEW DC LOAD</span><span class="cv"></span></div>
+        <div class="cr"><span class="cl">Energy added by one 300 MW datacenter</span><span class="cv hi">300 × 168 = 50,400 MWh per Black Period</span></div>
+        <div class="cr"><span class="cl">Largest concurrent BESS project (Nivala, 140 MWh) offsets</span><span class="cv hi">140 ÷ 50,400 = 0.28% of one DC addition at duration</span></div>
+      </div>
+
+      <p style="margin-top:.8rem"><strong>Interpretation — dispatchable layer:</strong> Finland's nuclear and hydro generation base retains approximately 103 hours of sustained output at structural capacity values. This is the system's primary endurance asset. It is accurate, and it means Finland is not at risk of a Black Period failure from insufficient dispatchable generation in the current configuration.</p>
+      <p><strong>Interpretation — BESS layer:</strong> Battery storage systems are not designed to sustain system operation across multi-day intervals — that is not their engineering purpose. They perform short-duration stability services effectively. The diagnostic finding is narrower: when BESS is classified as stability-providing infrastructure within an allocation framework, its MWh contribution at Black Period scale (0.094%) is not commensurate with its MW classification. New continuous load additions increase the BP energy integral by 50,400 MWh per 300 MW facility; the infrastructure pipeline adding 140 MWh at a time does not close this gap at duration.</p>
+      <div class="rb"><p>The diagnostic question is not whether BESS solves the Black Period constraint — it does not and is not designed to. The question is whether infrastructure allocation recognises the difference between short-duration flexibility and long-duration resilience, and whether new continuous load is being matched by growth in the latter.</p></div>
+    </div>
+  </div>
+
+
+  <div class="ind">
+    <div class="ind-h">
+      <div><span class="i-id">I–5</span></div>
+      <div><span class="i-name">Infrastructure Reinforcement Burden<br>load timeline vs. grid readiness</span></div>
+      <div><span class="i-verd warn">Concern<br>temporal mismatch</span></div>
+    </div>
+    <div class="ind-b">
+      <p>Grid reinforcement costs and timelines associated with committed load relative to stabilising investments. Consumption-binding infrastructure may commit transmission capacity faster than reinforcement can be deployed.</p>
+      <div class="calc">
+        <div class="cr"><span class="cl">Datacenter connection timeline (new facility)</span><span class="cv warn">2–3 years from decision to operation</span></div>
+        <div class="cr"><span class="cl">400 kV transmission line construction</span><span class="cv hi">7–8 years from planning to energisation</span></div>
+        <div class="cr"><span class="cl">Southern grid moratorium (Fingrid)</span><span class="cv hi">New connections paused until 2027 — capacity ceiling reached</span></div>
+        <div class="cr"><span class="cl">Aurora Line (north-south 400 kV)</span><span class="cv warn">Under development — multi-year horizon</span></div>
+      </div>
+      <p>The southern Finnish grid has reached its connection capacity at the same time that the majority of datacenter investment is targeting southern Finland for market access reasons. The reinforcement burden is primarily temporal: load commits on a 2–3 year timeline; the infrastructure required to serve it operates on a 7–8 year timeline. This is the same temporal mismatch identified in WP-001 §4 at the generation layer, now visible at the transmission layer.</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- §07 DIAGNOSTIC FINDINGS -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Diagnostic Findings</h2>
+
+  <div class="find">
+    <div class="find-h">
+      <div><span class="f-id">DA-003-F1</span></div>
+      <div>I–1 MW formulation is insufficient as a sole allocation criterion</div>
+      <div><span class="warn">Concern</span></div>
+    </div>
+    <div class="find-b">
+      <p>The I–1 ratio passes at the aggregate level and breaches in the canonical per-allocation case. More fundamentally, MW-denominated I–1 cannot detect the duration gap in I–4. An allocation framework that does not require duration correction for BESS will systematically classify the Finnish allocation balance as improving while the duration adequacy position deteriorates. I–1 requires dual computation: MW terms and MWh-corrected terms, with the latter primary for continuity assessment.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="find-h">
+      <div><span class="f-id">DA-003-F2</span></div>
+      <div>I–4 duration gap quantified — BESS covers 0.094% of Black Period requirement</div>
+      <div><span class="breach">Structural breach</span></div>
+    </div>
+    <div class="find-b">
+      <p>Finland's BESS fleet contributes 0.094% of the energy integral required for a 168-hour Black Period. Each new 300 MW datacenter adds 50,400 MWh to this requirement. The largest concurrent BESS project (Nivala, 140 MWh) offsets 0.28% of that addition at duration. The dispatchable generation buffer (nuclear + hydro, approximately 103h at structural capacity values) is not expanding — it is a fixed asset base against a growing energy integral. At current deployment rates, the duration gap opened by datacenter allocation is widening.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="find-h">
+      <div><span class="f-id">DA-003-F3</span></div>
+      <div>Indicator contradiction is the primary diagnostic signal</div>
+      <div><span class="breach">Primary finding</span></div>
+    </div>
+    <div class="find-b">
+      <p>I–1 (MW basis) passes. I–4 (MWh, duration-adjusted) identifies a structural gap. Both are computed from the same system. The contradiction is not a measurement error — it arises because MW and MWh measure different physical properties serving different system functions at different timescales.</p>
+      <p>Infrastructure can simultaneously satisfy a formal stability classification and provide limited contribution to the endurance property that classification is designed to protect. This condition — appropriate for short-duration purposes, insufficient at long-duration scale — is the pattern WP-001 identified as the central analytical gap: the failure mode exists at the duration layer; the diagnostic tool that would reveal it is absent from MW-only frameworks. DA-003 is that tool applied to the allocation case.</p>
+      <p>The practical implication is specific: allocation governance frameworks that evaluate stability-providing infrastructure exclusively in MW terms will systematically miss the duration dimension of the stability function. Adding MWh-corrected duration assessment as a parallel criterion would make the gap visible without displacing MW-based adequacy assessment.</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- FIGURE 1 EMBEDDED -->
+<div class="section">
+  <div class="section-id">Figure 1</div>
+  <h2>MW Adequacy vs. MWh Endurance — The Indicator Contradiction</h2>
+  <p style="font-family:var(--serif);font-size:.88rem;font-style:italic;color:var(--muted);margin-bottom:1.2rem">The same infrastructure, measured at two different timescales, produces contradictory adequacy signals.</p>
+
+  <!-- two-panel MW vs MWh -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.6rem">
+
+    <!-- MW panel -->
+    <div style="border:1px solid var(--rule)">
+      <div style="background:#eef3ee;padding:.55rem .8rem;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ok);border-bottom:1px solid var(--rule)">Layer 1 · Instantaneous capacity (MW)</div>
+      <div style="padding:.85rem;display:flex;flex-direction:column;gap:.7rem">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">DC operational<span style="color:var(--ink)">285 MW</span></div>
+          <div style="background:#e8e4dc;height:13px"><div style="height:100%;width:27%;background:var(--ok);display:flex;align-items:center;justify-content:flex-end;padding-right:3px;font-size:.47rem;color:#fff">27%</div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">DC 2026 committed<span style="color:var(--ink)">600 MW</span></div>
+          <div style="background:#e8e4dc;height:13px"><div style="height:100%;width:57%;background:var(--warn);display:flex;align-items:center;justify-content:flex-end;padding-right:3px;font-size:.47rem;color:#fff">57%</div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">DC 2030 trajectory<span style="color:var(--accent)">1,500 MW</span></div>
+          <div style="background:#e8e4dc;height:13px;overflow:visible;position:relative"><div style="height:100%;width:100%;background:var(--accent);display:flex;align-items:center;padding-left:4px;font-size:.47rem;color:#fff">exceeds BESS fleet</div></div>
+        </div>
+        <div style="font-size:.5rem;color:var(--muted);text-align:right">← scale: BESS fleet = 1,050 MW</div>
+        <div style="padding:.45rem .6rem;background:#eef3ee;border:1px solid #b8d4b8;font-size:.54rem;letter-spacing:.05em">
+          <span style="color:var(--ok)">✔ MW assessment: adequate (current)</span><br>
+          <span style="font-family:var(--serif);font-size:.78rem;color:#2a3a2a;font-style:italic">DC load below BESS MW rating. Conventional adequacy framework passes.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MWh panel -->
+    <div style="border:1px solid var(--rule)">
+      <div style="background:#f8f0e8;padding:.55rem .8rem;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--rule)">Layer 2 · Black Period endurance (MWh · 168h)</div>
+      <div style="padding:.85rem;display:flex;flex-direction:column;gap:.7rem">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">BESS fleet energy<span style="color:var(--accent)">1,890 MWh</span></div>
+          <div style="background:#e8e4dc;height:13px;position:relative"><div style="height:100%;width:3px;background:var(--accent)"></div></div>
+          <div style="font-size:.46rem;color:var(--accent);margin-top:2px">0.094% of requirement — bar width is real scale</div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">One new 300 MW DC adds<span style="color:var(--accent)">50,400 MWh / BP</span></div>
+          <div style="background:#e8e4dc;height:13px"><div style="height:100%;width:2.5%;background:var(--accent);display:flex;align-items:center;padding-left:3px;font-size:.45rem;color:#fff">50k</div></div>
+          <div style="font-size:.46rem;color:var(--accent);margin-top:2px">= 26.7× entire BESS fleet energy</div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.22rem">Nuclear + hydro dispatchable<span style="color:var(--ok)">~1,240,000 MWh</span></div>
+          <div style="background:#e8e4dc;height:13px"><div style="height:100%;width:61.5%;background:var(--ok);display:flex;align-items:center;padding-left:4px;font-size:.47rem;color:#fff">103h endurance</div></div>
+        </div>
+        <div style="font-size:.5rem;color:var(--muted);text-align:right">← scale: 2,016,000 MWh (BP requirement)</div>
+        <div style="padding:.45rem .6rem;background:#faf0e8;border:1px solid #d4b888;font-size:.54rem;letter-spacing:.05em">
+          <span style="color:var(--accent)">⚠ MWh assessment: duration gap</span><br>
+          <span style="font-family:var(--serif);font-size:.78rem;color:#3a2510;font-style:italic">BESS covers 9.5 min at BP scale. Dispatchable base carries the endurance load; it is not growing with new DC additions.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- contradiction box -->
+  <div style="border:2px solid var(--ink);padding:1rem 1.2rem;display:grid;grid-template-columns:1fr 24px 1fr;gap:.7rem;align-items:center;margin-bottom:1.4rem">
+    <div>
+      <div style="font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">I–1 · MW basis</div>
+      <div style="font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--ok)">Passes</div>
+      <div style="font-family:var(--serif);font-style:italic;font-size:.8rem;color:var(--muted);line-height:1.5;margin-top:.25rem">285 MW DC vs 1,050 MW BESS. Ratio 0.27, below threshold of 2.50.</div>
+    </div>
+    <div style="text-align:center;font-size:1.1rem;color:var(--rule)">≠</div>
+    <div>
+      <div style="font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">I–4 · MWh duration basis</div>
+      <div style="font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--accent)">Gap identified</div>
+      <div style="font-family:var(--serif);font-style:italic;font-size:.8rem;color:var(--muted);line-height:1.5;margin-top:.25rem">1,890 MWh vs 2,016,000 MWh BP requirement. BESS fraction: 0.094%.</div>
+    </div>
+  </div>
+
+  <!-- timescale diagram -->
+  <div style="border:1px solid var(--rule)">
+    <div style="background:#f0ece4;padding:.5rem .85rem;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)">Timescale — what each asset class is designed to do</div>
+    <div style="padding:.85rem;display:flex;flex-direction:column;gap:.65rem">
+
+      <div style="display:grid;grid-template-columns:110px 1fr;gap:.5rem;align-items:center">
+        <div style="font-size:.58rem;color:var(--ink)">BESS<br><span style="color:var(--muted);font-size:.5rem">frequency · balancing · ramp</span></div>
+        <div>
+          <div style="height:16px;background:#e8e4dc;display:flex">
+            <div style="width:1.5%;background:var(--ok);display:flex;align-items:center;justify-content:center;font-size:.44rem;color:#fff">F</div>
+            <div style="width:5%;background:var(--ok);margin-left:1px;display:flex;align-items:center;justify-content:center;font-size:.44rem;color:#fff">aFRR</div>
+            <div style="width:12%;background:var(--warn);margin-left:1px;display:flex;align-items:center;justify-content:center;font-size:.44rem;color:#fff">intraday</div>
+            <div style="flex:1;background:#c8c4bc;margin-left:1px;display:flex;align-items:center;padding-left:4px;font-size:.44rem;color:var(--muted)">→ not designed for this range</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.44rem;color:var(--muted);padding:.15rem .05rem 0">
+            <span>seconds</span><span>minutes</span><span>hours</span><span>days</span><span>weeks</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:110px 1fr;gap:.5rem;align-items:center">
+        <div style="font-size:.58rem;color:var(--ink)">Nuclear + hydro<br><span style="color:var(--muted);font-size:.5rem">dispatchable · sustained</span></div>
+        <div>
+          <div style="height:16px;background:#e8e4dc;display:flex">
+            <div style="width:6%;background:#c8c4bc;display:flex;align-items:center;justify-content:center;font-size:.42rem;color:var(--muted)">ramp</div>
+            <div style="flex:1;background:var(--ok);margin-left:1px;display:flex;align-items:center;padding-left:5px;font-size:.44rem;color:#fff">sustained across any duration ↔</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.44rem;color:var(--muted);padding:.15rem .05rem 0">
+            <span>seconds</span><span>minutes</span><span>hours</span><span>days</span><span>weeks</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:110px 1fr;gap:.5rem;align-items:center">
+        <div style="font-size:.58rem;color:var(--ink)">Datacenter load<br><span style="color:var(--muted);font-size:.5rem">continuous · committed</span></div>
+        <div>
+          <div style="height:16px;background:var(--accent);display:flex;align-items:center;padding-left:6px;font-size:.44rem;color:#fff">continuous demand — 24h · 365d · 20+ year commitment ↔</div>
+          <div style="display:flex;justify-content:space-between;font-size:.44rem;color:var(--muted);padding:.15rem .05rem 0">
+            <span>seconds</span><span>minutes</span><span>hours</span><span>days</span><span>weeks</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:110px 1fr;gap:.5rem;align-items:center">
+        <div style="font-size:.58rem;color:var(--ink)">Black Period<br><span style="color:var(--muted);font-size:.5rem">stress reference (WP-001)</span></div>
+        <div>
+          <div style="height:16px;background:#e8e4dc;display:flex">
+            <div style="width:18%;background:#e8e4dc"></div>
+            <div style="width:26%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.44rem;color:#fff">168 hours</div>
+            <div style="flex:1;background:#e8e4dc"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.44rem;color:var(--muted);padding:.15rem .05rem 0">
+            <span>seconds</span><span>minutes</span><span>hours</span><span>days</span><span>weeks</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.8rem;line-height:1.7">Figure 1 · Sources: BESS — Fingrid Feb 2026. DC capacity — FDCA / DCD. Duration — published project specs (LCP Delta, ESS-News). Black Period — WP-001 §3. MWh panel bar widths proportional to 2,016,000 MWh scale; BESS bar width reflects actual ratio.</p>
+</div>
+
+
+<!-- §08 EPISTEMIC STATUS -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Scope and Epistemic Status</h2>
+
+  <p>This assessment does not claim that the Finnish system will fail to maintain continuity across a Black Period. The dispatchable generation base retains substantial duration capacity. Finland possesses genuine structural advantages: nuclear baseload, significant hydro, strong interconnections, and one of the highest concentrations of technically skilled energy system operators in Europe.</p>
+
+  <p>The diagnostic concern is the allocation trajectory. The three structural variables from WP-004 — variation, redundancy, and recovery time — do not require system failure to produce a diagnostic finding. They require declining trajectories. I–4 identifies a declining trajectory in duration-adjusted stability-providing capacity relative to consumption-binding load. That trajectory is the finding.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Epistemic boundary</div>
+    <p>This assessment cannot determine whether the duration gap is an actionable policy problem or an acceptable residual risk. That judgment requires cost-benefit analysis and risk tolerance thresholds that are appropriately set by accountable institutions. ACI's role is to render the gap visible and to provide the analytical framework for its measurement. What is done about it lies outside this document's scope.</p>
+  </div>
+
+  <p>The indicators are falsifiable. Each is defined in terms of quantities measurable from public sources. Uncertainty ranges exist — particularly around BESS fleet duration (estimated from published project specifications) and the growth trajectory of DC load. Where data is unavailable, the absence is itself a governance observation: a system whose allocation balance cannot be fully assessed from public data has a transparency condition independent of the balance itself.</p>
+</div>
+
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="v-label">Administrative Diagnostic Verdict · DA-003 · v2.0 · March 2026</div>
+  <div class="v-zone">Concern — Structural trajectory requires monitoring</div>
+  <div class="v-body">
+    The Finnish energy system's allocation balance appears adequate in MW-denominated terms (I–1 aggregate: 0.27) and reveals a structural duration gap in MWh-corrected terms (I–4: BESS covers 0.094% of Black Period energy integral; effective endurance 9.5 minutes at system scale).<br><br>
+    The primary diagnostic finding (F3) is an indicator contradiction functioning as a structural signal: formal stability classification criteria are satisfied while the functional endurance property those criteria are designed to protect is absent at the temporal scale that determines continuity. This pattern confirms WP-005 F-2 (duration adequacy gap amplified by investment wave) and is consistent with Ω-0 Signal S-2 (Redundancy Consumption Without Replacement).<br><br>
+    The dispatchable generation base retains adequate duration capacity (estimated 103+ hours at structural values). The allocation concern concerns new investment, not existing assets. Duration-capable stability investment added proportional to new continuous load would close the gap identified in I–4. The cost of that correction increases with each new load commitment made without it. The intervention window identified in WP-005 F-5 remains open.
+  </div>
+</div>
+
+
+<!-- APPENDIX A: OPERATIONAL SNAPSHOT -->
+<div class="section">
+  <div class="section-id">Appendix A</div>
+  <h2>Operational Snapshot — Illustrative Data (6 March 2026)</h2>
+
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);font-style:italic">The following real-time values are provided as illustrative context only. They are not used as primary evidence for any indicator computation. Structural parameters in §02–§05 are the evidential basis for this diagnostic.</p>
+
+  <table class="tbl">
+    <tr><th>Dataset</th><th>Value</th><th>Timestamp</th><th>Diagnostic use</th></tr>
+    <tr><td>DS-193 System consumption</td><td>12,134 MW</td><td>21:33</td><td>Consistent with §02 structural range</td></tr>
+    <tr><td>DS-181 Wind production</td><td>5,994 MW</td><td>21:33</td><td>Illustrative — not Black Period condition</td></tr>
+    <tr><td>DS-87 Export to Sweden</td><td>+644 MW</td><td>21:33</td><td>Normal operation export — unavailable under BP-3</td></tr>
+    <tr><td>DS-187 Estlink</td><td>−54 MW</td><td>21:15</td><td>Marginal import — illustrative</td></tr>
+    <tr><td>DS-1 FCR-N reserve</td><td>79 MW</td><td>—</td><td>Below Nordic reference level of ~140 MW</td></tr>
+  </table>
+
+  <p style="font-family:var(--serif);font-size:.88rem;color:var(--muted);font-style:italic">Note: DS-74 (labelled "nuclear" in earlier fetch tool version) and DS-75 (labelled "hydro") require dataset ID verification before use. Values of 12,470 MW and 5,871 MW respectively are inconsistent with Finnish installed capacity and likely represent different aggregation boundaries. These values are excluded from this assessment pending verification.</p>
+</div>
+
+
+<!-- CROSS-REFERENCES -->
+<div class="xb">
+  <div class="xl">ACI Cross-References</div>
+  <div class="xr"><span class="xi">WP-001</span><span class="xd">Duration Adequacy and Continuity Risk — Black Period concept, continuity gap condition (Available Capacity × Endurance Time &lt; Required Energy Integral), the foundational constraint operationalised in I–4.</span></div>
+  <div class="xr"><span class="xi">WP-004</span><span class="xd">Recovery Capacity Invariants — three-variable diagnostic (variation, redundancy, recovery time) and Direction Rule: trajectory more significant than current level.</span></div>
+  <div class="xr"><span class="xi">WP-005</span><span class="xd">Compound Stress Finland 2025–2035 — F-2 confirmed empirically: duration gap amplified by investment wave. F-5: intervention window open and closing.</span></div>
+  <div class="xr"><span class="xi">WP-008</span><span class="xd">Institutional Allocation and System Continuity — source framework for this document. DA-003 operationalises I–1 through I–5 using structural Finnish data.</span></div>
+  <div class="xr"><span class="xi">DA-001</span><span class="xd">Finland Pre-Shortage Phase 2026–2032 — physical layer assessment. DA-003 adds the allocation layer to the same system diagnosis.</span></div>
+  <div class="xr"><span class="xi">Ω-0</span><span class="xd">Recovery Capacity Reference — S-2 (Redundancy Without Replacement) operative at the BESS classification layer. Direction Rule applied throughout.</span></div>
+</div>
+
+<div class="doc-footer">
+  Aether Continuity Institute · Diagnostic Assessment No. 003 · Version 6.0 · March 2026<br>
+  Domain D-1 · D-4 · Infrastructure Allocation Diagnostics · Open Working Draft · Subject to revision<br>
+  aethercontinuity.org · Companion to WP-008 · Follows DA-002 · Supersedes DA-003 v1.0–v5.0
+</div>
+
+</body>
+</html>

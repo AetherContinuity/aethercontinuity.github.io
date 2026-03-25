@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI TN-005 — Tier A System Audit Questionnaire</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --paper-2: #ede7d8;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --blue: #185fa5;
+  --green: #0f6e56;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 2rem 7rem;
+}
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+.nav-home { font-family: var(--mono); font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: '← '; }
+.nav-home:hover { color: var(--ink); }
+.nav-id { font-family: var(--mono); font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.doc-header { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1rem 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: baseline; }
+.doc-id { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+.doc-meta { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.9; }
+h1 { font-family: var(--serif); font-size: 1.75rem; font-weight: 500; letter-spacing: -.01em; margin-bottom: .35rem; line-height: 1.2; }
+.tagline { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--muted); margin-bottom: .3rem; }
+.tagline-fi { font-family: var(--serif); font-size: .92rem; font-style: italic; color: var(--muted); margin-bottom: 2.2rem; }
+.cite-block { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin-bottom: 2.2rem; font-size: .6rem; letter-spacing: .06em; color: var(--muted); line-height: 1.9; }
+.cite-block span { color: var(--ink); font-size: .62rem; }
+.section { margin-bottom: 2.5rem; }
+.section-id { font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+h2 { font-family: var(--serif); font-size: 1.06rem; font-weight: 500; margin-bottom: .75rem; border-bottom: 1px solid var(--rule); padding-bottom: .35rem; }
+p { font-family: var(--serif); font-size: 1rem; line-height: 1.8; color: #2a2520; margin-bottom: .85rem; }
+.scope-note { border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1rem 0; background: #f0ece4; }
+.scope-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.scope-note p { font-family: var(--serif); font-size: .9rem; line-height: 1.7; margin-bottom: .5rem; color: #2a2520; }
+.scope-note p:last-child { margin-bottom: 0; }
+.rb { border-left: 3px solid var(--ink); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #f0ece4; }
+.rb p { font-family: var(--serif); font-size: .95rem; font-style: italic; margin: 0; color: var(--ink); line-height: 1.7; }
+.ep-note { border-left: 3px solid var(--accent); padding: .85rem 1.2rem; margin: 1.2rem 0; background: #faf5ee; }
+.ep-label { font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ep-note p { font-family: var(--serif); font-size: .92rem; margin: 0; color: #3a2510; line-height: 1.7; }
+.ep-note p + p { margin-top: .6rem; }
+
+/* System identity block */
+.sys-block { border: 1px solid var(--rule); margin-bottom: 2rem; background: var(--paper-2); }
+.sys-header { padding: .65rem 1rem; border-bottom: 1px solid var(--rule); background: #f0ece4; }
+.sys-label { font-family: var(--mono); font-size: .58rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+.sys-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.sys-field { padding: .55rem 1rem; border-bottom: 1px solid var(--rule); }
+.sys-field:nth-child(odd) { border-right: 1px solid var(--rule); }
+.sys-field:last-child, .sys-field:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+.sys-field-label { font-family: var(--mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .25rem; }
+.sys-field-val { font-family: var(--serif); font-size: .88rem; color: var(--ink); min-height: 1.4rem; border-bottom: 1px dotted var(--rule); }
+
+/* Question blocks */
+.aq-block { border: 1px solid var(--rule); margin: 1.2rem 0; }
+.aq-header { padding: .6rem 1rem; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 3rem 1fr auto; align-items: baseline; gap: .6rem; background: var(--paper-2); }
+.aq-num { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; color: var(--accent); font-weight: 500; }
+.aq-dim { font-family: var(--mono); font-size: .55rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.aq-ref { font-family: var(--mono); font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rule); }
+.aq-body { padding: .8rem 1rem; }
+.aq-q { font-family: var(--serif); font-size: .95rem; font-weight: 500; color: var(--ink); margin-bottom: .5rem; line-height: 1.5; }
+.aq-guidance { font-family: var(--serif); font-size: .85rem; color: #3a3530; line-height: 1.65; margin-bottom: .75rem; }
+.aq-evidence { font-family: var(--mono); font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+.aq-evidence-list { font-family: var(--serif); font-size: .84rem; color: #2a2520; line-height: 1.7; padding-left: .1rem; }
+.aq-result { margin-top: .75rem; border-top: 1px solid var(--rule); padding-top: .6rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem; }
+.aq-result-cell { font-family: var(--mono); font-size: .52rem; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .5rem; border: 1px solid var(--rule); text-align: center; }
+.res-pass { color: var(--green); border-color: var(--green); background: #f0f8f4; }
+.res-fail { color: #8b0000; border-color: #8b0000; background: #fdf0ec; }
+.res-partial { color: var(--accent); border-color: var(--accent); background: #faf5ee; }
+
+/* Summary grid */
+.summary-grid { border: 1px solid var(--rule); margin: 1.2rem 0; border-collapse: collapse; width: 100%; }
+.summary-grid th { font-family: var(--mono); font-size: .54rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: .45rem .7rem; border-bottom: 1px solid var(--rule); text-align: left; background: #f0ece4; }
+.summary-grid td { font-family: var(--serif); font-size: .88rem; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.summary-grid tr:last-child td { border-bottom: none; }
+.verdict-pass { font-family: var(--mono); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
+.verdict-fail { font-family: var(--mono); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase; color: #8b0000; }
+.verdict-partial { font-family: var(--mono); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+
+/* Outcome block */
+.outcome-block { border: 2px solid var(--ink); padding: 1.1rem 1.3rem; margin: 1.4rem 0; }
+.outcome-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: .6rem; }
+.outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .6rem; }
+.outcome-cell { border: 1px solid var(--rule); padding: .65rem .8rem; }
+.outcome-cell-label { font-family: var(--mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .3rem; }
+.outcome-pass .outcome-cell-label { color: var(--green); }
+.outcome-fail .outcome-cell-label { color: #8b0000; }
+.outcome-partial .outcome-cell-label { color: var(--accent); }
+.outcome-cell p { font-family: var(--serif); font-size: .86rem; margin: 0; line-height: 1.6; color: #2a2520; }
+
+/* Xref */
+.xref-block { border-top: 1px solid var(--rule); margin-top: 2rem; padding-top: 1.5rem; }
+.xref-row { display: grid; grid-template-columns: 5rem 1fr; gap: .75rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+.xref-row:last-child { border-bottom: none; }
+.xref-id { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .1em; padding-top: .1rem; }
+.xref-text { font-family: var(--serif); font-size: .88rem; line-height: 1.6; color: #2a2520; }
+
+footer { border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1rem; font-size: .58rem; letter-spacing: .1em; color: var(--muted); line-height: 2; display: flex; justify-content: space-between; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">TN · 005 · 2026</span>
+</nav>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · TN-005 · Technical Note</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-3 · D-4 · Version 1.0 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Subject to revision<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Tier A System Audit Questionnaire</h1>
+<p class="tagline">Ten Questions for Demonstrating Operative H-4b Compliance in Decision-Critical Public Sector Systems</p>
+<p class="tagline-fi">Tier A -järjestelmien auditointikyselylomake: kymmenen kysymystä operationaalisen H-4b-vaatimustenmukaisuuden osoittamiseen päätöksentekokriittisissä julkisen sektorin järjestelmissä</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Tier A System Audit Questionnaire. ACI Technical Note No. 005, v1.0. Available at: https://aethercontinuity.org<br>
+  <span>Purpose —</span> This questionnaire is submitted by the system owner of a TN-004 Tier A classified system to the designated oversight authority (RKOM or equivalent). Each question requires documented evidence, not declarations. Unsupported Yes answers are treated as No for audit purposes.<br>
+  <span>Cross-references —</span> TN-003 (D1–D4 Architectural Audit Metrics) · TN-004 (Decision-Critical System Scoping Tool) · WP-003 · WP-006 · WP-011
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>How to Use This Questionnaire</h2>
+
+  <div class="scope-note">
+    <div class="scope-label">Instructions for system owners</div>
+    <p>This questionnaire is completed by the accountable system owner for each TN-004 Tier A classified system. It is submitted to the designated oversight body before procurement approval for new systems, and on an annual cycle for existing Tier A systems.</p>
+    <p>Each question requires a Yes or No answer accompanied by documented evidence. "Evidence" means a verifiable, auditable record — a test log, a configuration specification, a procurement contract clause, or an independent audit report. A declaration of intent, a vendor SLA, or a verbal assurance does not constitute evidence for the purposes of this questionnaire.</p>
+    <p>A No answer, or a Yes answer without supporting evidence, is recorded as Fail for that dimension. A partial answer — where the property exists for some functions but not others — is recorded as Partial, which triggers a scoping review to determine whether the covered functions include all TC-1, TC-2, and TC-3 relevant operations.</p>
+  </div>
+
+  <div class="rb">
+    <p>The questionnaire tests whether operative H-4b exists — whether non-compliance with D1–D4 architectural requirements produces present, attributable, and proportionate institutional cost. A system that passes all ten questions has demonstrated operative H-4b for its scope. A system that fails any question in the D-1 or D-3 dimension is presumptively non-compliant regardless of NIS2 or CER status.</p>
+  </div>
+</div>
+
+<!-- §02 System Identity -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>System Identity</h2>
+  <p>Completed by system owner prior to questionnaire submission.</p>
+
+  <div class="sys-block">
+    <div class="sys-header">
+      <div class="sys-label">Tier A System — Audit Record</div>
+    </div>
+    <div class="sys-fields">
+      <div class="sys-field">
+        <div class="sys-field-label">System name</div>
+        <div class="sys-field-val">&nbsp;</div>
+      </div>
+      <div class="sys-field">
+        <div class="sys-field-label">Owning authority</div>
+        <div class="sys-field-val">&nbsp;</div>
+      </div>
+      <div class="sys-field">
+        <div class="sys-field-label">TN-004 terminal condition(s)</div>
+        <div class="sys-field-val">TC-1 &nbsp; TC-2 &nbsp; TC-3 &nbsp; (circle applicable)</div>
+      </div>
+      <div class="sys-field">
+        <div class="sys-field-label">Named accountable authority</div>
+        <div class="sys-field-val">&nbsp;</div>
+      </div>
+      <div class="sys-field">
+        <div class="sys-field-label">Audit date</div>
+        <div class="sys-field-val">&nbsp;</div>
+      </div>
+      <div class="sys-field">
+        <div class="sys-field-label">Previous audit result</div>
+        <div class="sys-field-val">Pass / Partial / Fail / First audit</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §03 D-1 Questions -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>D-1 Power Endurance Questions</h2>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-1</span>
+      <span class="aq-dim">D-1 · Power endurance · Local generation</span>
+      <span class="aq-ref">TN-003 §03 D-1</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Can this system sustain full operational function for 72 hours or more using only locally available power, without dependency on external grid availability or real-time fuel procurement?</div>
+      <div class="aq-guidance">This question tests whether the system's power supply is duration-capable in the TN-003 sense — not merely whether a UPS or generator exists, but whether the energy source is physically on-site or in jurisdiction-controlled reserve, and whether the rated duration covers the compound stress reference window. Cloud-hosted systems that depend on the provider's datacenter power infrastructure do not satisfy this question regardless of the provider's own continuity certifications.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Local power system specification with rated duration under operational load · Fuel or energy reserve inventory and replenishment independence documentation · Provider contract clauses specifying local-power capability if applicable</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — 72h+ demonstrated with evidence</div>
+        <div class="aq-result-cell res-partial">Partial — covered for some functions</div>
+        <div class="aq-result-cell res-fail">Fail — no local power capability or &lt;72h</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-2</span>
+      <span class="aq-dim">D-1 · Power endurance · Test record</span>
+      <span class="aq-ref">TN-003 §03 D-1</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Has this system been operated on local power without external grid input within the past 12 months, for a minimum of 8 hours under normal operational load, with results documented?</div>
+      <div class="aq-guidance">A power endurance specification that has never been tested is an architectural claim, not a demonstrated property. The 8-hour test is a minimum verification exercise — it confirms that the local power system functions as specified under real operational load, not just in a standby configuration. The test log must record: start time, end time, load level, any anomalies observed, and the name of the officer responsible for the test.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Dated test log signed by responsible officer · Load measurement during test period · Anomaly record (including nil-anomaly declaration)</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — test conducted, documented, within 12 months</div>
+        <div class="aq-result-cell res-partial">Partial — test conducted but underdocumented</div>
+        <div class="aq-result-cell res-fail">Fail — no test record in past 12 months</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §04 D-2 Question -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>D-2 Data Endurance Question</h2>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-3</span>
+      <span class="aq-dim">D-2 · Data endurance · Local sovereignty</span>
+      <span class="aq-ref">TN-003 §03 D-2</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Are the decision-critical registers and operational data required by this system's TC functions held in jurisdiction-controlled storage, physically accessible without external network connectivity?</div>
+      <div class="aq-guidance">This question targets the primary data sovereignty condition. "Jurisdiction-controlled" means the storage infrastructure is owned, leased, or contractually controlled by the jurisdiction — not by a third-party cloud provider. "Physically accessible without external network connectivity" means that during a network separation event (loss of internet, degraded WAN, provider unavailability), the data can be read, written, and used by authorised system operators without requiring connection to external infrastructure.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Storage infrastructure ownership or lease documentation · Network topology diagram showing access paths under degraded connectivity · Data sovereignty declaration specifying which data sets are held locally</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — local sovereignty documented for all TC-relevant data</div>
+        <div class="aq-result-cell res-partial">Partial — some TC-relevant data held externally</div>
+        <div class="aq-result-cell res-fail">Fail — primary data held in external cloud without local copy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-4</span>
+      <span class="aq-dim">D-2 · Data endurance · Offline mode test</span>
+      <span class="aq-ref">TN-003 §03 D-2</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Has this system's offline operational mode been tested within the past 12 months — demonstrating that TC functions can be executed for at least 72 hours using only locally held data, without external data access?</div>
+      <div class="aq-guidance">As with AQ-2, an untested offline capability is an architectural claim. The test must cover the specific TC functions identified in §02 (TC-1, TC-2, TC-3 as applicable) — not just general system availability. A test that shows the system boots offline but cannot process authenticated decisions does not satisfy AQ-4 for a TC-1 system. The test must be conducted against realistic operational scenarios, not synthetic load.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Dated offline test log specifying TC functions tested · Confirmation that all tested TC functions executed successfully · Duration of offline operation achieved</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — 72h offline test completed for all TC functions</div>
+        <div class="aq-result-cell res-partial">Partial — offline mode works but TC functions incomplete</div>
+        <div class="aq-result-cell res-fail">Fail — no offline test or offline mode not functional</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §05 D-3 Questions -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>D-3 Identity Endurance Questions</h2>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-5</span>
+      <span class="aq-dim">D-3 · Identity endurance · Local authority</span>
+      <span class="aq-ref">TN-003 §03 D-3 · WP-003</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Can the authentication and authorisation functions required for this system's TC operations proceed without dependency on any external identity provider, PKI authority, or internet-connected service?</div>
+      <div class="aq-guidance">This is the TN-004 Q-3 cascade dependency question in audit form. Identity failure is frequently the first failure mode in compound stress — not because the decision system itself fails, but because the authentication layer fails first and takes all downstream systems with it. A system whose local identity authority depends on an external cloud SSO, a geographically remote certificate authority, or a provider-managed token service does not satisfy AQ-5 even if the primary system is locally hosted. The question traces the identity chain to its root.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Local identity authority technical specification · Identity provider dependency map showing all external dependencies in the authentication chain · Confirmation that no external network call is required to authenticate a decision-authorised user</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — local identity authority operational, no external dependency</div>
+        <div class="aq-result-cell res-partial">Partial — local fallback exists but not primary</div>
+        <div class="aq-result-cell res-fail">Fail — authentication chain has external dependency with no local fallback</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-6</span>
+      <span class="aq-dim">D-3 · Identity endurance · Stress credentials</span>
+      <span class="aq-ref">TN-003 §03 D-3</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Is there a documented, tested procedure for activating fallback credentials for TC functions under compound stress conditions — specifying who holds the credentials, under what conditions they are activated, and how their integrity is cryptographically secured?</div>
+      <div class="aq-guidance">Normal-operation authentication procedures frequently depend on infrastructure that fails under compound stress — networked HSMs, cloud-hosted credential stores, email-based MFA. A stress credential procedure addresses the specific condition where normal authentication infrastructure is unavailable. The procedure must be written, not improvised. The credentials must be physically secured and jurisdiction-controlled. The activation conditions must be explicit — ambiguity about when fallback credentials may be used creates governance risk independent of technical capability.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Written stress credential procedure document · Physical security record for credential storage · Test record showing procedure was exercised within 12 months</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — procedure documented, credentials secured, tested</div>
+        <div class="aq-result-cell res-partial">Partial — procedure exists but untested or credentials not physically secured</div>
+        <div class="aq-result-cell res-fail">Fail — no documented stress credential procedure</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §06 D-4 Questions -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>D-4 Audit Endurance Questions</h2>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-7</span>
+      <span class="aq-dim">D-4 · Audit endurance · Physical separation</span>
+      <span class="aq-ref">TN-003 §03 D-4</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Are the decision audit logs for this system's TC functions held in jurisdiction-controlled storage that is physically separated from the primary system and cannot be accessed, modified, or deleted by primary system administrators?</div>
+      <div class="aq-guidance">Audit log integrity depends on the log being held by a system that is independent of the system being audited. A log held in the same cloud environment as the primary system is accessible to anyone with administrative access to that environment — provider staff, compromised administrators, or an attacker who has reached the primary system. Physical separation is a structural requirement: the audit system and the primary system must have different access control surfaces, different administrative domains, and ideally different physical locations.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Audit log storage architecture documentation showing physical separation · Access control specification confirming different administrative domain · Ownership documentation for audit storage infrastructure</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — physically separated, different admin domain, jurisdiction-controlled</div>
+        <div class="aq-result-cell res-partial">Partial — separated but same provider or partially shared admin</div>
+        <div class="aq-result-cell res-fail">Fail — audit logs in same environment as primary system</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-8</span>
+      <span class="aq-dim">D-4 · Audit endurance · Cryptographic integrity</span>
+      <span class="aq-ref">TN-003 §03 D-4 · TN-002 §03</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Can the completeness and authenticity of the decision audit trail be verified independently of primary system availability — through a cryptographic hash chain or equivalent mechanism that does not require access to the primary system?</div>
+      <div class="aq-guidance">A log that can only be verified through the primary system provides no accountability in the scenario where the primary system has failed, been compromised, or is under dispute. Independent verifiability requires that the log's integrity is cryptographically sealed at the time of writing — each entry references its predecessor, and the chain can be verified by any party holding the public verification key without requiring access to the primary system. This is the standard established in TN-002 §03 for audit endurance in edge intelligence nodes.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Cryptographic integrity mechanism specification (hash chain algorithm, key management) · Independent verification test record — log verified without primary system access · Key custody documentation</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — cryptographic chain verifiable independently, tested</div>
+        <div class="aq-result-cell res-partial">Partial — integrity mechanism exists but verification requires partial system access</div>
+        <div class="aq-result-cell res-fail">Fail — no independent integrity verification mechanism</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §07 Systemic Questions -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Systemic Endurance Questions</h2>
+  <p>These questions address properties that span multiple D-dimensions and concern the system's behaviour under compound stress as a whole.</p>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-9</span>
+      <span class="aq-dim">Cross-dimensional · Compound stress integration test</span>
+      <span class="aq-ref">TN-003 §04 · WP-006</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Has this system been tested under simultaneous D-1, D-2, and D-3 stress conditions — simulating grid unavailability, external network separation, and external identity provider unavailability — with all TC functions demonstrated as operational for the 72-hour reference window?</div>
+      <div class="aq-guidance">D1, D2, and D3 properties tested individually may each pass while failing in combination — if, for example, the offline data access relies on authentication infrastructure that also fails under network separation. The compound stress integration test is the only verification that all four endurance properties work together under the conditions they are actually designed to address. This test is more demanding than the individual dimension tests in AQ-2 and AQ-4 and should be conducted at least annually for all Tier A systems.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Compound stress test scenario specification · Test execution log covering all three simultaneous stress conditions · Confirmation of TC function availability throughout 72-hour window · Named responsible officer for test</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — compound test conducted, all TC functions operational for 72h</div>
+        <div class="aq-result-cell res-partial">Partial — test conducted but TC functions degraded during test window</div>
+        <div class="aq-result-cell res-fail">Fail — no compound stress test conducted</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aq-block">
+    <div class="aq-header">
+      <span class="aq-num">AQ-10</span>
+      <span class="aq-dim">Labour Continuity Reserve · DA-006 intersection</span>
+      <span class="aq-ref">DA-006 · TN-004 §07 Q-4</span>
+    </div>
+    <div class="aq-body">
+      <div class="aq-q">Is there documented evidence that the personnel required to operate this system's TC functions under compound stress conditions are available, trained, and able to perform those functions without external support — including senior staff, not only junior operators?</div>
+      <div class="aq-guidance">TN-004 §07 Q-4 identifies the unresolved intersection between technical D1–D4 compliance and the DA-006 Labour Continuity Reserve finding. A technically compliant system may fail if the operators required to run it under stress are unavailable — through attrition, the +55 cohort atrophy mechanism documented in DA-006, or external dependency on vendor support staff. This question directly operationalises the DA-006/TN-004 intersection. "Senior staff" is explicit: compound stress scenarios frequently require judgment and authority beyond what junior operators can provide. The question is not satisfied by a staffing chart; it requires evidence of training exercises under stress conditions and a succession plan for key roles.</div>
+      <div class="aq-evidence">Required evidence</div>
+      <div class="aq-evidence-list">Stress scenario training records for TC-relevant staff within 12 months · Succession documentation for each TC-critical operator role · Confirmation that TC functions can be performed without vendor or external contractor presence</div>
+      <div class="aq-result">
+        <div class="aq-result-cell res-pass">Pass — trained staff documented, succession plan in place, vendor-independent</div>
+        <div class="aq-result-cell res-partial">Partial — training incomplete or succession gaps identified</div>
+        <div class="aq-result-cell res-fail">Fail — TC functions require external support or training not documented</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §08 Summary and Verdict -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>Audit Summary and Verdict</h2>
+
+  <table class="summary-grid">
+    <thead>
+      <tr><th>Question</th><th>Dimension</th><th>Result</th><th>Evidence ref.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>AQ-1</td><td>D-1 Power — local generation</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-2</td><td>D-1 Power — test record</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-3</td><td>D-2 Data — local sovereignty</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-4</td><td>D-2 Data — offline mode test</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-5</td><td>D-3 Identity — local authority</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-6</td><td>D-3 Identity — stress credentials</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-7</td><td>D-4 Audit — physical separation</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-8</td><td>D-4 Audit — cryptographic integrity</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-9</td><td>Compound stress integration test</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>AQ-10</td><td>Labour continuity reserve</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="outcome-block">
+    <div class="outcome-label">Audit verdict — select one</div>
+    <div class="outcome-grid">
+      <div class="outcome-cell outcome-pass">
+        <div class="outcome-cell-label">Pass — operative H-4b confirmed</div>
+        <p>All ten questions answered Yes with documented evidence. System is compliant with TN-003 D1–D4 requirements. Procurement proceeds or annual certification renewed.</p>
+      </div>
+      <div class="outcome-cell outcome-fail">
+        <div class="outcome-cell-label">Fail — operative H-4b not demonstrated</div>
+        <p>One or more questions answered No or without supporting evidence. Procurement is blocked pending remediation. Override requires named accountable authority, documented risk acceptance, and time-bounded remediation plan per TN-004 §06.</p>
+      </div>
+      <div class="outcome-cell outcome-partial" style="grid-column: span 2;">
+        <div class="outcome-cell-label">Partial — elevated review required</div>
+        <p>One or more questions answered Partial. The system owner and oversight authority must jointly determine whether the partial coverage includes or excludes the specific TC functions that triggered Tier A classification. If TC functions are within the uncovered scope, the system is treated as Fail for procurement purposes. If TC functions are demonstrably within the covered scope, a time-bounded plan to close the partial coverage is required as a condition of approval.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ep-note">
+    <div class="ep-label">AQ-10 note — not a blocking condition in isolation</div>
+    <p>AQ-10 (Labour Continuity Reserve) is the only question that does not map directly to a TN-003 D1–D4 dimension. A Fail on AQ-10 does not automatically block procurement or trigger the TN-004 override mechanism — it triggers a mandatory workforce continuity review. The review determines whether the identified gap constitutes an operational risk sufficient to affect the audit verdict. This distinction is necessary because AQ-10 addresses a structural labour market condition (DA-006 L-4 segmentation) that a single system owner cannot resolve through procurement alone.</p>
+  </div>
+</div>
+
+<!-- Cross-references -->
+<div class="xref-block section">
+  <div class="section-id">Viitteet</div>
+  <h2>Cross-references</h2>
+  <div class="xref-row">
+    <div class="xref-id">TN-003</div>
+    <div class="xref-text">D1–D4 Architectural Audit Metrics. Defines the properties each AQ question tests. TN-005 is the evidence-based questionnaire form for TN-003 §03 compliance demonstration.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">TN-004</div>
+    <div class="xref-text">Decision-Critical System Scoping Tool. Determines which systems are subject to TN-005. A system must be TN-004 Tier A classified before TN-005 applies. The TN-004 override mechanism is activated by a Fail verdict in TN-005.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-003</div>
+    <div class="xref-text">Institutional Termination Time. AQ-5 and AQ-6 (identity endurance) connect directly to the ITT mechanism: identity layer failure is the most common first event in an ITT sequence.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">TN-002</div>
+    <div class="xref-text">Duration-Capable Edge Intelligence Node. AQ-8 cryptographic integrity criterion references TN-002 §03 post-quantum attestation specification.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">DA-006</div>
+    <div class="xref-text">Labour Market Allocation Diagnostic. AQ-10 directly operationalises the DA-006/TN-004 §07 Q-4 intersection: the Labour Continuity Reserve finding applied to the specific human operators required for Tier A system TC functions.</div>
+  </div>
+  <div class="xref-row">
+    <div class="xref-id">WP-011</div>
+    <div class="xref-text">The TN-005 audit verdict mechanism is the operative H-4b enforcement point WP-011 §08 identifies as the missing link. A Pass verdict confirms operative H-4b for the scoped system. A Fail verdict with override confirms nominal H-4b with named political accountability — the H-4a fallback in WP-011 §04.</div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    ACI Technical Note No. 005<br>
+    Tier A System Audit Questionnaire<br>
+    Version 1.0 · 2026 · Domain D-3 · D-4
+  </div>
+  <div>
+    Open Working Draft · Subject to revision<br>
+    Aether Continuity Institute<br>
+    aethercontinuity.org
+  </div>
+  <div>
+    Cross-refs: TN-003 · TN-004 · WP-003<br>
+    TN-002 · DA-006 · WP-011<br>
+    &nbsp;
+  </div>
+</footer>
+
+</body>
+</html>

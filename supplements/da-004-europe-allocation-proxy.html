@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA-004 — European Energy Investment: Category I / II Proxy Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0d0b;--paper:#f7f4ee;--paper-2:#ede7d8;--paper-3:#e4dccb;
+  --rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--ok:#4a7a4a;--warn:#8b7a3a;
+  --mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);max-width:740px;margin:0 auto;padding:0 2rem 7rem}
+
+/* header */
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.4rem 0 1.2rem;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.dih-l{display:flex;flex-direction:column;gap:.2rem}
+.dih-inst{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.dih-series{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-top:.2rem}
+.dih-series em{color:var(--accent);font-style:normal}
+.dih-r{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+.dih-meta strong{color:var(--ink);font-weight:400}
+.status-pill{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--rule);padding:.22rem .65rem;margin-top:.3rem}
+.dot{width:4px;height:4px;border-radius:50%;background:#5a8a5a}
+.status-text{font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+nav{border-bottom:1px solid var(--rule);padding:1.1rem 0;display:flex;justify-content:space-between;align-items:center}
+.nav-home{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.nav-home::before{content:'← '}
+.nav-id{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* title */
+.title-block{padding:4rem 0 2.5rem;border-bottom:1px solid var(--rule);margin-bottom:3rem}
+.paper-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem}
+h1{font-family:var(--serif);font-size:clamp(1.7rem,4vw,2.4rem);font-weight:500;line-height:1.22;letter-spacing:-.01em;margin-bottom:1.3rem}
+.subtitle{font-family:var(--serif);font-size:1.05rem;font-style:italic;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+.cite-box{background:var(--paper-2);border-left:3px solid var(--accent);padding:.9rem 1.2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.05em;color:var(--muted);line-height:1.9}
+.domain-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+.dtag{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rule);padding:.18rem .55rem;color:var(--muted)}
+
+/* sections */
+.sec{margin-bottom:2.8rem}
+.sec-hdr{display:flex;align-items:baseline;gap:1.2rem;margin-bottom:1.2rem;padding-bottom:.55rem;border-bottom:1px solid var(--rule)}
+.sec-num{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--muted);min-width:2rem}
+h2{font-family:var(--serif);font-size:1.1rem;font-weight:500;letter-spacing:-.01em}
+p{font-size:.97rem;line-height:1.85;color:#2a2520;margin-bottom:.95rem}
+p:last-child{margin-bottom:0}
+
+/* callout */
+.callout{margin:1.8rem 0;border-left:3px solid var(--ink);padding:.95rem 1.4rem;background:var(--paper-2)}
+.callout p{font-size:.93rem;font-style:italic;margin:0;color:#3a3530}
+
+/* data figure */
+.fig{border:1px solid var(--rule);margin:2rem 0}
+.fig-head{background:var(--paper-2);padding:.5rem 1rem;font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:baseline}
+.fig-src{font-size:.46rem;color:var(--muted);letter-spacing:.06em}
+.fig-body{padding:1.2rem 1.3rem}
+
+/* bar chart rows */
+.bar-row{display:grid;grid-template-columns:160px 1fr 70px;gap:.6rem;align-items:center;margin-bottom:.6rem}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink);line-height:1.4}
+.bar-track{background:#e8e4dc;height:18px;position:relative}
+.bar-fill{height:100%;display:flex;align-items:center;padding-left:5px;font-size:.46rem;color:#fff;letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.bar-fill.cat1{background:var(--accent)}
+.bar-fill.cat2{background:var(--ok)}
+.bar-fill.mid{background:var(--warn)}
+.bar-fill.neutral{background:#9a9288}
+.bar-val{font-family:var(--mono);font-size:.62rem;color:var(--ink);text-align:right}
+
+/* ratio display */
+.ratio-display{display:grid;grid-template-columns:1fr 40px 1fr;gap:1rem;align-items:center;margin:1.5rem 0}
+.ratio-box{border:1px solid var(--rule);padding:1rem 1.2rem;text-align:center}
+.ratio-box.cat1{border-color:var(--accent);background:#fdf8f4}
+.ratio-box.cat2{border-color:#b8d4b8;background:#f4faf4}
+.ratio-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.ratio-val{font-family:var(--serif);font-size:2rem;font-weight:500;line-height:1}
+.ratio-val.cat1{color:var(--accent)}
+.ratio-val.cat2{color:var(--ok)}
+.ratio-sub{font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.4rem;letter-spacing:.04em}
+.ratio-div{text-align:center;font-family:var(--serif);font-size:1.5rem;color:var(--rule)}
+
+/* signal table */
+.sig-table{border:1px solid var(--rule);margin:1.5rem 0}
+.st-head{display:grid;grid-template-columns:60px 1fr 120px 100px;background:var(--ink);color:var(--paper)}
+.st-head div{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:.65rem .85rem;border-right:1px solid #3a3530}
+.st-head div:last-child{border-right:none}
+.st-row{display:grid;grid-template-columns:60px 1fr 120px 100px;border-bottom:1px solid var(--rule)}
+.st-row:last-child{border-bottom:none}
+.st-row>div{padding:.65rem .85rem;font-family:var(--serif);font-size:.86rem;line-height:1.4;border-right:1px solid var(--rule);color:#2a2520;vertical-align:top}
+.st-row>div:last-child{border-right:none}
+.st-id{font-family:var(--mono);font-size:.62rem;color:var(--accent);display:flex;align-items:flex-start;padding-top:.7rem}
+.sig-hi{color:var(--accent);font-family:var(--mono);font-size:.6rem}
+.sig-ok{color:var(--ok);font-family:var(--mono);font-size:.6rem}
+.sig-warn{color:var(--warn);font-family:var(--mono);font-size:.6rem}
+
+/* country comparison */
+.country-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.8rem 0}
+.cbox{border:1px solid var(--rule);padding:1.1rem 1.3rem}
+.cbox.deviation{border-color:#b8d4b8;background:#f4faf4}
+.cbox.template{border-color:#d4b888;background:#faf0e8}
+.cbox-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.75rem;padding-bottom:.45rem;border-bottom:1px solid var(--rule)}
+.cbox-name{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink)}
+.cbox-type{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase}
+.cbox-type.dev{color:var(--ok)}
+.cbox-type.tmp{color:var(--accent)}
+.cbox p{font-size:.86rem;line-height:1.6;color:#3a3530;margin-bottom:.5rem}
+.cbox p:last-child{margin-bottom:0}
+.cbox-mech{font-family:var(--mono);font-size:.56rem;color:var(--muted);margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--rule);letter-spacing:.04em;line-height:1.7}
+
+/* finding box */
+.finding{border:2px solid var(--ink);padding:1.8rem 2rem;margin:2.2rem 0}
+.finding-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.finding-text{font-family:var(--serif);font-size:1.15rem;font-weight:500;line-height:1.5;color:var(--ink);margin-bottom:.8rem}
+.finding-note{font-family:var(--serif);font-style:italic;font-size:.88rem;color:var(--muted);line-height:1.65}
+
+/* conclusion */
+.conclusion{margin-top:3.5rem;background:var(--ink);color:var(--paper);padding:2.5rem}
+.conclusion-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#7a7468;margin-bottom:1rem}
+.conclusion p{color:#d8d0c0;font-size:1rem;line-height:1.8;margin-bottom:.8rem}
+.conclusion p:last-child{margin-bottom:0}
+
+/* next pointer */
+.next{margin-top:3rem;border:1px solid var(--rule);padding:1.5rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.next-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.next-title{font-size:.95rem;font-weight:500}
+.next-arrow{font-family:var(--mono);font-size:.7rem;color:var(--accent);white-space:nowrap}
+
+footer{border-top:1px solid var(--rule);padding:2rem 0 4rem;display:flex;justify-content:space-between;gap:2rem}
+.fcol{font-family:var(--mono);font-size:.56rem;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);line-height:2}
+
+@media(max-width:600px){
+  .dih{grid-template-columns:1fr}.country-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">DA · 004 · 2026</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-l">
+    <span class="dih-inst">Aether Continuity Institute</span>
+    <span class="dih-series"><em>Diagnostic Assessment</em> &nbsp;·&nbsp; No. 004</span>
+  </div>
+  <div class="dih-r">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>DA</strong></div>
+    <div class="status-pill">
+      <span class="dot"></span>
+      <span class="status-text">Active · v1.0</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<div class="title-block">
+  <div class="paper-label">ACI Diagnostic Assessment No. 004</div>
+  <h1>European Energy Investment: A Category I / Category II Proxy Analysis</h1>
+  <p class="subtitle">Does European infrastructure capital flow preferentially toward consumption-enabling investments, and is the stability-providing gap measurable?</p>
+  <div class="cite-box">
+    Cite as: Aether Continuity Institute (ACI), Diagnostic Assessment No. 004, 2026.<br>
+    Available at: https://aethercontinuity.org/supplements/da-004-europe-allocation-proxy.html<br>
+    <span style="color:#9a8060;">v1.0 — First proxy analysis. Empirical basis: IEA World Energy Investment 2024–2025 · OECD Pension Markets in Focus 2025.</span>
+  </div>
+  <div class="domain-row">
+    <span class="dtag">D-1 · Duration Adequacy</span>
+    <span class="dtag">D-4 · Compound Stress</span>
+    <span class="dtag">WP-008 · WP-009 Candidate</span>
+    <span class="dtag">RQM-001 · E-1 Test</span>
+  </div>
+</div>
+
+
+<!-- §01 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 01</span>
+    <h2>Purpose and Scope</h2>
+  </div>
+  <p>RQM-001 requires, as evidence condition E-1, at least two OECD country pairs showing differential Category I / Category II allocation ratios correlated with capital architecture type. Before that cross-country comparison can be constructed, a prior step is needed: establishing whether the Category I / Category II distinction is empirically observable at all in available energy investment data, and whether the proxy indicators are coherent enough to support the cross-country analysis E-1 requires.</p>
+  <p>This assessment addresses that prior step for the European energy system, using IEA investment and capacity data as the primary source. It does not claim to resolve E-1 — that requires country-pair data and a capital architecture control variable. It establishes whether the diagnostic partition is visible in the aggregate data, and identifies which specific data series would need to be disaggregated to conduct the full E-1 test.</p>
+  <p>The assessment is explicitly a proxy analysis. The Category I / Category II distinction was developed in WP-008 for infrastructure capital allocation broadly — its application to energy investment data requires definitional choices that are made transparent here and are open to revision.</p>
+</div>
+
+
+<!-- §02 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 02</span>
+    <h2>Category Definitions for Energy Investment</h2>
+  </div>
+  <p>In WP-008, Category I (consumption-binding) infrastructure commits system capacity to a fixed load profile, while Category II (stability-providing) infrastructure increases system flexibility and recovery capacity. Applying this distinction to energy investment requires translation, since energy sector investment categories do not map cleanly onto WP-008's original typology.</p>
+  <p>For this proxy analysis, the translation is as follows. Category I covers investment that primarily increases electricity supply capacity without providing dispatchable control — variable renewable generation (solar PV, wind) and consumption-binding load infrastructure (hyperscale datacenters, large industrial electrification). Category II covers investment that primarily increases the system's ability to govern its own operation under stress — grid reinforcement, dispatchable and flexible generation, energy storage, and demand-side flexibility infrastructure.</p>
+
+  <div class="callout">
+    <p>This is a proxy translation, not a precise mapping. Variable renewable generation contributes to the energy system and is not in itself a continuity risk. The diagnostic question is not whether Category I investments are undesirable, but whether Category II investments are growing proportionally to Category I commitments — and whether the allocation ratio is influenced by the capital architecture of the financing system.</p>
+  </div>
+
+  <p>One deliberate ambiguity: grid investment sits at the boundary. Grid reinforcement enables both renewable integration (Category I logic) and system resilience (Category II logic). For this analysis, grid investment is treated as Category II on the grounds that it conditions the system's capacity to absorb stress, regardless of the generation mix it serves.</p>
+</div>
+
+
+<!-- §03 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 03</span>
+    <h2>European Investment Data — The Ratio</h2>
+  </div>
+  <p>IEA data for the European Union shows a large and widening asymmetry between investment in variable renewable generation and investment in the flexibility and stability infrastructure that conditions how that generation can be used. The asymmetry has been accelerating.</p>
+
+  <div class="fig">
+    <div class="fig-head">
+      <span>Figure A — EU energy investment by category proxy, 2024–2025 (approximate)</span>
+      <span class="fig-src">Source basis: IEA World Energy Investment 2024–2025</span>
+    </div>
+    <div class="fig-body">
+      <div class="bar-row">
+        <span class="bar-label">Renewables generation<br><span style="font-size:.5rem;color:var(--muted)">solar PV · wind · hydro</span></span>
+        <div class="bar-track"><div class="bar-fill cat1" style="width:85%">Category I proxy</div></div>
+        <span class="bar-val">~$390B EU</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Grid infrastructure<br><span style="font-size:.5rem;color:var(--muted)">transmission · distribution</span></span>
+        <div class="bar-track"><div class="bar-fill cat2" style="width:17%">Category II</div></div>
+        <span class="bar-val">~$65B EU</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dispatchable / storage<br><span style="font-size:.5rem;color:var(--muted)">nuclear · BESS · flexibility</span></span>
+        <div class="bar-track"><div class="bar-fill cat2" style="width:8%"></div></div>
+        <span class="bar-val">smaller share</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Fossil fuel generation<br><span style="font-size:.5rem;color:var(--muted)">gas · coal</span></span>
+        <div class="bar-track"><div class="bar-fill neutral" style="width:3%"></div></div>
+        <span class="bar-val">35:1 ratio</span>
+      </div>
+      <p style="font-family:var(--serif);font-size:.75rem;font-style:italic;color:var(--muted);margin-top:1rem;margin-bottom:0">Figure A is schematic — bar widths reflect approximate relative proportions based on IEA data. The 35:1 ratio is the IEA's own figure for EU renewable-to-fossil-fuel investment in 2024, up from 6:1 a decade earlier. Grid investment figure reflects IEA 2023 data for EU (~$65B, +20% year-on-year).</p>
+    </div>
+  </div>
+
+  <div class="ratio-display">
+    <div class="ratio-box cat1">
+      <div class="ratio-label">Category I proxy</div>
+      <div class="ratio-val cat1">35×</div>
+      <div class="ratio-sub">Renewables vs fossil fuel, 2024<br>up from 6× a decade ago</div>
+    </div>
+    <div class="ratio-div">÷</div>
+    <div class="ratio-box cat2">
+      <div class="ratio-label">Category II investment</div>
+      <div class="ratio-val cat2">+20%</div>
+      <div class="ratio-sub">Grid investment growth in 2023<br>after near-stagnation 2015–2022</div>
+    </div>
+  </div>
+
+  <p>The diagnostic signal here is not the absolute level of either category but the trajectory divergence. Renewable generation investment grew 35-fold relative to fossil fuels over a decade. Grid investment was essentially flat from 2015 to 2022 at approximately USD 300 billion globally per year before beginning to recover. The gap between what the system generates and what the system can govern is widening — and has been widening for most of the period during which the current infrastructure commitment was being made.</p>
+</div>
+
+
+<!-- §04 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 04</span>
+    <h2>Stability Gap Indicators — Observable Signals</h2>
+  </div>
+  <p>If the Category I / Category II imbalance is real, it should produce observable operational signals in the electricity system — not only in investment data. Three signal types are available from IEA data for 2024–2025.</p>
+
+  <div class="sig-table">
+    <div class="st-head">
+      <div>Signal</div>
+      <div>Observation</div>
+      <div>Source</div>
+      <div>Diagnostic reading</div>
+    </div>
+    <div class="st-row">
+      <div class="st-id">S-1</div>
+      <div>Approximately 1,650 GW of renewable capacity in advanced grid connection queues globally — 150 GW above the prior year's level. Ireland curtailed roughly 11% of variable renewable output in April 2024 due to grid absorption limits.</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">IEA Renewables 2024</div>
+      <div><span class="sig-hi">↑ Cat I pressure</span><br><span style="font-family:var(--serif);font-size:.8rem;color:var(--muted)">Generation investment outpacing grid capacity</span></div>
+    </div>
+    <div class="st-row">
+      <div class="st-id">S-2</div>
+      <div>In H1 2025, EU gas-fired generation rose approximately 20% year-on-year. Hydropower output fell around 15% and wind output approximately 10%, both driven by adverse meteorological conditions. The system compensated with dispatchable fossil generation — demonstrating continued dependence on Category I fossil infrastructure as backup, despite the 35:1 investment ratio favouring renewables.</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">IEA Electricity Mid-Year Update 2025</div>
+      <div><span class="sig-warn">→ Endurance test</span><br><span style="font-family:var(--serif);font-size:.8rem;color:var(--muted)">Flexibility still rests on legacy dispatchable assets</span></div>
+    </div>
+    <div class="st-row">
+      <div class="st-id">S-3</div>
+      <div>OECD pension assets reached USD 69.8 trillion at end-2024 — a record level. Large pension funds have systematically increased foreign infrastructure exposure over the past decade. The 'private equity model' of infrastructure finance, dominant in Europe and North America, has been documented by OECD as distinct from the 'Canadian/Australian model' in its preference for market-return structures.</div>
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">OECD Pension Markets 2025 · OECD LPF Survey 2023</div>
+      <div><span class="sig-hi">→ Layer 1 active</span><br><span style="font-family:var(--serif);font-size:.8rem;color:var(--muted)">Capital architecture operating at scale</span></div>
+    </div>
+  </div>
+
+  <p>Signal S-2 is particularly diagnostic for the RQM-001 framework. The EU electricity system in H1 2025 experienced a compound stress event: two major variable sources simultaneously underperformed. The system response was to draw on dispatchable fossil generation — assets that are not growing and whose investment share is at 1:35 relative to renewables. This is a direct observation of Category II dependency under stress, using exactly the legacy reserve assets that WP-001's Black Period analysis identifies as the critical endurance layer.</p>
+</div>
+
+
+<!-- §05 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 05</span>
+    <h2>Capital Architecture — Preliminary Country Comparison</h2>
+  </div>
+  <p>RQM-001 predicts that countries with different capital architectures will show different Category I / Category II allocation patterns. The following comparison is based on structural capital architecture data, not yet on disaggregated Category I / Category II investment ratios — that is the E-1 test that DA-004 is scoping. The structural patterns are consistent with the prediction.</p>
+
+  <div class="country-grid">
+    <div class="cbox deviation">
+      <div class="cbox-header">
+        <span class="cbox-name">🇳🇴 Norway</span>
+        <span class="cbox-type dev">Predicted: deviation</span>
+      </div>
+      <p>Norway's Government Pension Fund Global is the world's largest sovereign wealth fund — included in the OECD's Large Pension Fund survey — and operates under a mandate that is partially insulated from market-rate IRR requirements. The state retains direct investment capacity in energy infrastructure through Equinor and Statkraft without requiring standard DSCR qualification.</p>
+      <div class="cbox-mech">Mechanism: Layer 1 filter weakened by sovereign capital scale · Category II investment possible below market threshold</div>
+    </div>
+    <div class="cbox deviation">
+      <div class="cbox-header">
+        <span class="cbox-name">🇫🇷 France</span>
+        <span class="cbox-type dev">Predicted: partial deviation</span>
+      </div>
+      <p>Caisse des Dépôts et Consignations — France's state long-term investment institution — manages several hundred billion in assets on a public mandate with an explicit mission to support long-duration infrastructure. EDF, despite recent partial reprivatisation, remains substantially state-directed. These actors can commit capital to dispatchable nuclear and grid infrastructure on horizons and at returns unavailable to market-mandate funds.</p>
+      <div class="cbox-mech">Mechanism: Public capital insulates strategic assets from private equity model · Layer 1 filter selectively bypassed</div>
+    </div>
+    <div class="cbox template">
+      <div class="cbox-header">
+        <span class="cbox-name">🇫🇮 Finland</span>
+        <span class="cbox-type tmp">Predicted: template exposure</span>
+      </div>
+      <p>Finnish infrastructure investment is financed primarily through pension fund capital (Varma, Ilmarinen, Elo, Veritas) and market-mandate infrastructure funds (CapMan Infrastructure). There is no sovereign wealth fund and limited state-directed long-term investment capacity at the scale of Norway's NBIM or France's Caisse des Dépôts. Capital allocation follows standard institutional investor mandates.</p>
+      <div class="cbox-mech">Mechanism: Full Layer 1 exposure · Category II investments must compete on market-rate criteria · consistent with DA-003 findings on endurance gap</div>
+    </div>
+    <div class="cbox template">
+      <div class="cbox-header">
+        <span class="cbox-name">🇩🇪 Germany</span>
+        <span class="cbox-type tmp">Predicted: template exposure</span>
+      </div>
+      <p>Germany's infrastructure investment is market and bank-intermediated, with KfW providing partial public capacity but at a scale insufficient to displace private equity model dominance. The Energiewende policy architecture has driven very large Category I investment (solar, wind) while grid investment lagged significantly — with grid connection queues and curtailment emerging as documented system constraints by 2023–2024.</p>
+      <div class="cbox-mech">Mechanism: Policy-driven Category I scaling without proportional Category II · Layer 1 and Layer 3 both active · Germany is the clearest observable case of S-1 signal</div>
+    </div>
+  </div>
+
+  <p>The structural patterns are consistent with RQM-001's prediction, but this is not yet an E-1 test. E-1 requires disaggregated investment ratio data showing that Norway and France have measurably higher Category II shares than Finland and Germany, controlled for sectoral mix. That data is not yet assembled. DA-004 identifies the structural plausibility of the prediction; the empirical test remains to be constructed.</p>
+</div>
+
+
+<!-- §06 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 06</span>
+    <h2>What This Analysis Does and Does Not Show</h2>
+  </div>
+  <p>DA-004 establishes three things. First, the Category I / Category II distinction is observably present in European energy investment data — the 35:1 renewable-to-fossil ratio, the near-stagnation of grid investment 2015–2022, and the documented grid connection queues and curtailment events are all consistent with a system where stability-providing investment has not grown proportionally to consumption-enabling commitment.</p>
+  <p>Second, the H1 2025 EU electricity stress event is a direct empirical observation of Category II dependency under compound meteorological stress — the system revealed its continued dependence on legacy dispatchable assets whose investment share is minimal. This is not a crisis, but it is a palpable signal of the endurance structure WP-001 identifies as the diagnostic layer.</p>
+  <p>Third, the capital architecture comparison is structurally consistent with RQM-001's prediction, but is not yet an empirical test of it. The prediction is that Norway and France would show higher Category II investment shares than Finland and Germany when controlled for sectoral mix — this is testable with disaggregated IEA or national energy investment data, but that data assembly has not been done here.</p>
+
+  <div class="finding">
+    <div class="finding-label">DA-004 — Core finding</div>
+    <div class="finding-text">The Category I / Category II gap is observable in European energy investment data. The stability deficit is operational, not merely structural.</div>
+    <div class="finding-note">The H1 2025 EU stress event demonstrates that the Category II dependency is active under currently observable meteorological conditions, not only under hypothetical compound stress scenarios. The endurance gap WP-001 identifies is not a future risk — it is a present operating condition that existing legacy assets currently mask.</div>
+  </div>
+</div>
+
+
+<!-- §07 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 07</span>
+    <h2>Data Requirements for E-1 Completion</h2>
+  </div>
+  <p>To complete the E-1 test as specified in RQM-001, three specific data series are required beyond what is available in public IEA aggregate statistics.</p>
+  <p>First, disaggregated national energy investment data by generation type and grid/flexibility category for Norway, France, Finland, and Germany — ideally 2015–2024 to capture the full trajectory divergence period. This is available in principle from IEA's World Energy Investment country annexes and from national energy agency statistics (Fingrid, Statnett, RTE, Bundesnetzagentur).</p>
+  <p>Second, pension fund and infrastructure fund allocation data by sub-asset class showing the share going to variable renewable generation versus dispatchable/storage/grid assets. OECD's Long-Term Investing of Large Pension Funds survey collects infrastructure sub-sector data but the 2023 edition does not disaggregate at Category I / Category II resolution. Direct fund disclosure data or Preqin infrastructure database access would be required.</p>
+  <p>Third, for the capital architecture control variable, national statistics on the share of infrastructure investment financed through public-mandate versus private-market vehicles. This is partially derivable from existing OECD data but would require country-level assembly rather than aggregate reporting.</p>
+  <p>These data requirements are not prohibitive for a working paper. They are more demanding than can be assembled from publicly available aggregate statistics alone, and would benefit from access to Preqin or similar private-market data infrastructure.</p>
+</div>
+
+</main>
+
+<div class="conclusion">
+  <div class="conclusion-label">Diagnostic summary — DA-004</div>
+  <p>The Category I / Category II gap is visible in European energy investment data and has been widening for approximately a decade. The 35:1 renewable-to-fossil investment ratio measures Category I scaling without a corresponding Category II signal. Grid investment near-stagnation 2015–2022 and the H1 2025 EU electricity stress response demonstrate that stability-providing capacity has not grown proportionally.</p>
+  <p>Capital architecture patterns for Norway, France, Finland, and Germany are structurally consistent with RQM-001's prediction — public-mandate capital correlates with predicted deviation from the template, and market-mandate capital with predicted template exposure. This is not yet an empirical test; it is a plausibility confirmation that justifies the investment in assembling the data required for E-1.</p>
+  <p>WP-009 is conditionally viable. The diagnostic partition is real and observable. The transnational correlation mechanism is structurally plausible and the deviation-case architecture is coherent. What remains is the disaggregated country-pair analysis — the step that would convert structural plausibility into an analytically defensible claim.</p>
+</div>
+
+<div style="padding:0 0 0">
+  <div class="next">
+    <div>
+      <div class="next-label">Precondition for</div>
+      <div class="next-title">WP-009 — Transnational Allocation Filter (conditional on E-1 completion)</div>
+    </div>
+    <div class="next-arrow">→ RQM-001</div>
+  </div>
+</div>
+
+<footer>
+  <div class="fcol">
+    Aether Continuity Institute<br>
+    Diagnostic Assessment No. 004<br>
+    Version 1.0 · March 2026
+  </div>
+  <div class="fcol">
+    Status: Active · v1.0<br>
+    Subject to revision<br>
+    Empirical basis: IEA 2024–2025 · OECD 2025
+  </div>
+  <div class="fcol">
+    Domains: D-1 · D-4<br>
+    Follows: RQM-001<br>
+    Companion: WP-008 v1.1 · WP-001
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ACI DA-005 — Digital Infrastructure Allocation Diagnostic</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --blue: #185fa5;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 7rem;
+}
+.doc-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.doc-id { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink); }
+.doc-meta { font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:right; line-height:1.9; }
+h1 { font-family:var(--serif); font-size:1.8rem; font-weight:500; letter-spacing:-.01em; margin-bottom:.35rem; line-height:1.2; }
+.tagline { font-family:var(--serif); font-size:1rem; font-style:italic; color:var(--muted); margin-bottom:.3rem; }
+.tagline-fi { font-family:var(--serif); font-size:.92rem; font-style:italic; color:var(--muted); margin-bottom:2.4rem; }
+.cite-block { border:1px solid var(--rule); padding:.9rem 1.1rem; margin-bottom:2.4rem; font-size:.6rem; letter-spacing:.06em; color:var(--muted); line-height:1.9; }
+.cite-block span { color:var(--ink); font-size:.62rem; }
+.section { margin-bottom:2.5rem; }
+.section-id { font-size:.58rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+h2 { font-family:var(--serif); font-size:1.06rem; font-weight:500; margin-bottom:.75rem; border-bottom:1px solid var(--rule); padding-bottom:.35rem; }
+h3 { font-family:var(--serif); font-size:.98rem; font-weight:500; margin:1.4rem 0 .6rem; color:var(--ink); }
+p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; margin-bottom:.85rem; }
+.rb { border-left:3px solid var(--ink); padding:.85rem 1.2rem; margin:1.2rem 0; background:#f0ece4; }
+.rb p { font-family:var(--serif); font-size:.95rem; font-style:italic; margin:0; color:var(--ink); line-height:1.7; }
+.ep-note { border-left:3px solid var(--accent); padding:.85rem 1.2rem; margin:1.2rem 0; background:#faf5ee; }
+.ep-label { font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:.4rem; }
+.ep-note p { font-family:var(--serif); font-size:.92rem; margin:0; color:#3a2510; line-height:1.7; }
+.scope-note { border:1px solid var(--rule); padding:.9rem 1.1rem; margin:1rem 0; background:#f0ece4; }
+.scope-label { font-family:var(--mono); font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+.scope-note p { font-family:var(--serif); font-size:.9rem; line-height:1.7; margin-bottom:.5rem; color:#2a2520; }
+.scope-note p:last-child { margin-bottom:0; }
+.flow { border:1px solid var(--rule); padding:1.2rem 1.4rem; margin:1.2rem 0; background:#f0ece4; }
+.flow pre { font-family:var(--mono); font-size:.7rem; line-height:1.9; color:var(--ink); white-space:pre; }
+.tbl { width:100%; border:1px solid var(--rule); margin:1.2rem 0; border-collapse:collapse; }
+.tbl th { font-family:var(--mono); font-size:.56rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:.5rem .7rem; border-bottom:1px solid var(--rule); text-align:left; background:#f0ece4; }
+.tbl td { font-family:var(--serif); font-size:.88rem; line-height:1.55; padding:.6rem .7rem; border-bottom:1px solid var(--rule); vertical-align:top; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl-key { font-family:var(--mono); font-size:.62rem; color:var(--accent); letter-spacing:.1em; }
+.tbl-key-b { font-family:var(--mono); font-size:.62rem; color:var(--blue); letter-spacing:.1em; }
+.axis-econ { font-family:var(--mono); font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+.axis-cont { font-family:var(--mono); font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; color:var(--blue); }
+.doc-footer { border-top:1px solid var(--rule); margin-top:4rem; padding-top:1rem; font-size:.58rem; letter-spacing:.1em; color:var(--muted); line-height:2; }
+.finding-strong { color:#0f6e56; font-style:italic; }
+.finding-weak { color:#8b4513; font-style:italic; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="doc-id">ACI · DA-005 · Diagnostic Assessment</div>
+    <div class="doc-id" style="font-size:.58rem;color:var(--muted);margin-top:.2rem">Domain D-1 · D-4 · D-5 · D-6 · Version 0.3 · 2026</div>
+  </div>
+  <div class="doc-meta">
+    Open Working Draft<br>
+    Pre-publication<br>
+    aethercontinuity.org
+  </div>
+</div>
+
+<h1>Digital Infrastructure Allocation Diagnostic</h1>
+<p class="tagline">Capital Structure and Infrastructure Trajectory: A Cross-National Test</p>
+<p class="tagline-fi">Digitaalisen infrastruktuurin allokaatiodiagnostiikka: pääomarakenne ja infrastruktuuripolku</p>
+
+<div class="cite-block">
+  <span>Cite as —</span> Aether Continuity Institute (ACI). (2026). Digital Infrastructure Allocation Diagnostic. ACI Diagnostic Assessment No. 005, v0.3. Available at: https://aethercontinuity.org<br>
+  <span>Cross-references —</span> WP-006 (Continuity Computing) · WP-007 (Situational Awareness Persistence) · WP-008 (Institutional Allocation) · WP-009 (Coupled Infrastructure) · RQM-001 (Correlated Blindspot) · DA-002 (Computational Decision Capacity) · DA-003 (Finland Allocation) · DA-004 (Europe Allocation Proxy) · TN-002 (Duration-Capable Edge Intelligence Node)<br>
+  <span>Companion to —</span> WP-009. Operationalises and tests the mechanism and hypothesis of WP-009 §03–§04. The WP-006 / WP-007 continuity computing framework provides the second diagnostic dimension introduced in v0.2.
+</div>
+
+<!-- ABSTRACT -->
+<div class="section">
+  <div class="section-id">Abstract</div>
+  <h2>Abstract</h2>
+
+  <p>This diagnostic assessment tests the WP-009 hypothesis that capital structure shapes national digital infrastructure trajectory when computation becomes energy-bound. A dual-axis framework — <span class="axis-econ">economic axis</span> (D-1 through D-4: value-chain position) and <span class="axis-cont">continuity axis</span> (C-1 through C-2: decision endurance under compound stress) — is applied to three OECD comparison pairs: France–Finland (P-1), United States–Germany (P-2), Estonia–Sweden (P-3).</p>
+
+  <p>The economic axis finding is directionally consistent with the WP-009 prediction across all three pairs: strategic or public capital participation correlates with stronger domestic value-chain position. The continuity axis finding introduces a result not predicted by WP-009 alone: <strong>economic sovereignty and decision sovereignty are separable variables.</strong> A country can occupy a strong economic axis position while exhibiting structural decision-infrastructure fragility, and vice versa.</p>
+
+  <p>The most structurally significant finding concerns Finland. Finland exhibits the Northern Host pattern on the economic axis — large physical capacity, foreign-owned, thin domestic AI ecosystem — and simultaneously exhibits the highest C-1 risk in the assessment: public sector digital infrastructure migrating toward hyperscale cloud dependency for core government functions. Finland may be simultaneously among the most attractive physical locations for AI infrastructure in Europe and among the most structurally vulnerable for public decision-making infrastructure. These are not contradictory — they are two consequences of the same Northern Host institutional logic.</p>
+</div>
+
+<!-- §01 -->
+<div class="section">
+  <div class="section-id">§ 01</div>
+  <h2>Research Design / Tutkimusasetelma</h2>
+
+  <p>The hypothesis tested in this assessment is reproduced from WP-009 §04:</p>
+
+  <div class="rb">
+    <p>When computation becomes energy-bound infrastructure, national digital capability will begin to correlate with the capital structure governing infrastructure investment.</p>
+  </div>
+
+  <p>This assessment applies a <strong>dual-axis research design.</strong> The first axis — the economic axis — tests the WP-009 hypothesis directly: whether capital structure predicts value-chain position across comparison pairs. The second axis — the continuity axis — evaluates the same infrastructure against the WP-006 / WP-007 framework: whether the infrastructure exhibits duration capability across the four D1–D4 components, or whether it is optimised for throughput in a way that creates structural fragility under compound stress.</p>
+
+  <p>The dual-axis design was introduced in v0.2 following incorporation of WP-006 and WP-007. Its inclusion follows from the observation that economic and continuity dimensions are analytically independent: a country with a strong domestic AI ecosystem but fully cloud-dependent public sector decision infrastructure exhibits a different risk profile than a country with thin ecosystem but locally anchored public decision infrastructure.</p>
+
+  <p>Three comparison pairs are examined. P-1 (France–Finland) carries the most analytical weight as a near-natural experiment: both are EU member states with low-carbon electricity systems and high datacenter attractiveness, but different capital allocation logics. P-2 (United States–Germany) anchors the private hyperscale extreme and the Central Hybrid regulatory model. P-3 (Estonia–Sweden) introduces the small-state continuity variant — particularly significant because Estonia's X-Road architecture is the most comprehensively documented public digital infrastructure design in the dataset.</p>
+</div>
+
+<!-- §02 -->
+<div class="section">
+  <div class="section-id">§ 02</div>
+  <h2>Indicator Framework / Indikaattorikehys</h2>
+
+  <p>The indicator framework is structured around four economic dimensions and two continuity dimensions.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Dim.</th><th>Label</th><th>Indicators</th><th>Role in analysis</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">D-1</span><br><span class="axis-econ">economic</span></td>
+        <td>Infrastructure capacity</td>
+        <td>Hyperscale MW; HPC petaflops</td>
+        <td>Physical scale. Category I (hyperscale) vs Category II (HPC/public) balance.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-2</span><br><span class="axis-econ">economic</span></td>
+        <td>Capital structure</td>
+        <td>AI startup funding; public tech investment % GDP; strategic vs market-rate capital share</td>
+        <td>Primary explanatory variable. Distinguishes private hyperscale logic from strategic or public capital participation.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-3</span><br><span class="axis-econ">economic</span></td>
+        <td>Ecosystem development</td>
+        <td>Domestic AI companies; domestic cloud operators; AI patents per capita</td>
+        <td>Value-chain retention. Primary outcome variable of the WP-009 economic hypothesis.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-4</span><br><span class="axis-econ">economic</span></td>
+        <td>Energy allocation</td>
+        <td>Datacenter demand % national generation; Category II (stabilising) / Category I (consumption-binding) ratio</td>
+        <td>DA-003/DA-004 endurance diagnostic applied to digital layer.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">C-1</span><br><span class="axis-cont">continuity</span></td>
+        <td>Duration capability</td>
+        <td>Public sector: local vs cloud-hosted decision systems; D1–D4 coverage of critical government functions</td>
+        <td>WP-006 §07 continuity axis. Whether public sector AI/decision infrastructure satisfies power, data, identity, and audit endurance requirements.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">C-2</span><br><span class="axis-cont">continuity</span></td>
+        <td>Awareness persistence</td>
+        <td>Critical infrastructure operators: locally hosted vs external situational awareness; offline decision capability</td>
+        <td>WP-007 §03 axis. Whether operational awareness persists under simultaneous energy, communications, and institutional stress.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>D-2 (capital structure) is the primary explanatory variable. D-1 and D-3 together form the primary outcome variable. D-4 connects the analysis to the DA-003 / DA-004 energy diagnostic. C-1 and C-2 constitute the continuity axis introduced in v0.2.</p>
+
+  <p>One deliberate design choice: the framework does not include GDP per capita, digital readiness indices, or composite innovation rankings as control variables. A country can score highly on digital readiness indices while exhibiting the Northern Host pattern. Including such indices as controls would conflate the outcome with the control — a standard endogeneity problem.</p>
+</div>
+
+<!-- §03 -->
+<div class="section">
+  <div class="section-id">§ 03</div>
+  <h2>Data Sources and Limitations / Datalähteet ja rajoitukset</h2>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Dim.</th><th>Primary sources</th><th>Known limitations</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">D-1</span></td>
+        <td>Synergy Research hyperscale tracker; Data Center Map; EuroHPC JU records; TOP500</td>
+        <td>Hyperscale capacity figures are often estimates; some facilities undisclosed. HPC figures more reliable via TOP500 and EuroHPC.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-2</span></td>
+        <td>Dealroom / Crunchbase; national innovation fund disclosures; OECD STI Outlook</td>
+        <td>Strategic capital participation often embedded in broader programs; cross-country comparability limited by reporting standards. Bias direction attenuates predicted correlation.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-3</span></td>
+        <td>OECD AI Policy Observatory; national company registries; EPO PATSTAT; Atomico State of European Tech</td>
+        <td>Company counts vary with definition. Patent data lags 2–3 years.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">D-4</span></td>
+        <td>National grid operators (Fingrid, RTE, BNetzA); IEA Electricity Statistics; industry analyst estimates</td>
+        <td>Datacenter electricity consumption weakest data point: ±30% estimate variance. DA-003 structural parameter approach applied where possible.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">C-1</span></td>
+        <td>National cybersecurity agency reports; government cloud procurement frameworks; VM (FI), DINUM (FR) digital strategy documents</td>
+        <td>D1–D4 endurance properties not systematically disclosed. Assessment uses architecture-level proxy: whether procurement frameworks require local hosting, offline capability, or duration certification.</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">C-2</span></td>
+        <td>National preparedness authority reports; critical infrastructure operator procurement; DA-002 CS-1–CS-6 signal taxonomy where applicable</td>
+        <td>Situational awareness infrastructure often sensitive and undisclosed. Estonia (X-Road documentation) and Finland (NESA / HVK reports) offer most accessible proxies.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The DA-002 signal taxonomy (CS-1 through CS-6) provides a reference for the types of precursor signals that would indicate computational ITT onset. Applying that taxonomy rigorously to national-level systems is outside the scope of this diagnostic assessment but is documented in DA-002 for reference.</p>
+</div>
+
+<!-- §04 -->
+<div class="section">
+  <div class="section-id">§ 04</div>
+  <h2>P-1: France – Finland / Ranska–Suomi</h2>
+
+  <p>The France–Finland pair is the primary analytical test of the WP-009 hypothesis. Both share EU regulatory context, low-carbon electricity systems, and high datacenter attractiveness. The primary difference is institutional capital logic.</p>
+
+  <h3>Economic axis (D-1 through D-4)</h3>
+
+  <p>On D-1, both countries have attracted substantial hyperscale investment. Finland hosts Google (Hamina), Microsoft (Helsinki region), and Amazon. France hosts comparable or larger hyperscale capacity in the Paris region with ongoing regional expansion. HPC diverges: Finland's LUMI (top-five European system, Category II public investment) has no commercial equivalent in Finland's private digital infrastructure.</p>
+
+  <p>On D-2, the contrast is pronounced. Finland's digital infrastructure investment is predominantly foreign private capital. France maintains active state participation through Bpifrance, EDF digital infrastructure programs, and the Stratégie Nationale pour l'IA (approximately €2.5 billion committed, 2021–2025). The per-capita gap in strategic capital participation is substantial and directionally consistent with the WP-009 prediction.</p>
+
+  <p>On D-3, France has a significantly larger domestic AI company base: Mistral AI is visible, but the structural signal is the broader Parisian ecosystem — Station F, Bpifrance portfolio companies, INRIA spinoffs. Finland's domestic AI ecosystem is competent but thin: strong in applied AI research (Aalto, University of Helsinki), weak in commercialised AI product companies with international scale. Large physical compute capacity, thin domestic commercial AI ecosystem — this is precisely the Northern Host profile.</p>
+
+  <p>On D-4, both exhibit Category I growth. Finland's trajectory is more acute given hyperscale scale relative to national grid. The Category I / II imbalance is directionally similar in both countries but more pronounced in Finland.</p>
+
+  <h3>Continuity axis (C-1 and C-2)</h3>
+
+  <p>On C-1, Finland's government cloud strategy (VM julkisen hallinnon pilvipalvelulinjaukset) permits and in practice encourages migration to hyperscale cloud for central government functions. Kela, Verohallinto, and THL have all undertaken significant Azure migrations. Under the WP-006 framework, this reduces D2 (data endurance) and D3 (identity endurance): government decision functions that depend on continuous hyperscale connectivity lose decision validity when connectivity is disrupted. DVV and Suomi.fi authentication represent partial exceptions, but the overall trajectory is toward external dependency.</p>
+
+  <p>France's Doctrine cloud au centre (2021, DINUM) established a tiered cloud framework. The most sensitive workloads require hosting on cloud de confiance providers (OVHcloud, Thales/S3NS) certified under SecNumCloud. This imposes a national sovereignty layer on digital infrastructure that Finland's framework does not. French public sector decision infrastructure retains a larger share of locally anchored identity and audit capability — visible in procurement documentation even without direct technical measurement.</p>
+
+  <p>On C-2, NESA (Huoltovarmuuskeskus) preparedness reports indicate partial compliance: some continuity capability at operator level, but integration across sectors and at the national decision layer is incomplete. France's SGDSN maintains more explicit continuity architecture at national level, though subnational operator resilience shows comparable gaps.</p>
+
+  <h3>P-1 summary</h3>
+
+  <div class="ep-note">
+    <div class="ep-label">FC-4 evaluation</div>
+    <p>FC-4 of WP-009 is not falsified by P-1. The FR–FI pair shows a measurable difference in value-chain structure directionally consistent with the predicted capital structure effect. The continuity axis finding — Finland's highest C-1 risk in the dataset — is an extension of the WP-009 mechanism, not a test of it. The Northern Host pattern has two costs, not one.</p>
+  </div>
+</div>
+
+<!-- §05 -->
+<div class="section">
+  <div class="section-id">§ 05</div>
+  <h2>P-2: United States – Germany / Yhdysvallat–Saksa</h2>
+
+  <p>P-2 tests the mechanism at the extreme ends of the capital structure spectrum. The United States represents the full private hyperscale model. Germany represents the Central Hybrid Zone: regulatory governance (GAIA-X, BSI Grundschutz, Digitale Souveränität) as a substitute for direct capital participation. This pair does not function as a near-natural experiment; its role is to anchor the private-capital extreme and test whether the Central Hybrid approach produces measurably different outcomes.</p>
+
+  <h3>Economic axis</h3>
+
+  <p>On D-2, the US private hyperscale model produces the highest private capital intensity in the dataset. CHIPS Act investments target semiconductor manufacturing, not cloud or AI infrastructure. Germany's D-2 profile is mixed: GAIA-X co-investment and BMWi programs represent a layer of strategic capital absent from the US model, but subordinate to private hyperscale investment.</p>
+
+  <p>On D-3, the US exhibits the strongest economic axis performance by a wide margin. Germany's domestic AI ecosystem is the largest in continental Europe but primarily applied-AI and Mittelstand-integrated, with limited global-scale platform formation. This pattern — US capturing the upper value chain, Germany occupying applied and industrial AI layers — is consistent with the Central Hybrid prediction: regulatory friction slows Category I investment without building Category II domestic capability at platform scale.</p>
+
+  <h3>Continuity axis</h3>
+
+  <p>On C-1, FedRAMP addresses cybersecurity resilience rather than duration in the WP-006 D1–D4 sense. CISA guidance does not specify D2 or D3 as standalone components. Germany's BSI Grundschutz Notfallmanagement addresses operational continuity more explicitly, but is a security and risk management standard rather than a duration-architecture specification. The WP-006 components — particularly D3 (identity endurance without central attestation) and D4 (audit endurance without external logging) — are not explicitly addressed in either framework.</p>
+
+  <div class="scope-note">
+    <div class="scope-label">P-2 continuity finding</div>
+    <p>Security maturity and duration capability are not the same property. Both the US FedRAMP and German BSI frameworks were designed with cybersecurity and rapid-recovery scenarios as primary design conditions. Neither was designed with the compound stress scenario — simultaneous energy, communications, and institutional disruption — that WP-006 identifies as the critical design condition for continuity architecture.</p>
+  </div>
+</div>
+
+<!-- §06 -->
+<div class="section">
+  <div class="section-id">§ 06</div>
+  <h2>P-3: Estonia – Sweden / Viro–Ruotsi</h2>
+
+  <p>The Estonia–Sweden pair was selected to test the mechanism in a small-state context and to introduce a case with unusually well-documented public digital infrastructure architecture. Both are small, highly digitalised Nordic/Baltic states representing different institutional logics: Estonia's infrastructure is primarily publicly designed and publicly anchored; Sweden's is more market-led despite comparable digitalisation levels.</p>
+
+  <p>Estonia is the most important case in the dataset for the continuity axis. The X-Road data exchange layer, e-ID system, digital signature infrastructure, and KSI (Keyless Signature Infrastructure) blockchain-based audit system together constitute a documented example of public digital infrastructure that approaches the WP-006 D1–D4 architecture more closely than any other national system in the assessment.</p>
+
+  <h3>Economic axis</h3>
+
+  <p>On D-3, Sweden has a significantly stronger AI company base — Stockholm hosts one of Europe's most active startup ecosystems. Estonia's ecosystem is smaller but has produced notable infrastructure companies (Guardtime, Nortal, Pipedrive) with strong public sector integration. The pattern is consistent with the WP-009 prediction: Sweden's market-led model produces a larger absolute ecosystem; Estonia's public-infrastructure model produces a smaller but more domestically anchored ecosystem.</p>
+
+  <h3>Continuity axis</h3>
+
+  <p>On C-1, Estonia's X-Road architecture is designed for federated, distributed operation without a central server. All participating organisations run local security servers; data exchange is peer-to-peer with central governance but without central data storage. X-Road retains partial functionality under central infrastructure disruption in a way that centralised cloud architectures do not. Estonia's KSI blockchain provides audit integrity without dependence on a central logging server — the closest national-scale equivalent to WP-006 D4 (audit endurance) in the dataset.</p>
+
+  <p>Sweden's C-1 profile is weaker relative to Estonia. Swedish government cloud strategy (MSB and DIGG guidance) has moved toward hyperscale cloud for central government functions in a pattern similar to Finland's, at a somewhat earlier stage.</p>
+
+  <p>On C-2, Estonia's National Cyber Security Centre (RIA) and the 2007 cyberattack experience have produced a compound-stress-aware doctrine that is more deliberately continuity-designed than the Swedish MSB equivalent, which developed without the same forcing event.</p>
+
+  <div class="rb">
+    <p>The Estonia–Sweden pair demonstrates that economic axis position and continuity axis position are separable: Sweden has stronger economic axis performance; Estonia has stronger continuity axis performance. This is the clearest empirical illustration in the dataset of the dual-axis structure introduced in §02.</p>
+  </div>
+
+  <p>For the WP-009 falsification conditions, P-3 provides evidence against FC-2 (energy endowment dominance): Estonia and Sweden have broadly similar energy characteristics but diverge significantly on the continuity axis. The divergence is attributable to institutional design choice, not physical endowment.</p>
+</div>
+
+<!-- §07 -->
+<div class="section">
+  <div class="section-id">§ 07</div>
+  <h2>Cross-Pair Synthesis / Parien välinen synteesi</h2>
+
+  <h3>Economic axis — summary</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Pair</th><th>Country</th><th>D-2 capital</th><th>D-3 ecosystem</th><th>Economic axis result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="tbl-key">P-1</span></td><td>France</td><td>Strategic + private</td><td>Strong domestic AI stack</td><td>Consistent with WP-009</td></tr>
+      <tr><td><span class="tbl-key">P-1</span></td><td>Finland</td><td>Private foreign</td><td>Thin domestic ecosystem</td><td>Northern Host confirmed</td></tr>
+      <tr><td><span class="tbl-key">P-2</span></td><td>United States</td><td>Private hyperscale</td><td>Strongest in dataset</td><td>Consistent — upper value chain</td></tr>
+      <tr><td><span class="tbl-key">P-2</span></td><td>Germany</td><td>Hybrid regulatory</td><td>Industrial AI, limited platform</td><td>Central Hybrid confirmed</td></tr>
+      <tr><td><span class="tbl-key">P-3</span></td><td>Estonia</td><td>Public infra layer</td><td>Small, domestically anchored</td><td>Public model — small state</td></tr>
+      <tr><td><span class="tbl-key">P-3</span></td><td>Sweden</td><td>Market-led</td><td>Larger, less anchored</td><td>Consistent with WP-009</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Continuity axis — summary</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Pair</th><th>Country</th><th>C-1 primary finding</th><th>C-2 primary finding</th><th>Continuity</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">P-1</span></td><td>France</td>
+        <td>SecNumCloud sovereignty layer; partial local anchoring</td>
+        <td>SGDSN national continuity architecture</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P-1</span></td><td>Finland</td>
+        <td>Hyperscale cloud migration of core gov functions — <strong>highest C-1 risk in dataset</strong></td>
+        <td>NESA: partial sector awareness, incomplete integration</td>
+        <td><span class="finding-weak">Weak</span></td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P-2</span></td><td>United States</td>
+        <td>FedRAMP: security not duration architecture</td>
+        <td>CISA: security-oriented, not compound-stress designed</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P-2</span></td><td>Germany</td>
+        <td>BSI Grundschutz: continuity standard exists, not D1–D4</td>
+        <td>BBK: Bevölkerungsschutz continuity doctrine</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key-b">P-3</span></td><td>Estonia</td>
+        <td>X-Road distributed; KSI audit integrity; federated identity — closest to D1–D4 logic in dataset</td>
+        <td>RIA: compound stress doctrine from 2007 experience</td>
+        <td><span class="finding-strong">Strong</span></td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">P-3</span></td><td>Sweden</td>
+        <td>MSB framework; cloud migration trend similar to Finland</td>
+        <td>MSB: civil contingencies, limited compound stress design</td>
+        <td>Moderate</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §08 -->
+<div class="section">
+  <div class="section-id">§ 08</div>
+  <h2>The Finland Paradox / Suomen paradoksi</h2>
+
+  <p>The two-axis framework reveals a structural condition that is particularly pronounced for Finland, and which is not captured by single-axis economic analysis.</p>
+
+  <div class="ep-note">
+    <div class="ep-label">Core structural finding</div>
+    <p>Finland may simultaneously be one of Europe's most attractive locations for AI infrastructure investment and one of its most exposed jurisdictions in terms of public institutional continuity under compound stress. Economic attractiveness and continuity risk are not only independent — they are, under the current infrastructure trajectory, positively correlated.</p>
+  </div>
+
+  <p>Finland's energy characteristics — clean, cold, cable-connected, with significant nuclear baseload and competitive electricity pricing — make it structurally attractive for hyperscale compute hosting. Each new hyperscale facility strengthens Finland's economic axis position on infrastructure volume while simultaneously creating a new long-duration energy commitment that binds the energy system to sustaining continuous high-density loads.</p>
+
+  <p>The continuity axis tells a different story. The same infrastructure trajectory that strengthens economic position creates growing dependency: public sector workloads migrating to platforms whose availability cannot be assumed in the compound stress scenarios that WP-005 models for Finland's 2026–2035 horizon. The two axes are diverging.</p>
+
+  <p>This is not an argument against hyperscale hosting. It is an argument for treating economic axis development and continuity axis development as separate policy objectives requiring separate interventions. Optimising for one does not automatically improve the other. Neglecting one while optimising the other produces the paradox.</p>
+
+  <p>Estonia's C-1 strength demonstrates that this is not a resource constraint. Estonia's continuity architecture advantage over Sweden is not a size, energy, or wealth advantage — it is a design advantage. This validates WP-006's central claim: continuity is a design property, not an operational property. It must be specified and built in, not assumed or added after the fact.</p>
+</div>
+
+<!-- §09 -->
+<div class="section">
+  <div class="section-id">§ 09</div>
+  <h2>Evaluation of WP-009 Hypothesis / WP-009-hypoteesin arviointi</h2>
+
+  <p>WP-009 specifies four falsification conditions (FC-1 through FC-4). This diagnostic assessment provides the empirical basis for evaluating each.</p>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>Condition</th><th>Prediction</th><th>DA-005 finding</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tbl-key">FC-1</span></td>
+        <td>Capital structure predicts economic axis position in P-1</td>
+        <td>France significantly higher on D-1, D-2, D-3 despite similar energy profile to Finland</td>
+        <td>Not falsified</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-2</span></td>
+        <td>Architecture-first strategy produces continuity advantage in P-3</td>
+        <td>Estonia C-2 score highest in sample; divergence from Sweden is clear and attributable to institutional design, not physical endowment</td>
+        <td>Not falsified</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-3</span></td>
+        <td>Northern Host zone requires capital reorientation for zone migration</td>
+        <td>No Northern Host jurisdiction has migrated without capital structure change; Germany's partial success relies on regulatory leverage, not capital equivalence</td>
+        <td>Not falsified</td>
+      </tr>
+      <tr>
+        <td><span class="tbl-key">FC-4</span></td>
+        <td>Energy–computation coupling produces shared failure modes</td>
+        <td>Beyond the scope of this diagnostic; addressed in WP-010 §03</td>
+        <td>Deferred → WP-010</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rb">
+    <p>On the economic axis, the WP-009 hypothesis is not falsified by this assessment. The predicted correlation between capital structure and value-chain position is visible across all three comparison pairs. This does not constitute causal proof, but the pattern is consistent with the mechanism proposed in WP-009 §03.</p>
+  </div>
+
+  <div class="ep-note">
+    <div class="ep-label">Extended finding — continuity axis</div>
+    <p>Economic sovereignty and decision sovereignty are separable variables. The Northern Host institutional logic produces two costs, not one: externalised AI value chain (economic axis) and externalised public decision infrastructure (continuity axis). These are independent consequences of the same allocation pattern. A jurisdiction can achieve strong economic axis performance while its decision-critical digital infrastructure migrates toward dependency on platforms whose availability in compound stress scenarios cannot be assumed. The corrective is not to abandon the economic axis but to treat the continuity axis as a separate design objective with its own architectural requirements — the N-1 equivalent for the digital decision layer.</p>
+  </div>
+
+  <h3>Scope and limitations</h3>
+
+  <p>This assessment uses proxy indicators and cannot claim causal identification. The D-2 capital structure dimension — the primary explanatory variable — is the least reliably measured. Strategic capital participation is systematically undercounted; this attenuates the observed correlation in a conservative direction. The C-1 and C-2 dimensions rely on architecture-level proxies; direct technical measurement of D1–D4 endurance properties would require access not available to this assessment.</p>
+
+  <p>A future assessment incorporating Nordic–Baltic comparisons at greater resolution (FI–EE direct pair; SE–EE; NO–DK) would allow more precise calibration of the continuity axis findings, particularly regarding the relationship between public infrastructure doctrine and duration architecture.</p>
+</div>
+
+<div class="doc-footer">
+  ACI Diagnostic Assessment No. 005 · Digital Infrastructure Allocation Diagnostic<br>
+  Version 0.4 · Pre-publication draft · 2026 · Domain D-1 · D-4 · D-5 · D-6<br>
+  Merged: Finland Paradox §08 incorporated from parallel draft · Aether Continuity Institute · aethercontinuity.org
+</div>
+
+</body>
+</html>

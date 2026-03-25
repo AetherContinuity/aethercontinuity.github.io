@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RQM-001 — Correlated Continuity Blindspots in OECD Infrastructure Allocation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0d0b;--paper:#f7f4ee;--paper-2:#ede7d8;--paper-3:#e4dccb;
+  --rule:#ccc8be;--muted:#7a7468;--accent:#8b4513;--ok:#4a7a4a;--warn:#8b7a3a;
+  --mono:'DM Mono','Courier New',monospace;--serif:'EB Garamond',Georgia,serif
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);max-width:740px;margin:0 auto;padding:0 2rem 7rem}
+
+/* header strip */
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.4rem 0 1.2rem;margin-bottom:0;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.dih-l{display:flex;flex-direction:column;gap:.2rem}
+.dih-inst{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.dih-series{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-top:.2rem}
+.dih-series em{color:var(--accent);font-style:normal}
+.dih-r{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.9}
+.dih-meta strong{color:var(--ink);font-weight:400}
+.status-pill{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--rule);padding:.22rem .65rem;margin-top:.3rem}
+.dot{width:4px;height:4px;border-radius:50%;background:#c87a3a}
+.status-text{font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* nav */
+nav{border-bottom:1px solid var(--rule);padding:1.1rem 0;display:flex;justify-content:space-between;align-items:center;margin-bottom:0}
+.nav-home{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.nav-home::before{content:'← '}
+.nav-id{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* title block */
+.title-block{padding:4rem 0 2.5rem;border-bottom:1px solid var(--rule);margin-bottom:3rem}
+.paper-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem}
+h1{font-family:var(--serif);font-size:clamp(1.7rem,4vw,2.4rem);font-weight:500;line-height:1.22;letter-spacing:-.01em;margin-bottom:1.3rem}
+.subtitle{font-family:var(--serif);font-size:1.05rem;font-style:italic;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+.cite-box{background:var(--paper-2);border-left:3px solid var(--accent);padding:.9rem 1.2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.05em;color:var(--muted);line-height:1.9}
+.domain-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+.dtag{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rule);padding:.18rem .55rem;color:var(--muted)}
+
+/* sections */
+.sec{margin-bottom:2.8rem}
+.sec-hdr{display:flex;align-items:baseline;gap:1.2rem;margin-bottom:1.2rem;padding-bottom:.55rem;border-bottom:1px solid var(--rule)}
+.sec-num{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--muted);min-width:2rem}
+h2{font-family:var(--serif);font-size:1.1rem;font-weight:500;letter-spacing:-.01em}
+p{font-size:.97rem;line-height:1.85;color:#2a2520;margin-bottom:.95rem}
+p:last-child{margin-bottom:0}
+
+/* callout */
+.callout{margin:1.8rem 0;border-left:3px solid var(--ink);padding:.95rem 1.4rem;background:var(--paper-2)}
+.callout p{font-size:.93rem;font-style:italic;margin:0;color:#3a3530}
+
+/* two-col compare */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.8rem 0}
+.cbox{border:1px solid var(--rule);padding:1.1rem 1.3rem;background:var(--paper-3)}
+.cbox-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+.cbox-title{font-family:var(--serif);font-size:.95rem;font-weight:500;margin-bottom:.5rem}
+.cbox p{font-size:.84rem;line-height:1.6;color:#3a3530;margin-bottom:0}
+
+/* three-part condition block */
+.conditions{border:1px solid var(--rule);margin:1.8rem 0}
+.cond-head{background:var(--paper-2);padding:.5rem 1rem;font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)}
+.cond-row{display:grid;grid-template-columns:40px 1fr;border-bottom:1px solid var(--rule)}
+.cond-row:last-child{border-bottom:none}
+.cond-id{padding:.75rem .8rem;font-family:var(--mono);font-size:.65rem;color:var(--accent);border-right:1px solid var(--rule);display:flex;align-items:flex-start;padding-top:.85rem}
+.cond-body{padding:.75rem 1rem;font-family:var(--serif);font-size:.9rem;line-height:1.6;color:#2a2520}
+.cond-body strong{font-weight:500}
+
+/* evidence table */
+.etable{border:1px solid var(--rule);margin:1.8rem 0;overflow-x:auto}
+.etable table{width:100%;border-collapse:collapse;font-size:.86rem}
+.etable thead tr{background:var(--ink);color:var(--paper)}
+.etable thead th{font-family:var(--mono);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;font-weight:400}
+.etable tbody tr{border-bottom:1px solid var(--rule)}
+.etable tbody td{padding:.75rem 1rem;line-height:1.45;vertical-align:top;font-family:var(--serif)}
+.etable tbody td:first-child{font-family:var(--mono);font-size:.65rem;color:var(--accent);white-space:nowrap}
+
+/* research question box — centrepiece */
+.rq-box{border:2px solid var(--ink);padding:1.8rem 2rem;margin:2.2rem 0}
+.rq-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.rq-text{font-family:var(--serif);font-size:1.2rem;font-weight:500;line-height:1.5;color:var(--ink);margin-bottom:.8rem}
+.rq-note{font-family:var(--serif);font-style:italic;font-size:.88rem;color:var(--muted);line-height:1.65}
+
+/* scope note */
+.scope{background:var(--paper-2);border:1px solid var(--rule);padding:1.3rem 1.5rem;margin:2rem 0}
+.scope-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.scope-row{display:flex;gap:.8rem;margin-bottom:.45rem;align-items:baseline}
+.scope-tag{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);min-width:60px}
+.scope-val{font-family:var(--serif);font-size:.88rem;line-height:1.5;color:#2a2520}
+
+/* footer */
+footer{border-top:1px solid var(--rule);padding:2rem 0 4rem;display:flex;justify-content:space-between;gap:2rem}
+.fcol{font-family:var(--mono);font-size:.56rem;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);line-height:2}
+
+@media(max-width:600px){
+  .compare{grid-template-columns:1fr}
+  .dih{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">RQM · 001 · 2026</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-l">
+    <span class="dih-inst">Aether Continuity Institute</span>
+    <span class="dih-series"><em>Research Question Memo</em> &nbsp;·&nbsp; No. 001</span>
+  </div>
+  <div class="dih-r">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>RQM</strong></div>
+    <div class="status-pill">
+      <span class="dot"></span>
+      <span class="status-text">Pre-Research · Not a Working Paper</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<div class="title-block">
+  <div class="paper-label">ACI Research Question Memo No. 001</div>
+  <h1>Correlated Continuity Blindspots in OECD Infrastructure Allocation</h1>
+  <p class="subtitle">Is the continuity-blind investment filter a transnational correlation risk — and not merely a national policy failure?</p>
+  <div class="cite-box">
+    Pre-research document. Not for citation as a working paper.<br>
+    Companion: WP-008 (Institutional Allocation and System Continuity) · v1.1<br>
+    <span style="color:#9a8060;">Purpose: Scope and falsifiability test before committing to WP-009.</span>
+  </div>
+  <div class="domain-row">
+    <span class="dtag">D-1 · Duration Adequacy</span>
+    <span class="dtag">D-3 · Temporal Decision Capacity</span>
+    <span class="dtag">D-4 · Compound Stress</span>
+    <span class="dtag">WP-009 Candidate</span>
+  </div>
+</div>
+
+
+<!-- §01 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 01</span>
+    <h2>Point of Departure</h2>
+  </div>
+  <p>WP-008 establishes that infrastructure capital allocation exhibits a systematic bias toward consumption-binding investments and away from stability-providing ones. It attributes this bias to institutional mechanisms that are visible at the national level: policy visibility, financial structuring preferences, procurement design, and sectoral lobbying.</p>
+  <p>These are national explanations. They describe why a given system may misallocate. They do not explain why the same misallocation pattern appears in multiple countries simultaneously — without coordination, and across different political and regulatory contexts.</p>
+  <p>This memo examines whether a transnational correlation mechanism exists: a shared selection filter operating beneath individual national decisions that produces structurally similar allocation outcomes across OECD infrastructure systems.</p>
+</div>
+
+
+<!-- §02 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 02</span>
+    <h2>The 2008 Analogy — and Its Limit</h2>
+  </div>
+  <p>The 2008 financial crisis is instructive not as a template but as a structural type. Its diagnostic core was not a bubble — overvalued assets are common and rarely produce systemic crises alone. The critical mechanism was <em>misidentified correlation</em>: risk that appeared distributed across independent assets was in fact concentrated in a single shared variable — the US housing market and the refinancing assumptions built on top of it. When that variable moved, the apparent diversification collapsed simultaneously across institutions.</p>
+  <p>The allocation-bias hypothesis proposes an analogous structure. The risk is not concentrated in a single asset class. It is concentrated in a shared selection logic — a continuity-blind investment filter — that operates across different sectors, geographies, and project types. Investments in datacenters, logistics infrastructure, and energy-intensive industry look sectorally distinct. Under the hypothesis, they share the same structural property: they were selected by a filter that systematically discounts continuity reserve requirements.</p>
+
+  <div class="callout">
+    <p>The proposed correlation is not same asset — it is same filter. The question is whether that filter is transnational in origin, and whether its effects are therefore correlated across national systems in a way that no individual national analysis would reveal.</p>
+  </div>
+
+  <p>One structural difference from 2008 must be acknowledged at the outset: the realization mechanism is different. The 2008 crisis was rapid, liquidity-mediated, and amplified by leverage. An allocation-bias realization would be slower, physically mediated, and manifested as exhausted system flexibility rather than market panic. The analogy is therefore not to crisis type but to <em>blindspot structure</em> — the shared condition of not knowing what is correlated.</p>
+</div>
+
+
+<!-- §03 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 03</span>
+    <h2>The Proposed Transnational Filter</h2>
+  </div>
+  <p>The hypothesis requires a mechanism: something operating above or between national systems that transmits the same selection preference across jurisdictions. Three candidate layers are identified.</p>
+
+  <div class="compare">
+    <div class="cbox">
+      <div class="cbox-label">Layer 1 — Capital Architecture</div>
+      <div class="cbox-title">Infrastructure as Asset Class</div>
+      <p>Pension funds, infrastructure funds, and international bank consortia operate across borders using near-identical mandate structures. They systematically prefer predictable long-term cashflows, contractually bounded risk, and measurable project returns — properties that favour consumption-binding Category I investments. Category II stability infrastructure lacks equivalent financial structuring.</p>
+    </div>
+    <div class="cbox">
+      <div class="cbox-label">Layer 2 — Risk Pricing Standards</div>
+      <div class="cbox-title">Shared Evaluation Models</div>
+      <p>IRR, DSCR, NPV, and Basel-framework credit assessments are applied globally using near-identical methodologies. These models are not wrong; they are incomplete. Resilience, redundancy, and endurance capacity are not priced in standard project finance models. The absence is structural, not accidental — and it is shared across jurisdictions that use the same tools.</p>
+    </div>
+  </div>
+  <div class="compare">
+    <div class="cbox">
+      <div class="cbox-label">Layer 3 — Policy Diffusion</div>
+      <div class="cbox-title">Institutional Model Transfer</div>
+      <p>OECD, IMF, EU, and major consultancy networks transmit policy frameworks rapidly across borders. Investment competition norms, datacenter attraction strategies, and market-efficiency doctrines diffuse through these channels and shape national policy even without formal coordination. This layer explains framing convergence; Layers 1 and 2 explain investment outcome convergence.</p>
+    </div>
+    <div class="cbox">
+      <div class="cbox-label">Filter Combination</div>
+      <div class="cbox-title">What Is Systematically Excluded</div>
+      <p>Investments that are difficult to finance under Layer 1 criteria, invisible under Layer 2 models, and underrepresented in Layer 3 policy frameworks will be systematically underbuilt across all countries using these structures — regardless of national political preference. This is the proposed transnational filter.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- §04 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 04</span>
+    <h2>Research Question</h2>
+  </div>
+
+  <div class="rq-box">
+    <div class="rq-label">RQM-001 — Central Research Question</div>
+    <div class="rq-text">Do transnational financing and risk-pricing structures create correlated continuity blindspots across OECD infrastructure allocation — such that apparent sectoral diversification conceals a shared structural exposure to continuity-reserve exhaustion?</div>
+    <div class="rq-note">This is a diagnostic question, not a predictive one. The answer would determine whether WP-008's national allocation framework requires a transnational extension — and whether that extension constitutes a new domain or a deeper layer of the existing one.</div>
+  </div>
+
+  <p>The question is structured to be falsifiable. It would be falsified if: (a) no systematic preference for Category I investments is observable in transnational capital flows; (b) countries with different capital architectures show similar allocation patterns; or (c) continuity reserve indicators do not covary with capital architecture type across OECD systems.</p>
+</div>
+
+
+<!-- §05 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 05</span>
+    <h2>Counter-Evidence Structure</h2>
+  </div>
+  <p>The hypothesis predicts that countries with different capital architectures will exhibit different allocation patterns. Three partial exceptions are structurally informative.</p>
+
+  <div class="etable">
+    <table>
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Capital architecture</th>
+          <th>Predicted deviation</th>
+          <th>Mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Norway</td>
+          <td>Sovereign wealth fund — large public investment capacity</td>
+          <td>Higher Category II share; less market-finance dependency</td>
+          <td>NBIM scale removes DSCR constraint for strategic investment</td>
+        </tr>
+        <tr>
+          <td>France</td>
+          <td>State-directed — EDF, SNCF, strategic industry doctrine</td>
+          <td>Partial deviation — public actors can invest below market IRR threshold</td>
+          <td>State ownership insulates selected sectors from Layer 1 filter</td>
+        </tr>
+        <tr>
+          <td>Japan</td>
+          <td>Bank-intermediated — high domestic savings, long-term industrial policy</td>
+          <td>Longer investment horizons; lower Layer 1 filter intensity</td>
+          <td>Domestic capital recycling reduces dependence on transnational fund mandates</td>
+        </tr>
+        <tr>
+          <td>Finland / Germany</td>
+          <td>Market capital + pension fund dependency</td>
+          <td>Strong filter exposure — hypothesis predicts high Category I concentration</td>
+          <td>No countervailing public investment architecture at scale</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>If the deviations hold empirically, they strengthen rather than weaken the hypothesis: they confirm that capital architecture is the operative variable, not national political preference or sectoral mix. A hypothesis that survives its own counter-evidence structure is a better candidate for a working paper than one that cannot specify its conditions of falsification.</p>
+</div>
+
+
+<!-- §06 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 06</span>
+    <h2>Realization Conditions</h2>
+  </div>
+  <p>A chronic allocation imbalance does not automatically become a crisis. The transition from structural underinvestment to acute system stress requires a specific configuration. Three conditions must hold simultaneously.</p>
+
+  <div class="conditions">
+    <div class="cond-head">Realization conditions — all three required for acute transition</div>
+    <div class="cond-row">
+      <div class="cond-id">A</div>
+      <div class="cond-body"><strong>Common filter active.</strong> The same continuity-blind selection logic has operated across the system long enough to produce a structurally depleted Category II base — distributed across sectors and geographies but sharing the same absence.</div>
+    </div>
+    <div class="cond-row">
+      <div class="cond-id">B</div>
+      <div class="cond-body"><strong>Shared hidden dependency.</strong> Multiple apparently independent systems rely on the same implicit assumption: that reserve capacity is available elsewhere — in the grid, the market, imported supply, public balance sheets, or labour market flexibility. This assumption is embedded, not stated.</div>
+    </div>
+    <div class="cond-row">
+      <div class="cond-id">C</div>
+      <div class="cond-body"><strong>Simultaneous reserve closure.</strong> A compound stress event — geopolitical disruption, energy supply constraint, interest rate shock, or cumulative demographic pressure — removes the assumed reserve capacity across multiple systems at once. The hidden dependency becomes visible precisely when it can no longer be relied upon.</div>
+    </div>
+  </div>
+
+  <p>The realization would not resemble a financial market panic. It would manifest as the simultaneous discovery that systems designed to operate with external flexibility have none — that each system assumed others carried the buffer. This is structurally equivalent to the 2008 correlation revelation, mediated through physical and institutional constraints rather than liquidity.</p>
+</div>
+
+
+<!-- §07 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 07</span>
+    <h2>Scope Conditions for WP-009</h2>
+  </div>
+  <p>This memo does not constitute a working paper. It constitutes a scoping test: is the research question well enough formed, and is the falsifiability structure sufficient, to justify the analytical investment a working paper requires?</p>
+
+  <div class="scope">
+    <div class="scope-label">WP-009 conditions — all required before drafting</div>
+    <div class="scope-row">
+      <span class="scope-tag">E-1</span>
+      <span class="scope-val">Empirical basis: at least two OECD country pairs showing differential Category I/II allocation ratios correlated with capital architecture type — not with sectoral mix or political cycle.</span>
+    </div>
+    <div class="scope-row">
+      <span class="scope-tag">E-2</span>
+      <span class="scope-val">Mechanism specificity: Layer 1 (capital architecture) must be operationally separable from Layer 2 (risk pricing) — they may reinforce each other, but a paper that conflates them cannot be falsified independently.</span>
+    </div>
+    <div class="scope-row">
+      <span class="scope-tag">E-3</span>
+      <span class="scope-val">Deviation cases: Norway, France, or Japan data must show directionally consistent deviation from the template prediction. If all countries look the same regardless of architecture, the hypothesis is wrong.</span>
+    </div>
+    <div class="scope-row">
+      <span class="scope-tag">E-4</span>
+      <span class="scope-val">Scope boundary: the paper diagnoses filter structure and correlation — it does not predict crisis timing, model market dynamics, or prescribe capital regulation. These are outside ACI's diagnostic scope.</span>
+    </div>
+  </div>
+
+  <p>If these four conditions can be met with available data, WP-009 is viable. If E-3 fails — if deviation cases do not hold — the transnational hypothesis weakens and the research question reverts to a national-level analysis, which WP-008 already covers adequately.</p>
+</div>
+
+
+<!-- §08 -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">§ 08</span>
+    <h2>Relationship to Lex Resiliens</h2>
+  </div>
+  <p>The Lex Resiliens framework tests whether systems that appear functional under normal conditions retain decision capacity under stress — specifically whether failure is governed (condition 2) and whether the interval before failure is long enough for adaptive response (condition 3).</p>
+  <p>The allocation-filter hypothesis maps directly onto this structure. A system whose continuity reserve has been silently depleted by a transnational filter passes condition 1 (normal-state performance) while failing conditions 2 and 3 under compound stress — not because of a discrete failure event, but because the structural capacity for governed failure and temporal endurance was never built.</p>
+  <p>If the WP-009 hypothesis holds, it would constitute a specific mechanism by which Lex Resiliens condition 3 — sufficient endurance for institutional decision — is systematically underbuilt across OECD systems. That would make transnational allocation diagnostics a component of any serious resilience assessment framework, not an adjacent research line.</p>
+</div>
+
+</main>
+
+<footer>
+  <div class="fcol">
+    Aether Continuity Institute<br>
+    Research Question Memo · No. 001<br>
+    Version 1.0 · March 2026
+  </div>
+  <div class="fcol">
+    Status: Pre-research · Not for citation<br>
+    Not a working paper<br>
+    Subject to revision or abandonment
+  </div>
+  <div class="fcol">
+    Domains: D-1 · D-3 · D-4<br>
+    Precedes: WP-009 (conditional)<br>
+    Depends on: WP-008 v1.1
+  </div>
+</footer>
+
+</body>
+</html>
