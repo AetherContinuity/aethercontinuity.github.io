@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI — Tools & Instruments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f5f0e8;--paper-2:#ede7d8;--rule:#c8bfad;--muted:#7a7468;--accent:#8b4513;--serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px;scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.75;min-height:100vh}
+nav{border-bottom:1px solid var(--rule);padding:1.4rem 4rem;display:flex;justify-content:space-between;align-items:center}
+.nav-home{font-family:var(--mono);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-home:hover{color:var(--ink)}
+.nav-home::before{content:'<- '}
+.nav-id{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.page{max-width:740px;margin:0 auto;padding:5rem 2rem 8rem}
+.page-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem}
+h1{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:500;line-height:1.2;letter-spacing:-.01em;margin-bottom:1rem}
+.intro{font-size:1rem;color:var(--muted);font-style:italic;margin-bottom:3rem;padding-bottom:2.5rem;border-bottom:1px solid var(--rule)}
+.doc-group{margin-bottom:3.5rem}
+.group-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule)}
+.doc-entry{display:grid;grid-template-columns:80px 1fr auto;gap:1.25rem;align-items:start;padding:1.25rem 0;border-bottom:1px solid var(--rule)}
+.doc-entry:last-child{border-bottom:none}
+.doc-id{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent)}
+.doc-title{font-size:1.05rem;font-weight:500;margin-bottom:.2rem}
+.doc-sub{font-size:.9rem;font-style:italic;color:var(--muted);margin-bottom:.5rem}
+.doc-desc{font-size:.9rem;color:#3a3530;line-height:1.65}
+.doc-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.tag{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--rule);padding:.15rem .5rem}
+.tag-live{border-color:#5a8a5a;color:#4a7a4a}
+.tag-wip{border-color:var(--accent);color:var(--accent)}
+.doc-link{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;white-space:nowrap;padding-top:.2rem}
+.doc-link:hover{text-decoration:underline}
+.series-note{background:var(--paper-2);border:1px solid var(--rule);padding:1.5rem 1.75rem;margin-top:3.5rem;font-size:.92rem;color:#3a3530;line-height:1.75}
+.series-note-label{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+footer{border-top:1px solid var(--rule);padding:2.5rem 4rem;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted);line-height:2}
+@media(max-width:640px){nav{padding:1rem 1.5rem}.page{padding:3rem 1.25rem 5rem}.doc-entry{grid-template-columns:1fr;gap:.5rem}footer{grid-template-columns:1fr;padding:2rem 1.5rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-home" href="/">ACI</a>
+  <span class="nav-id">Tools &amp; Instruments</span>
+</nav>
+<div class="page">
+  <div class="page-label">Open Tools</div>
+  <h1>Tools &amp; Instruments</h1>
+  <p class="intro">Interactive diagnostics, data instruments, and design prototypes. These tools operationalise ACI analytical frameworks against live or reference data. They are not publications — they are instruments.</p>
+
+  <div class="doc-group">
+    <div class="group-label">Grid Instruments</div>
+
+    <div class="doc-entry">
+      <span class="doc-id">WEM<br><span style="color:var(--muted);font-size:.55rem">v1 &middot; 2025</span></span>
+      <div>
+        <div class="doc-title">Winter Endurance Monitor</div>
+        <div class="doc-sub">ACI Open Grid Instrument</div>
+        <div class="doc-desc">Live diagnostic instrument tracking Finnish electricity system endurance pressure against the Black Period logic. Connects to Fingrid Open Data API (datasets 124, 74, 194). Computes Demand Pressure, Domestic Coverage, Stress Persistence, and EPP posture in real time. Requires API key configuration.</div>
+        <div class="doc-tags"><span class="tag tag-live">Live data</span><span class="tag">Fingrid API</span><span class="tag">DA-003</span><span class="tag">WP-001</span></div>
+      </div>
+      <a class="doc-link" href="/tools/ACI-INSTRUMENT-v1.html">Open &rarr;</a>
+    </div>
+
+    <div class="doc-entry">
+      <span class="doc-id">DA-003<br><span style="color:var(--muted);font-size:.55rem">Fetch tool</span></span>
+      <div>
+        <div class="doc-title">DA-003 Data Fetch Tool</div>
+        <div class="doc-sub">Finnish infrastructure allocation data retrieval</div>
+        <div class="doc-desc">Utility tool for retrieving and inspecting the source data underlying DA-003 Finland Infrastructure Allocation Diagnostic. Supports direct verification of BESS capacity, datacenter load, and grid statistics against Fingrid and Statistics Finland sources.</div>
+        <div class="doc-tags"><span class="tag">DA-003</span><span class="tag">Fingrid</span></div>
+      </div>
+      <a class="doc-link" href="/tools/da003-fetch-tool.html">Open &rarr;</a>
+    </div>
+  </div>
+
+  <div class="doc-group">
+    <div class="group-label">Calibration &amp; Validation</div>
+
+    <div class="doc-entry">
+      <span class="doc-id">WP-001<br><span style="color:var(--muted);font-size:.55rem">Validator</span></span>
+      <div>
+        <div class="doc-title">WP-001 Calibration Validator</div>
+        <div class="doc-sub">Duration adequacy parameter testing</div>
+        <div class="doc-desc">Interactive calibration tool for WP-001 duration adequacy parameters. Tests threshold sensitivity and validates indicator outputs against reference scenarios.</div>
+        <div class="doc-tags"><span class="tag">WP-001</span><span class="tag">Calibration</span></div>
+      </div>
+      <a class="doc-link" href="/tools/wp001-calibration-validator.html">Open &rarr;</a>
+    </div>
+  </div>
+
+    <div class="doc-entry">
+      <span class="doc-id">SGFA<br><span style="color:var(--muted);font-size:.55rem">Scenarios</span></span>
+      <div>
+        <div class="doc-title">MESA Node Economic Scenarios 2025–2040</div>
+        <div class="doc-sub">SGFA scenario analysis tool</div>
+        <div class="doc-desc">Interactive economic scenario analysis for MESA Node investments across the 2025–2040 horizon. Models key financial parameters, stress scenarios, and return profiles for different municipal energy node configurations. Companion to SP-002 (SGFA 4.0).</div>
+        <div class="doc-tags"><span class="tag">MESA</span><span class="tag">SP-002</span><span class="tag tag-live">Interactive</span></div>
+      </div>
+      <a class="doc-link" href="/tools/sgfa_skenaariot_2025_2040-3.html">Open &rarr;</a>
+    </div>
+
+    <div class="doc-entry">
+      <span class="doc-id">RAID<br><span style="color:var(--muted);font-size:.55rem">Eval v1.2</span></span>
+      <div>
+        <div class="doc-title">RAID Battery — Energy Evaluation Committee</div>
+        <div class="doc-sub">ACI Energy Evaluation Committee v1.2</div>
+        <div class="doc-desc">Interactive evaluation framework for RAID-Battery concept analysis. Structured assessment tool for the segmented architecture properties described in SP-003 — fault tolerance, Health Score logic, and SEFI-R testing methodology.</div>
+        <div class="doc-tags"><span class="tag">SP-003</span><span class="tag">RAID-Battery</span><span class="tag tag-live">Interactive</span></div>
+      </div>
+      <a class="doc-link" href="/tools/ACI_RAID_Battery_Evaluation-2.html">Open &rarr;</a>
+    </div>
+
+  </div>
+
+  <div class="doc-group">
+    <div class="group-label">Design Prototypes</div>
+
+    <div class="doc-entry">
+      <span class="doc-id">OBS<br><span style="color:var(--muted);font-size:.55rem">Wireframe B-1</span></span>
+      <div>
+        <div class="doc-title">ACI Observatory — Wireframe B-1</div>
+        <div class="doc-sub">UI design prototype for the Winter Endurance Monitor</div>
+        <div class="doc-desc">Annotated wireframe for the next-generation Observatory interface. Layout, component placement, and interaction logic for the Winter Endurance Monitor dashboard. Not functional — design reference only.</div>
+        <div class="doc-tags"><span class="tag tag-wip">Prototype</span><span class="tag">UI design</span><span class="tag">WEM</span></div>
+      </div>
+      <a class="doc-link" href="/tools/ACI-OBSERVATORY-wireframe-B1.html">View &rarr;</a>
+    </div>
+  </div>
+
+  <div class="series-note">
+    <div class="series-note-label">Note on tool status</div>
+    Live data tools require a Fingrid Open Data API key, available free at data.fingrid.fi. Dataset IDs should be verified before deployment as Fingrid has changed identifiers historically. Design prototypes are not functional and are provided for reference only. Tools in this section are experimental and subject to change independently of the publication versioning cycle.
+  </div>
+</div>
+<footer>
+  <div>Aether Continuity Institute<br>Tools &amp; Instruments<br>aethercontinuity.org</div>
+  <div>Grid instruments<br>Calibration tools<br>Design prototypes</div>
+  <div>Experimental<br>March 2026<br>aethercontinuity.org/tools</div>
+</footer>
+</body>
+</html>
