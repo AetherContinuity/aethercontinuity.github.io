@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-003 — The RAID-Battery: Segmented Energy Architecture and Fault-Tolerant Electrochemical Storage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2.5rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+  ul.body-list { padding-left: 1.4rem; margin-bottom: 1rem; }
+  ul.body-list li { font-size: 1rem; line-height: 1.75; color: #2a2520; margin-bottom: 0.3rem; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .arch-diagram { background: var(--paper-3); border: 1px solid var(--rule); padding: 1.5rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.72rem; line-height: 2; color: var(--ink); overflow-x: auto; }
+  .arch-diagram .layer-box { border: 1px solid var(--rule); padding: 0.5rem 1rem; margin-bottom: 0.3rem; background: var(--paper-2); }
+  .arch-diagram .layer-box.active { background: var(--paper); border-color: var(--accent); }
+  .arch-diagram .layer-label { color: var(--accent); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .arch-diagram .arrow { text-align: center; color: var(--muted); margin: 0.2rem 0; }
+
+  /* Tables */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table.std { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  table.std thead tr { background: var(--ink); color: var(--paper); }
+  table.std thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  table.std tbody tr { border-bottom: 1px solid var(--rule); }
+  table.std tbody tr:hover { background: var(--paper-2); }
+  table.std tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  table.std tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .result-ok { color: #4a7a4a; font-family: var(--mono); font-size: 0.82rem; }
+  .result-warn { color: var(--accent); font-family: var(--mono); font-size: 0.82rem; }
+  .result-na { color: var(--muted); font-style: italic; font-size: 0.88rem; }
+
+  /* Appendix */
+  .appendix-header { border-top: 2px solid var(--ink); margin-top: 4rem; padding-top: 2rem; margin-bottom: 2rem; }
+  .appendix-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  h2.appendix-title { font-size: 1.25rem; font-weight: 500; }
+
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2; color: var(--ink); }
+
+  .kri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--rule); margin: 1.5rem 0; }
+  .kri-box { padding: 1rem 1.25rem; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .kri-box:nth-child(2n) { border-right: none; }
+  .kri-box:nth-last-child(-n+2) { border-bottom: none; }
+  .kri-dim { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .kri-assessment { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.2rem; }
+  .kri-risk { font-size: 0.85rem; color: var(--muted); font-style: italic; }
+
+  .disclaimer { background: var(--paper-2); border: 1px solid var(--rule); padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 0.85rem; color: var(--muted); line-height: 1.65; font-style: italic; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; }
+    .dih { grid-template-columns: 1fr; } footer { flex-direction: column; gap: 1rem; }
+    .kri-grid { grid-template-columns: 1fr; } .kri-box { border-right: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 003</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">SP · 003 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 003 · Concept Paper · CC BY 4.0</div>
+    <h1 class="paper-title">The RAID-Battery: Segmented Energy Architecture, SEFI-R, and the Next Generation of Fault-Tolerant Electrochemical Storage Systems</h1>
+    <p class="paper-subtitle">Working Paper v1.0 — Pre-publication concept paper · Not a patent application</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 003, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-003-raid-battery.html<br>
+      License: Creative Commons CC BY 4.0<br>
+      Related disclosure: SEFI-R v1.0, Open Technical Disclosure, 26 February 2026 (Zenodo, DOI: 10.5281/zenodo.14940723)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">Energy Storage Architecture</span>
+      <span class="domain-tag">Fault Tolerance</span>
+      <span class="domain-tag">SEFI-R</span>
+      <span class="domain-tag">CC BY 4.0</span>
+    </div>
+  </div>
+
+  <!-- Abstract -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">Abstract</span><h2 class="section-title"></h2></div>
+    <p>This working paper examines a potential paradigm shift in battery architecture — from the monolithic cell-chain to a distributed, segment-controlled energy system referred to here as the RAID-Battery. The concept does not primarily propose a new cell chemistry, but rather a fundamental change at the system level: the battery is no longer a passive energy reservoir, but a fault-tolerant, software-managed, situation-aware energy infrastructure.</p>
+    <p>The paper integrates five perspectives: physical architecture, control systems, testing methodology, use cases, and economic logic. The central argument is that the next major development step for batteries may not arise primarily from increased energy density, but from the transfer of reliability, safety, and performance from the individual cell to the system architecture as a whole.</p>
+    <p>In this context, SEFI-R (Segment-Event Fault Injection and Recovery) — published as an open technical disclosure in February 2026 (Zenodo DOI: 10.5281/zenodo.14940723) — emerges as a possible starting point for standardization: it provides a method for measuring a segmented energy system's ability to detect, isolate, and manage localized faults without destructive testing.</p>
+  </div>
+
+  <!-- §1 Introduction -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Introduction</h2></div>
+    <p>Current development of electric vehicles and large battery packs has been strongly cell-centric. Public discourse typically focuses on energy density, charging speed, cycle lifetime, and safety. Yet at the system level, present-day batteries remain surprisingly monolithic: even though a pack consists of modules and hundreds or thousands of cells, fault management is often crude protective switching rather than fine-grained fault tolerance.</p>
+    <p>This leads to several structural problems:</p>
+    <ul class="body-list">
+      <li>A single weak cell or segment can propagate its performance limitations across the entire pack</li>
+      <li>Ultra-fast charging is constrained by the weakest element in the chain</li>
+      <li>Production yield suffers because only the best-matched cells can be used in demanding applications</li>
+      <li>Serviceability is poor — entire packs or modules are replaced due to single localized issues</li>
+      <li>Safety strategies are based on shutdown rather than continued degraded-mode operation</li>
+    </ul>
+    <p>This paper proposes an alternative framing: the battery should be understood as a distributed energy system, more closely resembling an electrical grid, a data center, or a RAID disk array than a single chemical component.</p>
+    <div class="callout">
+      <p><strong>Scope of novelty claim.</strong> This paper does not claim novelty for segmentation, bypass topology, or distributed battery management as such — these concepts have prior art dating to the 1990s. Its proposed contribution lies in the integration of segmented architecture, resilience-oriented orchestration, and the SEFI-R non-destructive recovery-testing methodology into a unified system framework.</p>
+    </div>
+  </div>
+
+  <!-- §2 RAID Analogy -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">The RAID Analogy and Its Significance</h2></div>
+    <p>RAID (Redundant Array of Independent Disks) emerged as a solution to a problem in information systems: a single disk failure caused the entire system to fail. The core insight of RAID was to transfer reliability from the individual component to the system architecture.</p>
+
+    <div class="arch-diagram">
+      <div class="layer-box active">
+        <div class="layer-label">L1 — Vehicle Energy Management System (EMS)</div>
+        driver demand · charging protocol · thermal
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer-box active">
+        <div class="layer-label">L2 — RAID-Battery Orchestrator (BMS 2.0)</div>
+        Health Score · Load Allocation · SHN · State machine · Micro-SEFI diagnostics
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer-box">
+        <div class="layer-label">L3 — Segment Controllers (Local MCU × N)</div>
+        V · I · T sensing · local fault isolation · hard-limit enforcement (independent of L2)
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer-box">
+        <div class="layer-label">L4 — Battery Segments (cells + switching + sensors)</div>
+      </div>
+    </div>
+    <p style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Figure 1. RAID-Battery control stack. Reliability is an emergent property of the four-layer architecture. L2 (orchestrator) optimises; L3 (segment controllers) protect independently.</p>
+
+    <p>The same principle applied to batteries: an individual cell or segment is permitted to be imperfect; failure is accepted as a normal part of system behavior; the system detects, isolates, and compensates for localized faults; performance is maintained even in a partially degraded state.</p>
+
+    <h3 class="sub">2.1 Accepting Component Imperfection</h3>
+    <p>Current battery packs are based on a series chain in which the weakest element determines the whole. RAID thinking starts from the premise that components are allowed to fail, provided the architecture is designed to tolerate this.</p>
+
+    <h3 class="sub">2.2 Fault State Management</h3>
+    <p>A RAID system does not merely detect a fault — it continues operating afterward. Analogously, the RAID-Battery does not aim solely for safe shutdown, but for sustained degraded-mode operation.</p>
+
+    <h3 class="sub">2.3 Quantifying Recovery</h3>
+    <p>In information systems, rebuild time is a key metric. The battery system equivalent is the quantification of recovery: the system is not simply intact or broken, but its ability to recover from a fault event can be measured. This is precisely what the SEFI-R Recovery Ratio (Recov(Z)) enables.</p>
+  </div>
+
+  <!-- §3 Segmented Architecture -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Segmented Battery Architecture</h2></div>
+
+    <h3 class="sub">3.1 The Segment as an Energy Node</h3>
+    <p>A single segment may contain its own cell group, voltage/current/temperature sensing, optional impedance measurement, local switching and bypass capability, and a local microcontroller. The segment is therefore not merely a mechanical subdivision, but an active energy node.</p>
+
+    <h3 class="sub">3.2 Illustrative Example: 80 kWh EV Pack</h3>
+    <div class="table-wrap">
+      <table class="std">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Total capacity</td><td>80 kWh</td></tr>
+          <tr><td>Number of segments</td><td>16</td></tr>
+          <tr><td>Capacity per segment</td><td>~5 kWh</td></tr>
+          <tr><td>Shared bus</td><td>High-voltage DC bus</td></tr>
+          <tr><td>Control</td><td>Centralised pack orchestrator</td></tr>
+          <tr><td>Impact of one segment loss</td><td>~6.25% capacity reduction only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">3.3 Architecture Variants</h3>
+    <p>Multiple architectural approaches are possible, ranging from simple series segments with bypass paths, through multiple independently controlled segment buses, to a fully modular DC/DC-based energy-node architecture. Early commercial implementations are likely to use simpler bypass-path solutions, while longer-term evolution may lead to genuinely distributed HV energy nodes.</p>
+  </div>
+
+  <!-- §4 Pack Orchestrator -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Pack Orchestrator: BMS 2.0</h2></div>
+    <p>A conventional BMS primarily performs measurement, balancing, and protective switching. In a segmented battery, this is no longer sufficient. A new control tier is required — the pack orchestrator.</p>
+
+    <h3 class="sub">4.0 Two-Layer Control Architecture: Reflexes and Intelligence</h3>
+    <p>A practical implementation separates two structurally distinct roles across two layers. The <strong>Guardian layer</strong> is implemented in deterministic hardware (microcontroller or RTOS-based embedded system). It holds hard limits, runs the protection loop, and maintains a fallback current-limit profile that can operate without any input from the orchestrator. The <strong>Orchestrator layer</strong> is implemented on a more capable compute platform and handles all optimisation, learning, and diagnostics functions. It is permitted to fail and restart without causing a safety event, provided the Guardian layer continues to operate correctly.</p>
+    <p><strong>The orchestrator–guardian interface</strong> must be minimal, explicit, and unidirectionally safe. Three elements are sufficient: a liveness signal (monotonically advancing sequence counter with timestamp); a current-limit broadcast with a defined time-to-live; and a re-enable gate in the guardian requiring N consecutive valid signals before returning control authority after a recovery event.</p>
+
+    <h3 class="sub">4.1 The Health Score and Resilience Algorithm</h3>
+    <div class="formula-block">
+      HS = w₁ × cap_ratio + w₂ × dcir_factor + w₃ × Recov(Z) + w₄ × thermal_factor<br>
+      (default weights: 0.35 · 0.25 · 0.25 · 0.15)
+    </div>
+    <p>The orchestrator no longer simply asks whether a segment is usable, but how much it should be loaded relative to other segments at any given moment. This is a critical departure from conventional BMS thinking.</p>
+
+    <h3 class="sub">4.2 B-Grade and B+ Cell Management</h3>
+    <p>The practical value of HS logic is particularly apparent when the system contains non-prime cell material. A segment that is weaker in capacity or resistance can be kept safely in operation if the orchestrator assigns it a reduced discharge and charge current, prioritises cooling, transfers it to light-duty mode as needed, and isolates it before a critical fault if recovery capacity is declining. This transforms weakness into a managed property rather than an immediate cause for rejection.</p>
+
+    <h3 class="sub">4.3 Micro-SEFI as a Software Maintenance Tool</h3>
+    <p>SEFI-R in this model is not only a laboratory test, but can be conceived as a software-based maintenance tool. The system may perform controlled micro-SEFI-type tests during servicing, diagnostics, or charging cycles. Recov(Z) becomes an updating resilience parameter continuously feeding orchestrator decision-making.</p>
+
+    <h3 class="sub">4.4–4.6 Load Distribution, Orchestrator Redundancy, Two Time Scales</h3>
+    <p>Discharge and charging power is distributed in proportion to segment health scores. Orchestrator redundancy (hot standby, safe fallback mode) is a long-term requirement. Control requires at least two loops: a fast protection loop at the millisecond level, and a slower optimisation and diagnostics loop at the second-to-minute level.</p>
+  </div>
+
+  <!-- §5 SEFI-R -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">SEFI-R as a Testing Methodology and Standardisation Basis</h2></div>
+    <p>The central insight of SEFI-R is that a battery need not be physically damaged in order to measure its fault tolerance. Instead, a controlled electrical fault path is introduced into the system, after which the response, isolation, and recovery are measured.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table — SEFI-R Method Structure</div>
+      <table class="std">
+        <thead><tr><th>Phase</th><th>Name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>Fault Injection</td><td>A known electrical leakage condition is introduced temporarily via an externally controlled impedance element. No physical damage.</td></tr>
+          <tr><td>B</td><td>Response Measurement</td><td>Detection latency and isolation response time are recorded during and immediately after the event.</td></tr>
+          <tr><td>C</td><td>Recovery Quantification</td><td>A normalised recovery metric is computed after a defined recovery period. Repeated events permit trend evaluation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">5.2 The Recovery Ratio</h3>
+    <div class="formula-block">
+      Recov(Z) = Z(recovery) / Z(baseline)<br>
+      SHN = P10(Recov(Z) across all active segments)
+    </div>
+    <p>A value of 1.0 indicates complete functional recovery. Values below 1.0 indicate residual degradation. SHN provides a pack-level resilience indicator robust to localised outliers in large cell assemblies.</p>
+
+    <h3 class="sub">5.3 Relationship to Existing Standards</h3>
+    <div class="table-wrap">
+      <table class="std">
+        <thead><tr><th>Standard</th><th>Scope</th><th>Gap addressed by SEFI-R</th></tr></thead>
+        <tbody>
+          <tr><td>IEC 62133</td><td>Safety; abuse testing</td><td>No non-destructive fault injection or recovery metric</td></tr>
+          <tr><td>IEC 62660</td><td>Performance; cycle life</td><td>No resilience or recovery characterisation</td></tr>
+          <tr><td>ISO 12405</td><td>EV traction battery testing</td><td>No segment-level fault injection or isolation validation</td></tr>
+          <tr><td>IEEE 1679</td><td>Electrochemical energy storage evaluation</td><td>No fault proxy or recovery ratio defined</td></tr>
+          <tr><td>UN 38.3</td><td>Transport safety; destructive abuse tests</td><td>Destructive only; not applicable to resilience measurement</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">5.4 Recov(Z) vs DCIR</h3>
+    <p>DCIR measures instantaneous electrical condition; Recov(Z) measures the system's ability to return to stable operation after a controlled perturbation. Two cells may exhibit similar DCIR values while having very different recovery characteristics. Recov(Z) may function as an earlier indicator of resilience loss before any corresponding rise in DCIR becomes measurable. <em>This hypothesis requires experimental validation (identified as open question OQ-1).</em></p>
+
+    <h3 class="sub">5.5 Standardisation Pathway</h3>
+    <p>Submission of SEFI-R as a new work item to IEC TC 21 or ISO TC 69 is proposed in §13. Without a shared testing method, certification frameworks, cross-manufacturer comparison, and insurance/warranty risk management frameworks cannot develop for segmented architectures.</p>
+  </div>
+
+  <!-- §6 Fault Tolerance -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Fault Tolerance and Fail-Operational Design</h2></div>
+    <div class="table-wrap">
+      <table class="std">
+        <thead><tr><th>Property</th><th>Fail-Safe (Conventional)</th><th>Fail-Operational (RAID-Battery)</th></tr></thead>
+        <tbody>
+          <tr><td>Fault detection</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Fault response</td><td>System shutdown</td><td>Segment isolation + load rebalancing</td></tr>
+          <tr><td>Post-fault operation</td><td>None</td><td>Degraded mode with remaining segments</td></tr>
+          <tr><td>Performance after fault</td><td>Zero</td><td>Proportionally reduced</td></tr>
+          <tr><td>Mission continuation</td><td>Not possible</td><td>Possible (critical applications)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">6A Physical and Electrical Resilience Architecture</h3>
+    <p><strong>6A.1 Electrical Isolation Layer (Guardian).</strong> The Guardian layer enforces hard limits on voltage, current, and temperature independently of the pack orchestrator, responding to boundary violations within defined time bounds: short-circuit isolation under 100 µs, overvoltage/undervoltage under 10 ms, over-temperature under 100 ms. Predictive isolation is triggered by thermal rise rate exceeding 2°C/s.</p>
+    <p>Three structural properties: <em>determinism</em> (all safety responses bounded in time by hardware constraints); <em>independence</em> (correct operation when the orchestrator is absent, crashed, or sending invalid commands); <em>authority</em> (no orchestrator command can override an active envelope violation).</p>
+    <p><strong>6A.2 Thermal Containment Layer.</strong> Thermal runaway in a lithium-ion cell generates heat, flammable gases, and potentially sustained combustion at temperatures between 500°C and over 1000°C. Electrical isolation alone does not extinguish the exothermic reaction. The barrier system uses a hybrid material approach: aerogel (primary thermal insulation, 0.015–0.020 W/mK) combined with mica plate (mechanical support, 900–1000°C rated) and intumescent edge seals. Directed venting channels route evolved gases away from adjacent segments into a common manifold.</p>
+    <p><strong>6A.3 Combined Protection.</strong> The Guardian's dT/dt trigger is the primary link: if the barrier begins to lose effectiveness, the Guardian triggers predictive isolation before the adjacent segment reaches its absolute limit. The barrier buys time; the Guardian uses that time. RAID-Battery achieves fail-operational behaviour only when electrical isolation and thermal containment are jointly satisfied.</p>
+  </div>
+
+  <!-- §7 Ultra-Fast Charging -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Ultra-Fast Charging in a Segmented Battery</h2></div>
+    <p>1–2 MW charging in an 800 V system implies very large currents. In a monolithic pack, the constraints are: the weakest element limits the whole; large I²R thermal loads; uneven stress distribution. When an 80 kWh pack is divided into 16 segments, total power is distributed across segments — approximately 75 kW per segment on average for 1.2 MW charging. Power is distributed intelligently: healthy segments accept more; warm segments accept less; degraded segments receive only a small fraction.</p>
+    <p>A segmented battery in this context resembles a small internal electrical grid: energy node states are monitored in real time; load is routed safely; thermal stress and aging are balanced across segments; fault conditions do not collapse the entire charging session.</p>
+  </div>
+
+  <!-- §8 Economic Logic -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Economic Logic: Yield, Grading, and the B-Grade Market</h2></div>
+    <p>In a conventional series-based battery, the weakest cell constrains the whole — leading to aggressive cell grading, underpriced use of B- and C-grade cells, high testing requirements, and significant material waste. The battery industry's yield problem is a major structural cost driver.</p>
+    <p>When the system is fault-tolerant, slightly weaker but still functional cells can be used — increasing manufacturing yield, reducing sorting and grading costs, lowering warranty costs, and opening a new market for B+ grade cells currently difficult to place in premium applications.</p>
+    <div class="callout">
+      <p>RAID did for the disk industry what segmentation may do for batteries: the requirement for individual component perfection decreased; reliability emerged from the architecture; and the cost structure changed permanently.</p>
+    </div>
+  </div>
+
+  <!-- §9 Barriers -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 09</span><h2 class="section-title">Barriers to Adoption</h2></div>
+    <ul class="body-list">
+      <li>Lock-in to existing capital investments in current architecture</li>
+      <li>Absence of certification pathways and relevant standards</li>
+      <li>Unclear cost structure relative to added electronics and control complexity</li>
+      <li>Exceptionally high risk aversion in the automotive industry</li>
+      <li>Insurance and liability frameworks not yet adapted to fault-tolerant battery behavior</li>
+    </ul>
+    <p>This suggests that the transition is likely to originate in niche applications — drones, eVTOL, specialised ground vehicles — before moving to premium EVs and eventually the mass market.</p>
+  </div>
+
+  <!-- §10 KRI -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 10</span><h2 class="section-title">System Resilience Assessment: Key Resilience Indicators</h2></div>
+
+    <div class="kri-grid">
+      <div class="kri-box">
+        <div class="kri-dim">Component level</div>
+        <div class="kri-assessment">Strong — active node design</div>
+        <div class="kri-risk">Risk: measurement/switch redundancy needed</div>
+      </div>
+      <div class="kri-box">
+        <div class="kri-dim">System level</div>
+        <div class="kri-assessment">Strong — orchestrator logic</div>
+        <div class="kri-risk">Risk: single orchestrator failure point</div>
+      </div>
+      <div class="kri-box">
+        <div class="kri-dim">Temporal degradation</div>
+        <div class="kri-assessment">Uncertain — mixed-quality aging</div>
+        <div class="kri-risk">Risk: segment-level aging tracking required</div>
+      </div>
+      <div class="kri-box">
+        <div class="kri-dim">Scalability</div>
+        <div class="kri-assessment">Good — hierarchical potential</div>
+        <div class="kri-risk">Risk: control architecture complexity</div>
+      </div>
+      <div class="kri-box" style="grid-column:1/-1;border-bottom:none">
+        <div class="kri-dim">Market / regulatory</div>
+        <div class="kri-assessment">Weak — institutional barriers</div>
+        <div class="kri-risk">Risk: certification and standards gap — the primary bottleneck</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §11 Roadmap -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 11</span><h2 class="section-title">Technology Adoption Roadmap</h2></div>
+
+    <h3 class="sub">Near Term (1–3 Years)</h3>
+    <p>Research prototypes of segmented pack architectures. Drone and eVTOL first deployments. SEFI-R-type validation tests on segmented demonstrators. Early publications establishing prior art and concept.</p>
+
+    <h3 class="sub">Medium Term (3–7 Years)</h3>
+    <p>Premium EV and specialty vehicle applications. Segment-level fault management in commercial systems. First steps toward standardisation (IEC TC 21, ISO TC 69). Measurable improvements in serviceability and cycle lifetime.</p>
+
+    <h3 class="sub">Long Term (7–15 Years)</h3>
+    <p>Broader adoption in the EV market. B-grade and B+ grade cells integrated within fault-tolerant architecture. Controlled segment-level implementation of 1–2 MW charging. Batteries evolving into programmable, upgradeable energy infrastructure.</p>
+
+    <h3 class="sub">Use Case Positioning</h3>
+    <p><strong>Immediately strong:</strong> Unmanned aerial systems and eVTOL (fault tolerance over peak energy density); heavy-duty industrial vehicles (serviceability over long asset life); stationary energy storage systems (mixed-grade and second-life cell populations).</p>
+    <p><strong>Promising but requiring further evidence:</strong> Commercial electric fleets; premium electric vehicles; defence and critical infrastructure.</p>
+    <p><strong>Not the right tool:</strong> High-volume consumer EVs optimising for maximum structural integration and minimum unit cost per kWh.</p>
+    <div class="callout">
+      <p>RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail.</p>
+    </div>
+  </div>
+
+  <!-- §12 Conclusions -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 12</span><h2 class="section-title">Conclusions</h2></div>
+    <ol style="padding-left:1.4rem;margin-bottom:1rem">
+      <li style="font-size:1rem;line-height:1.75;color:#2a2520;margin-bottom:.4rem">Battery reliability can shift from the individual cell to the system architecture</li>
+      <li style="font-size:1rem;line-height:1.75;color:#2a2520;margin-bottom:.4rem">SEFI-R provides a promising foundation for testing and potential standardisation of segmented architectures</li>
+      <li style="font-size:1rem;line-height:1.75;color:#2a2520;margin-bottom:.4rem">Ultra-fast charging in a segmented battery is primarily a control and load distribution challenge, not solely a materials problem</li>
+      <li style="font-size:1rem;line-height:1.75;color:#2a2520;margin-bottom:.4rem">Production yield and total cost of ownership can improve significantly if the system tolerates weaker but still functional segments</li>
+      <li style="font-size:1rem;line-height:1.75;color:#2a2520">The future of the battery may more closely resemble an electrical grid or data center than a traditional chemical component</li>
+    </ol>
+
+    <div class="finding-box">
+      <div class="finding-label">SP-003 — Core thesis</div>
+      <p>The battery is not, in the future, a single component — but a distributed, programmable, and fault-tolerant energy infrastructure.</p>
+    </div>
+  </div>
+
+  <!-- §13 Proposed Further Development -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 13</span><h2 class="section-title">Proposed Further Development</h2></div>
+    <ul class="body-list">
+      <li>Technical block diagram of alternative segment architectures (series bypass, multi-bus, DC/DC energy nodes)</li>
+      <li>Example load distribution algorithm for 1.2 MW charging across 16 segments with dynamic health-score weighting</li>
+      <li>SEFI-R-based validation matrix for segmented battery systems</li>
+      <li>Economic scenario analysis of yield impact under B-grade segment tolerance</li>
+      <li>Supplementary appendix: Health Score computation model with B-grade strategy and micro-SEFI software integration</li>
+      <li>Submission of SEFI-R for consideration as a new work item in IEC TC 21 or ISO TC 69</li>
+    </ul>
+  </div>
+
+  <!-- §14 Strategic Conclusion -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 14</span><h2 class="section-title">Strategic Conclusion</h2></div>
+    <p>The RAID-Battery does not appear in this paper merely as a new battery product, but as a potential reference architecture for energy systems. Its significance is threefold: it transfers reliability from the individual cell to the system; it opens the possibility of using more aggressive cell chemistries and less perfect cell production; and it transforms the battery's role from a passive component to a software-managed, serviceable, and fault-tolerant infrastructure.</p>
+    <p>The question is not only about a continuation of battery technology, but about a possible new development trajectory in which electrochemistry, power electronics, embedded software, standardisation, and production economics converge into a single system-level innovation.</p>
+  </div>
+
+  <!-- References -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">Ref</span><h2 class="section-title">References</h2></div>
+    <ul class="body-list" style="list-style:none;padding-left:0">
+      <li style="margin-bottom:.6rem;font-size:.92rem;color:#3a3530">SEFI-R Open Technical Disclosure v1.0. Zenodo. <a href="https://doi.org/10.5281/zenodo.14940723" style="color:var(--accent)">https://doi.org/10.5281/zenodo.14940723</a> (February 2026)</li>
+      <li style="margin-bottom:.6rem;font-size:.92rem;color:#3a3530">IEC 62133:2012. Safety requirements for portable sealed secondary lithium cells.</li>
+      <li style="margin-bottom:.6rem;font-size:.92rem;color:#3a3530">IEC 62660:2018. Secondary lithium-ion cells for the propulsion of electric road vehicles.</li>
+      <li style="margin-bottom:.6rem;font-size:.92rem;color:#3a3530">ISO 12405-4:2018. Electrically propelled road vehicles — Test specification for lithium-ion traction battery packs.</li>
+      <li style="margin-bottom:.6rem;font-size:.92rem;color:#3a3530">IEEE Std 1679-2010. Recommended Practice for the Characterisation and Evaluation of Emerging Energy Storage Technologies.</li>
+    </ul>
+  </div>
+
+  <!-- ─────────────────── APPENDIX A ─────────────────── -->
+  <div class="appendix-header">
+    <div class="appendix-id">Appendix A</div>
+    <h2 class="appendix-title">Simulation Results: Concept Validation</h2>
+  </div>
+
+  <div class="disclaimer">All simulations in this appendix are conceptual model results. They do not incorporate full electrochemical or thermal physics models. Results should be interpreted as indicative of system-level behaviour, not as validated performance metrics or certified design data.</div>
+
+  <div class="section">
+    <h3 class="sub">A1. Fault Injection Behaviour</h3>
+    <p>The simulation runs a 16-segment pack (12 A-grade, 4 B-grade) over 800 cycles under four fault injection profiles: no faults, one segment isolated at cycle 200, two faults at cycles 200 and 400, and three faults at cycles 200, 400, and 600. In all cases the orchestrator continues degraded-mode operation, redistributing load across remaining active segments. Each fault removes approximately 6.25% of total pack capacity. No full system shutdown occurs in any scenario.</p>
+    <div class="callout"><p><strong>Key result:</strong> The fail-operational envelope holds across all tested fault counts. This provides quantitative support for the working paper's central claim that system reliability can be transferred from the individual segment to the architecture.</p></div>
+
+    <h3 class="sub">A2. Fast-Charge Thermal Stress</h3>
+    <p>The simulation compares four operating profiles under both default Health Score weights and a thermal-heavy weighting (w₄ = 0.45). The thermal factor routes load away from hot segments in real time, without any hardware change.</p>
+    <div class="callout"><p><strong>Key result:</strong> The same physical hardware exhibits meaningfully different thermal behaviour depending on orchestrator weight configuration. This supports the concept of the RAID-Battery as a software-defined energy system in which operational profile is a software parameter, not a hardware constraint.</p></div>
+
+    <h3 class="sub">A3. Economic Monte Carlo Analysis (3,000 runs)</h3>
+    <p>A Monte Carlo simulation compares the total manufacturing and warranty cost of a conventional all-prime-cell pack against a RAID-Battery pack accepting B-grade cells in 2–4 of 16 segments.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table A3 — Key Assumptions</div>
+      <table class="std">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>A-grade cell cost</td><td>80 €/kWh</td></tr>
+          <tr><td>B-grade cell cost</td><td>52 €/kWh (35% discount)</td></tr>
+          <tr><td>Pack assembly</td><td>18 €/kWh</td></tr>
+          <tr><td>Sorting cost — conventional</td><td>4 €/kWh</td></tr>
+          <tr><td>Sorting cost — RAID</td><td>1 €/kWh</td></tr>
+          <tr><td>Control electronics overhead</td><td>~480 € per pack</td></tr>
+          <tr><td>Warranty event cost — conventional</td><td>600 € (full pack)</td></tr>
+          <tr><td>Warranty event cost — RAID</td><td>150 € (segment-level)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table A3b — Results Summary (3,000 Monte Carlo runs)</div>
+      <table class="std">
+        <thead><tr><th>Metric</th><th>Conventional</th><th>RAID-Battery</th><th>Delta</th></tr></thead>
+        <tbody>
+          <tr><td>Median pack cost</td><td>113.3 €/kWh</td><td class="result-ok">104.8 €/kWh</td><td class="result-ok">−8.5 €/kWh</td></tr>
+          <tr><td>90% CI on saving</td><td colspan="2">—</td><td>[2.1, 14.9] €/kWh</td></tr>
+          <tr><td>RAID lower cost</td><td colspan="2">—</td><td class="result-ok">98% of scenarios</td></tr>
+          <tr><td>Manufacturing yield improvement</td><td colspan="2">—</td><td class="result-ok">+6.0 pp median</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><p><strong>Key result:</strong> The cost case is driven primarily by B-grade cell acceptance and reduced warranty exposure, and holds robustly across the simulated parameter range even with added electronics cost.</p></div>
+  </div>
+
+  <!-- ─────────────────── APPENDIX B ─────────────────── -->
+  <div class="appendix-header">
+    <div class="appendix-id">Appendix B</div>
+    <h2 class="appendix-title">Indicative Case Study: Electric Forestry Machine, Kuopio Region</h2>
+  </div>
+
+  <div class="disclaimer">All values in this appendix are indicative estimates based on publicly available industry data and operational experience from Finnish forestry operations. They are not based on measured data from a specific vehicle or operator. Purpose: order-of-magnitude illustration only — not a business case or investment recommendation.</div>
+
+  <div class="section">
+    <h3 class="sub">B1. Application Context</h3>
+    <p>Finnish forestry machines — harvesters and forwarders — represent a demanding application environment that aligns well with RAID-Battery properties. Machines operate in two-shift patterns (up to 16 hours/day) across a Nordic climate ranging from approximately −16°C in January to +24°C in July in the Kuopio region. Downtime is expensive: a productive harvester generates estimated revenue of 150–220 €/h, and a single pack-level failure can result in three or more days of lost productivity. Asset lives of 10–15 years are normal.</p>
+    <p>This case study models a 120 kWh electric harvester with a 20-segment RAID-Battery pack (16 A-grade, 4 B-grade) operating 240 working days per year over a 12-year asset life. A conventional all-prime-cell pack of identical nominal capacity is the comparison baseline.</p>
+
+    <h3 class="sub">B2. Cold-Weather Capacity Management</h3>
+    <p>Battery capacity derates approximately 1.2 percentage points per °C below 15°C. At the January average of approximately −12°C, this implies derating to ~68% for a conventionally managed pack. A RAID-Battery orchestrator can selectively pre-warm only segments scheduled for immediate high-load operation. Conservative recovery estimate: +4 percentage points → approximately 72% usable capacity in January conditions.</p>
+
+    <h3 class="sub">B3–B4. Lifecycle Cost Model and Indicative Results</h3>
+    <div class="table-wrap">
+      <div class="table-caption">Table B3 — 12-Year Lifecycle Cost Comparison (Indicative)</div>
+      <table class="std">
+        <thead><tr><th>Cost category</th><th>Conventional</th><th>RAID-Battery</th></tr></thead>
+        <tbody>
+          <tr><td>Initial pack cost</td><td>~12.8 k€</td><td>~12.5 k€</td></tr>
+          <tr><td>Scheduled replacements (×2)</td><td>~84.0 k€ (years 5 + 10)</td><td class="result-ok">Segment swaps only</td></tr>
+          <tr><td>Unscheduled downtime</td><td>Significant (3+ days/event)</td><td class="result-ok">Reduced (0.25 days/segment event)</td></tr>
+          <tr><td>Total 12-year cost (indicative)</td><td class="result-warn">~156.7 k€</td><td class="result-ok">~52.5 k€</td></tr>
+          <tr><td>Indicative 12-year saving</td><td colspan="2" style="text-align:center"><strong>~104 k€ (~66% of conventional cost)</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The saving is driven primarily by elimination of full-pack replacement events and reduction in unscheduled downtime — not by the initial cost difference.</p>
+
+    <h3 class="sub">B5. Limitations</h3>
+    <p>Results are sensitive to assumed downtime cost rate, failure interval, and pack replacement cost. The cold-weather recovery of 4 percentage points has not been validated against a physical system. Segment swap cost of ~2,800 € assumes field-replaceable modules — an architectural assumption not yet proven in a production design.</p>
+  </div>
+
+  <!-- ─────────────────── APPENDIX E ─────────────────── -->
+  <div class="appendix-header">
+    <div class="appendix-id">Appendix E</div>
+    <h2 class="appendix-title">Methodology and Assumptions</h2>
+  </div>
+
+  <div class="section">
+    <h3 class="sub">E1. Nature of This Work</h3>
+    <p>This is a concept-level system architecture paper. It describes a proposed approach to battery pack design and control, supported by logical argument, simulation modelling, and comparison with analogous systems in other engineering domains. It does not present measured data from a physical prototype. All quantitative results in Appendix A (simulation) and Appendix B (lifecycle cost) are model outputs, not measurements.</p>
+
+    <h3 class="sub">E2. Simulation Methodology</h3>
+    <p>Simulations are implemented in Python using a population-based segment model (16–20 segments with realistic spreads for capacity, internal resistance, recovery metric, and temperature). Health Score formula and load allocation logic are direct implementations of §4 definitions. Aging dynamics are load-proportional with grade-specific multipliers. These are structural models — they capture system-level behaviour but do not model lithium-ion chemistry, thermal physics, or degradation mechanisms at the electrode level. The economic Monte Carlo (3,000 runs) uses assumed parameter distributions; not based on audited cost data.</p>
+
+    <h3 class="sub">E3. Claims and Their Basis</h3>
+    <div class="table-wrap">
+      <table class="std">
+        <thead><tr><th>Claim</th><th>Basis</th><th>Confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Fail-operational behaviour under multiple segment faults</td><td>Simulation (Appendix A)</td><td>High at system logic level; not validated with real electrochemistry</td></tr>
+          <tr><td>Thermal containment prevents propagation</td><td>Engineering analysis (Appendix B material properties)</td><td>Moderate; requires physical TR test to confirm</td></tr>
+          <tr><td>Recov(Z) provides earlier degradation signal than DCIR</td><td>Hypothesis (electrochemical reasoning §5.5)</td><td class="result-warn">Low; requires experimental validation (OQ-1)</td></tr>
+          <tr><td>8.5 €/kWh median cost saving</td><td>Monte Carlo model with assumed parameters</td><td>Order-of-magnitude plausible; sensitive to segment swap cost assumption</td></tr>
+          <tr><td>SEFI-R addresses gap in existing standards</td><td>Comparison with IEC/ISO/IEEE/UN standards (§5.3)</td><td class="result-ok">High; no identified standard covers non-destructive fault injection + recovery quantification</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">E4. What This Paper Does Not Claim</h3>
+    <ul class="body-list">
+      <li>Experimental validation of any physical component</li>
+      <li>That Recov(Z) has been shown to be an earlier degradation indicator than DCIR in physical systems</li>
+      <li>That thermal containment performs as specified in an actual thermal runaway event</li>
+      <li>That the economic projections represent market reality</li>
+      <li>Compliance with any safety standard (ISO 26262, IEC 61508, UN GTR 20, or others)</li>
+      <li>Novelty for segmentation, bypass topology, or distributed battery management as such</li>
+      <li>This paper is a defensive publication — not a patent application</li>
+    </ul>
+  </div>
+
+  <!-- ─────────────────── APPENDIX F ─────────────────── -->
+  <div class="appendix-header">
+    <div class="appendix-id">Appendix F</div>
+    <h2 class="appendix-title">Terminology and Definitions</h2>
+  </div>
+
+  <div class="section">
+    <div class="table-wrap">
+      <table class="std">
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>DCIR</td><td>DC Internal Resistance. Standard proxy for cell health and power delivery capability. Does not capture dynamic recovery behaviour after a disturbance.</td></tr>
+          <tr><td>Degraded mode</td><td>System operating state in which one or more segments have been isolated but remaining active segments continue to deliver power at reduced total capacity. Synonymous with "fail-operational" in this context.</td></tr>
+          <tr><td>Envelope Protection</td><td>The Guardian layer's continuous enforcement of hard limits on segment voltage, current, and temperature. Active in all states. Cannot be overridden by the Orchestrator.</td></tr>
+          <tr><td>Fail-operational</td><td>System property by which the system continues to deliver useful output after a fault event, at potentially reduced performance. Distinguished from fail-safe (system stops).</td></tr>
+          <tr><td>Freshness counter</td><td>8-bit monotonically incrementing counter in every CMD frame. Guardian rejects frames not strictly greater than last accepted value, preventing replay attacks.</td></tr>
+          <tr><td>Guardian layer</td><td>Deterministic firmware layer at the segment controller (SCU) bare-metal level. Implements Envelope Protection, state machine, and L-MAC validation.</td></tr>
+          <tr><td>Health Score (HS)</td><td>Real-time normalised composite indicator (0–1) for each segment. Weighted sum of capacity ratio, DCIR factor, Recov(Z), and thermal factor. Used by Load Allocation Engine.</td></tr>
+          <tr><td>L-MAC</td><td>Lightweight Message Authentication Code. Per-message authentication mechanism for Guardian–Orchestrator communication. Based on AES-CMAC or HMAC-SHA256 with 32-bit truncated tag.</td></tr>
+          <tr><td>Micro-SEFI</td><td>Software-based scheduled SEFI-R-type perturbation during low-demand windows. Provides updating Recov(Z) value as a continuous maintenance parameter.</td></tr>
+          <tr><td>Orchestrator</td><td>Upper software layer running on Linux-based SBC or equivalent. Responsible for Health Score computation, load allocation, micro-SEFI scheduling, system-level diagnostics. Permitted to fail and restart.</td></tr>
+          <tr><td>Recov(Z)</td><td>SEFI-R Recovery Ratio: Z(recovery) / Z(baseline). Value of 1.0 = complete functional recovery. Values below 1.0 = residual degradation. Primary resilience input to Health Score engine.</td></tr>
+          <tr><td>SEFI-R</td><td>Segment-Event Fault Injection and Recovery. Non-destructive test methodology. Zenodo DOI: 10.5281/zenodo.14940723.</td></tr>
+          <tr><td>Segment</td><td>Electrically and control-logically independent subdivision of the battery pack. Contains its own cell group, sensing, local switching, and a segment controller (SCU/Guardian). Basic unit of fault isolation.</td></tr>
+          <tr><td>SHN</td><td>System Health Number. 10th percentile of Recov(Z) values across all active segments. Pack-level resilience indicator robust to localised outliers.</td></tr>
+          <tr><td>Thermal barrier</td><td>Physical inter-segment separation interrupting thermal runaway propagation. Composed of aerogel insulation, mica plate, and intumescent edge seals.</td></tr>
+          <tr><td>TTL</td><td>Time-to-Live. Field in CMD frame specifying validity period (1–500 ms). Guardian reverts to fallback profile when TTL expires without renewal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─────────────────── APPENDIX G ─────────────────── -->
+  <div class="appendix-header">
+    <div class="appendix-id">Appendix G</div>
+    <h2 class="appendix-title">Development Methodology and AI Contribution Statement</h2>
+  </div>
+
+  <div class="section">
+    <h3 class="sub">G1. Development Process</h3>
+    <p>This work was developed through an iterative process of human-led system design, analysis, and decision-making, with AI-assisted structuring, writing, simulation implementation, and document production. The conceptual contributions — the RAID analogy applied to battery architecture, the SEFI-R methodology, the two-layer Guardian–Orchestrator control architecture, and the use case positioning — originated from and were directed by the human author throughout.</p>
+
+    <h3 class="sub">G2. AI Tool Contribution</h3>
+    <p>Claude (Anthropic, claude-sonnet-4 series) was used as an AI assistant throughout the development process for: document structuring and drafting from human-provided outlines; simulation code generation in Python; Word document generation; prior art search assistance; cross-referencing consistency checks; and technical writing in English.</p>
+    <p>The AI did not originate the core technical concepts, did not make independent architectural decisions, and did not determine the scope or direction of the work. All substantive technical choices were made by the human author.</p>
+
+    <h3 class="sub">G3. Attribution Statement</h3>
+    <p>Developed through human-led system design and AI-assisted validation, structuring, and document production. The intellectual contribution, conceptual direction, and all technical decisions are those of the human author. AI tools were used as productivity instruments, not as independent contributors.</p>
+
+    <div class="citation-box" style="margin-top:1.5rem">
+      <strong>Suggested citation acknowledgement for derivative works:</strong><br>
+      "Developed through human-led system design with AI-assisted documentation and simulation structuring (Anthropic Claude, March 2026)."
+    </div>
+
+    <h3 class="sub">G4. Reproducibility</h3>
+    <p>Python simulation source code is available in the Zenodo repository alongside the SEFI-R disclosure (DOI: 10.5281/zenodo.14940723). All simulation parameters are documented in the code. Results are reproducible by running the provided scripts with Python 3.11+, numpy, matplotlib, scipy. Results are deterministic (fixed random seed).</p>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>License:</strong> Creative Commons CC BY 4.0 — Released for open discussion. Not a patent application.<br>
+    <strong>Related disclosure:</strong> SEFI-R v1.0, Zenodo DOI: 10.5281/zenodo.14940723<br>
+    <strong>Competing interests:</strong> None declared.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-003 · v1.0 · 2026<br>CC BY 4.0 · Open Working Draft</div>
+  <div class="footer-col">SEFI-R: 10.5281/zenodo.14940723<br>Not a patent application</div>
+</footer>
+
+</body>
+</html>

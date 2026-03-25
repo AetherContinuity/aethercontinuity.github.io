@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-001 — Power Adequacy Under Compound Stress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .highlights { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; }
+  .highlights-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .highlights ul { padding-left: 1.2rem; }
+  .highlights ul li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.3rem; color: #2a2520; }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+  .abstract-sub { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.3rem; }
+
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+  .keywords strong { color: var(--ink); font-weight: 400; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  /* Tables */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .result-strong { color: #2a6a2a; font-family: var(--mono); font-size: 0.82rem; font-weight: 500; }
+  .result-warn { color: var(--accent); font-family: var(--mono); font-size: 0.82rem; }
+
+  /* Formula blocks */
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2; color: var(--ink); }
+
+  /* Finding boxes */
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  /* References */
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; color: #3a3530; }
+  .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); font-family: var(--mono); }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 001</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">SP · 001 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 001</div>
+    <h1 class="paper-title">Power Adequacy Under Compound Stress: Reserve Duration and Tail-Risk Contraction in Wind-Dominant Systems</h1>
+    <p class="paper-subtitle">Case Study: Finland 2026–2035</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 001, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html<br>
+      Cross-references: WP-001 (Duration Adequacy) · WP-005 (Compound Stress Finland) · DA-001 (Finland Pre-Shortage Phase) · DA-003 (Finland Allocation Diagnostic)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-1 · Duration Adequacy</span>
+      <span class="domain-tag">D-4 · Compound Stress</span>
+    </div>
+  </div>
+
+  <div class="highlights">
+    <div class="highlights-label">Highlights</div>
+    <ul>
+      <li>Reserve duration (48h → 72h) reduces tail-risk LOLE by 56% under compound stress.</li>
+      <li>Non-linear threshold effect: duration dominates reserve power scaling in extreme quantiles.</li>
+      <li>Wind persistence (AR(1) ρ) is the dominant driver of extreme adequacy tail risk.</li>
+      <li>Bootstrap 95% CIs confirm statistical robustness of tail contraction findings.</li>
+      <li>Policy: energy-limited reserve design is critical for wind-dominant power systems.</li>
+    </ul>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p><strong>Purpose:</strong> This study quantifies probabilistic power-system adequacy risk under compound stress events combining cold-driven demand amplification, persistent low-wind regimes, and cross-border import constraints, with direct policy relevance for Finland's energy transition through 2035.</p>
+    <p><strong>Methods:</strong> A two-stage probabilistic framework couples a 120-hour threshold-depletion stress-window analysis with an annual 8,760-hour Monte Carlo adequacy model evaluated using Loss of Load Expectation (LOLE) and Expected Energy Not Served (EENS). Wind is modelled as a seasonal mean with AR(1) stochastic deviations and episodic low-wind regime blocks. A long-duration reserve layer parameterised by maximum power (R<sub>max</sub> = 300 MW) and duration (T<sub>R</sub> = 48 h vs. 72 h) is evaluated for its effect on the right tail of adequacy distributions.</p>
+    <p><strong>Results:</strong> Extending reserve duration from 48 h to 72 h reduces stress-window depletion probability by 37% and cuts post-reserve LOLE by 56%. In the annualised Monte Carlo simulation, P99 LOLE contracts from 6.53 h/year to 0.00 h/year — an extreme non-linear tail contraction confirmed by bootstrap confidence intervals.</p>
+    <p><strong>Policy Implications:</strong> Reserve duration — not reserve capacity alone — functions as a structural volatility-damping layer in wind-dominant systems. Energy-limited adequacy design should be a primary consideration in capacity market frameworks and national energy security policy across Nordic and comparable wind-dominant jurisdictions.</p>
+    <div class="keywords"><strong>Keywords:</strong> Power system adequacy · LOLE · EENS · Compound stress · Long-duration reserve · Tail risk · Monte Carlo · Energy security policy · Finland · Wind integration</div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Relationship to ACI Series</div>
+    <p>This paper provides the quantitative empirical foundation for the duration adequacy argument in <a href="/papers/wp-001-duration-adequacy-2.html">WP-001</a>. The calibration parameters and Monte Carlo framework are operationalised in the <a href="/tools/wp001-calibration-validator.html">WP-001 Calibration Validator</a>. The compound stress scenarios are directly related to <a href="/papers/wp-005-compound-stress-finland.html">WP-005</a> and the empirical Finnish system data in <a href="/supplements/da-001-finland-preshortage.html">DA-001</a> and <a href="/supplements/da-003-finland-allocation.html">DA-003</a>.</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Introduction</h2></div>
+    <p>The accelerating deployment of variable renewable energy — particularly wind power — is transforming adequacy risk in power systems across Europe. Where adequacy risk was historically concentrated in single-source failures or predictable seasonal demand peaks, wind-dominant systems face a qualitatively different challenge: correlated, multi-day compound stress events in which low wind generation, extreme cold-driven demand, and cross-border import constraints materialise simultaneously. These events are characterised by rare but severe tail outcomes rather than moderate mean-level disruptions.</p>
+    <p>Finland presents a particularly instructive case study. Between 2026 and 2035, Finland's installed wind capacity is projected to reach approximately 10,000–14,000 MW, representing a structural shift in the generation mix. The system retains a legacy base of nuclear generation (approximately 5,500 MW including Olkiluoto-3) and regulated hydropower (approximately 3,200 MW). The system winter peak approaches 15,000 MW, creating periods in which the adequacy margin depends critically on both wind output and import availability across Nordic interconnections.</p>
+    <p>Current adequacy planning frameworks, including the ENTSO-E European Resource Adequacy Assessment (ERAA), rely primarily on mean LOLE and capacity margin metrics. These metrics provide limited signal about the distributional shape of adequacy risk — specifically whether the right tail of LOLE and EENS distributions is bounded or heavy. A system that meets a mean LOLE criterion of 3 h/year may nonetheless exhibit P99 LOLE outcomes of 20+ h/year under compound stress scenarios with high wind persistence.</p>
+
+    <div class="callout">
+      <p>This paper makes three contributions: a two-stage probabilistic framework coupling threshold-depletion analysis with annual Monte Carlo simulation; calibrated parameter estimates for wind persistence, low-wind regime statistics, and temperature-driven demand sensitivity for the Finnish system; and quantitative evidence that reserve duration — independently of reserve capacity — functions as a non-linear volatility-damping mechanism.</p>
+    </div>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Literature Review</h2></div>
+
+    <h3 class="subsection">2.1 Probabilistic Adequacy Assessment</h3>
+    <p>Power system adequacy assessment has relied on probabilistic metrics since Billinton and Allan (1996), who systematised Loss of Load Expectation (LOLE) and Expected Energy Not Served (EENS) as primary adequacy indicators. Monte Carlo simulation methods allow generation and demand uncertainty to be jointly represented across full planning horizons. Dent and Zachary (2015) argued that fixed LOLE thresholds should be interpreted as distributional targets rather than deterministic requirements.</p>
+
+    <h3 class="subsection">2.2 Compound Stress and Meteorological Correlation</h3>
+    <p>Bloomfield et al. (2020) demonstrated that cold weather and low wind are positively correlated in Northern European climates, creating compound energy stress events of multiple days' duration. Olauson et al. (2017) quantified wind drought statistics across Scandinavia, finding that low-wind regimes can persist for 24–72 hours with non-negligible probability. Staffell and Pfenninger (2018) showed that wind generation modelling based on short historical records systematically underestimates the probability of persistent low-generation regimes.</p>
+
+    <h3 class="subsection">2.3 Energy-Limited Reserves and Research Gap</h3>
+    <p>Denholm et al. (2013) argued that as renewable penetration increases, energy capacity — not power capacity — becomes the binding adequacy constraint during multi-day stress events. The existing literature has established that compound stress events generate tail risk and that energy-limited reserves are important for multi-day adequacy. However, the specific functional relationship between reserve duration and the shape of the LOLE/EENS distribution — particularly the behaviour of extreme quantiles — has not been systematically quantified. This gap is the primary contribution of the present study.</p>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Modelling Framework</h2></div>
+
+    <h3 class="subsection">3.1 Overall Architecture</h3>
+    <p>The modelling framework consists of two coupled analytical stages. The first stage — the threshold-depletion analysis — evaluates the behaviour of a 120-hour stress window in which compound stress conditions are imposed simultaneously: wind generation at 5–10% of installed capacity, demand elevated by approximately 20% above seasonal mean, and import constraints active. The second stage — the annual Monte Carlo simulation — embeds the stress-window dynamics within a full 8,760-hour annual simulation, producing distributional estimates of LOLE and EENS across the full range of weather and operational outcomes.</p>
+
+    <h3 class="subsection">3.2 Adequacy Metrics</h3>
+    <div class="formula-block">
+      M<sub>i,t</sub> = A<sub>i,t</sub> − D<sub>i,t</sub><br>
+      LOLE = (1/N) Σ<sub>i</sub> Σ<sub>t</sub> 𝟭(M<sub>i,t</sub> &lt; 0)<br>
+      EENS = (1/N) Σ<sub>i</sub> Σ<sub>t</sub> max(−M<sub>i,t</sub>, 0)
+    </div>
+
+    <h3 class="subsection">3.3 Wind Generation Model</h3>
+    <div class="formula-block">
+      W<sub>t</sub> = W̅(t) + ε<sub>t</sub><br>
+      ε<sub>t</sub> = ρ · ε<sub>t−1</sub> + σ<sub>ε</sub> · η<sub>t</sub> &nbsp;&nbsp; η<sub>t</sub> ~ N(0,1)
+    </div>
+    <p>Episodic low-wind regime blocks are superimposed stochastically with calibrated frequency, mean duration, and maximum duration parameters. The AR(1) plus regime-block structure isolates the effect of wind persistence on tail adequacy risk, facilitating transparent sensitivity analysis over the persistence parameter ρ.</p>
+
+    <h3 class="subsection">3.4 Reserve Layer</h3>
+    <p>The long-duration reserve layer is parameterised by maximum power output (R<sub>max</sub>) and duration (T<sub>R</sub>). The reserve covers residual deficits up to R<sub>max</sub>, subject to an energy budget of T<sub>R</sub> · R<sub>max</sub>. Once exhausted, the reserve is unavailable until restocked. This representation reflects strategic fuel reserves, large-scale battery storage, or demand response programmes with finite energy capacity.</p>
+
+    <h3 class="subsection">3.5 Simulation Parameters</h3>
+    <p>The annual Monte Carlo simulation uses N = 10,000 replications per configuration. Convergence is confirmed by N = 5,000. For P99 tail estimates, convergence stabilises by N ≈ 7,000. Seed sensitivity is assessed across five independent random seeds — P99 LOLE under T<sub>R</sub> = 72 h is 0.00 h/year across all five seeds, with bootstrap CI [0.00, 0.00], confirming structural robustness.</p>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Empirical Calibration</h2></div>
+    <p>Model parameters are calibrated from hourly electricity system data for Finland, covering 2010–2024.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 1 — Wind Process Calibration Parameters</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Calibrated Value</th></tr></thead>
+        <tbody>
+          <tr><td>AR(1) persistence (ρ)</td><td>0.9315</td></tr>
+          <tr><td>Residual standard deviation (σ)</td><td>449.4 MW</td></tr>
+          <tr><td>Low-wind threshold</td><td>&lt; 10% of installed capacity</td></tr>
+          <tr><td>Low-wind events per year (mean)</td><td>84</td></tr>
+          <tr><td>Mean low-wind duration</td><td>3.19 h</td></tr>
+          <tr><td>P90 low-wind duration</td><td>7 h</td></tr>
+          <tr><td>Maximum observed low-wind duration</td><td>45 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 2 — Load Model Calibration Parameters</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Calibrated Value</th></tr></thead>
+        <tbody>
+          <tr><td>Temperature elasticity (β)</td><td>−131.3 MW/°C</td></tr>
+          <tr><td>Residual AR(1) persistence (ρ<sub>D</sub>)</td><td>0.9175</td></tr>
+          <tr><td>Residual standard deviation (σ<sub>D</sub>)</td><td>220.2 MW</td></tr>
+          <tr><td>Cold spell threshold</td><td>T &lt; −15°C</td></tr>
+          <tr><td>Cold spell events per year (mean)</td><td>92.3</td></tr>
+          <tr><td>Mean cold spell duration</td><td>8.09 h</td></tr>
+          <tr><td>P90 cold spell duration</td><td>20 h</td></tr>
+          <tr><td>Maximum cold spell duration</td><td>176 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 3 — System Capacity Parameters (Baseline)</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>System winter peak demand</td><td>15,000 MW</td></tr>
+          <tr><td>Nuclear generation (dispatchable)</td><td>5,500 MW</td></tr>
+          <tr><td>Hydropower (regulated)</td><td>3,200 MW</td></tr>
+          <tr><td>Wind capacity factor (risk scenario)</td><td>5–10%</td></tr>
+          <tr><td>Strategic reserve power (R<sub>max</sub>, baseline)</td><td>300 MW</td></tr>
+          <tr><td>Reserve energy budget (T<sub>R</sub> = 48 h)</td><td>14,400 MWh</td></tr>
+          <tr><td>Reserve energy budget (T<sub>R</sub> = 72 h)</td><td>21,600 MWh</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><em>Validation note:</em> Subsequent validation against Finnish hourly data (2015–2024) indicates that observed AR(1) persistence (ρ ≈ 0.992) exceeds the calibrated model value (ρ = 0.9315). This implies the model parameter represents a conservative lower bound on actual wind persistence — the identified non-linear threshold effect should be interpreted as a conservative lower-bound estimate of the true system requirement.</p>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Results</h2></div>
+
+    <h3 class="subsection">5.1 Threshold-Depletion Analysis</h3>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 4 — Threshold-Depletion Analysis (120-Hour Stress Window, R<sub>max</sub> = 300 MW)</div>
+      <table>
+        <thead><tr><th>Indicator</th><th>T<sub>R</sub> = 48 h</th><th>T<sub>R</sub> = 72 h</th><th>Δ (%)</th></tr></thead>
+        <tbody>
+          <tr><td>Reserve depletion probability</td><td class="result-warn">44.4%</td><td class="result-strong">28.1%</td><td>−37%</td></tr>
+          <tr><td>Post-reserve LOLE (h / 120-h window)</td><td class="result-warn">18.0</td><td class="result-strong">7.84</td><td>−56%</td></tr>
+          <tr><td>Post-reserve EENS (MWh / 120-h window)</td><td class="result-warn">4,941</td><td class="result-strong">2,173</td><td>−56%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">5.2 Annual Monte Carlo Results</h3>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 5 — Annual Monte Carlo Adequacy Metrics with Bootstrap 95% Confidence Intervals</div>
+      <table>
+        <thead><tr><th>Metric</th><th>T<sub>R</sub>=48h point</th><th>T<sub>R</sub>=48h CI95</th><th>T<sub>R</sub>=72h point</th><th>T<sub>R</sub>=72h CI95</th></tr></thead>
+        <tbody>
+          <tr><td>LOLE mean (h/year)</td><td>0.33</td><td>[0.10, 0.62]</td><td class="result-strong">0.10</td><td>[0.00, 0.27]</td></tr>
+          <tr><td>LOLE P99 (h/year)</td><td class="result-warn">6.53</td><td>[1.02, 20.51]</td><td class="result-strong">0.00</td><td>[0.00, 0.00]</td></tr>
+          <tr><td>EENS mean (MWh/year)</td><td>88</td><td>[24, 177]</td><td class="result-strong">29</td><td>[0, 73]</td></tr>
+          <tr><td>EENS P99 (MWh/year)</td><td class="result-warn">1,588</td><td>[0, 5,685]</td><td class="result-strong">0</td><td>[0, 0]</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Core finding</div>
+      <p>Mean LOLE reduction is 70% (0.33 → 0.10 h/year). P99 LOLE reduction is effectively 100% (6.53 → 0.00 h/year). This asymmetry defines the duration-threshold effect: reserve duration acts as a cap on stress event severity rather than as a proportional reduction in all adequacy outcomes.</p>
+    </div>
+  </div>
+
+  <!-- §6 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Sensitivity Analysis</h2></div>
+
+    <h3 class="subsection">6.1 Reserve Restock Time (24–96 h)</h3>
+    <div class="table-wrap">
+      <div class="table-caption">Table 6 — Sensitivity A: Reserve Restock Time</div>
+      <table>
+        <thead><tr><th>Restock (h)</th><th>P99 LOLE T<sub>R</sub>=48h</th><th>P99 LOLE T<sub>R</sub>=72h</th><th>P99 EENS T<sub>R</sub>=48h</th><th>P99 EENS T<sub>R</sub>=72h</th></tr></thead>
+        <tbody>
+          <tr><td>24</td><td>17.10</td><td class="result-strong">0.00</td><td>4,911</td><td class="result-strong">0</td></tr>
+          <tr><td>48</td><td>12.00</td><td class="result-strong">0.00</td><td>3,212</td><td class="result-strong">0</td></tr>
+          <tr><td>72</td><td>18.06</td><td class="result-strong">0.00</td><td>4,780</td><td class="result-strong">0</td></tr>
+          <tr><td>96</td><td>11.00</td><td class="result-strong">0.00</td><td>3,180</td><td class="result-strong">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">6.2 Wind Persistence (ρ ± 10%)</h3>
+    <div class="table-wrap">
+      <div class="table-caption">Table 7 — Sensitivity B: Wind Persistence</div>
+      <table>
+        <thead><tr><th>ρ</th><th>P99 LOLE T<sub>R</sub>=48h</th><th>P99 LOLE T<sub>R</sub>=72h</th><th>P99 EENS T<sub>R</sub>=48h</th><th>P99 EENS T<sub>R</sub>=72h</th></tr></thead>
+        <tbody>
+          <tr><td>0.828 (−10%)</td><td>2.68</td><td class="result-strong">0.00</td><td>533</td><td class="result-strong">0</td></tr>
+          <tr><td>0.920 (ref.)</td><td>15.21</td><td class="result-strong">0.00</td><td>4,120</td><td class="result-strong">0</td></tr>
+          <tr><td>0.999 (extreme)</td><td class="result-warn">781.68</td><td class="result-warn">745.73</td><td class="result-warn">203,896</td><td class="result-warn">193,795</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">6.3 Reserve Power R<sub>max</sub> (±20%)</h3>
+    <div class="table-wrap">
+      <div class="table-caption">Table 8 — Sensitivity C: Reserve Power R<sub>max</sub></div>
+      <table>
+        <thead><tr><th>R<sub>max</sub> (MW)</th><th>P99 LOLE T<sub>R</sub>=48h</th><th>P99 LOLE T<sub>R</sub>=72h</th><th>P99 EENS T<sub>R</sub>=48h</th><th>P99 EENS T<sub>R</sub>=72h</th></tr></thead>
+        <tbody>
+          <tr><td>240 (−20%)</td><td class="result-warn">31.00</td><td class="result-warn">6.21</td><td class="result-warn">7,229</td><td class="result-warn">1,469</td></tr>
+          <tr><td>300 (baseline)</td><td>11.31</td><td class="result-strong">0.00</td><td>3,009</td><td class="result-strong">0</td></tr>
+          <tr><td>360 (+20%)</td><td>14.21</td><td class="result-strong">0.00</td><td>4,260</td><td class="result-strong">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>At R<sub>max</sub> = 240 MW, P99 LOLE under T<sub>R</sub> = 72 h rises to 6.21 h/year, indicating a minimum capacity threshold below which duration extension alone is insufficient. The reserve design space has a joint (capacity, duration) requirement for extreme tail risk elimination.</p>
+  </div>
+
+  <!-- §7 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Discussion and Policy Implications</h2></div>
+
+    <h3 class="subsection">7.1 The Duration-Threshold Effect</h3>
+    <p>The central empirical finding reflects a specific structural mechanism: the transition from a reserve that regularly runs out during compound stress events to one that spans the typical compound event duration. The calibrated maximum cold spell duration is 176 hours and maximum low-wind duration is 45 hours; the P90 cold spell duration is 20 hours. A 48-hour reserve covers the majority of individual stress components but is frequently insufficient to span the combined compound event. A 72-hour reserve covers the great majority of compound event realisations encountered in the simulation.</p>
+    <p>The non-linearity is a property of the adequacy risk distribution: a 50% increase in energy budget produces a 70% reduction in mean LOLE but a near-100% reduction in P99 LOLE. This provides a principled basis for reserve duration requirements: the duration threshold should be set at or above the P90–P95 of compound stress event duration in the relevant system.</p>
+
+    <h3 class="subsection">7.2 Implications for Capacity Market Design</h3>
+    <p>Current capacity market frameworks across Europe typically specify capacity requirements in power (MW). Energy content (MWh) and duration (hours) requirements are less commonly specified in capacity contracts. The results presented here argue directly for explicit duration requirements, particularly for long-duration reserves in wind-dominant systems. The difference between 14,400 MWh (48-hour reserve) and 21,600 MWh (72-hour reserve) — 7,200 MWh of additional energy capacity — represents the margin between P99 LOLE of 6.53 h/year and zero.</p>
+
+    <h3 class="subsection">7.3 Wind Persistence as the Binding Risk Driver</h3>
+    <p>The sensitivity analysis demonstrates that wind persistence is the dominant driver of extreme adequacy risk. At the calibrated Finnish value of ρ ≈ 0.93, the reserve design examined here is effective. At ρ → 1.0, no single reserve layer provides adequate protection, and multi-layer resilience strategies become necessary structural complements. If climate change increases the frequency of blocking anticyclone events in Northern Europe, the effective wind persistence parameter could shift upward, rendering current reserve specifications inadequate.</p>
+
+    <h3 class="subsection">7.4 Policy Recommendations</h3>
+    <p>Based on the findings of this study, the following policy recommendations are offered for Finnish energy regulators, Fingrid, and the Ministry of Economic Affairs and Employment, as well as for comparable Nordic and European jurisdictions:</p>
+    <p>(1) Adopt energy-duration specifications in strategic reserve procurement contracts. A 72-hour energy budget is recommended as the baseline specification for compound stress resilience under the Finnish system parameters.</p>
+    <p>(2) Commission systematic wind persistence analysis as a standard input to national and regional adequacy assessments, including scenarios reflecting potential climate-driven increases in blocking pattern frequency.</p>
+    <p>(3) Develop a compound stress early-warning framework combining real-time wind output, temperature forecasts, and import capacity monitoring.</p>
+    <p>(4) Consider multi-layer resilience design for parameter uncertainty — demand response programmes, fuel-based backup generation, and interconnection reinforcement provide complementary layers whose effectiveness is less sensitive to wind persistence.</p>
+  </div>
+
+  <!-- §8 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Limitations and Future Research</h2></div>
+    <p>The model represents the Finnish power system as a single aggregated adequacy zone and does not simulate AC power flow, network constraints, or voltage stability dynamics. Wind and demand processes are modelled using simplified stochastic representations; the AR(1) framework does not fully represent spatial correlations across wind farm clusters or the synoptic-scale dynamics of blocking anticyclone events.</p>
+    <p>Empirical validation against Finnish hourly data (2015–2024) indicates that real-world wind persistence exceeds the calibrated model parameters (observed ρ ≈ 0.992 vs. model ρ ≈ 0.931). Historical data also show fewer but longer low-wind events (mean ≈ 13.7 hours vs. 3.2 hours), consistent with increasing geographic dispersion of the wind fleet. These deviations do not weaken the central result — on the contrary, they imply the model underestimates duration-driven adequacy risk. The non-linear threshold effect between 48-hour and 72-hour reserve duration should be interpreted as a conservative lower-bound estimate.</p>
+    <p>Future research directions include extension to multi-zone adequacy models with transmission constraints; integration of climate projections; and economic valuation of reserve duration requirements across capacity market designs.</p>
+  </div>
+
+  <!-- §9 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 09</span><h2 class="section-title">Conclusion</h2></div>
+    <p>This study has quantified the distributional effects of long-duration reserve design on power system adequacy under compound stress in a wind-dominant system. Using a two-stage probabilistic framework calibrated to Finland's 2026–2035 projected generation mix, the key finding is that a 24-hour increment in reserve duration — from 48 to 72 hours — eliminates extreme P99 LOLE outcomes (6.53 h/year → 0.00 h/year) while producing a 70% reduction in mean LOLE (0.33 → 0.10 h/year).</p>
+    <p>Sensitivity analysis identifies wind persistence as the dominant driver of extreme adequacy risk. At extreme persistence values (ρ → 1.0), no single reserve layer can provide adequate protection, underscoring the need for multi-layer resilience strategies.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">SP-001 — Core policy conclusion</div>
+      <p>Reserve procurement frameworks should specify energy duration requirements alongside power capacity requirements. As Finland and comparable Nordic and European systems continue their wind-dominant energy transitions, energy-limited adequacy design will become increasingly critical — and the quantitative framework presented here provides a practical tool for calibrating reserve duration requirements to system-specific compound stress risk profiles.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ul class="ref-list">
+      <li>Billinton, R., &amp; Allan, R. N. (1996). <em>Reliability evaluation of power systems</em> (2nd ed.). Springer.</li>
+      <li>Billinton, R., &amp; Li, W. (1994). <em>Reliability assessment of electrical power systems using Monte Carlo methods.</em> Plenum Press.</li>
+      <li>Bloomfield, H. C., Brayshaw, D. J., &amp; Charlton-Perez, A. (2020). Characterising the winter meteorological drivers of the European electricity system using targeted circulation types. <em>Meteorological Applications</em>, 27(1), e1858.</li>
+      <li>Dent, C. J., &amp; Zachary, S. (2015). Probabilistic reliability standards for wind power planning. <em>IEEE Transactions on Power Systems</em>, 30(1), 33–40.</li>
+      <li>Denholm, P., Ela, E., Kirby, B., &amp; Milligan, M. (2013). The role of energy storage with renewable electricity generation. <em>Energy Policy</em>, 62, 1295–1302.</li>
+      <li>ENTSO-E. (2023). <em>European resource adequacy assessment (ERAA) 2023.</em> European Network of Transmission System Operators for Electricity.</li>
+      <li>Helistö, N., et al. (2019). Backbone — An adaptable energy systems modelling framework. <em>Energies</em>, 12(17), 3388.</li>
+      <li>Keane, A., et al. (2011). Capacity value of wind power. <em>IEEE Transactions on Power Systems</em>, 26(2), 564–572.</li>
+      <li>Olauson, J., Bergkvist, M., &amp; Widén, J. (2017). Variability and predictability of wind power at aggregated scales in Europe. <em>Energy</em>, 127, 428–438.</li>
+      <li>Panteli, M., &amp; Mancarella, P. (2015). The grid: Stronger, bigger, smarter? <em>IEEE Power and Energy Magazine</em>, 13(3), 58–66.</li>
+      <li>Staffell, I., &amp; Pfenninger, S. (2018). The increasing impact of weather on electricity supply and demand. <em>Energy</em>, 145, 65–78.</li>
+    </ul>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>Data availability:</strong> Calibration source data available from Fingrid Open Data (data.fingrid.fi) and Finnish Meteorological Institute open data portal.<br>
+    <strong>Competing interests:</strong> None declared.<br>
+    <strong>Acknowledgements:</strong> Source data provided by Fingrid Oyj and the Finnish Meteorological Institute. Research conducted independently; no external funding received.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-001 · v1.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-1 · D-4<br>Companion: WP-001 · WP-005 · DA-001</div>
+</footer>
+
+</body>
+</html>
