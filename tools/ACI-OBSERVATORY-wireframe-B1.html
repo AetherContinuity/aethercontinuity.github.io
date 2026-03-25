@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI Winter Endurance Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0d11;
+    --bg-2: #11141a;
+    --bg-3: #181c24;
+    --bg-4: #1e232e;
+    --line: #252b38;
+    --line-2: #2d3444;
+    --text-dim: #3d4a60;
+    --text-mid: #6b7a96;
+    --text-sub: #8c9db8;
+    --text: #c8d4e8;
+    --text-hi: #e8eef8;
+    --accent: #4a7fc1;
+    --accent-dim: #2a4a72;
+
+    /* Posture palette */
+    --normal: #2a7a4a;
+    --normal-glow: #3aaa6a;
+    --normal-text: #6de09a;
+    --tight: #7a6a1a;
+    --tight-glow: #c8a820;
+    --tight-text: #f0cc40;
+    --elevated: #7a3a18;
+    --elevated-glow: #d06020;
+    --elevated-text: #f08840;
+    --bp: #7a1818;
+    --bp-glow: #cc2020;
+    --bp-text: #f04040;
+
+    --posture-color: var(--elevated-glow);
+    --posture-text: var(--elevated-text);
+    --posture-bg: var(--elevated);
+  }
+
+  html { font-size: 14px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 28px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--line-2);
+    padding: 32px 0 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+  }
+
+  .header-left {}
+
+  .site-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .site-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .site-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--text-hi);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .site-title em {
+    font-style: italic;
+    color: var(--text-sub);
+    font-weight: 400;
+  }
+
+  .site-subtitle {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+    max-width: 520px;
+    line-height: 1.55;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .timestamp-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+  }
+  .timestamp-block .ts-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    color: var(--text-mid);
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--normal-glow);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── POSTURE BANNER ── */
+  .posture-banner {
+    margin: 28px 0 0;
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-left: 4px solid var(--posture-color);
+    padding: 22px 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .posture-label-block {}
+  .posture-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .posture-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--posture-text);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-shadow: 0 0 28px var(--posture-color);
+  }
+
+  .posture-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--line-2);
+  }
+
+  .posture-note {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text-sub);
+    line-height: 1.6;
+    max-width: 640px;
+    letter-spacing: 0.02em;
+  }
+  .posture-note strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .posture-epp-block {
+    text-align: right;
+    white-space: nowrap;
+  }
+  .epp-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .epp-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--posture-text);
+    line-height: 1;
+  }
+  .epp-sublabel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  /* ── METRICS ROW ── */
+  .metrics-section {
+    margin-top: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .window-tabs {
+    display: flex;
+    gap: 2px;
+  }
+  .tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .tab:hover:not(.active) {
+    color: var(--text-sub);
+    border-color: var(--line-2);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+  }
+
+  .metric-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 20px 20px 18px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: border-color 0.2s;
+  }
+  .metric-card:hover { border-color: var(--line-2); }
+  .metric-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-accent, var(--line));
+    opacity: 0.6;
+  }
+
+  .metric-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .metric-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--card-color, var(--text-hi));
+    letter-spacing: -0.02em;
+  }
+  .metric-unit {
+    font-size: 0.68rem;
+    font-weight: 300;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-left: 3px;
+  }
+
+  .metric-sub {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+
+  .metric-bar {
+    margin-top: 14px;
+    height: 2px;
+    background: var(--bg-4);
+    position: relative;
+  }
+  .metric-bar-fill {
+    height: 100%;
+    background: var(--card-color, var(--accent));
+    opacity: 0.7;
+    transition: width 1s ease;
+  }
+
+  .posture-badge {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border: 1px solid;
+  }
+  .badge-normal  { color: var(--normal-text);   border-color: var(--normal);   background: rgba(42,122,74,0.12); }
+  .badge-tight   { color: var(--tight-text);    border-color: var(--tight);    background: rgba(122,106,26,0.12); }
+  .badge-elevated{ color: var(--elevated-text); border-color: var(--elevated); background: rgba(122,58,24,0.15); }
+  .badge-bp      { color: var(--bp-text);       border-color: var(--bp);       background: rgba(122,24,24,0.15); }
+
+  /* Per-card posture colors */
+  .card-normal   { --card-color: var(--normal-glow);   --card-accent: var(--normal); }
+  .card-tight    { --card-color: var(--tight-glow);    --card-accent: var(--tight); }
+  .card-elevated { --card-color: var(--elevated-glow); --card-accent: var(--elevated); }
+  .card-bp       { --card-color: var(--bp-glow);       --card-accent: var(--bp); }
+
+  /* ── CHARTS SECTION ── */
+  .charts-section {
+    margin-top: 24px;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2px;
+  }
+
+  .chart-panel {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 24px;
+  }
+
+  .chart-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chart-title-right {
+    color: var(--text-dim);
+    font-size: 0.58rem;
+  }
+
+  /* SVG chart styles */
+  .chart-svg { width: 100%; overflow: visible; }
+
+  .axis-line { stroke: var(--line-2); stroke-width: 1; }
+  .grid-line { stroke: var(--line); stroke-width: 1; }
+  .data-line { fill: none; stroke-width: 1.5; }
+  .data-area { opacity: 0.08; }
+  .data-dot  { r: 2.5; }
+  .axis-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    fill: var(--text-dim);
+  }
+
+  .chart-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+  .legend-line {
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+  }
+
+  /* right panel: SP bar chart */
+  .sp-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .sp-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sp-bar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    width: 46px;
+    flex-shrink: 0;
+  }
+  .sp-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--bg-4);
+    position: relative;
+  }
+  .sp-bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .sp-bar-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding-left: 8px;
+    white-space: nowrap;
+  }
+  .sp-bar-desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--text-dim);
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── EPP TREND ── */
+  .epp-section {
+    margin-top: 2px;
+  }
+  .epp-panel {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 24px;
+  }
+
+  /* ── METHOD NOTE ── */
+  .method-section {
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .method-block {}
+  .method-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  .method-note {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
+  .method-note p { margin-bottom: 0.6em; }
+  .method-note p:last-child { margin-bottom: 0; }
+
+  .ref-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ref-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--text-mid);
+  }
+  .ref-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 2px 7px;
+    flex-shrink: 0;
+    letter-spacing: 0.08em;
+  }
+  .ref-desc { color: var(--text-mid); line-height: 1.4; }
+
+  .method-limits {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .limit-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+  .limit-item::before {
+    content: '—';
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--text-dim);
+    max-width: 580px;
+    line-height: 1.5;
+  }
+  .footer-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-align: right;
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  /* ── ANNOTATIONS (wireframe layer) ── */
+  .wf-note {
+    position: relative;
+  }
+  .wf-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    background: #1a2a1a;
+    border: 1px solid #2a4a2a;
+    color: #4a8a4a;
+    padding: 2px 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+    text-transform: uppercase;
+  }
+
+  /* ── POSTURE SCALE (corner decoration) ── */
+  .posture-scale {
+    display: flex;
+    gap: 3px;
+    align-items: stretch;
+  }
+  .scale-block {
+    width: 8px;
+    height: 28px;
+    opacity: 0.4;
+  }
+  .scale-block.active { opacity: 1; }
+  .s1 { background: var(--normal-glow); }
+  .s2 { background: var(--tight-glow); }
+  .s3 { background: var(--elevated-glow); }
+  .s4 { background: var(--bp-glow); }
+
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ══ HEADER ══════════════════════════════════════════════ -->
+  <header>
+    <div class="header-left">
+      <div class="site-eyebrow">ACI Open Grid Instrument <span class="wf-tag">Wireframe B-1</span></div>
+      <h1 class="site-title">Winter Endurance <em>Monitor</em></h1>
+      <p class="site-subtitle">
+        Seuraa, kasvaako Suomen talvinen jatkuvuuspaine nopeammin kuin sitä kantava monipäiväinen endurance-kerros.
+      </p>
+    </div>
+    <div class="header-right">
+      <div class="timestamp-block">
+        <div class="ts-live"><span class="live-dot"></span> Live — päivittyy tunneittain</div>
+        <div>2025-01-22 · 14:00 UTC</div>
+        <div>Lähde: Fingrid Open Data</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ POSTURE BANNER ══════════════════════════════════════ -->
+  <div class="posture-banner">
+    <div class="posture-label-block">
+      <div class="posture-label">Nykyinen posture</div>
+      <div class="posture-value">ELEVATED</div>
+      <div style="margin-top:10px;">
+        <div class="posture-scale">
+          <div class="scale-block s1"></div>
+          <div class="scale-block s2"></div>
+          <div class="scale-block s3 active"></div>
+          <div class="scale-block s4"></div>
+        </div>
+      </div>
+    </div>
+    <div class="posture-divider"></div>
+    <div class="posture-note">
+      <strong>Useampi endurance-signaali koholla samanaikaisesti.</strong> Järjestelmä on hetkellisessä tasapainossa,
+      mutta kotimainen peitto on pysynyt alle normaalin 72 tunnin ajan ja tuontiriippuvuus on noussut
+      kolmantena peräkkäisenä päivänä. Pitkittyvä kuorma ajaa endurance-painetta. Tämä on diagnostinen luokitus,
+      ei operatiivinen hälytys.
+    </div>
+    <div class="posture-epp-block">
+      <div class="epp-label">EPP</div>
+      <div class="epp-value">0.54</div>
+      <div class="epp-sublabel">W168 · synteettinen</div>
+    </div>
+  </div>
+
+  <!-- ══ CORE METRICS ══════════════════════════════════════ -->
+  <div class="metrics-section">
+    <div class="section-header">
+      <span class="section-label">Core Metrics</span>
+      <div class="section-line"></div>
+      <div class="window-tabs">
+        <div class="tab">W24</div>
+        <div class="tab active">W72</div>
+        <div class="tab">W168</div>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+
+      <!-- A: Demand Pressure -->
+      <div class="metric-card card-tight">
+        <div class="metric-id">A · DP_72</div>
+        <div class="metric-name">Demand<br>Pressure</div>
+        <div class="metric-value">1.09<span class="metric-unit">× norm.</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:62%"></div></div>
+        <div class="metric-sub">Baseline: 11 240 MW<br>Toteuma: 12 250 MW</div>
+        <div class="posture-badge badge-tight">Tight</div>
+      </div>
+
+      <!-- B: Domestic Coverage -->
+      <div class="metric-card card-elevated">
+        <div class="metric-id">B · DC_72</div>
+        <div class="metric-name">Domestic<br>Coverage</div>
+        <div class="metric-value">74<span class="metric-unit">%</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:74%"></div></div>
+        <div class="metric-sub">Tuotanto: 9 065 MW<br>Kulutus: 12 250 MW</div>
+        <div class="posture-badge badge-elevated">Elevated</div>
+      </div>
+
+      <!-- C: Net Import Reliance -->
+      <div class="metric-card card-elevated">
+        <div class="metric-id">C · NIR_72</div>
+        <div class="metric-name">Net Import<br>Reliance</div>
+        <div class="metric-value">24<span class="metric-unit">%</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:80%"></div></div>
+        <div class="metric-sub">Netto-tuonti: 2 940 MW<br>3. peräkkäinen vrk</div>
+        <div class="posture-badge badge-elevated">Elevated</div>
+      </div>
+
+      <!-- D: Stress Persistence -->
+      <div class="metric-card card-elevated">
+        <div class="metric-id">D · SP_168</div>
+        <div class="metric-name">Stress<br>Persistence</div>
+        <div class="metric-value">38<span class="metric-unit">%</span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:77%"></div></div>
+        <div class="metric-sub">64/168 stressituntia<br>W168-ikkuna</div>
+        <div class="posture-badge badge-elevated">Elevated</div>
+      </div>
+
+      <!-- E: EPP -->
+      <div class="metric-card card-elevated">
+        <div class="metric-id">E · EPP</div>
+        <div class="metric-name">Endurance<br>Pressure</div>
+        <div class="metric-value">0.54<span class="metric-unit"></span></div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:83%"></div></div>
+        <div class="metric-sub">DC: 0.30 · SP: 0.30<br>DP: 0.20 · NIR: 0.20</div>
+        <div class="posture-badge badge-elevated">Elevated</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ CHARTS ══════════════════════════════════════════════ -->
+  <div class="charts-section">
+    <div class="section-header">
+      <span class="section-label">Aikasarjat — W72</span>
+      <div class="section-line"></div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em;">72H · TUNTIDATAN KELLUVA IKKUNA</span>
+    </div>
+
+    <div class="charts-grid">
+
+      <!-- Main chart -->
+      <div class="chart-panel">
+        <div class="chart-title">
+          Kulutus · Kotimainen tuotanto · Netto-tuonti
+          <span class="chart-title-right">MW · hourly</span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 680 180" preserveAspectRatio="none" style="height:180px">
+          <defs>
+            <linearGradient id="gradCons" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c8a820" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#c8a820" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="gradProd" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3aaa6a" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#3aaa6a" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="gradImp" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d06020" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#d06020" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Grid lines -->
+          <line x1="0" y1="36" x2="680" y2="36" class="grid-line"/>
+          <line x1="0" y1="72" x2="680" y2="72" class="grid-line"/>
+          <line x1="0" y1="108" x2="680" y2="108" class="grid-line"/>
+          <line x1="0" y1="144" x2="680" y2="144" class="grid-line"/>
+
+          <!-- Axis labels -->
+          <text x="0" y="34" class="axis-label">14 000</text>
+          <text x="0" y="70" class="axis-label">12 000</text>
+          <text x="0" y="106" class="axis-label">10 000</text>
+          <text x="0" y="142" class="axis-label">8 000</text>
+          <text x="0" y="178" class="axis-label">6 000</text>
+
+          <!-- Time labels -->
+          <text x="48" y="178" class="axis-label" text-anchor="middle">-72h</text>
+          <text x="200" y="178" class="axis-label" text-anchor="middle">-48h</text>
+          <text x="350" y="178" class="axis-label" text-anchor="middle">-24h</text>
+          <text x="500" y="178" class="axis-label" text-anchor="middle">-12h</text>
+          <text x="650" y="178" class="axis-label" text-anchor="middle">nyt</text>
+
+          <!-- Consumption area + line -->
+          <path class="data-area" fill="url(#gradCons)"
+            d="M48,88 C80,84 110,76 150,72 C190,68 220,74 260,70 C300,66 330,72 370,64 C400,58 430,62 470,60 C510,58 540,62 580,56 C620,52 640,50 650,48 L650,170 L48,170 Z"/>
+          <path class="data-line" stroke="#c8a820"
+            d="M48,88 C80,84 110,76 150,72 C190,68 220,74 260,70 C300,66 330,72 370,64 C400,58 430,62 470,60 C510,58 540,62 580,56 C620,52 640,50 650,48"/>
+
+          <!-- Domestic prod area + line -->
+          <path class="data-area" fill="url(#gradProd)"
+            d="M48,108 C80,106 110,100 150,98 C190,96 220,102 260,100 C300,98 330,104 370,100 C400,98 430,100 470,102 C510,104 540,106 580,104 C620,102 640,100 650,98 L650,170 L48,170 Z"/>
+          <path class="data-line" stroke="#3aaa6a"
+            d="M48,108 C80,106 110,100 150,98 C190,96 220,102 260,100 C300,98 330,104 370,100 C400,98 430,100 470,102 C510,104 540,106 580,104 C620,102 640,100 650,98"/>
+
+          <!-- Net import fill -->
+          <path class="data-area" fill="url(#gradImp)"
+            d="M48,108 C80,106 110,100 150,98 C190,96 220,102 260,100 C300,98 330,104 370,100 L370,64 C330,72 300,66 260,70 C220,74 190,68 150,72 C110,76 80,84 48,88 Z"/>
+          <path class="data-line" stroke="#d06020" stroke-dasharray="4,3" stroke-width="1"
+            d="M48,108 C80,106 110,100 150,98 C190,96 220,102 260,100 C300,98 330,104 370,100 C400,98 430,100 470,102 C510,104 540,106 580,104 C620,102 640,100 650,98"/>
+
+          <!-- Threshold line (DC 80%) -->
+          <line x1="48" y1="106" x2="650" y2="106" stroke="#252b38" stroke-width="1" stroke-dasharray="2,4"/>
+        </svg>
+
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-line" style="background:#c8a820"></div> Kulutus</div>
+          <div class="legend-item"><div class="legend-line" style="background:#3aaa6a"></div> Kotimainen tuotanto</div>
+          <div class="legend-item"><div class="legend-line" style="background:#d06020;opacity:0.6;"></div> Import-gap</div>
+        </div>
+      </div>
+
+      <!-- SP bars -->
+      <div class="chart-panel">
+        <div class="chart-title">Stress Persistence — W168</div>
+        <div class="sp-bars">
+          <div>
+            <div class="sp-bar-row">
+              <div class="sp-bar-label">W24</div>
+              <div class="sp-bar-track">
+                <div class="sp-bar-fill" style="width:28%;background:var(--tight-glow)">
+                  <span class="sp-bar-value" style="color:var(--tight-text)">28%</span>
+                </div>
+              </div>
+            </div>
+            <div class="sp-bar-desc" style="margin-left:58px">7/24 stressituntia</div>
+          </div>
+          <div>
+            <div class="sp-bar-row">
+              <div class="sp-bar-label">W72</div>
+              <div class="sp-bar-track">
+                <div class="sp-bar-fill" style="width:33%;background:var(--elevated-glow)">
+                  <span class="sp-bar-value" style="color:var(--elevated-text)">33%</span>
+                </div>
+              </div>
+            </div>
+            <div class="sp-bar-desc" style="margin-left:58px">24/72 stressituntia</div>
+          </div>
+          <div>
+            <div class="sp-bar-row">
+              <div class="sp-bar-label">W168</div>
+              <div class="sp-bar-track">
+                <div class="sp-bar-fill" style="width:38%;background:var(--elevated-glow)">
+                  <span class="sp-bar-value" style="color:var(--elevated-text)">38%</span>
+                </div>
+              </div>
+            </div>
+            <div class="sp-bar-desc" style="margin-left:58px">64/168 stressituntia · Elevated</div>
+          </div>
+        </div>
+
+        <!-- Posture threshold marks -->
+        <div style="margin-top:28px;border-top:1px solid var(--line);padding-top:18px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;">SP_168 threshold-vyöhykkeet</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;">
+              <div style="width:32px;height:6px;background:var(--normal);opacity:0.7"></div>
+              <span style="color:var(--normal-text)">Normal</span>
+              <span style="color:var(--text-dim);margin-left:auto">&lt; 15%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;">
+              <div style="width:32px;height:6px;background:var(--tight);opacity:0.7"></div>
+              <span style="color:var(--tight-text)">Tight</span>
+              <span style="color:var(--text-dim);margin-left:auto">15 – 30%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;">
+              <div style="width:32px;height:6px;background:var(--elevated);opacity:0.7"></div>
+              <span style="color:var(--elevated-text)">Elevated ◀ nyt</span>
+              <span style="color:var(--text-dim);margin-left:auto">30 – 50%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;">
+              <div style="width:32px;height:6px;background:var(--bp);opacity:0.7"></div>
+              <span style="color:var(--bp-text)">BP-like</span>
+              <span style="color:var(--text-dim);margin-left:auto">&gt; 50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EPP trend chart -->
+    <div class="epp-section">
+      <div class="section-header" style="margin-top:2px;margin-bottom:0">
+      </div>
+      <div class="epp-panel">
+        <div class="chart-title">
+          Endurance Pressure Proxy — EPP (W168) · 30 päivän trendi
+          <span class="chart-title-right">Synteettinen indeksi [0–1] · komponenttipainot: DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20</span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 900 100" preserveAspectRatio="none" style="height:100px">
+          <!-- Posture bands -->
+          <rect x="0" y="0"  width="900" height="20" fill="var(--bp)"       opacity="0.07"/>
+          <rect x="0" y="20" width="900" height="25" fill="var(--elevated)"  opacity="0.07"/>
+          <rect x="0" y="45" width="900" height="25" fill="var(--tight)"     opacity="0.07"/>
+          <rect x="0" y="70" width="900" height="30" fill="var(--normal)"    opacity="0.07"/>
+
+          <!-- Band labels -->
+          <text x="895" y="12"  class="axis-label" text-anchor="end" fill="#f04040" opacity="0.6">BP</text>
+          <text x="895" y="34"  class="axis-label" text-anchor="end" fill="#f08840" opacity="0.6">Elev.</text>
+          <text x="895" y="59"  class="axis-label" text-anchor="end" fill="#f0cc40" opacity="0.6">Tight</text>
+          <text x="895" y="84"  class="axis-label" text-anchor="end" fill="#6de09a" opacity="0.6">Normal</text>
+
+          <!-- Grid -->
+          <line x1="0" y1="45" x2="900" y2="45" class="grid-line"/>
+          <line x1="0" y1="70" x2="900" y2="70" class="grid-line"/>
+          <line x1="0" y1="20" x2="900" y2="20" class="grid-line"/>
+
+          <!-- EPP line (0=top=1.0, 100=bottom=0.0) -->
+          <path class="data-area" fill="var(--elevated-glow)" opacity="0.1"
+            d="M0,82 C30,80 60,78 90,76 C120,74 150,72 180,74 C210,76 240,70 270,68 C300,66 330,64 360,60 C390,56 420,58 450,54 C480,50 510,46 540,50 C570,54 600,52 630,50 C660,48 690,46 720,45 C750,44 780,48 810,54 C840,58 870,56 900,54 L900,100 L0,100 Z"/>
+          <path class="data-line" stroke="var(--elevated-glow)" stroke-width="2"
+            d="M0,82 C30,80 60,78 90,76 C120,74 150,72 180,74 C210,76 240,70 270,68 C300,66 330,64 360,60 C390,56 420,58 450,54 C480,50 510,46 540,50 C570,54 600,52 630,50 C660,48 690,46 720,45 C750,44 780,48 810,54 C840,58 870,56 900,54"/>
+
+          <!-- Current marker -->
+          <line x1="900" y1="0" x2="900" y2="100" stroke="var(--elevated-glow)" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+          <circle cx="900" cy="54" r="4" fill="var(--elevated-glow)" opacity="0.9"/>
+          <text x="890" y="50" class="axis-label" fill="var(--elevated-text)" text-anchor="end">0.54</text>
+
+          <!-- Time axis -->
+          <text x="0"   y="98" class="axis-label">-30d</text>
+          <text x="450" y="98" class="axis-label" text-anchor="middle">-15d</text>
+          <text x="890" y="98" class="axis-label" text-anchor="end">nyt</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ METHOD NOTE ══════════════════════════════════════════ -->
+  <div class="method-section">
+
+    <div class="method-block">
+      <div class="method-label">Instrumentin rajaukset</div>
+      <div class="method-limits">
+        <div class="limit-item">Tämä instrumentti on diagnostinen, ei operatiivinen eikä viranomaishälytys.</div>
+        <div class="limit-item">Posture-luokitus ei ennusta yksittäistä sähkökatkoa.</div>
+        <div class="limit-item">EPP on synteettinen indeksi — komponenttiarvot ovat ensisijainen tulkintalähde.</div>
+        <div class="limit-item">Stability ≠ endurance. Hetkellinen tasapaino ei tarkoita monipäiväistä kestävyyttä.</div>
+        <div class="limit-item">MW ≠ MWh. Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa.</div>
+        <div class="limit-item">Risk transfer on rakenteellinen havainto, ei moraalinen syytös yksittäisistä toimijoista.</div>
+      </div>
+    </div>
+
+    <div class="method-block">
+      <div class="method-label">Viitteet</div>
+      <ul class="ref-list">
+        <li class="ref-item"><span class="ref-code">WP-001</span><span class="ref-desc">Capacity vs. Duration — Black Period 168h stress window</span></li>
+        <li class="ref-item"><span class="ref-code">DA-001</span><span class="ref-desc">Early warning logic — "Concern trending toward Danger"</span></li>
+        <li class="ref-item"><span class="ref-code">DA-003</span><span class="ref-desc">Layer divergence — L1–L2 vs. L3 endurance gap</span></li>
+        <li class="ref-item"><span class="ref-code">WP-008</span><span class="ref-desc">Continuous load allocation and endurance pressure</span></li>
+        <li class="ref-item"><span class="ref-code">TN-001</span><span class="ref-desc">PPA structure and residual risk transfer</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ══════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-left">
+      The instrument does not ask whether Finland has power in a given hour.
+      It asks whether Finland's winter system is becoming more dependent on thin endurance margins
+      as continuous load commitments grow faster than the multi-day layer that sustains them.
+    </div>
+    <div class="footer-right">
+      ACI Open Grid Instrument<br>
+      Winter Endurance Monitor<br>
+      Wireframe B-1 · 2025
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

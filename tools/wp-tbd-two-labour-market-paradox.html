@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-TBD — The Two Labour Market Paradox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --ok: #4a7a4a;
+    --warn: #8b7a3a;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* DIH */
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dih-series {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: 0.2rem;
+  }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+    text-align: right;
+  }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--rule);
+    padding: 0.25rem 0.7rem;
+    margin-top: 0.4rem;
+  }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b7a3a; }
+  .dih-status-text {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Nav */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Paper wrapper */
+  .paper {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 5rem 2rem 8rem;
+    animation: fadeUp 1.2s ease both;
+    animation-delay: 0.15s;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Title block */
+  .title-block {
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3.5rem;
+  }
+  .paper-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+  }
+  h1.paper-title {
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 4.5vw, 2.7rem);
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    margin-bottom: 1rem;
+  }
+  .paper-subtitle {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 2.2rem;
+  }
+  .meta-row {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .meta-value {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+
+  /* Internal notice */
+  .internal-notice {
+    border: 1px solid var(--warn);
+    background: #fdf8f0;
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+  .internal-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warn);
+    white-space: nowrap;
+  }
+  .internal-text {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Abstract box */
+  .abstract-box {
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 3rem;
+  }
+  .abstract-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+  .abstract-box p { font-size: 0.95rem; line-height: 1.75; color: var(--ink); }
+  .abstract-box p + p { margin-top: 0.7rem; }
+
+  /* Sections */
+  .section { margin-bottom: 3.5rem; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.4rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    min-width: 2.5rem;
+  }
+  h2.section-title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .section p { margin-bottom: 1.1rem; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* Pull boxes */
+  .pull-box {
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .pull-label {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+  }
+  .pull-box p { font-size: 0.95rem; line-height: 1.75; }
+  .pull-box p + p { margin-top: 0.6rem; }
+
+  /* Research question */
+  .rq-box {
+    border: 2px solid var(--ink);
+    padding: 1.3rem 1.7rem;
+    margin: 1.8rem 0;
+  }
+  .rq-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.7rem;
+  }
+  .rq-box p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  /* Data tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.82rem;
+  }
+  .data-table th {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--paper-3);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    border: 1px solid var(--rule);
+    font-weight: 400;
+  }
+  .data-table td {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--rule);
+    line-height: 1.4;
+    vertical-align: top;
+  }
+  .data-table tr.highlight td { background: #faf5ee; }
+  .data-table .mono-val {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+  }
+  .data-table .note {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .table-caption {
+    font-family: var(--serif);
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    line-height: 1.55;
+  }
+
+  /* Segment grid */
+  .segment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin: 1.5rem 0;
+  }
+  .segment-box {
+    padding: 1.2rem 1.4rem;
+    border-right: 1px solid var(--rule);
+  }
+  .segment-box:last-child { border-right: none; }
+  .segment-box.market-a { background: #eef3ee; }
+  .segment-box.market-b { background: #faf0e8; }
+  .segment-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .segment-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+  .segment-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  .segment-box ul li {
+    font-size: 0.85rem;
+    padding: 0.15rem 0;
+    color: var(--ink);
+  }
+  .segment-box ul li::before {
+    content: '— ';
+    color: var(--muted);
+  }
+  .segment-bridge {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--rule);
+    padding: 0.6rem 1.4rem;
+    background: var(--paper-2);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Case study */
+  .case-box {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--muted);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    background: var(--paper-2);
+  }
+  .case-label {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+  }
+  .case-box p { font-size: 0.9rem; line-height: 1.7; }
+  .case-box p + p { margin-top: 0.6rem; }
+  .case-box .case-note {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.7rem;
+  }
+
+  /* Summary boxes */
+  .summary-box {
+    border: 1px solid var(--ink);
+    padding: 1.3rem 1.7rem;
+    margin: 1.8rem 0;
+  }
+  .summary-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.9rem;
+  }
+  .summary-box ol {
+    padding-left: 1.2rem;
+  }
+  .summary-box ol li {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Policy table */
+  .policy-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.82rem; }
+  .policy-table th {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--paper-3);
+    padding: 0.45rem 0.8rem;
+    text-align: left;
+    border: 1px solid var(--rule);
+    font-weight: 400;
+  }
+  .policy-table td {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--rule);
+    line-height: 1.45;
+    vertical-align: top;
+  }
+  .policy-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .policy-area {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  /* Conclusion block */
+  .conclusion-block {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 0;
+    margin: 3rem 0;
+  }
+  .conclusion-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .conclusion-block p { margin-bottom: 1rem; }
+  .thesis-box {
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.4rem;
+    margin-top: 1.5rem;
+    background: var(--paper-2);
+  }
+  .thesis-box p {
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* References */
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .ref-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: refs;
+  }
+  .ref-list li {
+    counter-increment: refs;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    margin-bottom: 0.7rem;
+    padding-left: 2rem;
+    position: relative;
+    color: var(--ink);
+  }
+  .ref-list li::before {
+    content: counter(refs) '.';
+    position: absolute;
+    left: 0;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    top: 0.15rem;
+  }
+
+  /* Draft note */
+  .draft-note {
+    margin-top: 2rem;
+    padding: 1rem 1.4rem;
+    border: 1px dashed var(--rule);
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    font-family: var(--mono);
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .paper { padding: 3rem 1.5rem 6rem; }
+    .segment-grid { grid-template-columns: 1fr; }
+    .segment-box { border-right: none; border-bottom: 1px solid var(--rule); }
+    footer { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+    .dih { padding: 1.2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Document identity header -->
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Working Paper</span> &nbsp;·&nbsp; No. TBD</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      Year &nbsp;<strong>2025</strong><br>
+      Version &nbsp;<strong>0.4 — Draft</strong><br>
+      Series &nbsp;<strong>WP</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Internal Only</span>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <a href="/" class="nav-home">aethercontinuity.org</a>
+  <span class="nav-id">WP-TBD · Internal</span>
+</nav>
+
+<main class="paper">
+
+  <!-- Internal notice -->
+  <div class="internal-notice">
+    <span class="internal-label">Internal</span>
+    <span class="internal-text">Not for public distribution. Working draft pending series assignment and editorial review. Original version in Finnish (v4).</span>
+  </div>
+
+  <!-- Title block -->
+  <div class="title-block">
+    <div class="paper-label">Working Paper — Labour Market Diagnostics</div>
+    <h1 class="paper-title">The Two Labour Market Paradox</h1>
+    <p class="paper-subtitle">Structural unemployment and labour shortage in Finland — with particular attention to workers aged 55 and above</p>
+    <div class="meta-row">
+      <div class="meta-item">
+        <span class="meta-label">Domains</span>
+        <span class="meta-value">D-3 · D-4</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Companion</span>
+        <span class="meta-value">WP-008 · DA-006</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Language</span>
+        <span class="meta-value">EN (translated from FI)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">Internal draft — number TBD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-box">
+    <div class="abstract-label">Abstract</div>
+    <p>Finland's labour market exhibits two apparently contradictory phenomena simultaneously: elevated unemployment and persistent labour shortage. This paper examines the phenomenon through the hypothesis that the labour market has divided into two partially separate segments, between which mobility is institutionally and organisationally constrained.</p>
+    <p>Particular attention is given to workers aged 55 and above, whose employment rates lag significantly behind those of the core workforce despite high levels of accumulated experience and skill. The paper argues that the central problem is not a deficit of available positions but an institutional matching failure — and that this failure has a structural character that is not resolved by standard demand-side interventions.</p>
+    <p>The analysis also examines the cultural dimension of contemporary work and its contribution to labour market segmentation.</p>
+  </div>
+
+  <!-- §1 Introduction -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">Introduction</h2>
+    </div>
+    <p>Finland's labour market is characterised by a paradox: unemployment and labour shortage coexist. This is not exclusively a Finnish phenomenon, but its effects are particularly visible in Finland and have recurred persistently in both policy debate and research literature.</p>
+    <p>Labour shortage is especially acute in social and healthcare services, industrial and technical occupations, and the ICT sector. Simultaneously, long-term unemployment has remained a significant structural feature. This paper examines the phenomenon through a structural and institutional lens.</p>
+
+    <div class="rq-box">
+      <div class="rq-label">Research Question</div>
+      <p>How does the structural segmentation of the labour market explain the simultaneous occurrence of unemployment and labour shortage in Finland, with particular reference to workers aged 55 and above?</p>
+    </div>
+
+    <div class="pull-box">
+      <div class="pull-label">Method</div>
+      <p>This paper is based on conceptual analysis, statistical background data, and a case illustration. The approach is theory-guided: empirical material serves to illuminate the hypothesis rather than to test it statistically. A subsequent version will incorporate a systematic literature review and quantitative analysis.</p>
+    </div>
+
+    <p>The paper is structured as follows. Section 2 presents the theoretical framework. Section 3 provides a quantitative survey of the statistical evidence. Section 4 presents the segmentation diagram. Sections 5 and 6 address the specific situation of workers aged 55 and above and the role of network-based labour markets. Sections 7 and 8 examine institutional barriers and international comparisons. Sections 9, 10, and 11 cover the policy framework, the cultural dimension of work, and the implications for ageing societies. Section 12 draws conclusions.</p>
+  </div>
+
+  <!-- §2 Hypothesis -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">The Two Labour Market Hypothesis</h2>
+    </div>
+    <p>Labour markets can be described through two partially separate segments. The classical economic model assumes that labour shortage and unemployment are corrected by the market mechanism. This paper argues that this corrective mechanism operates only partially in Finland.</p>
+
+    <div class="pull-box">
+      <div class="pull-label">Hypothesis Specification</div>
+      <p>The two labour market hypothesis does not posit entirely separate labour markets but a segmented structure in which movement between segments is institutionally and organisationally constrained. The segments are partially distinct — not absolutely isolated.</p>
+    </div>
+
+    <div class="segment-grid">
+      <div class="segment-box market-a">
+        <div class="segment-label">Labour Market A</div>
+        <div class="segment-title">High-skill positions · Labour shortage</div>
+        <ul>
+          <li>High productivity</li>
+          <li>Persistent unfilled demand</li>
+          <li>Active formal recruitment</li>
+        </ul>
+      </div>
+      <div class="segment-box market-b">
+        <div class="segment-label">Labour Market B</div>
+        <div class="segment-title">Long-term unemployment · Exclusion risk</div>
+        <ul>
+          <li>Overrepresentation of older workers</li>
+          <li>Partial work capacity</li>
+          <li>Weaker institutional integration</li>
+        </ul>
+      </div>
+      <div class="segment-bridge">↕ &nbsp; Limited mobility between segments</div>
+    </div>
+
+    <p>Segmentation is produced by several simultaneous factors: skill matching failures, recruitment practices, institutional incentive structures, and informal networks that systematically favour certain groups. Labour shortage therefore does not automatically reduce unemployment — this is the core of the paradox.</p>
+  </div>
+
+  <!-- §3 Quantitative -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Quantitative Survey</h2>
+    </div>
+    <p>This section presents the statistical background supporting the hypothesis. Data is drawn from Statistics Finland's Labour Force Survey (2023–2024), Eurostat age-group data, and EURES reports.</p>
+
+    <h3 style="font-family:var(--serif);font-size:1rem;font-weight:500;margin:1.5rem 0 0.8rem;">3.1 — Employment Rate by Age Group</h3>
+    <p>The employment rate varies significantly across age groups. The position of the 55–64 age bracket is especially notable: their employment rate is 13.6 percentage points below that of the 35–54 core workforce, despite concurrent labour shortages in sectors where experienced workers are most valuable.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Age group</th>
+          <th>Employment rate 2023/24</th>
+          <th>Comparison 2010</th>
+          <th>Group</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono-val">15–24</td>
+          <td class="mono-val">44.5%</td>
+          <td class="mono-val">—</td>
+          <td>Youth</td>
+          <td class="note">High seasonality</td>
+        </tr>
+        <tr>
+          <td class="mono-val">25–34</td>
+          <td class="mono-val">82.1%</td>
+          <td class="mono-val">—</td>
+          <td>Prime age</td>
+          <td class="note">Highest activity</td>
+        </tr>
+        <tr>
+          <td class="mono-val">35–54</td>
+          <td class="mono-val">85.3%</td>
+          <td class="mono-val">—</td>
+          <td>Core workforce</td>
+          <td class="note">Most stable segment</td>
+        </tr>
+        <tr class="highlight">
+          <td class="mono-val"><strong>55–64</strong></td>
+          <td class="mono-val"><strong>71.7%</strong></td>
+          <td class="mono-val">71.7%</td>
+          <td><strong>55+ workers</strong></td>
+          <td class="note"><strong>13.6 pp below 35–54</strong></td>
+        </tr>
+        <tr>
+          <td class="mono-val">60–64</td>
+          <td class="mono-val">71.0%</td>
+          <td class="mono-val">43.0%</td>
+          <td>Pension threshold</td>
+          <td class="note">+28 pp since 2010</td>
+        </tr>
+        <tr>
+          <td class="mono-val">20–64</td>
+          <td class="mono-val">76.7%</td>
+          <td class="mono-val">77.9%</td>
+          <td>All 2024</td>
+          <td class="note">−1.2 pp vs 2023</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-caption">Table 1. Employment rate by age group, Finland 2023–2024. Source: Statistics Finland, Labour Force Survey; Eurostat. The 55–64 group is highlighted.</p>
+
+    <p>A positive development is visible among 60–64-year-olds: their labour force participation rose from 43% (2010) to 71% (2024), a major structural shift attributable in large part to pension reform (2005 and 2017). This illustrates that institutional change can materially affect the labour market position of older workers.</p>
+
+    <h3 style="font-family:var(--serif);font-size:1rem;font-weight:500;margin:1.5rem 0 0.8rem;">3.2 — Unemployment Rate by Age Group</h3>
+    <p>In 2024 overall unemployment stood at 8.4% (ages 15–74), a 1.2 percentage point increase year-on-year. Long-term unemployment is projected to reach approximately 94,000 individuals in 2025. The age distribution reveals two concerning polarisation trends.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Age group</th>
+          <th>Unemployment rate 2024</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono-val">15–24</td>
+          <td class="mono-val">18.8%</td>
+          <td class="note">Highest group</td>
+        </tr>
+        <tr>
+          <td class="mono-val">25–34</td>
+          <td class="mono-val">8.1%</td>
+          <td class="note">Rising trend</td>
+        </tr>
+        <tr>
+          <td class="mono-val">35–44</td>
+          <td class="mono-val">6.5%</td>
+          <td class="note">Lowest group</td>
+        </tr>
+        <tr>
+          <td class="mono-val">45–54</td>
+          <td class="mono-val">7.2%</td>
+          <td class="note">Near average</td>
+        </tr>
+        <tr class="highlight">
+          <td class="mono-val"><strong>55–64</strong></td>
+          <td class="mono-val"><strong>8.6%</strong></td>
+          <td class="note"><strong>Overrepresented in long-term unemployment</strong></td>
+        </tr>
+        <tr>
+          <td class="mono-val">All 15–74</td>
+          <td class="mono-val">8.4%</td>
+          <td class="note">Annual average 2024 (+1.2 pp vs 2023)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-caption">Table 2. Unemployment rate by age group, Finland 2024. Source: Statistics Finland, Labour Force Survey (annual average 2024); Statista 2025.</p>
+
+    <p>The quantitative paradox is clear: the 55–64 age group has an unemployment rate (8.6%) near the overall average while its employment rate (71.7%) sits well below that of the core workforce (85.3%). The explanation does not lie in willingness or capability — it lies in structure.</p>
+
+    <h3 style="font-family:var(--serif);font-size:1rem;font-weight:500;margin:1.5rem 0 0.8rem;">3.3 — Labour Shortage by Sector, 2024</h3>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Shortage level</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Social and healthcare services</td>
+          <td class="mono-val" style="color:var(--accent)">Critical</td>
+          <td class="note">Largest absolute gap; +23,000 employed 2024</td>
+        </tr>
+        <tr>
+          <td>Construction and installation</td>
+          <td class="mono-val" style="color:var(--accent)">High</td>
+          <td class="note">Largest single short-term occupational shortage</td>
+        </tr>
+        <tr>
+          <td>Personal services</td>
+          <td class="mono-val" style="color:var(--accent)">High</td>
+          <td class="note">Care, cleaning, domestic — growing due to demographics</td>
+        </tr>
+        <tr>
+          <td>ICT and software development</td>
+          <td class="mono-val" style="color:var(--accent)">High</td>
+          <td class="note">Software developers and IT specialists in sustained demand</td>
+        </tr>
+        <tr>
+          <td>Early education and teaching</td>
+          <td class="mono-val" style="color:var(--warn)">Moderate</td>
+          <td class="note">Kindergarten teachers, special education teachers</td>
+        </tr>
+        <tr>
+          <td>Industry and technology</td>
+          <td class="mono-val" style="color:var(--warn)">Moderate</td>
+          <td class="note">Welders, process operators, machinists</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-caption">Table 3. Labour shortage by sector, Finland 2024. Source: EURES Labour Market Information Finland 2024; Labour Market Barometer autumn 2024; Statistics Finland.</p>
+
+    <h3 style="font-family:var(--serif);font-size:1rem;font-weight:500;margin:1.5rem 0 0.8rem;">3.4 — Ageing Workforce by Sector</h3>
+    <p>An especially concrete structural risk is visible in sparsely populated regions, where 55–74-year-olds constitute a large share of the workforce in several sectors. Their departure over the coming decade creates a replacement challenge for which incoming cohorts are insufficient.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Share aged 55–74 (2022)</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>Property services and maintenance</strong></td>
+          <td class="mono-val"><strong>47.8%</strong></td>
+          <td class="note">Highest sector — nearly half depart within 10 years</td>
+        </tr>
+        <tr class="highlight">
+          <td><strong>Public administration</strong></td>
+          <td class="mono-val"><strong>39.3%</strong></td>
+          <td class="note">Significant structural risk</td>
+        </tr>
+        <tr>
+          <td>Finance and insurance</td>
+          <td class="mono-val">37.4%</td>
+          <td class="note">Knowledge difficult to replace</td>
+        </tr>
+        <tr>
+          <td>Primary production</td>
+          <td class="mono-val">36.8%</td>
+          <td class="note">Rural areas especially exposed</td>
+        </tr>
+        <tr>
+          <td>Education and healthcare</td>
+          <td class="mono-val">34–36%</td>
+          <td class="note">Age risk within already-shortage sectors</td>
+        </tr>
+        <tr>
+          <td>Knowledge-intensive (ICT)</td>
+          <td class="mono-val">19.2%</td>
+          <td class="note">Lowest — young age structure</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-caption">Table 4. Share of ageing workforce (55–74) by sector in sparsely populated areas of Finland, 2022. Source: Vihinen et al. (2024) / Nordregio 2024.</p>
+
+    <div class="summary-box">
+      <div class="summary-label">Quantitative Summary</div>
+      <ol>
+        <li>The employment rate of 55–64-year-olds (71.7%) is 13.6 percentage points below the core workforce — despite this group holding the highest accumulated experience.</li>
+        <li>Labour shortage sectors (healthcare, ICT, construction) are precisely those in which older-worker experience is most valuable.</li>
+        <li>Up to 47.8% of workers in certain sectors are aged 55–74 — they will exit the labour force within a decade with insufficient replacement cohorts.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- §4 Segmentation -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Segmentation Structure</h2>
+    </div>
+    <p>The following schema illustrates the two-segment structure and the constrained mobility between them.</p>
+
+    <div class="segment-grid" style="margin-bottom:0.4rem">
+      <div class="segment-box market-a">
+        <div class="segment-label">Labour Market A</div>
+        <div class="segment-title">High skill · Labour shortage</div>
+        <ul>
+          <li>Healthcare and social services</li>
+          <li>ICT</li>
+          <li>Industrial technical occupations</li>
+        </ul>
+      </div>
+      <div class="segment-box market-b">
+        <div class="segment-label">Labour Market B</div>
+        <div class="segment-title">Long-term unemployment · Exclusion risk</div>
+        <ul>
+          <li>Workers aged 55+</li>
+          <li>Partial work capacity</li>
+          <li>Long-term unemployed</li>
+        </ul>
+      </div>
+      <div class="segment-bridge">↕ &nbsp; Constrained mobility — institutional and organisational barriers to crossing</div>
+    </div>
+    <p class="table-caption" style="margin-top:0.5rem">Figure 1. Two-segment labour market structure, Finland. Transition between segments is not impossible but is made structurally improbable without active institutional support.</p>
+  </div>
+
+  <!-- §5 Older workers -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Workers Aged 55 and Above</h2>
+    </div>
+    <p>The position of older workers in the labour market represents a particularly clear instance of the segmentation mechanism. Two forces converge in this group: deep accumulated professional competence on one hand, and structural employment barriers on the other.</p>
+
+    <p><strong>Structural strengths:</strong> long professional experience and deep occupational knowledge; stable work motivation and organisational commitment; extensive professional networks.</p>
+
+    <p><strong>Employment barriers:</strong> risk perceptions on the employer side associated with recruitment of unfamiliar older candidates; age-related preconceptions in hiring decisions; extended unemployment spells that compound over time and progressively reduce employment prospects.</p>
+
+    <div class="case-box">
+      <div class="case-label">Case Illustration — Experienced engineer, aged 58</div>
+      <p>A mechanical engineer with 30 years of process industry experience lost his position in 2022 when his employer ceased operations and relocated production abroad. Forty formal applications produced two interview invitations.</p>
+      <p>Employment ultimately came through an informal network: a former colleague recommended him to a subcontractor that needed precisely his skill profile. The engagement began as a three-month consulting contract and became permanent after six months.</p>
+      <p class="case-note">This case is not an isolated exception — it illustrates the mechanism by which network-based recruitment functions as an alternative labour market operating in parallel to the formal open application system. The mechanism is structural, and its institutional reinforcement could materially improve employment outcomes for workers aged 55 and above.</p>
+    </div>
+
+    <p>The case illustrates a broader structural problem: experienced workers can remain outside the labour market while labour shortages persist simultaneously. This is a concrete instantiation of the gap between the two segments.</p>
+  </div>
+
+  <!-- §6 Network economy -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Network Economy and the Hidden Labour Market</h2>
+    </div>
+    <p>A significant share of positions is filled through informal networks. Open vacancy advertising constitutes only part of the labour market: research suggests that 50–70% of positions are filled without a public announcement (European Commission, 2023).</p>
+
+    <p>A typical network-based employment path proceeds through: an educational or prior employment relationship; contact with a firm through a personal network; a project or consulting engagement; and eventual permanent employment.</p>
+
+    <p>Educational institutions can function as important bridge-builders. Institutional mechanisms supporting network-based employment are currently underutilised. For workers aged 55 and above, networks are especially significant because formal application processes systematically produce worse outcomes for this group.</p>
+  </div>
+
+  <!-- §7 Barriers -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Institutional and Cultural Barriers</h2>
+    </div>
+    <p>Several interrelated factors contribute to the matching failure.</p>
+
+    <p><strong>Recruitment risk perception.</strong> Employers may perceive hiring as high-risk. Dismissal protection and wage costs can reduce willingness to hire unfamiliar workers. This risk perception is heightened for older applicants even though the empirical evidence for elevated actual risk is weak.</p>
+
+    <p><strong>Age-related preconceptions.</strong> Preconceptions associated with age or extended unemployment can influence recruitment decisions independently of actual job performance capacity (Böckerman &amp; Ilmakunnas, 2012). This has been documented across multiple international studies.</p>
+
+    <p><strong>Effectiveness of support instruments.</strong> In some cases employment subsidies do not lead to durable employment. The structure of subsidies does not always create incentives for long-term contracts — producing what is termed a gateway effect, where subsidy-supported positions function as temporary holding patterns rather than pathways to stable employment.</p>
+
+    <p><strong>Digital skills and continuous learning.</strong> Rapid technological change requires continuous skill updating. Training opportunities do not always reach older workers adequately, although their learning capacity is not meaningfully diminished relative to younger cohorts.</p>
+  </div>
+
+  <!-- §8 International -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">International Comparison</h2>
+    </div>
+    <p>Several countries have addressed comparable structural problems through different labour market models. A common feature is the combination of labour market flexibility with social protection (Andersen &amp; Svarer, 2007).</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Model</th>
+          <th>Key feature</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Denmark</strong></td>
+          <td>Flexicurity</td>
+          <td class="note">Flexibility + secured social protection</td>
+        </tr>
+        <tr>
+          <td><strong>Netherlands</strong></td>
+          <td>Extensive part-time employment</td>
+          <td class="note">Work-sharing — low entry threshold</td>
+        </tr>
+        <tr>
+          <td><strong>Germany</strong></td>
+          <td>Employer-based training system</td>
+          <td class="note">Matching built into vocational education</td>
+        </tr>
+        <tr>
+          <td><strong>Sweden</strong></td>
+          <td>Partial-capacity employment models</td>
+          <td class="note">Intermediate labour markets as institutions</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The flexicurity model has attracted the most international attention, but its transferability to Finland is uncertain — the institutional starting conditions differ substantially. Sweden's partial-capacity employment model is likely closer to the Finnish context and may offer more directly applicable lessons.</p>
+  </div>
+
+  <!-- §9 Policy -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Policy Framework</h2>
+    </div>
+    <p>The analysis supports the identification of several possible interventions. They are not mutually exclusive — they are mutually reinforcing.</p>
+
+    <table class="policy-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Intervention</th>
+          <th>Target area</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="policy-num">1</span></td>
+          <td>Recognise structural segmentation as the diagnostic frame for policy</td>
+          <td><span class="policy-area">Policy knowledge base</span></td>
+        </tr>
+        <tr>
+          <td><span class="policy-num">2</span></td>
+          <td>Closer integration of education institutions and employer networks</td>
+          <td><span class="policy-area">Matching failure</span></td>
+        </tr>
+        <tr>
+          <td><span class="policy-num">3</span></td>
+          <td>Intermediate labour markets for partial-capacity workers</td>
+          <td><span class="policy-area">Inclusion</span></td>
+        </tr>
+        <tr>
+          <td><span class="policy-num">4</span></td>
+          <td>Rapid adult training pipelines aligned to shortage sectors</td>
+          <td><span class="policy-area">Productivity</span></td>
+        </tr>
+        <tr>
+          <td><span class="policy-num">5</span></td>
+          <td>Reduce perceived recruitment risk for employers</td>
+          <td><span class="policy-area">Employment rate</span></td>
+        </tr>
+        <tr>
+          <td><span class="policy-num">6</span></td>
+          <td>Flexible arrangements for the late career stage</td>
+          <td><span class="policy-area">Workers aged 55+</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Implementation requires coordination across multiple actors: employment authorities, educational institutions, firms, and civil society organisations. No single intervention is sufficient — what is required is a system-level change in the logic of matching.</p>
+  </div>
+
+  <!-- §10 Cultural -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 10</span>
+      <h2 class="section-title">The Cultural Dimension — Heroic Work and Everyday Labour</h2>
+    </div>
+    <p>This section examines the cultural dimension of contemporary labour markets — a perspective that is frequently underrepresented in labour market research despite its material effects.</p>
+
+    <p><strong>The shift in work identity.</strong> In Finnish — and more broadly Western — work culture, a significant transition has occurred: work is increasingly experienced as a source of identity, vocation, and self-realisation. Work is not undertaken merely for income; it is expected to be meaningful, inspiring, and personally rewarding (Nätti et al., 2021).</p>
+
+    <p><strong>Heroic culture and its shadow.</strong> This development has produced what might be called a heroic work culture: entrepreneurship, passion, success, and sector-belonging are idealised — not merely competent work performance. Start-up culture, portfolio careers, and personal branding are the symbolic expressions of this tendency.</p>
+
+    <p>Heroic culture creates an implicit hierarchy in which "meaningful" work is valued above ordinary, repeatable-skill work. This hierarchy influences recruitment decisions, educational choices, and social recognition.</p>
+
+    <p><strong>Effect on workers aged 55 and above.</strong> Older workers have generally been formed in a different work culture — one in which work was a value in itself, professional skill accumulated over decades, and employer loyalty was the norm. This cultural gap can negatively affect their market position independently of their actual competence and productivity.</p>
+
+    <p><strong>Structural consequence.</strong> Heroic culture may partly reinforce the two-segment division: Segment A attracts the "passionate" knowledge worker, while Segment B receives less cultural attention. Societally essential everyday labour — care work, basic industry, logistics — does not receive the cultural recognition it warrants, even as labour shortage in these sectors is acute.</p>
+
+    <p style="font-style:italic;color:var(--muted);">Work is no longer merely performed — it is performed. This performative dimension transforms recruitment markets in ways that place representatives of different generations in unequal positions — not on grounds of competence, but on grounds of narrative.</p>
+  </div>
+
+  <!-- §11 Ageing -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ 11</span>
+      <h2 class="section-title">Policy Implications for Ageing Societies</h2>
+    </div>
+    <p>Finland's situation is not an exception but a case study of a broader international phenomenon. Population ageing affects all OECD countries, and the labour market position of workers aged 55 and above is becoming one of the most significant structural policy questions of the coming decade.</p>
+
+    <p><strong>Demographic pressure.</strong> In most Western countries, replacing the departing generation using only younger cohorts is not possible. OECD assessments indicate that raising the labour force participation of older workers by five percentage points would, in most countries, compensate for one to two years of demographic deficit (OECD, 2023).</p>
+
+    <p><strong>The two-segment problem is universal.</strong> The same paradox — simultaneous labour shortage and older-worker unemployment — has been documented in Germany, the United Kingdom, Japan, and South Korea. Institutional solutions differ, but the structural problem is recognisable across all cases.</p>
+
+    <p><strong>Finland's opportunity.</strong> Finland's distinctive advantage is its dense institutional structure: short distances between public authorities, educational institutions, and firms allow rapid policy development. This has been recognised in international comparative assessments. Finland thus has both the need and the institutional capacity to act — the primary constraint is currently one of political will.</p>
+
+    <div class="pull-box">
+      <div class="pull-label">International Relevance</div>
+      <p>The two-segment model developed in this paper is applicable more broadly to ageing Western economies. Finland functions as a laboratory in which structural tensions are especially visible and institutional intervention capacity is exceptionally good. The paper's findings therefore carry potential relevance for international policy discourse.</p>
+    </div>
+  </div>
+
+  <!-- §12 Conclusion -->
+  <div class="conclusion-block">
+    <div class="conclusion-label">Conclusion — § 12</div>
+    <p>The central problem of Finland's labour market is not the number of available positions but the system's capacity to connect people, skills, and positions effectively. People, competence, and jobs exist — but the system does not always combine them efficiently.</p>
+    <p>For workers aged 55 and above, this matching failure is concrete: experienced professionals can remain outside the labour market while labour shortages persist in the very sectors where their experience is most valuable.</p>
+    <div class="thesis-box">
+      <p>Finland's labour market problem is not a deficit of positions but a deficit in the system's ability to match people, skills, and work effectively. Removing structural and institutional barriers — combined with a broadening of the cultural recognition accorded to everyday labour — could materially improve the functioning of the labour market and simultaneously reduce the social costs of long-term unemployment.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ol class="ref-list">
+      <li>OECD (2023). <em>OECD Employment Outlook 2023: Artificial Intelligence and the Labour Market.</em> OECD Publishing, Paris. https://doi.org/10.1787/08785bba-en</li>
+      <li>Statistics Finland (2024). <em>Labour Force Survey — Annual results 2024.</em> Helsinki: Tilastokeskus. https://stat.fi/en/publication/cm0z8kztk0y1o07ulqh34y1ok</li>
+      <li>Statistics Finland (2024). <em>Finland in Figures 2024.</em> Helsinki: Tilastokeskus. https://stat.fi/en/news/finland-in-figures-2024</li>
+      <li>Bank of Finland (2025). Labour market flows run deeper — Participation has raised both employment and unemployment. <em>Bank of Finland Bulletin.</em> Helsinki.</li>
+      <li>EURES (2024). <em>Labour Market Information: Finland.</em> European Employment Services, December 2024. https://eures.europa.eu/living-and-working/labour-market-information-finland_en</li>
+      <li>Vihinen, H. et al. (2024). <em>Strategies to address Nordic rural labour shortage — Finland country report.</em> Nordregio Report 2024:23.</li>
+      <li>Ministry of Economic Affairs and Employment (2023). <em>Short-term Labour Market Forecast, Spring 2023.</em> Helsinki: TEM.</li>
+      <li>Andersen, T. M. &amp; Svarer, M. (2007). Flexicurity — Labour Market Performance in Denmark. <em>CESifo Economic Studies</em>, 53(3), 389–429.</li>
+      <li>Böckerman, P. &amp; Ilmakunnas, P. (2012). The Job Satisfaction-Productivity Nexus: A Study Using Matched Survey and Register Data. <em>Industrial and Labor Relations Review</em>, 65(2), 244–262.</li>
+      <li>Nätti, J., Pyöriä, P. &amp; Ojala, S. (2021). Työelämän muutos Suomessa 2000-luvulla. In: <em>Suomalainen elämä.</em> Helsinki: Gaudeamus.</li>
+      <li>European Commission (2023). <em>Employment and Social Developments in Europe 2023.</em> Luxembourg: Publications Office of the EU.</li>
+    </ol>
+  </div>
+
+  <div class="draft-note">
+    This paper is a preliminary working draft. Empirical material, a systematic literature review, and additional quantitative analysis are to be incorporated in a subsequent version. Number to be assigned upon editorial review.<br>
+    Original language: Finnish (v4). Translated and adapted for internal circulation, 2025.<br>
+    Companion documents: WP-008 (Institutional Allocation and System Continuity) · DA-006 (Labour Market Allocation Diagnostic)
+  </div>
+
+</main>
+
+<footer>
+  <div>
+    Aether Continuity Institute<br>
+    Working Paper — No. TBD<br>
+    Version 0.4 · 2025
+  </div>
+  <div>
+    Status: Internal Only<br>
+    Not for public distribution<br>
+    Subject to revision
+  </div>
+  <div>
+    Domains: D-3 · D-4<br>
+    Companion: WP-008 · DA-006<br>
+    Original: FI v4
+  </div>
+</footer>
+
+</body>
+</html>
