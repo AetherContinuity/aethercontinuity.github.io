@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI — Aether Continuity Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+  .dih {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 2rem 1.25rem;
+    margin: 0 auto;
+    max-width: 740px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .section { margin-bottom: 3rem; }
+  .section p { margin-bottom: 1.25rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); flex-shrink: 0; }
+  h2.section-title { font-size: 1.3rem; font-weight: 500; letter-spacing: -0.01em; }
+  .domain-list { line-height: 2; }
+  .domain-list a { color: var(--ink); text-decoration: none; }
+  .domain-list a:hover { color: var(--accent); }
+  .domain-list .unlisted { color: var(--muted); font-style: italic; }
+  .research-link { display: inline-block; margin-top: 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .research-link:hover { text-decoration: underline; }
+  .pub-list { margin-top: 1rem; }
+  .pub-item { display: flex; align-items: baseline; gap: 1.25rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+  .pub-item:last-child { border-bottom: none; }
+  .pub-id { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--accent); flex-shrink: 0; min-width: 48px; }
+  .pub-body { flex: 1; }
+  .pub-title { font-size: 1rem; }
+  .pub-title a { color: var(--ink); text-decoration: none; }
+  .pub-title a:hover { color: var(--accent); }
+  .pub-meta { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 0.2rem; }
+  .sup-list { margin-top: 1rem; }
+  .sup-item { display: flex; align-items: baseline; gap: 1.25rem; padding: 0.85rem 0; border-bottom: 1px solid var(--rule); }
+  .sup-item:last-child { border-bottom: none; }
+  .sup-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--accent); flex-shrink: 0; min-width: 60px; }
+  .sup-body { flex: 1; }
+  .sup-title { font-size: .97rem; }
+  .sup-title a { color: var(--ink); text-decoration: none; }
+  .sup-title a:hover { color: var(--accent); }
+  .sup-sub { font-size: .88rem; font-style: italic; color: var(--muted); margin-top: .1rem; }
+  .section-label { font-family: var(--mono); font-size: .6rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .75rem; }
+  .section-label a { color: var(--accent); font-size: .6rem; text-decoration: none; }
+  .section-label a:hover { text-decoration: underline; }
+  .closing-quote { border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 2.5rem; text-align: center; }
+  .closing-quote blockquote { font-size: 1.05rem; font-style: italic; color: var(--muted); line-height: 1.8; max-width: 520px; margin: 0 auto 1rem; }
+  .closing-quote cite { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 4rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); line-height: 2; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .paper { padding: 3rem 1.25rem 5rem; }
+    .dih { padding: 1.25rem 1.25rem 1rem; }
+    footer { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <div class="dih-institute">Aether Continuity Institute &middot; ACI</div>
+    <div class="dih-series">Working Definition &middot; <span class="series-accent">Open</span></div>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      Est: <strong>2026</strong><br>
+      Version: <strong>1.0</strong><br>
+      Status: <strong>Active</strong>
+    </div>
+    <div class="dih-status">
+      <div class="dih-status-dot"></div>
+      <span class="dih-status-text">Active &middot; v1.0</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <span class="nav-home">ACI &middot; Est. 2026 &middot; Foundational Note v1.0</span>
+  <span class="nav-id">EN &nbsp; FI</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">Open Working Definition &middot; 2026</div>
+    <h1 class="paper-title">Continuity is not guaranteed by <em>capacity.</em></h1>
+    <p class="paper-subtitle">Aether Continuity Institute is an independent technical initiative focused on understanding and diagnosing the limits of continuity in critical systems operating under compound stress conditions.</p>
+    <p>ACI studies when complex socio-technical systems cease to maintain decision capability, service delivery, or operational coherence &mdash; despite nominal capacity availability.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">Purpose</h2></div>
+    <p>The institute&rsquo;s primary objective is <em>diagnostic clarity</em> rather than solution advocacy. ACI identifies conditions under which optimization fails &mdash; it does not optimize systems.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">Methodological Principle</h2></div>
+    <p>ACI applies a diagnostic-first methodology: identify physical or operational constraints, determine weakest-link failure conditions, evaluate temporal endurance under compound stress, and distinguish technical necessity from institutional feasibility.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">Institutional Position</h2></div>
+    <p>ACI operates as a low-visibility diagnostic entity. Its role is to observe, clarify, and articulate continuity risks that may remain structurally underrepresented within operational or institutional frameworks. ACI seeks neither ownership nor control of implementation outcomes.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">Publication Principle</h2></div>
+    <p>ACI publications are released as Working Papers, Technical Notes, and Diagnostic Assessments. Documents are iterative and may evolve as empirical understanding improves. Authority derives from analytical transparency rather than institutional mandate.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">Working Domains</h2></div>
+    <div class="domain-list">
+      <a href="/papers/wp-001-duration-adequacy-2.html">D-1 Duration adequacy in low-inertia energy systems</a><br>
+      <a href="/papers/wp-002-drd.html">D-2 Distributed continuity doctrines (DRD)</a><br>
+      <a href="/papers/wp-004-recovery-capacity-invariants.html">D-3 Temporal decision capacity and institutional diagnostics</a><br>
+      <a href="/papers/wp-005-compound-stress-finland.html">D-4 Compound stress evaluation frameworks</a><br>
+      <a href="/papers/wp-006-continuity-computing.html">D-5 Continuity-oriented computing systems</a><br>
+      <a href="/papers/wp-007-situational-awareness-persistence.html">D-6 Situational awareness persistence</a>
+    </div>
+    <a class="research-link" href="/research.html">Research Program &rarr;</a>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 06</span><h2 class="section-title">Non-Goals</h2></div>
+    <p>Advocate specific political outcomes &mdash; Promote investment programs &mdash; Function as a consultancy &mdash; Compete with operational authorities &mdash; Propose comprehensive system redesigns &mdash; Optimize systems</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 07</span><h2 class="section-title">Publications</h2></div>
+
+    <div class="section-label">Working Papers</div>
+    <div class="pub-list">
+      <div class="pub-item">
+        <span class="pub-id">011</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-011-institutional-system4.html">Working Paper No.011 &mdash; Institutional System-4 Architecture for Small-State Viability</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-3 &middot; D-4</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">010</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-010-grid-logic.html">Working Paper No.010 &mdash; Why Energy-Bound Computation Inherits Grid Logic</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-1 &middot; D-4 &middot; D-5</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">009</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-009-coupled-infrastructure.html">Working Paper No.009 &mdash; Coupled Infrastructure: When Computation Becomes Energy-Bound</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-1 &middot; D-4 &middot; D-5</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">008</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-008-institutional-allocation.html">Working Paper No.008 &mdash; Institutional Allocation and System Continuity</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-1 &middot; D-3 &middot; D-4</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">007</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-007-situational-awareness-persistence.html">Working Paper No.007 &mdash; Situational Awareness Persistence Under Compound Stress</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-6</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">006</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-006-continuity-computing.html">Working Paper No.006 &mdash; Continuity Computing: Decision Capacity as a System Invariant Under Compound Stress</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-5</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">005</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-005-compound-stress-finland.html">Working Paper No.005 &mdash; Compound Stress and System Continuity: Finland 2025&ndash;2035</a></div>
+          <div class="pub-meta">Mar 2026 &middot; D-1 &middot; D-4</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">004</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-004-recovery-capacity-invariants.html">Working Paper No.004 &mdash; Recovery Capacity and System Vulnerability: Trajectory as a Diagnostic Indicator</a></div>
+          <div class="pub-meta">Feb 2026 &middot; D-3 &middot; D-4</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">003</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-003-itt.html">Working Paper No.003 &mdash; Institutional Termination Time and Temporal Decision Capacity</a></div>
+          <div class="pub-meta">Jan 2026 &middot; D-3</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">002</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-002-drd.html">Working Paper No.002 &mdash; Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</a></div>
+          <div class="pub-meta">Jan 2026 &middot; D-2</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <span class="pub-id">001</span>
+        <div class="pub-body">
+          <div class="pub-title"><a href="/papers/wp-001-duration-adequacy-2.html">Working Paper No.001 &mdash; Duration Adequacy and Continuity Risk in High-Electrification Power Systems</a></div>
+          <div class="pub-meta">Dec 2025 &middot; D-1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Supplements &amp; Applied Documents &rarr; <a href="/supplements/">View all</a></div>
+    <div class="sup-list">
+      <div class="sup-item">
+        <span class="sup-id">DA-006</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/da-006-labour-market-allocation.html">Labour Market Allocation Diagnostic</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v1.0 &middot; Mar 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">DA-005</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/da-005-digital-infrastructure-allocation-diagnostic.html">Digital Infrastructure Allocation Diagnostic</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v0.4 &middot; Mar 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">DA-004</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/da-004-europe-allocation-proxy.html">European Energy Investment: Category I / II Proxy Analysis</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v1.0 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">DA-003</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/da-003-finland-allocation.html">Infrastructure Allocation Diagnostic: Finland</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v6.0 &middot; Mar 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">DA-002</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/da-002-awareness-infrastructure-readiness.html">Awareness Infrastructure Readiness: Finnish Critical Infrastructure Operators</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v1.0 &middot; Mar 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">DA-001</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/ACI_DA-001_v1_1.html">Finland Pre-Shortage Phase 2026&ndash;2032</a></div>
+          <div class="sup-sub">Diagnostic Assessment &middot; v1.1 &middot; Mar 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">RQM-001</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/rqm-001-correlated-blindspot.html">Correlated Continuity Blindspots in OECD Infrastructure Allocation</a></div>
+          <div class="sup-sub">Research Query Memo &middot; v1.0 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">TN-005</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/tn-005-audit-questionnaire.html">Tier A System Audit Questionnaire</a></div>
+          <div class="sup-sub">Technical Note &middot; v1.0 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">TN-004</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/tn-004-scoping-tool.html">Decision-Critical System Scoping Tool</a></div>
+          <div class="sup-sub">Technical Note &middot; v2 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">TN-003</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/tn-003-d1-d4-audit-metrics.html">D1&ndash;D4 Architectural Audit Metrics</a></div>
+          <div class="sup-sub">Technical Note &middot; v1.0 &middot; 2026</div>
+        </div>
+      </div></div>
+      <div class="sup-item">
+        <span class="sup-id">TN-002</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/tn-002-dcein.html">Duration-Capable Edge Intelligence Node</a></div>
+          <div class="sup-sub">Technical Note &middot; v1.0 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">TN-001</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">Duration-Capable Local Energy Node</a></div>
+          <div class="sup-sub">Technical Note &middot; v1.0 &middot; Dec 2025</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">MESA</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/supplements/mesa-architecture.html">Municipal Energy Stability Architecture</a></div>
+          <div class="sup-sub">Architecture Framework &middot; v1.0 &middot; Dec 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Tools &amp; Instruments &rarr; <a href="/tools/">View all</a></div>
+    <div class="sup-list">
+      <div class="sup-item">
+        <span class="sup-id">WEM</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/tools/ACI-INSTRUMENT-v1.html">Winter Endurance Monitor</a></div>
+          <div class="sup-sub">Open Grid Instrument &middot; v1 &middot; 2025</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">SGFA Tool</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/tools/sgfa_skenaariot_2025_2040-3.html">MESA Node Economic Scenarios 2025–2040</a></div>
+          <div class="sup-sub">Interactive scenario tool &middot; Companion to SP-002</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">RAID Eval</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/tools/ACI_RAID_Battery_Evaluation-2.html">RAID Battery — Energy Evaluation Committee</a></div>
+          <div class="sup-sub">Evaluation framework v1.2 &middot; Companion to SP-003</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Supporting Papers</div>
+    <div class="sup-list">
+      <div class="sup-item">
+        <span class="sup-id">SP-003</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/papers/sp-003-raid-battery.html">The RAID-Battery: Segmented Energy Architecture and Fault-Tolerant Electrochemical Storage</a></div>
+          <div class="sup-sub">Concept Paper &middot; CC BY 4.0 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">SP-002</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/papers/sp-002-sgfa-4-toteutusohjelma.html">SGFA 4.0 — Kunnallisen energiavakauden toteutusohjelma</a></div>
+          <div class="sup-sub">Executive Summary &middot; v2.1 &middot; 2026</div>
+        </div>
+      </div>
+      <div class="sup-item">
+        <span class="sup-id">SP-001</span>
+        <div class="sup-body">
+          <div class="sup-title"><a href="/papers/sp-001-power-adequacy-compound-stress.html">Power Adequacy Under Compound Stress: Reserve Duration and Tail-Risk Contraction</a></div>
+          <div class="sup-sub">Supporting Paper &middot; D-1 &middot; D-4 &middot; 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem">Foundational</div>
+    <div class="pub-list">
+      <div class="pub-item">
+        <span class="pub-id">&mdash;</span>
+        <div class="pub-body">
+          <div class="pub-title">ACI Foundational Note v1.0 &mdash; This document &middot; 2026</div>
+          <div class="pub-meta">Active &middot; v1.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing-quote">
+    <blockquote>&ldquo;Continuity is not guaranteed by capacity, intent, or optimization.<br>It emerges only where systems retain decision capability under stress.&rdquo;</blockquote>
+    <cite>ACI &mdash; Foundational Note v1.0 &middot; 2026</cite>
+  </div>
+
+</main>
+
+<footer>
+  <div>Aether Continuity Institute<br>Working Definition<br>Open for iteration</div>
+  <div>ACI &mdash; Foundational Note v1.0 &middot; 2026<br>Active &middot; v1.0</div>
+  <div>aethercontinuity.org<br>Working Definition &mdash; Open for iteration</div>
+</footer>
+
+</body>
+</html>
