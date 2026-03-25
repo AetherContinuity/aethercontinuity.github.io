@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI — Energy Evaluation Committee v1.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0f0e0d; --paper:#f5f0e8; --warm:#ede8da; --cool:#eeeae0;
+  --rule:#c8bfa8; --rule-l:#ddd6c5; --accent:#8b1a1a; --muted:#6b6355;
+  --adopt-bg:#e8f4e8;--adopt-ink:#1a4a1a;--adopt-b:#3a8a3a;
+  --pilot-bg:#e8eef8;--pilot-ink:#1a2f50;--pilot-b:#2a5090;
+  --watch-bg:#fdf5d8;--watch-ink:#5a4a10;--watch-b:#b08020;
+  --ignore-bg:#f8eae4;--ignore-ink:#5a1a10;--ignore-b:#a03020;
+  --dot-h:#2d7a2d;--dot-m:#c4941a;--dot-l:#c43a2a;
+  --dep-mat:#7a4a10;--dep-reg:#1a3a6a;--dep-inf:#1a5a3a;--dep-tec:#4a1a6a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Libre Baskerville',Georgia,serif;font-size:13.5px;line-height:1.7;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.5;}
+
+/* MASTHEAD */
+.masthead{border-bottom:2px solid var(--ink);padding:22px 34px 16px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;}
+.org-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.masthead-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;letter-spacing:.02em;line-height:1.2;}
+.masthead-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.09em;margin-top:2px;}
+.vbadge{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.12em;color:var(--accent);background:var(--warm);border:1px solid var(--accent);border-radius:2px;padding:2px 6px;display:inline-block;margin-left:9px;}
+.masthead-r{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.08em;line-height:1.9;}
+.doc-id{font-size:11.5px;font-weight:600;color:var(--accent);}
+
+/* TABS */
+.tabs-bar{border-bottom:1px solid var(--rule);background:var(--warm);padding:0 34px;display:flex;gap:0;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px 9px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:color .15s,border-color .15s;white-space:nowrap;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 110px);}
+
+/* NAV */
+.nav{border-right:1px solid var(--rule);padding:24px 18px;background:var(--warm);}
+.nav-section{margin-bottom:22px;}
+.nl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:4px;margin-bottom:7px;}
+.ni{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 7px;cursor:pointer;border-radius:2px;color:var(--ink);letter-spacing:.04em;transition:background .15s;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
+.ni:hover{background:var(--rule-l);}
+.ni.active{background:var(--ink);color:var(--paper);}
+.ndot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.ni.active .ndot{background:var(--paper) !important;}
+.ndot-adopt{background:var(--adopt-b);}
+.ndot-pilot{background:var(--pilot-b);}
+.ndot-watch{background:var(--watch-b);}
+.ndot-ignore{background:var(--ignore-b);}
+.nav-input{width:100%;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 8px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);outline:none;border-radius:2px;letter-spacing:.03em;transition:border-color .15s;}
+.nav-input:focus{border-color:var(--ink);}
+.nav-btn{width:100%;margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:7px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;border-radius:2px;transition:background .15s;}
+.nav-btn:hover{background:var(--accent);}
+
+/* CONTENT */
+.content{padding:28px 36px;max-width:960px;}
+.portfolio-view{padding:28px 36px;max-width:960px;display:none;}
+.portfolio-view.visible{display:block;}
+.content.hidden{display:none;}
+
+/* SECTION HEAD */
+.sh{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;display:flex;align-items:center;gap:9px;}
+.sh::after{content:'';flex:1;height:1px;background:var(--rule-l);}
+
+/* CASE HEADER */
+.case-header{border-bottom:1px solid var(--rule);margin-bottom:22px;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+.cid-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px;}
+.ctitle{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;letter-spacing:.01em;line-height:1.15;}
+.cmeta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:2px;}
+.chr{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.dstamp{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:5px 12px;border:2px solid;border-radius:2px;display:inline-block;}
+.stamp-adopt{color:var(--adopt-ink);border-color:var(--adopt-b);background:var(--adopt-bg);}
+.stamp-pilot{color:var(--pilot-ink);border-color:var(--pilot-b);background:var(--pilot-bg);}
+.stamp-watch{color:var(--watch-ink);border-color:var(--watch-b);background:var(--watch-bg);}
+.stamp-ignore{color:var(--ignore-ink);border-color:var(--ignore-b);background:var(--ignore-bg);}
+
+/* TTR */
+.ttr-bar{display:flex;align-items:center;gap:9px;}
+.ttr-label{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+.ttr-track{display:flex;gap:2px;}
+.ttr-seg{height:5px;width:24px;border-radius:2px;background:var(--rule-l);}
+.ttr-seg.on{background:var(--ink);}
+.ttr-val{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;color:var(--ink);white-space:nowrap;}
+
+/* PROTOCOL */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:24px;border-radius:2px;overflow:hidden;}
+.pc{background:var(--paper);padding:12px 14px;}
+.pk{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.pv{font-size:12px;line-height:1.55;}
+
+/* COMMITTEE */
+.cgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:24px;border-radius:2px;overflow:hidden;}
+.member{background:var(--paper);padding:12px 10px;display:flex;flex-direction:column;gap:6px;}
+.mrole{font-family:'IBM Plex Mono',monospace;font-size:7.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--rule-l);padding-bottom:4px;min-height:24px;display:flex;align-items:flex-end;line-height:1.3;}
+.mbody{font-size:11px;line-height:1.6;flex:1;}
+.ptag{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;padding:2px 5px;border-radius:2px;display:inline-block;margin-top:3px;}
+.ptag-adopt{background:var(--adopt-bg);color:var(--adopt-ink);}
+.ptag-pilot{background:var(--pilot-bg);color:var(--pilot-ink);}
+.ptag-watch{background:var(--watch-bg);color:var(--watch-ink);}
+.ptag-ignore{background:var(--ignore-bg);color:var(--ignore-ink);}
+
+/* DIVERGENCE */
+.dtable{width:100%;border-collapse:collapse;border:1px solid var(--rule);border-radius:2px;overflow:hidden;font-size:11.5px;margin-bottom:24px;}
+.dtable thead tr{background:var(--ink);color:var(--paper);}
+.dtable th{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:8px 12px;text-align:left;}
+.dtable td{padding:8px 12px;border-bottom:1px solid var(--rule-l);vertical-align:middle;}
+.dtable tr:last-child td{border-bottom:none;}
+.dtable tr:nth-child(even) td{background:var(--warm);}
+.cdot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;}
+.cdot-high{background:var(--dot-h);}
+.cdot-med{background:var(--dot-m);}
+.cdot-low{background:var(--dot-l);}
+.rtag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;padding:2px 5px;border-radius:2px;letter-spacing:.06em;}
+.risk-low{background:#e8f4e8;color:#2d5a2d;}
+.risk-med{background:#fdf3d8;color:#5a4010;}
+.risk-high{background:#f8e8e4;color:#5a2010;}
+
+/* BURDEN */
+.blist{border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.bitem{display:grid;grid-template-columns:26px 1fr auto;align-items:center;padding:9px 13px;border-bottom:1px solid var(--rule-l);gap:9px;background:var(--paper);}
+.bitem:nth-child(even){background:var(--warm);}
+.bitem:last-child{border-bottom:none;}
+.bnum{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);font-weight:500;}
+.btext{font-size:12px;line-height:1.5;}
+.bstat{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap;font-weight:500;}
+.bs-open{background:#f8eae4;color:#5a1a1a;}
+.bs-partial{background:#fdf3d8;color:#5a4010;}
+.bs-met{background:#e8f4e8;color:#1a4a1a;}
+
+/* ACTION TRIGGERS */
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:24px;border-radius:2px;overflow:hidden;}
+.acell{background:var(--paper);padding:13px 11px;display:flex;flex-direction:column;gap:7px;}
+.acell.is-active{background:var(--cool);}
+.ahead{display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--rule-l);padding-bottom:6px;}
+.active-ind{width:5px;height:5px;border-radius:50%;background:var(--rule);display:inline-block;}
+.active-ind.on{background:var(--ink);}
+.alabel{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.aitems{display:flex;flex-direction:column;gap:4px;}
+.aitem{font-size:11px;line-height:1.5;padding-left:9px;position:relative;}
+.aitem::before{content:'→';position:absolute;left:0;font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--accent);top:2px;}
+.ahorizon{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:.07em;padding-top:6px;border-top:1px solid var(--rule-l);margin-top:4px;}
+
+/* DEPENDENCY LAYER */
+.dep-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+.dep-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:2px;border:1px solid;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.06em;}
+.dep-mat{background:#fdf3e8;color:var(--dep-mat);border-color:#d4a060;}
+.dep-reg{background:#e8eef8;color:var(--dep-reg);border-color:#6080c0;}
+.dep-inf{background:#e8f4ee;color:var(--dep-inf);border-color:#40a070;}
+.dep-tec{background:#f0e8f8;color:var(--dep-tec);border-color:#9060c0;}
+.dep-crit{outline:2px solid currentColor;outline-offset:1px;}
+.dep-icon{font-size:10px;}
+.dep-type-legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.dl-item{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--muted);display:flex;align-items:center;gap:4px;}
+
+/* KILL SIGNAL */
+.klist{border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.kitem{display:grid;grid-template-columns:1fr auto;align-items:center;padding:9px 13px;border-bottom:1px solid var(--rule-l);gap:12px;background:var(--paper);}
+.kitem:nth-child(even){background:var(--warm);}
+.kitem:last-child{border-bottom:none;}
+.ktext{font-size:12px;line-height:1.5;}
+.kstat{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:500;}
+.ks-clear{background:#e8f4e8;color:#1a4a1a;}
+.ks-watch{background:#fdf3d8;color:#5a4010;}
+.ks-triggered{background:#f8e8e4;color:#7a1a10;}
+
+/* SYNTHESIS */
+.synthesis{border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.synth-head{background:var(--ink);color:var(--paper);padding:8px 15px;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;}
+.synth-body{padding:16px;background:var(--paper);font-size:12.5px;line-height:1.8;}
+.synth-body p+p{margin-top:9px;}
+.synth-axiom{margin-top:12px;padding:11px 14px;background:var(--warm);border-left:3px solid var(--accent);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;line-height:1.5;}
+
+/* ── PORTFOLIO ── */
+.pf-header{border-bottom:1px solid var(--rule);margin-bottom:20px;padding-bottom:12px;}
+.pf-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.pf-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.08em;margin-top:2px;}
+
+/* Matrix table */
+.pm-wrap{border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.pm-head{display:grid;grid-template-columns:140px 1fr 70px 70px 70px 70px 100px;background:var(--ink);color:var(--paper);}
+.pm-hcell{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:8px 11px;border-right:1px solid rgba(255,255,255,.1);}
+.pm-hcell:last-child{border-right:none;}
+.pm-row{display:grid;grid-template-columns:140px 1fr 70px 70px 70px 70px 100px;background:var(--paper);border-bottom:1px solid var(--rule-l);cursor:pointer;transition:background .12s;}
+.pm-row:hover{background:var(--cool);}
+.pm-row:nth-child(even){background:var(--warm);}
+.pm-row:nth-child(even):hover{background:var(--cool);}
+.pm-row:last-child{border-bottom:none;}
+.pmcell{padding:10px 11px;border-right:1px solid var(--rule-l);font-size:11.5px;display:flex;align-items:center;}
+.pmcell:last-child{border-right:none;justify-content:center;}
+.pm-name{font-weight:700;font-family:'Libre Baskerville',serif;font-size:12px;}
+.pm-desc{font-size:10px;color:var(--muted);margin-top:1px;font-family:'IBM Plex Mono',monospace;}
+.mini-ttr{display:flex;gap:2px;}
+.mt-seg{width:10px;height:4px;border-radius:1px;background:var(--rule-l);}
+.mt-seg.on{background:var(--ink);}
+.mini-stamp{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid;border-radius:2px;}
+
+/* Posture summary */
+.pf-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.pfs-cell{background:var(--paper);padding:14px 12px;display:flex;flex-direction:column;gap:5px;}
+.pfs-count{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;line-height:1;}
+.pfs-items{font-size:10.5px;color:var(--muted);line-height:1.6;}
+
+/* Systemic Risk */
+.sys-risk{border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-bottom:24px;}
+.sys-head{background:var(--ink);color:var(--paper);padding:8px 15px;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;}
+.sys-grid{display:flex;flex-direction:column;gap:1px;background:var(--rule);}
+.sys-row{background:var(--paper);padding:11px 15px;display:grid;grid-template-columns:200px 1fr auto;align-items:center;gap:14px;}
+.sys-row:nth-child(even){background:var(--warm);}
+.sys-dep-name{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.04em;}
+.sys-techs{display:flex;flex-wrap:wrap;gap:4px;}
+.sys-tech-chip{font-family:'IBM Plex Mono',monospace;font-size:8.5px;padding:2px 6px;background:var(--warm);border:1px solid var(--rule);border-radius:2px;letter-spacing:.03em;}
+.sys-count{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);white-space:nowrap;}
+.sys-crit-bar{width:100%;height:4px;background:var(--rule-l);border-radius:2px;margin-top:4px;overflow:hidden;}
+.sys-crit-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+/* Loading */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(245,240,232,.88);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:13px;}
+.loading-overlay.active{display:flex;}
+.loading-bar-wrap{width:180px;height:2px;background:var(--rule);border-radius:2px;overflow:hidden;}
+.loading-bar{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .4s ease;}
+.loading-text{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.1em;}
+
+/* Footer */
+.footer{border-top:1px solid var(--rule);padding:12px 34px;display:flex;justify-content:space-between;align-items:center;}
+.fl,.fr{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:.08em;}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.pgrid,.cgrid,.dtable,.blist,.agrid,.dep-grid,.klist,.synthesis{animation:fadeIn .28s ease both;}
+.agrid{animation-delay:.04s;}.dep-grid{animation-delay:.07s;}.klist{animation-delay:.10s;}.synthesis{animation-delay:.13s;}
+
+@media(max-width:860px){
+  .main{grid-template-columns:1fr;}
+  .nav{border-right:none;border-bottom:1px solid var(--rule);}
+  .cgrid{grid-template-columns:repeat(2,1fr);}
+  .agrid{grid-template-columns:repeat(2,1fr);}
+  .pm-head,.pm-row{grid-template-columns:130px 1fr 60px 80px;}
+  .pm-hcell:nth-child(3),.pmcell:nth-child(3),
+  .pm-hcell:nth-child(5),.pmcell:nth-child(5),
+  .pm-hcell:nth-child(6),.pmcell:nth-child(6){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div>
+    <div class="org-label">ACI · Aether Continuity Institute · Analytical Tool T-002</div>
+    <div class="masthead-title">Energy Evaluation Committee <span class="vbadge">v1.2</span></div>
+    <div class="masthead-sub">Technology assessment · Kill signals · Burden of proof · Dependency mapping</div>
+  </div>
+  <div class="masthead-r">
+    <div class="doc-id">ACI-EEC-v1.2</div>
+    <div id="doc-date">—</div>
+    <div><a href="https://aethercontinuity.org/tools/" style="color:var(--muted);text-decoration:none;font-size:8.5px;letter-spacing:.08em;">aethercontinuity.org/tools</a></div>
+  </div>
+</div>
+
+<div style="background:var(--cool);border-bottom:1px solid var(--rule);padding:9px 34px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.04em;display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;">
+  <span>This tool is an open analytical instrument. It does not constitute investment or policy advice.</span>
+  <span style="display:flex;gap:.6rem;flex-wrap:wrap;">
+    <a href="https://aethercontinuity.org/supplements/mesa-architecture.html" style="color:var(--muted);text-decoration:none;background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">MESA v1.0</a>
+    <span style="background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">WP-004</span>
+    <span style="background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">DA-001</span>
+    <span style="background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">D-3 · D-4</span>
+  </span>
+  <span style="margin-left:auto;font-size:8.5px;">Custom cases persist in browser storage · <button onclick="if(confirm('Poista kaikki tallennetut caset?')){localStorage.removeItem('aci-eec-custom-cases-v1');location.reload();}" style="font-family:inherit;font-size:8.5px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;">Tyhjennä tallennetut</button></span>
+</div>
+
+<div class="tabs-bar">
+  <div class="tab active" id="tab-case" onclick="showTab('case')">Arviointi</div>
+  <div class="tab" id="tab-portfolio" onclick="showTab('portfolio')">Portfolio</div>
+</div>
+
+<div class="main">
+  <nav class="nav">
+    <div class="nav-section">
+      <div class="nl">Tallennetut arviot</div>
+      <div id="nav-cases"></div>
+    </div>
+    <div class="nav-section">
+      <div class="nl">Uusi arvio</div>
+      <input class="nav-input" id="ni-name" type="text" placeholder="Teknologian nimi…" style="margin-bottom:5px;">
+      <textarea class="nav-input" id="ni-desc" rows="3" style="resize:vertical;" placeholder="Väite tai kuvaus…"></textarea>
+      <button class="nav-btn" onclick="runNewCase()">▶ Arvioi komitealla</button>
+    </div>
+    <div class="nav-section">
+      <div class="nl">Versio</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);line-height:1.8;letter-spacing:.04em;">
+        I Claim Protocol<br>
+        II Committee<br>
+        III Divergence<br>
+        IV Burden of Proof<br>
+        V Action Triggers<br>
+        VI Dependencies ★<br>
+        VII Kill Signals ★<br>
+        VIII Synthesis
+      </div>
+    </div>
+  </nav>
+
+  <main class="content" id="case-view"></main>
+  <div class="portfolio-view" id="portfolio-view"></div>
+</div>
+
+<div class="footer">
+  <div class="fl">ACI-EEC v1.2 · SGFA Decision Instrument · Dependency + Kill Signal layer</div>
+  <div class="fr">Analyysi ei päätä mikä on totta — vaan mitä kannattaa tehdä nyt.</div>
+</div>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-text" id="loading-text">Komitea kokoontuu…</div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────
+const TTR = {
+  fast:  {label:'3–6 kk',  segs:1},
+  short: {label:'6–18 kk', segs:2},
+  mid:   {label:'2–5 v',   segs:3},
+  long:  {label:'5–10 v',  segs:4},
+  spec:  {label:'10+ v',   segs:5},
+};
+const TTRMAX = 5;
+
+const AT = {
+  adopt:{items:['Integroi SGFA-arkkitehtuuriin','Dokumentoi käyttöönottoprosessi','Aseta suorituskykymittarit'],h:'Toimenpide: välitön'},
+  pilot:{items:['Määritä max-budjetti ja testikohde','Mittarit: hyötysuhde, €/yksikkö, kestävyys','Tarkistuspiste 6 kk:n kohdalla'],h:'Toimenpide: 1–3 kk'},
+  watch:{items:['Seuraa julkaisuja ja pilotteja','Tarkista rahoituskehitys (6 kk)','Arvioi kill signals -tila'],h:'Toimenpide: passiivinen seuranta'},
+  ignore:{items:['Ei resurssiallokointia','Arkistoi perusteluineen','Avaa uudelleen jos data muuttuu'],h:'Toimenpide: suljettu (toistaiseksi)'},
+};
+
+const DEP_TYPES = {
+  material:   {icon:'◈', label:'Materiaali',     cls:'dep-mat'},
+  regulation: {icon:'⚖', label:'Regulaatio',     cls:'dep-reg'},
+  infrastructure:{icon:'⌖', label:'Infrastruktuuri', cls:'dep-inf'},
+  technology: {icon:'⬡', label:'Teknologia',     cls:'dep-tec'},
+};
+
+// ── CASES ──────────────────────────────────────────────────
+const CASES = {};
+const LS_KEY = 'aci-eec-custom-cases-v1';
+
+function defCase(c){ CASES[c.slug] = c; }
+
+function saveCustomCases() {
+  try {
+    const custom = Object.values(CASES).filter(c => c._custom);
+    localStorage.setItem(LS_KEY, JSON.stringify(custom));
+  } catch(e) { console.warn('Storage save failed:', e); }
+}
+
+function loadCustomCases() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const cases = JSON.parse(raw);
+    cases.forEach(c => { c._custom = true; defCase(c); });
+  } catch(e) { console.warn('Storage load failed:', e); }
+}
+
+// 1. ZUN-H
+defCase({slug:'zun-h',id:'ACI-EEC-2025-001',name:'Zun-H',subtitle:'Ohutkalvofotoelektrolyysi · aurinkovety',date:'2025-Q2',ttr:'mid',
+  protocol:{
+    core:'Ohutkalvopohjainen fotoelektrolyysijärjestelmä tuottaa vetyä suoraan auringonvalosta ilman erillistä elektrolyysiä — suunnattu off-grid-kohteisiin.',
+    weakest:'Kalvon pitkäaikainen kestävyys käytännön olosuhteissa on toistaiseksi osoitettu vain laboratorio-olosuhteissa.',
+    falsification:'Ei julkaistua pitkäkestoista kenttädataa (≥2 v). Hyötysuhdeväitteet perustuvat kontrolloituihin laboratorioajoihin.',
+    empirical:'6–12 kk pilotti vakioimattomissa ulko-olosuhteissa: hyötysuhde, kalvon degradaatio, kaasuerottelu, €/kg H₂.'
+  },
+  members:[
+    {role:'Physics Auditor',body:'Ei fysikaalisia esteitä. Fotoelektrokemiallinen hajoaminen tunnettu ilmiö. Teoreettinen hyötysuhde 10–15 % realistinen.',posture:'watch',postureLabel:'Watch'},
+    {role:'Engineering Realist',body:'Kalvo kriittinen heikkous. Degradaatio UV:ssa ja lämpösykleissä ongelma. Kaasuerottelu vaatii lisäinfrastruktuuria.',posture:'watch',postureLabel:'Watch'},
+    {role:'Economic Filter',body:'€/kg H₂ data puuttuu. Kalvon korvausväli tuntematon — dominoi CAPEX/OPEX. Ei investointipäätöstä ilman kenttädataa.',posture:'ignore',postureLabel:'Ignore (nyt)'},
+    {role:'System Integrator',body:'Erittäin kiinnostava off-grid: mökit, syrjäiset kohteet. SGFA-integraatio suoraviivainen jos hyötysuhde pitää.',posture:'pilot',postureLabel:'Pilot (off-grid)'},
+    {role:'Adversarial Skeptic',body:'"Vallankumouksellinen"-kieli ilman kenttädataa varoitusmerkki. Markkinointiviestintä selvästi ylittää julkaistu data.',posture:'watch',postureLabel:'Watch'},
+  ],
+  divergence:[
+    {dim:'Fysiikka & teoria',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Ei fysikaalisia esteitä'},
+    {dim:'Kestävyys / kalvo',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Kriittisin epävarmuus'},
+    {dim:'Talous (€/kg H₂)',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Data puuttuu'},
+    {dim:'Off-grid-soveltuvuus',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Lupaavin käyttöalue'},
+    {dim:'Skaalautuvuus',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Ratkaisematta'},
+  ],
+  burden:[
+    {text:'Hyötysuhde ≥10 % ulko-olosuhteissa (6 kk)',status:'open',statusLabel:'Avoin'},
+    {text:'Kalvon käyttöikä ≥5 v kenttäolosuhteissa',status:'open',statusLabel:'Avoin'},
+    {text:'Turvallinen kaasuerottelujärjestelmä',status:'partial',statusLabel:'Osittain'},
+    {text:'€/kg H₂ <5 € off-grid-kohteessa',status:'open',statusLabel:'Avoin'},
+    {text:'Fotoelektrokemiallinen mekanismi julkaistuissa mittauksissa',status:'met',statusLabel:'Täytetty'},
+  ],
+  dependencies:[
+    {type:'material',label:'Ohutkalvokomponentit',critical:true},
+    {type:'material',label:'Katalyyttimetallit (Pt/Ir)',critical:true},
+    {type:'technology',label:'Kaasuerotteluteknologia',critical:true},
+    {type:'regulation',label:'Vetysäilytyssäädökset',critical:false},
+    {type:'infrastructure',label:'Off-grid sähköpuskuri',critical:false},
+  ],
+  killSignals:[
+    {condition:'Ei kenttädataa 24 kk:n sisällä pilot-päätöksestä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Kalvon käyttöikä <1 v kenttätestissä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'€/kg H₂ >15 € optimistisessa mallissa',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Ydinväite falsifioitu vertaisarvioidussa julkaisussa',status:'clear',statusLabel:'Ei lauennut'},
+  ],
+  decision:'watch',decisionLabel:'WATCH + SMALL PILOT',
+  synthesis:'Zun-H edustaa fysikaalisesti validia mutta todentamatonta lähestymistapaa. Komitea on yksimielinen siitä, että teoreettinen perusta kestää — mutta kukaan ei voi antaa puoltavaa investointisuositusta ilman kenttädataa. Suurin epävarmuus on kalvossa: sen kestävyys määrää koko järjestelmän elinkaariarvon.\n\nKriittinen riippuvuus katalyyttimetalleista (Pt/Ir) ja ohutkalvokomponenteista tekee tästä myös materiaaliriskin — molemmat pullonkaulat jaetaan muiden energiateknologioiden kanssa. Kill signals -kynnykset asetettu: jos kenttädata ei ole saatavilla 24 kk:n sisällä, case suljetaan aktiivisesta seurannasta.',
+  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+});
+
+// 2. SMR — STEADY ENERGY / KUOPIO
+defCase({slug:'smr-steady',id:'ACI-EEC-2025-002',name:'SMR / Steady Energy',subtitle:'Pieni modulaarinen ydinreaktori · kaukolämpö',date:'2025-Q3',ttr:'long',
+  protocol:{
+    core:'Pieni modulaarinen ydinreaktori (SMR, ~50 MWt) kaukolämmöntuotantoon — Suomen olosuhteisiin suunniteltu, teollinen pre-commercial deployment 2030-luvulla.',
+    weakest:'Lupaprosessin pituus ja poliittinen vastustus ovat ratkaisemattomia muuttujia, joihin teknologinen suorituskyky ei vaikuta.',
+    falsification:'STUK:in lupakehys SMR:lle ei ole vielä valmis. Ei demonstroituja reaktoreita Suomessa tai pohjoismaisessa oikeudellisessa ympäristössä.',
+    empirical:'Regulatory roadmap + kustannusmalli FOAK-reaktorille (First Of A Kind): €/MWh vs. referenssi. Vertailu lämpöpumppuihin ja biopolttoaineisiin.'
+  },
+  members:[
+    {role:'Physics Auditor',body:'Fysiikka täysin tunnettu. SMR-teknologia on vakiintunutta ydinvoimatekniikkaa pienemmässä mittakaavassa. Ei uutta fysiikkaa. Turvallisuusprofiili passiivijäähdytyksellä vahva.',posture:'adopt',postureLabel:'Adopt (fysiikka)'},
+    {role:'Engineering Realist',body:'FOAK-kustannusriski on massiivinen. Ensimmäinen rakennus maksaa moninkertaisesti sarjatuotannolle. Rakennusaika 7–12 v. Komponenttiketju ei ole valmis.',posture:'watch',postureLabel:'Watch'},
+    {role:'Economic Filter',body:'FOAK-reaktori Suomeen: todennäköisesti 500–900 M€. Kaukolämmön hinta kilpailukykyinen vasta skaalassa. Rahoitusmalli julkinen tai EU-tuki välttämätön.',posture:'pilot',postureLabel:'Pilot (rahoitusmalli)'},
+    {role:'System Integrator',body:'Erinomainen strateginen sopivuus: baseload-lämpö, ei riippuvuus säästä, kaukolämpöverkko valmis. Kuopion mittakaava sopii. Pitkäaikainen energiaomavaraisuus.',posture:'adopt',postureLabel:'Adopt (strategia)'},
+    {role:'Adversarial Skeptic',body:'Poliittinen ja regulatorinen riski aliarvioidaan systemaattisesti. Aikataulut ovat historiallisesti pettäneet. Voiko 2030-luku olla realistinen? Skeptinen.',posture:'watch',postureLabel:'Watch'},
+  ],
+  divergence:[
+    {dim:'Fysiikka & tekniikka',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Tunnettu teknologia'},
+    {dim:'Regulaatio & lupa',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Suurin epävarmuus'},
+    {dim:'FOAK-kustannus',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Historiallinen ylioptimismi'},
+    {dim:'Strateginen sopivuus',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Konsensus: sopii SGFA'},
+    {dim:'Aikataulu (2030-luku)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Historiallinen riski'},
+  ],
+  burden:[
+    {text:'STUK:in SMR-lupakehys valmis (selkeä milestone)',status:'partial',statusLabel:'Osittain'},
+    {text:'FOAK-kustannusarvio ±30 % tarkkuudella',status:'open',statusLabel:'Avoin'},
+    {text:'Rahoitusmalli (julkinen/EU) vahvistettu',status:'open',statusLabel:'Avoin'},
+    {text:'Demonstraatioreaktori käynnissä vertailukelpoisessa ympäristössä',status:'open',statusLabel:'Avoin'},
+    {text:'Kaukolämpöintegraation tekninen suunnitelma',status:'met',statusLabel:'Täytetty'},
+  ],
+  dependencies:[
+    {type:'regulation',label:'STUK SMR-lupakehys',critical:true},
+    {type:'regulation',label:'EU:n ydinenergiapolitiikka',critical:true},
+    {type:'infrastructure',label:'Kaukolämpöverkko (olemassa)',critical:false},
+    {type:'material',label:'Reaktorikomponenttiketju',critical:true},
+    {type:'technology',label:'Passiivijäähdytysjärjestelmä',critical:false},
+    {type:'infrastructure',label:'FOAK-rahoitusmekanismi',critical:true},
+  ],
+  killSignals:[
+    {condition:'STUK hylkää SMR-lupakehyksen kokonaan',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'FOAK-kustannus ylittää 1,5 Md€ (Suomi)',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'EU:n taksonomia sulkee ydinvoiman rahoituksen',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Aikatauluarvio siirtyy yli 2040-luvulle',status:'watch',statusLabel:'Seurannassa'},
+  ],
+  decision:'pilot',decisionLabel:'PILOT (regulaatio + rahoitusmalli)',
+  synthesis:'SMR edustaa teknisesti kypsintä vaihtoehtoa tässä portfoliossa — fysiikka on tunnettu, turvallisuusprofiili vahva, ja strateginen sopivuus Kuopion kaukolämpöjärjestelmään on erinomäinen. Physics Auditor ja System Integrator ovat harvinaisessa yksimielisyydessä: tämä sopii SGFA-kehykseen.\n\nKriittinen este ei ole tekniikassa vaan regulaatiossa ja FOAK-kustannuksessa. Komitea suosittelee aktiivista "regulatory pilot" -lähestymistä: seuraa STUK-prosessia, rakenna rahoitusmalli rinnalla, ja pidä kill signal -kynnys selkeänä. Aikataulun realismi on suurin yksittäinen epävarmuus — historiallinen ylioptimismi ydinprojekteissa on dokumentoitua.',
+  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+});
+
+// 3. LFP / SODIUM-ION
+defCase({slug:'lfp-na-ion',id:'ACI-EEC-2025-003',name:'LFP / Na-ion akut',subtitle:'Litiumrautafosfaatti ja natrium-ioni · stationäärinen varastointi',date:'2025-Q3',ttr:'short',
+  protocol:{
+    core:'LFP ja Na-ion -akut stationääriseen energiavarastointiin: mökit, SGFA puskurikapasiteetti, kaukolämpöverkon tasaus. Kypsynyt teknologia, laskeva kustannuskäyrä.',
+    weakest:'Na-ionin energiatiheys ja syklinkestävyys stationäärisessä käytössä pitkällä aikavälillä ei vielä täysin kenttäosoitettu skaalassa.',
+    falsification:'LFP:lle on laajaa kenttädataa. Na-ionille kenttäasennus <3 v — pitkäaikainen syklinkestävyys avoinna.',
+    empirical:'€/kWh-vertailu LFP vs. Na-ion vs. referenssivaihtoehdot; syklinkestävyys 10 v datalla; toimitusketjun haavoittuvuus (Li vs. Na).'
+  },
+  members:[
+    {role:'Physics Auditor',body:'LFP: täysin tunnettu, vakaa kemia. Na-ion: fysikaalisesti validi, Na-ionien suurempi koko laskee energiatiheyttä — ei fysiikkaongelma, suunnitteluparametri.',posture:'adopt',postureLabel:'Adopt (LFP)'},
+    {role:'Engineering Realist',body:'LFP: käyttöönottovalmis, lukuisia referenssejä. Na-ion: komponenttiekosysteemi rakentuu. Molemmat: BMS-integraatio ja lämpöhallinta tunnettuja haasteita.',posture:'adopt',postureLabel:'Adopt (LFP)'},
+    {role:'Economic Filter',body:'LFP: 80–120 €/kWh (2025, skaalassa). Na-ion potentiaalisesti 20–30 % halvempi materiaalikustannuksissa. CAPEX vs. OPEX selkeästi laskettavissa.',posture:'adopt',postureLabel:'Adopt'},
+    {role:'System Integrator',body:'Suorin integraatio SGFA-arkkitehtuuriin. Mökkikohtainen tai alueellinen puskuri toimii heti. Ei regulatorisia esteitä. Nopein TTR tässä portfoliossa.',posture:'adopt',postureLabel:'Adopt'},
+    {role:'Adversarial Skeptic',body:'LFP-valmistus on keskittynyt Kiinaan — geopoliittinen riski. Na-ion: varo varhaisen markkinoinnin lupauksista, data on lyhyt. Muuten: teknologia toimii.',posture:'pilot',postureLabel:'Pilot (Na-ion)'},
+  ],
+  divergence:[
+    {dim:'Fysiikka & tekniikka (LFP)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Kypsä teknologia'},
+    {dim:'Talous & CAPEX',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Selkeästi laskettavissa'},
+    {dim:'Na-ion pitkäaikaiskestävyys',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Data lyhyt'},
+    {dim:'Toimitusketjuriski (Li/Na)',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Geopolitiikka'},
+    {dim:'SGFA-integraatio',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Konsensus: valmis'},
+  ],
+  burden:[
+    {text:'LFP-referenssiasennus SGFA-kohteessa (6 kk)',status:'open',statusLabel:'Avoin'},
+    {text:'€/kWh-laskenta omaan kohteeseen',status:'open',statusLabel:'Avoin'},
+    {text:'Na-ion: 2+ v kenttädata syklinkestävyydestä',status:'partial',statusLabel:'Osittain'},
+    {text:'BMS-integraatio olemassa olevaan järjestelmään',status:'partial',statusLabel:'Osittain'},
+    {text:'LFP-tekniikka: kypsä teknologia, laaja kenttädata',status:'met',statusLabel:'Täytetty'},
+  ],
+  dependencies:[
+    {type:'material',label:'Litium (LFP) / Natrium (Na-ion)',critical:false},
+    {type:'material',label:'Katodi-/anodimateriaalit',critical:true},
+    {type:'technology',label:'BMS (Battery Mgmt System)',critical:true},
+    {type:'infrastructure',label:'Sähköliityntä ja tasasuuntaaja',critical:false},
+    {type:'regulation',label:'Akustojen palo- ja kierrätyssäädökset',critical:false},
+  ],
+  killSignals:[
+    {condition:'Na-ion syklinkestävyys <2000 sykliä realisoituu laajassa kentässä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'LFP-hinta nousee >200 €/kWh geopoliittisesti',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Parempi teknologia (solid-state) saavuttaa <100 €/kWh ennen asennusta',status:'watch',statusLabel:'Seurannassa'},
+  ],
+  decision:'adopt',decisionLabel:'ADOPT (LFP) + PILOT (Na-ion)',
+  synthesis:'LFP on tässä portfoliossa ainoa teknologia, jossa kaikki viisi komitean jäsentä konvergoi riittävän vahvaan suositukseen toimia. Fysiikka tunnetaan, talous on laskettavissa, SGFA-integraatio on suoraviivainen, ja kenttädata on laaja. Tämä on referenssiteknologia: se asettaa aikadimension ja kustannustasovertailun kaikille muille caseille.\n\nNa-ion ansaitsee pienen pilotin: materiaaliketjuriski on pienempi (litiumin geopolitiikka vs. natrium), mutta pitkäaikaisdata puuttuu. Kill signal on asetettu selkeäksi: jos solid-state-akkujen hintakehitys kiihdyttää, tämä arvio avataan uudelleen.',
+  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+});
+
+// 4. POWER-TO-X
+defCase({slug:'ptx',id:'ACI-EEC-2025-004',name:'Power-to-X',subtitle:'Sähkö → synteettiset polttoaineet / ammoniakki / metanoli',date:'2025-Q3',ttr:'mid',
+  protocol:{
+    core:'Uusiutuvalla sähköllä tuotettu vety muunnetaan synteettisiksi polttoaineiksi (ammoniakki, metanoli, e-fuel) raskaaseen liikenteeseen ja teollisuuteen.',
+    weakest:'Järjestelmän hyötysuhde on alhainen (sähkö→vety→PtX: 30–50 %) ja koko arvoketju on riippuvainen halvan sähkön saatavuudesta ympärivuotisesti.',
+    falsification:'€/kg tai €/MWh ei ole kilpailukykyinen fossiilisille polttoaineille ilman hiilimaksua tai suurta skaalaa. Demonstraatiolaitoksia käynnissä, mutta kaupallinen skaalaus ei ole todistettu.',
+    empirical:'Systeemihyötysuhde koko arvoketjussa + €/kg tuote + break-even-hiilihinta. Vertailu: suora sähköistäminen vs. PtX-reitti per kohdesektori.'
+  },
+  members:[
+    {role:'Physics Auditor',body:'Ei fysikaalisesti kiistanalaista. Mutta hyötysuhde on fundamentaali rajoite: jokainen muunnosvaihe vie 20–40 %. Järjestelmä on vain viisas kun suoraa sähköistämistä ei voi käyttää.',posture:'watch',postureLabel:'Watch'},
+    {role:'Engineering Realist',body:'Elektrolyysikapasiteetti, CO₂-lähde (DAC tai bioperäinen), synteesireaktorit — kaikki tunnettua tekniikkaa erikseen. Integraatio isossa skaalassa: ratkaisematon. Huolto ja ajotasapaino ongelmallisia.',posture:'watch',postureLabel:'Watch'},
+    {role:'Economic Filter',body:'Green ammonia: 600–900 €/t (2025). Fossiilit: 200–300 €/t. Break-even vain korkean hiilihinnan tai subsidi-ohjelman kanssa. CAPEX massiivinen. Ei kannata ilman systemaattista tukea.',posture:'ignore',postureLabel:'Ignore (nyt)'},
+    {role:'System Integrator',body:'Relevanssi SGFA:lle: rajallinen suorana sovelluksena. Mutta: jos PtX onnistuu teollisuustasolla, se muuttaa koko energiajärjestelmää. Epäsuorat vaikutukset merkittäviä. Seuraa järjestelmätasolla.',posture:'watch',postureLabel:'Watch (järjestelmä)'},
+    {role:'Adversarial Skeptic',body:'PtX on usein se vastaus johon etsitään kysymystä. Teollisuus käyttää narratiivia siirtääkseen vastuuta teknologiselle tulevaisuudelle. Vaadi näyttö €/MWh-tasolla ennen mitään allokointia.',posture:'ignore',postureLabel:'Ignore'},
+  ],
+  divergence:[
+    {dim:'Fysiikka (hyötysuhde)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'med',riskLabel:'Rajoittava',note:'Fundamentaali häviö'},
+    {dim:'Talous tänään',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'high',riskLabel:'Ei kilpailukyky',note:'Ei kannata ilman tukea'},
+    {dim:'Tulevaisuuden talous (skaalassa)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'med',riskLabel:'Spekulatiivinen',note:'Riippuu hiilihinnasta'},
+    {dim:'Järjestelmätason merkitys',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Epäsuora',note:'Seuraa sivusta'},
+    {dim:'SGFA-suora soveltuvuus',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Ei suoraa sovellusta'},
+  ],
+  burden:[
+    {text:'€/MWh kilpailukykyinen fossiileille ilman hiilitukea',status:'open',statusLabel:'Avoin'},
+    {text:'Kaupallinen skaalauslaitos toiminnassa (>50 MW)',status:'open',statusLabel:'Avoin'},
+    {text:'Systeemihyötysuhde >45 % kokonaisarvoketjussa',status:'open',statusLabel:'Avoin'},
+    {text:'Demonstraatiomittakaavan tuotanto käynnissä',status:'met',statusLabel:'Täytetty'},
+    {text:'Kohdesektori jossa PtX parempi kuin suora sähköistäminen',status:'partial',statusLabel:'Osittain'},
+  ],
+  dependencies:[
+    {type:'material',label:'Elektrolyyserimateriaalit (Ir/Pt)',critical:true},
+    {type:'infrastructure',label:'Halpa ylijäämäsähkö ympärivuotisesti',critical:true},
+    {type:'regulation',label:'EU:n hiilimaksu / CBAM',critical:true},
+    {type:'infrastructure',label:'CO₂-lähde (DAC tai bio)',critical:true},
+    {type:'technology',label:'Synteesireaktoriteknologia',critical:false},
+    {type:'regulation',label:'PtX-polttoaineiden sertifiointi',critical:false},
+  ],
+  killSignals:[
+    {condition:'Hiilimaksu ei ylitä 150 €/t CO₂ vuoteen 2030 mennessä',status:'watch',statusLabel:'Seurannassa'},
+    {condition:'Suoran sähköistämisen kustannus alittaa PtX-reitin kohdesektorissa',status:'watch',statusLabel:'Seurannassa'},
+    {condition:'Kaupallinen skaalahanke peruuntuu teknis-taloudellisista syistä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'€/kg polttoaine ei laske >30 % vuoteen 2028 mennessä',status:'clear',statusLabel:'Ei lauennut'},
+  ],
+  decision:'watch',decisionLabel:'WATCH (järjestelmätaso)',
+  synthesis:'Power-to-X on portfolion tapaukista se, jossa epäsuorat vaikutukset ovat tärkeämmät kuin suora sovellettavuus. Fysiikka on rajoittava mutta ei estävä — hyötysuhde on fundamentaali, ei ongelma. Talous ei tänään toimi ilman merkittävää hiilimaksua tai subventioita, ja Economic Filter sekä Adversarial Skeptic ovat yksimielisiä tästä.\n\nKomitea suosittelee järjestelmätason seurantaa: PtX:n eteneminen muuttaa koko energiamarkkinaa, mikä vaikuttaa kaikkiin muihin portfolio-casehin. Kaksi kill signal -kynnystä ovat jo "seurannassa" — erityisesti hiilimaksukehitys on oltava aktiivisen tarkkailun kohteena. Ei resurssiallokointia suoraan, mutta ei myöskään sulkemista.',
+  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+});
+
+// ── RENDER CASE ────────────────────────────────────────────
+function renderCase(c){
+  const ttr = TTR[c.ttr]||TTR.mid;
+  const segs = Array.from({length:TTRMAX},(_,i)=>`<div class="ttr-seg${i<ttr.segs?' on':''}"></div>`).join('');
+
+  const members = c.members.map(m=>`
+    <div class="member">
+      <div class="mrole">${m.role}</div>
+      <div class="mbody">${m.body}</div>
+      <span class="ptag ptag-${m.posture}">${m.postureLabel}</span>
+    </div>`).join('');
+
+  const divRows = c.divergence.map(d=>`
+    <tr>
+      <td>${d.dim}</td>
+      <td><span class="cdot cdot-${d.consensus}"></span>${d.consensusLabel}</td>
+      <td>${d.spread}</td>
+      <td><span class="rtag risk-${d.risk}">${d.riskLabel}</span></td>
+      <td style="color:var(--muted);font-style:italic;font-size:10.5px;">${d.note}</td>
+    </tr>`).join('');
+
+  const burden = c.burden.map((b,i)=>`
+    <div class="bitem">
+      <span class="bnum">0${i+1}</span>
+      <span class="btext">${b.text}</span>
+      <span class="bstat bs-${b.status}">${b.statusLabel}</span>
+    </div>`).join('');
+
+  const actionCells = ['adopt','pilot','watch','ignore'].map(p=>{
+    const a=AT[p]; const isActive=p===c.decision;
+    return `<div class="acell${isActive?' is-active':''}">
+      <div class="ahead">
+        <span class="ptag ptag-${p}" style="${isActive?'outline:2px solid var(--ink);outline-offset:1px;':''}">${p.toUpperCase()}</span>
+        <span class="alabel"><span class="active-ind${isActive?' on':''}"></span>${isActive?'aktiivinen':'—'}</span>
+      </div>
+      <div class="aitems">${a.items.map(i=>`<div class="aitem">${i}</div>`).join('')}</div>
+      <div class="ahorizon">${a.h}</div>
+    </div>`;
+  }).join('');
+
+  // Dependencies
+  const legend = Object.entries(DEP_TYPES).map(([k,v])=>
+    `<div class="dl-item"><span class="dep-icon">${v.icon}</span>${v.label}</div>`).join('');
+  const deps = c.dependencies.map(d=>{
+    const dt=DEP_TYPES[d.type];
+    return `<span class="dep-tag ${dt.cls}${d.critical?' dep-crit':''}">${dt.icon} ${d.label}${d.critical?' ★':''}</span>`;
+  }).join('');
+
+  // Kill signals
+  const ksItems = c.killSignals.map(k=>`
+    <div class="kitem">
+      <span class="ktext">${k.condition}</span>
+      <span class="kstat ks-${k.status}">${k.statusLabel}</span>
+    </div>`).join('');
+
+  const synthParas = c.synthesis.split('\n\n').map(p=>`<p>${p}</p>`).join('');
+
+  document.getElementById('case-view').innerHTML = `
+    <div class="case-header">
+      <div>
+        <div class="cid-label">${c.id} · ${c.date}</div>
+        <div class="ctitle">${c.name}</div>
+        <div class="cmeta">${c.subtitle}</div>
+      </div>
+      <div class="chr">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">Komitean päätös</div>
+          <div class="dstamp stamp-${c.decision}">${c.decisionLabel}</div>
+        </div>
+        <div class="ttr-bar">
+          <span class="ttr-label">TTR</span>
+          <div class="ttr-track">${segs}</div>
+          <span class="ttr-val">${ttr.label}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sh">I — Claim Protocol</div>
+    <div class="pgrid">
+      <div class="pc"><div class="pk">Core claim</div><div class="pv">${c.protocol.core}</div></div>
+      <div class="pc"><div class="pk">Weakest assumption</div><div class="pv">${c.protocol.weakest}</div></div>
+      <div class="pc"><div class="pk">Falsification gap</div><div class="pv">${c.protocol.falsification}</div></div>
+      <div class="pc"><div class="pk">Empirical test</div><div class="pv">${c.protocol.empirical}</div></div>
+    </div>
+
+    <div class="sh">II — Committee Analysis</div>
+    <div class="cgrid">${members}</div>
+
+    <div class="sh">III — Divergence Matrix</div>
+    <table class="dtable">
+      <thead><tr><th>Dimensio</th><th>Konsensus</th><th>Hajonta</th><th>Riski</th><th>Huomio</th></tr></thead>
+      <tbody>${divRows}</tbody>
+    </table>
+
+    <div class="sh">IV — Burden of Proof</div>
+    <div class="blist">${burden}</div>
+
+    <div class="sh">V — Action Triggers</div>
+    <div class="agrid">${actionCells}</div>
+
+    <div class="sh">VI — Dependency Layer <span style="font-size:8px;background:var(--warm);border:1px solid var(--rule);padding:1px 5px;border-radius:2px;letter-spacing:.06em;">★ kriittinen</span></div>
+    <div style="margin-bottom:8px;" class="dep-type-legend">${legend}</div>
+    <div class="dep-grid">${deps}</div>
+
+    <div class="sh">VII — Kill Signals</div>
+    <div class="klist">${ksItems}</div>
+
+    <div class="sh">VIII — Committee Synthesis</div>
+    <div class="synthesis">
+      <div class="synth-head">Synteesi & päätösperuste</div>
+      <div class="synth-body">${synthParas}<div class="synth-axiom">"${c.axiom}"</div></div>
+    </div>
+  `;
+}
+
+// ── RENDER PORTFOLIO ───────────────────────────────────────
+function renderPortfolio(){
+  const cases = Object.values(CASES);
+  const counts = {adopt:0,pilot:0,watch:0,ignore:0};
+  cases.forEach(c=>{ if(counts[c.decision]!==undefined) counts[c.decision]++; });
+
+  const rows = cases.map(c=>{
+    const ttr=TTR[c.ttr]||TTR.mid;
+    const segs=Array.from({length:TTRMAX},(_,i)=>`<div class="mt-seg${i<ttr.segs?' on':''}"></div>`).join('');
+    const highR=c.divergence.filter(d=>d.risk==='high').length;
+    const metB=c.burden.filter(b=>b.status==='met').length;
+    const critDeps=c.dependencies.filter(d=>d.critical).length;
+    const ksWarn=c.killSignals.filter(k=>k.status!=='clear').length;
+    return `<div class="pm-row" onclick="loadAndShow('${c.slug}')">
+      <div class="pmcell" style="flex-direction:column;align-items:flex-start;gap:2px;">
+        <div class="pm-name">${c.name}</div>
+        <div class="pm-desc">${c.date}</div>
+      </div>
+      <div class="pmcell" style="flex-direction:column;align-items:flex-start;gap:2px;">
+        <span style="font-size:11px;color:var(--muted);">${c.subtitle}</span>
+      </div>
+      <div class="pmcell" style="justify-content:center;"><div class="mini-ttr">${segs}</div></div>
+      <div class="pmcell" style="justify-content:center;">
+        <span class="rtag ${highR>=3?'risk-high':highR>=2?'risk-med':'risk-low'}">${highR}×↑</span>
+      </div>
+      <div class="pmcell" style="justify-content:center;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;">${critDeps}★ dep</span>
+      </div>
+      <div class="pmcell" style="justify-content:center;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:${ksWarn>0?'var(--accent)':'var(--muted)'};">${ksWarn} signal</span>
+      </div>
+      <div class="pmcell">
+        <span class="mini-stamp stamp-${c.decision}" style="font-size:8.5px;padding:3px 8px;">${c.decisionLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Systemic risk — aggregate shared dependencies
+  const depMap = {};
+  cases.forEach(c=>{
+    c.dependencies.forEach(d=>{
+      if(!depMap[d.label]) depMap[d.label]={label:d.label,type:d.type,critical:d.critical,techs:[]};
+      depMap[d.label].techs.push({name:c.name,critical:d.critical});
+    });
+  });
+  const sharedDeps = Object.values(depMap)
+    .filter(d=>d.techs.length>1)
+    .sort((a,b)=>b.techs.length-a.techs.length);
+
+  const sysRows = sharedDeps.map(d=>{
+    const dt=DEP_TYPES[d.type]||DEP_TYPES.technology;
+    const critCount=d.techs.filter(t=>t.critical).length;
+    const chips=d.techs.map(t=>`<span class="sys-tech-chip">${t.name}${t.critical?'★':''}</span>`).join('');
+    const fillPct=Math.round((critCount/d.techs.length)*100);
+    return `<div class="sys-row">
+      <div>
+        <div class="sys-dep-name">${dt.icon} ${d.label}</div>
+        <div class="sys-crit-bar"><div class="sys-crit-fill" style="width:${fillPct}%"></div></div>
+      </div>
+      <div class="sys-techs">${chips}</div>
+      <div class="sys-count">${d.techs.length} teknologiaa</div>
+    </div>`;
+  }).join('');
+
+  const summaryItems = ['adopt','pilot','watch','ignore'].map(p=>{
+    const pc=cases.filter(c=>c.decision===p);
+    return `<div class="pfs-cell">
+      <div class="ptag ptag-${p}" style="width:fit-content;font-size:8px;">${p.toUpperCase()}</div>
+      <div class="pfs-count">${counts[p]}</div>
+      <div class="pfs-items">${pc.map(c=>c.name).join(', ')||'—'}</div>
+    </div>`;
+  }).join('');
+
+  // Meta-signal
+  const watchHigh = cases.filter(c=>c.decision==='watch'&&c.divergence.filter(d=>d.risk==='high').length>=3).length;
+  const metaSignal = watchHigh>=2
+    ? `⚡ Meta-signaali: ${watchHigh} WATCH-teknologiaa, korkea riskiprofiili — murros mahdollinen, mutta epävarmuus dominoi kenttää.`
+    : counts.adopt>=2
+    ? `✓ Meta-signaali: ${counts.adopt} ADOPT-päätöstä — riittävä kypsyys toimia, hae referenssidata.`
+    : `↻ Meta-signaali: Portfolio kehittyy. Lisää tapauksia paremman kuvan saamiseksi.`;
+
+  document.getElementById('portfolio-view').innerHTML = `
+    <div class="pf-header">
+      <div class="pf-title">Portfolio Overview</div>
+      <div class="pf-meta">${cases.length} arviota · ACI-EEC v1.2 · ${new Date().toLocaleDateString('fi-FI')}</div>
+    </div>
+
+    <div class="sh">Arviointi-matriisi</div>
+    <div class="pm-wrap">
+      <div class="pm-head">
+        <div class="pm-hcell">Teknologia</div>
+        <div class="pm-hcell">Kuvaus</div>
+        <div class="pm-hcell">TTR</div>
+        <div class="pm-hcell">Riskidim.</div>
+        <div class="pm-hcell">Kriitt. dep.</div>
+        <div class="pm-hcell">Kill signals</div>
+        <div class="pm-hcell">Päätös</div>
+      </div>
+      ${rows}
+    </div>
+
+    <div class="sh">Päätösjakauma</div>
+    <div class="pf-summary">${summaryItems}</div>
+
+    <div class="sh">Systeemiset pullonkaulat — jaetut riippuvuudet</div>
+    <div class="sys-risk">
+      <div class="sys-head">Dependency · Teknologiat joilla sama pullonkaula · ★ = kriittinen ko. teknologialle</div>
+      <div class="sys-grid">${sysRows||'<div style="padding:14px 15px;font-size:12px;color:var(--muted);">Ei jaettuja riippuvuuksia tässä portfoliossa.</div>'}</div>
+    </div>
+
+    <div class="synthesis">
+      <div class="synth-head">Portfolio Meta-signaali</div>
+      <div class="synth-body">
+        <p>${metaSignal}</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px;">Systeeminen pullonkaula-analyysi paljastaa jaetut riskit: teknologiat jotka riippuvat samoista materiaaleista, regulaatiosta tai infrastruktuurista muodostavat ryppäitä — epäonnistuminen yhdessä voi vaikuttaa useampaan.</p>
+      </div>
+    </div>
+  `;
+}
+
+// ── TABS + NAVIGATION ──────────────────────────────────────
+function showTab(t){
+  document.getElementById('tab-case').classList.toggle('active',t==='case');
+  document.getElementById('tab-portfolio').classList.toggle('active',t==='portfolio');
+  document.getElementById('case-view').classList.toggle('hidden',t!=='case');
+  document.getElementById('portfolio-view').classList.toggle('visible',t==='portfolio');
+  if(t==='portfolio') renderPortfolio();
+}
+
+function loadAndShow(slug){
+  document.querySelectorAll('#nav-cases .ni').forEach(el=>el.classList.remove('active'));
+  const ni=document.getElementById('navitem-'+slug);
+  if(ni) ni.classList.add('active');
+  showTab('case');
+  renderCase(CASES[slug]);
+  document.getElementById('case-view').scrollTop=0;
+}
+
+function addNavItem(c){
+  const nav=document.getElementById('nav-cases');
+  const el=document.createElement('div');
+  el.className='ni';el.id='navitem-'+c.slug;
+  el.innerHTML=`<span class="ndot ndot-${c.decision}"></span>${c.name}`;
+  el.onclick=()=>loadAndShow(c.slug);
+  nav.appendChild(el);
+}
+
+// ── AI EVAL ───────────────────────────────────────────────
+async function runNewCase(){
+  const name=document.getElementById('ni-name').value.trim();
+  const desc=document.getElementById('ni-desc').value.trim();
+  if(!name){alert('Anna teknologian nimi.');return;}
+  const overlay=document.getElementById('loading');
+  const bar=document.getElementById('loading-bar');
+  const ltxt=document.getElementById('loading-text');
+  overlay.classList.add('active');
+  const steps=['Komitea kokoontuu…','Physics Auditor analysoi…','Economic Filter laskee…','Dependency Layer rakentuu…','Kill Signals asetetaan…','Synteesi kirjoitetaan…'];
+  let si=0;
+  const iv=setInterval(()=>{ltxt.textContent=steps[Math.min(si++,steps.length-1)];bar.style.width=Math.min((si/steps.length)*83,83)+'%';},800);
+  const slug=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  const yr=new Date().getFullYear();const q=Math.ceil((new Date().getMonth()+1)/3);
+  const prompt=`Olet ACI Energy Evaluation Committee v1.2 -järjestelmä. Arvioi teknologia/idea kriittisesti SGFA-kontekstissa.
+
+Teknologia: ${name}
+Kuvaus: ${desc||'(Tee arvio nimen perusteella)'}
+
+Palauta VAIN validi JSON, ei muuta:
+
+{
+  "slug":"${slug}","id":"ACI-EEC-${yr}-00X","name":"${name}",
+  "subtitle":"max 7 sanaa","date":"${yr}-Q${q}","ttr":"mid",
+  "protocol":{"core":"...","weakest":"...","falsification":"...","empirical":"..."},
+  "members":[
+    {"role":"Physics Auditor","body":"...","posture":"watch","postureLabel":"Watch"},
+    {"role":"Engineering Realist","body":"...","posture":"watch","postureLabel":"Watch"},
+    {"role":"Economic Filter","body":"...","posture":"ignore","postureLabel":"Ignore"},
+    {"role":"System Integrator","body":"...","posture":"pilot","postureLabel":"Pilot"},
+    {"role":"Adversarial Skeptic","body":"...","posture":"watch","postureLabel":"Watch"}
+  ],
+  "divergence":[
+    {"dim":"Fysiikka & teoria","consensus":"high","consensusLabel":"Vahva","spread":"Pieni","risk":"low","riskLabel":"Matala","note":"..."},
+    {"dim":"Kestävyys","consensus":"low","consensusLabel":"Heikko","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."},
+    {"dim":"Talous","consensus":"low","consensusLabel":"Epäselvä","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."},
+    {"dim":"Soveltuvuus","consensus":"med","consensusLabel":"Kohtalainen","spread":"Kohtalainen","risk":"med","riskLabel":"Keskisuuri","note":"..."},
+    {"dim":"Skaalautuvuus","consensus":"low","consensusLabel":"Heikko","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."}
+  ],
+  "burden":[
+    {"text":"...","status":"open","statusLabel":"Avoin"},
+    {"text":"...","status":"open","statusLabel":"Avoin"},
+    {"text":"...","status":"partial","statusLabel":"Osittain"},
+    {"text":"...","status":"open","statusLabel":"Avoin"},
+    {"text":"...","status":"met","statusLabel":"Täytetty"}
+  ],
+  "dependencies":[
+    {"type":"material","label":"...","critical":true},
+    {"type":"regulation","label":"...","critical":true},
+    {"type":"infrastructure","label":"...","critical":false},
+    {"type":"technology","label":"...","critical":false}
+  ],
+  "killSignals":[
+    {"condition":"...","status":"clear","statusLabel":"Ei lauennut"},
+    {"condition":"...","status":"clear","statusLabel":"Ei lauennut"},
+    {"condition":"...","status":"watch","statusLabel":"Seurannassa"}
+  ],
+  "decision":"watch","decisionLabel":"WATCH + PILOT",
+  "synthesis":"Suomeksi. 2 kappaletta erotettu \\n\\n:llä.",
+  "axiom":"Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi."
+}
+
+ttr: fast|short|mid|long|spec
+posture/decision: adopt|pilot|watch|ignore
+consensus/risk: high|med|low
+status: open|partial|met
+dependency type: material|regulation|infrastructure|technology
+killSignal status: clear|watch|triggered`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const clean=(data.content?.[0]?.text||'').replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    parsed._custom = true;
+    clearInterval(iv);bar.style.width='100%';
+    setTimeout(()=>{
+      overlay.classList.remove('active');bar.style.width='0%';
+      defCase(parsed);addNavItem(parsed);
+      saveCustomCases();
+      document.getElementById('ni-name').value='';document.getElementById('ni-desc').value='';
+      loadAndShow(parsed.slug);
+    },400);
+  }catch(e){clearInterval(iv);overlay.classList.remove('active');bar.style.width='0%';alert('Virhe: '+e.message);}
+}
+
+// ── INIT ──────────────────────────────────────────────────
+document.getElementById('doc-date').textContent=new Date().toLocaleDateString('fi-FI',{year:'numeric',month:'long',day:'numeric'});
+
+// ── RAID-BATTERY ──────────────────────────────────────────
+defCase({
+  slug:'raid-battery',
+  id:'ACI-EEC-2026-001',
+  name:'RAID-Battery Architecture',
+  subtitle:'Segmentoitu, ohjelmistoavusteinen vikasietoinen akku · Working Paper v1.0 (Ruotsalainen, 2026)',
+  date:'2026-Q1',
+  ttr:'mid',
+  protocol:{
+    core:'Akkujärjestelmän arkkitehtuuriparadigman muutos: luotettavuus siirretään yksittäiseltä kennolta järjestelmätasolle. Pakki jaetaan itsenäisiin segmentteihin (esim. 16 × 5 kWh / 80 kWh pakki), joita ohjaa deterministinen Guardian-kerros (bare-metal MCU: oikosulkueristys <100 µs, OV/UV <10 ms, lämpötila <100 ms, dT/dt-triggeröinti 2°C/s) ja optimoiva Orchestrator-kerros (Health Score + SEFI-R micro-diagnostiikka). Kriittinen periaate: mikään Orchestrator-komento ei voi ohittaa aktiivista Guardian-rajarikkomusta. SEFI-R (DOI: 10.5281/zenodo.14940723) tarjoaa ei-destruktiivisen Recov(Z)-testauksen — aukko IEC 62133, IEC 62660, ISO 12405, IEEE 1679 ja UN 38.3 -standardeissa.',
+    weakest:'Recov(Z)-varhaishavainto-hypoteesi: väite että Recov(Z) ennakoi degradaatiota ennen DCIR-nousua on toistaiseksi vain simulaatiopohjainen. Ei kokeellista validointia. Thermal barrier (aerogeeli 0,015–0,020 W/mK + mica 900–1000°C + intumescent edge seals + venting manifold) -toimivuus TR-tapahtumassa on laskennallinen arvio — yksikään materiaali ei yksinään kata koko TR-lämpötilakirjoa. Segmenttivaihdon kenttäkustannus (oletus ~2 800 €) on todentamaton.',
+    falsification:'(1) Thermal barrier ei estä TR-propagaatiota: T_naapuri > 85°C instrumentoidussa testissä → koko segment-replacement-talous kaatuu. (2) Recov(Z) ei ennakoi vikoja ennen DCIR-nousua kenttätestissä vähintään kolmella solukemialla. (3) Segmenttivaihto kentällä maksaa >8 000 € (erikoisteknikko + logistiikka, metsäkonekohde Kuopio) → Monte Carlo -talouscase muuttuu merkittävästi.',
+    empirical:'1) Instrumentoitu TR-testi yhdellä segmentillä: naapurin T-profiili mitattu (kriittisin yksittäinen testi). 2) Recov(Z) vs. DCIR -korrelaatio ≥3 solukemialla, kenttäolosuhteissa. 3) Segmenttivaihdon aika + reaalikustannus dokumentoitu metsäkonekohteessa. 4) SEFI-R-toistettavuus eri mittausympäristöissä.'
+  },
+  members:[
+    {
+      role:'Physics Auditor',
+      body:'Sähkökemian perusta kunnossa — segmentointi, bypass-topologia ja BMS-logiikka tunnettua prior artia 1990-luvulta. Noveliteetti on integraatiossa: segmentoitu arkkitehtuuri + resilienssiohjattu Orchestrator + SEFI-R yhtenä kehyksenä. Guardian-kerroksen dT/dt-triggeröinti (2°C/s → ennakoiva eristys ennen abs. lämpötilarajan ylitystä) on fysikaalisesti perusteltu ja tärkeä: barrier ostaa aikaa, Guardian käyttää sen. Recov(Z)-varhaishavainto-hypoteesi: sähkökemiallinen palautuminen on ilmiönä tunnettu, mutta ennakointiarvo suhteessa DCIR:ään vaatii kokeellisen vahvistuksen ≥3 solukemialla. Thermal barrier: aerogel+mica+intumescent — hybridilähestymistapa on oikea, koska yksikään materiaali ei kata koko 500–1000°C TR-kirjoa.',
+      posture:'watch',postureLabel:'Watch'
+    },
+    {
+      role:'Engineering Realist',
+      body:'Guardian-spesifikaatio on nyt tarkka ja toteutettavissa: oikosulku <100 µs, OV/UV <10 ms, T <100 ms, dT/dt 2°C/s. Roolijako on arkkitehtuurillisesti oikea — Guardian deterministic/safety, Orchestrator optimizing/permitted-to-fail. Rajapintaprotokolla (liveness counter + TTL + re-enable gate) on riittävä ja loosely coupled. Kriittisin avoin insinööriongelma: segmenttimoduulin mekaaninen vaihdettavuus kentällä. Kuopion metsäkoneen tärinä- ja kylmäympäristö (−16°C talvi) on kova — 2 800 €/segmentti-oletus edellyttää standardoitua moduulia jota ei ole suunniteltu eikä testattu. Tämä on projektin kriittisin engineering-riski.',
+      posture:'pilot',postureLabel:'Pilot (raskas kalusto)'
+    },
+    {
+      role:'Economic Filter',
+      body:'Monte Carlo 3 000 ajoa (80 kWh / 16 segmenttiä, A-grade 80 €/kWh, B-grade 52 €/kWh −35 %): mediaanikustannussäästö 8,5 €/kWh, 90 % CI [2,1; 14,9] €/kWh, RAID halvempi 98 % skenaarioista. Elektroniikkaoverhead ~480 €/pakki sisältyy kaikkiin RAID-ajoihin. Kuopion metsäkonecase (120 kWh, 12 v, 240 pv/v): indikatiiivisesti ~104 k€ kumulatiivinen säästö — pääosin vältetystä kokonaispakkivaihdosta (konventionaalinen) vs. segmenttivaihto. Kriittisin oletus joka voi muuttaa casen: segmenttivaihto kentällä. Jos reaalikustannus on 8 000–12 000 € eikä 2 800 €, talouslogiikka muuttuu merkittävästi. Economic case on WATCH kunnes kenttäkustannus mitattu.',
+      posture:'watch',postureLabel:'Watch'
+    },
+    {
+      role:'System Integrator',
+      body:'Nelikerroksinen kontrollistack (EMS → Orchestrator → Segment Controllers → Cell Groups) on rakenteellisesti vahva. Guardian-Orchestrator -rajapinta on arkkitehtuurillisesti oikein: intelligence on eriytetty authority-to-act -toiminnosta turvallisuuskriittisissä tilanteissa. SEFI-R:n standardointipotentiaali IEC TC 21 / ISO TC 69 -elimissä on aito — kaikki viisi nykyistä standardia (IEC 62133, IEC 62660, ISO 12405, IEEE 1679, UN 38.3) jättävät ei-destruktiivisen resilienssimittauksen katteen ulkopuolelle. Käyttökohderajaus on rehellinen ja vahvistaa luottamusta: EI mass-market EV, KYLLÄ raskas kalusto + eVTOL + stationary storage. Forestry machine -case (Kuopio) on oikea ensimmäinen kohde.',
+      posture:'pilot',postureLabel:'Pilot (raskas kalusto)'
+    },
+    {
+      role:'Adversarial Skeptic',
+      body:'Kolme kill-signal -tasoista avointa kysymystä: (1) Thermal barrier — barrier ostaa aikaa (aerogel+mica+intumescent+venting), Guardian käyttää sen (dT/dt-triggeröinti). Tämä on looginen kahden kerroksen yhteisvaikutus — mutta mittaamatonta. Yksikin instrumentoitu TR-testi muuttaisi tämän arvion. (2) Segmenttivaihtokustannus kentällä — 2 800 € oletus on tarkistamaton. Metsäkoneen kenttäympäristö on haastava. (3) Recov(Z) varhaishavainto — hypoteesi on fysikaalisesti motivoitu, mutta validoimaton. Jos ei pidä, SEFI-R:n differentiaatioarvo DCIR:ään verrattuna heikkenee. Dokumentin vahvuus: se sanoo itse ääneen "RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail." Tämä rajaus tekee casesta uskottavan.',
+      posture:'watch',postureLabel:'Watch'
+    }
+  ],
+  divergence:[
+    {dim:'Guardian-kerroksen arkkitehtuuri',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Spesifikaatio tarkka: <100µs, dT/dt 2°C/s, no-override'},
+    {dim:'SEFI-R / Recov(Z) varhaishavainto',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Fysikaalisesti motivoitu, kokeellinen validointi puuttuu'},
+    {dim:'Thermal barrier (TR-esto, kahden kerroksen)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Looginen mutta mittaamaton — kriittisin avoin kysymys'},
+    {dim:'Segmenttivaihdon kenttätalous',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'2 800 € oletus — kenttäkustannus todentamatta'},
+    {dim:'Käyttökohderajaus (ei mass EV)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Rehellinen rajaus vahvistaa uskottavuutta'},
+    {dim:'SEFI-R standardointipotentiaali',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Aito aukko kaikissa viidessä nykyisessä standardissa'}
+  ],
+  burden:[
+    {text:'Thermal barrier: TR-testi, naapurisegmentti T < 85°C instrumentoidusti mitattu',status:'open',statusLabel:'Avoin — kriittisin'},
+    {text:'Recov(Z) vs. DCIR -korrelaatio kenttätestissä ≥3 solukemialla',status:'open',statusLabel:'Avoin'},
+    {text:'Segmenttivaihdon reaalikustannus kentällä dokumentoitu (metsäkonekohde)',status:'open',statusLabel:'Avoin'},
+    {text:'SEFI-R-toistettavuus osoitettu ≥2 solukemialla ja mittausympäristöllä',status:'partial',statusLabel:'Osittain (simulaatio, Zenodo DOI: 10.5281/zenodo.14940723)'},
+    {text:'Guardian-spesifikaatio: ajoitusvaatimukset ja re-enable-logiikka dokumentoitu',status:'partial',statusLabel:'Osittain (WP + Orchestrator Spec v0.1 tulossa)'},
+    {text:'Arkkitehtuurin looginen johdonmukaisuus, prior art -analyysi ja käyttökohderajaus',status:'met',statusLabel:'Täytetty (WP v1.0, CC BY 4.0)'}
+  ],
+  dependencies:[
+    {type:'regulation',label:'IEC TC 21 / ISO TC 69 — SEFI-R uusi työkohde-ehdotus',critical:true},
+    {type:'material',label:'Thermal barrier: aerogel (0,015–0,020 W/mK) + mica (900–1000°C) + intumescent edge seals',critical:true},
+    {type:'technology',label:'Guardian HW: dual-core MCU + galvaaninen erotus, <100µs oikosulku',critical:true},
+    {type:'infrastructure',label:'Kenttähuolto: standardoitu segmenttimoduuli + vaihtoprosessi (todentamatta)',critical:true},
+    {type:'technology',label:'Recov(Z) -mittausprotokolla kenttäkäyttöön (laboratorio → kenttä -validointi)',critical:true},
+    {type:'infrastructure',label:'Ensimmäinen pilot-kohde: raskas kalusto (esim. Kuopion alueen metsäkone)',critical:false}
+  ],
+  killSignals:[
+    {condition:'Thermal barrier ei estä TR-propagaatiota: T_naapuri > 85°C instrumentoidussa yksittäisessä kokeessa',status:'watch',statusLabel:'Seurannassa — ei testattu. Yksi koe muuttaisi arvion.'},
+    {condition:'Segmenttivaihto kentällä maksaa >8 000 € (metsäkonekohde, erikoisteknikko + logistiikka)',status:'watch',statusLabel:'Seurannassa — reaalikustannus mittaamatta'},
+    {condition:'Recov(Z) ei korreloi vian kanssa paremmin kuin DCIR kenttätestissä ≥3 solukemialla',status:'clear',statusLabel:'Ei lauennut — hypoteesi fysikaalisesti motivoitu, validoimaton'},
+    {condition:'Toinen toimija julkaisee identtisen SEFI-R -menetelmän ennen IEC TC 21 -ehdotusta',status:'clear',statusLabel:'Ei lauennut — SEFI-R julkaistu Zenodossa (DOI: 10.5281/zenodo.14940723)'}
+  ],
+  decision:'pilot',
+  decisionLabel:'WATCH + PILOT (raskas kalusto)',
+  synthesis:'RAID-Battery on poikkeuksellinen konseptitason case: arkkitehtuurinen logiikka on vahva, spesifikaatio on nyt tarkka (Guardian <100µs / dT/dt 2°C/s / no-override-periaate), ja dokumentaatio rehellinen rajoituksistaan. Käyttökohderajaus — ei mass-market EV, kyllä raskas kalusto + eVTOL + stationary storage — on arkkitehtuurillisesti johdonmukainen ja tekee casesta uskottavan.\n\nMonte Carlo (3 000 ajoa) tukee talouslogiikkaa: mediaanisäästö 8,5 €/kWh, RAID halvempi 98 % skenaarioista — mutta kriittisin oletus (segmenttivaihto 2 800 €) on todentamatta. Thermal barrier on kahden kerroksen järjestelmä (barrier ostaa aikaa, Guardian käyttää sen dT/dt-triggerin kautta) — looginen, mutta mittaamaton. Yksi instrumentoitu TR-testi on pienin mahdollinen kokeellinen askel joka muuttaisi tämän arvion perustavanlaatuisesti.',
+  axiom:'"RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail." (Ruotsalainen, WP v1.0, 2026)'
+});
+
+Object.values(CASES).forEach(addNavItem);
+loadCustomCases();
+Object.values(CASES).filter(c=>c._custom).forEach(addNavItem);
+loadAndShow('raid-battery');
+</script>
+</body>
+</html>
