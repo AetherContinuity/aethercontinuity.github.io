@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WP-012 — MESA Transition Pathway | ACI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#8b6914;--panel:#eeeae2;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.75;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+
+/* Header block */
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:14px;}
+.aci-meta span{display:block;}
+.aci-meta strong{color:var(--ink);}
+
+/* Title */
+h1{font-size:1.85rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 8px;}
+.subtitle{font-size:1rem;color:var(--muted);font-style:italic;margin-bottom:6px;}
+.cite{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:10px;line-height:1.6;}
+.xref{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:6px;}
+
+/* Abstract */
+.abstract{border-left:3px solid var(--accent);padding:14px 18px;margin:28px 0;background:var(--panel);font-size:.9rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:8px;}
+
+/* Sections */
+.sec-num{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.2rem;font-weight:600;margin-bottom:16px;line-height:1.3;}
+h3{font-size:1rem;font-weight:600;margin:24px 0 10px;}
+p{margin-bottom:14px;}
+p:last-child{margin-bottom:0;}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:7px 12px;text-align:left;border-bottom:2px solid var(--line);background:var(--panel);}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+.tbl-label{font-family:var(--mono);font-size:.72rem;font-weight:600;}
+.tbl-arrow{color:var(--accent);font-weight:700;}
+
+/* Callout */
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);padding:14px 18px;margin:22px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+
+/* Formula-style display */
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2;}
+
+/* Domain tags */
+.domain-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.dtag{font-family:var(--mono);font-size:.6rem;border:1px solid var(--line);padding:2px 8px;border-radius:2px;color:var(--muted);}
+
+/* Preceded by */
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;font-family:var(--mono);font-size:.68rem;color:var(--muted);}
+.preceded a{color:var(--accent);text-decoration:none;}
+
+/* Executive summary box */
+.exec-summary{border:2px solid var(--ink);padding:20px 24px;margin:32px 0;}
+.exec-label{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:14px;}
+.exec-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:580px){.exec-row{grid-template-columns:1fr;}}
+.exec-card{padding:12px 14px;background:var(--panel);border:1px solid var(--line);}
+.exec-num{font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--accent);}
+.exec-caption{font-size:.78rem;margin-top:4px;line-height:1.5;color:var(--muted);}
+
+/* Print */
+@media print{body{max-width:none;padding:20px;font-size:11pt;} .sec-num{margin-top:24pt;}}
+</style>
+</head>
+<body>
+
+<div class="aci-header">
+  <div class="aci-kicker">Aether Continuity Institute · Working Paper Series</div>
+  <div class="aci-meta">
+    <span>Series <strong>WP</strong></span>
+    <span>Number <strong>012</strong></span>
+    <span>Year <strong>2026</strong></span>
+    <span>Version <strong>1.0</strong></span>
+    <span>Status <strong>Open Working Draft</strong></span>
+    <span>Language <strong>EN / FI summary</strong></span>
+  </div>
+  <div class="domain-tags" style="margin-top:12px;">
+    <span class="dtag">D-1 · Duration Adequacy</span>
+    <span class="dtag">D-4 · Compound Stress</span>
+    <span class="dtag">D-5 · Continuity Computing</span>
+  </div>
+</div>
+
+<h1>MESA Transition Pathway:<br>From Structural Z3 to Operational Z1</h1>
+<div class="subtitle">Energy Sufficiency, Temporal Fragility, and the Architecture of Finnish Resilience 2026–2035</div>
+
+<div class="cite">
+  Cite as: Aether Continuity Institute (ACI), Working Paper No. 012, 2026.<br>
+  Available at: https://aethercontinuity.org/papers/wp-012-mesa-transition.html
+</div>
+<div class="xref">
+  Cross-references: WP-001 · WP-005 · WP-006 · WP-009 · WP-010 · WP-011 · TN-001 · TN-002 · SP-002
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>On 26 March 2026, Finland's electricity system produced 14,091 MW against a consumption of 11,469 MW, with wind power operating at 80% of installed capacity. The system registered a surplus of +495 MW. By all conventional capacity metrics, this was a strong day. The AFS diagnostic framework classified the system as Zone 3 — structural stress. The paradox is not a modelling artefact. It is the central diagnostic finding of this paper: Finland is energy sufficient but temporally fragile. Surplus capacity today does not constitute resilience tomorrow, because the failure mode is not energy volume but temporal alignment of supply, demand, and decision capability under compound stress.</p>
+  <p>This paper argues that the Municipal Energy Stability Architecture (MESA) — integrating district heating networks, data centre waste heat, hydrogen electrolysis, and distributed storage — constitutes the only identified pathway that addresses temporal fragility directly, rather than increasing aggregate capacity that remains unavailable at the moment of stress. Using the AFS StateEngine, the paper models four transition scenarios across 2026–2035 and identifies the specific parameter thresholds at which zone transitions occur. The analysis is diagnostic rather than prescriptive: it specifies what structural changes are necessary for Z3 → Z2 and Z2 → Z1 transitions, without advocating particular implementation mechanisms. The central finding is that Finland's path from structural fragility to operational resilience is technically available, economically coherent, and dependent on coordination rather than technological breakthrough. The obstacles are institutional, not physical.</p>
+</div>
+
+<!-- ── §01 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 01</span>
+<h2>The Paradox of Sufficient Energy</h2>
+
+<p>The standard framing of energy security treats volume as the primary variable. A system with adequate generation capacity, sufficient transmission, and positive trade balance is considered secure. By this framing, Finland in 2026 is in a strong position: significant nuclear baseload, rapidly expanding wind, cross-border interconnections, and positive generation balance on a growing share of days.</p>
+
+<p>The AFS diagnostic framework challenges this framing at its foundation. The central claim of WP-001, generalised in WP-004, is that continuity risk is not adequately characterised by capacity metrics alone. Systems fail not when capacity is absent but when the temporal structure of demand, supply, and decision capability fall out of alignment under compound stress. A system that is capable under average conditions may be incapable under the specific combination of conditions that defines its failure mode.</p>
+
+<p>The live measurement that motivates this paper illustrates the paradox directly. Wind power operating at 80% capacity factor is not a stress condition. It is close to a best-case day. Yet the system remains in Zone 3 — structural stress — because the diagnostic variables that determine zone classification are not current generation output but the structural relationship between protected capacity, funding stability, and risk exposure. The good day does not repair the structural fragility that will be operative on the bad day.</p>
+
+<div class="callout">
+  <div class="callout-label">Central diagnostic claim</div>
+  <p>A system is <em>energy sufficient but temporally fragile</em> when its aggregate capacity is adequate but its capacity to maintain decision capability and service delivery during a specific stress sequence — low wind, elevated demand, constrained cross-border availability — is structurally limited by the proportion of that capacity that is available, protected, and financially stable at the moment of stress. Increasing aggregate capacity without increasing the protected and temporally available share does not reduce the fragility; it increases the illusion that the fragility has been addressed.</p>
+</div>
+
+<p>The AFS parameter that captures this distinction is the Protection-to-Gap ratio, expressed through the PDI (Protection Deficit Index). A system with PDI 0.34 — the value registered on the date of this paper's motivating observation — has a structural protection deficit that persists regardless of current generation conditions. The question this paper addresses is what architectural changes reduce PDI durably, rather than situationally.</p>
+
+<!-- ── §02 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 02</span>
+<h2>MESA as a Parameter-Level Intervention</h2>
+
+<p>The Municipal Energy Stability Architecture, specified in SP-002 and TN-001, is a framework for integrating distributed energy assets — district heating networks, data centre waste heat, hydrogen electrolysis, storage, and local generation — into a coordinated continuity architecture at municipal or regional scale. This paper does not reproduce the MESA specification; it analyses MESA's effects at the AFS parameter level, which is where its transition significance becomes legible.</p>
+
+<p>Each MESA component produces a distinct parameter effect. The effects are individually modest; their combination is nonlinear because of the multiplicative structure of the PDI and SBM calculations.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>MESA Component</th>
+      <th>Primary Parameter Effect</th>
+      <th>Mechanism</th>
+      <th>Magnitude (indicative)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>DC–district heating integration</strong></td>
+      <td class="tbl-arrow">↑ eL3</td>
+      <td>Distributed island capacity in heating networks reduces dependence on continuous grid supply for thermal continuity</td>
+      <td>+2 to +4 units by 2032</td>
+    </tr>
+    <tr>
+      <td><strong>Hydrogen electrolysis + storage</strong></td>
+      <td class="tbl-arrow">↑ cFixed</td>
+      <td>Dispatchable stored energy converts variable surplus into secured capacity, directly increasing the fixed protection component</td>
+      <td>+2 to +5 units by 2033</td>
+    </tr>
+    <tr>
+      <td><strong>Distributed storage + grid balancing</strong></td>
+      <td class="tbl-arrow">↓ sigmaRiskBp</td>
+      <td>Storage absorbs wind variability; network-level balancing reduces the risk premium embedded in the effective interest rate calculation</td>
+      <td>40 → 13–18 bp by 2032</td>
+    </tr>
+    <tr>
+      <td><strong>MESA revenue streams</strong><br><small>(heat, hydrogen, CO₂ markets)</small></td>
+      <td class="tbl-arrow">↓ gAnn</td>
+      <td>MESA assets generate revenue that partially offsets the structural funding gap, reducing the annualised gap parameter over time</td>
+      <td>5.0 → 2.5–3.5 by 2035</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The interaction between these effects is the core analytical point. A reduction in sigmaRiskBp lowers the effective interest rate (iEff), which raises SBM directly. A simultaneous increase in cFixed raises the protection ratio, which lowers PDI. When both occur together within the AFS state space, the system can cross two threshold boundaries — PDI 0.25 and SBM 2.0 — in a compressed timeframe that neither effect alone would produce.</p>
+
+<h3>The Temporal Elasticity Coefficient (εₜ)</h3>
+
+<p>The parameter effects above describe endpoint states. The transition question is whether the capacity that is structurally present can be made temporally available — that is, accessible at the specific moment when the system is under stress, rather than available in aggregate across an extended period.</p>
+
+<p>This paper introduces the temporal elasticity coefficient (εₜ) as an explicit diagnostic variable. εₜ describes the ratio of stress-period available capacity to aggregate installed capacity. A system with εₜ = 1.0 has full capacity available at every moment. A system with εₜ close to 0 has high aggregate capacity that is structurally unavailable during the stress sequence that defines its failure mode. Current Finnish wind infrastructure, absent storage, has εₜ approaching 0 during black period conditions (wind CF < 10%), regardless of installed capacity.</p>
+
+<div class="formula">
+εₜ = (capacity available during stress sequence) / (aggregate installed capacity)<br><br>
+MESA target: εₜ ≥ 0.60 by 2032<br>
+Current estimated εₜ during low-wind compound stress: ~0.15–0.22
+</div>
+
+<p>MESA's contribution is not primarily to aggregate capacity but to εₜ. Hydrogen storage, district heating thermal mass, and dispatchable DC load flexibility all increase the proportion of installed capacity that remains available specifically during the stress sequences the system is most likely to encounter. This is the mechanism through which MESA addresses temporal fragility rather than energy volume.</p>
+
+<!-- ── §03 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 03</span>
+<h2>Four Transition Scenarios, 2026–2035</h2>
+
+<p>The following scenarios are derived from the WP-012 AFS Scenario Engine, which applies linear parameter interpolation from the 2026 baseline to scenario-specific endpoints across the 2026–2035 window. The baseline uses live Fingrid data as the starting state: PDI 0.336, SBM 2.092, Zone Z3, sigmaRiskBp 30 (measured at wind CF 80%), iBase 3.35% (ECB Finnish 10Y, 26 March 2026). An interactive version of the scenario engine — allowing readers to adjust parameters and observe zone transitions in real time — is available as a technical appendix: <a href="https://aethercontinuity.org/tools/wp012-mesa-trajectory.html" style="color:var(--accent);">WP-012 AFS Scenario Engine →</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Description</th>
+      <th>2030 Zone</th>
+      <th>2035 Zone</th>
+      <th>Failure condition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>S0 — Inertia</strong></td>
+      <td>Current policy trajectory. No coordinated MESA deployment. Incremental capacity additions without storage integration. sigmaRiskBp remains elevated on stress days.</td>
+      <td><span style="color:#e07030;font-weight:700">Z3</span></td>
+      <td><span style="color:#e07030;font-weight:700">Z3</span></td>
+      <td>Z3 lock-in is the predicted outcome. High-wind days improve spot metrics without changing structural PDI. Black period events remain Z4-capable under compound stress.</td>
+    </tr>
+    <tr>
+      <td><strong>S1 — Fragmented</strong></td>
+      <td>Isolated DC-heating integrations, small storage pilots, no national coordination. Parameters improve slowly and non-uniformly across regions.</td>
+      <td><span style="color:#e07030;font-weight:700">Z3</span></td>
+      <td><span style="color:#e8a040;font-weight:700">Z2</span></td>
+      <td>Fails if sigmaRiskBp does not fall below 28 bp by 2032. Individual projects without grid-level coordination do not produce the sigmaRiskBp reduction that drives SBM improvement.</td>
+    </tr>
+    <tr>
+      <td><strong>S2 — Coordinated MESA</strong></td>
+      <td>National DC–heating programme from 2027. Hydrogen electrolysis at scale from 2028. Coordinated storage deployment. MESA revenue streams operational by 2030.</td>
+      <td><span style="color:#e8a040;font-weight:700">Z2</span></td>
+      <td><span style="color:#e8a040;font-weight:700">Z2+</span></td>
+      <td>Fails to reach Z1 if gAnn does not fall below 3.5 by 2033. MESA revenue stream development is the binding constraint; technical deployment alone is insufficient.</td>
+    </tr>
+    <tr>
+      <td><strong>S3 — Full Integration</strong></td>
+      <td>S2 plus CO₂ capture at surplus-powered facilities, full DC-heating national network, hydrogen export capability. All synergies realised. εₜ ≥ 0.60 achieved.</td>
+      <td><span style="color:#4caf7d;font-weight:700">Z1–Z2</span></td>
+      <td><span style="color:#4caf7d;font-weight:700">Z1</span></td>
+      <td>Requires cFixed/eL3 ratio above 0.55 by 2031. If hydrogen storage deployment lags, cFixed growth is insufficient even with eL3 expansion. Timing of electrolysis scale-up is the critical path.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The scenario comparison yields a finding that is central to the policy argument of this paper: the difference between S1 and S2 is not primarily technological but coordinative. The assets required for S2 exist or are in procurement. The parameter improvement that separates S1 from S2 — primarily the sigmaRiskBp reduction from coordinated storage deployment — requires grid-level integration of assets that in S1 are deployed in isolation. This is an institutional and regulatory problem, not an engineering one.</p>
+
+<!-- ── §04 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 04</span>
+<h2>Transition Trajectory in AFS State Space</h2>
+
+<p>The four scenarios produce distinct trajectories in the two-dimensional AFS state space defined by PDI (horizontal axis, 0 to 0.5) and SBM (vertical axis, −3 to +4). Zone boundaries are fixed: Z3/Z4 boundary at PDI 0.25 and SBM 0; Z2/Z3 boundary at PDI 0.25 or SBM 2.0; Z1/Z2 boundary at PDI 0.15 and SBM 2.0.</p>
+
+<p>The trajectory analysis reveals a structural property that is not visible in the year-by-year parameter tables: zone transitions are discontinuous relative to parameter changes. A system can improve continuously on PDI and SBM without changing zone classification until a threshold is crossed, at which point classification changes abruptly. This nonlinearity has a direct policy implication: incremental investment produces no observable resilience improvement until the threshold is crossed. This creates a political economy problem — the return to investment appears to be zero until it appears to be total — that is structurally similar to the pre-crisis adoption problem identified in WP-011.</p>
+
+<div class="callout">
+  <div class="callout-label">Trajectory finding</div>
+  <p>In S0, the system moves slowly along the Z3 interior without approaching any threshold. A decade of incremental improvement produces no zone transition. In S3, the trajectory crosses both the Z3→Z2 boundary (approximately 2029–2030) and the Z2→Z1 boundary (approximately 2033–2034) within a compressed window. The acceleration is produced by the interaction between sigmaRiskBp reduction and cFixed growth: each reinforces the other through the AFS calculation structure. This interaction is not available in scenarios where the two parameter improvements occur independently.</p>
+</div>
+
+<p>The S0 trajectory also reveals a directional risk that the static snapshot obscures. As the iBase parameter rises with sovereign financing costs — a realistic scenario given Finnish defence expenditure commitments and ECB rate normalisation — the SBM component of the AFS calculation declines. S0 is not a stable equilibrium; it is a slowly deteriorating one. The system does not stay in Z3 indefinitely under inertia; it drifts toward the Z3/Z4 boundary as financial stress compounds.</p>
+
+<!-- ── §05 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 05</span>
+<h2>Critical Thresholds and Decision Windows</h2>
+
+<p>The scenario analysis identifies specific parameter thresholds whose crossing constitutes zone transitions. These thresholds are the quantitative translation of the policy decisions required for each transition. They are stated here as diagnostic benchmarks, not as policy targets — the institutional mechanisms by which they might be approached are outside this paper's scope.</p>
+
+<h3>Z3 → Z2 Transition</h3>
+
+<p>The Z3→Z2 boundary is crossed when either PDI falls below 0.25 or SBM rises above 2.0, whichever occurs first. In the MESA pathway, both conditions are approached simultaneously. The binding parameters are:</p>
+
+<div class="formula">
+cFixed / eL3  >  0.40  (protection coverage ratio)<br>
+sigmaRiskBp  &lt;  25 bp  (network risk premium, stress-day)<br>
+→ Estimated transition year in S2: 2029–2030
+</div>
+
+<p>The sigmaRiskBp threshold deserves emphasis. The current live measurement (30 bp, measured at wind CF 80%) is already close to the Z3→Z2 boundary SBM contribution. Under stress conditions — wind CF < 10%, black period — sigmaRiskBp rises toward 80–120 bp, moving the system deep into Z3. The 25 bp threshold is not a calm-day achievement; it must be sustainable under stress-day conditions. This is only achievable with storage deployment that maintains effective balancing capacity when wind is unavailable.</p>
+
+<h3>Z2 → Z1 Transition</h3>
+
+<p>The Z2→Z1 transition requires both PDI below 0.15 and SBM above 2.0 simultaneously. This is a more demanding conjunction. The binding parameters are:</p>
+
+<div class="formula">
+gAnn  &lt;  3.0  (structural funding gap reduced by MESA revenues)<br>
+cFixed / eL3  >  0.55  (higher protection coverage required)<br>
+SBM  >  2.0  (sustained, not episodic)<br>
+→ Estimated transition year in S3: 2033–2034
+</div>
+
+<p>The gAnn threshold reflects the MESA revenue stream argument. The transition from Z2 to Z1 cannot be achieved through capacity expansion alone; it requires that the structural funding gap — the gap between gross capacity needs and protected capacity — narrows through the productive deployment of MESA assets. Heat sales, hydrogen revenues, and CO₂ market participation collectively reduce the gap that PDI measures. Without these revenue streams, capacity expansion increases eL3 and cFixed but does not proportionally reduce gAnn, limiting the PDI improvement achievable.</p>
+
+<h3>Decision Windows</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Decision</th>
+      <th>Required by</th>
+      <th>If deferred past</th>
+      <th>Consequence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>National DC–district heating integration programme</td>
+      <td>2027</td>
+      <td>2028</td>
+      <td>eL3 growth insufficient for Z3→Z2 before 2032; S2 trajectory unavailable</td>
+    </tr>
+    <tr>
+      <td>Hydrogen electrolysis at industrial scale</td>
+      <td>2028</td>
+      <td>2030</td>
+      <td>cFixed growth delayed by 2–3 years; Z2→Z1 transition pushed past 2035 planning horizon</td>
+    </tr>
+    <tr>
+      <td>Grid-level storage coordination (sigmaRiskBp target)</td>
+      <td>2027–2028</td>
+      <td>2029</td>
+      <td>sigmaRiskBp reduction depends on network-level integration; individual projects produce insufficient systemic effect</td>
+    </tr>
+    <tr>
+      <td>MESA revenue framework</td>
+      <td>2028</td>
+      <td>2031</td>
+      <td>gAnn remains above 3.5; Z1 not achievable within horizon regardless of physical deployment</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── §06 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 06</span>
+<h2>The Economic Coherence of the Transition</h2>
+
+<p>This paper is diagnostic, not economic. A full cost-benefit analysis of MESA deployment is outside its scope. However, the diagnostic findings have direct economic implications that bear stating, because they modify the standard framing of resilience investment as a cost rather than a productive deployment.</p>
+
+<p>The standard framing treats resilience infrastructure as insurance: a cost paid to reduce the probability of a loss. This framing is analytically correct for redundant capacity that sits idle until needed. It is incorrect for MESA architecture, which is not idle capacity but productive infrastructure that generates revenue streams while simultaneously improving structural resilience parameters.</p>
+
+<p>DC–district heating integration reduces municipal heating costs while improving eL3. Hydrogen electrolysis at surplus-period prices — approaching zero or negative on high-wind days — produces hydrogen at the lowest marginal cost available in Europe, for domestic industrial use that currently depends on imported natural gas. District heating networks with thermal storage reduce peak electricity demand while providing balancing services. CO₂ capture at surplus-powered industrial facilities produces a tradeable commodity from an industrial process that must occur regardless.</p>
+
+<p>The economic argument is therefore not that resilience investment is worth its cost. It is that MESA investment has a positive expected return on commercial criteria, independent of its resilience contribution. The resilience improvement is a structural co-benefit of productive infrastructure deployment. This is an unusual combination, and it is the primary reason the MESA transition pathway is described in this paper as architecturally optimal rather than merely adequate.</p>
+
+<p>Finland's specific competitive position reinforces the argument. Northern latitude, cold climate, existing industrial infrastructure, significant low-carbon generation, and a regulatory environment capable of supporting complex multi-actor coordination are simultaneously the prerequisites for MESA deployment and the factors that make Finland an attractive location for the energy-intensive industries whose integration generates the MESA revenue streams. The transition pathway does not require Finland to become something it is not. It requires Finland to coordinate what it already has.</p>
+
+<!-- ── §07 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 07</span>
+<h2>Knowledge Export and the Technology Transfer Dimension</h2>
+
+<p>The analysis above addresses Finland's internal transition. A secondary finding, noted here as a diagnostic observation rather than a developed argument, concerns the export dimension of successful MESA deployment.</p>
+
+<p>The temporal fragility problem identified in this paper — energy sufficient systems with low εₜ under stress conditions — is not unique to Finland. It characterises every high-latitude jurisdiction with rapid wind expansion and existing district heating infrastructure: the Nordic countries, the Baltic states, northern Germany, and Poland. The structural differences between these jurisdictions are real but not fundamental; the failure mode is the same.</p>
+
+<p>A jurisdiction that successfully resolves temporal fragility through MESA-type architecture does not only improve its own resilience parameters. It produces a working template — demonstrated, documented, and operational — of the type that WP-011's H-3 condition identifies as necessary for institutional adoption elsewhere. The value of this template is not primarily as an export product in the conventional commercial sense. It is as a proof of concept that resolves the analogy credibility problem (H-1) for jurisdictions where the failure has not yet occurred.</p>
+
+<p>The policy implication, which this paper does not develop but flags explicitly, is that Finland's transition timeline has European externalities that are not captured in domestic cost-benefit analysis. Early and successful MESA deployment generates template value that benefits neighbouring jurisdictions' institutional learning process. This externality suggests that the social return to Finnish MESA investment exceeds its private return by a margin that standard economic analysis does not include.</p>
+
+<!-- ── §08 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 08</span>
+<h2>Falsification Conditions</h2>
+
+<p>In accordance with ACI's diagnostic methodology, the central claims of this paper are stated in falsifiable form.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Claim</th>
+      <th>Falsification condition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Z3→Z2 transition is achievable by 2030 under S2</td>
+      <td>Falsified if cFixed/eL3 ratio remains below 0.38 and sigmaRiskBp remains above 28 bp in 2030 live measurement</td>
+    </tr>
+    <tr>
+      <td>sigmaRiskBp reduction requires coordinated storage deployment</td>
+      <td>Falsified if sigmaRiskBp falls below 25 bp under S1 (fragmented) conditions; would indicate that uncoordinated storage produces network-level balancing effects</td>
+    </tr>
+    <tr>
+      <td>MESA revenue streams are necessary for Z1 achievement</td>
+      <td>Falsified if gAnn falls below 3.0 through capacity expansion alone, without MESA-associated revenue streams reducing the structural funding gap</td>
+    </tr>
+    <tr>
+      <td>S0 is a deteriorating rather than stable equilibrium</td>
+      <td>Falsified if SBM remains above 2.0 through 2030 under S0 conditions as iBase rises. Current ECB rate trajectory and Finnish defence expenditure commitments make this difficult but not impossible to falsify.</td>
+    </tr>
+    <tr>
+      <td>MESA investment has positive commercial return independent of resilience contribution</td>
+      <td>Falsified if district heating heat sales, hydrogen production, or CO₂ capture revenues do not exceed MESA deployment and operational costs at current and projected energy price levels. Subject to detailed investment analysis outside this paper's scope.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── §09 ─────────────────────────────────────────────────────────────────── -->
+<span class="sec-num">§ 09</span>
+<h2>Executive Summary — Kolme kuvaa, kolme kynnystä, kolme päätöstä</h2>
+
+<p>Tämä osio on kirjoitettu suomeksi. Se on tarkoitettu päätöksentekijöille, jotka eivät tarvitse teknistä analyysiä vaan sen johtopäätökset.</p>
+
+<div class="exec-summary">
+  <div class="exec-label">Tilannearvio 26.3.2026</div>
+  <div class="exec-row">
+    <div class="exec-card">
+      <div class="exec-num">14 091 MW</div>
+      <div class="exec-caption">tuotanto tänään — hyvä päivä, tuulivoima 80 % kapasiteetista</div>
+    </div>
+    <div class="exec-card">
+      <div class="exec-num">Z3</div>
+      <div class="exec-caption">järjestelmän tila silti — rakenteellinen stressi ei poistu hyvällä säällä</div>
+    </div>
+    <div class="exec-card">
+      <div class="exec-num">2030</div>
+      <div class="exec-caption">vuosi jolloin Z2 on saavutettavissa — jos koordinointi alkaa nyt</div>
+    </div>
+  </div>
+</div>
+
+<h3>Kolme kuvaa</h3>
+
+<p><strong>Kuva 1: Paradoksi.</strong> Suomi tuottaa tänään enemmän sähköä kuin kuluttaa. Silti järjestelmä on stressitilassa. Syy: ylijäämä on nyt, vajaus tulee myöhemmin — talvipakkasella, matalalla tuulella, kun kaikki tarvitsevat lämpöä samanaikaisesti. Kapasiteetti on olemassa mutta ei ole ajallisesti saavutettavissa silloin kun sitä tarvitaan.</p>
+
+<p><strong>Kuva 2: Polku.</strong> Koordinoitu MESA-integraatio — datakeskusten hukkalämpö kaukolämpöverkkoihin, vetyelektrolyysi ylijäämäsähköllä, hajautettu varastointi — muuttaa rakenteen. Samat megawatit, mutta ne ovat saatavilla silloin kun niitä tarvitaan. Z3 → Z2 vuoteen 2030 mennessä, Z1 ennen 2035.</p>
+
+<p><strong>Kuva 3: Talous.</strong> Tämä ei ole vakuutusinvestointi. Datakeskus myy lämpöä kunnalle. Elektrolyysilaitos tuottaa vetyä, jota Suomi tällä hetkellä tuo maakaasuna. Kaukolämpöverkko tarjoaa tasapainotuspalveluja sähkömarkkinalle. Investoinnilla on positiivinen kaupallinen tuotto jo ennen resilienssiarvon laskemista.</p>
+
+<h3>Kolme kynnystä</h3>
+
+<p>Vyöhykemuutos Z3 → Z2 vaatii: suojakapasiteettisuhde cFixed/eL3 yli 0.40, ja verkon riskipreemio sigmaRiskBp alle 25 bp myös stressipäivinä. Vyöhykemuutos Z2 → Z1 vaatii lisäksi: rakenteellinen rahoitusvaje gAnn alle 3.0, mitä MESA-tulovirrat — lämpö, vety, CO₂-markkinat — mahdollistavat.</p>
+
+<h3>Kolme päätöstä</h3>
+
+<p><strong>Päätös 1 (2027):</strong> Käynnistetäänkö kansallinen DC–kaukolämpöintegraatio-ohjelma? Jos ei, Z3→Z2-siirtymä viivästyy 2032:een tai myöhemmäksi.</p>
+
+<p><strong>Päätös 2 (2028):</strong> Sisällytetäänkö vetyelektrolyysi teollisessa mittakaavassa seuraavaan energia-investointiohjelmaan? Jos ei, Z2→Z1-siirtymä siirtyy yli 2035:n suunnitteluhorisontin.</p>
+
+<p><strong>Päätös 3 (2028):</strong> Luodaanko MESA-tulovirtojen mahdollistava sääntelykehys — lämpömarkkinat, vetysopimusrakenteet, CO₂-talteenottokannustimet? Jos ei, fyysinen kapasiteetti rakennetaan mutta rahoitusrakenne ei parane, ja Z1 pysyy saavuttamattomissa vaikka tekniset parametrit täyttyisivät.</p>
+
+<p>Esteet eivät ole teknisiä. Ne ovat koordinaatio- ja institutionaalisia. Suomella on tarvittava osaaminen, infrastruktuuri ja resurssiperusta. Tämä paperi ei väitä, että Z1 on helppo saavuttaa. Se väittää, että se on saavutettavissa — ja että tämänpäiväinen ylijäämä on sen todiste.</p>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<div class="preceded">
+  <div>Preceded by</div>
+  <a href="https://aethercontinuity.org/papers/wp-011-institutional-system4.html">WP-011 — Institutional System-4 Architecture for Small-State Viability ←</a>
+  <div style="margin-top:8px;">ACI Working Paper No. 012 · Version 1.0 · 2026 · Open Working Draft</div>
+  <div>aethercontinuity.org · Working Paper Series · Open for iteration</div>
+</div>
+
+</body>
+</html>
