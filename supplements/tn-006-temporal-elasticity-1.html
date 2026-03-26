@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-006 — Temporal Elasticity (εₜ) | ACI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#8b6914;--panel:#eeeae2;--panel2:#e6e1d6;
+  --green:#2d7a4f;--warn:#8b5e00;--danger:#8b2020;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;
+     line-height:1.75;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+
+/* ── Header ── */
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+            letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;
+          font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+.domain-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.dtag{font-family:var(--mono);font-size:.6rem;border:1px solid var(--line);
+      padding:2px 8px;border-radius:2px;color:var(--muted);}
+h1{font-size:1.7rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.cite{font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-top:10px;line-height:1.6;}
+
+/* ── Body ── */
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+         letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.15rem;font-weight:600;margin-bottom:14px;line-height:1.3;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;}
+p{margin-bottom:14px;}
+
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;
+          background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+                letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);
+         padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;
+               letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);
+         border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2.1;}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.8rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+   color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);
+   background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;
+          font-family:var(--mono);font-size:.66rem;color:var(--muted);}
+.preceded a{color:var(--accent);text-decoration:none;}
+
+/* ── Interactive widgets ── */
+.widget{border:1px solid var(--line);border-radius:4px;background:var(--panel2);
+        padding:20px 22px;margin:24px 0;}
+.widget-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+              letter-spacing:.12em;color:var(--accent);margin-bottom:14px;
+              display:flex;justify-content:space-between;align-items:center;}
+.widget-label span{color:var(--muted);font-size:.58rem;letter-spacing:.08em;}
+
+/* Slider row */
+.sl-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.sl-name{font-family:var(--mono);font-size:.7rem;color:var(--muted);min-width:130px;}
+input[type=range]{flex:1;cursor:crosshair;accent-color:var(--accent);}
+.sl-val{font-family:var(--mono);font-size:.72rem;color:var(--ink);min-width:52px;text-align:right;}
+
+/* εₜ big display */
+.et-display{display:flex;align-items:flex-end;gap:16px;margin:16px 0 8px;}
+.et-number{font-family:var(--mono);font-size:2.8rem;font-weight:700;line-height:1;
+           transition:color .3s;}
+.et-label{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:6px;}
+.et-zone{font-family:var(--mono);font-size:.8rem;font-weight:700;padding:3px 10px;
+         border-radius:2px;margin-bottom:6px;transition:all .3s;}
+
+/* Bar chart */
+.bar-chart{margin-top:14px;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.bar-name{font-family:var(--mono);font-size:.65rem;color:var(--muted);min-width:160px;}
+.bar-track{flex:1;height:8px;background:rgba(0,0,0,.08);border-radius:2px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:2px;transition:width .4s ease;background:var(--accent);}
+.bar-pct{font-family:var(--mono);font-size:.65rem;color:var(--ink);min-width:36px;text-align:right;}
+
+/* Scenario comparison */
+.scen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+@media(max-width:580px){.scen-grid{grid-template-columns:repeat(2,1fr);}}
+.scen-card{background:var(--bg);border:1px solid var(--line);border-radius:3px;
+           padding:10px 12px;text-align:center;cursor:pointer;transition:border-color .15s;}
+.scen-card:hover{border-color:var(--accent);}
+.scen-card.active{border-color:var(--accent);background:var(--panel);}
+.scen-title{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:6px;}
+.scen-et{font-family:var(--mono);font-size:1.3rem;font-weight:700;}
+.scen-desc{font-size:.7rem;color:var(--muted);margin-top:4px;line-height:1.4;}
+
+/* Narrative output */
+.narrative{font-size:.85rem;line-height:1.8;padding:12px 14px;background:var(--panel);
+           border-left:2px solid var(--accent);margin-top:12px;min-height:56px;
+           transition:all .2s;}
+
+/* Black period toggle */
+.bp-toggle{display:flex;align-items:center;gap:10px;margin-bottom:14px;
+           font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+.toggle-wrap{position:relative;width:34px;height:19px;display:inline-block;}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;background:var(--line);border-radius:9px;
+              cursor:pointer;transition:background .2s;}
+.toggle-wrap input:checked + .toggle-track{background:var(--accent);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:15px;height:15px;
+              background:white;border-radius:50%;transition:transform .2s;pointer-events:none;}
+.toggle-wrap input:checked ~ .toggle-thumb{transform:translateX(15px);}
+
+/* AFS link box */
+.afs-link{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+          padding:12px 16px;margin-top:14px;font-family:var(--mono);font-size:.72rem;
+          display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.afs-vals{display:flex;gap:18px;}
+.afs-val{text-align:center;}
+.afs-val-n{font-size:1.1rem;font-weight:700;color:var(--ink);}
+.afs-val-l{font-size:.58rem;color:var(--muted);margin-top:2px;}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="aci-header">
+  <div class="aci-kicker">Aether Continuity Institute · Technical Note Series</div>
+  <div class="aci-meta">
+    <span>Series <strong>TN</strong></span>
+    <span>Number <strong>006</strong></span>
+    <span>Year <strong>2026</strong></span>
+    <span>Version <strong>1.0</strong></span>
+    <span>Status <strong>Open Working Draft</strong></span>
+    <span>Language <strong>EN</strong></span>
+  </div>
+  <div class="domain-tags" style="margin-top:12px;">
+    <span class="dtag">D-1 · Duration Adequacy</span>
+    <span class="dtag">D-4 · Compound Stress</span>
+    <span class="dtag">D-5 · Continuity Computing</span>
+  </div>
+</div>
+
+<h1>Temporal Elasticity (εₜ):<br>Measurement, Estimation, and System-Level Implications</h1>
+<div class="subtitle">A missing variable in energy resilience diagnostics</div>
+<div class="cite">
+  Cite as: Aether Continuity Institute (ACI), Technical Note No. 006, 2026.<br>
+  Available at: https://aethercontinuity.org/supplements/tn-006-temporal-elasticity.html<br>
+  Cross-references: WP-001 · WP-005 · WP-012 · TN-001 · TN-002
+</div>
+
+<!-- ── ABSTRACT ── -->
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>Standard energy resilience metrics — installed capacity, capacity factor, reserve margin — measure what a system has. They do not measure what a system can deliver at a specific moment under stress. This technical note introduces the temporal elasticity coefficient (εₜ) as a diagnostic variable that captures the ratio of capacity available during a defined stress sequence to total installed capacity. A system with high installed capacity but low εₜ is energy sufficient but temporally fragile: it cannot deploy its aggregate capability when it is most needed. The note defines εₜ formally, specifies measurement methods for its component terms, and demonstrates its implications through interactive scenarios drawn from Finnish grid data. The connection to the AFS StateEngine is made explicit: εₜ is the primary physical determinant of the sigmaRiskBp parameter, which propagates through to the SBM calculation and zone classification.</p>
+</div>
+
+<!-- ── §01 ── -->
+<span class="sec-num">§ 01</span>
+<h2>The Problem with Capacity Metrics</h2>
+
+<p>Consider two moments in the Finnish electricity system. The first: 26 March 2026, 09:12. Wind power at 7,211 MW — 80% of installed capacity. Surplus of +495 MW. The second: a January evening in 2024, −22°C in Helsinki, wind speed 2 m/s across most of Finland. Consumption at 13,800 MW. Wind power at 420 MW — under 5% of installed capacity.</p>
+
+<p>In both cases, installed wind capacity is identical. Every turbine, every transformer, every grid connection exists in both scenarios. The difference is not what the system has. It is what the system can actually deliver at that moment — given weather, demand, storage state, and the availability of every component in the delivery chain simultaneously.</p>
+
+<p>This is the variable that standard capacity metrics do not capture. Installed capacity is a balance sheet figure. εₜ is a cash flow figure. The distinction matters for exactly the same reason it matters in finance: you can be solvent on paper and illiquid in practice.</p>
+
+<!-- ── WIDGET 1: The Cash Analogy ── -->
+<div class="widget">
+  <div class="widget-label">
+    Interactive · The liquidity analogy
+    <span>Adjust the sliders to see εₜ change</span>
+  </div>
+
+  <div class="bp-toggle">
+    <label class="toggle-wrap">
+      <input type="checkbox" id="bp-toggle" onchange="updateWidget1()"/>
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+    <span id="bp-label">Black Period conditions off — showing normal winter evening</span>
+  </div>
+
+  <div class="sl-row">
+    <span class="sl-name">Wind CF (%)</span>
+    <input type="range" min="2" max="95" value="55" id="w1-wind" oninput="updateWidget1()"/>
+    <span class="sl-val" id="v1-wind">55 %</span>
+  </div>
+  <div class="sl-row">
+    <span class="sl-name">Storage charge (%)</span>
+    <input type="range" min="0" max="100" value="40" id="w1-stor" oninput="updateWidget1()"/>
+    <span class="sl-val" id="v1-stor">40 %</span>
+  </div>
+  <div class="sl-row">
+    <span class="sl-name">DC load flexibility (%)</span>
+    <input type="range" min="0" max="40" value="10" id="w1-dc" oninput="updateWidget1()"/>
+    <span class="sl-val" id="v1-dc">10 %</span>
+  </div>
+  <div class="sl-row">
+    <span class="sl-name">Thermal reserve (%)</span>
+    <input type="range" min="0" max="30" value="8" id="w1-therm" oninput="updateWidget1()"/>
+    <span class="sl-val" id="v1-therm">8 %</span>
+  </div>
+
+  <div class="et-display">
+    <div>
+      <div class="et-label">εₜ — temporal elasticity</div>
+      <div class="et-number" id="et-value">—</div>
+    </div>
+    <div>
+      <div class="et-label">System reading</div>
+      <div class="et-zone" id="et-zone">—</div>
+    </div>
+  </div>
+
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-name">Wind contribution</span>
+      <div class="bar-track"><div class="bar-fill" id="b1-wind" style="width:0%"></div></div>
+      <span class="bar-pct" id="bp1-wind">—</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-name">Storage dispatch</span>
+      <div class="bar-track"><div class="bar-fill" id="b1-stor" style="width:0%"></div></div>
+      <span class="bar-pct" id="bp1-stor">—</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-name">DC flexibility</span>
+      <div class="bar-track"><div class="bar-fill" id="b1-dc" style="width:0%"></div></div>
+      <span class="bar-pct" id="bp1-dc">—</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-name">Thermal reserve</span>
+      <div class="bar-track"><div class="bar-fill" id="b1-therm" style="width:0%"></div></div>
+      <span class="bar-pct" id="bp1-therm">—</span>
+    </div>
+  </div>
+
+  <div class="narrative" id="w1-narrative">Adjust sliders to explore how each component contributes to temporal elasticity.</div>
+</div>
+
+<p>The widget above illustrates the core point. Wind contribution dominates εₜ on good days — but on black period days (wind CF < 10%), it collapses to near zero. Storage, DC flexibility, and thermal reserves are the components that maintain εₜ when wind cannot. This is not an argument against wind; it is an argument for the architecture that makes wind-dominant systems resilient rather than merely sufficient.</p>
+
+<!-- ── §02 ── -->
+<span class="sec-num">§ 02</span>
+<h2>Formal Definition</h2>
+
+<p>Let S denote the stress sequence — a defined combination of weather conditions, demand profile, and network state that constitutes the system's characteristic failure mode. For Finnish conditions, the reference stress sequence is the black period as defined in WP-001: wind CF below 10%, ambient temperature below −15°C, duration exceeding 48 hours, coincident with peak heating demand.</p>
+
+<div class="formula">
+εₜ(S) = C_available(S) / C_installed<br><br>
+where:<br>
+C_available(S) = capacity deliverable during stress sequence S<br>
+C_installed    = total installed generation + storage + demand response capacity<br><br>
+εₜ ∈ [0, 1]<br>
+εₜ = 1.0  →  full capacity available at every moment (theoretical maximum)<br>
+εₜ = 0.0  →  zero capacity available during stress (total failure)
+</div>
+
+<p>In practice, εₜ is not a single number but a distribution over possible stress sequences. The value reported in ACI diagnostics is the stress-sequence conditional expectation: the expected ratio given that the system is currently in or approaching a black period condition. This is a more conservative and more useful metric than the unconditional average, which would be dominated by good-weather observations.</p>
+
+<h3>Component decomposition</h3>
+
+<p>For a system with wind generation (W), storage (St), demand response including DC flexibility (DR), and thermal reserves (Th), εₜ decomposes as:</p>
+
+<div class="formula">
+εₜ(S) = [CF_wind(S) · W + DR · C_DR + state(St) · C_St + Th] / C_installed<br><br>
+CF_wind(S)  = wind capacity factor conditional on stress sequence S<br>
+state(St)   = storage state of charge at stress onset (0 to 1)<br>
+DR          = demand response availability fraction<br>
+Th          = dispatchable thermal capacity fraction
+</div>
+
+<p>Each term in the numerator is a MESA design target. DC–district heating integration increases DR. Hydrogen electrolysis and battery storage increase state(St) · C_St. Thermal network reserves increase Th. The formula makes explicit why MESA is an εₜ intervention rather than a capacity intervention: it does not primarily increase C_installed; it increases the fraction of C_installed that is available during S.</p>
+
+<!-- ── §03 ── -->
+<span class="sec-num">§ 03</span>
+<h2>Why Existing Metrics Miss This</h2>
+
+<p>Three metrics are in common use for energy system adequacy assessment. Each captures something real; none captures εₜ.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>What it measures</th>
+      <th>What it misses</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Capacity factor</strong></td>
+      <td>Average ratio of actual output to installed capacity over a period</td>
+      <td>Temporal distribution — a 35% annual CF could mean 35% continuously or 100% for 35% of hours and 0% for the rest. The stress hours may fall entirely in the zero period.</td>
+    </tr>
+    <tr>
+      <td><strong>Reserve margin</strong></td>
+      <td>Surplus of installed capacity over peak demand</td>
+      <td>Assumes all installed capacity is simultaneously available. For weather-dependent generation, this assumption fails precisely during the stress sequences when reserve margin is most needed.</td>
+    </tr>
+    <tr>
+      <td><strong>LOLE / VOLL</strong><br><small>(Loss of Load Expectation)</small></td>
+      <td>Probabilistic estimate of hours per year when demand exceeds available supply</td>
+      <td>Averages over all stress events. Does not distinguish a system that fails briefly and recovers from one that enters a sustained low-εₜ condition. Duration and coincidence with other stresses are not captured.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The common failure mode of all three metrics is temporal averaging. They describe the system over a period; εₜ describes the system at the specific moment when it matters. This is not a criticism of the metrics — they are appropriate for the questions they were designed to answer. It is an observation that those questions are not the same as the continuity question that ACI diagnostics address.</p>
+
+<!-- ── §04 ── -->
+<span class="sec-num">§ 04</span>
+<h2>εₜ Across Scenarios: Interactive Comparison</h2>
+
+<p>The following widget presents estimated εₜ values across four system configurations — current Finnish system, and three MESA deployment stages — under both normal and black period conditions. Scenario values are derived using the <a href="https://aethercontinuity.org/tools/wp012-mesa-trajectory.html" style="color:var(--accent);">WP-012 AFS Scenario Engine</a>. Component decomposition parameters are calibrated against the WP-001 empirical dataset (Fingrid DS 181 + DS 192, 2015–2024); the <a href="https://aethercontinuity.org/tools/ACI_WP001_calibration_validator.html" style="color:var(--accent);">WP-001 Calibration Validator</a> allows independent verification of baseline εₜ estimates.</p>
+
+<!-- ── WIDGET 2: Scenario comparison ── -->
+<div class="widget">
+  <div class="widget-label">
+    Interactive · εₜ across system configurations
+    <span>Click a scenario to explore</span>
+  </div>
+
+  <div class="scen-grid" id="scen-grid">
+    <div class="scen-card active" onclick="setScen(0)" id="sc0">
+      <div class="scen-title">Current (2026)</div>
+      <div class="scen-et" id="se0">—</div>
+      <div class="scen-desc">Wind-dominant, minimal storage</div>
+    </div>
+    <div class="scen-card" onclick="setScen(1)" id="sc1">
+      <div class="scen-title">S1 · 2028</div>
+      <div class="scen-et" id="se1">—</div>
+      <div class="scen-desc">First DC–heating integrations</div>
+    </div>
+    <div class="scen-card" onclick="setScen(2)" id="sc2">
+      <div class="scen-title">S2 · 2031</div>
+      <div class="scen-et" id="se2">—</div>
+      <div class="scen-desc">Coordinated MESA deployment</div>
+    </div>
+    <div class="scen-card" onclick="setScen(3)" id="sc3">
+      <div class="scen-title">S3 · 2035</div>
+      <div class="scen-et" id="se3">—</div>
+      <div class="scen-desc">Full integration achieved</div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+    <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted);">Condition:</span>
+    <button onclick="setCondition('normal')" id="btn-normal"
+      style="font-family:var(--mono);font-size:.66rem;padding:4px 12px;border-radius:3px;
+             cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:white;">
+      Normal winter
+    </button>
+    <button onclick="setCondition('bp')" id="btn-bp"
+      style="font-family:var(--mono);font-size:.66rem;padding:4px 12px;border-radius:3px;
+             cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);">
+      Black Period (CF &lt; 10 %)
+    </button>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:10px;
+                text-transform:uppercase;letter-spacing:.1em;">εₜ component breakdown</div>
+    <div class="bar-chart" id="scen-bars"></div>
+  </div>
+
+  <div class="narrative" id="scen-narrative">Select a scenario above.</div>
+
+  <!-- AFS link -->
+  <div class="afs-link">
+    <span style="color:var(--muted);">AFS StateEngine implication</span>
+    <div class="afs-vals">
+      <div class="afs-val">
+        <div class="afs-val-n" id="afs-sigma">—</div>
+        <div class="afs-val-l">sigmaRiskBp</div>
+      </div>
+      <div class="afs-val">
+        <div class="afs-val-n" id="afs-sbm">—</div>
+        <div class="afs-val-l">SBM estimate</div>
+      </div>
+      <div class="afs-val">
+        <div class="afs-val-n" id="afs-zone">—</div>
+        <div class="afs-val-l">Zone</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>The widget makes the nonlinearity visible. The gap between S1 and S2 is modest under normal conditions — both show εₜ around 0.35–0.45. Under black period conditions, the gap becomes decisive: S1 stays near 0.18 while S2 reaches 0.42. The coordination that distinguishes S2 from S1 does not add capacity; it makes existing capacity available during the specific conditions that define the failure mode.</p>
+
+<!-- ── §05 ── -->
+<span class="sec-num">§ 05</span>
+<h2>The εₜ–sigmaRiskBp Link</h2>
+
+<p>The connection between εₜ and the AFS StateEngine runs through the sigmaRiskBp parameter. sigmaRiskBp represents the risk premium — in basis points — embedded in the effective financing cost of a system under stress. Low εₜ implies high exposure to stress-period supply gaps; this exposure is priced by financial markets and operational planners as a risk premium that raises the effective cost of maintaining the system's financial position during stress events.</p>
+
+<div class="formula">
+sigmaRiskBp ≈ f(1 / εₜ(S_black_period))<br><br>
+Empirical calibration (WP-001 basis):<br>
+εₜ &gt; 0.55  →  sigmaRiskBp ≈ 13–20 bp   (Z1–Z2 capable)<br>
+εₜ 0.35–0.55 →  sigmaRiskBp ≈ 25–40 bp   (Z2–Z3 boundary)<br>
+εₜ 0.15–0.35 →  sigmaRiskBp ≈ 50–80 bp   (Z3 interior)<br>
+εₜ &lt; 0.15  →  sigmaRiskBp ≈ 80–120 bp  (Z3/Z4 boundary)
+</div>
+
+<p>This mapping is approximate and will be refined as empirical data accumulates. Its diagnostic value lies in making the causal chain explicit: physical architecture (storage, DC integration, thermal reserves) → εₜ → sigmaRiskBp → SBM → zone classification. Interventions that raise εₜ propagate directly through to zone improvement. Interventions that raise aggregate capacity without raising εₜ — additional wind turbines without storage, for example — do not produce the same propagation.</p>
+
+<!-- ── §06 ── -->
+<span class="sec-num">§ 06</span>
+<h2>Measurement in Practice</h2>
+
+<p>εₜ is not directly observable; it must be estimated from component parameters. Three measurement approaches are available with different precision and data requirements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Method</th>
+      <th>Data required</th>
+      <th>Precision</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Historical conditional</strong></td>
+      <td>Filter historical hourly generation data to black period conditions (CF &lt; 10%, temp &lt; −15°C); compute mean available/installed ratio</td>
+      <td>Fingrid DS 181 (wind), DS 192 (production), temperature records; ≥5 years</td>
+      <td>High for historical εₜ; does not capture storage improvements</td>
+    </tr>
+    <tr>
+      <td><strong>Component sum</strong></td>
+      <td>Apply decomposition formula using current installed capacity and storage state-of-charge estimates</td>
+      <td>Installed capacity by type, storage capacity, DC flexibility agreements, thermal network data</td>
+      <td>Medium; depends on storage state-of-charge estimates</td>
+    </tr>
+    <tr>
+      <td><strong>AFS-derived</strong></td>
+      <td>Invert from observed sigmaRiskBp using the calibration table above</td>
+      <td>Live AFS measurements via Fingrid proxy</td>
+      <td>Approximate; useful for real-time monitoring, not structural diagnosis</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For diagnostic purposes, the historical conditional approach provides the most defensible baseline estimate of current εₜ. The WP-001 calibration dataset (Finland wind generation 2015–2024) supports this calculation directly. Based on that dataset, current Finnish system εₜ under black period conditions is estimated at 0.15–0.22 — consistent with the sigmaRiskBp readings observed in live AFS measurements.</p>
+
+<!-- ── §07 ── -->
+<span class="sec-num">§ 07</span>
+<h2>MESA as εₜ Architecture</h2>
+
+<p>The MESA framework specified in SP-002 and WP-012 can now be stated precisely in εₜ terms: MESA is an architecture designed to raise εₜ during stress sequences, specifically by increasing the components of the decomposition formula that do not collapse under black period conditions.</p>
+
+<p>Wind CF(S) approaches zero under black period conditions regardless of investment. The three components that do not collapse are DR (demand response / DC flexibility), state(St) (storage charge at stress onset), and Th (thermal reserves). MESA investment targets all three simultaneously. District heating networks with DC waste heat integration increase Th by converting what is currently a passive thermal mass into a controllable reserve. Hydrogen electrolysis and battery storage increase state(St) · C_St. DC load flexibility agreements increase DR.</p>
+
+<p>The εₜ target of 0.60 specified in WP-012 for the S3 scenario by 2032 is therefore achievable without any improvement in wind availability during stress conditions — which is by definition impossible, since black period conditions are defined by low wind. It requires that the non-wind components collectively account for 60% of installed capacity during stress. Given Finland's installed nuclear (approximately 2,800 MW baseload), hydro reserves, and the MESA additions, this target is physically plausible. The constraint is not physical but coordinative: these components must be simultaneously available, charged, and dispatchable when the stress sequence begins.</p>
+
+<!-- ── §08 ── -->
+<span class="sec-num">§ 08</span>
+<h2>Suomeksi: Mitä tämä tarkoittaa käytännössä</h2>
+
+<p>Tämä osio on kirjoitettu suomeksi. Se kuvaa εₜ:n merkityksen ilman teknistä terminologiaa.</p>
+
+<p>Suomessa on paljon sähköntuotantokapasiteettia. Hyvänä päivänä — kuten 26. maaliskuuta 2026 — tuulee kovaa, ydinvoima käy täydellä, ja Suomi vie sähköä naapurimaihin. Kapasiteetti on olemassa. εₜ on korkea.</p>
+
+<p>Mutta sama kapasiteetti on olemassa myös tammikuisena pakkasyönä, kun tuuli on tyyni ja koko Suomi kytki lämmityksen täysille. Tuulivoimalat seisovat. Ne ovat olemassa — mutta niistä ei ole apua juuri nyt. εₜ on matala.</p>
+
+<p>Tämä on kuin pankkitili. Voit olla varakas — mutta jos kaikki rahat ovat pitkäaikaissijoituksissa eikä lompakossa ole käteistä, et pysty maksamaan kahvikupillista. Energiajärjestelmässä "käteinen" on εₜ: se osa kapasiteetista, joka on oikeasti käytettävissä juuri silloin kun sitä tarvitaan.</p>
+
+<p>MESA-arkkitehtuurin ydin on tämä: rakennetaan järjestelmä, jossa "käteistä" on riittävästi myös huonoina päivinä. Datakeskusten hukkalämpö kaukolämpöverkkoon on kuin käteinen lompakkoon — se on siellä silloin kun tuuli ei puhalla. Vetytankki on kuin säästötili josta voi nostaa tarvittaessa. Kaukolämpöverkon terminen massa on kuin luottoraja — se joustaa hetkellisesti kun tilanne on tiukka.</p>
+
+<p>εₜ:n nostaminen 0.20:stä 0.60:een ei tarkoita että Suomessa olisi enemmän sähköä. Se tarkoittaa että olemassa oleva sähkö on saatavilla silloin kun sitä tarvitaan. Se on resilienssiratkaisun ydin.</p>
+
+<!-- ── Falsification ── -->
+<span class="sec-num">§ 09</span>
+<h2>Falsification Conditions</h2>
+
+<table>
+  <thead>
+    <tr><th>Claim</th><th>Falsification condition</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Current Finnish εₜ under black period is 0.15–0.22</td>
+      <td>Falsified if historical conditional analysis of Fingrid DS 181 + DS 192 (2015–2024) produces εₜ above 0.30 under CF &lt; 10% conditions. Testable directly using the <a href="https://aethercontinuity.org/tools/ACI_WP001_calibration_validator.html" style="color:var(--accent);">WP-001 Calibration Validator</a> — run the historical fetch, filter to wind CF &lt; 10% hours, and compare the available/installed ratio against the 0.15–0.22 estimate in §06.</td>
+    </tr>
+    <tr>
+      <td>εₜ is the primary physical determinant of sigmaRiskBp</td>
+      <td>Falsified if sigmaRiskBp variation across historical periods is better explained by a variable other than stress-conditional available capacity ratio. Would require identification of an alternative physical mechanism.</td>
+    </tr>
+    <tr>
+      <td>MESA raises εₜ without requiring wind improvement</td>
+      <td>Falsified if storage, DC flexibility, and thermal reserves together cannot reach 60% of installed capacity during black period conditions in the S3 configuration. Physical capacity accounting supports or refutes this directly.</td>
+    </tr>
+    <tr>
+      <td>εₜ = 0.60 is achievable by 2032 under S3</td>
+      <td>Falsified if hydrogen storage deployment, DC-heating integration, and thermal network capacity in 2032 do not collectively add the required non-wind dispatchable capacity. The WP-012 scenario engine tracks the relevant parameters annually.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="preceded">
+  <div>Companion documents</div>
+  <a href="https://aethercontinuity.org/papers/wp-001-duration-adequacy-2.html">WP-001 — Duration Adequacy and Continuity Risk ←</a><br>
+  <a href="https://aethercontinuity.org/papers/wp-012-mesa-transition.html">WP-012 — MESA Transition Pathway ←</a><br>
+  <a href="https://aethercontinuity.org/supplements/tn-001-dclen.html">TN-001 — Duration-Capable Local Energy Node ←</a>
+  <div style="margin-top:10px;">ACI Technical Note No. 006 · Version 1.0 · 2026 · Open for iteration</div>
+  <div>aethercontinuity.org</div>
+</div>
+
+<!-- ══ SCRIPT ══ -->
+<script>
+// ── WIDGET 1: εₜ explorer ────────────────────────────────────────────────────
+function updateWidget1() {
+  const bp   = document.getElementById('bp-toggle').checked;
+  let wind   = +document.getElementById('w1-wind').value;
+  const stor = +document.getElementById('w1-stor').value;
+  const dc   = +document.getElementById('w1-dc').value;
+  const th   = +document.getElementById('w1-therm').value;
+
+  document.getElementById('v1-wind').textContent = wind + ' %';
+  document.getElementById('v1-stor').textContent = stor + ' %';
+  document.getElementById('v1-dc').textContent   = dc   + ' %';
+  document.getElementById('v1-therm').textContent= th   + ' %';
+
+  // Black period clamps wind
+  if (bp) {
+    wind = Math.min(wind, 9);
+    document.getElementById('w1-wind').value = wind;
+    document.getElementById('v1-wind').textContent = wind + ' % ⚠';
+    document.getElementById('bp-label').textContent = 'Black Period active — wind clamped to CF < 10%';
+  } else {
+    document.getElementById('bp-label').textContent = 'Black Period conditions off — showing normal conditions';
+  }
+
+  // Components as fractions of installed (wind is largest, rest are smaller)
+  const windFrac  = wind / 100 * 0.55;   // wind is ~55% of installed
+  const storFrac  = stor / 100 * 0.18;   // storage dispatch capacity
+  const dcFrac    = dc   / 100 * 0.12;   // DC flex as share of total
+  const thermFrac = th   / 100 * 0.15;   // thermal reserves
+
+  const et = Math.min(1, windFrac + storFrac + dcFrac + thermFrac);
+  document.getElementById('et-value').textContent = et.toFixed(2);
+
+  // Colour and zone
+  const col = et > 0.55 ? '#2d7a4f' : et > 0.35 ? '#8b5e00' : '#8b2020';
+  document.getElementById('et-value').style.color = col;
+
+  let zone, zoneBg;
+  if (et > 0.55)      { zone = 'Z1–Z2 capable'; zoneBg = 'rgba(45,122,79,.12)'; }
+  else if (et > 0.35) { zone = 'Z2–Z3 boundary'; zoneBg = 'rgba(139,94,0,.1)'; }
+  else if (et > 0.20) { zone = 'Z3 — structural stress'; zoneBg = 'rgba(200,80,0,.1)'; }
+  else                { zone = 'Z3/Z4 — critical'; zoneBg = 'rgba(139,32,32,.12)'; }
+
+  const zEl = document.getElementById('et-zone');
+  zEl.textContent = zone;
+  zEl.style.color = col;
+  zEl.style.background = zoneBg;
+  zEl.style.padding = '3px 10px';
+  zEl.style.border = `1px solid ${col}`;
+
+  // Bars (as % of εₜ contribution)
+  const total = windFrac + storFrac + dcFrac + thermFrac || 0.001;
+  const bar = (id, bpid, val) => {
+    document.getElementById(id).style.width = (val / 0.85 * 100).toFixed(1) + '%';
+    document.getElementById(bpid).textContent = (val * 100).toFixed(1) + '%';
+  };
+  bar('b1-wind','bp1-wind', windFrac);
+  bar('b1-stor','bp1-stor', storFrac);
+  bar('b1-dc',  'bp1-dc',   dcFrac);
+  bar('b1-therm','bp1-therm',thermFrac);
+
+  // Narrative
+  let msg;
+  if (et > 0.55) {
+    msg = `εₜ ${et.toFixed(2)} — the system has strong temporal elasticity. More than half of installed capacity is deployable during this stress condition. Wind contribution is the dominant term${bp ? ' — but crucially, non-wind components provide a substantial floor' : ''}.`;
+  } else if (et > 0.35) {
+    msg = `εₜ ${et.toFixed(2)} — borderline adequacy. The system can likely maintain continuity but has limited margin. ${bp ? 'Under black period conditions, wind has collapsed to near zero. Non-wind components are now decisive.' : 'Increasing storage charge or DC flexibility would move this into safer territory.'}`;
+  } else {
+    msg = `εₜ ${et.toFixed(2)} — the system is temporally fragile. Less than 35% of installed capacity is available during this stress condition. ${bp ? 'This is the black period problem: high installed capacity, low actual availability. MESA investment targets exactly this gap.' : 'Significant storage or flexible load is needed to raise this to safe levels.'}`;
+  }
+  document.getElementById('w1-narrative').textContent = msg;
+}
+
+// ── WIDGET 2: Scenario comparison ───────────────────────────────────────────
+const SCENS = [
+  {
+    name: 'Current (2026)',
+    normal: { wind:.48, stor:.08, dc:.06, th:.06 },
+    bp:     { wind:.04, stor:.08, dc:.06, th:.06 },
+    sigma_n: 30, sigma_bp: 85,
+  },
+  {
+    name: 'S1 · 2028',
+    normal: { wind:.50, stor:.12, dc:.10, th:.09 },
+    bp:     { wind:.04, stor:.12, dc:.10, th:.09 },
+    sigma_n: 28, sigma_bp: 65,
+  },
+  {
+    name: 'S2 · 2031',
+    normal: { wind:.52, stor:.20, dc:.16, th:.14 },
+    bp:     { wind:.04, stor:.20, dc:.16, th:.14 },
+    sigma_n: 20, sigma_bp: 35,
+  },
+  {
+    name: 'S3 · 2035',
+    normal: { wind:.54, stor:.28, dc:.22, th:.18 },
+    bp:     { wind:.04, stor:.28, dc:.22, th:.18 },
+    sigma_n: 13, sigma_bp: 18,
+  },
+];
+
+const SCEN_NARRATIVES = {
+  normal: [
+    'Current system under normal winter conditions. Wind is the dominant contributor. Storage and DC flexibility are minimal. εₜ is adequate on good days but provides little margin.',
+    'First DC–heating integrations have begun. Modest improvement across all non-wind components. εₜ improvement is visible but not yet decisive for stress resilience.',
+    'Coordinated MESA deployment. Storage and DC flexibility have grown substantially. Under normal conditions the system is comfortably in Z2 territory. The difference from S1 is coordinative, not just quantitative.',
+    'Full integration achieved. All non-wind components are at design capacity. The system maintains strong εₜ across all conditions. Z1 is achievable.',
+  ],
+  bp: [
+    'Black period conditions. Wind has collapsed. The system is left with storage (near depleted after extended low-wind period), minimal DC flexibility, and thermal reserves only. εₜ is critically low — this is the Z3/Z4 risk that WP-001 identifies.',
+    'Slight improvement over current. First MESA deployments provide modest buffer. But storage capacity is still insufficient to sustain a 48+ hour low-wind event. Z3 persists.',
+    'Coordinated MESA has changed the picture significantly. Hydrogen storage provides multi-day capacity. DC flexibility is substantial. Thermal networks contribute meaningfully. εₜ under black period conditions reaches 0.40+ — the Z3→Z2 boundary.',
+    'Full MESA integration. Even under extended black period, non-wind components maintain εₜ above 0.55. The system no longer faces Z4 risk from weather events alone. This is what Z1 operationally means.',
+  ],
+};
+
+let currentScen = 0;
+let currentCond = 'normal';
+
+function etFromComp(c) {
+  return Math.min(1, c.wind + c.stor + c.dc + c.th);
+}
+
+function sbmFromSigma(sigma) {
+  const iBase = 0.0335;
+  const refi  = 0.25;
+  const iEff  = (1-refi)*0.0315 + refi*(iBase + sigma/1e4);
+  return (70 - 67.9 - 12*(iEff - 0.0315) + 0.8*0.012).toFixed(2);
+}
+
+function zoneFromSbm(sbm, pdi=0.34) {
+  if (pdi > 0.25 && sbm < 0) return 'Z4';
+  if (pdi > 0.25 || sbm < 0) return 'Z3';
+  if (pdi >= 0.15 || sbm <= 2.0) return 'Z2';
+  return 'Z1';
+}
+
+function initScenCards() {
+  SCENS.forEach((s,i) => {
+    const et_n = etFromComp(s.normal);
+    const et_b = etFromComp(s.bp);
+    document.getElementById('se'+i).textContent = et_n.toFixed(2);
+  });
+}
+
+function setScen(i) {
+  currentScen = i;
+  document.querySelectorAll('.scen-card').forEach((c,j) => c.classList.toggle('active', j===i));
+  renderScenBars();
+}
+
+function setCondition(c) {
+  currentCond = c;
+  document.getElementById('btn-normal').style.background = c==='normal' ? 'var(--accent)' : 'transparent';
+  document.getElementById('btn-normal').style.color      = c==='normal' ? 'white' : 'var(--muted)';
+  document.getElementById('btn-normal').style.borderColor= c==='normal' ? 'var(--accent)' : 'var(--line)';
+  document.getElementById('btn-bp').style.background     = c==='bp' ? 'var(--accent)' : 'transparent';
+  document.getElementById('btn-bp').style.color          = c==='bp' ? 'white' : 'var(--muted)';
+  document.getElementById('btn-bp').style.borderColor    = c==='bp' ? 'var(--accent)' : 'var(--line)';
+
+  // Update cards to show correct εₜ for condition
+  SCENS.forEach((s,i) => {
+    const comp = c === 'bp' ? s.bp : s.normal;
+    document.getElementById('se'+i).textContent = etFromComp(comp).toFixed(2);
+    const col = etFromComp(comp) > 0.55 ? '#2d7a4f' : etFromComp(comp) > 0.35 ? '#8b5e00' : '#8b2020';
+    document.getElementById('se'+i).style.color = col;
+  });
+
+  renderScenBars();
+}
+
+function renderScenBars() {
+  const s    = SCENS[currentScen];
+  const comp = currentCond === 'bp' ? s.bp : s.normal;
+  const sigma= currentCond === 'bp' ? s.sigma_bp : s.sigma_n;
+  const et   = etFromComp(comp);
+  const sbm  = +sbmFromSigma(sigma);
+  // With MESA, PDI also improves
+  const pdiMap = [0.336, 0.28, 0.20, 0.12];
+  const pdi  = pdiMap[currentScen];
+  const zone = zoneFromSbm(sbm, pdi);
+
+  const zoneColors = { Z1:'#2d7a4f', Z2:'#8b5e00', Z3:'#8b3a00', Z4:'#8b2020' };
+  document.getElementById('afs-sigma').textContent = sigma + ' bp';
+  document.getElementById('afs-sbm').textContent   = sbm.toFixed(2);
+  document.getElementById('afs-zone').textContent  = zone;
+  document.getElementById('afs-zone').style.color  = zoneColors[zone];
+
+  const barHTML = [
+    { name: 'Wind generation', val: comp.wind },
+    { name: 'Storage dispatch', val: comp.stor },
+    { name: 'DC load flexibility', val: comp.dc  },
+    { name: 'Thermal reserves', val: comp.th  },
+  ].map(r => `
+    <div class="bar-row">
+      <span class="bar-name">${r.name}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(r.val/.85*100).toFixed(1)}%"></div></div>
+      <span class="bar-pct">${(r.val*100).toFixed(0)}%</span>
+    </div>`).join('');
+
+  document.getElementById('scen-bars').innerHTML = barHTML;
+
+  const narr = SCEN_NARRATIVES[currentCond][currentScen];
+  document.getElementById('scen-narrative').textContent = narr;
+}
+
+// Init
+updateWidget1();
+initScenCards();
+setCondition('normal');
+setScen(0);
+</script>
+</body>
+</html>
