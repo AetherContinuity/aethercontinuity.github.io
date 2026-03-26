@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AFS Core v1.5 — Live Grid Monitor | ACI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #0a0a09;
+      --panel:  #11110f;
+      --line:   #1e1e1b;
+      --ink:    #ede7d8;
+      --muted:  #6b6860;
+      --accent: #c8a96e;
+      --green:  #4caf7d;
+      --warn:   #e8a040;
+      --danger: #d95f5f;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --serif: Georgia, 'Times New Roman', serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 16px 24px;
+      background: rgba(10,10,9,.96);
+      position: sticky; top: 0; z-index: 30;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .h-title { font-size: 1.4rem; font-weight: 400; font-style: italic; letter-spacing: -.02em; }
+    .h-meta  { font-family: var(--mono); font-size: .62rem; color: var(--muted);
+                text-transform: uppercase; letter-spacing: .12em; margin-top: 3px; display: flex; gap: 14px; }
+    .h-status { text-align: right; font-family: var(--mono); }
+    .h-zone  { font-size: 1.3rem; font-weight: 700; }
+    .h-zone.Z1 { color: #4caf7d; }
+    .h-zone.Z2 { color: #e8a040; }
+    .h-zone.Z3 { color: #e07030; }
+    .h-zone.Z4 { color: #d95f5f; animation: pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .badge { font-family: var(--mono); font-size: .62rem; border: 1px solid var(--line);
+              padding: 2px 8px; border-radius: 3px; color: var(--muted); }
+    .badge.live { border-color: rgba(76,175,125,.3); color: var(--green); }
+    .badge.err  { border-color: rgba(217,95,95,.3);  color: var(--danger); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid;
+           grid-template-columns: 1fr 320px; gap: 18px; }
+    @media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+
+    /* ── CARDS ── */
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 18px; }
+    .sec { font-family: var(--mono); font-size: .62rem; text-transform: uppercase;
+           letter-spacing: .12em; color: var(--muted); margin-bottom: 12px; }
+
+    /* ── PROXY SETUP ── */
+    #setup-panel { grid-column: 1 / -1; }
+    .proxy-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    input[type="text"] {
+      flex: 1; min-width: 200px; background: rgba(0,0,0,.4);
+      border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
+      font-family: var(--mono); font-size: .75rem; padding: 7px 11px; outline: none;
+    }
+    input:focus { border-color: var(--accent); }
+    .btn { font-family: var(--mono); font-size: .72rem; padding: 7px 13px;
+           border-radius: 4px; border: none; cursor: pointer; white-space: nowrap; }
+    .btn-go  { background: var(--accent); color: #0a0a09; font-weight: 700; }
+    .btn-sec { background: rgba(30,30,27,.9); color: var(--ink); border: 1px solid var(--line); }
+    .btn-grn { background: rgba(76,175,125,.12); color: var(--green); border: 1px solid rgba(76,175,125,.25); }
+    .proxy-msg { font-family: var(--mono); font-size: .7rem; margin-top: 7px; color: var(--muted); }
+    .proxy-msg.ok  { color: var(--green); }
+    .proxy-msg.err { color: var(--danger); }
+
+    /* ── RISK HORIZON CHART ── */
+    #chart-panel { position: relative; }
+    #chart-wrap {
+      position: relative; height: 460px; width: 100%;
+      border-left: 1px solid #333; border-bottom: 1px solid #333; cursor: crosshair;
+    }
+    #chart-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .chart-meta { display: flex; justify-content: space-between; font-family: var(--mono);
+                  font-size: .62rem; color: var(--muted); margin-bottom: 8px; }
+
+    /* ── METRICS ROW ── */
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+               border: 1px solid var(--line); margin-top: 14px; }
+    .metric  { padding: 10px 12px; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: none; }
+    .metric-label { font-family: var(--mono); font-size: .58rem; text-transform: uppercase;
+                    letter-spacing: .1em; color: var(--muted); }
+    .metric-value { font-family: var(--mono); font-size: 1rem; font-weight: 700; color: var(--ink); margin-top: 3px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    /* RKOM slider */
+    .rkom-row { display: flex; justify-content: space-between; font-family: var(--mono);
+                font-size: .7rem; margin-bottom: 6px; }
+    .rkom-val { color: var(--accent); }
+    input[type="range"] { width: 100%; cursor: crosshair; accent-color: var(--accent); }
+    .sim-result { margin-top: 10px; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+    .sim-result span { color: var(--warn); }
+
+    /* Live data panel */
+    .live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .live-item { background: rgba(0,0,0,.3); border: 1px solid var(--line); border-radius: 3px; padding: 9px 11px; }
+    .live-name  { font-family: var(--mono); font-size: .58rem; text-transform: uppercase;
+                  letter-spacing: .08em; color: var(--muted); }
+    .live-value { font-family: var(--mono); font-size: .95rem; font-weight: 700; color: var(--ink); margin-top: 2px; }
+    .live-value.deficit { color: var(--danger); }
+    .live-value.surplus { color: var(--green); }
+
+    /* Audit */
+    .audit-row { display: flex; justify-content: space-between; align-items: center;
+                 border-bottom: 1px solid rgba(30,30,27,.7); padding-bottom: 6px; margin-bottom: 6px; }
+    .audit-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .audit-key  { font-family: var(--mono); font-size: .65rem; text-transform: uppercase; color: var(--muted); }
+    .audit-src  { font-family: var(--mono); font-size: .6rem; color: #3d3c38; margin-top: 1px; }
+    .audit-right { display: flex; align-items: center; gap: 7px; }
+    .audit-val  { font-family: var(--mono); font-size: .78rem; color: var(--ink); }
+    .conf-dot   { width: 6px; height: 6px; border-radius: 50%; }
+    .conf-high  { background: var(--green); }
+    .conf-med   { background: var(--warn); }
+    .conf-low   { background: var(--muted); }
+
+    /* Invariants */
+    .inv-breach { background: rgba(217,95,95,.07); border: 1px solid rgba(217,95,95,.2);
+                  border-radius: 3px; padding: 10px 12px; font-family: var(--mono);
+                  font-size: .7rem; color: var(--danger); }
+    .inv-ok     { font-family: var(--mono); font-size: .7rem; color: var(--green); }
+
+    /* Fetch log */
+    #log { font-family: var(--mono); font-size: .65rem; color: var(--muted);
+           max-height: 120px; overflow-y: auto; line-height: 1.7; }
+    .ll-ok   { color: var(--green); }
+    .ll-err  { color: var(--danger); }
+    .ll-info { color: var(--accent); }
+    .ll-warn { color: var(--warn); }
+
+    /* Progress */
+    .prog-wrap { display: none; margin-top: 8px; }
+    .prog-bar  { height: 2px; background: rgba(50,50,45,.6); border-radius: 1px; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 1px; transition: width .4s; }
+
+    /* Tooltip */
+    #tooltip {
+      position: absolute; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,.92); border: 1px solid var(--line); border-radius: 3px;
+      padding: 8px 11px; font-family: var(--mono); font-size: .68rem; display: none;
+    }
+    #tooltip .tl { color: var(--muted); font-size: .58rem; margin-bottom: 3px; }
+
+    .spin { display: inline-block; width: 8px; height: 8px;
+            border: 1.5px solid rgba(200,169,110,.2); border-top-color: var(--accent);
+            border-radius: 50%; animation: sp .7s linear infinite; vertical-align: middle; margin-right: 5px; }
+    @keyframes sp { to { transform: rotate(360deg); } }
+
+    /* Fetch now button row */
+    .fetch-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .last-fetch { font-family: var(--mono); font-size: .62rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="h-title">AFS Core // Master v1.5</div>
+    <div class="h-meta">
+      <span id="sync-status">Status: Internal_Sim</span>
+      <span id="integrity-status" style="color: var(--green)">Integrity: Nominal</span>
+    </div>
+  </div>
+  <div class="h-status">
+    <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);text-transform:uppercase">Current_Regime</div>
+    <div class="h-zone" id="zone-display">—</div>
+    <div style="margin-top:4px"><span class="badge" id="live-badge">● Ei yhteyttä</span></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PROXY SETUP — full width -->
+  <div class="card" id="setup-panel">
+    <div class="sec">Proxy · Data Source</div>
+    <div class="proxy-row">
+      <input type="text" id="proxy-url"
+        value="https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api"
+        placeholder="https://proxy.workers.dev/api" />
+      <button class="btn btn-grn" onclick="testProxy()">⚡ Testaa</button>
+      <button class="btn btn-go"  onclick="fetchAndUpdate()">▶ Hae live-data</button>
+    </div>
+    <div class="proxy-msg" id="proxy-msg">— ei testattu</div>
+    <div class="prog-wrap" id="prog-wrap">
+      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:4px" id="prog-label">Haetaan…</div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="fetch-row">
+      <label style="font-family:var(--mono);font-size:.65rem;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <input type="checkbox" id="auto-refresh" /> Auto-refresh 5 min
+      </label>
+      <span class="last-fetch" id="last-fetch">—</span>
+    </div>
+  </div>
+
+  <!-- RISK HORIZON CHART -->
+  <div class="card" id="chart-panel">
+    <div class="chart-meta">
+      <span style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Risk_Horizon_Matrix</span>
+      <span id="tzt-display" style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">T-t-T: —</span>
+    </div>
+
+    <div id="chart-wrap" onmousemove="onChartHover(event)" onmouseleave="hideTooltip()">
+      <svg id="rhm-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <marker id="arr-red" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L4,2 L0,4 Z" fill="#d95f5f" />
+          </marker>
+          <marker id="arr-amber" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L4,2 L0,4 Z" fill="#e8a040" />
+          </marker>
+        </defs>
+        <!-- Zones -->
+        <g opacity="0.14">
+          <rect x="0"  y="0"    width="30" height="28.5" fill="#4caf7d"/>
+          <path d="M30 0 H50 V42.8 H0 V28.5 H30 Z" fill="#e8a040"/>
+          <path d="M50 0 H100 V42.8 H50 Z M0 42.8 H50 V100 H0 Z" fill="#e07030"/>
+          <rect x="50" y="42.8" width="50" height="57.2" fill="#d95f5f"/>
+        </g>
+        <!-- Zone labels -->
+        <text x="10" y="11" fill="#4caf7d" font-size="3.5" font-family="monospace" opacity="0.45">Z1</text>
+        <text x="35" y="38" fill="#e8a040" font-size="3.5" font-family="monospace" opacity="0.45">Z2</text>
+        <text x="75" y="18" fill="#e07030" font-size="3.5" font-family="monospace" opacity="0.45">Z3</text>
+        <text x="75" y="75" fill="#d95f5f" font-size="3.5" font-family="monospace" opacity="0.45">Z4</text>
+        <!-- Threshold lines -->
+        <g stroke="white" stroke-width="0.15" stroke-dasharray="1.5 1" opacity="0.18">
+          <line x1="30" y1="0" x2="30" y2="100"/>
+          <line x1="50" y1="0" x2="50" y2="100"/>
+          <line x1="0"  y1="28.5" x2="100" y2="28.5"/>
+          <line x1="0"  y1="42.8" x2="100" y2="42.8"/>
+        </g>
+        <!-- Trail (populated by JS) -->
+        <g id="trail-g"></g>
+        <!-- Vector (populated by JS) -->
+        <line id="vector-line" x1="50" y1="50" x2="50" y2="50"
+              stroke="#d95f5f" stroke-width="0.8" marker-end="url(#arr-red)" opacity="0"/>
+        <!-- Sim vector (populated by JS) -->
+        <line id="sim-line" x1="50" y1="50" x2="50" y2="50"
+              stroke="#e8a040" stroke-width="0.6" stroke-dasharray="1 0.5" marker-end="url(#arr-amber)" opacity="0"/>
+        <!-- Sim dot -->
+        <circle id="sim-dot" cx="50" cy="50" r="1.2" fill="none" stroke="#e8a040" stroke-width="0.5" opacity="0"/>
+        <!-- Crosshair (hover) -->
+        <line id="ch-v" x1="0" y1="0" x2="0" y2="100" stroke="white" stroke-width="0.12" opacity="0"/>
+        <line id="ch-h" x1="0" y1="0" x2="100" y2="0" stroke="white" stroke-width="0.12" opacity="0"/>
+        <!-- System point -->
+        <circle id="sys-ring" cx="50" cy="50" r="3.5" fill="none" stroke="white" stroke-width="0.4" opacity="0.2"/>
+        <circle id="sys-dot"  cx="50" cy="50" r="1.8" fill="white"/>
+      </svg>
+      <div id="tooltip">
+        <div class="tl">PROBE</div>
+        <div id="tt-pdi">PDI: —</div>
+        <div id="tt-sbm">SBM: —</div>
+      </div>
+    </div>
+
+    <!-- Metrics bar -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">PDI</div>
+        <div class="metric-value" id="m-pdi">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">SBM</div>
+        <div class="metric-value" id="m-sbm">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Zone</div>
+        <div class="metric-value" id="m-zone">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">T-t-T</div>
+        <div class="metric-value" id="m-tzt">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- HMI INTERPRETATION PANEL -->
+    <div class="card" id="hmi-panel" style="border-color: var(--line);">
+      <div class="sec">Tilannearvio</div>
+      <div id="hmi-zone-line" style="font-size:1rem;font-weight:600;margin-bottom:8px;color:var(--muted)">— odottaa dataa</div>
+      <div id="hmi-body" style="font-size:.82rem;line-height:1.75;color:var(--ink);opacity:.85;">
+        Paina <em>Hae live-data</em> aloittaaksesi.
+      </div>
+      <div id="hmi-rkom" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted);line-height:1.65;"></div>
+    </div>
+
+    <!-- Live Fingrid data -->
+    <div class="card">
+      <div class="sec">Fingrid · Live</div>
+      <div class="live-grid">
+        <div class="live-item">
+          <div class="live-name">Tuotanto</div>
+          <div class="live-value" id="lv-prod">—</div>
+        </div>
+        <div class="live-item">
+          <div class="live-name">Kulutus</div>
+          <div class="live-value" id="lv-cons">—</div>
+        </div>
+        <div class="live-item">
+          <div class="live-name">Ylijäämä</div>
+          <div class="live-value" id="lv-surp">—</div>
+        </div>
+        <div class="live-item">
+          <div class="live-name">Tuulivoima</div>
+          <div class="live-value" id="lv-wind">—</div>
+        </div>
+        <div class="live-item" style="grid-column: 1 / -1;">
+          <div class="live-name">Spot-hinta (FI) <span id="spot-src" style="color:var(--muted);font-size:.55rem;">— ei haettu</span></div>
+          <div style="display:flex;align-items:baseline;gap:10px;">
+            <div class="live-value" id="lv-spot">—</div>
+            <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted)" id="lv-spot-stress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RKOM -->
+    <div class="card">
+      <div class="sec">Control_Interface</div>
+      <div class="rkom-row">
+        <span style="font-family:var(--mono);font-size:.65rem;color:var(--muted)">RKOM_Intervention</span>
+        <span class="rkom-val" id="rkom-val">0%</span>
+      </div>
+      <input type="range" min="0" max="1" step="0.1" value="0" id="rkom-slider" oninput="onRkom(this.value)"/>
+      <div class="sim-result" id="sim-result" style="display:none">
+        Sim_Zone: <span id="sim-zone">—</span> · PDI: <span id="sim-pdi">—</span>
+      </div>
+    </div>
+
+    <!-- Invariants -->
+    <div class="card">
+      <div class="sec">Invariant_Check</div>
+      <div id="inv-display" class="inv-ok">✓ Nominal — ei rikkomuksia</div>
+    </div>
+
+    <!-- Data audit -->
+    <div class="card">
+      <div class="sec">Data_Adaptor_Audit</div>
+      <div id="audit-list">
+        <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">— hae data ensin</div>
+      </div>
+    </div>
+
+    <!-- Fetch log -->
+    <div class="card" style="padding:12px 14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="sec" style="margin:0">Fetch Log</div>
+        <button class="btn btn-sec" style="font-size:.58rem;padding:2px 7px;" onclick="document.getElementById('log').innerHTML=''">Tyhjennä</button>
+      </div>
+      <div id="log"></div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. DATASET IDs (matching calibration validator)
+// ─────────────────────────────────────────────────────────────────────────────
+const DS = { PROD: 192, CONS: 193, SURP: 198, WIND: 181, SPOT: 105 };
+
+// Spot price component — Fingrid DS 105 (day-ahead €/MWh)
+// Reference price: 60 €/MWh (FI long-run average, pre-crisis baseline)
+// Above REF_PRICE → forced/expensive import → gAnn penalty scales up
+const REF_PRICE_EUR_MWH = 60;
+
+// Finnish installed wind capacity (MW) by year — same table as calibration tool
+const INST_CAP = {
+  2015:872,2016:1533,2017:2044,2018:2041,2019:2284,
+  2020:2586,2021:3099,2022:5677,2023:6993,2024:7400,2025:8200,2026:9000
+};
+const instCapNow = () => INST_CAP[new Date().getFullYear()] || 9000;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. AFS BASELINE (matches AFS_Master_v1_5)
+// ─────────────────────────────────────────────────────────────────────────────
+const BASELINE = {
+  rTax:70, eMandatory:67.9, gAnn:5.0, cFixed:2.1, eL3:5.0,
+  iBase:0.0315, sigmaRiskBp:40, gReal:0.012, refiShare:0.25
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. FINGRID + PRICE → AFS ADAPTER  (v2 — price-aware gAnn)
+//
+//  gAnn = BASELINE + quantComponent + priceComponent
+//
+//    quantComponent = (netImport / consumption) × 6
+//      → how much of demand is covered by imports (volume signal)
+//
+//    priceComponent = max(0, spot − REF_PRICE) / REF_PRICE × 4
+//      → how expensive the import is (cost-intensity signal)
+//
+//  Interpretation:
+//    cheap surplus (spot ≤ 60, exporting) → gAnn ≈ baseline, no penalty
+//    cheap import  (spot ≤ 60, importing) → volume penalty only
+//    expensive import (spot > 60)         → volume + price penalty
+//    spike import  (spot >> 60)           → gAnn climbs sharply → Z4 risk
+//
+//  gReal — now SYMMETRIC:
+//    surplus → positive contribution (capped +0.04)
+//    deficit → small negative drag   (floored −0.02)
+//    This means sustained deficit slightly lowers SBM even if gAnn
+//    hasn't fully absorbed the stress yet.
+// ─────────────────────────────────────────────────────────────────────────────
+function buildExternalData(snap, bond = null, spotPrice = null, spotSource = null) {
+  const cap    = instCapNow();
+  const windCF = snap.wind_MW / cap;
+
+  // sigmaRiskBp ← wind capacity factor (unchanged)
+  let sigmaRiskBp;
+  if      (windCF < 0.05) sigmaRiskBp = 120;
+  else if (windCF < 0.15) sigmaRiskBp = 80;
+  else if (windCF < 0.30) sigmaRiskBp = 50;
+  else                     sigmaRiskBp = 30;
+
+  // gAnn v2 — price-aware
+  const absMax       = Math.max(snap.consumption_MW, 1);
+  const importFrac   = Math.max(0, -snap.surplus_MW) / absMax;          // 0 if exporting
+  const quantComp    = importFrac * 6;                                   // volume signal
+  const priceComp    = spotPrice !== null
+    ? Math.max(0, spotPrice - REF_PRICE_EUR_MWH) / REF_PRICE_EUR_MWH * 4  // cost-intensity signal
+    : 0;
+  const gAnn = parseFloat((BASELINE.gAnn + quantComp + priceComp).toFixed(3));
+
+  // gReal — symmetric: positive on surplus, small negative drag on deficit
+  const surplusFrac = snap.surplus_MW / Math.max(snap.production_MW, 1);
+  const gReal = parseFloat(
+    Math.max(-0.02, Math.min(0.04, surplusFrac * 0.05)).toFixed(4)
+  );
+
+  // iBase from ECB if available
+  const iBase = bond ? parseFloat(bond.value.toFixed(5)) : BASELINE.iBase;
+
+  // Metadata for audit panel
+  const confidence = {};
+  const sources    = {};
+  ['rTax','eMandatory','cFixed','eL3','refiShare'].forEach(k => {
+    confidence[k] = 'low'; sources[k] = 'System Baseline';
+  });
+  confidence.sigmaRiskBp = 'high'; sources.sigmaRiskBp = 'Fingrid Live (DS 181)';
+  confidence.gReal       = 'high'; sources.gReal       = 'Fingrid Live (DS 198)';
+  confidence.iBase       = bond        ? bond.confidence         : 'low';
+  sources.iBase          = bond        ? bond.source              : 'System Baseline';
+  confidence.gAnn        = spotPrice !== null ? 'high'   : 'med';
+  sources.gAnn           = spotPrice !== null
+    ? `Fingrid DS 198 + ${spotSource || 'DS 105'}`
+    : 'Fingrid DS 198 — ei hintadataa';
+
+  return {
+    sigmaRiskBp, gAnn, gReal, iBase,
+    _meta:  { confidence, sources },
+    _snap:  snap,
+    _price: spotPrice,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. STATE ENGINE (identical to AFS_Master_v1_5)
+// ─────────────────────────────────────────────────────────────────────────────
+function computeState(ext) {
+  const inp = { ...BASELINE, ...ext };
+  const fundingGap = Math.max(0, inp.gAnn - inp.cFixed);
+  const protRatio  = Math.max(0, Math.min(1, inp.cFixed / Math.max(inp.eL3, 1e-4)));
+  const pdi = Math.max(0, Math.min(1, (fundingGap / Math.max(inp.gAnn, 1e-4)) * (1 - protRatio)));
+  const iEff = (1 - inp.refiShare) * 0.0315 + inp.refiShare * (inp.iBase + inp.sigmaRiskBp / 1e4);
+  const sbm  = inp.rTax - inp.eMandatory - 12 * (iEff - 0.0315) + 0.8 * inp.gReal;
+
+  let zone = 'Z1';
+  if      (pdi > 0.25 && sbm < 0)          zone = 'Z4';
+  else if (pdi > 0.25 || sbm < 0)          zone = 'Z3';
+  else if (pdi >= 0.15 || sbm <= 2.0)      zone = 'Z2';
+
+  const invariants = [];
+  if (inp.cFixed > inp.eL3) invariants.push('INV_C_FIXED_EXCEEDS_EL3');
+  if (inp.iBase  < 0)       invariants.push('INV_NEGATIVE_IBASE');
+
+  return { pdi, sbm, zone, invariants };
+}
+
+function computeProjection(pdi, sbm, dPdi, dSbm) {
+  const tPdi = dPdi > 0 ? (0.25 - pdi) / dPdi : Infinity;
+  const tSbm = dSbm < 0 ? sbm / Math.abs(dSbm) : Infinity;
+  const tZ4  = (isFinite(tPdi) && isFinite(tSbm)) ? Math.max(tPdi, tSbm) : Infinity;
+  return (tZ4 < 0 || tZ4 > 40) ? Infinity : tZ4;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. CHART HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+const chartX = pdi => Math.max(0, Math.min(1, pdi / 0.5)) * 100;
+const chartY = sbm  => 100 - (Math.max(0, Math.min(1, (sbm + 3) / 7)) * 100);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let currentInputs = {};
+let currentState  = computeState({});
+let history       = [];
+let rkomLevel     = 0;
+let autoTimer     = null;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. FETCH HELPERS (same proxy format as calibration validator)
+// ─────────────────────────────────────────────────────────────────────────────
+function proxyBase() {
+  return document.getElementById('proxy-url').value.trim().replace(/\/$/, '');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function fetchLatest(dsId, retries = 3) {
+  const now   = new Date();
+  const from  = new Date(now.getTime() - 30 * 60 * 1000);
+  const start = from.toISOString();
+  const end   = now.toISOString();
+  const url   = `${proxyBase()}?ds=${dsId}&start=${start}&end=${end}&size=5`;
+
+  for (let attempt = 0; attempt < retries; attempt++) {
+    const r = await fetch(url);
+
+    if (r.status === 429) {
+      const wait = 12000 * (attempt + 1);
+      addLog('warn', `DS ${dsId} rate limit — odotetaan ${wait/1000}s…`);
+      await sleep(wait);
+      continue;
+    }
+    if (!r.ok) throw new Error(`HTTP ${r.status} (DS ${dsId})`);
+
+    const json = await r.json();
+    const rows = json.data || [];
+    if (!rows.length) throw new Error(`Tyhjä vastaus DS ${dsId}`);
+    const sorted = rows.sort((a, b) =>
+      new Date(b.startTime || b.start_time || b.time) -
+      new Date(a.startTime || a.start_time || a.time)
+    );
+    return +sorted[0].value;
+  }
+  throw new Error(`DS ${dsId} ylitti yritysrajan (429)`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8a. ECB YIELD CURVE — Finnish 10Y government bond (iBase)
+//     CORS-free, no proxy needed.
+//     Series: YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y
+//     Returns yield in % → divide by 100 for iBase decimal.
+//     Falls back to BASELINE if ECB is unavailable.
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchFinnishBondYield() {
+  const url = 'https://data-api.ecb.europa.eu/service/data/YC/' +
+    'B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y' +
+    '?lastNObservations=1&format=jsondata';
+  try {
+    const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!r.ok) throw new Error(`ECB HTTP ${r.status}`);
+    const json = await r.json();
+    // Navigate SDMX-JSON structure: dataSets[0].series["0:0:0:0:0:0:0"].observations
+    const series = json.dataSets?.[0]?.series;
+    if (!series) throw new Error('Ei sarjadataa ECB:ltä');
+    const obs = Object.values(series)[0]?.observations;
+    if (!obs) throw new Error('Ei havaintoja ECB:ltä');
+    // Most recent observation value is in index 0 of the array
+    const latest = Object.values(obs).sort((a, b) => b[0] - a[0])[0];
+    const yieldPct = latest[0];
+    if (isNaN(yieldPct)) throw new Error('NaN ECB-arvosta');
+    return { value: yieldPct / 100, source: 'ECB YC (FI 10Y)', confidence: 'high' };
+  } catch(e) {
+    addLog('warn', `ECB-korko epäonnistui: ${e.message} — käytetään baseline`);
+    return { value: BASELINE.iBase, source: 'System Baseline (ECB unavail.)', confidence: 'low' };
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8b. SPOT PRICE — Fingrid DS 105 (day-ahead €/MWh, hourly)
+//     Uses wider 3h window — spot is published once daily at ~13:00 UTC.
+//     DS 244 fallback: up-regulating price (≥ spot by definition, 1h delay).
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchSpotPrice() {
+  // Helper: fetch with custom time window (minutes)
+  async function fetchWithWindow(dsId, windowMinutes) {
+    const now   = new Date();
+    const from  = new Date(now.getTime() - windowMinutes * 60 * 1000);
+    const url   = `${proxyBase()}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=5`;
+    const r     = await fetch(url);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const json  = await r.json();
+    const rows  = json.data || [];
+    if (!rows.length) throw new Error('tyhjä');
+    const sorted = rows.sort((a, b) =>
+      new Date(b.startTime || b.start_time || b.time) -
+      new Date(a.startTime || a.start_time || a.time)
+    );
+    return +sorted[0].value;
+  }
+
+  // 1. Try DS 105 with a 4-hour window (covers gaps between hourly publications)
+  try {
+    const val = await fetchWithWindow(105, 240);
+    addLog('info', `Spot DS 105: ${val.toFixed(2)} €/MWh`);
+    return { value: val, source: 'Fingrid DS 105' };
+  } catch(e) {
+    addLog('warn', `DS 105 ei dataa (${e.message}) — kokeillaan DS 244`);
+  }
+
+  await sleep(7000);
+
+  // 2. Fallback: DS 244 (up-regulating price ≥ spot price, hourly, 1h delay)
+  try {
+    const val = await fetchWithWindow(244, 120);
+    addLog('info', `Spot fallback DS 244: ${val.toFixed(2)} €/MWh`);
+    return { value: val, source: 'Fingrid DS 244 (säätöhinta)' };
+  } catch(e) {
+    addLog('warn', `Spot-hinta epäonnistui kokonaan: ${e.message}`);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8c. PROXY TEST
+// ─────────────────────────────────────────────────────────────────────────────
+async function testProxy() {
+  const msg = document.getElementById('proxy-msg');
+  msg.className = 'proxy-msg'; msg.textContent = '⟳ Testataan…';
+  try {
+    const val = await fetchLatest(DS.WIND);
+    msg.className = 'proxy-msg ok';
+    msg.textContent = `✓ Proxy toimii — Tuulivoima nyt: ${val.toFixed(0)} MW`;
+    setLiveBadge(true);
+    addLog('ok', `Proxy OK — tuulivoima ${val.toFixed(0)} MW`);
+  } catch(e) {
+    msg.className = 'proxy-msg err';
+    msg.textContent = '✕ ' + e.message;
+    setLiveBadge(false);
+    addLog('err', 'Proxy-testi epäonnistui: ' + e.message);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 9. MAIN FETCH + UPDATE
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchAndUpdate() {
+  showProg(true, 'Haetaan valtion korkokanta (ECB)…', 5);
+  addLog('info', 'Aloitetaan live-haku…');
+  setLiveBadge(false);
+
+  try {
+    // 1. ECB bond yield — no rate limit, fast, no proxy needed
+    const bond = await fetchFinnishBondYield();
+    addLog('ok', `ECB FI 10Y: ${(bond.value * 100).toFixed(3)} % (${bond.source})`);
+
+    // 2. Spot price — DS 105 (4h window) with DS 244 fallback
+    showProg(true, 'Haetaan spot-hinta (DS 105)…', 12);
+    await sleep(7000);
+    const spotResult = await fetchSpotPrice();
+    const spotPrice  = spotResult ? spotResult.value : null;
+    const spotSource = spotResult ? spotResult.source : null;
+    if (spotPrice !== null) {
+      addLog('ok', `Spot FI: ${spotPrice.toFixed(2)} €/MWh via ${spotSource} (${spotPrice > REF_PRICE_EUR_MWH ? '▲ yli viitehinnan' : '▼ alle viitehinnan'})`);
+    }
+    await sleep(2000);
+
+    // 3. Fingrid datasets — sequential with 7s gap (rate limit)
+    showProg(true, 'Haetaan tuotanto (DS 192)…', 20);
+    const prod = await fetchLatest(DS.PROD);
+    addLog('info', `Tuotanto: ${prod.toFixed(0)} MW`);
+    await sleep(7000);
+
+    showProg(true, 'Kulutus (DS 193)…', 40);
+    const cons = await fetchLatest(DS.CONS);
+    addLog('info', `Kulutus: ${cons.toFixed(0)} MW`);
+    await sleep(7000);
+
+    showProg(true, 'Ylijäämä (DS 198)…', 60);
+    const surp = await fetchLatest(DS.SURP);
+    addLog('info', `Ylijäämä: ${surp.toFixed(0)} MW`);
+    await sleep(7000);
+
+    showProg(true, 'Tuulivoima (DS 181)…', 80);
+    const wind = await fetchLatest(DS.WIND);
+    addLog('ok', `Tuulivoima: ${wind.toFixed(0)} MW`);
+
+    showProg(true, 'Lasketaan…', 96);
+
+    const snap = { production_MW: prod, consumption_MW: cons, surplus_MW: surp, wind_MW: wind,
+                   fetchedAt: new Date().toISOString() };
+
+    const extData = buildExternalData(snap, bond, spotPrice, spotSource);
+    currentInputs = extData;
+
+    if (currentState.pdi !== undefined) {
+      history = [...history, { ...currentState, ts: Date.now() }].slice(-15);
+    }
+    currentState = computeState(extData);
+
+    updateLivePanel(snap, spotPrice, spotSource);
+    updateAuditPanel(extData);
+    updateInvariants(currentState.invariants);
+    updateChart();
+    updateMetrics(currentState, extData);
+    updateHMI();
+    updateRkomSim();
+
+    setLiveBadge(true);
+    document.getElementById('sync-status').textContent = 'Status: Live_Sync';
+    document.getElementById('last-fetch').textContent =
+      'Päivitetty: ' + new Date().toLocaleTimeString('fi-FI');
+    addLog('ok', `Zone: ${currentState.zone} · PDI: ${currentState.pdi.toFixed(4)} · SBM: ${currentState.sbm.toFixed(3)} · gAnn: ${extData.gAnn.toFixed(3)}`);
+
+  } catch(e) {
+    addLog('err', 'Haku epäonnistui: ' + e.message);
+    setLiveBadge(false);
+  }
+
+  showProg(false);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 10. UI UPDATE FUNCTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+function updateLivePanel(snap, spotPrice = null, spotSource = null) {
+  const mw = v => v.toFixed(0) + ' MW';
+  document.getElementById('lv-prod').textContent = mw(snap.production_MW);
+  document.getElementById('lv-cons').textContent = mw(snap.consumption_MW);
+
+  const surpEl = document.getElementById('lv-surp');
+  surpEl.textContent = (snap.surplus_MW >= 0 ? '+' : '') + mw(snap.surplus_MW);
+  surpEl.className = 'live-value ' + (snap.surplus_MW >= 0 ? 'surplus' : 'deficit');
+
+  const windCF = (snap.wind_MW / instCapNow() * 100).toFixed(1);
+  document.getElementById('lv-wind').textContent = `${mw(snap.wind_MW)} (CF ${windCF}%)`;
+
+  // Spot price — dedicated lv-spot card
+  const spotEl   = document.getElementById('lv-spot');
+  const stressEl = document.getElementById('lv-spot-stress');
+  const srcEl    = document.getElementById('spot-src');
+  if (spotPrice !== null) {
+    const priceColor = spotPrice > REF_PRICE_EUR_MWH * 2 ? 'var(--danger)' :
+                       spotPrice > REF_PRICE_EUR_MWH     ? 'var(--warn)'   : 'var(--green)';
+    spotEl.textContent   = spotPrice.toFixed(2) + ' €/MWh';
+    spotEl.style.color   = priceColor;
+    stressEl.textContent = spotPrice > REF_PRICE_EUR_MWH
+      ? `▲ ${((spotPrice - REF_PRICE_EUR_MWH) / REF_PRICE_EUR_MWH * 100).toFixed(0)}% yli viitehinnan`
+      : `▼ alle viitehinnan (${REF_PRICE_EUR_MWH} €/MWh)`;
+    if (srcEl) srcEl.textContent = spotSource || 'DS 105';
+  } else {
+    spotEl.textContent   = '— ei dataa';
+    stressEl.textContent = '';
+    if (srcEl) srcEl.textContent = '— ei haettu';
+  }
+}
+
+function updateAuditPanel(ext) {
+  const merged = { ...BASELINE, ...ext };
+  const meta   = ext._meta || { confidence:{}, sources:{} };
+  const keys   = Object.keys(BASELINE);
+
+  document.getElementById('audit-list').innerHTML = keys.map(k => {
+    const conf = meta.confidence[k] || 'low';
+    const src  = meta.sources[k]    || 'System Baseline';
+    const val  = typeof merged[k] === 'number' ? merged[k].toFixed(3) : '—';
+    return `<div class="audit-row">
+      <div>
+        <div class="audit-key">${k}</div>
+        <div class="audit-src">${src}</div>
+      </div>
+      <div class="audit-right">
+        <div class="conf-dot conf-${conf}"></div>
+        <div class="audit-val">${val}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateInvariants(invs) {
+  const el = document.getElementById('inv-display');
+  if (!invs || !invs.length) {
+    el.className = 'inv-ok'; el.textContent = '✓ Nominal — ei rikkomuksia';
+    document.getElementById('integrity-status').style.color = 'var(--green)';
+    document.getElementById('integrity-status').textContent = 'Integrity: Nominal';
+  } else {
+    el.className = 'inv-breach';
+    el.innerHTML = invs.map(i => `⚠ ${i}`).join('<br>');
+    document.getElementById('integrity-status').style.color = 'var(--danger)';
+    document.getElementById('integrity-status').textContent = 'Integrity: Breach';
+  }
+}
+
+function updateChart() {
+  const cx = chartX(currentState.pdi);
+  const cy = chartY(currentState.sbm);
+
+  // Move system point
+  document.getElementById('sys-dot').setAttribute('cx', cx);
+  document.getElementById('sys-dot').setAttribute('cy', cy);
+  document.getElementById('sys-ring').setAttribute('cx', cx);
+  document.getElementById('sys-ring').setAttribute('cy', cy);
+
+  // Trail
+  const trailG = document.getElementById('trail-g');
+  trailG.innerHTML = history.map((h, i) =>
+    `<circle cx="${chartX(h.pdi)}" cy="${chartY(h.sbm)}" r="0.7"
+     fill="white" opacity="${(i + 1) / history.length * 0.25}"/>`
+  ).join('');
+
+  // Vector — stabilised: weighted average over last 3 history points.
+  // Uses oldest available anchor so single noisy steps don't dominate.
+  if (history.length >= 1) {
+    const pts   = history.slice(-3);           // up to 3 snapshots
+    const anchor = pts[0];                     // oldest of the window
+    const steps  = pts.length;                 // 1–3
+    const dPdi   = (currentState.pdi - anchor.pdi) / steps;   // avg step per interval
+    const dSbm   = (currentState.sbm - anchor.sbm) / steps;
+    // Project 4 intervals ahead (same visual length as before, but smoothed direction)
+    const vx = chartX(currentState.pdi + dPdi * 4);
+    const vy = chartY(currentState.sbm + dSbm * 4);
+    const vl = document.getElementById('vector-line');
+    vl.setAttribute('x1', cx); vl.setAttribute('y1', cy);
+    vl.setAttribute('x2', vx); vl.setAttribute('y2', vy);
+    // Fade vector if direction is negligible (noise suppression)
+    const vecLen = Math.hypot(vx - cx, vy - cy);
+    vl.setAttribute('opacity', vecLen < 1.0 ? String((vecLen / 1.0 * 0.4).toFixed(2)) : '0.75');
+  }
+
+  // Zone header colour
+  const zd = document.getElementById('zone-display');
+  zd.textContent = currentState.zone;
+  zd.className = 'h-zone ' + currentState.zone;
+}
+
+function updateMetrics(state, ext) {
+  const zoneColors = { Z1:'#4caf7d', Z2:'#e8a040', Z3:'#e07030', Z4:'#d95f5f' };
+  document.getElementById('m-pdi').textContent  = state.pdi.toFixed(4);
+  document.getElementById('m-sbm').textContent  = state.sbm.toFixed(3);
+  document.getElementById('m-zone').textContent = state.zone;
+  document.getElementById('m-zone').style.color = zoneColors[state.zone];
+
+  // T-t-T uses same stabilised vector as chart
+  const tztPts  = history.slice(-3);
+  const tztAnchor = tztPts[0];
+  const tztSteps  = tztPts ? tztPts.length : 0;
+  const dPdiTzt = tztAnchor ? (state.pdi - tztAnchor.pdi) / tztSteps : 0;
+  const dSbmTzt = tztAnchor ? (state.sbm - tztAnchor.sbm) / tztSteps : 0;
+  const tzt  = tztAnchor
+    ? computeProjection(state.pdi, state.sbm, dPdiTzt, dSbmTzt)
+    : Infinity;
+  const tztStr = isFinite(tzt) ? tzt.toFixed(1) + 'Q' : '∞';
+  document.getElementById('m-tzt').textContent     = tztStr;
+  document.getElementById('tzt-display').textContent = 'T-t-T: ' + tztStr;
+}
+
+function onRkom(val) {
+  rkomLevel = parseFloat(val);
+  document.getElementById('rkom-val').textContent = (rkomLevel * 100).toFixed(0) + '%';
+  updateRkomSim();
+}
+
+function updateRkomSim() {
+  const simEl = document.getElementById('sim-result');
+  if (rkomLevel === 0) {
+    simEl.style.display = 'none';
+    document.getElementById('sim-line').setAttribute('opacity', '0');
+    document.getElementById('sim-dot').setAttribute('opacity', '0');
+    updateHMI();
+    return;
+  }
+  const base = { ...BASELINE, ...currentInputs };
+  const simExt = {
+    ...currentInputs,
+    cFixed: Math.min(base.eL3, base.cFixed + rkomLevel * 0.3 * base.eL3),
+    sigmaRiskBp: Math.max(20, (currentInputs.sigmaRiskBp || 40) - rkomLevel * 60)
+  };
+  const sim = computeState(simExt);
+
+  const sx = chartX(sim.pdi);
+  const sy = chartY(sim.sbm);
+  const cx = chartX(currentState.pdi);
+  const cy = chartY(currentState.sbm);
+  const sl = document.getElementById('sim-line');
+  sl.setAttribute('x1', cx); sl.setAttribute('y1', cy);
+  sl.setAttribute('x2', sx); sl.setAttribute('y2', sy);
+  sl.setAttribute('opacity', '0.85');
+  document.getElementById('sim-dot').setAttribute('cx', sx);
+  document.getElementById('sim-dot').setAttribute('cy', sy);
+  document.getElementById('sim-dot').setAttribute('opacity', '0.9');
+
+  const zoneColors = { Z1:'#4caf7d', Z2:'#e8a040', Z3:'#e07030', Z4:'#d95f5f' };
+  simEl.style.display = 'block';
+  document.getElementById('sim-zone').textContent = sim.zone;
+  document.getElementById('sim-zone').style.color = zoneColors[sim.zone];
+  document.getElementById('sim-pdi').textContent  = sim.pdi.toFixed(4);
+
+  updateHMI(sim);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HMI — PLAIN LANGUAGE INTERPRETATION ENGINE
+// Translates AFS state → readable Finnish for non-technical users.
+// ─────────────────────────────────────────────────────────────────────────────
+function updateHMI(simState = null) {
+  const s    = currentState;
+  const snap = currentInputs._snap;
+  const price = currentInputs._price;
+
+  if (!snap) return;
+
+  const zoneColors = { Z1:'#4caf7d', Z2:'#e8a040', Z3:'#e07030', Z4:'#d95f5f' };
+
+  // ── Zone headline ──
+  const zoneLines = {
+    Z1: { color: '#4caf7d', icon: '✓', text: 'Järjestelmä toimii normaalisti' },
+    Z2: { color: '#e8a040', icon: '○', text: 'Lieviä jänniteitä — seuranta suositeltavaa' },
+    Z3: { color: '#e07030', icon: '△', text: 'Selkeä rakenteellinen stressi' },
+    Z4: { color: '#d95f5f', icon: '⚠', text: 'Kriittinen tila — päätöskyky uhattuna' },
+  };
+  const zl = zoneLines[s.zone];
+  document.getElementById('hmi-zone-line').style.color = zl.color;
+  document.getElementById('hmi-zone-line').textContent = `${zl.icon} Vyöhyke ${s.zone} — ${zl.text}`;
+
+  // ── Body: what's driving the state ──
+  const lines = [];
+
+  // PDI reading
+  if (s.pdi > 0.30) {
+    lines.push(`Suojakapasiteettivaje on merkittävä (PDI ${s.pdi.toFixed(2)}): käytettävissä olevat kriittiset resurssit kattavat vain osan järjestelmän tarpeesta.`);
+  } else if (s.pdi > 0.15) {
+    lines.push(`Suojakapasiteetti on osittain riittämätön (PDI ${s.pdi.toFixed(2)}): reunatilanne, jossa lisästressi voi heikentää toimintakykyä.`);
+  } else {
+    lines.push(`Suojakapasiteetti on riittävällä tasolla (PDI ${s.pdi.toFixed(2)}).`);
+  }
+
+  // SBM reading
+  if (s.sbm < 0) {
+    lines.push(`Systeemibudjettimittari on negatiivinen (SBM ${s.sbm.toFixed(2)}): rahoitustasapaino on pettänyt — järjestelmä kuluttaa enemmän kuin se pystyy ylläpitämään.`);
+  } else if (s.sbm < 2.0) {
+    lines.push(`Systeemibudjettimittari on niukka (SBM ${s.sbm.toFixed(2)}): liikkumavara on kapea, ja pienikin muutos korkotasossa tai kysynnässä voi kääntää saldon negatiiviseksi.`);
+  } else {
+    lines.push(`Systeemibudjettimittari on positiivinen (SBM ${s.sbm.toFixed(2)}): rahoitustasapaino kestää nykyisen stressin.`);
+  }
+
+  // Grid context
+  const cap = instCapNow();
+  const windCF = snap.wind_MW / cap;
+  if (windCF > 0.6) {
+    lines.push(`Tuulivoima tuottaa tällä hetkellä ${(windCF*100).toFixed(0)} % kapasiteetistaan — verkkoriski on matala.`);
+  } else if (windCF < 0.10) {
+    lines.push(`Tuulivoima on lähes pysähdyksissä (CF ${(windCF*100).toFixed(0)} %) — tämä nostaa verkon epätasapainoriskiä merkittävästi.`);
+  }
+
+  if (snap.surplus_MW < -500) {
+    lines.push(`Suomi tuo sähköä ${Math.abs(snap.surplus_MW).toFixed(0)} MW verran — tuontiriippuvuus on koholla.`);
+  } else if (snap.surplus_MW > 500) {
+    lines.push(`Suomi vie sähköä ${snap.surplus_MW.toFixed(0)} MW — verkon ylijäämätilanne on hyvä.`);
+  }
+
+  if (price !== null) {
+    if (price > REF_PRICE_EUR_MWH * 2) {
+      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) on poikkeuksellisen korkea — tämä lisää järjestelmän kustannuspainetta.`);
+    } else if (price > REF_PRICE_EUR_MWH) {
+      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) ylittää viitehinnan — lievästi kohonnut kustannusstressi.`);
+    } else {
+      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) on maltillinen.`);
+    }
+  }
+
+  // Z3/Z4 structural note
+  if (s.zone === 'Z3' || s.zone === 'Z4') {
+    lines.push(`Huomio: stressitila on <em>rakenteellinen</em> — se ei poistu hyvällä sääpäivällä, vaan vaatii pitkäjänteisiä toimenpiteitä suojakapasiteetin kasvattamiseksi.`);
+  }
+
+  document.getElementById('hmi-body').innerHTML = lines.map(l => `<p style="margin-bottom:6px">${l}</p>`).join('');
+
+  // ── RKOM simulation reading ──
+  const rkomEl = document.getElementById('hmi-rkom');
+  if (simState && rkomLevel > 0) {
+    rkomEl.style.display = 'block';
+    const improved = simState.zone < s.zone || simState.pdi < s.pdi;
+    const zoneChange = simState.zone !== s.zone
+      ? ` → <strong style="color:${zoneColors[simState.zone]}">${simState.zone}</strong>`
+      : ' (vyöhyke ei muutu)';
+
+    let rkomText = `RKOM ${(rkomLevel*100).toFixed(0)} % -interventiolla: PDI laskee arvoon ${simState.pdi.toFixed(3)}${zoneChange}. `;
+    if (simState.zone === 'Z1') {
+      rkomText += 'Täysimittainen interventio palauttaisi järjestelmän normaalitilaan.';
+    } else if (simState.pdi < s.pdi * 0.7) {
+      rkomText += 'Interventio parantaa tilannetta merkittävästi, muttei riitä yksin vyöhykemuutokseen.';
+    } else {
+      rkomText += 'Interventiovaikutus on rajallinen — rakenteellinen vaje vaatii laajempia toimia.';
+    }
+    rkomEl.innerHTML = rkomText;
+  } else {
+    rkomEl.style.display = 'none';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 11. HOVER / CROSSHAIR
+// ─────────────────────────────────────────────────────────────────────────────
+function onChartHover(e) {
+  const wrap = document.getElementById('chart-wrap');
+  const b    = wrap.getBoundingClientRect();
+  const px   = (e.clientX - b.left) / b.width  * 100;
+  const py   = (e.clientY - b.top)  / b.height * 100;
+  const pdi  = px / 100 * 0.5;
+  const sbm  = 4 - py / 100 * 7;
+
+  document.getElementById('ch-v').setAttribute('x1', px); document.getElementById('ch-v').setAttribute('x2', px);
+  document.getElementById('ch-h').setAttribute('y1', py); document.getElementById('ch-h').setAttribute('y2', py);
+  document.getElementById('ch-v').setAttribute('opacity', '0.25');
+  document.getElementById('ch-h').setAttribute('opacity', '0.25');
+
+  const tt = document.getElementById('tooltip');
+  tt.style.display = 'block';
+  tt.style.left    = (e.offsetX + 16) + 'px';
+  tt.style.top     = (e.offsetY + 10) + 'px';
+  document.getElementById('tt-pdi').textContent = 'PDI: ' + pdi.toFixed(3);
+  document.getElementById('tt-sbm').textContent = 'SBM: ' + sbm.toFixed(2);
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').style.display = 'none';
+  document.getElementById('ch-v').setAttribute('opacity', '0');
+  document.getElementById('ch-h').setAttribute('opacity', '0');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 12. AUTO-REFRESH
+// ─────────────────────────────────────────────────────────────────────────────
+document.getElementById('auto-refresh').addEventListener('change', function() {
+  if (this.checked) {
+    fetchAndUpdate();
+    autoTimer = setInterval(fetchAndUpdate, 5 * 60 * 1000);
+    addLog('info', 'Auto-refresh käynnistetty (5 min)');
+  } else {
+    clearInterval(autoTimer);
+    addLog('info', 'Auto-refresh pysäytetty');
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 13. HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+function setLiveBadge(ok) {
+  const b = document.getElementById('live-badge');
+  b.textContent = ok ? '● Live' : '● Ei yhteyttä';
+  b.className = ok ? 'badge live' : 'badge err';
+}
+
+function showProg(show, label = '', pct = 0) {
+  document.getElementById('prog-wrap').style.display = show ? 'block' : 'none';
+  document.getElementById('prog-label').textContent  = label;
+  document.getElementById('prog-fill').style.width   = pct + '%';
+}
+
+function addLog(type, msg) {
+  const el = document.getElementById('log');
+  const d  = document.createElement('div');
+  d.className  = 'll-' + type;
+  d.textContent = `[${new Date().toLocaleTimeString('fi-FI')}] ${msg}`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+// Init render with baseline (no live data yet)
+updateChart();
+updateMetrics(currentState, {});
+addLog('info', 'AFS v1.5 käynnistetty — odottaa Fingrid-dataa');
+</script>
+</body>
+</html>
