@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI Tools — MESA Node Economic Scenarios</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --text:#1a1a1a;--muted:#555;--faint:#888;--border:#d0d0d0;
+  --bg:#fff;--bg-alt:#f7f7f5;
+  --mono:"Courier New",Courier,monospace;
+  --sans:Georgia,"Times New Roman",serif;
+  --ui:system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--ui);font-size:15px;color:var(--text);background:var(--bg);max-width:800px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+.nav{font-family:var(--ui);font-size:12px;color:var(--faint);letter-spacing:.04em;margin-bottom:2rem;display:flex;gap:1rem;}
+.nav a{color:var(--faint);text-decoration:none;}.nav a:hover{color:var(--text);}
+.nav .sep{color:var(--border);}
+
+.context-box{border:1px solid var(--border);padding:1rem 1.25rem;margin-bottom:2rem;background:var(--bg-alt);}
+.context-label{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
+.context-title{font-family:var(--sans);font-size:1.15rem;font-weight:normal;margin-bottom:.3rem;}
+.context-sub{font-size:.875rem;color:var(--muted);font-style:italic;margin-bottom:.75rem;}
+.context-meta{font-family:var(--mono);font-size:10px;color:var(--faint);display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.context-body{font-size:.875rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:.75rem;}
+.context-body a{color:var(--muted);}
+.context-refs{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;}
+.ref-tag{font-family:var(--mono);font-size:10px;color:var(--faint);background:var(--bg);border:1px solid var(--border);padding:1px 6px;border-radius:2px;}
+
+.sec{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;font-family:var(--ui);}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem 1.25rem;margin-bottom:12px;}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{padding:5px 14px;font-size:12px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg-alt);color:var(--muted);font-family:var(--ui);}
+.tab.active{background:var(--bg);color:var(--text);font-weight:500;}
+.sc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.sc-card{border-radius:3px;padding:10px 12px;border:1px solid var(--border);cursor:pointer;background:var(--bg-alt);}
+.sc-card.sel{background:var(--bg);}
+.sc-label{font-size:11px;font-weight:600;margin-bottom:3px;font-family:var(--ui);}
+.sc-year{font-size:11px;color:var(--faint);font-family:var(--mono);}
+.sc-irr{font-size:20px;font-weight:500;margin-top:5px;font-family:var(--ui);}
+.param-table{width:100%;font-size:13px;border-collapse:collapse;}
+.param-table td{padding:5px 8px;border-bottom:1px solid #eee;}
+.param-table tr:last-child td{border-bottom:none;}
+.param-table .lbl{color:var(--muted);width:55%;}
+.param-table .cur{font-weight:500;text-align:right;font-family:var(--mono);}
+.param-table .src{font-size:10px;color:var(--faint);text-align:right;font-family:var(--mono);}
+.pillar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.pillar-lbl{font-size:12px;color:var(--muted);min-width:220px;}
+.pillar-track{flex:1;height:16px;background:var(--bg-alt);border-radius:2px;overflow:hidden;border:1px solid var(--border);}
+.pillar-fill{height:100%;border-radius:2px;transition:width .4s;}
+.pillar-num{font-size:12px;font-weight:500;min-width:64px;text-align:right;font-family:var(--mono);}
+.dvd{border:none;border-top:1px solid var(--border);margin:10px 0;}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.metric{background:var(--bg-alt);border:1px solid var(--border);border-radius:3px;padding:10px 12px;}
+.m-lbl{font-size:11px;color:var(--faint);margin-bottom:4px;font-family:var(--ui);}
+.m-val{font-size:20px;font-weight:500;font-family:var(--ui);}
+.m-sub{font-size:10px;color:var(--faint);margin-top:2px;font-family:var(--mono);}
+.upside-strip{background:var(--bg-alt);border:1px solid var(--border);border-radius:3px;padding:8px 12px;font-size:12px;color:var(--muted);margin-top:8px;}
+.upside-val{font-size:15px;font-weight:500;color:var(--text);}
+.note{font-size:11px;color:var(--faint);line-height:1.6;margin-top:8px;font-family:var(--ui);}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.slider-lbl{font-size:13px;color:var(--muted);min-width:160px;}
+.slider-val{font-size:13px;font-weight:500;min-width:50px;text-align:right;font-family:var(--mono);}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-size:12px;color:var(--faint);}
+.legend span{display:inline-flex;align-items:center;gap:5px;}
+.legend-line{width:18px;height:2px;display:inline-block;}
+footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--faint);line-height:1.9;}
+footer a{color:var(--faint);text-decoration:none;}
+@media(max-width:600px){
+  .sc-grid{grid-template-columns:repeat(2,1fr);}
+  .m-grid{grid-template-columns:repeat(2,1fr);}
+  .pillar-lbl{min-width:140px;font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="https://aethercontinuity.org">ACI</a>
+  <span class="sep">·</span>
+  <a href="../">Tools</a>
+  <span class="sep">·</span>
+  <span>MESA Node Economic Scenarios</span>
+</nav>
+
+<div class="context-box">
+  <div class="context-label">ACI · Analytical Tool · T-001</div>
+  <div class="context-title">MESA Node Economic Scenarios — SGFA 4.0</div>
+  <div class="context-sub">Interactive sensitivity analysis for a MESA-compliant municipal CHP–PtX energy node</div>
+  <div class="context-meta">
+    <span>Version 1.0</span>
+    <span>March 2026</span>
+    <span>Domain D-1 · D-4 · D-5</span>
+    <span>Status: Active</span>
+  </div>
+  <div class="context-body">
+    This tool models the economic structure of a MESA-architecture municipal energy node across four market scenarios (2025–2040). Profitability is grounded in three avoided-cost pillars — avoided fossil procurement, district heat sales (HPA), and avoided CO₂ liability — not in fuel market speculation. PtX upside is modelled as a real option with an explicit activation threshold (electricity spot &lt; 35 €/MWh), not as a base-case revenue stream.
+    <br><br>
+    This tool is derived from ACI diagnostic work on Finland's structural energy system constraints. It does not constitute an investment recommendation. Parameters are fully adjustable — results reflect user-defined assumptions.
+    <br><br>
+    SGFA 4.0 is a municipal implementation programme based on the MESA architecture. It is not an ACI programme.
+    <div class="context-refs">
+      <a href="https://aethercontinuity.org/supplements/mesa-architecture.html" class="ref-tag">MESA v1.0</a>
+      <span class="ref-tag">WP-001</span>
+      <span class="ref-tag">WP-004</span>
+      <span class="ref-tag">WP-005</span>
+      <span class="ref-tag">DA-001</span>
+      <span class="ref-tag">TN-001</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec">Solmun koko</div>
+<div class="card" style="padding:.75rem 1.25rem;">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+    <span style="font-size:13px;color:var(--muted);">CHP-sähköteho</span>
+    <span style="font-family:var(--mono);font-size:15px;font-weight:500;" id="chp_mw_v">150 MW</span>
+  </div>
+  <input type="range" min="50" max="300" value="150" step="10" id="chp_mw" style="width:100%;display:block;">
+  <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:4px;">
+    <span>50 MW</span><span>Tier B ←→ Tier A</span><span>300 MW</span>
+  </div>
+</div>
+
+<div class="sec">Skenaariot</div>
+<div class="sc-grid" id="sc_grid"></div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="pillars">Kassavirran rakenne</div>
+  <div class="tab" data-tab="params">Markkinaparametrit</div>
+  <div class="tab" data-tab="timeline">Aikajana 2025–2040</div>
+</div>
+
+<div id="tab_pillars">
+  <div class="card">
+    <div class="sec" style="margin-bottom:10px;">Tulovirrat ja kustannukset</div>
+    <div id="pillar_content"></div>
+    <hr class="dvd">
+    <div class="pillar-row">
+      <span class="pillar-lbl" style="font-weight:600;">EBITDA yhteensä</span>
+      <div class="pillar-track"><div class="pillar-fill" id="total_fill" style="background:#185FA5;"></div></div>
+      <span class="pillar-num" id="total_num" style="font-size:15px;"></span>
+    </div>
+  </div>
+  <div class="m-grid" id="metrics_grid"></div>
+  <div class="upside-strip" id="upside_strip"></div>
+</div>
+
+<div id="tab_params" style="display:none;">
+  <div class="card">
+    <div class="sec" style="margin-bottom:10px;">Parametrit ja lähteet</div>
+    <table class="param-table" id="param_table"></table>
+    <div class="note" id="param_note"></div>
+  </div>
+</div>
+
+<div id="tab_timeline" style="display:none;">
+  <div class="card">
+    <div class="sec" style="margin-bottom:8px;">IRR-kehitys skenaarioittain 2025–2040</div>
+    <div style="position:relative;width:100%;height:240px;"><canvas id="tl_chart"></canvas></div>
+    <div class="legend" id="tl_legend"></div>
+    <div class="note" id="tl_note"></div>
+  </div>
+</div>
+
+<footer>
+  ACI · Analytical Tool T-001 · MESA Node Economic Scenarios · Version 1.0 · March 2026<br>
+  Aether Continuity Institute · <a href="https://aethercontinuity.org">aethercontinuity.org</a> · Domain D-1 · D-4 · D-5<br>
+  This tool is an open analytical instrument. It does not constitute investment, legal, or policy advice.<br>
+  SGFA 4.0 is a municipal implementation programme based on MESA architecture. It is not an ACI programme.
+</footer>
+
+<script>
+const SCENARIOS = [
+  { id:'now',    label:'Nykytila 2025',       year:'2025', color:'#185FA5', selBg:'#E6F1FB',
+    fossil:90,  dh:52, co2:68,  methP:650,
+    note:'EU ETS ~68 €/t (Q1/2025). Maakaasu TTF ~90 €/MWh teollisuudelle. Kaukolämpö Kuopio-taso.',
+    src:'ETS: EEX Q1/2025 · Fossil: Gasum/Neste teollisuushinta · DH: Kuopion Energia 2024' },
+  { id:'mid',    label:'Perusskenaario 2030', year:'2030', color:'#1D9E75', selBg:'#E1F5EE',
+    fossil:120, dh:60, co2:110, methP:950,
+    note:'EU ETS nousee ~110 €/t (EU tavoiteura REPowerEU). Fossiilinen kallistuu CO₂-kustannuksen kautta.',
+    src:'ETS: EU Climate Target Plan · Fossil: IEA WEO 2024 · DH: Energiateollisuus ennuste' },
+  { id:'high',   label:'Korkea CO₂ 2035',    year:'2035', color:'#D85A30', selBg:'#FAECE7',
+    fossil:160, dh:68, co2:160, methP:1200,
+    note:'EU ETS 150–170 €/t (tiukka ilmastopaketti, CBAM täysvaikutus). Fossiilinen >150 €/MWh.',
+    src:'ETS: Carbon Tracker "Inevitable Policy Response" · IEA Net Zero scenario' },
+  { id:'stress', label:'Stressitesti 2030',   year:'2030', color:'#888780', selBg:'#F1EFE8',
+    fossil:65,  dh:50, co2:55,  methP:500,
+    note:'Matala hintaskenaario: ETS putoaa kriisiin, fossiilinen halpenee LNG-ylijäämällä. ETS 55 €/t ja fossiilinen 65 €/MWh — molemmat alle 10 vuoden keskiarvon.',
+    src:'Stressitesti — ei ennuste, vaan alarajan herkkyysanalyysi' },
+];
+
+let selSc = 0, chpMW = 150, tlChart = null;
+
+function calcNode(sc, chp) {
+  const cf=0.45, hy=8760;
+  const fuelE = chp*cf*hy;
+  const fossilSave = fuelE*sc.fossil/1e6;
+  const heatMW = chp*0.88;
+  const heatRev = heatMW*cf*hy*sc.dh/1e6;
+  const co2tons = fuelE*0.28;
+  const co2Rev = co2tons*sc.co2/1e6;
+  const vppRev = chp*0.4*22000/1e6;
+  const opex = chp*0.088;
+  const ebitda = fossilSave+heatRev+co2Rev+vppRev-opex;
+  const capex = chp*1.38;
+  const ncf = ebitda*0.82;
+  const payback = capex/ncf;
+  let cumDisc = 0, discPayback = null;
+  for(let t=1;t<=20;t++){
+    cumDisc += ncf/Math.pow(1.05,t);
+    if(discPayback===null && cumDisc>=capex) discPayback=t;
+  }
+  if(discPayback===null) discPayback='>20';
+  const upside = sc.methP*8/1000;
+  function irr(eb) {
+    const c=eb*0.82; let lo=0,hi=1;
+    for(let i=0;i<60;i++){const m=(lo+hi)/2;let n=-capex;for(let t=1;t<=20;t++)n+=c/Math.pow(1+m,t);if(n>0)lo=m;else hi=m;}
+    return (lo+hi)/2*100;
+  }
+  return {fossilSave,heatRev,co2Rev,vppRev,opex,ebitda,capex,ncf,payback,discPayback,upside,irr:irr(ebitda),irrUp:irr(ebitda+upside)};
+}
+
+function renderCards() {
+  document.getElementById('sc_grid').innerHTML = SCENARIOS.map((sc,i)=>{
+    const r=calcNode(sc,chpMW), sel=i===selSc;
+    return `<div class="sc-card${sel?' sel':''}" data-i="${i}"
+      style="background:${sel?sc.selBg:'#f2f3f4'};border-color:${sel?sc.color:'#ddd'};">
+      <div class="sc-label" style="color:${sc.color};">${sc.label}</div>
+      <div class="sc-year">${sc.year}</div>
+      <div class="sc-irr" style="color:${sc.color};">${r.irr.toFixed(1)}%</div>
+      <div style="font-size:11px;color:#888;">IRR perus</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.sc-card').forEach(el=>el.addEventListener('click',()=>{selSc=+el.dataset.i;render();}));
+}
+
+function renderPillars() {
+  const sc=SCENARIOS[selSc], r=calcNode(sc,chpMW);
+  const pillars=[
+    {lbl:'Vältetty fossiilinen hankinta',          val:r.fossilSave, color:'#185FA5'},
+    {lbl:'Kaukolämpömyynti (HPA)',                 val:r.heatRev,    color:'#1D9E75'},
+    {lbl:'Hiilidioksidin hyötykäyttö (vältetty ETS-riski)', val:r.co2Rev, color:'#D85A30'},
+    {lbl:'Reservimarkkinat (VPP/FCR)',             val:r.vppRev,     color:'#BA7517'},
+    {lbl:'OPEX (käyttökustannukset)',              val:-r.opex,      color:'#888780'},
+  ];
+  const mx=Math.max(...pillars.map(p=>Math.abs(p.val)),5);
+  document.getElementById('pillar_content').innerHTML=pillars.map(p=>{
+    const pct=Math.min(Math.abs(p.val)/mx*100,100).toFixed(1);
+    const sign=p.val<0?'−':'+';
+    return `<div class="pillar-row">
+      <span class="pillar-lbl">${p.lbl}</span>
+      <div class="pillar-track"><div class="pillar-fill" style="width:${pct}%;background:${p.color};opacity:${p.val<0?.4:1};"></div></div>
+      <span class="pillar-num">${sign}${Math.abs(p.val).toFixed(1)} M€</span>
+    </div>`;
+  }).join('');
+  document.getElementById('total_fill').style.width=Math.min(r.ebitda/mx*100,100).toFixed(1)+'%';
+  document.getElementById('total_num').textContent=r.ebitda.toFixed(1)+' M€/v';
+  const npv20=Array.from({length:20},(_,i)=>r.ncf/Math.pow(1.05,i+1)).reduce((a,b)=>a+b,-r.capex);
+  document.getElementById('metrics_grid').innerHTML=`
+    <div class="metric"><div class="m-lbl">IRR (ilman myyntiä)</div><div class="m-val">${r.irr.toFixed(1)}%</div><div class="m-sub">perusmalli</div></div>
+    <div class="metric"><div class="m-lbl">Diskontattu takaisinmaksu</div><div class="m-val">${r.discPayback} v</div><div class="m-sub">WACC 5 %, kokonainen vuosi</div></div>
+    <div class="metric"><div class="m-lbl">NPV 20 v (5 %)</div><div class="m-val">${npv20.toFixed(0)} M€</div><div class="m-sub">diskontattu</div></div>`;
+  document.getElementById('upside_strip').innerHTML=`
+    <strong style="color:#1C1C1C;">Markkinaupside (optio):</strong>
+    PtX käynnistyy kun sähkö &lt; 35 €/MWh. Jos ylijäämäpolttoainetta myydään (${sc.methP} €/t, ~8 kt/v) →
+    lisätulo <span class="upside-val">${r.upside.toFixed(1)} M€/v</span>,
+    IRR nousee <span class="upside-val">${r.irrUp.toFixed(1)} %:iin</span>.
+    Ei kannattavuuden perusta — deterministinen kassavirta + optioyläpuoli.`;
+}
+
+function renderParams() {
+  const sc=SCENARIOS[selSc];
+  const rows=[
+    ['Fossiilinen vertailuhinta',sc.fossil+' €/MWh','—'],
+    ['Kaukolämmön hinta (HPA)',sc.dh+' €/MWh','—'],
+    ['EU ETS CO₂-hinta',sc.co2+' €/t','—'],
+    ['Polttoaineen markkinahinta',sc.methP+' €/t','upside-optio'],
+    ['CHP käyttöaste','45 %','oletus'],
+    ['CO₂-kerroin','0.28 tCO₂/MWh','fossiili-korvaus'],
+    ['Lämpö/sähkö-suhde','0.88','Wärtsilä 34DF tyyppi'],
+    ['PtX käynnistyskynnys','< 35 €/MWh (sähkö spot)','optiorakenne'],
+    ['WACC','5 %','kunnallinen luottoluokitus'],
+    ['CAPEX/MW','1.38 M€/MW','sis. integraatio'],
+  ];
+  document.getElementById('param_table').innerHTML=rows.map(r=>`
+    <tr><td class="lbl">${r[0]}</td><td class="cur">${r[1]}</td><td class="src">${r[2]}</td></tr>`).join('');
+  document.getElementById('param_note').innerHTML=`<br>${sc.note}<br><em>${sc.src}</em>`;
+}
+
+function renderTimeline() {
+  const years=[2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040];
+  const base=SCENARIOS[0];
+  function interp(sc,yr){
+    const t=Math.max(0,Math.min(1,(yr-2025)/15));
+    return {fossil:base.fossil+(sc.fossil-base.fossil)*t,dh:base.dh+(sc.dh-base.dh)*t,
+            co2:base.co2+(sc.co2-base.co2)*t,methP:base.methP+(sc.methP-base.methP)*t};
+  }
+  const series=[
+    {id:'mid',   label:'Perusskenaario', color:'#1D9E75'},
+    {id:'high',  label:'Korkea CO₂',    color:'#D85A30'},
+    {id:'stress',label:'Stressitesti',  color:'#888780'},
+  ];
+  const datasets=series.map(d=>{
+    const sc=SCENARIOS.find(s=>s.id===d.id);
+    return {label:d.label,data:years.map(yr=>+calcNode(interp(sc,yr),chpMW).irr.toFixed(2)),
+      borderColor:d.color,backgroundColor:'transparent',tension:.35,borderWidth:2,pointRadius:3};
+  });
+  if(tlChart) tlChart.destroy();
+  tlChart=new Chart(document.getElementById('tl_chart'),{
+    type:'line',data:{labels:years.map(String),datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{size:11}}},
+        y:{grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{size:11},callback:v=>v+'%'},
+           title:{display:true,text:'IRR %',font:{size:11}},min:0}
+      }}
+  });
+  document.getElementById('tl_legend').innerHTML=series.map(d=>
+    `<span><span class="legend-line" style="background:${d.color};"></span>${d.label}</span>`).join('');
+  document.getElementById('tl_note').textContent=
+    'Stressitestissä ETS 55 €/t ja fossiilinen 65 €/MWh — molemmat alle 10 vuoden keskiarvon. Malli ylittää infrarahoituksen 6–8 % minimikynnyksen kaikissa skenaarioissa.';
+}
+
+function render() {
+  renderCards();
+  renderPillars();
+  renderParams();
+  if(document.querySelector('.tab.active').dataset.tab==='timeline') renderTimeline();
+}
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',function(){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active');
+  ['pillars','params','timeline'].forEach(id=>{
+    document.getElementById('tab_'+id).style.display=this.dataset.tab===id?'block':'none';
+  });
+  if(this.dataset.tab==='timeline') renderTimeline();
+}));
+
+document.getElementById('chp_mw').addEventListener('input',function(){
+  chpMW=+this.value;
+  document.getElementById('chp_mw_v').textContent=chpMW+' MW';
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
