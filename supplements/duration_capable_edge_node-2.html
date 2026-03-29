@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Duration-Capable Edge Intelligence v1.1 | Aether Continuity Institute</title>
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f7f4ee;
+  --rule: #ccc8be;
+  --muted: #7a7468;
+  --accent: #8b4513;
+  --mono: 'DM Mono','Courier New',monospace;
+  --serif: 'EB Garamond',Georgia,serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  line-height: 1.75;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 4rem 2.5rem 8rem;
+}
+
+/* Header */
+.page-header {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.2rem 0;
+  margin-bottom: 3rem;
+}
+.org-name {
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .3rem;
+}
+h1 {
+  font-size: 2.2rem;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  margin-bottom: .5rem;
+  line-height: 1.15;
+}
+.subtitle {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+.subtitle-fi {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* Abstract */
+.abstract {
+  border: 1px solid var(--rule);
+  padding: 1.5rem 1.8rem;
+  margin: 3rem 0;
+  background: #faf8f4;
+}
+.abstract-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .8rem;
+}
+.abstract p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: .9rem;
+}
+.abstract p:last-child { margin-bottom: 0; }
+
+/* Sections */
+.section { margin: 3.5rem 0; }
+.section-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .6rem;
+}
+h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .5rem;
+}
+h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin: 1.8rem 0 .8rem;
+  color: var(--accent);
+}
+p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #2a2520;
+  margin-bottom: 1rem;
+}
+
+/* Components grid */
+.components {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.8rem;
+  margin: 2rem 0;
+}
+.component {
+  border: 1px solid var(--rule);
+  padding: 1.2rem;
+  background: #faf8f4;
+}
+.component-id {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .15em;
+  color: var(--accent);
+  margin-bottom: .4rem;
+}
+.component-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: .6rem;
+  color: var(--ink);
+}
+.component p {
+  font-size: .95rem;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* Principle boxes */
+.principle {
+  border-left: 4px solid var(--ink);
+  padding: 1.2rem 1.5rem;
+  margin: 2rem 0;
+  background: #f0ece4;
+}
+.principle p {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.75;
+}
+
+/* Architecture visual */
+.arch-box {
+  border: 2px solid var(--rule);
+  padding: 2rem;
+  margin: 2.5rem 0;
+  background: #fefcfa;
+  font-family: var(--mono);
+  font-size: .85rem;
+  line-height: 1.9;
+  color: var(--muted);
+}
+.arch-layer {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px dashed var(--rule);
+}
+.arch-layer:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.arch-layer-name {
+  font-weight: bold;
+  color: var(--ink);
+  margin-bottom: .4rem;
+}
+
+/* Key insight */
+.key-insight {
+  border: 2px solid var(--accent);
+  padding: 1.5rem 1.8rem;
+  margin: 2.5rem 0;
+  background: #faf5ee;
+}
+.insight-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .8rem;
+}
+.key-insight p {
+  font-size: 1.08rem;
+  line-height: 1.8;
+  margin-bottom: .8rem;
+}
+.key-insight p:last-child { margin-bottom: 0; }
+
+/* Footer */
+.doc-footer {
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: .65rem;
+  line-height: 1.8;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  html { font-size: 16px; }
+  body { padding: 2rem 1.5rem 4rem; }
+  .components { grid-template-columns: 1fr; gap: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="org-name">Aether Continuity Institute</div>
+  <h1>Duration-Capable Edge Intelligence</h1>
+  <div class="subtitle">Architectural Principles for Resilient Autonomous Systems</div>
+  <div class="subtitle-fi">Kestävät autonomiset järjestelmät</div>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>A Duration-Capable Edge Intelligence Node (DCEIN) is an architectural pattern for autonomous systems designed to maintain operational capacity through extended infrastructure disruptions. Unlike conventional edge computing nodes that rely on continuous external connectivity, a DCEIN embeds five structural capabilities—power autonomy, sensor resilience, identity independence, audit continuity, and awareness externalization—that together enable sustained local decision-making and societal relevance during grid failures, network outages, and service degradations.</p>
+  <p>This document defines the core architectural requirements and design principles. The framework is technology-neutral: any implementation satisfying the structural requirements qualifies as a DCEIN, regardless of hardware platform or software stack.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Foundation</div>
+  <h2>The Duration Problem</h2>
+  
+  <p>Most autonomous systems fail not from lack of capability, but from lack of endurance. A smart home controller with sophisticated AI fails the moment grid power is lost. A fleet management system with perfect route optimization fails when cellular connectivity drops. An industrial sensor network with sub-millisecond precision fails when the authentication server becomes unreachable. And critically, a monitoring system that continues operating but cannot communicate its state to the external world fails in its societal function—operational but invisible.</p>
+
+  <p>These failures share a common pattern: <em>external dependency collapse</em>. The system's intelligence remains intact, but its operational scaffolding—power, connectivity, identity services, audit infrastructure, and awareness channels—disappears, and with it, the system's ability to function meaningfully in human environments.</p>
+
+  <div class="principle">
+    <p>Duration capability is not about surviving longer. It is about maintaining decision authority and external awareness when external dependencies fail.</p>
+  </div>
+
+  <p>The DCEIN architectural pattern addresses this by identifying five critical dependency categories and specifying structural requirements that enable each to survive independently during disruption periods. A system satisfying all five requirements can continue autonomous operation and maintain societal relevance for hours, days, or weeks—depending on how thoroughly the requirements are implemented.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Architecture</div>
+  <h2>The Five Duration Components</h2>
+  
+  <p>Duration capability emerges from the conjunction of five architectural properties, each addressing a distinct failure mode:</p>
+
+  <div class="components">
+    <div class="component">
+      <div class="component-id">D1</div>
+      <div class="component-name">Power Autonomy</div>
+      <p>Local energy supply sustains all critical functions across grid disconnection periods. This is not backup power—it is primary power independence, sized to the compound stress duration of the operating environment. Advanced battery systems (e.g., lithium-metal chemistries exceeding 400 Wh/kg) enable multi-day autonomous operation.</p>
+    </div>
+
+    <div class="component">
+      <div class="component-id">D2</div>
+      <div class="component-name">Sensor Resilience</div>
+      <p>Local sensor data remains valid for decision-making during connectivity loss. When external data streams fail, the system degrades gracefully to local-only sensing rather than halting decisions entirely.</p>
+    </div>
+
+    <div class="component">
+      <div class="component-id">D3</div>
+      <div class="component-name">Identity Independence</div>
+      <p>Local trust infrastructure provides cryptographic attestation without reliance on cloud identity services. Post-quantum cryptographic signatures (e.g., Dilithium, Kyber) ensure decisions remain verifiable even when central authentication systems are unreachable and quantum computing threats emerge.</p>
+    </div>
+
+    <div class="component">
+      <div class="component-id">D4</div>
+      <div class="component-name">Audit Continuity</div>
+      <p>Complete decision provenance is maintained locally during disruptions, enabling deferred reconciliation with external audit systems once connectivity is restored. No decision goes unlogged.</p>
+    </div>
+  </div>
+
+  <div class="component" style="margin-top: 1.8rem; border: 2px solid var(--accent); background: #faf5ee;">
+    <div class="component-id" style="color: var(--accent);">D5</div>
+    <div class="component-name">Awareness Externalization</div>
+    <p>Local system state is made externally accessible through degradation-resistant channels. When primary communication infrastructure fails, the system broadcasts critical awareness information via low-bandwidth, locally-generated signals (alerts, beacons, fallback messaging) ensuring the external environment remains informed of operational status and critical conditions.</p>
+  </div>
+
+  <p style="margin-top: 2rem;">These components are not optional features that can be added incrementally. They are structural requirements: a system lacking any one component is not duration-capable, regardless of how well the others are implemented.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Critical Gap</div>
+  <h2>The Awareness Problem</h2>
+
+  <p>A system that survives infrastructure collapse but cannot communicate its state faces a paradox: it operates correctly while the external world remains unaware. This is not a theoretical concern—it is an observed failure mode with serious consequences.</p>
+
+  <p>Consider a monitoring system during a regional power outage. D1–D4 ensure the system continues: local power sustains operation, sensors function, cryptographic attestation works, and decisions are logged. But if all communication channels depend on failed infrastructure, the system becomes operationally invisible. It detects critical conditions, makes valid decisions, maintains full audit trails—yet no external actor receives this information.</p>
+
+  <div class="principle">
+    <p>Operational continuity without external awareness is societal irrelevance. The system survives, but its survival serves no one.</p>
+  </div>
+
+  <p>This is the motivation for D5. Where D1–D4 address the system's internal resilience, D5 addresses its external relevance. The distinction is fundamental: a DCEIN without D5 is duration-capable in the narrow computational sense, but fails in the broader sociotechnical sense. It can make decisions, but cannot inform the environment that depends on those decisions.</p>
+
+  <h3>Structural Requirement</h3>
+
+  <p>D5 mandates that awareness externalization must degrade more slowly than internal operation. As infrastructure fails progressively, the system should transition through awareness modes:</p>
+
+  <p><strong>Full connectivity:</strong> Standard cloud-based communication, real-time dashboards, API integration.</p>
+
+  <p><strong>Degraded connectivity:</strong> SMS fallback, low-bandwidth alerts, periodic status broadcasts.</p>
+
+  <p><strong>Local-only:</strong> BLE beacons, mesh radio, physical signals (sirens, lights), edge-accessible dashboards.</p>
+
+  <p><strong>Minimal:</strong> Human-readable local display, fail-safe indicators.</p>
+
+  <p>The key property: even when WAN infrastructure is completely unavailable, some form of state externalization must remain functional. D5 is not about maintaining convenience—it is about maintaining meaning.</p>
+
+  <h3>Triggering Condition</h3>
+
+  <p>D5 externalization must activate under uncertainty, not only under certainty. When a system detects a potential threat but identification remains incomplete, the appropriate response is bounded communication ("event detected, assessment ongoing") rather than silence. Awareness latency must not exceed physical event latency. The trigger condition is: detection present AND identification incomplete AND potential impact non-zero. Under these conditions, the system externalizes its uncertainty rather than suppressing communication until full confirmation is achieved.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Structure</div>
+  <h2>Two-Unit Architecture</h2>
+  
+  <p>The D3 and D4 requirements—identity independence and audit continuity—impose a critical architectural constraint: <em>physical separation of the decision unit and the trust unit</em>.</p>
+
+  <p>This separation is not organizational; it is structural. A combined unit where the same processor handles both sensor processing and cryptographic attestation creates a correlated failure mode: compromise of the decision logic simultaneously compromises the audit trail. Physical separation prevents this: even if the decision unit is partially compromised, the trust unit maintains an independent attestation record.</p>
+
+  <div class="arch-box">
+<div class="arch-layer">
+<div class="arch-layer-name">ECU — Edge Compute Unit</div>
+Sensor interfaces · Local inference · Decision engine<br>
+Runs the operational logic: sensor fusion, KRI calculation,<br>
+decision execution. Can operate offline for extended periods.
+</div>
+
+<div class="arch-layer">
+<div class="arch-layer-name">TAU — Trust Anchor Unit</div>
+Cryptographic attestation · Local identity · Audit logging<br>
+Provides independent verification of ECU decisions. Maintains<br>
+unforgeable audit trail. Never executes operational logic.
+</div>
+
+<div class="arch-layer">
+<div class="arch-layer-name">Communication</div>
+ECU ↔ TAU on local network segment, independent of WAN.<br>
+Attestation protocol: ECU signs decision → TAU validates →<br>
+TAU logs hash. Deferred reconciliation when WAN returns.
+</div>
+  </div>
+
+  <p>This is the minimum viable architecture. More sophisticated implementations can distribute functions further—multiple ECUs, hierarchical TAUs, federated audit chains—but the core separation must remain: operational logic and trust logic must never occupy the same failure domain.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Implementation</div>
+  <h2>The Aether One Reference Platform</h2>
+  
+  <p>The Aether One platform demonstrates one complete instantiation of the DCEIN architecture. It embodies the two-unit separation (dedicated compute node + dedicated trust node), implements post-quantum cryptographic attestation, and provides local sensor fusion with degraded-mode operation.</p>
+
+  <h3>Core Architectural Elements</h3>
+
+  <p><strong>Sensor Layer:</strong> Local environmental sensors (temperature, air quality, motion, structural integrity) with mock-fallback capability. When sensors fail or provide implausible readings, the system continues operation using conservative fallback values rather than halting.</p>
+
+  <p><strong>Decision Engine:</strong> Deterministic inference core calculating Key Risk Indicators (KRI) and Livability Reserves (LR) from sensor inputs. Determinism ensures that decision hashes remain reproducible across audit replay—critical for D4 compliance.</p>
+
+  <p><strong>Trust Infrastructure:</strong> Post-quantum signature scheme (Dilithium) providing cryptographic attestation independent of external PKI. The trust node maintains a local decision log that can operate disconnected for weeks, synchronizing when connectivity returns.</p>
+
+  <p><strong>Watchdog System:</strong> Heartbeat monitoring between ECU and TAU ensures that failures are detected and logged even when the operational unit is compromised. The system enters degraded mode gracefully rather than failing silently.</p>
+
+  <h3>Duration Calibration</h3>
+
+  <p>The Aether One reference implementation addresses D2–D4 directly through its software architecture. D1 (power autonomy) requires physical infrastructure provisioning beyond the core platform: uninterruptible power supply, solar generation, or battery banks sized to the deployment environment's compound stress duration.</p>
+
+  <p>For Finnish operating environments, compound stress analysis indicates grid disconnection periods in the 24–72 hour range under moderate scenarios, extending to 7–14 days under severe disruptions. A DCEIN configuration for Finland must therefore provision D1 capacity sufficient to sustain both ECU and TAU across this envelope.</p>
+
+  <h3>Implementation Notes</h3>
+
+  <p><strong>TrustCore NX Architecture:</strong> The secure neural coprocessor concept at the heart of Aether One combines on-die cryptographic acceleration with AI inference capabilities, enabling local decision-making with hardware-level attestation. This dual-function design allows the TAU to validate ECU decisions using dedicated cryptographic hardware while maintaining low power consumption.</p>
+
+  <p><strong>Monikertakäyttöakku™ Power Module:</strong> Advanced lithium-metal battery technology (BEI Maximus Ultralight series, >400 Wh/kg energy density) provides the D1 foundation for extended autonomous operation. Operating temperature range of -35°C to +73°C makes this suitable for Nordic deployment environments where conventional battery systems fail.</p>
+
+  <p><strong>VERA Agent PQC Integration:</strong> The secure communication layer implements NIST-standardized post-quantum algorithms (Kyber for key exchange, Dilithium for signatures) using the Open Quantum Safe library stack. This future-proofs the D3 trust infrastructure against quantum computing threats while maintaining compatibility with existing PKI systems during transition periods.</p>
+
+  <p><strong>D5 Awareness Channels:</strong> The reference implementation demonstrates D5 through multiple fallback mechanisms. Primary: Telegram bot notifications over cellular networks (survives WAN failure if cellular remains). Secondary: Local status dashboard accessible via WiFi direct connection. Tertiary: Planned integration with LoRa mesh and BLE broadcast beacons for infrastructure-independent alerting. This layered approach ensures awareness externalization degrades gracefully rather than failing catastrophically.</p>
+</div>
+
+<div class="key-insight">
+  <div class="insight-label">Key Principle</div>
+  <p>A Duration-Capable Edge Intelligence Node is not a device specification. It is an architectural requirement.</p>
+  <p>Any system satisfying the five structural components (D1–D5) and the two-unit separation constraint qualifies as a DCEIN, regardless of its hardware platform, programming language, or sensor suite. The architecture is technology-neutral because the requirements are derived from fundamental reliability properties, not from implementation details.</p>
+  <p>The Aether One platform is one conforming implementation. Other platforms satisfying the same structural requirements are equally valid instantiations of the pattern.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Deployment</div>
+  <h2>Operational Considerations</h2>
+  
+  <p>Duration capability is relative to an environment's <em>compound stress duration</em>—the length of simultaneous infrastructure failures the system must survive while maintaining decision authority. This duration is not a theoretical parameter; it is derived from empirical analysis of the deployment region's infrastructure resilience characteristics.</p>
+
+  <p>A DCEIN configuration adequate for urban Helsinki (grid reliability >99.9%, cellular redundancy, municipal backup systems) may be inadequate for rural Lapland (extended grid outages, sparse cellular coverage, limited emergency services). Conversely, over-provisioning duration capacity beyond the environment's stress profile imposes unnecessary cost and complexity.</p>
+
+  <h3>Duration Envelope Calibration</h3>
+
+  <p>The duration envelope has six parameters, each mapped to a duration component:</p>
+
+  <p><strong>Grid disconnection duration</strong> → D1 must provide local power exceeding the 95th percentile outage length for the region.</p>
+
+  <p><strong>WAN connectivity loss</strong> → D2 must ensure local sensor data remains valid for all decisions during the gap.</p>
+
+  <p><strong>Identity service unavailability</strong> → D3 must provide local attestation for the full disruption window, with deferred reconciliation capacity.</p>
+
+  <p><strong>Audit system unavailability</strong> → D4 log capacity must accommodate all decision records generated during the outage without overflow.</p>
+
+  <p><strong>Primary communication channel failure</strong> → D5 must maintain external awareness through fallback mechanisms independent of failed infrastructure.</p>
+
+  <p><strong>Local network segment failure</strong> → D3+D4 deferred reconciliation must activate if ECU-TAU communication is lost.</p>
+
+  <p>A configuration satisfying all components but only for a shorter duration than the worst-case envelope is not duration-capable for that environment. Duration adequacy is a coverage relationship between the system's endurance parameters and the environment's stress profile.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Philosophy</div>
+  <h2>Why Duration Matters</h2>
+  
+  <p>The distinction between power and persistence is fundamental. A system with megawatts of available power but no local decision authority loses all utility the moment its uplink fails. Similarly, a system with perfect local autonomy but no means of external communication loses all societal relevance the moment its awareness channels fail.</p>
+
+  <p>This is not an argument for self-sufficiency as an ideological position. It is a recognition that autonomous systems operating in critical domains—infrastructure monitoring, environmental control, emergency response, medical support—cannot afford the failure mode where loss of external connectivity equals loss of all function, nor the failure mode where operational continuity becomes invisible to the people who depend on it.</p>
+
+  <div class="principle">
+    <p>Duration capability transforms a system from cloud-dependent to cloud-augmented, and from operationally isolated to societally integrated. The system operates independently when necessary, synchronizes when possible, and communicates always.</p>
+  </div>
+
+  <p>This architectural shift has practical implications for deployment strategy. A duration-capable system can be installed in remote or infrastructure-weak locations where conventional cloud-dependent systems would fail. It can serve as a resilience layer for existing infrastructure, providing continuity when primary systems degrade. And it can operate as a sovereign compute node in contexts where continuous external connectivity is undesirable or unavailable.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Conclusion</div>
+  <h2>The Architecture, Not the Implementation</h2>
+  
+  <p>The DCEIN specification is deliberately implementation-agnostic. It defines what a duration-capable system must satisfy structurally, not how to build one. This is intentional: the requirements derive from reliability theory and operational necessity, not from any particular technology stack.</p>
+
+  <p>As a result, DCEIN-compliant systems can be built using radically different approaches—embedded systems on custom silicon, industrial compute platforms, edge AI accelerators, even software-defined infrastructure running on commodity hardware—as long as the five duration components and the two-unit separation are preserved.</p>
+
+  <p>The Aether One platform demonstrates feasibility: the architectural requirements can be satisfied using accessible, well-understood technologies. But it is not the only path. Organizations with different constraints, threat models, or operational requirements may implement the same architectural pattern using entirely different components.</p>
+
+  <div class="principle">
+    <p>What matters is not the hardware. What matters is the guarantee: when infrastructure fails, the system continues.</p>
+  </div>
+</div>
+
+<div class="doc-footer">
+  Duration-Capable Edge Intelligence: Architectural Principles for Resilient Autonomous Systems<br>
+  Version 1.1 — March 2026 — Includes D5: Awareness Externalization<br>
+  Aether Continuity Institute · aethercontinuity.org · Open architectural specification
+</div>
+
+</body>
+</html>
