@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ACI MESA — Municipal Energy Stability Architecture</title>
+<meta name="description" content="MESA is ACI's technical architecture framework for municipal energy stabilisation nodes — CHP, PtX, CO₂ capture and VPP integration. Companion to WP-001, WP-004, WP-005.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -101,84 +102,84 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
 
 <h1>Municipal Energy Stability Architecture</h1>
 <p class="sub">Kunnallisen energiavakauden arkkitehtuurikehys</p>
-<p class="desc">Hajautettu, teknologianeutraali viitekehys paikalliselle energiajärjestelmän vakauttamiselle ja omavaraisuudelle — laadittu ACI Working Paper -viitekehyksessä (WP-001–WP-005).</p>
-<div class="kw">Avainsanat: kunnallinen energia · CHP · PtX · metanoli · kaukolämpö · VPP · compound stress · recovery capacity · WP-001 · WP-004 · WP-005 · DA-001 · TN-001</div>
+<p class="desc">Distributed, technology-neutral framework for local energy system stabilisation and self-sufficiency — developed within the ACI Working Paper framework (WP-001–WP-005).</p>
+<div class="kw">Keywords: municipal energy · CHP · PtX · methanol · district heat · VPP · compound stress · recovery capacity · WP-001 · WP-004 · WP-005 · DA-001 · TN-001</div>
 
 <div class="ab">
   <div class="ab-l">Kehyksen luonne</div>
-  <p>MESA (Municipal Energy Stability Architecture) on tekninen arkkitehtuuriviitekehys, joka kuvaa optimaalisen kunnallisen energiavakauttamislaitoksen rakenteen, toimintaperiaatteet ja talouslogiikan. Se ei ole kaupallinen tuote eikä brändi — se on arkkitehtuurimalli, joka voidaan toteuttaa paikallisiin olosuhteisiin räätälöitynä.</p>
-  <p>MESA on suunniteltu ACI:n compound stress -diagnostiikan pohjalta. Solmu on testattu samanaikaisia stressitekijöitä vastaan, ei vain yksittäisiä riskejä.</p>
+  <p>MESA (Municipal Energy Stability Architecture) is a technical architecture framework that describes the structure, operating principles and financial logic of an optimal municipal energy stabilisation facility. It is not a commercial product or brand — it is an architecture model that can be implemented tailored to local conditions.</p>
+  <p>MESA is designed on the basis of ACI's compound stress diagnostics. The node is tested against simultaneous stress factors, not just individual risks.</p>
 </div>
 
 <!-- §01 -->
 <div class="sec">
   <div class="sec-id">§ 01</div>
   <h2>Johdanto: Miksi MESA?</h2>
-  <p>MESA syntyi vastauksena kolmeen rakenteelliseen energiajärjestelmän vajeeseen:</p>
+  <p>MESA emerged in response to three structural energy system deficits:</p>
   <ul>
-    <li><strong>Talven tehopula:</strong> Suomen sähköjärjestelmässä on tunnistettu 2–3 GW:n säätövoiman vajetta talven huipputunneilla, kun tuuli- ja ydinvoima eivät riitä.</li>
-    <li><strong>Lämpöjärjestelmien haavoittuvuus:</strong> Kaukolämpöverkot ovat yhä riippuvaisempia volatileista polttoainemarkkinoista ja tuontienergiasta.</li>
-    <li><strong>CO₂-virtojen hukkakäyttö:</strong> Teollisuuden ja energiantuotannon biogeeniset CO₂-virrat päätyvät ilmakehään sen sijaan, että ne toimisivat kemiallis-energetisen kierron raaka-aineena.</li>
+    <li><strong>Winter capacity deficit:</strong> Finland's power system has an identified 2–3 GW balancing capacity deficit during winter peak hours when wind and nuclear power are insufficient.</li>
+    <li><strong>Heating system vulnerability:</strong> District heating networks are increasingly dependent on volatile fuel markets and imported energy.</li>
+    <li><strong>Biogenic CO₂ waste:</strong> Industrial and energy production biogenic CO₂ streams end up in the atmosphere instead of serving as feedstock in chemical-energy cycles.</li>
   </ul>
-  <p>MESA-arkkitehtuuri vastaa näihin vajeisiin yhdistämällä neljä toiminnallista kerrosta yhtenäiseksi, paikallisesti omistetuksi ja operoiduksi energiasolmuksi.</p>
+  <p>The MESA architecture responds to these deficits by combining four functional layers into a unified, locally owned and operated energy node.</p>
 </div>
 
 <!-- §02 -->
 <div class="sec">
   <div class="sec-id">§ 02</div>
   <h2>Historiallinen Konteksti: Todistettu Arkkitehtuurityyppi</h2>
-  <p>MESA ei ole keksitty alusta lähtien. Se vastaa rakenteellisesti kolmea historiallisesti todistettua ja toimivaa mallia, jotka ovat kukin tuottaneet merkittävää kunnallista energiavakautta.</p>
+  <p>MESA was not invented from scratch. It corresponds structurally to three historically proven and functional models, each of which has produced significant municipal energy stability.</p>
 
   <div class="tbl-wrap">
   <table>
     <thead><tr><th>Malli</th><th>Maa / Aikakausi</th><th>Ydinmekanismi</th><th>MESA:n vastaavuus</th></tr></thead>
     <tbody>
-      <tr><td class="key">Hajautettu CHP</td><td>Tanska, 1990-luku</td><td>Paikalliset CHP-laitokset kaukolämmön peruskuorman tuottajina</td><td>Lämpöjärjestelmän ankkuri + paikallinen säätövoima</td></tr>
-      <tr><td class="key">Stadtwerke-renessanssi</td><td>Saksa, 2000–2020</td><td>Kunnalliset energiayhtiöt investoivat hajautettuun tuotantoon</td><td>Kunnallinen omistus + markkinajoustomalli</td></tr>
-      <tr><td class="key">Local Resilience Hubs</td><td>Kalifornia, 2015–</td><td>Paikalliset energiakeskukset kriisinkestävyyden ytimessä</td><td>Compound stress -resilienssi + kemiallinen varasto</td></tr>
+      <tr><td class="key">Distributed CHP</td><td>Denmark, 1990s</td><td>Local CHP plants as baseload producers for district heating</td><td>Heating system anchor + local balancing capacity</td></tr>
+      <tr><td class="key">Stadtwerke renaissance</td><td>Germany, 2000–2020</td><td>Municipal energy companies investing in distributed production</td><td>Municipal ownership + market flexibility model</td></tr>
+      <tr><td class="key">Local Resilience Hubs</td><td>California, 2015–</td><td>Local energy hubs at the core of crisis resilience</td><td>Compound stress resilience + chemical storage</td></tr>
     </tbody>
   </table>
   </div>
 
-  <div class="rb"><p>Yhteinen piirre kaikissa malleissa: keskitetyn järjestelmän rinnalle on syntynyt kunnallinen stabilointikerros, joka absorboi markkina- ja toimitushäiriöitä ja tuottaa samalla liiketaloudellista hyötyä omistajilleen.</p></div>
+  <div class="rb"><p>Common feature across all models: a municipal stabilisation layer has emerged alongside the centralised system, absorbing market and supply disruptions while generating commercial value for its owners.</p></div>
 </div>
 
 <!-- §03 -->
 <div class="sec">
   <div class="sec-id">§ 03</div>
-  <h2>MESA-Arkkitehtuurin Neljä Toimintakerrosta</h2>
-  <p>MESA-solmu koostuu neljästä toiminnallisesta kerroksesta, jotka muodostavat yhtenäisen, itseään vahvistavan systeemin. Jokainen kerros toimii itsenäisesti, mutta kerrosten välinen integraatio on MESA:n taloudellisen logiikan ydin.</p>
+  <h2>MESA Architecture: Four Functional Layers</h2>
+  <p>The MESA node consists of four functional layers that form a unified, self-reinforcing system. Each layer operates independently, but the integration between layers is the core of MESA's financial logic.</p>
 
   <div class="ls">
     <div class="layer">
       <div class="ll">A</div>
       <div class="lb">
-        <div class="lt">Paikallinen Säätövoima</div>
-        <div class="ld">Moottorivoimalat tai muut nopeat tuotantoyksiköt tarjoavat reservikapasiteettia sähkömarkkinoille (FCR-N/D, aFRR, mFRR). Toimii itsenäisesti muista kerroksista riippumatta.</div>
-        <div class="lr">WP-001 · Keston riittävyys · DA-001 S1–S2</div>
+        <div class="lt">Local Balancing Capacity</div>
+        <div class="ld">Engine power plants or other fast generation units provide reserve capacity to electricity markets (FCR-N/D, aFRR, mFRR). Operates independently of other layers.</div>
+        <div class="lr">WP-001 · Duration adequacy · DA-001 S1–S2</div>
       </div>
     </div>
     <div class="layer">
       <div class="ll">B</div>
       <div class="lb">
         <div class="lt">Kemiallinen Energiavarasto</div>
-        <div class="ld">Power-to-X -prosessi (elektrolyysi + metanolisynteesi) muuntaa edullisen sähkön polttoaineeksi CHP:lle. CO₂-lähteenä biogeeniset virrat teollisuudesta tai omasta CHP:stä. Tämä kerros on aikasidonnainen: CO₂-ikkunan umpeutuminen tekee sen rakenteellisesti mahdottomaksi.</div>
+        <div class="ld">Power-to-X process (electrolysis + methanol synthesis) converts cheap electricity into fuel for CHP. CO₂ source: biogenic streams from industry or own CHP. This layer is time-constrained: the closing of the CO₂ window makes it structurally impossible.</div>
         <div class="lr">DA-001 S3 · TN-001 §04 · WP-005 F-5</div>
       </div>
     </div>
     <div class="layer">
       <div class="ll">C</div>
       <div class="lb">
-        <div class="lt">Lämpöjärjestelmän Ankkuri</div>
-        <div class="ld">CHP- ja PtX-prosessien hukkalämpö integroidaan kaukolämpöverkkoon kiinteähintaisella sopimuksella (HPA). Tarjoaa kunnalle ennustettavan lämmöntoimituksen riippumatta polttoaineiden markkinahinnoista.</div>
+        <div class="lt">Heating System Anchor</div>
+        <div class="ld">Waste heat from CHP and PtX processes is integrated into the district heating network under a fixed-price contract (HPA). Provides the municipality with predictable heat delivery independent of fuel market prices.</div>
         <div class="lr">WP-004 Muuttuja II · DA-001 S1</div>
       </div>
     </div>
     <div class="layer">
       <div class="ll">D</div>
       <div class="lb">
-        <div class="lt">Markkinajouston Lähde</div>
-        <div class="ld">Virtuaalivoimalaitos (VPP) -optimointi yhdistää kaikki kerrokset yhtenäiseksi markkinatoimijaksi. Muuntaa sähkömarkkinoiden volatiliteetin lisätuloksi sen sijaan, että se olisi riski.</div>
+        <div class="lt">Market Flexibility Source</div>
+        <div class="ld">Virtual power plant (VPP) optimisation connects all layers into a unified market actor. Converts electricity market volatility into additional revenue rather than risk.</div>
         <div class="lr">WP-004 Muuttuja I · DA-001 S2</div>
       </div>
     </div>
@@ -192,23 +193,23 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
   <p>MESA-solmun energia- ja ainevirrat (tekstuaalinen P&ID-kuvaus):</p>
 
   <div class="flow">
-<pre>CO₂-lähde (teollisuus/CHP)
+<pre>CO₂ source (industry/CHP)
         ↓
   CO₂-kompressori → Puhdistus
         ↓
-  Elektrolyysi  ←  Sähköverkko (spot-hinta)
+  Electrolysis  ←  Power grid (spot price)
   (H₂-tuotanto)
         ↓
   Metanolisynteesi (CO₂ + H₂ → CH₃OH)
         ↓
-  Metanolisäiliö
+  Methanol storage
         ↓
-  CHP-moottorit  →  Sähkö → Verkko / reservimarkkinat
+  CHP engines  →  Electricity → Grid / reserve markets
         ↓
-  Hukkalämpö → Kaukolämpöverkko (HPA-sopimus)</pre>
+  Waste heat → District heating network (HPA contract)</pre>
   </div>
 
-  <div class="rb"><p>Avainperiaate: CHP-moottorit käyttävät omaa PtX-tuotettua metanolia polttoaineenaan, jolloin fossiilisten polttoaineiden ostokustannus lähestyy nollaa. Tuotto syntyy vältetyistä kustannuksista, ei spekulatiivisesta metanolin ulkoismyynnistä.</p></div>
+  <div class="rb"><p>Key principle: CHP engines use their own PtX-produced methanol as fuel, bringing fossil fuel purchase costs close to zero. Revenue comes from avoided costs, not speculative external methanol sales.</p></div>
 </div>
 
 <!-- §05 -->
@@ -221,13 +222,13 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
     <thead><tr><th>Parametri</th><th>Tyypillinen arvo</th><th>Huomio</th></tr></thead>
     <tbody>
       <tr><td>Elektrolyysikapasiteetti</td><td>40–80 MWe</td><td>Optimoitu paikallisen CO₂-virran mukaan</td></tr>
-      <tr><td>Moottorikapasiteetti (CHP)</td><td>80–200 MW</td><td>Metanoli- tai biokaasukäyttöinen</td></tr>
-      <tr><td>Metanolituotanto</td><td>15–30 kt/a</td><td>100 % omakäyttö tai ylijäämä myyntiin</td></tr>
-      <tr><td>CO₂-tarve</td><td>30–45 kt/a</td><td>Biogeeninen lähde (CHP, jätepolttolaitos)</td></tr>
-      <tr><td>Lämpöjousto kaukolämpöön</td><td>20–80 MW</td><td>HT-verkko (CHP) + LT-verkko (PtX-hukkalämpö)</td></tr>
-      <tr><td>Kokonaishyötysuhde</td><td>80–88 %</td><td>CHP + PtX + lämpöintegraatio</td></tr>
+      <tr><td>Engine capacity (CHP)</td><td>80–200 MW</td><td>Methanol or biogas-fuelled</td></tr>
+      <tr><td>Methanol production</td><td>15–30 kt/yr</td><td>100% own use or surplus to market</td></tr>
+      <tr><td>CO₂ requirement</td><td>30–45 kt/yr</td><td>Biogenic source (CHP, waste incineration)</td></tr>
+      <tr><td>Heat flexibility to district network</td><td>20–80 MW</td><td>HT network (CHP) + LT network (PtX waste heat)</td></tr>
+      <tr><td>Overall efficiency</td><td>80–88%</td><td>CHP + PtX + heat integration</td></tr>
       <tr><td>CAPEX per solmu</td><td>120–240 M€</td><td>Riippuu kapasiteetista ja integraatioasteesta</td></tr>
-      <tr><td>EBITDA per solmu</td><td>35–60 M€/a</td><td>Perustuu vältetyille kustannuksille</td></tr>
+      <tr><td>EBITDA per node</td><td>€35–60M/yr</td><td>Based on avoided costs</td></tr>
       <tr><td>Takaisinmaksuaika</td><td>4–6 vuotta</td><td>Ilman julkista tukea</td></tr>
       <tr><td>IRR</td><td>14–20 %</td><td>Stressitestatuilla markkinaoletuksilla 8–12 %</td></tr>
     </tbody>
@@ -239,39 +240,39 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
 <div class="sec">
   <div class="sec-id">§ 06</div>
   <h2>Talousmalli: Tulovirrat ja Riskilattia</h2>
-  <p>MESA:n talousmalli perustuu neljään tulovirtaan, joista tärkein on vältetty kustannus eikä ulkopuolinen myyntituotto. Tämä erottaa sen markkinasijoituksesta.</p>
+  <p>MESA's financial model is based on four revenue streams, the most important of which is avoided cost rather than external sales revenue. This distinguishes it from a market investment.</p>
 
   <div class="tbl-wrap">
   <table>
     <thead><tr><th>Tulovirta</th><th>Mekanismi</th><th>Arvio (M€/a, 60 MW)</th><th>Markkinariskitaso</th></tr></thead>
     <tbody>
-      <tr><td>Fossiilisen polttoaineen korvaus</td><td>Oma metanoli korvaa ostopolttoaineen CHP:ssä</td><td>20–50</td><td>Erittäin matala (sisäinen säästö)</td></tr>
-      <tr><td>Kaukolämpömyynti (HPA)</td><td>Hukkalämpö kiinteähintaisella sopimuksella</td><td>10–25</td><td>Matala (sopimuspohjainen)</td></tr>
+      <tr><td>Fossil fuel substitution</td><td>Own methanol replaces purchased fuel in CHP</td><td>20–50</td><td>Very low (internal saving)</td></tr>
+      <tr><td>District heat sales (HPA)</td><td>Waste heat under fixed-price contract</td><td>10–25</td><td>Low (contract-based)</td></tr>
       <tr><td>Reservimarkkina (VPP)</td><td>FCR-N/D, aFRR, mFRR -tulot</td><td>1–6</td><td>Matala-keskitaso</td></tr>
-      <tr><td>Metanolin ylijäämämyynti</td><td>RFNBO-metanoli spotmarkkinoille</td><td>1–8</td><td>Keskitaso (vaihtoehtoinen)</td></tr>
+      <tr><td>Methanol surplus sales</td><td>RFNBO methanol to spot markets</td><td>1–8</td><td>Medium (optional)</td></tr>
     </tbody>
   </table>
   </div>
 
-  <div class="rb"><p>Riskilattia-periaate: MESA:n kannattavuus on turvattu jo pelkästään fossiilikorvaussäästöillä ja lämpösopimuksella. Reservi- ja metanolimyynnit ovat lisätuloja, joita ei vaadita peruskannattavuuteen.</p></div>
+  <div class="rb"><p>Risk floor principle: MESA profitability is secured by fossil substitution savings and the heat contract alone. Reserve and methanol sales are additional revenues not required for basic viability.</p></div>
 </div>
 
 <!-- §07 -->
 <div class="sec">
   <div class="sec-id">§ 07</div>
   <h2>ACI-Viitekehys: Compound Stress -diagnostiikka</h2>
-  <p>MESA-arkkitehtuuri on suunniteltu ACI:n jatkuvuusdiagnostiikan ja compound stress -metodologian pohjalta. Solmu on testattu samanaikaisia stressitekijöitä vastaan, ei vain yksittäisiä riskejä.</p>
+  <p>The MESA architecture is designed on the basis of ACI's continuity diagnostics and compound stress methodology. The node is tested against simultaneous stress factors, not just individual risks.</p>
 
   <h3>7.1 Compound Stress -skenaario: Talvi 2026–2027</h3>
   <div class="tbl-wrap">
   <table>
-    <thead><tr><th>Stressitekijä</th><th>Vaikutus ilman MESA:a</th><th>MESA:n vaimentava mekanismi</th></tr></thead>
+    <thead><tr><th>Stress factor</th><th>Impact without MESA</th><th>MESA damping mechanism</th></tr></thead>
     <tbody>
-      <tr><td>Sähkön hintapiikki (&gt;150 €/MWh)</td><td>CHP:n käyttökustannukset nousevat</td><td>Oma metanoli absorboi, PtX pysähtyy (ei osto)</td></tr>
-      <tr><td>Fossiilipolttoaineen saatavuushäiriö</td><td>Kaukolämpö vaarantuu</td><td>Varastoitu metanoli jatkaa tuotantoa</td></tr>
-      <tr><td>Kylmä jakso + tehopula</td><td>Sähkö- ja lämpökatkojen riski</td><td>CHP tuottaa reservikapasiteettia markkinoille</td></tr>
-      <tr><td>CO₂-syöttöhäiriö</td><td>PtX-tuotanto pysähtyy</td><td>CHP jatkaa normaalisti; PtX palautuu kun CO₂ saatavilla</td></tr>
-      <tr><td>Sähkömarkkinoiden volatiliteetti</td><td>Kustannusten arvaamattomuus</td><td>VPP muuntaa volatiliteetin lisätuloksi</td></tr>
+      <tr><td>Electricity price spike (&gt;150 €/MWh)</td><td>CHP operating costs rise</td><td>Own methanol absorbs, PtX halts (no purchase)</td></tr>
+      <tr><td>Fossil fuel supply disruption</td><td>District heat endangered</td><td>Stored methanol continues production</td></tr>
+      <tr><td>Cold spell + capacity deficit</td><td>Risk of power and heat outages</td><td>CHP produces reserve capacity for markets</td></tr>
+      <tr><td>CO₂ feed disruption</td><td>PtX production halts</td><td>CHP continues normally; PtX resumes when CO₂ available</td></tr>
+      <tr><td>Electricity market volatility</td><td>Cost unpredictability</td><td>VPP converts volatility into additional revenue</td></tr>
     </tbody>
   </table>
   </div>
@@ -282,9 +283,9 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
     <thead><tr><th>RSM-dimensio</th><th>MESA:n tulos</th><th>Perustelut</th></tr></thead>
     <tbody>
       <tr><td>Absorptiokapasiteetti</td><td>Korkea</td><td>Varastoitu metanoli + VPP-jousto</td></tr>
-      <tr><td>Jatkuvuuskapasiteetti</td><td>Erittäin korkea</td><td>Modulaarinen rakenne, CHP-varmistus</td></tr>
+      <tr><td>Continuity capacity</td><td>Very high</td><td>Modular structure, CHP backup</td></tr>
       <tr><td>Transformaatiokapasiteetti</td><td>Korkea</td><td>PtX-koon skaalautuvuus markkinatilanteen mukaan</td></tr>
-      <tr><td>Taloudellinen resilienssi</td><td>Korkea (stressitestissä IRR 8–12 %)</td><td>Perustuotto ei riipu ulkoisesta metanolin hinnasta</td></tr>
+      <tr><td>Financial resilience</td><td>High (stress test IRR 8–12%)</td><td>Base return independent of external methanol price</td></tr>
     </tbody>
   </table>
   </div>
@@ -298,11 +299,11 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
 
   <div class="tbl-wrap">
   <table>
-    <thead><tr><th>Kerros</th><th>Kunnan rooli</th><th>CAPEX-osuus</th><th>Taloudellinen hyöty</th></tr></thead>
+    <thead><tr><th>Layer</th><th>Municipal role</th><th>CAPEX share</th><th>Financial benefit</th></tr></thead>
     <tbody>
-      <tr><td>Infrastruktuuri</td><td>Tontti, lämpöliittymät, putkisto</td><td>10–20 %</td><td>Vuokratulot, kiinteistövero, HPA-sopimus</td></tr>
-      <tr><td>Operaattoriyhtiö</td><td>Osakkuus solmuyhtiössä</td><td>Valinnainen</td><td>Osinkotuotto, IRR-osuus</td></tr>
-      <tr><td>Konsortiohallinto</td><td>VPP-keskus, hankintayhteistyö</td><td>Pieni (hallinto)</td><td>Skaalaedut, EU-rahoituspääsy</td></tr>
+      <tr><td>Infrastructure</td><td>Site, heat connections, pipework</td><td>10–20%</td><td>Rental income, property tax, HPA contract</td></tr>
+      <tr><td>Operating company</td><td>Shareholding in node company</td><td>Optional</td><td>Dividend yield, IRR share</td></tr>
+      <tr><td>Consortium governance</td><td>VPP hub, procurement cooperation</td><td>Small (admin)</td><td>Scale benefits, EU funding access</td></tr>
     </tbody>
   </table>
   </div>
@@ -312,13 +313,13 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
   <table>
     <thead><tr><th>Vaihe</th><th>Toimenpide</th><th>Kesto</th></tr></thead>
     <tbody>
-      <tr><td class="key">1</td><td>Esiselvitys — CO₂-taseen, lämpöverkon ja sähköliitynnän kartoitus</td><td>1–2 kk</td></tr>
-      <tr><td class="key">2</td><td>Poliittinen päätös — Kunnanhallituksen sitoutuminen ja tontinvaraus</td><td>1–3 kk</td></tr>
-      <tr><td class="key">3</td><td>Sopimukset — HPA, maanvuokra, solmuyhtiön perustaminen</td><td>2–4 kk</td></tr>
-      <tr><td class="key">4</td><td>Luvitus — Rakennus- ja ympäristöluvat (priorisoitu)</td><td>3–6 kk</td></tr>
+      <tr><td class="key">1</td><td>Pre-study — CO₂ balance, heat network and grid connection survey</td><td>1–2 mo</td></tr>
+      <tr><td class="key">2</td><td>Political decision — Municipal board commitment and site reservation</td><td>1–3 mo</td></tr>
+      <tr><td class="key">3</td><td>Contracts — HPA, land lease, node company establishment</td><td>2–4 mo</td></tr>
+      <tr><td class="key">4</td><td>Permitting — Building and environmental permits (prioritised)</td><td>3–6 mo</td></tr>
       <tr><td class="key">5</td><td>FEED / Hankinta — Tekninen esiselvitys, laitetoimittajavalinta</td><td>3–6 kk</td></tr>
       <tr><td class="key">6</td><td>Rakentaminen — Modulaarinen, vaiheistettu</td><td>12–18 kk</td></tr>
-      <tr><td class="key">7</td><td>Käyttöönotto — VPP-integraatio, optimoinnin aktivointi</td><td>1–2 kk</td></tr>
+      <tr><td class="key">7</td><td>Commissioning — VPP integration, optimisation activation</td><td>1–2 mo</td></tr>
     </tbody>
   </table>
   </div>
@@ -333,16 +334,16 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
   <table>
     <thead><tr><th>Rahoitusinstrumentti</th><th>MESA:n kelpoisuusperuste</th><th>Prioriteetti</th></tr></thead>
     <tbody>
-      <tr><td>Innovation Fund</td><td>RFNBO-metanolituotanto + CO₂-talteenotto + lisäisyys</td><td>Korkea</td></tr>
-      <tr><td>CEF Energy</td><td>Sähköverkon vakaus, PtX-infrastruktuuri, energiayhteenliitäntä</td><td>Korkea</td></tr>
-      <tr><td>Just Transition Fund</td><td>JTF-alueilla sijaitsevat solmut (energiasiirtymäalueet)</td><td>Kohtalainen</td></tr>
-      <tr><td>InvestEU / EIB</td><td>Kunnallinen infrastruktuuri, pitkä tuottoprofiili, matala luottoriski</td><td>Korkea</td></tr>
-      <tr><td>NIB (Pohjoismaat)</td><td>Pohjoinen infrastruktuuriyhteistyö, energiaomavaraisuus</td><td>Kohtalainen</td></tr>
+      <tr><td>Innovation Fund</td><td>RFNBO methanol production + CO₂ capture + additionality</td><td>High</td></tr>
+      <tr><td>CEF Energy</td><td>Grid stability, PtX infrastructure, energy interconnection</td><td>High</td></tr>
+      <tr><td>Just Transition Fund</td><td>Nodes in JTF regions (energy transition areas)</td><td>Moderate</td></tr>
+      <tr><td>InvestEU / EIB</td><td>Municipal infrastructure, long return profile, low credit risk</td><td>High</td></tr>
+      <tr><td>NIB (Nordics)</td><td>Nordic infrastructure cooperation, energy self-sufficiency</td><td>Moderate</td></tr>
     </tbody>
   </table>
   </div>
 
-  <p>Regulatoriset ajurit: RED III:n RFNBO-velvoitteet (2030: 42 % uusiutuva vety teollisuudessa), REPowerEU:n energiaomavaraisuustavoitteet, sekä Suomen kansallinen varautumisvelvoite (huoltovarmuuslaki).</p>
+  <p>Regulatory drivers: RED III RFNBO obligations (2030: 42% renewable hydrogen in industry), REPowerEU energy self-sufficiency targets, and Finland's national preparedness obligation (Security of Supply Act).</p>
 </div>
 
 <!-- §10 -->
@@ -351,11 +352,11 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
   <h2>Yhteenveto: MESA Arkkitehtuurina</h2>
 
   <div class="vt">
-    <div class="vr"><span class="vi">Tekninen</span><span class="vx">Todistettu teknologia (CHP + elektrolyysi + metanoli); 80–88 % kokonaishyötysuhde.</span></div>
-    <div class="vr"><span class="vi">Taloudellinen</span><span class="vx">IRR 14–20 % ilman tukia; riskilattia perustuu vältetyille kustannuksille.</span></div>
-    <div class="vr"><span class="vi">Kunnallinen</span><span class="vx">Täysi paikallinen omistus; ei vastapuoliriskiä; korkein mahdollinen luottoluokitus kuntarahoitukselle.</span></div>
-    <div class="vr"><span class="vi">Kansallinen</span><span class="vx">Täyttää 2–3 GW:n säätövoiman vajeen; RFNBO-velvoitteiden täyttäminen.</span></div>
-    <div class="vr"><span class="vi">Eurooppalainen</span><span class="vx">Replikoitava malli; korkea EU-rahoituskelpoisuus; energiayhteisöjen paradigma.</span></div>
+    <div class="vr"><span class="vi">Technical</span><span class="vx">Proven technology (CHP + electrolysis + methanol); 80–88% overall efficiency.</span></div>
+    <div class="vr"><span class="vi">Financial</span><span class="vx">IRR 14–20% without subsidies; risk floor based on avoided costs.</span></div>
+    <div class="vr"><span class="vi">Municipal</span><span class="vx">Full local ownership; no counterparty risk; highest possible credit rating for municipal financing.</span></div>
+    <div class="vr"><span class="vi">National</span><span class="vx">Addresses 2–3 GW balancing capacity deficit; fulfils RFNBO obligations.</span></div>
+    <div class="vr"><span class="vi">European</span><span class="vx">Replicable model; high EU funding eligibility; energy communities paradigm.</span></div>
     <div class="vr"><span class="vi">Resilienssi (ACI)</span><span class="vx">Compound stress -testattu; korkea RSM-tulos kaikissa kriisiskenaarioissa.</span></div>
   </div>
 </div>
@@ -363,17 +364,17 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
 <!-- Cross-refs -->
 <div class="xb">
   <div class="xl">Viittaukset</div>
-  <div class="xr"><div class="xi">WP-001</div><div class="xd">Duration Adequacy. Keston riittävyys -käsite ja Black Period -ehto. Kerroksen A mitoituksen teoreettinen perusta.</div></div>
+  <div class="xr"><div class="xi">WP-001</div><div class="xd">Duration Adequacy. Duration adequacy concept and Black Period condition. Theoretical basis for Layer A sizing.</div></div>
   <div class="xr"><div class="xi">WP-004</div><div class="xd">Recovery Capacity Invariants. Ensisijainen analyyttinen viitekehys. Kaikki RSM-dimensiot ja compound stress -testaus viittaavat WP-004:n muuttujiin.</div></div>
   <div class="xr"><div class="xi">WP-005</div><div class="xd">Compound Stress Finland 2025–2035. Kontekstuaalinen perusta. CO₂-ikkuna (F-5) ja neuvotteluasema (F-4) ovat suoraan relevantteja kerrokselle B ja MESA:n omistusrakenteelle.</div></div>
   <div class="xr"><div class="xi">DA-001</div><div class="xd">Finland Pre-Shortage Phase 2026–2032. MESA on suunniteltu vastaamaan erityisesti DA-001:n tunnistamiin viiteen aktiiviseen varoitussignaaliin.</div></div>
-  <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node. MESA on TN-001:ssä kuvatun arkkitehtuurin täydellinen toteutusviitekehys — TN-001 kuvaa rakenteelliset ominaisuudet, MESA kuvaa toteutuksen logiikan.</div></div>
+  <div class="xr"><div class="xi">TN-001</div><div class="xd">Duration-Capable Local Energy Node. MESA is the complete implementation framework for the architecture described in TN-001 — TN-001 describes the structural properties, MESA describes the implementation logic.</div></div>
 </div>
 
 <div class="final-box">
   <strong>MESA · Municipal Energy Stability Architecture</strong><br>
   Tekninen Arkkitehtuurikehys v1.0 · Joulukuu 2025 · Domain D-1 / D-4 / D-5<br>
-  Laadittu ACI Working Paper -viitekehyksessä (WP-001–WP-005)<br><br>
+  Developed within the ACI Working Paper framework (WP-001–WP-005)<br><br>
   <span style="text-transform:none;letter-spacing:0;font-size:.62rem;font-style:italic;color:var(--muted)">MESA on arkkitehtuuri, ei tuote. Se kuvaa rakenteen, jonka avulla kunta tai kuntakonsortio voi rakentaa paikallisesti omistetun, taloudellisesti kannattavan ja compound stress -testatun energiavakauttamislaitoksen.</span>
 </div>
 
@@ -381,7 +382,7 @@ td.key{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spaci
   ACI · Municipal Energy Stability Architecture · Tekninen Arkkitehtuurikehys v1.0<br>
   Joulukuu 2025 · Domain D-1 / D-4 / D-5 · Tekninen viitekehys<br>
   Aether Continuity Institute · aethercontinuity.org<br>
-  Tämä kehys kuvaa arkkitehtuurin rakenteelliset ominaisuudet. Se ei suosittele erityisiä toimittajia, investointiohjelmia tai poliittisia kantoja.
+  This framework describes the structural properties of the architecture. It does not recommend specific suppliers, investment programmes or policy positions.
 </div>
 
 </body>

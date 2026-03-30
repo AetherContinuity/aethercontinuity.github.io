@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,7 +116,7 @@ footer a{color:var(--faint);text-decoration:none;}
 <div class="sec">Solmun koko</div>
 <div class="card" style="padding:.75rem 1.25rem;">
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-    <span style="font-size:13px;color:var(--muted);">CHP-sähköteho</span>
+    <span style="font-size:13px;color:var(--muted);">CHP electrical output</span>
     <span style="font-family:var(--mono);font-size:15px;font-weight:500;" id="chp_mw_v">150 MW</span>
   </div>
   <input type="range" min="50" max="300" value="150" step="10" id="chp_mw" style="width:100%;display:block;">
@@ -140,7 +140,7 @@ footer a{color:var(--faint);text-decoration:none;}
     <div id="pillar_content"></div>
     <hr class="dvd">
     <div class="pillar-row">
-      <span class="pillar-lbl" style="font-weight:600;">EBITDA yhteensä</span>
+      <span class="pillar-lbl" style="font-weight:600;">EBITDA total</span>
       <div class="pillar-track"><div class="pillar-fill" id="total_fill" style="background:#185FA5;"></div></div>
       <span class="pillar-num" id="total_num" style="font-size:15px;"></span>
     </div>
@@ -151,7 +151,7 @@ footer a{color:var(--faint);text-decoration:none;}
 
 <div id="tab_params" style="display:none;">
   <div class="card">
-    <div class="sec" style="margin-bottom:10px;">Parametrit ja lähteet</div>
+    <div class="sec" style="margin-bottom:10px;">Parameters and sources</div>
     <table class="param-table" id="param_table"></table>
     <div class="note" id="param_note"></div>
   </div>
@@ -177,7 +177,7 @@ footer a{color:var(--faint);text-decoration:none;}
 const SCENARIOS = [
   { id:'now',    label:'Nykytila 2025',       year:'2025', color:'#185FA5', selBg:'#E6F1FB',
     fossil:90,  dh:52, co2:68,  methP:650,
-    note:'EU ETS ~68 €/t (Q1/2025). Maakaasu TTF ~90 €/MWh teollisuudelle. Kaukolämpö Kuopio-taso.',
+    note:'EU ETS ~68 €/t (Q1/2025). Natural gas TTF ~90 €/MWh industrial. District heat Kuopio-level.',
     src:'ETS: EEX Q1/2025 · Fossil: Gasum/Neste teollisuushinta · DH: Kuopion Energia 2024' },
   { id:'mid',    label:'Perusskenaario 2030', year:'2030', color:'#1D9E75', selBg:'#E1F5EE',
     fossil:120, dh:60, co2:110, methP:950,
@@ -185,11 +185,11 @@ const SCENARIOS = [
     src:'ETS: EU Climate Target Plan · Fossil: IEA WEO 2024 · DH: Energiateollisuus ennuste' },
   { id:'high',   label:'Korkea CO₂ 2035',    year:'2035', color:'#D85A30', selBg:'#FAECE7',
     fossil:160, dh:68, co2:160, methP:1200,
-    note:'EU ETS 150–170 €/t (tiukka ilmastopaketti, CBAM täysvaikutus). Fossiilinen >150 €/MWh.',
+    note:'EU ETS 150–170 €/t (strict climate package, CBAM full effect). Fossil >150 €/MWh.',
     src:'ETS: Carbon Tracker "Inevitable Policy Response" · IEA Net Zero scenario' },
   { id:'stress', label:'Stressitesti 2030',   year:'2030', color:'#888780', selBg:'#F1EFE8',
     fossil:65,  dh:50, co2:55,  methP:500,
-    note:'Matala hintaskenaario: ETS putoaa kriisiin, fossiilinen halpenee LNG-ylijäämällä. ETS 55 €/t ja fossiilinen 65 €/MWh — molemmat alle 10 vuoden keskiarvon.',
+    note:'Low price scenario: ETS falls in crisis, fossil cheapens on LNG surplus. ETS 55 €/t and fossil 65 €/MWh — both below 10-year average.',
     src:'Stressitesti — ei ennuste, vaan alarajan herkkyysanalyysi' },
 ];
 
@@ -241,11 +241,11 @@ function renderCards() {
 function renderPillars() {
   const sc=SCENARIOS[selSc], r=calcNode(sc,chpMW);
   const pillars=[
-    {lbl:'Vältetty fossiilinen hankinta',          val:r.fossilSave, color:'#185FA5'},
-    {lbl:'Kaukolämpömyynti (HPA)',                 val:r.heatRev,    color:'#1D9E75'},
-    {lbl:'Hiilidioksidin hyötykäyttö (vältetty ETS-riski)', val:r.co2Rev, color:'#D85A30'},
+    {lbl:'Avoided fossil procurement',          val:r.fossilSave, color:'#185FA5'},
+    {lbl:'District heat sales (HPA)',                 val:r.heatRev,    color:'#1D9E75'},
+    {lbl:'CO₂ utilisation (avoided ETS risk)', val:r.co2Rev, color:'#D85A30'},
     {lbl:'Reservimarkkinat (VPP/FCR)',             val:r.vppRev,     color:'#BA7517'},
-    {lbl:'OPEX (käyttökustannukset)',              val:-r.opex,      color:'#888780'},
+    {lbl:'OPEX (operating costs)',              val:-r.opex,      color:'#888780'},
   ];
   const mx=Math.max(...pillars.map(p=>Math.abs(p.val)),5);
   document.getElementById('pillar_content').innerHTML=pillars.map(p=>{
@@ -261,28 +261,28 @@ function renderPillars() {
   document.getElementById('total_num').textContent=r.ebitda.toFixed(1)+' M€/v';
   const npv20=Array.from({length:20},(_,i)=>r.ncf/Math.pow(1.05,i+1)).reduce((a,b)=>a+b,-r.capex);
   document.getElementById('metrics_grid').innerHTML=`
-    <div class="metric"><div class="m-lbl">IRR (ilman myyntiä)</div><div class="m-val">${r.irr.toFixed(1)}%</div><div class="m-sub">perusmalli</div></div>
+    <div class="metric"><div class="m-lbl">IRR (without sales)</div><div class="m-val">${r.irr.toFixed(1)}%</div><div class="m-sub">base model</div></div>
     <div class="metric"><div class="m-lbl">Diskontattu takaisinmaksu</div><div class="m-val">${r.discPayback} v</div><div class="m-sub">WACC 5 %, kokonainen vuosi</div></div>
     <div class="metric"><div class="m-lbl">NPV 20 v (5 %)</div><div class="m-val">${npv20.toFixed(0)} M€</div><div class="m-sub">diskontattu</div></div>`;
   document.getElementById('upside_strip').innerHTML=`
     <strong style="color:#1C1C1C;">Markkinaupside (optio):</strong>
-    PtX käynnistyy kun sähkö &lt; 35 €/MWh. Jos ylijäämäpolttoainetta myydään (${sc.methP} €/t, ~8 kt/v) →
-    lisätulo <span class="upside-val">${r.upside.toFixed(1)} M€/v</span>,
+    PtX activates when electricity &lt; 35 €/MWh. If surplus fuel is sold (${sc.methP} €/t, ~8 kt/v) →
+    additional revenue <span class="upside-val">${r.upside.toFixed(1)} M€/v</span>,
     IRR nousee <span class="upside-val">${r.irrUp.toFixed(1)} %:iin</span>.
-    Ei kannattavuuden perusta — deterministinen kassavirta + optioyläpuoli.`;
+    Not the profitability basis — deterministic cash flow + option upside.`;
 }
 
 function renderParams() {
   const sc=SCENARIOS[selSc];
   const rows=[
     ['Fossiilinen vertailuhinta',sc.fossil+' €/MWh','—'],
-    ['Kaukolämmön hinta (HPA)',sc.dh+' €/MWh','—'],
+    ['District heat price (HPA)',sc.dh+' €/MWh','—'],
     ['EU ETS CO₂-hinta',sc.co2+' €/t','—'],
     ['Polttoaineen markkinahinta',sc.methP+' €/t','upside-optio'],
-    ['CHP käyttöaste','45 %','oletus'],
+    ['CHP utilisation','45 %','assumption'],
     ['CO₂-kerroin','0.28 tCO₂/MWh','fossiili-korvaus'],
-    ['Lämpö/sähkö-suhde','0.88','Wärtsilä 34DF tyyppi'],
-    ['PtX käynnistyskynnys','< 35 €/MWh (sähkö spot)','optiorakenne'],
+    ['Heat/power ratio','0.88','Wärtsilä 34DF tyyppi'],
+    ['PtX activation threshold','< 35 €/MWh (electricity spot)','option structure'],
     ['WACC','5 %','kunnallinen luottoluokitus'],
     ['CAPEX/MW','1.38 M€/MW','sis. integraatio'],
   ];
@@ -323,7 +323,7 @@ function renderTimeline() {
   document.getElementById('tl_legend').innerHTML=series.map(d=>
     `<span><span class="legend-line" style="background:${d.color};"></span>${d.label}</span>`).join('');
   document.getElementById('tl_note').textContent=
-    'Stressitestissä ETS 55 €/t ja fossiilinen 65 €/MWh — molemmat alle 10 vuoden keskiarvon. Malli ylittää infrarahoituksen 6–8 % minimikynnyksen kaikissa skenaarioissa.';
+    'Stress test at ETS 55 €/t and fossil 65 €/MWh — both below 10-year average. Model exceeds infrastructure financing 6–8% minimum threshold in all scenarios.';
 }
 
 function render() {

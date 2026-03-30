@@ -1,5 +1,5 @@
 0<!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -92,9 +92,9 @@ input[type=range]{width:100%;cursor:crosshair;accent-color:var(--accent);margin-
     <div class="sec">Skenaario</div>
     <div class="scenario-tabs">
       <button class="stab active" onclick="setScenario('base')">S0 · Baseline (ei muutosta)</button>
-      <button class="stab" onclick="setScenario('slow')">S1 · Hidas siirtymä</button>
+      <button class="stab" onclick="setScenario('slow')">S1 · Slow Transition</button>
       <button class="stab" onclick="setScenario('mesa')">S2 · MESA-integraatio</button>
-      <button class="stab" onclick="setScenario('full')">S3 · Täysi combo</button>
+      <button class="stab" onclick="setScenario('full')">S3 · Full Integration</button>
     </div>
     <div class="scenario-desc" id="scen-desc">—</div>
   </div>
@@ -107,13 +107,13 @@ input[type=range]{width:100%;cursor:crosshair;accent-color:var(--accent);margin-
       <div class="param-row">
         <div class="param-label">eL3 — Suojakapasiteetti (lopputila)<span id="lbl-eL3">5.0</span></div>
         <input type="range" min="2" max="12" step="0.5" value="5" id="sl-eL3" oninput="onParam()"/>
-        <div class="param-desc">DC-lämpö + MESA-solmut kasvattavat hajautettua suojakapasiteettia. Baseline 5.0 → tavoite 10+</div>
+        <div class="param-desc">DC heat + MESA nodes expand distributed protection capacity. Baseline 5.0 → target 10+</div>
       </div>
 
       <div class="param-row">
-        <div class="param-label">cFixed — Kiinteä kapasiteetti (lopputila)<span id="lbl-cFixed">2.1</span></div>
+        <div class="param-label">cFixed — Fixed capacity (end state)<span id="lbl-cFixed">2.1</span></div>
         <input type="range" min="1" max="8" step="0.5" value="2.1" id="sl-cFixed" oninput="onParam()"/>
-        <div class="param-desc">Vety- ja lämpövarastoinnin käyttöönotto kasvattaa varmennettua kapasiteettia suoraan.</div>
+        <div class="param-desc">Hydrogen and heat storage deployment directly increases certified capacity.</div>
       </div>
 
       <div class="param-row">
@@ -125,17 +125,17 @@ input[type=range]{width:100%;cursor:crosshair;accent-color:var(--accent);margin-
       <div class="param-row">
         <div class="param-label">iBase — Korkotaso (koko periodi)<span id="lbl-iBase">3.35 %</span></div>
         <input type="range" min="1" max="6" step="0.25" value="3.35" id="sl-iBase" oninput="onParam()"/>
-        <div class="param-desc">ECB-korkopolku vaikuttaa SBM:ään suoraan. Nykytaso 3.35 % — alas- tai ylöspäin?</div>
+        <div class="param-desc">ECB rate path affects SBM directly. Current level 3.35% — up or down?</div>
       </div>
 
       <div class="param-row">
         <div class="param-label">gAnn — Rahoitusvaje (lopputila)<span id="lbl-gAnn">5.0</span></div>
         <input type="range" min="1" max="12" step="0.5" value="5" id="sl-gAnn" oninput="onParam()"/>
-        <div class="param-desc">MESA tuottaa tuloja (lämpö, CO₂, vety) — kaventaa rakenteellista vajetta ajan myötä.</div>
+        <div class="param-desc">MESA generates revenues (heat, CO₂, hydrogen) — narrows structural deficit over time.</div>
       </div>
 
       <div class="param-row">
-        <div class="param-label">Siirtymän nopeus<span id="lbl-speed">7 v</span></div>
+        <div class="param-label">Transition speed<span id="lbl-speed">7 v</span></div>
         <input type="range" min="3" max="15" step="1" value="7" id="sl-speed" oninput="onParam()"/>
         <div class="param-desc">Vuosia jolloin parametrit saavuttavat lopputilan (lineaarinen interpolaatio).</div>
       </div>
@@ -206,7 +206,7 @@ input[type=range]{width:100%;cursor:crosshair;accent-color:var(--accent);margin-
         <circle id="baseline-ring" cx="0" cy="0" r="7" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
       </svg>
     </div>
-    <div class="chart-label-x">← Matala PDI = hyvä suojakapasiteetti · Korkea SBM = riittävä rahoitustasapaino →</div>
+    <div class="chart-label-x">← Low PDI = good protection capacity · High SBM = adequate fiscal balance →</div>
   </div>
 
   <!-- TIMELINE TABLE + INSIGHT -->
@@ -274,22 +274,22 @@ function cy(sbm) { return CY0 - (Math.max(0, Math.min(1, (sbm - SBM_MIN) / (SBM_
 const SCENARIOS = {
   base: {
     label: 'S0 · Baseline — ei muutosta',
-    desc: '<strong>Nykypolitiikka jatkuu.</strong> Ei merkittäviä MESA-investointeja, ei DC-integraatiota, ei vety-infrastruktuuria. Fingrid operoi kuten 2025. Kapasiteettiparametrit pysyvät lähellä lähtötasoa. Tämä on vertailuskenaario jota vasten muut mitataan.',
+    desc: '<strong>Current policy continues.</strong> No significant MESA investments, no DC integration, no hydrogen infrastructure. Fingrid operates as in 2025. Capacity parameters remain near baseline. This is the reference scenario against which others are measured.',
     eL3: 5.5, cFixed: 2.5, sigma: 35, iBase: 3.35, gAnn: 5.5, speed: 10
   },
   slow: {
-    label: 'S1 · Hidas siirtymä',
-    desc: '<strong>Osittaiset toimet ilman koordinaatiota.</strong> Yksittäisiä DC-lämpöprojekteja, pieniä akkupilotteja. Kapasiteetti kasvaa hitaasti. Korkotaso pysyy korkeana. Vyöhykemuutos Z3 → Z2 tapahtuu ehkä 2032–2034, jos lainkaan.',
+    label: 'S1 · Slow Transition',
+    desc: '<strong>Partial actions without coordination.</strong> Individual DC heat projects, small battery pilots. Capacity grows slowly. Interest rates remain elevated. Zone transition Z3 → Z2 may occur 2032–2034, if at all.',
     eL3: 7.0, cFixed: 3.5, sigma: 28, iBase: 3.0, gAnn: 4.5, speed: 9
   },
   mesa: {
     label: 'S2 · MESA-integraatio',
-    desc: '<strong>Koordinoitu MESA-käyttöönotto.</strong> DC-solmut kytketään kaukolämpöverkkoihin 2027–2030. Vety-elektrolyysi ylijäämäsähköllä käynnistyy 2028. sigmaRiskBp laskee merkittävästi kun varastot tasaavat tuulivaihtelua. Z3 → Z2 noin 2030.',
+    desc: '<strong>Coordinated MESA deployment.</strong> DC nodes connected to district heating networks 2027–2030. Hydrogen electrolysis from surplus power starts 2028. sigmaRiskBp falls significantly as storage buffers wind variability. Z3 → Z2 around 2030.',
     eL3: 9.5, cFixed: 5.0, sigma: 18, iBase: 2.75, gAnn: 3.5, speed: 7
   },
   full: {
-    label: 'S3 · Täysi combo',
-    desc: '<strong>MESA + DC-lämpö + CO₂-talteenotto + vety täydessä laajuudessa.</strong> Kaikkien komponenttien synergiat realisoituvat. MESA-tulot (lämpö, vety, CO₂-markkinat) kaventavat rakenteellista vajetta. Black period -ongelma on hallittu 2032 mennessä. Z2 → Z1 saavutettavissa ennen 2035.',
+    label: 'S3 · Full Integration',
+    desc: '<strong>MESA + DC heat + CO₂ capture + hydrogen at full scale.</strong> All component synergies materialise. MESA revenues (heat, hydrogen, CO₂ markets) narrow the structural deficit. Black period problem is managed by 2032. Z2 → Z1 achievable before 2035.',
     eL3: 11.5, cFixed: 7.0, sigma: 13, iBase: 2.5, gAnn: 2.5, speed: 6
   }
 };
@@ -379,11 +379,11 @@ function renderChart(traj) {
 
 // ── RENDER TABLE ──────────────────────────────────────────────────────────────
 const KEY_EVENTS = {
-  2026: 'Lähtötila (live)',
-  2027: 'MESA-pilotit käynnistyvät',
-  2028: 'DC-lämpöintegraatiot',
+  2026: 'Baseline (live)',
+  2027: 'MESA pilots launch',
+  2028: 'DC heat integrations',
   2029: 'Vety-elektrolyysi skaalautuu',
-  2030: 'CO₂-talteenotto käynnissä',
+  2030: 'CO₂ capture operational',
   2032: 'Black period hallittu',
   2035: 'Tavoitetila',
 };
@@ -412,13 +412,13 @@ function renderThresholds(traj) {
   let title, body;
   if (!z2yr) {
     title = '⚠ Z3 pysyy koko periodin';
-    body  = 'Parametrit eivät riitä vyöhykemuutokseen 2026–2035. Lisää suojakapasiteettia (eL3, cFixed) tai vähennä rahoitusvajetta (gAnn).';
+    body  = 'Parameters insufficient for zone transition 2026–2035. Increase protection capacity (eL3, cFixed) or reduce fiscal deficit (gAnn).';
   } else if (!z1yr) {
     title = `○ Z3 → Z2 saavutetaan ${z2yr.yr}`;
-    body  = `Järjestelmä siirtyy lievälle stressitasolle ${z2yr.yr}. Z1-taso ei ole saavutettavissa tällä parametriyhdistelmällä — vaatisi suuremman kapasiteettikasvun tai rahoitusvajeen kaventumisen.`;
+    body  = `System transitions to mild stress level ${z2yr.yr}. Z1 is not achievable with this parameter combination — would require larger capacity growth or fiscal deficit reduction.`;
   } else {
     title = `✓ Z1 saavutetaan ${z1yr.yr}`;
-    body  = `Järjestelmä saavuttaa normaalitoiminnan ${z1yr.yr}. Z3 → Z2 tapahtui ${z2yr.yr}. Tämä on täyden MESA-integraaation skenaario — black period -ongelma on käytännössä hallittu.`;
+    body  = `System reaches normal operation ${z1yr.yr}. Z3 → Z2 occurred ${z2yr.yr}. This is the full MESA integration scenario — the black period problem is effectively managed.`;
   }
 
   document.getElementById('thresh-title').style.color = ZONE_COLORS[finalZone];

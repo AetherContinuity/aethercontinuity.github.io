@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -182,7 +182,7 @@
   <div class="h-status">
     <div style="font-family:var(--mono);font-size:.58rem;color:var(--muted);text-transform:uppercase">Current_Regime</div>
     <div class="h-zone" id="zone-display">—</div>
-    <div style="margin-top:4px"><span class="badge" id="live-badge">● Ei yhteyttä</span></div>
+    <div style="margin-top:4px"><span class="badge" id="live-badge">● No connection</span></div>
   </div>
 </header>
 
@@ -196,7 +196,7 @@
         value="https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api"
         placeholder="https://proxy.workers.dev/api" />
       <button class="btn btn-grn" onclick="testProxy()">⚡ Testaa</button>
-      <button class="btn btn-go"  onclick="fetchAndUpdate()">▶ Hae live-data</button>
+      <button class="btn btn-go"  onclick="fetchAndUpdate()">▶ Fetch live data</button>
     </div>
     <div class="proxy-msg" id="proxy-msg">— ei testattu</div>
     <div class="prog-wrap" id="prog-wrap">
@@ -318,7 +318,7 @@
           <div class="live-value" id="lv-cons">—</div>
         </div>
         <div class="live-item">
-          <div class="live-name">Ylijäämä</div>
+          <div class="live-name">Surplus</div>
           <div class="live-value" id="lv-surp">—</div>
         </div>
         <div class="live-item">
@@ -366,7 +366,7 @@
     <div class="card" style="padding:12px 14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <div class="sec" style="margin:0">Fetch Log</div>
-        <button class="btn btn-sec" style="font-size:.58rem;padding:2px 7px;" onclick="document.getElementById('log').innerHTML=''">Tyhjennä</button>
+        <button class="btn btn-sec" style="font-size:.58rem;padding:2px 7px;" onclick="document.getElementById('log').innerHTML=''">Clear</button>
       </div>
       <div id="log"></div>
     </div>
@@ -549,7 +549,7 @@ async function fetchLatest(dsId, retries = 3) {
 
     const json = await r.json();
     const rows = json.data || [];
-    if (!rows.length) throw new Error(`Tyhjä vastaus DS ${dsId}`);
+    if (!rows.length) throw new Error(`Empty response DS ${dsId}`);
     const sorted = rows.sort((a, b) =>
       new Date(b.startTime || b.start_time || b.time) -
       new Date(a.startTime || a.start_time || a.time)
@@ -576,16 +576,16 @@ async function fetchFinnishBondYield() {
     const json = await r.json();
     // Navigate SDMX-JSON structure: dataSets[0].series["0:0:0:0:0:0:0"].observations
     const series = json.dataSets?.[0]?.series;
-    if (!series) throw new Error('Ei sarjadataa ECB:ltä');
+    if (!series) throw new Error('No series data from ECB');
     const obs = Object.values(series)[0]?.observations;
-    if (!obs) throw new Error('Ei havaintoja ECB:ltä');
+    if (!obs) throw new Error('No observations from ECB');
     // Most recent observation value is in index 0 of the array
     const latest = Object.values(obs).sort((a, b) => b[0] - a[0])[0];
     const yieldPct = latest[0];
     if (isNaN(yieldPct)) throw new Error('NaN ECB-arvosta');
     return { value: yieldPct / 100, source: 'ECB YC (FI 10Y)', confidence: 'high' };
   } catch(e) {
-    addLog('warn', `ECB-korko epäonnistui: ${e.message} — käytetään baseline`);
+    addLog('warn', `ECB rate failed: ${e.message} — using baseline`);
     return { value: BASELINE.iBase, source: 'System Baseline (ECB unavail.)', confidence: 'low' };
   }
 }
@@ -605,7 +605,7 @@ async function fetchSpotPrice() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const json  = await r.json();
     const rows  = json.data || [];
-    if (!rows.length) throw new Error('tyhjä');
+    if (!rows.length) throw new Error('empty');
     const sorted = rows.sort((a, b) =>
       new Date(b.startTime || b.start_time || b.time) -
       new Date(a.startTime || a.start_time || a.time)
@@ -628,9 +628,9 @@ async function fetchSpotPrice() {
   try {
     const val = await fetchWithWindow(244, 120);
     addLog('info', `Spot fallback DS 244: ${val.toFixed(2)} €/MWh`);
-    return { value: val, source: 'Fingrid DS 244 (säätöhinta)' };
+    return { value: val, source: 'Fingrid DS 244 (balancing price)' };
   } catch(e) {
-    addLog('warn', `Spot-hinta epäonnistui kokonaan: ${e.message}`);
+    addLog('warn', `Spot price failed entirely: ${e.message}`);
     return null;
   }
 }
@@ -651,7 +651,7 @@ async function testProxy() {
     msg.className = 'proxy-msg err';
     msg.textContent = '✕ ' + e.message;
     setLiveBadge(false);
-    addLog('err', 'Proxy-testi epäonnistui: ' + e.message);
+    addLog('err', 'Proxy test failed: ' + e.message);
   }
 }
 
@@ -675,7 +675,7 @@ async function fetchAndUpdate() {
     const spotPrice  = spotResult ? spotResult.value : null;
     const spotSource = spotResult ? spotResult.source : null;
     if (spotPrice !== null) {
-      addLog('ok', `Spot FI: ${spotPrice.toFixed(2)} €/MWh via ${spotSource} (${spotPrice > REF_PRICE_EUR_MWH ? '▲ yli viitehinnan' : '▼ alle viitehinnan'})`);
+      addLog('ok', `Spot FI: ${spotPrice.toFixed(2)} €/MWh via ${spotSource} (${spotPrice > REF_PRICE_EUR_MWH ? '▲ above reference' : '▼ below reference'})`);
     }
     await sleep(2000);
 
@@ -690,9 +690,9 @@ async function fetchAndUpdate() {
     addLog('info', `Kulutus: ${cons.toFixed(0)} MW`);
     await sleep(7000);
 
-    showProg(true, 'Ylijäämä (DS 198)…', 60);
+    showProg(true, 'Surplus (DS 198)…', 60);
     const surp = await fetchLatest(DS.SURP);
-    addLog('info', `Ylijäämä: ${surp.toFixed(0)} MW`);
+    addLog('info', `Surplus: ${surp.toFixed(0)} MW`);
     await sleep(7000);
 
     showProg(true, 'Tuulivoima (DS 181)…', 80);
@@ -723,11 +723,11 @@ async function fetchAndUpdate() {
     setLiveBadge(true);
     document.getElementById('sync-status').textContent = 'Status: Live_Sync';
     document.getElementById('last-fetch').textContent =
-      'Päivitetty: ' + new Date().toLocaleTimeString('fi-FI');
+      'Updated: ' + new Date().toLocaleTimeString('fi-FI');
     addLog('ok', `Zone: ${currentState.zone} · PDI: ${currentState.pdi.toFixed(4)} · SBM: ${currentState.sbm.toFixed(3)} · gAnn: ${extData.gAnn.toFixed(3)}`);
 
   } catch(e) {
-    addLog('err', 'Haku epäonnistui: ' + e.message);
+    addLog('err', 'Fetch failed: ' + e.message);
     setLiveBadge(false);
   }
 
@@ -927,64 +927,64 @@ function updateHMI(simState = null) {
 
   // ── Zone headline ──
   const zoneLines = {
-    Z1: { color: '#4caf7d', icon: '✓', text: 'Järjestelmä toimii normaalisti' },
-    Z2: { color: '#e8a040', icon: '○', text: 'Lieviä jänniteitä — seuranta suositeltavaa' },
-    Z3: { color: '#e07030', icon: '△', text: 'Selkeä rakenteellinen stressi' },
-    Z4: { color: '#d95f5f', icon: '⚠', text: 'Kriittinen tila — päätöskyky uhattuna' },
+    Z1: { color: '#4caf7d', icon: '✓', text: 'System operating normally' },
+    Z2: { color: '#e8a040', icon: '○', text: 'Mild tensions — monitoring recommended' },
+    Z3: { color: '#e07030', icon: '△', text: 'Clear structural stress' },
+    Z4: { color: '#d95f5f', icon: '⚠', text: 'Critical state — decision capacity threatened' },
   };
   const zl = zoneLines[s.zone];
   document.getElementById('hmi-zone-line').style.color = zl.color;
-  document.getElementById('hmi-zone-line').textContent = `${zl.icon} Vyöhyke ${s.zone} — ${zl.text}`;
+  document.getElementById('hmi-zone-line').textContent = `${zl.icon} Zone ${s.zone} — ${zl.text}`;
 
   // ── Body: what's driving the state ──
   const lines = [];
 
   // PDI reading
   if (s.pdi > 0.30) {
-    lines.push(`Suojakapasiteettivaje on merkittävä (PDI ${s.pdi.toFixed(2)}): käytettävissä olevat kriittiset resurssit kattavat vain osan järjestelmän tarpeesta.`);
+    lines.push(`Protection capacity deficit is significant (PDI ${s.pdi.toFixed(2)}): available critical resources cover only part of system requirements.`);
   } else if (s.pdi > 0.15) {
-    lines.push(`Suojakapasiteetti on osittain riittämätön (PDI ${s.pdi.toFixed(2)}): reunatilanne, jossa lisästressi voi heikentää toimintakykyä.`);
+    lines.push(`Protection capacity is partially insufficient (PDI ${s.pdi.toFixed(2)}): borderline situation where additional stress may degrade operational capacity.`);
   } else {
-    lines.push(`Suojakapasiteetti on riittävällä tasolla (PDI ${s.pdi.toFixed(2)}).`);
+    lines.push(`Protection capacity is at adequate level (PDI ${s.pdi.toFixed(2)}).`);
   }
 
   // SBM reading
   if (s.sbm < 0) {
-    lines.push(`Systeemibudjettimittari on negatiivinen (SBM ${s.sbm.toFixed(2)}): rahoitustasapaino on pettänyt — järjestelmä kuluttaa enemmän kuin se pystyy ylläpitämään.`);
+    lines.push(`System budget metric is negative (SBM ${s.sbm.toFixed(2)}): fiscal balance has failed — system is consuming more than it can sustain.`);
   } else if (s.sbm < 2.0) {
-    lines.push(`Systeemibudjettimittari on niukka (SBM ${s.sbm.toFixed(2)}): liikkumavara on kapea, ja pienikin muutos korkotasossa tai kysynnässä voi kääntää saldon negatiiviseksi.`);
+    lines.push(`System budget metric is tight (SBM ${s.sbm.toFixed(2)}): margin is narrow, and even a small change in interest rates or demand can turn the balance negative.`);
   } else {
-    lines.push(`Systeemibudjettimittari on positiivinen (SBM ${s.sbm.toFixed(2)}): rahoitustasapaino kestää nykyisen stressin.`);
+    lines.push(`System budget metric is positive (SBM ${s.sbm.toFixed(2)}): fiscal balance withstands current stress.`);
   }
 
   // Grid context
   const cap = instCapNow();
   const windCF = snap.wind_MW / cap;
   if (windCF > 0.6) {
-    lines.push(`Tuulivoima tuottaa tällä hetkellä ${(windCF*100).toFixed(0)} % kapasiteetistaan — verkkoriski on matala.`);
+    lines.push(`Wind power is currently producing ${(windCF*100).toFixed(0)} % of capacity — grid risk is low.`);
   } else if (windCF < 0.10) {
-    lines.push(`Tuulivoima on lähes pysähdyksissä (CF ${(windCF*100).toFixed(0)} %) — tämä nostaa verkon epätasapainoriskiä merkittävästi.`);
+    lines.push(`Wind power is nearly stalled (CF ${(windCF*100).toFixed(0)} %) — this significantly raises grid imbalance risk.`);
   }
 
   if (snap.surplus_MW < -500) {
-    lines.push(`Suomi tuo sähköä ${Math.abs(snap.surplus_MW).toFixed(0)} MW verran — tuontiriippuvuus on koholla.`);
+    lines.push(`Finland is importing electricity ${Math.abs(snap.surplus_MW).toFixed(0)} MW — import dependency is elevated.`);
   } else if (snap.surplus_MW > 500) {
-    lines.push(`Suomi vie sähköä ${snap.surplus_MW.toFixed(0)} MW — verkon ylijäämätilanne on hyvä.`);
+    lines.push(`Finland is exporting electricity ${snap.surplus_MW.toFixed(0)} MW — grid surplus situation is good.`);
   }
 
   if (price !== null) {
     if (price > REF_PRICE_EUR_MWH * 2) {
-      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) on poikkeuksellisen korkea — tämä lisää järjestelmän kustannuspainetta.`);
+      lines.push(`Electricity price (${price.toFixed(0)} €/MWh) is exceptionally high — this increases system cost pressure.`);
     } else if (price > REF_PRICE_EUR_MWH) {
-      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) ylittää viitehinnan — lievästi kohonnut kustannusstressi.`);
+      lines.push(`Electricity price (${price.toFixed(0)} €/MWh) exceeds reference price — mildly elevated cost stress.`);
     } else {
-      lines.push(`Sähkön hinta (${price.toFixed(0)} €/MWh) on maltillinen.`);
+      lines.push(`Electricity price (${price.toFixed(0)} €/MWh) is moderate.`);
     }
   }
 
   // Z3/Z4 structural note
   if (s.zone === 'Z3' || s.zone === 'Z4') {
-    lines.push(`Huomio: stressitila on <em>rakenteellinen</em> — se ei poistu hyvällä sääpäivällä, vaan vaatii pitkäjänteisiä toimenpiteitä suojakapasiteetin kasvattamiseksi.`);
+    lines.push(`Huomio: stress state is <em>structural</em> — it does not resolve on a good weather day, but requires sustained action to increase protection capacity.`);
   }
 
   document.getElementById('hmi-body').innerHTML = lines.map(l => `<p style="margin-bottom:6px">${l}</p>`).join('');
@@ -996,13 +996,13 @@ function updateHMI(simState = null) {
     const improved = simState.zone < s.zone || simState.pdi < s.pdi;
     const zoneChange = simState.zone !== s.zone
       ? ` → <strong style="color:${zoneColors[simState.zone]}">${simState.zone}</strong>`
-      : ' (vyöhyke ei muutu)';
+      : ' (zone unchanged)';
 
     let rkomText = `RKOM ${(rkomLevel*100).toFixed(0)} % -interventiolla: PDI laskee arvoon ${simState.pdi.toFixed(3)}${zoneChange}. `;
     if (simState.zone === 'Z1') {
-      rkomText += 'Täysimittainen interventio palauttaisi järjestelmän normaalitilaan.';
+      rkomText += 'Full-scale intervention would restore the system to normal.';
     } else if (simState.pdi < s.pdi * 0.7) {
-      rkomText += 'Interventio parantaa tilannetta merkittävästi, muttei riitä yksin vyöhykemuutokseen.';
+      rkomText += 'Intervention significantly improves the situation but is insufficient alone for a zone transition.';
     } else {
       rkomText += 'Interventiovaikutus on rajallinen — rakenteellinen vaje vaatii laajempia toimia.';
     }
@@ -1049,10 +1049,10 @@ document.getElementById('auto-refresh').addEventListener('change', function() {
   if (this.checked) {
     fetchAndUpdate();
     autoTimer = setInterval(fetchAndUpdate, 5 * 60 * 1000);
-    addLog('info', 'Auto-refresh käynnistetty (5 min)');
+    addLog('info', 'Auto-refresh started (5 min)');
   } else {
     clearInterval(autoTimer);
-    addLog('info', 'Auto-refresh pysäytetty');
+    addLog('info', 'Auto-refresh stopped');
   }
 });
 
@@ -1061,7 +1061,7 @@ document.getElementById('auto-refresh').addEventListener('change', function() {
 // ─────────────────────────────────────────────────────────────────────────────
 function setLiveBadge(ok) {
   const b = document.getElementById('live-badge');
-  b.textContent = ok ? '● Live' : '● Ei yhteyttä';
+  b.textContent = ok ? '● Live' : '● No connection';
   b.className = ok ? 'badge live' : 'badge err';
 }
 
@@ -1083,7 +1083,7 @@ function addLog(type, msg) {
 // Init render with baseline (no live data yet)
 updateChart();
 updateMetrics(currentState, {});
-addLog('info', 'AFS v1.5 käynnistetty — odottaa Fingrid-dataa');
+addLog('info', 'AFS v1.5 started — awaiting Fingrid data');
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +41,7 @@ const CONFIG = {
   // ── Normalisaatiorajat EPP:lle ──
   EPP_NORM: {
     dp_min:  1.00, dp_max:  1.30,
-    dc_min:  0.60, dc_max:  0.95,   // dc käytetään käänteisesti: 1-DC
+    dc_min:  0.60, dc_max:  0.95,   // dc used inversely: 1-DC
     nir_min: 0.00, nir_max: 0.40,
     sp_min:  0.00, sp_max:  0.65,
   },
@@ -50,21 +50,21 @@ const CONFIG = {
   POSTURE_THRESHOLDS: {
     epp:  [0.20, 0.40, 0.65],
     dp72: [1.05, 1.12, 1.22],
-    dc72: [0.90, 0.80, 0.70],   // käänteinen: DC-arvo ALLE kynnyksen → huonompi
+    dc72: [0.90, 0.80, 0.70],   // inverse: DC value BELOW threshold → worse
     nir72:[0.10, 0.20, 0.30],
     sp168:[0.15, 0.30, 0.50],
   },
 
   // ── Baseline-kulutus (viikoittainen mediaani MW/h, viikot 1–52) ──
-  // Tämä on approksimaatiokäyrä. Oikeassa tuotannossa korvaa
+  // This is an approximation curve. Replace in production with
   // talvikausien 2018–2024 historiallisella mediaanilaskennalla.
   // Talviviikot (1–8, 45–52) ≈ 12 000–13 500 MW
-  // Kesäviikot (22–30) ≈ 8 500–9 500 MW
+  // Summer weeks (22–30) ≈ 8,500–9,500 MW
   get BASELINE_BY_WEEK() {
     const b = {};
     for (let w = 1; w <= 52; w++) {
       const phase = (w - 1) / 51;
-      // Käyrä: talvi korkea, kesä matala
+      // Curve: winter high, summer low
       const winter_peak = 12800;
       const summer_base = 8800;
       const seasonal = Math.cos(2 * Math.PI * (w - 2) / 52);
@@ -73,7 +73,7 @@ const CONFIG = {
     return b;
   },
 
-  // Päivitysväli millisekunteina (3 600 000 = 1h)
+  // Update interval in milliseconds (3,600,000 = 1h)
   REFRESH_MS: 3_600_000,
 };
 
@@ -272,7 +272,7 @@ function computeL2(L1) {
   M.W72.EPP  = epp_from_window(M.W72);
   M.W168.EPP = epp_from_window(M.W168);
 
-  // L3-bannerin apumuuttujat (päivätaso proxy, streak-laskurit)
+  // L3 banner helper variables (day-level proxy, streak counters)
   M.DC_persistence_days  = computeStreakDays(L1.dc_instant,  v => v < 0.80, 24);
   M.NIR_streak_days      = computeStreakDays(L1.nir_instant, v => v > 0.20, 24);
   M.EPP_rising           = M.W72.EPP > M.W168.EPP + 0.10;
@@ -281,7 +281,7 @@ function computeL2(L1) {
   return M;
 }
 
-// Laske kuinka monta kokonaista päivää ehto on pätevä (takautuvasti)
+// Calculate how many full days condition has been valid (retrospectively)
 function computeStreakDays(hourlyArr, condFn, hoursPerDay) {
   let days = 0;
   const total = hourlyArr.length;
@@ -314,7 +314,7 @@ function classifyPosture(M) {
   else if (epp < th.epp[2]) p = "ELEVATED";
   else                       p = "BLACK-PERIOD-LIKE";
 
-  // Override-säännöt (DA-001-henkiset suojaukset)
+  // Override rules (DA-001-style safeguards)
   if (M.W168.SP  > 0.55)           p = maxPosture(p, "ELEVATED");
   if (M.W168.DC  < 0.65)           p = maxPosture(p, "ELEVATED");
   if (M.W168.NIR > 0.33)           p = maxPosture(p, "ELEVATED");
@@ -336,7 +336,7 @@ function buildBannerText(posture, M) {
     "NORMAL":             "Talvinen jatkuvuuspaine normaalirajoissa.",
     "TIGHT":              "Endurance-marginaalit ohenevat.",
     "ELEVATED":           "Useampi endurance-signaali koholla samanaikaisesti.",
-    "BLACK-PERIOD-LIKE":  "Monipäiväinen endurance-paine selvästi koholla.",
+    "BLACK-PERIOD-LIKE":  "Multi-day endurance pressure clearly elevated.",
   };
 
   const details = [];
@@ -348,31 +348,31 @@ function buildBannerText(posture, M) {
   const ns    = M.NIR_streak_days;
 
   if (dc72 < 0.70) {
-    details.push(`Kotimainen peitto heikko — järjestelmä nojaa merkittävästi tuontiin.`);
+    details.push(`Domestic coverage weak — system relies significantly on imports.`);
   } else if (dc72 < 0.80 && pd >= 1) {
-    details.push(`Kotimainen peitto on pysynyt alle normaalin ${pd} päivän ajan.`);
+    details.push(`Domestic coverage has remained below normal for ${pd} days.`);
   }
 
   if (nir72 > 0.20 && ns >= 2) {
-    details.push(`Tuontiriippuvuus noussut ${ns}. peräkkäisenä päivänä.`);
+    details.push(`Import dependency elevated for ${ns} consecutive days.`);
   }
 
   if (sp168 > 0.30) {
-    details.push(`Pitkittyvä stressijakso — ${M.W168.SP_count}/${M.W168.SP_total} stressituntia viimeiseltä 168 tunnilta.`);
+    details.push(`Prolonged stress period — ${M.W168.SP_count}/${M.W168.SP_total} stress hours in last 168h.`);
   }
 
   if (dp72 > 1.12) {
-    details.push(`Kysyntäpaine selvästi normaalia korkeammalla.`);
+    details.push(`Demand pressure clearly above normal.`);
   }
 
   if (M.EPP_rising) {
-    details.push(`Paine kasvamassa — lyhyen aikavälin EPP noussut nopeasti.`);
+    details.push(`Pressure building — short-term EPP rising rapidly.`);
   } else if (M.EPP_falling) {
-    details.push(`Lyhyen aikavälin paine laskussa, mutta pitkä ikkuna pysyy koholla.`);
+    details.push(`Short-term pressure easing, but long window remains elevated.`);
   }
 
   const selected = details.slice(0, 2).join(" ");
-  const closing = "Tämä on diagnostinen luokitus, ei operatiivinen hälytys.";
+  const closing = "This is a diagnostic classification, not an operational alert.";
 
   return [leads[posture], selected, closing].filter(Boolean).join(" ");
 }
@@ -507,7 +507,7 @@ function renderCards(M, wname) {
   setCard("card-c", nir_badge, {
     value: pct(w.NIR), unit: "%",
     sub1: `Netto-tuonti: ${fmtMW(w.net_import_MW)} MW`,
-    sub2: streak >= 2 ? `${streak}. peräkkäinen vrk` : "Ei pitkittyvää trendiä",
+    sub2: streak >= 2 ? `Day ${streak} consecutive` : "No sustained trend",
     barPct: norm(w.NIR, 0, 0.40) * 100,
   });
 
@@ -528,7 +528,7 @@ function renderCards(M, wname) {
     sub1: "DC: 0.30 · SP: 0.30",
     sub2: "DP: 0.20 · NIR: 0.20",
     barPct: w.EPP * 100,
-    bottomNote: wname === "W24" ? "⚠ EPP näyttää W72-arvon pysyvyyssignaalin säilyttämiseksi" : null,
+    bottomNote: wname === "W24" ? "⚠ EPP shows W72 value to preserve persistence signal" : null,
   });
 }
 
@@ -756,7 +756,7 @@ async function refresh() {
     } catch (err) {
       console.error("Fingrid fetch failed:", err);
       document.getElementById("error-msg").textContent =
-        `Fingrid API ei vastannut: ${err.message}. Näytetään esimerkkidata.`;
+        `Fingrid API unavailable: ${err.message}. Showing sample data.`;
       document.getElementById("error-banner").style.display = "block";
       rawData = generateDemoData();
       isDemo = true;
@@ -994,13 +994,13 @@ footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px;
         <span id="ts-demo" class="demo-tag" style="display:none">DEMO DATA</span>
       </div>
       <h1 class="site-title">Winter Endurance <em>Monitor</em></h1>
-      <p class="site-subtitle">Seuraa, kasvaako Suomen talvinen jatkuvuuspaine nopeammin kuin sitä kantava monipäiväinen endurance-kerros.</p>
+      <p class="site-subtitle">Monitors whether Finland's winter continuity pressure is growing faster than the multi-day endurance layer that sustains it.</p>
     </div>
     <div>
       <div class="timestamp-block">
-        <div class="ts-live"><span class="live-dot"></span>Live — päivittyy tunneittain</div>
+        <div class="ts-live"><span class="live-dot"></span>Live — updates hourly</div>
         <div id="ts-time">—</div>
-        <div>Lähde: Fingrid Open Data</div>
+        <div>Source: Fingrid Open Data</div>
       </div>
     </div>
   </header>
@@ -1119,7 +1119,7 @@ footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px;
       <div class="chart-panel">
         <div class="chart-title">
           Kulutus · Kotimainen tuotanto · Import-gap
-          <span class="chart-title-right">Harmaat bändit = stressitunnit</span>
+          <span class="chart-title-right">Grey bands = stress hours</span>
         </div>
         <svg class="chart-svg" id="main-chart-svg" viewBox="0 0 640 160" preserveAspectRatio="none" style="height:160px;display:block"></svg>
         <div class="chart-legend">
@@ -1156,7 +1156,7 @@ footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px;
         </div>
 
         <div class="threshold-list">
-          <div class="thresh-label">SP_168 threshold-vyöhykkeet</div>
+          <div class="thresh-label">SP_168 threshold zones</div>
           <div class="thresh-row"><div class="thresh-swatch" style="background:var(--normal-glow)"></div><span class="thresh-name" style="color:var(--normal-text)">Normal</span><span class="thresh-range">&lt; 15%</span></div>
           <div class="thresh-row"><div class="thresh-swatch" style="background:var(--tight-glow)"></div><span class="thresh-name" style="color:var(--tight-text)">Tight</span><span class="thresh-range">15–30%</span></div>
           <div class="thresh-row"><div class="thresh-swatch" style="background:var(--elevated-glow)"></div><span class="thresh-name" style="color:var(--elevated-text)">Elevated</span><span class="thresh-range">30–50%</span></div>
@@ -1182,12 +1182,12 @@ footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px;
     <div>
       <div class="method-label">Instrumentin rajaukset</div>
       <div class="method-limits">
-        <div class="limit-item">Tämä instrumentti on diagnostinen, ei operatiivinen eikä viranomaishälytys.</div>
-        <div class="limit-item">Posture-luokitus ei ennusta yksittäistä sähkökatkoa.</div>
-        <div class="limit-item">EPP on synteettinen indeksi — komponenttiarvot ovat ensisijainen tulkintalähde.</div>
-        <div class="limit-item">Stability ≠ endurance. Hetkellinen tasapaino ei tarkoita monipäiväistä kestävyyttä.</div>
+        <div class="limit-item">This instrument is diagnostic, not operational and not an official alert.</div>
+        <div class="limit-item">Posture classification does not predict individual power outages.</div>
+        <div class="limit-item">EPP is a synthetic index — component values are the primary source for interpretation.</div>
+        <div class="limit-item">Stability ≠ endurance. Momentary balance does not imply multi-day endurance.</div>
         <div class="limit-item">MW ≠ MWh. Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa.</div>
-        <div class="limit-item">Risk transfer on rakenteellinen havainto, ei moraalinen syytös yksittäisistä toimijoista.</div>
+        <div class="limit-item">Risk transfer is a structural observation, not a moral judgement about individual actors.</div>
       </div>
     </div>
     <div>

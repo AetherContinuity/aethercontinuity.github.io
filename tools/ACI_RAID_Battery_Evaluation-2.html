@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -270,7 +270,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <span style="background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">DA-001</span>
     <span style="background:var(--paper);border:1px solid var(--rule);padding:1px 6px;border-radius:2px;">D-3 · D-4</span>
   </span>
-  <span style="margin-left:auto;font-size:8.5px;">Custom cases persist in browser storage · <button onclick="if(confirm('Poista kaikki tallennetut caset?')){localStorage.removeItem('aci-eec-custom-cases-v1');location.reload();}" style="font-family:inherit;font-size:8.5px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;">Tyhjennä tallennetut</button></span>
+  <span style="margin-left:auto;font-size:8.5px;">Custom cases persist in browser storage · <button onclick="if(confirm('Delete all saved cases?')){localStorage.removeItem('aci-eec-custom-cases-v1');location.reload();}" style="font-family:inherit;font-size:8.5px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;">Clear saved</button></span>
 </div>
 
 <div class="tabs-bar">
@@ -287,8 +287,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="nav-section">
       <div class="nl">Uusi arvio</div>
       <input class="nav-input" id="ni-name" type="text" placeholder="Teknologian nimi…" style="margin-bottom:5px;">
-      <textarea class="nav-input" id="ni-desc" rows="3" style="resize:vertical;" placeholder="Väite tai kuvaus…"></textarea>
-      <button class="nav-btn" onclick="runNewCase()">▶ Arvioi komitealla</button>
+      <textarea class="nav-input" id="ni-desc" rows="3" style="resize:vertical;" placeholder="Claim or description…"></textarea>
+      <button class="nav-btn" onclick="runNewCase()">▶ Evaluate with committee</button>
     </div>
     <div class="nav-section">
       <div class="nl">Versio</div>
@@ -311,7 +311,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <div class="footer">
   <div class="fl">ACI-EEC v1.2 · SGFA Decision Instrument · Dependency + Kill Signal layer</div>
-  <div class="fr">Analyysi ei päätä mikä on totta — vaan mitä kannattaa tehdä nyt.</div>
+  <div class="fr">Analysis does not decide what is true — but what is worth doing now.</div>
 </div>
 
 <div class="loading-overlay" id="loading">
@@ -331,16 +331,16 @@ const TTR = {
 const TTRMAX = 5;
 
 const AT = {
-  adopt:{items:['Integroi SGFA-arkkitehtuuriin','Dokumentoi käyttöönottoprosessi','Aseta suorituskykymittarit'],h:'Toimenpide: välitön'},
-  pilot:{items:['Määritä max-budjetti ja testikohde','Mittarit: hyötysuhde, €/yksikkö, kestävyys','Tarkistuspiste 6 kk:n kohdalla'],h:'Toimenpide: 1–3 kk'},
+  adopt:{items:['Integrate into SGFA architecture','Document deployment process','Set performance metrics'],h:'Action: immediate'},
+  pilot:{items:['Define max budget and test site','Metrics: efficiency, €/unit, durability','Checkpoint at 6 months'],h:'Action: 1–3 months'},
   watch:{items:['Seuraa julkaisuja ja pilotteja','Tarkista rahoituskehitys (6 kk)','Arvioi kill signals -tila'],h:'Toimenpide: passiivinen seuranta'},
   ignore:{items:['Ei resurssiallokointia','Arkistoi perusteluineen','Avaa uudelleen jos data muuttuu'],h:'Toimenpide: suljettu (toistaiseksi)'},
 };
 
 const DEP_TYPES = {
   material:   {icon:'◈', label:'Materiaali',     cls:'dep-mat'},
-  regulation: {icon:'⚖', label:'Regulaatio',     cls:'dep-reg'},
-  infrastructure:{icon:'⌖', label:'Infrastruktuuri', cls:'dep-inf'},
+  regulation: {icon:'⚖', label:'Regulation',     cls:'dep-reg'},
+  infrastructure:{icon:'⌖', label:'Infrastructure', cls:'dep-inf'},
   technology: {icon:'⬡', label:'Teknologia',     cls:'dep-tec'},
 };
 
@@ -369,190 +369,190 @@ function loadCustomCases() {
 // 1. ZUN-H
 defCase({slug:'zun-h',id:'ACI-EEC-2025-001',name:'Zun-H',subtitle:'Ohutkalvofotoelektrolyysi · aurinkovety',date:'2025-Q2',ttr:'mid',
   protocol:{
-    core:'Ohutkalvopohjainen fotoelektrolyysijärjestelmä tuottaa vetyä suoraan auringonvalosta ilman erillistä elektrolyysiä — suunnattu off-grid-kohteisiin.',
-    weakest:'Kalvon pitkäaikainen kestävyys käytännön olosuhteissa on toistaiseksi osoitettu vain laboratorio-olosuhteissa.',
-    falsification:'Ei julkaistua pitkäkestoista kenttädataa (≥2 v). Hyötysuhdeväitteet perustuvat kontrolloituihin laboratorioajoihin.',
-    empirical:'6–12 kk pilotti vakioimattomissa ulko-olosuhteissa: hyötysuhde, kalvon degradaatio, kaasuerottelu, €/kg H₂.'
+    core:'Thin-film photoelectrolysis system produces hydrogen directly from sunlight without separate electrolysis — targeted at off-grid applications.',
+    weakest:'Long-term membrane durability under real-world conditions has so far only been demonstrated in laboratory settings.',
+    falsification:'No published long-duration field data (≥2 yr). Efficiency claims based on controlled laboratory runs.',
+    empirical:'6–12 month pilot in uncontrolled outdoor conditions: efficiency, membrane degradation, gas separation, €/kg H₂.'
   },
   members:[
-    {role:'Physics Auditor',body:'Ei fysikaalisia esteitä. Fotoelektrokemiallinen hajoaminen tunnettu ilmiö. Teoreettinen hyötysuhde 10–15 % realistinen.',posture:'watch',postureLabel:'Watch'},
-    {role:'Engineering Realist',body:'Kalvo kriittinen heikkous. Degradaatio UV:ssa ja lämpösykleissä ongelma. Kaasuerottelu vaatii lisäinfrastruktuuria.',posture:'watch',postureLabel:'Watch'},
-    {role:'Economic Filter',body:'€/kg H₂ data puuttuu. Kalvon korvausväli tuntematon — dominoi CAPEX/OPEX. Ei investointipäätöstä ilman kenttädataa.',posture:'ignore',postureLabel:'Ignore (nyt)'},
-    {role:'System Integrator',body:'Erittäin kiinnostava off-grid: mökit, syrjäiset kohteet. SGFA-integraatio suoraviivainen jos hyötysuhde pitää.',posture:'pilot',postureLabel:'Pilot (off-grid)'},
-    {role:'Adversarial Skeptic',body:'"Vallankumouksellinen"-kieli ilman kenttädataa varoitusmerkki. Markkinointiviestintä selvästi ylittää julkaistu data.',posture:'watch',postureLabel:'Watch'},
+    {role:'Physics Auditor',body:'No physical barriers. Photoelectrochemical splitting is a known phenomenon. Theoretical efficiency 10–15% is realistic.',posture:'watch',postureLabel:'Watch'},
+    {role:'Engineering Realist',body:'Membrane is critical weakness. Degradation under UV and thermal cycling is a problem. Gas separation requires additional infrastructure.',posture:'watch',postureLabel:'Watch'},
+    {role:'Economic Filter',body:'€/kg H₂ data missing. Membrane replacement interval unknown — dominates CAPEX/OPEX. No investment decision without field data.',posture:'ignore',postureLabel:'Ignore (nyt)'},
+    {role:'System Integrator',body:'Highly interesting for off-grid: cabins, remote sites. SGFA integration straightforward if efficiency holds.',posture:'pilot',postureLabel:'Pilot (off-grid)'},
+    {role:'Adversarial Skeptic',body:'"Revolutionary" language without field data is a warning sign. Marketing communication clearly exceeds published data.',posture:'watch',postureLabel:'Watch'},
   ],
   divergence:[
-    {dim:'Fysiikka & teoria',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Ei fysikaalisia esteitä'},
-    {dim:'Kestävyys / kalvo',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Kriittisin epävarmuus'},
-    {dim:'Talous (€/kg H₂)',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Data puuttuu'},
-    {dim:'Off-grid-soveltuvuus',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Lupaavin käyttöalue'},
+    {dim:'Physics & theory',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'low',riskLabel:'Low',note:'No physical barriers'},
+    {dim:'Durability / membrane',consensus:'low',consensusLabel:'Weak',spread:'Large',risk:'high',riskLabel:'High',note:'Most critical uncertainty'},
+    {dim:'Economics (€/kg H₂)',consensus:'low',consensusLabel:'Unclear',spread:'Large',risk:'high',riskLabel:'High',note:'Data missing'},
+    {dim:'Off-grid suitability',consensus:'med',consensusLabel:'Moderate',spread:'Moderate',risk:'med',riskLabel:'Medium',note:'Most promising use case'},
     {dim:'Skaalautuvuus',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Ratkaisematta'},
   ],
   burden:[
-    {text:'Hyötysuhde ≥10 % ulko-olosuhteissa (6 kk)',status:'open',statusLabel:'Avoin'},
-    {text:'Kalvon käyttöikä ≥5 v kenttäolosuhteissa',status:'open',statusLabel:'Avoin'},
-    {text:'Turvallinen kaasuerottelujärjestelmä',status:'partial',statusLabel:'Osittain'},
+    {text:'Efficiency ≥10% in outdoor conditions (6 mo)',status:'open',statusLabel:'Open'},
+    {text:'Membrane lifetime ≥5 yr in field conditions',status:'open',statusLabel:'Open'},
+    {text:'Safe gas separation system',status:'partial',statusLabel:'Partial'},
     {text:'€/kg H₂ <5 € off-grid-kohteessa',status:'open',statusLabel:'Avoin'},
-    {text:'Fotoelektrokemiallinen mekanismi julkaistuissa mittauksissa',status:'met',statusLabel:'Täytetty'},
+    {text:'Photoelectrochemical mechanism in published measurements',status:'met',statusLabel:'Met'},
   ],
   dependencies:[
     {type:'material',label:'Ohutkalvokomponentit',critical:true},
     {type:'material',label:'Katalyyttimetallit (Pt/Ir)',critical:true},
     {type:'technology',label:'Kaasuerotteluteknologia',critical:true},
-    {type:'regulation',label:'Vetysäilytyssäädökset',critical:false},
-    {type:'infrastructure',label:'Off-grid sähköpuskuri',critical:false},
+    {type:'regulation',label:'Hydrogen storage regulations',critical:false},
+    {type:'infrastructure',label:'Off-grid power buffer',critical:false},
   ],
   killSignals:[
-    {condition:'Ei kenttädataa 24 kk:n sisällä pilot-päätöksestä',status:'clear',statusLabel:'Ei lauennut'},
-    {condition:'Kalvon käyttöikä <1 v kenttätestissä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'No field data within 24 months of pilot decision',status:'clear',statusLabel:'Not triggered'},
+    {condition:'Membrane lifetime <1 yr in field test',status:'clear',statusLabel:'Not triggered'},
     {condition:'€/kg H₂ >15 € optimistisessa mallissa',status:'clear',statusLabel:'Ei lauennut'},
-    {condition:'Ydinväite falsifioitu vertaisarvioidussa julkaisussa',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Core claim falsified in peer-reviewed publication',status:'clear',statusLabel:'Not triggered'},
   ],
   decision:'watch',decisionLabel:'WATCH + SMALL PILOT',
-  synthesis:'Zun-H edustaa fysikaalisesti validia mutta todentamatonta lähestymistapaa. Komitea on yksimielinen siitä, että teoreettinen perusta kestää — mutta kukaan ei voi antaa puoltavaa investointisuositusta ilman kenttädataa. Suurin epävarmuus on kalvossa: sen kestävyys määrää koko järjestelmän elinkaariarvon.\n\nKriittinen riippuvuus katalyyttimetalleista (Pt/Ir) ja ohutkalvokomponenteista tekee tästä myös materiaaliriskin — molemmat pullonkaulat jaetaan muiden energiateknologioiden kanssa. Kill signals -kynnykset asetettu: jos kenttädata ei ole saatavilla 24 kk:n sisällä, case suljetaan aktiivisesta seurannasta.',
-  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+  synthesis:'Zun-H represents a physically valid but unverified approach. The committee is unanimous that the theoretical basis holds — but no one can give a positive investment recommendation without field data. The greatest uncertainty is the membrane: its durability determines the entire system lifecycle value.\n\nCritical dependence on catalyst metals (Pt/Ir) and thin-film components also makes this a materials risk — both bottlenecks are shared with other energy technologies. Kill signal thresholds are set: if field data is not available within 24 months, the case is closed from active monitoring.',
+  axiom:'The committee does not decide what is true — but what is promising enough to test.'
 });
 
 // 2. SMR — STEADY ENERGY / KUOPIO
-defCase({slug:'smr-steady',id:'ACI-EEC-2025-002',name:'SMR / Steady Energy',subtitle:'Pieni modulaarinen ydinreaktori · kaukolämpö',date:'2025-Q3',ttr:'long',
+defCase({slug:'smr-steady',id:'ACI-EEC-2025-002',name:'SMR / Steady Energy',subtitle:'Small modular reactor · district heating',date:'2025-Q3',ttr:'long',
   protocol:{
-    core:'Pieni modulaarinen ydinreaktori (SMR, ~50 MWt) kaukolämmöntuotantoon — Suomen olosuhteisiin suunniteltu, teollinen pre-commercial deployment 2030-luvulla.',
+    core:'Small modular reactor (SMR, ~50 MWt) for district heat production — designed for Finnish conditions, industrial pre-commercial deployment in the 2030s.',
     weakest:'Lupaprosessin pituus ja poliittinen vastustus ovat ratkaisemattomia muuttujia, joihin teknologinen suorituskyky ei vaikuta.',
-    falsification:'STUK:in lupakehys SMR:lle ei ole vielä valmis. Ei demonstroituja reaktoreita Suomessa tai pohjoismaisessa oikeudellisessa ympäristössä.',
-    empirical:'Regulatory roadmap + kustannusmalli FOAK-reaktorille (First Of A Kind): €/MWh vs. referenssi. Vertailu lämpöpumppuihin ja biopolttoaineisiin.'
+    falsification:'STUK licensing framework for SMR is not yet finalised. No demonstrated reactors in Finland or Nordic legal environment.',
+    empirical:'Regulatory roadmap + cost model for FOAK reactor (First Of A Kind): €/MWh vs. reference. Comparison with heat pumps and biofuels.'
   },
   members:[
-    {role:'Physics Auditor',body:'Fysiikka täysin tunnettu. SMR-teknologia on vakiintunutta ydinvoimatekniikkaa pienemmässä mittakaavassa. Ei uutta fysiikkaa. Turvallisuusprofiili passiivijäähdytyksellä vahva.',posture:'adopt',postureLabel:'Adopt (fysiikka)'},
-    {role:'Engineering Realist',body:'FOAK-kustannusriski on massiivinen. Ensimmäinen rakennus maksaa moninkertaisesti sarjatuotannolle. Rakennusaika 7–12 v. Komponenttiketju ei ole valmis.',posture:'watch',postureLabel:'Watch'},
-    {role:'Economic Filter',body:'FOAK-reaktori Suomeen: todennäköisesti 500–900 M€. Kaukolämmön hinta kilpailukykyinen vasta skaalassa. Rahoitusmalli julkinen tai EU-tuki välttämätön.',posture:'pilot',postureLabel:'Pilot (rahoitusmalli)'},
-    {role:'System Integrator',body:'Erinomainen strateginen sopivuus: baseload-lämpö, ei riippuvuus säästä, kaukolämpöverkko valmis. Kuopion mittakaava sopii. Pitkäaikainen energiaomavaraisuus.',posture:'adopt',postureLabel:'Adopt (strategia)'},
-    {role:'Adversarial Skeptic',body:'Poliittinen ja regulatorinen riski aliarvioidaan systemaattisesti. Aikataulut ovat historiallisesti pettäneet. Voiko 2030-luku olla realistinen? Skeptinen.',posture:'watch',postureLabel:'Watch'},
+    {role:'Physics Auditor',body:'Physics fully understood. SMR technology is established nuclear engineering at smaller scale. No new physics. Safety profile with passive cooling is strong.',posture:'adopt',postureLabel:'Adopt (physics)'},
+    {role:'Engineering Realist',body:'FOAK cost risk is massive. First-of-kind construction costs multiples of series production. Build time 7–12 yr. Component supply chain is not ready.',posture:'watch',postureLabel:'Watch'},
+    {role:'Economic Filter',body:'FOAK reactor for Finland: likely €500–900M. District heat price competitive only at scale. Financing model requires public or EU support.',posture:'pilot',postureLabel:'Pilot (financing model)'},
+    {role:'System Integrator',body:'Excellent strategic fit: baseload heat, no weather dependency, district heating network ready. Kuopio-scale fits. Long-term energy independence.',posture:'adopt',postureLabel:'Adopt (strategy)'},
+    {role:'Adversarial Skeptic',body:'Political and regulatory risk is systematically underestimated. Timelines have historically slipped. Can the 2030s be realistic? Sceptical.',posture:'watch',postureLabel:'Watch'},
   ],
   divergence:[
     {dim:'Fysiikka & tekniikka',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Tunnettu teknologia'},
-    {dim:'Regulaatio & lupa',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Suurin epävarmuus'},
-    {dim:'FOAK-kustannus',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Historiallinen ylioptimismi'},
+    {dim:'Regulation & licensing',consensus:'low',consensusLabel:'Weak',spread:'Large',risk:'high',riskLabel:'High',note:'Largest uncertainty'},
+    {dim:'FOAK cost',consensus:'low',consensusLabel:'Unclear',spread:'Large',risk:'high',riskLabel:'High',note:'Historical overoptimism'},
     {dim:'Strateginen sopivuus',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Konsensus: sopii SGFA'},
     {dim:'Aikataulu (2030-luku)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Historiallinen riski'},
   ],
   burden:[
-    {text:'STUK:in SMR-lupakehys valmis (selkeä milestone)',status:'partial',statusLabel:'Osittain'},
+    {text:'STUK SMR licensing framework finalised (clear milestone)',status:'partial',statusLabel:'Partial'},
     {text:'FOAK-kustannusarvio ±30 % tarkkuudella',status:'open',statusLabel:'Avoin'},
     {text:'Rahoitusmalli (julkinen/EU) vahvistettu',status:'open',statusLabel:'Avoin'},
-    {text:'Demonstraatioreaktori käynnissä vertailukelpoisessa ympäristössä',status:'open',statusLabel:'Avoin'},
-    {text:'Kaukolämpöintegraation tekninen suunnitelma',status:'met',statusLabel:'Täytetty'},
+    {text:'Demonstration reactor operating in comparable environment',status:'open',statusLabel:'Open'},
+    {text:'District heat integration technical plan',status:'met',statusLabel:'Met'},
   ],
   dependencies:[
     {type:'regulation',label:'STUK SMR-lupakehys',critical:true},
     {type:'regulation',label:'EU:n ydinenergiapolitiikka',critical:true},
-    {type:'infrastructure',label:'Kaukolämpöverkko (olemassa)',critical:false},
+    {type:'infrastructure',label:'District heating network (existing)',critical:false},
     {type:'material',label:'Reaktorikomponenttiketju',critical:true},
-    {type:'technology',label:'Passiivijäähdytysjärjestelmä',critical:false},
+    {type:'technology',label:'Passive cooling system',critical:false},
     {type:'infrastructure',label:'FOAK-rahoitusmekanismi',critical:true},
   ],
   killSignals:[
-    {condition:'STUK hylkää SMR-lupakehyksen kokonaan',status:'clear',statusLabel:'Ei lauennut'},
-    {condition:'FOAK-kustannus ylittää 1,5 Md€ (Suomi)',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'STUK rejects SMR licensing framework entirely',status:'clear',statusLabel:'Not triggered'},
+    {condition:'FOAK cost exceeds €1.5bn (Finland)',status:'clear',statusLabel:'Not triggered'},
     {condition:'EU:n taksonomia sulkee ydinvoiman rahoituksen',status:'clear',statusLabel:'Ei lauennut'},
     {condition:'Aikatauluarvio siirtyy yli 2040-luvulle',status:'watch',statusLabel:'Seurannassa'},
   ],
   decision:'pilot',decisionLabel:'PILOT (regulaatio + rahoitusmalli)',
-  synthesis:'SMR edustaa teknisesti kypsintä vaihtoehtoa tässä portfoliossa — fysiikka on tunnettu, turvallisuusprofiili vahva, ja strateginen sopivuus Kuopion kaukolämpöjärjestelmään on erinomäinen. Physics Auditor ja System Integrator ovat harvinaisessa yksimielisyydessä: tämä sopii SGFA-kehykseen.\n\nKriittinen este ei ole tekniikassa vaan regulaatiossa ja FOAK-kustannuksessa. Komitea suosittelee aktiivista "regulatory pilot" -lähestymistä: seuraa STUK-prosessia, rakenna rahoitusmalli rinnalla, ja pidä kill signal -kynnys selkeänä. Aikataulun realismi on suurin yksittäinen epävarmuus — historiallinen ylioptimismi ydinprojekteissa on dokumentoitua.',
-  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+  synthesis:'SMR represents the technically most mature option in this portfolio — physics is understood, safety profile is strong, and the strategic fit with Kuopio's district heating system is excellent. Physics Auditor and System Integrator are in rare agreement: this fits the SGFA framework.\n\nThe critical barrier is not in the technology but in regulation and FOAK cost. The committee recommends an active "regulatory pilot" approach: track the STUK process, build the financing model in parallel, and keep the kill signal threshold clear. Timeline realism is the single largest uncertainty — historical overoptimism in nuclear projects is documented.',
+  axiom:'The committee does not decide what is true — but what is promising enough to test.'
 });
 
 // 3. LFP / SODIUM-ION
-defCase({slug:'lfp-na-ion',id:'ACI-EEC-2025-003',name:'LFP / Na-ion akut',subtitle:'Litiumrautafosfaatti ja natrium-ioni · stationäärinen varastointi',date:'2025-Q3',ttr:'short',
+defCase({slug:'lfp-na-ion',id:'ACI-EEC-2025-003',name:'LFP / Na-ion akut',subtitle:'Lithium iron phosphate and sodium-ion · stationary storage',date:'2025-Q3',ttr:'short',
   protocol:{
-    core:'LFP ja Na-ion -akut stationääriseen energiavarastointiin: mökit, SGFA puskurikapasiteetti, kaukolämpöverkon tasaus. Kypsynyt teknologia, laskeva kustannuskäyrä.',
-    weakest:'Na-ionin energiatiheys ja syklinkestävyys stationäärisessä käytössä pitkällä aikavälillä ei vielä täysin kenttäosoitettu skaalassa.',
-    falsification:'LFP:lle on laajaa kenttädataa. Na-ionille kenttäasennus <3 v — pitkäaikainen syklinkestävyys avoinna.',
-    empirical:'€/kWh-vertailu LFP vs. Na-ion vs. referenssivaihtoehdot; syklinkestävyys 10 v datalla; toimitusketjun haavoittuvuus (Li vs. Na).'
+    core:'LFP and Na-ion batteries for stationary energy storage: cabins, SGFA buffer capacity, district heating network balancing. Mature technology, declining cost curve.',
+    weakest:'Na-ion energy density and cycle durability in stationary use over the long term not yet fully field-demonstrated at scale.',
+    falsification:'LFP has extensive field data. Na-ion field installations <3 yr — long-term cycle durability open.',
+    empirical:'€/kWh comparison LFP vs. Na-ion vs. reference options; cycle durability with 10-yr data; supply chain vulnerability (Li vs. Na).'
   },
   members:[
-    {role:'Physics Auditor',body:'LFP: täysin tunnettu, vakaa kemia. Na-ion: fysikaalisesti validi, Na-ionien suurempi koko laskee energiatiheyttä — ei fysiikkaongelma, suunnitteluparametri.',posture:'adopt',postureLabel:'Adopt (LFP)'},
-    {role:'Engineering Realist',body:'LFP: käyttöönottovalmis, lukuisia referenssejä. Na-ion: komponenttiekosysteemi rakentuu. Molemmat: BMS-integraatio ja lämpöhallinta tunnettuja haasteita.',posture:'adopt',postureLabel:'Adopt (LFP)'},
-    {role:'Economic Filter',body:'LFP: 80–120 €/kWh (2025, skaalassa). Na-ion potentiaalisesti 20–30 % halvempi materiaalikustannuksissa. CAPEX vs. OPEX selkeästi laskettavissa.',posture:'adopt',postureLabel:'Adopt'},
-    {role:'System Integrator',body:'Suorin integraatio SGFA-arkkitehtuuriin. Mökkikohtainen tai alueellinen puskuri toimii heti. Ei regulatorisia esteitä. Nopein TTR tässä portfoliossa.',posture:'adopt',postureLabel:'Adopt'},
+    {role:'Physics Auditor',body:'LFP: fully understood, stable chemistry. Na-ion: physically valid, larger Na ions reduce energy density — not a physics problem, a design parameter.',posture:'adopt',postureLabel:'Adopt (LFP)'},
+    {role:'Engineering Realist',body:'LFP: deployment-ready, numerous references. Na-ion: component ecosystem building. Both: BMS integration and thermal management are known challenges.',posture:'adopt',postureLabel:'Adopt (LFP)'},
+    {role:'Economic Filter',body:'LFP: €80–120/kWh (2025, at scale). Na-ion potentially 20–30% cheaper in material costs. CAPEX vs. OPEX clearly calculable.',posture:'adopt',postureLabel:'Adopt'},
+    {role:'System Integrator',body:'Most direct integration into SGFA architecture. Cabin-level or regional buffer operational immediately. No regulatory barriers. Fastest TTR in this portfolio.',posture:'adopt',postureLabel:'Adopt'},
     {role:'Adversarial Skeptic',body:'LFP-valmistus on keskittynyt Kiinaan — geopoliittinen riski. Na-ion: varo varhaisen markkinoinnin lupauksista, data on lyhyt. Muuten: teknologia toimii.',posture:'pilot',postureLabel:'Pilot (Na-ion)'},
   ],
   divergence:[
-    {dim:'Fysiikka & tekniikka (LFP)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Kypsä teknologia'},
-    {dim:'Talous & CAPEX',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Selkeästi laskettavissa'},
-    {dim:'Na-ion pitkäaikaiskestävyys',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Data lyhyt'},
+    {dim:'Physics & engineering (LFP)',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'low',riskLabel:'Low',note:'Mature technology'},
+    {dim:'Economics & CAPEX',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'low',riskLabel:'Low',note:'Clearly calculable'},
+    {dim:'Na-ion long-term durability',consensus:'med',consensusLabel:'Moderate',spread:'Moderate',risk:'med',riskLabel:'Medium',note:'Short data'},
     {dim:'Toimitusketjuriski (Li/Na)',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Geopolitiikka'},
     {dim:'SGFA-integraatio',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Konsensus: valmis'},
   ],
   burden:[
     {text:'LFP-referenssiasennus SGFA-kohteessa (6 kk)',status:'open',statusLabel:'Avoin'},
     {text:'€/kWh-laskenta omaan kohteeseen',status:'open',statusLabel:'Avoin'},
-    {text:'Na-ion: 2+ v kenttädata syklinkestävyydestä',status:'partial',statusLabel:'Osittain'},
-    {text:'BMS-integraatio olemassa olevaan järjestelmään',status:'partial',statusLabel:'Osittain'},
-    {text:'LFP-tekniikka: kypsä teknologia, laaja kenttädata',status:'met',statusLabel:'Täytetty'},
+    {text:'Na-ion: 2+ yr field data on cycle durability',status:'partial',statusLabel:'Partial'},
+    {text:'BMS integration into existing system',status:'partial',statusLabel:'Partial'},
+    {text:'LFP technology: mature, extensive field data',status:'met',statusLabel:'Met'},
   ],
   dependencies:[
     {type:'material',label:'Litium (LFP) / Natrium (Na-ion)',critical:false},
     {type:'material',label:'Katodi-/anodimateriaalit',critical:true},
     {type:'technology',label:'BMS (Battery Mgmt System)',critical:true},
-    {type:'infrastructure',label:'Sähköliityntä ja tasasuuntaaja',critical:false},
-    {type:'regulation',label:'Akustojen palo- ja kierrätyssäädökset',critical:false},
+    {type:'infrastructure',label:'Grid connection and rectifier',critical:false},
+    {type:'regulation',label:'Battery fire and recycling regulations',critical:false},
   ],
   killSignals:[
-    {condition:'Na-ion syklinkestävyys <2000 sykliä realisoituu laajassa kentässä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Na-ion cycle durability <2000 cycles materialises in wide field use',status:'clear',statusLabel:'Not triggered'},
     {condition:'LFP-hinta nousee >200 €/kWh geopoliittisesti',status:'clear',statusLabel:'Ei lauennut'},
     {condition:'Parempi teknologia (solid-state) saavuttaa <100 €/kWh ennen asennusta',status:'watch',statusLabel:'Seurannassa'},
   ],
   decision:'adopt',decisionLabel:'ADOPT (LFP) + PILOT (Na-ion)',
-  synthesis:'LFP on tässä portfoliossa ainoa teknologia, jossa kaikki viisi komitean jäsentä konvergoi riittävän vahvaan suositukseen toimia. Fysiikka tunnetaan, talous on laskettavissa, SGFA-integraatio on suoraviivainen, ja kenttädata on laaja. Tämä on referenssiteknologia: se asettaa aikadimension ja kustannustasovertailun kaikille muille caseille.\n\nNa-ion ansaitsee pienen pilotin: materiaaliketjuriski on pienempi (litiumin geopolitiikka vs. natrium), mutta pitkäaikaisdata puuttuu. Kill signal on asetettu selkeäksi: jos solid-state-akkujen hintakehitys kiihdyttää, tämä arvio avataan uudelleen.',
-  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+  synthesis:'LFP is the only technology in this portfolio where all five committee members converge on a strong enough recommendation to act. Physics is understood, economics are calculable, SGFA integration is straightforward, and field data is extensive. This is the reference technology: it sets the time dimension and cost-level benchmark for all other cases.\n\nNa-ion deserves a small pilot: supply chain risk is lower (lithium geopolitics vs. sodium), but long-term data is absent. Kill signal is set clearly: if solid-state battery cost trajectory accelerates, this assessment is reopened.',
+  axiom:'The committee does not decide what is true — but what is promising enough to test.'
 });
 
 // 4. POWER-TO-X
-defCase({slug:'ptx',id:'ACI-EEC-2025-004',name:'Power-to-X',subtitle:'Sähkö → synteettiset polttoaineet / ammoniakki / metanoli',date:'2025-Q3',ttr:'mid',
+defCase({slug:'ptx',id:'ACI-EEC-2025-004',name:'Power-to-X',subtitle:'Electricity → synthetic fuels / ammonia / methanol',date:'2025-Q3',ttr:'mid',
   protocol:{
-    core:'Uusiutuvalla sähköllä tuotettu vety muunnetaan synteettisiksi polttoaineiksi (ammoniakki, metanoli, e-fuel) raskaaseen liikenteeseen ja teollisuuteen.',
-    weakest:'Järjestelmän hyötysuhde on alhainen (sähkö→vety→PtX: 30–50 %) ja koko arvoketju on riippuvainen halvan sähkön saatavuudesta ympärivuotisesti.',
-    falsification:'€/kg tai €/MWh ei ole kilpailukykyinen fossiilisille polttoaineille ilman hiilimaksua tai suurta skaalaa. Demonstraatiolaitoksia käynnissä, mutta kaupallinen skaalaus ei ole todistettu.',
-    empirical:'Systeemihyötysuhde koko arvoketjussa + €/kg tuote + break-even-hiilihinta. Vertailu: suora sähköistäminen vs. PtX-reitti per kohdesektori.'
+    core:'Hydrogen produced from renewable electricity is converted to synthetic fuels (ammonia, methanol, e-fuel) for heavy transport and industry.',
+    weakest:'System efficiency is low (electricity→hydrogen→PtX: 30–50%) and the entire value chain depends on cheap electricity availability year-round.',
+    falsification:'€/kg or €/MWh is not competitive with fossil fuels without a carbon price or large scale. Demonstration plants operational, but commercial scaling not proven.',
+    empirical:'System efficiency across entire value chain + €/kg product + break-even carbon price. Comparison: direct electrification vs. PtX route per target sector.'
   },
   members:[
-    {role:'Physics Auditor',body:'Ei fysikaalisesti kiistanalaista. Mutta hyötysuhde on fundamentaali rajoite: jokainen muunnosvaihe vie 20–40 %. Järjestelmä on vain viisas kun suoraa sähköistämistä ei voi käyttää.',posture:'watch',postureLabel:'Watch'},
-    {role:'Engineering Realist',body:'Elektrolyysikapasiteetti, CO₂-lähde (DAC tai bioperäinen), synteesireaktorit — kaikki tunnettua tekniikkaa erikseen. Integraatio isossa skaalassa: ratkaisematon. Huolto ja ajotasapaino ongelmallisia.',posture:'watch',postureLabel:'Watch'},
+    {role:'Physics Auditor',body:'Not physically controversial. But efficiency is a fundamental constraint: each conversion step takes 20–40%. The system is only wise when direct electrification cannot be used.',posture:'watch',postureLabel:'Watch'},
+    {role:'Engineering Realist',body:'Electrolysis capacity, CO₂ source (DAC or bio-based), synthesis reactors — all known technology separately. Integration at large scale: unsolved. Maintenance and load balancing problematic.',posture:'watch',postureLabel:'Watch'},
     {role:'Economic Filter',body:'Green ammonia: 600–900 €/t (2025). Fossiilit: 200–300 €/t. Break-even vain korkean hiilihinnan tai subsidi-ohjelman kanssa. CAPEX massiivinen. Ei kannata ilman systemaattista tukea.',posture:'ignore',postureLabel:'Ignore (nyt)'},
-    {role:'System Integrator',body:'Relevanssi SGFA:lle: rajallinen suorana sovelluksena. Mutta: jos PtX onnistuu teollisuustasolla, se muuttaa koko energiajärjestelmää. Epäsuorat vaikutukset merkittäviä. Seuraa järjestelmätasolla.',posture:'watch',postureLabel:'Watch (järjestelmä)'},
-    {role:'Adversarial Skeptic',body:'PtX on usein se vastaus johon etsitään kysymystä. Teollisuus käyttää narratiivia siirtääkseen vastuuta teknologiselle tulevaisuudelle. Vaadi näyttö €/MWh-tasolla ennen mitään allokointia.',posture:'ignore',postureLabel:'Ignore'},
+    {role:'System Integrator',body:'Relevance for SGFA: limited as direct application. But: if PtX succeeds at industrial scale, it transforms the entire energy system. Indirect effects significant. Monitor at system level.',posture:'watch',postureLabel:'Watch (system)'},
+    {role:'Adversarial Skeptic',body:'PtX is often the answer to which a question is being sought. Industry uses the narrative to shift responsibility to a technological future. Demand evidence at €/MWh level before any allocation.',posture:'ignore',postureLabel:'Ignore'},
   ],
   divergence:[
-    {dim:'Fysiikka (hyötysuhde)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'med',riskLabel:'Rajoittava',note:'Fundamentaali häviö'},
-    {dim:'Talous tänään',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'high',riskLabel:'Ei kilpailukyky',note:'Ei kannata ilman tukea'},
+    {dim:'Physics (efficiency)',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'med',riskLabel:'Constraining',note:'Fundamental loss'},
+    {dim:'Economics today',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'high',riskLabel:'Not competitive',note:'Unviable without support'},
     {dim:'Tulevaisuuden talous (skaalassa)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'med',riskLabel:'Spekulatiivinen',note:'Riippuu hiilihinnasta'},
-    {dim:'Järjestelmätason merkitys',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Epäsuora',note:'Seuraa sivusta'},
+    {dim:'System-level significance',consensus:'med',consensusLabel:'Moderate',spread:'Moderate',risk:'med',riskLabel:'Indirect',note:'Monitor from the side'},
     {dim:'SGFA-suora soveltuvuus',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Ei suoraa sovellusta'},
   ],
   burden:[
     {text:'€/MWh kilpailukykyinen fossiileille ilman hiilitukea',status:'open',statusLabel:'Avoin'},
     {text:'Kaupallinen skaalauslaitos toiminnassa (>50 MW)',status:'open',statusLabel:'Avoin'},
-    {text:'Systeemihyötysuhde >45 % kokonaisarvoketjussa',status:'open',statusLabel:'Avoin'},
-    {text:'Demonstraatiomittakaavan tuotanto käynnissä',status:'met',statusLabel:'Täytetty'},
-    {text:'Kohdesektori jossa PtX parempi kuin suora sähköistäminen',status:'partial',statusLabel:'Osittain'},
+    {text:'System efficiency >45% across full value chain',status:'open',statusLabel:'Open'},
+    {text:'Demonstration-scale production operational',status:'met',statusLabel:'Met'},
+    {text:'Target sector where PtX is better than direct electrification',status:'partial',statusLabel:'Partial'},
   ],
   dependencies:[
     {type:'material',label:'Elektrolyyserimateriaalit (Ir/Pt)',critical:true},
-    {type:'infrastructure',label:'Halpa ylijäämäsähkö ympärivuotisesti',critical:true},
+    {type:'infrastructure',label:'Cheap surplus electricity year-round',critical:true},
     {type:'regulation',label:'EU:n hiilimaksu / CBAM',critical:true},
-    {type:'infrastructure',label:'CO₂-lähde (DAC tai bio)',critical:true},
+    {type:'infrastructure',label:'CO₂ source (DAC or bio)',critical:true},
     {type:'technology',label:'Synteesireaktoriteknologia',critical:false},
     {type:'regulation',label:'PtX-polttoaineiden sertifiointi',critical:false},
   ],
   killSignals:[
-    {condition:'Hiilimaksu ei ylitä 150 €/t CO₂ vuoteen 2030 mennessä',status:'watch',statusLabel:'Seurannassa'},
-    {condition:'Suoran sähköistämisen kustannus alittaa PtX-reitin kohdesektorissa',status:'watch',statusLabel:'Seurannassa'},
-    {condition:'Kaupallinen skaalahanke peruuntuu teknis-taloudellisista syistä',status:'clear',statusLabel:'Ei lauennut'},
-    {condition:'€/kg polttoaine ei laske >30 % vuoteen 2028 mennessä',status:'clear',statusLabel:'Ei lauennut'},
+    {condition:'Carbon price does not exceed €150/t CO₂ by 2030',status:'watch',statusLabel:'Monitoring'},
+    {condition:'Direct electrification cost falls below PtX route in target sector',status:'watch',statusLabel:'Monitoring'},
+    {condition:'Commercial scale project cancelled for techno-economic reasons',status:'clear',statusLabel:'Not triggered'},
+    {condition:'€/kg fuel does not fall >30% by 2028',status:'clear',statusLabel:'Not triggered'},
   ],
-  decision:'watch',decisionLabel:'WATCH (järjestelmätaso)',
-  synthesis:'Power-to-X on portfolion tapaukista se, jossa epäsuorat vaikutukset ovat tärkeämmät kuin suora sovellettavuus. Fysiikka on rajoittava mutta ei estävä — hyötysuhde on fundamentaali, ei ongelma. Talous ei tänään toimi ilman merkittävää hiilimaksua tai subventioita, ja Economic Filter sekä Adversarial Skeptic ovat yksimielisiä tästä.\n\nKomitea suosittelee järjestelmätason seurantaa: PtX:n eteneminen muuttaa koko energiamarkkinaa, mikä vaikuttaa kaikkiin muihin portfolio-casehin. Kaksi kill signal -kynnystä ovat jo "seurannassa" — erityisesti hiilimaksukehitys on oltava aktiivisen tarkkailun kohteena. Ei resurssiallokointia suoraan, mutta ei myöskään sulkemista.',
-  axiom:'Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi.'
+  decision:'watch',decisionLabel:'WATCH (system level)',
+  synthesis:'Power-to-X is the case in this portfolio where indirect effects matter more than direct applicability. Physics is constraining but not prohibitive — efficiency is fundamental, not a problem. Economics today do not work without a significant carbon price or subsidies, and Economic Filter and Adversarial Skeptic are unanimous on this.\n\nThe committee recommends system-level monitoring: PtX advancement changes the entire energy market, which affects all other portfolio cases. Two kill signal thresholds are already "in monitoring" — carbon price trajectory in particular must be under active observation. No direct resource allocation, but no closure either.',
+  axiom:'The committee does not decide what is true — but what is promising enough to test.'
 });
 
 // ── RENDER CASE ────────────────────────────────────────────
@@ -621,7 +621,7 @@ function renderCase(c){
       </div>
       <div class="chr">
         <div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">Komitean päätös</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">Committee decision</div>
           <div class="dstamp stamp-${c.decision}">${c.decisionLabel}</div>
         </div>
         <div class="ttr-bar">
@@ -664,7 +664,7 @@ function renderCase(c){
 
     <div class="sh">VIII — Committee Synthesis</div>
     <div class="synthesis">
-      <div class="synth-head">Synteesi & päätösperuste</div>
+      <div class="synth-head">Synthesis & decision basis</div>
       <div class="synth-body">${synthParas}<div class="synth-axiom">"${c.axiom}"</div></div>
     </div>
   `;
@@ -746,10 +746,10 @@ function renderPortfolio(){
   // Meta-signal
   const watchHigh = cases.filter(c=>c.decision==='watch'&&c.divergence.filter(d=>d.risk==='high').length>=3).length;
   const metaSignal = watchHigh>=2
-    ? `⚡ Meta-signaali: ${watchHigh} WATCH-teknologiaa, korkea riskiprofiili — murros mahdollinen, mutta epävarmuus dominoi kenttää.`
+    ? `⚡ Meta-signal: ${watchHigh} WATCH technologies, high risk profile — disruption possible, but uncertainty dominates the field.`
     : counts.adopt>=2
-    ? `✓ Meta-signaali: ${counts.adopt} ADOPT-päätöstä — riittävä kypsyys toimia, hae referenssidata.`
-    : `↻ Meta-signaali: Portfolio kehittyy. Lisää tapauksia paremman kuvan saamiseksi.`;
+    ? `✓ Meta-signal: ${counts.adopt} ADOPT decisions — sufficient maturity to act, seek reference data.`
+    : `↻ Meta-signal: Portfolio developing. Add cases for a clearer picture.`;
 
   document.getElementById('portfolio-view').innerHTML = `
     <div class="pf-header">
@@ -766,25 +766,25 @@ function renderPortfolio(){
         <div class="pm-hcell">Riskidim.</div>
         <div class="pm-hcell">Kriitt. dep.</div>
         <div class="pm-hcell">Kill signals</div>
-        <div class="pm-hcell">Päätös</div>
+        <div class="pm-hcell">Decision</div>
       </div>
       ${rows}
     </div>
 
-    <div class="sh">Päätösjakauma</div>
+    <div class="sh">Decision distribution</div>
     <div class="pf-summary">${summaryItems}</div>
 
     <div class="sh">Systeemiset pullonkaulat — jaetut riippuvuudet</div>
     <div class="sys-risk">
       <div class="sys-head">Dependency · Teknologiat joilla sama pullonkaula · ★ = kriittinen ko. teknologialle</div>
-      <div class="sys-grid">${sysRows||'<div style="padding:14px 15px;font-size:12px;color:var(--muted);">Ei jaettuja riippuvuuksia tässä portfoliossa.</div>'}</div>
+      <div class="sys-grid">${sysRows||'<div style="padding:14px 15px;font-size:12px;color:var(--muted);">No shared dependencies in this portfolio.</div>'}</div>
     </div>
 
     <div class="synthesis">
       <div class="synth-head">Portfolio Meta-signaali</div>
       <div class="synth-body">
         <p>${metaSignal}</p>
-        <p style="font-size:12px;color:var(--muted);margin-top:8px;">Systeeminen pullonkaula-analyysi paljastaa jaetut riskit: teknologiat jotka riippuvat samoista materiaaleista, regulaatiosta tai infrastruktuurista muodostavat ryppäitä — epäonnistuminen yhdessä voi vaikuttaa useampaan.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px;">Systemic bottleneck analysis reveals shared risks: technologies that depend on the same materials, regulation or infrastructure form clusters — failure in one can affect several.</p>
       </div>
     </div>
   `;
@@ -831,7 +831,7 @@ async function runNewCase(){
   const iv=setInterval(()=>{ltxt.textContent=steps[Math.min(si++,steps.length-1)];bar.style.width=Math.min((si/steps.length)*83,83)+'%';},800);
   const slug=name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
   const yr=new Date().getFullYear();const q=Math.ceil((new Date().getMonth()+1)/3);
-  const prompt=`Olet ACI Energy Evaluation Committee v1.2 -järjestelmä. Arvioi teknologia/idea kriittisesti SGFA-kontekstissa.
+  const prompt=`You are the ACI Energy Evaluation Committee v1.2 system. Evaluate the technology/idea critically in SGFA context.
 
 Teknologia: ${name}
 Kuvaus: ${desc||'(Tee arvio nimen perusteella)'}
@@ -851,8 +851,8 @@ Palauta VAIN validi JSON, ei muuta:
   ],
   "divergence":[
     {"dim":"Fysiikka & teoria","consensus":"high","consensusLabel":"Vahva","spread":"Pieni","risk":"low","riskLabel":"Matala","note":"..."},
-    {"dim":"Kestävyys","consensus":"low","consensusLabel":"Heikko","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."},
-    {"dim":"Talous","consensus":"low","consensusLabel":"Epäselvä","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."},
+    {"dim":"Durability","consensus":"low","consensusLabel":"Weak","spread":"Large","risk":"high","riskLabel":"High","note":"..."},
+    {"dim":"Economics","consensus":"low","consensusLabel":"Unclear","spread":"Large","risk":"high","riskLabel":"High","note":"..."},
     {"dim":"Soveltuvuus","consensus":"med","consensusLabel":"Kohtalainen","spread":"Kohtalainen","risk":"med","riskLabel":"Keskisuuri","note":"..."},
     {"dim":"Skaalautuvuus","consensus":"low","consensusLabel":"Heikko","spread":"Suuri","risk":"high","riskLabel":"Korkea","note":"..."}
   ],
@@ -861,7 +861,7 @@ Palauta VAIN validi JSON, ei muuta:
     {"text":"...","status":"open","statusLabel":"Avoin"},
     {"text":"...","status":"partial","statusLabel":"Osittain"},
     {"text":"...","status":"open","statusLabel":"Avoin"},
-    {"text":"...","status":"met","statusLabel":"Täytetty"}
+    {"text":"...","status":"met","statusLabel":"Met"}
   ],
   "dependencies":[
     {"type":"material","label":"...","critical":true},
@@ -875,8 +875,8 @@ Palauta VAIN validi JSON, ei muuta:
     {"condition":"...","status":"watch","statusLabel":"Seurannassa"}
   ],
   "decision":"watch","decisionLabel":"WATCH + PILOT",
-  "synthesis":"Suomeksi. 2 kappaletta erotettu \\n\\n:llä.",
-  "axiom":"Komitea ei päätä mikä on totta — vaan mikä on riittävän lupaavaa testattavaksi."
+  "synthesis":"In English. 2 paragraphs separated by \\n\\n.",
+  "axiom":"The committee does not decide what is true — but what is promising enough to test."
 }
 
 ttr: fast|short|mid|long|spec
@@ -915,35 +915,35 @@ defCase({
   date:'2026-Q1',
   ttr:'mid',
   protocol:{
-    core:'Akkujärjestelmän arkkitehtuuriparadigman muutos: luotettavuus siirretään yksittäiseltä kennolta järjestelmätasolle. Pakki jaetaan itsenäisiin segmentteihin (esim. 16 × 5 kWh / 80 kWh pakki), joita ohjaa deterministinen Guardian-kerros (bare-metal MCU: oikosulkueristys <100 µs, OV/UV <10 ms, lämpötila <100 ms, dT/dt-triggeröinti 2°C/s) ja optimoiva Orchestrator-kerros (Health Score + SEFI-R micro-diagnostiikka). Kriittinen periaate: mikään Orchestrator-komento ei voi ohittaa aktiivista Guardian-rajarikkomusta. SEFI-R (DOI: 10.5281/zenodo.14940723) tarjoaa ei-destruktiivisen Recov(Z)-testauksen — aukko IEC 62133, IEC 62660, ISO 12405, IEEE 1679 ja UN 38.3 -standardeissa.',
-    weakest:'Recov(Z)-varhaishavainto-hypoteesi: väite että Recov(Z) ennakoi degradaatiota ennen DCIR-nousua on toistaiseksi vain simulaatiopohjainen. Ei kokeellista validointia. Thermal barrier (aerogeeli 0,015–0,020 W/mK + mica 900–1000°C + intumescent edge seals + venting manifold) -toimivuus TR-tapahtumassa on laskennallinen arvio — yksikään materiaali ei yksinään kata koko TR-lämpötilakirjoa. Segmenttivaihdon kenttäkustannus (oletus ~2 800 €) on todentamaton.',
-    falsification:'(1) Thermal barrier ei estä TR-propagaatiota: T_naapuri > 85°C instrumentoidussa testissä → koko segment-replacement-talous kaatuu. (2) Recov(Z) ei ennakoi vikoja ennen DCIR-nousua kenttätestissä vähintään kolmella solukemialla. (3) Segmenttivaihto kentällä maksaa >8 000 € (erikoisteknikko + logistiikka, metsäkonekohde Kuopio) → Monte Carlo -talouscase muuttuu merkittävästi.',
-    empirical:'1) Instrumentoitu TR-testi yhdellä segmentillä: naapurin T-profiili mitattu (kriittisin yksittäinen testi). 2) Recov(Z) vs. DCIR -korrelaatio ≥3 solukemialla, kenttäolosuhteissa. 3) Segmenttivaihdon aika + reaalikustannus dokumentoitu metsäkonekohteessa. 4) SEFI-R-toistettavuus eri mittausympäristöissä.'
+    core:'Battery system architectural paradigm shift: reliability transferred from the individual cell to the system level. Pack divided into independent segments (e.g. 16 × 5 kWh / 80 kWh pack), controlled by a deterministic Guardian layer (bare-metal MCU: short-circuit isolation <100 µs, OV/UV <10 ms, temperature <100 ms, dT/dt trigger 2°C/s) and an optimising Orchestrator layer (Health Score + SEFI-R micro-diagnostics). Critical principle: no Orchestrator command can override an active Guardian boundary violation. SEFI-R (DOI: 10.5281/zenodo.14940723) provides non-destructive Recov(Z) testing — a gap in IEC 62133, IEC 62660, ISO 12405, IEEE 1679 and UN 38.3 standards.',
+    weakest:'Recov(Z) early-warning hypothesis: the claim that Recov(Z) anticipates degradation before DCIR rise is so far only simulation-based. No experimental validation. Thermal barrier (aerogel 0.015–0.020 W/mK + mica 900–1000°C + intumescent edge seals + venting manifold) performance in a TR event is a calculated estimate — no single material covers the full TR temperature range. Segment swap field cost (assumption ~€2,800) is unverified.',
+    falsification:'(1) Thermal barrier does not prevent TR propagation: T_neighbour > 85°C in instrumented test → entire segment-replacement economics collapse. (2) Recov(Z) does not anticipate faults before DCIR rise in field test with at least three cell chemistries. (3) Segment swap in the field costs >€8,000 (specialist technician + logistics, forestry machine site Kuopio) → Monte Carlo financial case changes significantly.',
+    empirical:'1) Instrumented TR test on one segment: neighbour T-profile measured (most critical single test). 2) Recov(Z) vs. DCIR correlation with ≥3 cell chemistries in field conditions. 3) Segment swap time + real cost documented at forestry machine site. 4) SEFI-R repeatability across different measurement environments.'
   },
   members:[
     {
       role:'Physics Auditor',
-      body:'Sähkökemian perusta kunnossa — segmentointi, bypass-topologia ja BMS-logiikka tunnettua prior artia 1990-luvulta. Noveliteetti on integraatiossa: segmentoitu arkkitehtuuri + resilienssiohjattu Orchestrator + SEFI-R yhtenä kehyksenä. Guardian-kerroksen dT/dt-triggeröinti (2°C/s → ennakoiva eristys ennen abs. lämpötilarajan ylitystä) on fysikaalisesti perusteltu ja tärkeä: barrier ostaa aikaa, Guardian käyttää sen. Recov(Z)-varhaishavainto-hypoteesi: sähkökemiallinen palautuminen on ilmiönä tunnettu, mutta ennakointiarvo suhteessa DCIR:ään vaatii kokeellisen vahvistuksen ≥3 solukemialla. Thermal barrier: aerogel+mica+intumescent — hybridilähestymistapa on oikea, koska yksikään materiaali ei kata koko 500–1000°C TR-kirjoa.',
+      body:'Electrochemical foundation sound — segmentation, bypass topology and BMS logic are known prior art from the 1990s. Novelty is in the integration: segmented architecture + resilience-directed Orchestrator + SEFI-R as a single framework. Guardian layer dT/dt triggering (2°C/s → anticipatory isolation before absolute temperature limit breach) is physically justified and important: barrier buys time, Guardian uses it. Recov(Z) early-warning hypothesis: electrochemical recovery is a known phenomenon, but the predictive value relative to DCIR requires experimental confirmation with ≥3 cell chemistries. Thermal barrier: aerogel+mica+intumescent — hybrid approach is correct because no single material covers the full 500–1000°C TR range.',
       posture:'watch',postureLabel:'Watch'
     },
     {
       role:'Engineering Realist',
-      body:'Guardian-spesifikaatio on nyt tarkka ja toteutettavissa: oikosulku <100 µs, OV/UV <10 ms, T <100 ms, dT/dt 2°C/s. Roolijako on arkkitehtuurillisesti oikea — Guardian deterministic/safety, Orchestrator optimizing/permitted-to-fail. Rajapintaprotokolla (liveness counter + TTL + re-enable gate) on riittävä ja loosely coupled. Kriittisin avoin insinööriongelma: segmenttimoduulin mekaaninen vaihdettavuus kentällä. Kuopion metsäkoneen tärinä- ja kylmäympäristö (−16°C talvi) on kova — 2 800 €/segmentti-oletus edellyttää standardoitua moduulia jota ei ole suunniteltu eikä testattu. Tämä on projektin kriittisin engineering-riski.',
+      body:'Guardian specification is now precise and implementable: short-circuit <100 µs, OV/UV <10 ms, T <100 ms, dT/dt 2°C/s. Role separation is architecturally correct — Guardian deterministic/safety, Orchestrator optimizing/permitted-to-fail. Interface protocol (liveness counter + TTL + re-enable gate) is sufficient and loosely coupled. Most critical open engineering problem: mechanical swappability of the segment module in the field. Kuopio forestry machine vibration and cold environment (−16°C winter) is demanding — the €2,800/segment assumption requires a standardised module that has not been designed or tested. This is the project\'s most critical engineering risk.',
       posture:'pilot',postureLabel:'Pilot (raskas kalusto)'
     },
     {
       role:'Economic Filter',
-      body:'Monte Carlo 3 000 ajoa (80 kWh / 16 segmenttiä, A-grade 80 €/kWh, B-grade 52 €/kWh −35 %): mediaanikustannussäästö 8,5 €/kWh, 90 % CI [2,1; 14,9] €/kWh, RAID halvempi 98 % skenaarioista. Elektroniikkaoverhead ~480 €/pakki sisältyy kaikkiin RAID-ajoihin. Kuopion metsäkonecase (120 kWh, 12 v, 240 pv/v): indikatiiivisesti ~104 k€ kumulatiivinen säästö — pääosin vältetystä kokonaispakkivaihdosta (konventionaalinen) vs. segmenttivaihto. Kriittisin oletus joka voi muuttaa casen: segmenttivaihto kentällä. Jos reaalikustannus on 8 000–12 000 € eikä 2 800 €, talouslogiikka muuttuu merkittävästi. Economic case on WATCH kunnes kenttäkustannus mitattu.',
+      body:'Monte Carlo 3,000 runs (80 kWh / 16 segments, A-grade €80/kWh, B-grade €52/kWh −35%): median cost saving 8.5 €/kWh, 90% CI [2.1; 14.9] €/kWh, RAID cheaper in 98% of scenarios. Electronics overhead ~€480/pack included in all RAID runs. Kuopio forestry machine case (120 kWh, 12 yr, 240 days/yr): indicatively ~€104k cumulative saving — primarily from avoided full-pack replacement (conventional) vs. segment swap. Most critical assumption that can change the case: segment swap in the field. If real cost is €8,000–12,000 not €2,800, the financial logic changes significantly. Economic case is WATCH until field cost is measured.',
       posture:'watch',postureLabel:'Watch'
     },
     {
       role:'System Integrator',
-      body:'Nelikerroksinen kontrollistack (EMS → Orchestrator → Segment Controllers → Cell Groups) on rakenteellisesti vahva. Guardian-Orchestrator -rajapinta on arkkitehtuurillisesti oikein: intelligence on eriytetty authority-to-act -toiminnosta turvallisuuskriittisissä tilanteissa. SEFI-R:n standardointipotentiaali IEC TC 21 / ISO TC 69 -elimissä on aito — kaikki viisi nykyistä standardia (IEC 62133, IEC 62660, ISO 12405, IEEE 1679, UN 38.3) jättävät ei-destruktiivisen resilienssimittauksen katteen ulkopuolelle. Käyttökohderajaus on rehellinen ja vahvistaa luottamusta: EI mass-market EV, KYLLÄ raskas kalusto + eVTOL + stationary storage. Forestry machine -case (Kuopio) on oikea ensimmäinen kohde.',
+      body:'Four-layer control stack (EMS → Orchestrator → Segment Controllers → Cell Groups) is structurally strong. Guardian-Orchestrator interface is architecturally correct: intelligence is separated from authority-to-act in safety-critical situations. SEFI-R standardisation potential in IEC TC 21 / ISO TC 69 bodies is genuine — all five current standards (IEC 62133, IEC 62660, ISO 12405, IEEE 1679, UN 38.3) leave non-destructive resilience measurement outside their scope. Use-case scoping is honest and builds confidence: NOT mass-market EV, YES heavy equipment + eVTOL + stationary storage. Forestry machine case (Kuopio) is the right first target.',
       posture:'pilot',postureLabel:'Pilot (raskas kalusto)'
     },
     {
       role:'Adversarial Skeptic',
-      body:'Kolme kill-signal -tasoista avointa kysymystä: (1) Thermal barrier — barrier ostaa aikaa (aerogel+mica+intumescent+venting), Guardian käyttää sen (dT/dt-triggeröinti). Tämä on looginen kahden kerroksen yhteisvaikutus — mutta mittaamatonta. Yksikin instrumentoitu TR-testi muuttaisi tämän arvion. (2) Segmenttivaihtokustannus kentällä — 2 800 € oletus on tarkistamaton. Metsäkoneen kenttäympäristö on haastava. (3) Recov(Z) varhaishavainto — hypoteesi on fysikaalisesti motivoitu, mutta validoimaton. Jos ei pidä, SEFI-R:n differentiaatioarvo DCIR:ään verrattuna heikkenee. Dokumentin vahvuus: se sanoo itse ääneen "RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail." Tämä rajaus tekee casesta uskottavan.',
+      body:'Three kill-signal-level open questions: (1) Thermal barrier — barrier buys time (aerogel+mica+intumescent+venting), Guardian uses it (dT/dt triggering). This is a logical two-layer interaction — but unmeasured. Even one instrumented TR test would change this assessment. (2) Segment swap cost in the field — €2,800 assumption is unverified. Forestry machine field environment is demanding. (3) Recov(Z) early warning — hypothesis is physically motivated but unvalidated. If it does not hold, the differentiation value of SEFI-R vs. DCIR weakens. Document strength: it states aloud itself "RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail." This scoping makes the case credible.',
       posture:'watch',postureLabel:'Watch'
     }
   ],
@@ -951,35 +951,35 @@ defCase({
     {dim:'Guardian-kerroksen arkkitehtuuri',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Spesifikaatio tarkka: <100µs, dT/dt 2°C/s, no-override'},
     {dim:'SEFI-R / Recov(Z) varhaishavainto',consensus:'med',consensusLabel:'Kohtalainen',spread:'Kohtalainen',risk:'med',riskLabel:'Keskisuuri',note:'Fysikaalisesti motivoitu, kokeellinen validointi puuttuu'},
     {dim:'Thermal barrier (TR-esto, kahden kerroksen)',consensus:'low',consensusLabel:'Heikko',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'Looginen mutta mittaamaton — kriittisin avoin kysymys'},
-    {dim:'Segmenttivaihdon kenttätalous',consensus:'low',consensusLabel:'Epäselvä',spread:'Suuri',risk:'high',riskLabel:'Korkea',note:'2 800 € oletus — kenttäkustannus todentamatta'},
-    {dim:'Käyttökohderajaus (ei mass EV)',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Rehellinen rajaus vahvistaa uskottavuutta'},
-    {dim:'SEFI-R standardointipotentiaali',consensus:'high',consensusLabel:'Vahva',spread:'Pieni',risk:'low',riskLabel:'Matala',note:'Aito aukko kaikissa viidessä nykyisessä standardissa'}
+    {dim:'Segment swap field economics',consensus:'low',consensusLabel:'Unclear',spread:'Large',risk:'high',riskLabel:'High',note:'€2,800 assumption — field cost unverified'},
+    {dim:'Use-case scoping (not mass EV)',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'low',riskLabel:'Low',note:'Honest scoping builds credibility'},
+    {dim:'SEFI-R standardisation potential',consensus:'high',consensusLabel:'Strong',spread:'Small',risk:'low',riskLabel:'Low',note:'Genuine gap in all five current standards'}
   ],
   burden:[
     {text:'Thermal barrier: TR-testi, naapurisegmentti T < 85°C instrumentoidusti mitattu',status:'open',statusLabel:'Avoin — kriittisin'},
-    {text:'Recov(Z) vs. DCIR -korrelaatio kenttätestissä ≥3 solukemialla',status:'open',statusLabel:'Avoin'},
-    {text:'Segmenttivaihdon reaalikustannus kentällä dokumentoitu (metsäkonekohde)',status:'open',statusLabel:'Avoin'},
-    {text:'SEFI-R-toistettavuus osoitettu ≥2 solukemialla ja mittausympäristöllä',status:'partial',statusLabel:'Osittain (simulaatio, Zenodo DOI: 10.5281/zenodo.14940723)'},
+    {text:'Recov(Z) vs. DCIR correlation in field test with ≥3 cell chemistries',status:'open',statusLabel:'Open'},
+    {text:'Segment swap real cost in field documented (forestry machine site)',status:'open',statusLabel:'Open'},
+    {text:'SEFI-R repeatability demonstrated with ≥2 cell chemistries and measurement environments',status:'partial',statusLabel:'Partial (simulation, Zenodo DOI: 10.5281/zenodo.14940723)'},
     {text:'Guardian-spesifikaatio: ajoitusvaatimukset ja re-enable-logiikka dokumentoitu',status:'partial',statusLabel:'Osittain (WP + Orchestrator Spec v0.1 tulossa)'},
-    {text:'Arkkitehtuurin looginen johdonmukaisuus, prior art -analyysi ja käyttökohderajaus',status:'met',statusLabel:'Täytetty (WP v1.0, CC BY 4.0)'}
+    {text:'Architectural logical consistency, prior art analysis and use-case scoping',status:'met',statusLabel:'Met (WP v1.0, CC BY 4.0)'}
   ],
   dependencies:[
-    {type:'regulation',label:'IEC TC 21 / ISO TC 69 — SEFI-R uusi työkohde-ehdotus',critical:true},
+    {type:'regulation',label:'IEC TC 21 / ISO TC 69 — SEFI-R new work item proposal',critical:true},
     {type:'material',label:'Thermal barrier: aerogel (0,015–0,020 W/mK) + mica (900–1000°C) + intumescent edge seals',critical:true},
     {type:'technology',label:'Guardian HW: dual-core MCU + galvaaninen erotus, <100µs oikosulku',critical:true},
-    {type:'infrastructure',label:'Kenttähuolto: standardoitu segmenttimoduuli + vaihtoprosessi (todentamatta)',critical:true},
-    {type:'technology',label:'Recov(Z) -mittausprotokolla kenttäkäyttöön (laboratorio → kenttä -validointi)',critical:true},
-    {type:'infrastructure',label:'Ensimmäinen pilot-kohde: raskas kalusto (esim. Kuopion alueen metsäkone)',critical:false}
+    {type:'infrastructure',label:'Field service: standardised segment module + swap process (unverified)',critical:true},
+    {type:'technology',label:'Recov(Z) measurement protocol for field use (laboratory → field validation)',critical:true},
+    {type:'infrastructure',label:'First pilot site: heavy equipment (e.g. Kuopio region forestry machine)',critical:false}
   ],
   killSignals:[
-    {condition:'Thermal barrier ei estä TR-propagaatiota: T_naapuri > 85°C instrumentoidussa yksittäisessä kokeessa',status:'watch',statusLabel:'Seurannassa — ei testattu. Yksi koe muuttaisi arvion.'},
-    {condition:'Segmenttivaihto kentällä maksaa >8 000 € (metsäkonekohde, erikoisteknikko + logistiikka)',status:'watch',statusLabel:'Seurannassa — reaalikustannus mittaamatta'},
-    {condition:'Recov(Z) ei korreloi vian kanssa paremmin kuin DCIR kenttätestissä ≥3 solukemialla',status:'clear',statusLabel:'Ei lauennut — hypoteesi fysikaalisesti motivoitu, validoimaton'},
-    {condition:'Toinen toimija julkaisee identtisen SEFI-R -menetelmän ennen IEC TC 21 -ehdotusta',status:'clear',statusLabel:'Ei lauennut — SEFI-R julkaistu Zenodossa (DOI: 10.5281/zenodo.14940723)'}
+    {condition:'Thermal barrier does not prevent TR propagation: T_neighbour > 85°C in single instrumented experiment',status:'watch',statusLabel:'Monitoring — not tested. One experiment would change assessment.'},
+    {condition:'Segment swap in field costs >€8,000 (forestry machine site, specialist technician + logistics)',status:'watch',statusLabel:'Monitoring — real cost unmeasured'},
+    {condition:'Recov(Z) does not correlate with faults better than DCIR in field test with ≥3 cell chemistries',status:'clear',statusLabel:'Not triggered — hypothesis physically motivated, unvalidated'},
+    {condition:'Another actor publishes identical SEFI-R method before IEC TC 21 proposal',status:'clear',statusLabel:'Not triggered — SEFI-R published on Zenodo (DOI: 10.5281/zenodo.14940723)'}
   ],
   decision:'pilot',
   decisionLabel:'WATCH + PILOT (raskas kalusto)',
-  synthesis:'RAID-Battery on poikkeuksellinen konseptitason case: arkkitehtuurinen logiikka on vahva, spesifikaatio on nyt tarkka (Guardian <100µs / dT/dt 2°C/s / no-override-periaate), ja dokumentaatio rehellinen rajoituksistaan. Käyttökohderajaus — ei mass-market EV, kyllä raskas kalusto + eVTOL + stationary storage — on arkkitehtuurillisesti johdonmukainen ja tekee casesta uskottavan.\n\nMonte Carlo (3 000 ajoa) tukee talouslogiikkaa: mediaanisäästö 8,5 €/kWh, RAID halvempi 98 % skenaarioista — mutta kriittisin oletus (segmenttivaihto 2 800 €) on todentamatta. Thermal barrier on kahden kerroksen järjestelmä (barrier ostaa aikaa, Guardian käyttää sen dT/dt-triggerin kautta) — looginen, mutta mittaamaton. Yksi instrumentoitu TR-testi on pienin mahdollinen kokeellinen askel joka muuttaisi tämän arvion perustavanlaatuisesti.',
+  synthesis:'RAID-Battery is an exceptional concept-level case: the architectural logic is strong, the specification is now precise (Guardian <100µs / dT/dt 2°C/s / no-override principle), and the documentation is honest about its limitations. Use-case scoping — not mass-market EV, yes heavy equipment + eVTOL + stationary storage — is architecturally consistent and makes the case credible.\n\nMonte Carlo (3,000 runs) supports the financial logic: median saving 8.5 €/kWh, RAID cheaper in 98% of scenarios — but the most critical assumption (segment switch 2,800 €) is unverified. The thermal barrier is a two-layer system (barrier buys time, Guardian uses it via the dT/dt trigger) — logical but unmeasured. One instrumented TR test is the smallest possible experimental step that would fundamentally change this assessment.',
   axiom:'"RAID-Battery is not the best battery — it is the best system when the battery is not permitted to fail." (Ruotsalainen, WP v1.0, 2026)'
 });
 
