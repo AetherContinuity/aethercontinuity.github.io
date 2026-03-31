@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction — Aether Continuity Institute</title>
+<meta name="description" content="A short introduction to ACI's research: why systems fail not from exhausted capacity but from exhausted decision windows, and what a formal description of this failure mode requires.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+
+  .download-bar { display: flex; gap: 1.5rem; align-items: baseline; flex-wrap: wrap; margin-top: 1.5rem; padding: 1rem 1.25rem; background: var(--paper-2); border-left: 3px solid var(--accent); }
+  .download-bar a { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .download-bar a:hover { text-decoration: underline; }
+  .download-bar span { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.1rem; font-weight: 500; letter-spacing: -0.01em; }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .lead { font-size: 1.1rem; font-style: italic; line-height: 1.8; }
+
+  .formula-box { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 1.9; }
+  .formula-box .eq { font-size: 0.95rem; color: var(--ink); margin-bottom: 0.5rem; }
+  .formula-box .def { font-size: 0.65rem; color: var(--muted); }
+
+  blockquote { border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem; margin: 1.5rem 0; font-style: italic; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+
+  .consequence-box { border: 2px solid var(--ink); padding: 1.25rem 1.5rem; margin: 1.5rem 0; background: var(--paper-2); }
+  .consequence-box p { font-style: italic; font-size: 1rem; margin: 0; }
+
+  .domain-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1.25rem; margin: 1.25rem 0; }
+  .domain-code { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--accent); padding-top: 0.2rem; }
+  .domain-text strong { font-weight: 500; }
+  .domain-text { font-size: 0.95rem; line-height: 1.65; color: #2a2520; padding-bottom: 0.5rem; border-bottom: 1px solid var(--paper-3); }
+  .domain-grid .domain-text:last-child { border-bottom: none; }
+
+  .pub-types { margin: 1rem 0; }
+  .pub-type { padding: 0.6rem 0; border-bottom: 1px solid var(--rule); font-size: 0.95rem; line-height: 1.65; }
+  .pub-type:last-child { border-bottom: none; }
+  .pub-type strong { color: var(--ink); }
+
+  .research-link { display: inline-block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .research-link:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .paper { padding: 3rem 1.5rem 5rem; }
+    .domain-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">Introduction · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">Aether Continuity Institute · Open Introduction · 2026</div>
+    <h1 class="paper-title">Why Systems Fail Under Pressure</h1>
+    <p class="paper-subtitle">A short introduction to ACI's research — what we study, why it matters, and where to find our work.</p>
+    <div class="download-bar">
+      <a href="/supplements/ACI-Primer-v1.1.pdf" download>Download PDF ↓</a>
+      <span>·</span>
+      <span>2 pages · Open access · v1.1 · 2026</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">The Core Observation</h2></div>
+    <p class="lead">Critical systems rarely fail because nobody saw the problem coming. They fail because the moment at which a decision could still have changed the outcome passed before that decision was made.</p>
+    <p>This is the distinction ACI was founded to study: the difference between <em>having capacity</em> and <em>retaining the ability to act while that capacity still matters</em>. A system can have abundant resources, intact authority, and clear analytical understanding of what needs to be done — and still be past the point where any of those things can alter the outcome.</p>
+    <p>Standard resilience frameworks measure stocks: installed capacity, fiscal reserves, personnel. ACI measures something different — the <strong>decision window</strong>: the interval during which governance action retains causal influence over what happens next. When that window closes, capacity becomes irrelevant. The system experiences the outcome that was already determined.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">Operational Definition</h2></div>
+    <p>We define decision window closure as the point at which institutional response latency exceeds the remaining system adjustment horizon:</p>
+    <div class="formula-box">
+      <div class="eq">Ω(t) = max ( 0, ( T<sub>physical</sub> &minus; T<sub>latency</sub> ) / T<sub>physical</sub> )</div>
+      <div class="def">T<sub>physical</sub> — minimum lead time for an intervention to produce effects<br>
+      T<sub>latency</sub> — institution's observed decision-to-implementation cycle</div>
+    </div>
+    <p>When Ω(t) → 0, effective governance capacity → 0, independently of resource stocks or formal authority. We term the crossing of this threshold <strong>Institutional Termination Time (ITT)</strong>: the point at which governance loses causal reach over the outcome in question.</p>
+    <blockquote>When that threshold is crossed, policy ceases to be a control mechanism and becomes a narrative layer.</blockquote>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">A Concrete Case</h2></div>
+    <p>Energy infrastructure investments require 5–10 years from decision to operational effect. Institutional planning cycles run 1–3 years. Under normal conditions this gap is manageable. Under compound stress — simultaneous pressure across multiple system dimensions — institutional action latency increases while the physical decision horizon contracts.</p>
+    <p>ACI's live diagnostics track this ratio in real time for the Finnish grid. In the current pre-shortage trajectory (2026–2032), Ω(t) is measurably declining even as nominal capacity figures remain stable. The system appears functional by standard measures. The deficit is in the temporal intersection — not in the stocks.</p>
+    <blockquote>The central empirical question is not whether capacity exists, but whether it remains temporally aligned with the system it is meant to govern.</blockquote>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">Why This Is Not Obvious</h2></div>
+    <p>A system approaching ITT looks, by standard measures, functional. Resources are available, institutions are operating, analyses are being produced. The deficit is invisible to frameworks that model capacity without modelling the temporal condition of causal relevance. It becomes visible only retrospectively — which is precisely when it can no longer be acted upon.</p>
+    <p>This is the diagnostic gap ACI is designed to fill: making the window visible before it closes.</p>
+    <div class="consequence-box">
+      <p>If Ω(t) = 0 has been reached, the remaining policy process is not governance — it is the documentation of an outcome already determined by prior inaction.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">What ACI Studies</h2></div>
+    <p>ACI's research is organised across six technical domains, each examining a different layer of the continuity problem:</p>
+    <div class="domain-grid">
+      <div class="domain-code">D-1</div>
+      <div class="domain-text"><strong>Energy duration adequacy.</strong> When does energy infrastructure run out of decision time — before physical capacity is exhausted?</div>
+      <div class="domain-code">D-2</div>
+      <div class="domain-text"><strong>Distributed continuity doctrine.</strong> How should small states structure defence and continuity architecture under prolonged compound pressure?</div>
+      <div class="domain-code">D-3</div>
+      <div class="domain-text"><strong>Institutional decision capacity.</strong> Under what conditions does governance lose causal influence over outcomes, even when authority and resources remain intact?</div>
+      <div class="domain-code">D-4</div>
+      <div class="domain-text"><strong>Compound stress dynamics.</strong> How do simultaneous pressures interact to produce outcomes single-variable analysis cannot detect?</div>
+      <div class="domain-code">D-5</div>
+      <div class="domain-text"><strong>Continuity-oriented computing.</strong> How must computation be architected when decision capacity — not throughput — is the invariant to preserve?</div>
+      <div class="domain-code">D-6</div>
+      <div class="domain-text"><strong>Situational awareness persistence.</strong> How does awareness of system state survive the failure of the infrastructure on which it normally depends?</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 06</span><h2 class="section-title">What ACI Publishes</h2></div>
+    <p>All output is open access. Four publication types:</p>
+    <div class="pub-types">
+      <div class="pub-type"><strong>Working Papers (WP).</strong> Theoretical frameworks and diagnostic models. Twelve papers published across all six domains.</div>
+      <div class="pub-type"><strong>Diagnostic Assessments (DA).</strong> Applied evaluations of specific systems — currently focused on Finnish and Nordic critical infrastructure.</div>
+      <div class="pub-type"><strong>Technical Notes (TN).</strong> Architectural specifications that implement WP frameworks in concrete systems.</div>
+      <div class="pub-type"><strong>Live Instruments.</strong> Real-time diagnostic tools tracking grid stress, energy adequacy and scenario trajectories — publicly accessible.</div>
+    </div>
+    <p>ACI does not advocate for specific policy outcomes, promote investment programmes, or function as a consultancy. Its role is diagnostic: to identify conditions that existing frameworks do not capture, and to make them visible before the decision window closes.</p>
+    <div style="margin-top:1.5rem;">
+      <a class="research-link" href="/">ACI Home &rarr;</a>
+      &nbsp;&nbsp;&nbsp;
+      <a class="research-link" href="/research.html">Research Program &rarr;</a>
+      &nbsp;&nbsp;&nbsp;
+      <a class="research-link" href="/supplements/ACI-Primer-v1.1.pdf" download>Download PDF &darr;</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">Open Introduction · v1.1<br>2026</div>
+  <div class="footer-col">Open access<br>All rights reserved</div>
+</footer>
+
+</body>
+</html>
