@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI WP-013 — Distributed Authorship and Structural Coherence in Human–LLM Research Systems</title>
+<meta name="description" content="ACI WP-013: Distributed authorship and structural coherence in n-human, m-LLM research systems. Develops the anchor-document model of frame authority distribution, a three-level coherence hierarchy, and falsifiable conditions for productive coupling at scale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 1.5rem 0; border-left: 3px solid var(--ink); padding: 0.75rem 1.25rem; background: var(--paper-2); }
+  .callout p { font-style: italic; font-size: 0.98rem; margin: 0; }
+
+  .formula-block { background: var(--paper-3); border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.03em; line-height: 2.1; color: var(--ink); }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .case-block { background: var(--paper-2); border-left: 3px solid var(--muted); padding: 1rem 1.5rem; margin: 1.25rem 0; }
+  .case-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .case-block p { font-size: 0.95rem; margin-bottom: 0.5rem; }
+
+  .falsif-item { margin: 1rem 0; padding: 0.75rem 1.25rem; border: 1px solid var(--rule); background: var(--paper-3); }
+  .falsif-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Working Paper</span> &nbsp;·&nbsp; No. 013</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>WP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI Home</a>
+  <span class="nav-id">WP · 013 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Working Paper No. 013 · Domain D-3 · D-5</div>
+    <h1 class="paper-title">Distributed Authorship and Structural Coherence in Human–LLM Research Systems</h1>
+    <p class="paper-subtitle">Frame authority, the anchor-document model, and a three-level coherence hierarchy for n-human, m-LLM analytical environments</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Working Paper No. 013, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/wp-013-distributed-authorship-coherence.html<br>
+      <span style="color:#9a8060;">v1.0 — Initial working draft. Empirical validation programme open.</span>
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Institutional Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p>CN-002 established the theoretical model of the human–LLM shared cognitive space for the dyadic case: one human, one LLM, one structured analytical object. This paper extends that model to the general case of n humans and m LLMs working on the same analytical object across sessions. The extension introduces a new failure mode — frame authority fragmentation — that does not appear in the dyadic case and is not captured by existing multi-agent or institutional decision capacity frameworks.</p>
+    <p>The paper develops three propositions. First, coherence in distributed human–LLM systems is not a single property but a hierarchy of three distinct levels — terminological, frame, and output coherence — each of which is a necessary condition for the level above it. Second, frame authority in n-participant systems can be distributed through three structural models; this paper focuses on the anchor-document model (Model C), in which a structured governance document replaces personal authority hierarchies as the primary coherence mechanism. Third, the anchor-document model is falsifiable: specific observable conditions would demonstrate that document-based frame authority does not prevent coherence fragmentation. An empirical research programme based on these falsification conditions is specified.</p>
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">The Problem: From Dyad to Distributed System</h2></div>
+
+    <p>CN-002 identified the structural conditions under which a human–LLM interaction produces output irreducible to either participant: the human retains frame construction authority (F = 0), the LLM operates as implementation layer, and the analytical object is sufficiently structured to permit a meaningful division of cognitive labour. Under these conditions, the shared cognitive space S(t) = H(t) ∩ L(t) is non-empty and productive coupling is possible.</p>
+
+    <p>This model applies cleanly to the dyadic case. When a single human brings a developed analytical framework to a single LLM directed at that framework, the conditions for productive coupling are definite and observable. Frame construction authority is unambiguous — there is only one human to hold it. The analytical object is defined by that human's prior work. The division of labour is clear: the human decides what matters, the LLM implements.</p>
+
+    <p>The extension to n humans and m LLMs introduces a set of problems that the dyadic model cannot address. When multiple humans bring different analytical perspectives to the same object, frame authority is no longer unambiguous — it must be distributed somehow, and the mechanism of distribution determines whether coherent output remains possible. When multiple LLMs operate on the same object with potentially different formalization tendencies, their outputs may compound rather than reinforce each other. When the system operates across sessions and the same object is worked on by different subsets of participants at different times, the temporal coupling condition S(t) = ∩ H_i(t) ∩ L_j(t) becomes increasingly difficult to maintain.</p>
+
+    <div class="callout">
+      <p>The central question of this paper: under what structural conditions does a distributed human–LLM system maintain coherence across participants and sessions — and what observable properties distinguish coherent from incoherent systems?</p>
+    </div>
+
+    <h3 class="sub">1.1 A New Failure Mode</h3>
+
+    <p>The failure mode specific to distributed systems is frame authority fragmentation: the condition in which different participants operate with different implicit interpretive frames, none of which is dominant, and the system produces outputs that reflect the fragmentation rather than a coherent analytical contribution. This is distinct from the framing externalization failure mode described in SP-005 v1.1. Framing externalization is a dyadic failure: the human cedes frame authority to the LLM. Frame authority fragmentation is a distributed failure: frame authority is claimed by multiple participants simultaneously, producing incoherence rather than LLM dominance.</p>
+
+    <p>Frame authority fragmentation is not easily visible in the output. A system in this failure mode still produces text, still generates documents, still accumulates a body of work. The failure is structural: the output cannot be understood as a coherent contribution to a shared analytical project because there is no shared analytical project — there are n separate projects that happen to share a file system.</p>
+
+    <h3 class="sub">1.2 Relation to Existing Research</h3>
+
+    <p>The multi-agent LLM literature has developed sophisticated protocols for coordinating LLM-to-LLM coherence. MetaGPT's Standard Operating Procedures (SOPs) prevent error propagation by modularizing task distribution. CIR3's collective intentional reading mechanism maintains coherence in multi-LLM question-answer generation. CollabStory examines sequential multi-LLM authorship and its effect on narrative coherence. These approaches address coordination among LLM instances but do not model the distribution of frame authority among human participants — which is the specific problem this paper addresses.</p>
+
+    <p>The LLM-HAS (human-agent systems) literature models the human primarily as a feedback source, control point, or quality validator. The framework assumes a single human in a supervisory role. It does not model the coordination problem that arises when multiple humans, each with legitimate frame-construction authority, contribute to the same analytical object.</p>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">The Coherence Hierarchy</h2></div>
+
+    <p>Coherence in distributed human–LLM systems is not a single property. This paper proposes a three-level hierarchy in which each level is a necessary condition for the level above it. The hierarchy is not merely descriptive — it has a structural implication: coherence can only be lost from the top down, and it can only be built from the bottom up.</p>
+
+    <h3 class="sub">2.1 Level 1 — Terminological Coherence (TC)</h3>
+
+    <p>Terminological coherence is the condition in which the same concept carries the same operational meaning for all participants. This is the minimum necessary condition for any productive interaction. Without it, participants cannot verify whether they are in agreement or disagreement on any substantive point — apparent consensus may conceal divergent meanings, and apparent disagreement may reflect only terminological differences.</p>
+
+    <p>TC is the easiest level to measure and the easiest to lose. In a system with no explicit terminology governance, concepts drift across participants as each uses existing terms in new contexts and as LLMs generate terminologically adjacent but meaningfully distinct formulations. TC is also the only level that can in principle be restored purely through explicit negotiation — participants can agree on definitions without necessarily agreeing on analytical frames.</p>
+
+    <h3 class="sub">2.2 Level 2 — Frame Coherence (FC)</h3>
+
+    <p>Frame coherence is the condition in which participants share the same implicit structure for organizing what the analytical object is, what questions it addresses, and how findings within it connect to each other. TC is necessary but not sufficient for FC: participants can use the same terminology while holding fundamentally different organizing frames. A team that agrees on what "decision capacity" means may still disagree on whether it is a property of individuals, institutions, or systems — and this disagreement is a frame-level, not a terminology-level, difference.</p>
+
+    <p>FC is harder to measure because frames are often implicit. Participants in a frame-incoherent system may not recognize the incoherence until they attempt to produce a joint output — at which point the incompatibility becomes visible. The FAI (Frame Authority Index) developed in §03 provides an observable proxy for FC.</p>
+
+    <h3 class="sub">2.3 Level 3 — Output Coherence (OC)</h3>
+
+    <p>Output coherence is the condition in which the system's output is irreducible to the sum of individual participant contributions — the property identified in CN-002 as the defining characteristic of productive human–LLM coupling. TC and FC are necessary but not sufficient for OC: a system can maintain shared terminology and shared frames while still producing output that is simply the concatenation of individual contributions rather than an irreducible joint product.</p>
+
+    <p>OC requires not only that participants share a frame but that their contributions are genuinely interdependent — that each participant's output is shaped by the others' contributions in ways that alter what they would have produced independently.</p>
+
+    <div class="formula-block">
+      Coherence hierarchy:<br>
+      TC ⊂ FC ⊂ OC<br><br>
+      (TC is necessary for FC; FC is necessary for OC)<br><br>
+      For a system with n human participants H₁...Hₙ and m LLMs L₁...Lₘ:<br><br>
+      TC: ∀i,j: definition(concept, Hᵢ) ≅ definition(concept, Hⱼ)<br>
+      FC: ∀i,j: frame(O, Hᵢ, t) ≅ frame(O, Hⱼ, t) across sessions<br>
+      OC: output(S) ≠ Σ output(Hᵢ) + Σ output(Lⱼ)<br><br>
+      Shared cognitive space: S(t) = ∩ Hᵢ(t) ∩ Lⱼ(t)<br>
+      S(t) is non-empty only when TC and FC are maintained.
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Structural implication</div>
+      <p>Coherence loss is top-down: OC fails first (output becomes reducible), then FC fails (frames diverge), then TC fails (terminology fragments). Coherence restoration is bottom-up: TC must be restored before FC can be rebuilt, and FC must be rebuilt before OC becomes possible. Interventions that target OC directly without restoring TC and FC will not succeed.</p>
+    </div>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">Frame Authority Distribution: The Anchor-Document Model</h2></div>
+
+    <p>In the dyadic case, frame authority is unambiguous: the human holds it. In n-participant systems, frame authority must be distributed. Three structural models are possible: hierarchical (one designated human holds primary frame authority), egalitarian (all participants hold equal authority, with explicit coordination protocols), and anchor-document (a structured governance document holds frame authority, with human participants operating within the constraints it specifies).</p>
+
+    <p>This paper focuses on the anchor-document model (Model C) because it is the only model that scales without a fixed personal hierarchy. Hierarchical authority requires a stable designated authority figure whose participation cannot be assumed across sessions. Egalitarian authority requires explicit real-time coordination that becomes exponentially costly as n grows. The anchor-document model delegates frame authority to a persistent artifact that all participants — human and LLM — can access, query, and be audited against.</p>
+
+    <h3 class="sub">3.1 What an Anchor Document Must Contain</h3>
+
+    <p>For an anchor document to function as the primary frame authority mechanism, it must satisfy four requirements. It must define the analytical object — what the system is studying, what questions it addresses, what is in and out of scope. It must specify terminology — the operational definitions of core concepts that all participants are expected to use consistently. It must articulate the frame — the implicit structure that organizes how findings connect to each other and to the analytical object. And it must specify what participants may and may not change autonomously — the governance layer that prevents individual participants from altering the frame without collective decision.</p>
+
+    <p>A document that satisfies the first two requirements but not the third and fourth functions as a reference document, not an anchor document. The governance layer is what makes the document an authority rather than a resource.</p>
+
+    <h3 class="sub">3.2 The Frame Authority Index (FAI)</h3>
+
+    <p>The FAI provides an observable proxy for frame coherence at the participant level. It measures the degree to which frame construction authority remains with the human participants rather than being ceded to LLM instances.</p>
+
+    <div class="formula-block">
+      FAI = w₁ · I(t) + w₂ · R(t) + w₃ · S(t)<br><br>
+      I(t) = Initiative ratio:<br>
+      &nbsp;&nbsp;human-initiated new interpretive directions /<br>
+      &nbsp;&nbsp;all new interpretive directions in session<br><br>
+      R(t) = Resistance ratio:<br>
+      &nbsp;&nbsp;human rejections of LLM-proposed frames /<br>
+      &nbsp;&nbsp;all LLM-proposed frames in session<br><br>
+      S(t) = Structural control ratio:<br>
+      &nbsp;&nbsp;human-decided changes to analytical object /<br>
+      &nbsp;&nbsp;all changes to analytical object in session<br><br>
+      w₁ + w₂ + w₃ = 1 &nbsp;&nbsp;(calibrated empirically; default: 1/3 each)<br>
+      FAI ∈ [0, 1]<br>
+      FAI → 1: frame authority maintained by human participants<br>
+      FAI → 0: frame authority ceded to LLM instances
+    </div>
+
+    <p>In the anchor-document model, the FAI is expected to be high across all human participants because the anchor document provides a structural constraint that directs LLM outputs toward the established frame. LLM instances operating within the anchor document's constraints are less likely to generate frame-displacing outputs, and human participants have an explicit reference for resisting such outputs when they occur.</p>
+
+    <h3 class="sub">3.3 The Anchor Document as Temporal Continuity Mechanism</h3>
+
+    <p>CN-002 identified temporal continuity as a critical design requirement: between sessions, the human retains their evolving interpretive frame while the LLM retains nothing. The anchor document addresses this asymmetry directly. By externalizing the shared frame into a persistent, versioned artifact, it enables productive coupling to resume across sessions without requiring participants to reconstruct the shared frame from scratch. Each session begins with the anchor document as the shared context — the LLM instance is oriented to the current state of the analytical object, and human participants can verify that their frame remains consistent with the documented one.</p>
+
+    <p>This function is analogous to what WP-003 describes as institutional memory in the context of temporal decision capacity: the capacity to act effectively under pressure depends not only on having the right resources in the moment but on having preserved the interpretive structures that make those resources usable. An anchor document is the cognitive-layer equivalent of institutional memory — it preserves the frame across the gaps between sessions.</p>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">Empirical Cases</h2></div>
+
+    <p>Four cases are examined: ACI itself as the primary internal case, and three external cases drawn from the multi-agent and collaborative authorship literature. The cases are used to illustrate the coherence hierarchy and the conditions under which anchor-document-based frame authority succeeds or fails, not to validate the model empirically. Systematic empirical validation is specified in §06.</p>
+
+    <h3 class="sub">4.1 ACI as an Internal Case</h3>
+
+    <div class="case-block">
+      <div class="case-label">Internal Case — Aether Continuity Institute</div>
+      <p>ACI's research programme has been developed through a series of human–LLM interaction sessions in which the human participant maintained frame construction authority while LLM instances performed formalization, translation, cross-referencing, and structural auditing. The analytical object — the body of working papers, supporting papers, and diagnostic assessments — grew from a single working paper to over thirty published documents across six research domains.</p>
+      <p>The anchor document (ACI-STRUCTURE.md) explicitly governs what LLM instances may and may not change autonomously: publication types, domain definitions, naming conventions, and cross-reference requirements are fixed; content production, translation, and formatting are permitted. This separation functions as a structural enforcement of frame authority — LLM instances cannot alter the frame without a documented human decision.</p>
+      <p>The coherence properties observable in ACI are: consistent terminology across documents (TC maintained), consistent domain framing across working papers authored in different sessions (FC maintained), and cross-document argument dependencies that would not exist without the iterative human-LLM coupling (OC evidenced but not yet independently validated).</p>
+    </div>
+
+    <h3 class="sub">4.2 MetaGPT: SOP-Based Role Protocols</h3>
+
+    <div class="case-block">
+      <div class="case-label">External Case — MetaGPT (Hong et al., 2024)</div>
+      <p>MetaGPT formalizes role-based protocols by encoding Standard Operating Procedures (SOPs) that define each LLM agent's role through expert-level knowledge. Agents act as specialized operators who can verify each other's results, preventing error propagation through modularized task distribution.</p>
+      <p>Interpreted through the coherence hierarchy: MetaGPT's SOP structure functions as an anchor document at the LLM-to-LLM level — it defines terminology and task boundaries, achieving TC and partial FC among LLM instances. However, the human's role in MetaGPT is that of system designer rather than frame-construction participant. Once the SOPs are defined, the human exits the productive coupling. This is a different model from the anchor-document model developed here, in which humans remain active participants throughout.</p>
+    </div>
+
+    <h3 class="sub">4.3 CollabStory: Sequential Multi-LLM Authorship</h3>
+
+    <div class="case-block">
+      <div class="case-label">External Case — CollabStory (Lee et al., 2025)</div>
+      <p>CollabStory examines multi-LLM sequential story generation, where up to five LLM agents write successive segments of a narrative. Each agent contributes without awareness of the others' generative processes, receiving only the prior text as context.</p>
+      <p>CollabStory provides a clear instance of a system without an anchor document. TC may be maintained within the shared narrative context, but FC is not structurally guaranteed — each LLM agent implicitly organizes the narrative around its own generative tendencies. The study finds coherence degradation as the number of agents increases, consistent with the prediction that S(t) = ∩ Lⱼ(t) narrows with more participants. This is the LLM-only analogue of the frame authority fragmentation failure mode.</p>
+    </div>
+
+    <h3 class="sub">4.4 Collaborative Gym: Asynchronous Human–LLM Task Collaboration</h3>
+
+    <div class="case-block">
+      <div class="case-label">External Case — Collaborative Gym (Shao et al., 2024)</div>
+      <p>Collaborative Gym facilitates asynchronous interactions among humans, agents, and task environments across tasks including travel planning, data analysis, and academic writing. It evaluates both task outcomes and interaction quality.</p>
+      <p>Collaborative Gym represents a system where human frame authority is present but not structurally enforced. The human can intervene at any point but is not required to. In the tasks where human frame authority is exercised consistently, performance improves; in tasks where the human defers to the LLM agent, performance is more variable. This pattern is consistent with the FAI hypothesis: higher human initiative and resistance ratios correlate with higher output quality, even without an explicit anchor document.</p>
+    </div>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">Design Principles for Anchor-Document Systems</h2></div>
+
+    <p>The anchor-document model generates specific design requirements for systems intended to support coherent distributed human–LLM research. These are stated as structural requirements, not recommendations — systems that do not satisfy them should not be expected to maintain coherence at the FC and OC levels.</p>
+
+    <h3 class="sub">5.1 The Anchor Document Must Be Versioned and Accessible</h3>
+
+    <p>An anchor document that is not versioned cannot function as a temporal continuity mechanism. If the document changes without a record of what changed and when, participants returning to the system after a gap cannot determine whether their prior frame is consistent with the current document. Versioning is not merely good practice — it is a structural requirement for the anchor-document model's temporal continuity function.</p>
+
+    <p>Accessibility means that all participants — human and LLM — can query the document at the start of each session. For LLM instances, this means the anchor document must be provided as explicit context, not assumed from prior interaction. For human participants, it means the document must be locatable, readable, and current.</p>
+
+    <h3 class="sub">5.2 The Governance Layer Must Be Explicit</h3>
+
+    <p>The anchor document's governance layer — the specification of what participants may and may not change autonomously — must be explicit rather than implied. An implied governance layer requires participants to infer what is and is not open for revision, which introduces frame authority ambiguity. An explicit governance layer removes this ambiguity by specifying categories of permitted and restricted operations directly.</p>
+
+    <p>This is the cognitive-layer analogue of the Guardian/Orchestrator role separation in TN-002: one layer holds authority over the frame, the other holds optimization capability within that frame, and the boundary between them is enforced structurally rather than by individual vigilance.</p>
+
+    <h3 class="sub">5.3 LLM Role Specialization Reduces Frame Arbitration Risk</h3>
+
+    <p>In systems with multiple LLM instances, the risk that LLMs begin performing implicit frame arbitration — selecting among competing human frames rather than implementing within a shared frame — increases with the number of instances and the diversity of human participant frames. Explicit LLM role specialization (formalizer, auditor, cross-referencer) limits this risk by constraining each instance's operation to a defined function within the established frame.</p>
+
+    <p>Role specialization does not require different LLM models — it requires different operational constraints applied to the same model. A system in which one LLM instance is tasked with formalization and another with structural auditing, with explicit constraints on each, is more resistant to frame arbitration than a system in which any LLM instance can perform any operation.</p>
+
+    <h3 class="sub">5.4 Coherence Level Monitoring Must Match Intervention Capacity</h3>
+
+    <p>A system that monitors only output coherence — the highest level — cannot intervene effectively when coherence begins to fail at the terminological or frame level. By the time OC failure is visible, TC and FC may already be severely degraded, and restoration requires bottom-up reconstruction rather than targeted correction. Systems should monitor TC continuously (terminology drift is the earliest visible signal), FC at session boundaries (frame drift is visible in cross-session inconsistencies), and OC through periodic blind attribution testing.</p>
+  </div>
+
+  <!-- §06 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 06</span><h2 class="section-title">Scope, Limits, and Falsification Conditions</h2></div>
+
+    <p>This paper develops a theoretical framework for the anchor-document model of distributed human–LLM coherence. The empirical cases in §04 are illustrative, not validating. The falsification conditions below specify the observations that would require substantial revision of the framework.</p>
+
+    <h3 class="sub">6.1 Scope Limits</h3>
+
+    <p>The framework applies to systems in which the analytical object is structured and persistent — a research programme, a diagnostic framework, a body of technical documentation. It does not apply to ephemeral interactions (single-session tasks without a persistent object), to systems where the analytical object is primarily quantitative (databases, simulation models), or to interactions where the human's primary contribution is data provision rather than frame construction. The Model C (anchor-document) focus excludes Models A and B from systematic treatment; a comparative analysis of all three models is a research programme item, not a finding of this paper.</p>
+
+    <h3 class="sub">6.2 Falsification Conditions</h3>
+
+    <div class="falsif-item">
+      <div class="falsif-label">FC-1 — Hierarchy Falsification</div>
+      <p>If TC does not predict FC — that is, if systems with high terminological consistency routinely exhibit frame incoherence — the proposed hierarchy is false. TC and FC may be independent properties rather than hierarchically ordered ones, requiring a revised model.</p>
+    </div>
+
+    <div class="falsif-item">
+      <div class="falsif-label">FC-2 — FAI Falsification</div>
+      <p>If FAI does not correlate with output-level coherence as measured by the blind attribution test — that is, if high FAI does not predict that output is irreducible to individual participants — then frame authority is not the operative variable for OC. Something else determines whether output is irreducible, and the model requires revision.</p>
+    </div>
+
+    <div class="falsif-item">
+      <div class="falsif-label">FC-3 — Anchor Document Falsification</div>
+      <p>If systems with explicit anchor documents do not outperform systems without them on FC maintenance — that is, if the presence or absence of a governance document does not predict frame coherence across sessions — then the anchor-document model's core claim is false. Document-based frame authority does not function as claimed, and the mechanism requires re-examination.</p>
+    </div>
+
+    <div class="falsif-item">
+      <div class="falsif-label">FC-4 — Intersection Falsification</div>
+      <p>If coherence does not decrease with increasing n (number of participants) — that is, if S(t) = ∩ Hᵢ(t) ∩ Lⱼ(t) does not narrow as n grows — then the intersection model is incorrect. Coherence may be emergent rather than conjunctive, requiring a fundamentally different formal model.</p>
+    </div>
+
+    <div class="falsif-item">
+      <div class="falsif-label">FC-5 — Blind Attribution Falsification</div>
+      <p>If blind attribution of outputs to participants consistently succeeds at a rate significantly above chance (p &lt; 0.05) in systems where the anchor-document model is correctly implemented — that is, if output remains reducible to individual participants even under optimal conditions — then OC as defined here may not be achievable in distributed human–LLM systems regardless of structural design. This would require revising the OC criterion itself.</p>
+    </div>
+
+    <h3 class="sub">6.3 Research Programme</h3>
+
+    <p>The falsification conditions above define the empirical research programme. A suitable experimental platform would consist of a cloned structured analytical object (such as ACI's research repository) made available to n human participants and m LLM instances under controlled conditions. Three variants of the anchor-document model should be tested: with a full anchor document (governance layer explicit), with a partial anchor document (terminology defined but governance layer absent), and without an anchor document. FAI, TC, FC, and OC measures are recorded across sessions and compared across variants. The blind attribution test is administered by evaluators who have not participated in the sessions.</p>
+
+    <p>Pre-registration of analysis criteria before data collection is required to prevent the circularity risk identified in CN-002 §4.3 — the risk of using the model to analyse data that motivated the model. Evaluators should be blinded to the experimental condition (full/partial/no anchor document) during the attribution test.</p>
+  </div>
+
+  <!-- §07 — Relation to ACI Framework -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 07</span><h2 class="section-title">Relation to ACI Framework</h2></div>
+
+    <p>WP-013 occupies a specific position within ACI's research programme. It extends CN-002's dyadic model to the distributed case, making it a direct theoretical successor. It applies the temporal decision capacity construct from WP-003 at the cognitive-system level rather than the institutional level — the anchor document performs the same function as institutional memory in WP-003's framework, preserving causal reach across the temporal gaps between action opportunities. It connects to WP-006's continuity computing architecture by specifying the cognitive-layer requirements that complement WP-006's computational-layer requirements.</p>
+
+    <p>The question of whether the failure modes identified here warrant a new research domain (D-7) or are adequately captured as an extension of D-3 remains open. This paper is written as a D-3 extension — institutional decision capacity applied to distributed human–LLM research systems. If the empirical programme specified in §06 produces findings that cannot be interpreted within D-3's core question ("under what conditions does governance lose causal influence over outcomes?"), a domain extension proposal would be warranted.</p>
+  </div>
+
+  <!-- §08 — Conclusion -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 08</span><h2 class="section-title">Conclusion</h2></div>
+
+    <p>Distributed human–LLM research systems face a failure mode — frame authority fragmentation — that does not appear in the dyadic case and is not addressed by existing multi-agent or institutional decision capacity frameworks. This failure mode is structural: it arises from the distribution of frame construction authority across participants and is not remedied by increasing LLM capability or human expertise.</p>
+
+    <p>The anchor-document model provides a structural mechanism for managing this failure mode without requiring a fixed personal authority hierarchy. By delegating frame authority to a versioned, accessible, governance-specified document, the model enables coherent distributed operation across participants and sessions. The three-level coherence hierarchy — terminological, frame, output — provides an observable, hierarchically ordered set of properties that can be monitored and restored.</p>
+
+    <p>The framework is falsifiable, and its falsification conditions are specified. Whether the anchor-document model functions as claimed is an empirical question. The answer will determine whether document-based governance is a sufficient mechanism for distributed human–LLM coherence or whether the problem requires a fundamentally different approach.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">WP-013 · v1.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-3 · D-5<br>Basis: CN-002 · WP-003 · WP-006</div>
+</footer>
+
+<div style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;">
+  Version History<br>
+  <span style="font-weight:400;">v1.0 &middot; Mar 2026 &middot; Initial working draft</span>
+</div>
+
+</body>
+</html>

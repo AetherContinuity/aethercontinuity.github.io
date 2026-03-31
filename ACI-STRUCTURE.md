@@ -209,7 +209,7 @@ As of March 2026 — update this table when new publications are added.
 
 | Type | Range | Next ID |
 |------|-------|---------|
-| Working Papers (WP) | WP-001 – WP-012 | WP-013 |
+| Working Papers (WP) | WP-001 – WP-013 | WP-014 |
 | Supporting Papers (SP) | SP-001 – SP-006 | SP-007 |
 | Diagnostic Assessments (DA) | DA-001 – DA-006 | DA-007 |
 | Technical Notes (TN) | TN-001 – TN-006 | TN-007 |
@@ -241,3 +241,4 @@ Adding a §09 or beyond requires explicit decision and an update to this documen
 v1.0 · March 2026 · Initial governance definition  
 v1.1 · March 2026 · Added core axiom (§9), publication inventory table (§10), homepage §-structure invariants, RQM definition, fixed duplicate DA entry
 v1.2 · March 2026 · CN-002 added to inventory
+v1.3 · March 2026 · WP-013 added to inventory
