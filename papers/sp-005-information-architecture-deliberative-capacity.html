@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-005 — Information Architecture and Deliberative Capacity</title>
+<meta name="description" content="ACI SP-005 v1.1: Information architecture and deliberative capacity. Develops the full causal model of displacement persistence, LLM-mediated modulation, and introduces framing externalization as a distinct degradation pathway independent of cognitive load.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .highlights { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; }
+  .highlights-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .highlights ul { padding-left: 1.2rem; }
+  .highlights ul li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.3rem; color: #2a2520; }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+  .keywords strong { color: var(--ink); font-weight: 400; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2.2; color: var(--ink); }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; color: #3a3530; }
+  .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); font-family: var(--mono); }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 005</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">SP · 005 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 005</div>
+    <h1 class="paper-title">Information Architecture and Deliberative Capacity: The Three-Layer Causal Model and Its Implications for Continuity</h1>
+    <p class="paper-subtitle">Trigger, Stabiliser, and Alternative Equilibrium in the Degradation of Reflective Decision Processing</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 005, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-005-information-architecture-deliberative-capacity.html<br>
+      Cross-references: SP-004 (Cognitive Bandwidth and Decision Capacity) · WP-006 (Continuity Computing) · WP-007 (Situational Awareness Persistence) · WP-003 (Institutional Termination Time)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Temporal Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+      <span class="domain-tag">D-6 · Situational Awareness</span>
+    </div>
+  </div>
+
+  <div class="highlights">
+    <div class="highlights-label">Highlights</div>
+    <ul>
+      <li>Deliberative instability is produced by three distinct causal mechanisms operating at different speeds and through different channels: bandwidth overload (trigger), discount-rate misalignment (stabiliser), and status signalling (alternative equilibrium).</li>
+      <li>Each mechanism is necessary; none is sufficient alone. Interventions targeting only one layer produce incomplete and potentially misleading results.</li>
+      <li>The displacement probability function P(D) = f(L, A, R, δ) formalises the interaction of information load, affective intensity, reflective latency, and discount structure as jointly determinative of deliberative failure risk.</li>
+      <li>LLM-mediated interaction introduces reflective latency (R) as a user-modifiable variable — the direction of its effect on displacement depends on the interaction regime, not on model capability.</li>
+      <li>Reform programmes organised around single mechanisms will produce incomplete results; the layered model specifies which interventions address which causal layer and at what timescale.</li>
+    </ul>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p><strong>Purpose:</strong> SP-004 established the mechanism by which cognitive bandwidth overload produces prefrontal displacement in individual operators. This paper develops the full causal architecture: why displacement is persistent rather than episodic, why it survives even when bandwidth conditions improve, and what formal structure governs its probability across varying information environment configurations.</p>
+    <p><strong>Framework:</strong> A three-layer causal model is proposed. Layer one identifies cognitive bandwidth overload as the trigger mechanism — the condition that initiates displacement independently of incentive structures. Layer two identifies the multi-level discount-rate structure as the stabilising mechanism — the reason displacement conditions are continuously reproduced rather than corrected. Layer three identifies status signalling dynamics as an independent alternative equilibrium force — the reason deliberative failure can persist even when bandwidth and discount conditions improve.</p>
+    <p><strong>Formal model:</strong> The displacement probability function P(D) = f(L, A, R, δ) is introduced, where L is signal density, A is affective intensity, R is reflective latency, and δ represents the composite discount structure. This function parameterises the displacement model, making its boundary conditions formally tractable and empirically testable. The LLM-mediated modulation corollary is developed: LLM interaction introduces R as a user-modifiable variable whose effect on displacement probability is directionally predictable from the architecture of the interaction regime.</p>
+    <p><strong>Implications:</strong> The three-layer model specifies the conditions under which each class of intervention is necessary, sufficient, or inadequate, and identifies the timescales at which different interventions operate. For continuity-critical systems, it provides a diagnostic framework for assessing which causal layer is dominant in a specific operational context and which intervention design corresponds to that layer.</p>
+    <div class="keywords"><strong>Keywords:</strong> Deliberative capacity · Three-layer causal model · Displacement probability · Reflective latency · LLM modulation · Status signalling · Discount-rate structure · Continuity intervention design</div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Relationship to ACI Series</div>
+    <p>This paper extends the cognitive mechanism established in <a href="/papers/sp-004-cognitive-bandwidth-decision-capacity.html">SP-004</a>, providing the full causal architecture and formal model. The displacement probability function directly supports the decision capacity invariant analysis in <a href="/papers/wp-006-continuity-computing.html">WP-006</a> and the situational awareness persistence model in <a href="/papers/wp-007-situational-awareness-persistence.html">WP-007</a>. The intervention design framework provides the operational complement to the diagnostic framework developed across the SP-004/SP-005 pair.</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Introduction: The Persistence Problem</h2></div>
+    <p>SP-004 established that cognitive bandwidth overload is a sufficient condition for prefrontal displacement: when signal density exceeds the processing capacity of reflective cognition, reactive processing dominates regardless of individual intent or institutional design. This mechanism accounts for the onset of deliberative failure. It does not by itself account for its persistence.</p>
+    <p>If bandwidth overload were the only operative mechanism, deliberative failure would be episodic: overwhelming information environments would produce temporary displacement, which would self-correct once signal load reduced. The empirical observation is that deliberative failure in high-frequency digital environments is not episodic. It is persistent. The question this paper addresses is: why?</p>
+    <p>Two additional causal mechanisms must be specified. The first explains why bandwidth overload conditions are continuously reproduced rather than corrected — why the system that produces displacement is not organised to interrupt it. The second explains why deliberative failure persists even in environments where bandwidth and incentive conditions improve — why the functional alternative to deliberation has its own independent logic that does not require the first two mechanisms to sustain it.</p>
+
+    <div class="callout">
+      <p>The full causal model requires three layers. Bandwidth overload creates the occasion for displacement. Discount-rate misalignment removes the correction mechanism. Status signalling provides an alternative organising principle that functions independently of both. The interaction of these three layers produces deliberative instability that is robust to partial interventions.</p>
+    </div>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">The Three-Layer Causal Model</h2></div>
+
+    <h3 class="subsection">2.1 Layer One: Cognitive Bandwidth Overload as Trigger</h3>
+    <p>The first and temporally prior mechanism is cognitive bandwidth overload. This is the condition in which the volume, velocity, and affective intensity of incoming information exceeds the processing capacity of reflective cognition. The mechanism does not require an advertising model, a misaligned ownership structure, or a short discount horizon. It requires only that signal density cross the threshold at which prefrontal processing becomes the rationed resource — not absent, but insufficient for reliable activation.</p>
+    <p>Reflective deliberation does not fail because individuals choose not to deliberate, or because they lack the cognitive capacity to do so. It fails because the conditions for its reliable operation — sustained attention, manageable signal load, reduced affective arousal — are systematically unavailable in high-frequency engagement-optimised environments. Bandwidth overload is the mechanism by which those conditions are withdrawn.</p>
+    <p>This framing carries a specific implication: deliberative capacity is not first degraded by incentive distortions and then reflected in behaviour. It is first overwhelmed at the architectural level, and the incentive structure then determines whether recovery is possible and how quickly. The trigger is causally prior; the subsequent mechanisms determine duration and resistance to correction.</p>
+
+    <h3 class="subsection">2.2 Layer Two: Discount-Rate Structure as Stabiliser</h3>
+    <p>Without a second causal layer, bandwidth overload would predict only episodic deliberative failures. What the fractal discount-rate structure explains — analysed in detail in SP-004 — is why self-correction does not reliably occur: because the institutional incentives at every level of the system are oriented toward maintaining the conditions of overload, and the repair mechanisms that would otherwise operate are themselves suppressed by the same incentive structure.</p>
+    <p>The stabiliser mechanism answers a question the trigger mechanism cannot: why is deliberative degradation persistent rather than episodic? The answer is that the conditions for cognitive overload are continuously reproduced, and the institutional architecture that could interrupt this reproduction is not organised to do so. The temporal mismatch between the speed of displacement and the timescale of institutional correction — from seconds to years — means that each level of potential correction is systematically too slow to interrupt the cycle at the level below it.</p>
+    <p>The discount-rate structure thus functions as a structural lock: it does not produce displacement (the trigger does), but it prevents the self-correction that would otherwise occur, converting episodic failures into a persistent baseline condition.</p>
+
+    <h3 class="subsection">2.3 Layer Three: Status Signalling as Alternative Equilibrium</h3>
+    <p>The third layer addresses a challenge that neither of the first two mechanisms resolves: the possibility that deliberative failure persists even when bandwidth conditions improve and discount horizons lengthen. This is the status signalling problem. Tribal identity expression and in-group status competition are not merely products of short-horizon incentives. They are instrumentally rational under a wide range of discount structures, because the status payoffs of successful group signalling are continuous rather than one-time, and the social costs of defecting from group norms can be severe regardless of time horizon.</p>
+    <p>The empirical evidence is visible in high-δ institutional environments. Academic discourse, legal argument, and long-form political commentary — all contexts with extended time horizons and sustained identity continuity — exhibit persistent patterns of tribal signalling, selective evidence use, and motivated reasoning. High δ does not eliminate these patterns; it tends to produce more sophisticated and durable versions of them. δ elevation is therefore a necessary but not sufficient condition for deliberative stabilisation.</p>
+    <p>The status signalling layer also explains a specific pathological outcome: well-constructed but epistemically closed argument — what might be termed slow-packaged tribalism. An architecture that increases friction and extends time horizons without restructuring status incentives may produce participants who invest more time and effort in positions that remain structurally unchanged. The quality of the reasoning signal improves; the deliberative direction does not.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 1 — The Three-Layer Causal Structure</div>
+      <table>
+        <thead><tr><th>Layer</th><th>Mechanism</th><th>Causal Role</th><th>Explains</th><th>Primary Intervention</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Cognitive bandwidth overload</td><td>Trigger</td><td>Onset of displacement</td><td>Architectural friction · Signal density reduction</td></tr>
+          <tr><td>2</td><td>Discount-rate misalignment</td><td>Stabiliser</td><td>Persistence of displacement</td><td>Discount-rate reform · Institutional horizon extension</td></tr>
+          <tr><td>3</td><td>Status signalling dynamics</td><td>Alternative equilibrium</td><td>Deliberative failure independent of layers 1–2</td><td>Norm and status restructuring</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Structural finding</div>
+      <p>Deliberative instability is not produced by any one of these mechanisms operating alone. It is produced by their interaction: bandwidth overload creates the occasion, discount-rate misalignment removes the correction, and status competition provides an alternative organising principle that functions independently of the first two. Each intervention class is necessary; none is sufficient alone; they operate at different speeds and through different institutional channels.</p>
+    </div>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">The Displacement Probability Function</h2></div>
+
+    <h3 class="subsection">3.1 Formal Parameterisation</h3>
+    <p>The three-layer causal model can be compactly expressed through a displacement probability function that parameterises the joint effect of the relevant variables on the probability of prefrontal displacement in a given interaction context. The function is stated as a theoretical construct derived from the causal structure; its empirical operationalisation is addressed in Section 3.4.</p>
+
+    <div class="formula-block">
+      P(D) = f(L, A, R, δ)<br><br>
+      where:<br>
+      L  =  signal density (volume and velocity of incoming information)<br>
+      A  =  affective intensity (emotional salience and arousal load of signal content)<br>
+      R  =  reflective latency (interval between receiving input and generating response)<br>
+      δ  =  composite discount structure (joint function of δ<sub>platform</sub>, δ<sub>identity</sub>, δ<sub>agent</sub>)<br><br>
+      P(D) increases monotonically with L and A<br>
+      P(D) decreases monotonically with R (for R > 0)<br>
+      P(D) decreases as δ → 1 (long-horizon discount structure)<br>
+      P(D) → 1 as L → ∞ or A → A* (individual displacement threshold)<br>
+      P(D) remains non-zero for any finite δ due to status signalling (Layer 3)
+    </div>
+
+    <p>The final condition — P(D) remaining non-zero at high δ — captures the Layer Three mechanism: status signalling provides an independent path to deliberative failure that is not eliminated by discount-rate correction alone. The function therefore cannot be driven to zero by any single-variable intervention; multi-layer intervention is structurally required.</p>
+
+    <h3 class="subsection">3.2 The Displacement Threshold A*</h3>
+    <p>The individual displacement threshold A* is not a fixed constant. It is a context-dependent parameter that varies with cognitive fatigue, prior stress load, identity salience, and environmental stability. Its context-dependence has a critical implication: displacement risk is not a stable individual trait but a state-level variable modulated by environmental and situational factors. Two individuals with identical cognitive architectures but different prior information environments will exhibit different A* values at the point of a given decision requirement.</p>
+    <p>For continuity-critical systems, this implies that the human decision layer's displacement risk cannot be characterised by an individual profile alone. It must be assessed as a function of the information environment the operator has been embedded in prior to the decision moment — including the cumulative bandwidth load and affective intensity of their recent information diet. Pre-crisis information environment is a determinant of crisis-phase cognitive capacity.</p>
+
+    <h3 class="subsection">3.3 Interaction Effects</h3>
+    <p>The variables in the displacement function are not independent. Elevated A amplifies the effect of L: high-affective signals at a given density produce more displacement than low-affective signals at the same density. Low R reduces the effective impact of both L and A: a pause of sufficient length before response allows prefrontal processing to engage with signals that would otherwise be processed reactively. This interaction structure implies that the most effective single-variable intervention — where only one variable is available for modification — is typically R, because it directly modulates the relationship between the environment variables (L, A) and the cognitive outcome.</p>
+
+    <h3 class="subsection">3.4 Empirical Status</h3>
+    <p>The displacement probability function is stated as a theoretically derived boundary condition, not an empirically validated model. The formal relationship between R, L, A, and displacement probability awaits experimental operationalisation. The claim that A* is individually and contextually variable is consistent with existing research on working memory capacity and executive control (Engle, 2002), but the specific modulation of A* through information architecture variables has not been directly measured at the scale implied by this analysis.</p>
+    <p>These propositions are therefore offered as testable hypotheses within the research programme implied by the SP-004/SP-005 framework, not as conclusions of the present analysis. The primary empirical challenge is operationalising displacement probability in ecologically valid settings — measuring reflective processing activation rates across information environments that differ systematically in L, A, and R.</p>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">LLM-Mediated Modulation of Displacement Probability</h2></div>
+
+    <h3 class="subsection">4.1 Reflective Latency as a User-Modifiable Variable</h3>
+    <p>The displacement probability function introduces R — reflective latency — as a variable that is partially under user control in a way that L and A are not. In unmediated high-frequency digital environments, the architecture tends to drive R toward zero: rapid-response designs, notification urgency signals, and social norm pressure for immediate replies all suppress the reflective pause. R is not structurally protected; it must be actively maintained against environmental pressure.</p>
+    <p>Large language model (LLM) interaction introduces a structural modification to this dynamic. The nature of LLM interaction — input formulation, model response, reading and evaluation — creates natural pauses that do not exist in direct social media interaction. These pauses can serve as structural latency: the time between receiving information and formulating a response is extended by the interaction format itself, not by individual willpower.</p>
+
+    <h3 class="subsection">4.2 The Prefrontal Amplification Condition</h3>
+    <p>LLM interaction increases the probability of prefrontal activation — P(D) decreases — when three conditions hold simultaneously. First, model output must structurally compress information relative to the user's prior cognitive load: the interaction reduces effective signal density (ΔL ≤ 0) rather than adding to it. Second, the user must maintain a non-trivial reflective latency: R exceeds a context-specific threshold sufficient for deliberative processing to engage. Third, affective intensity must remain below the individual displacement threshold: A &lt; A*.</p>
+    <p>Under these conditions, the LLM system functions as a cognitive compression mechanism — reducing the informational load required to achieve a given epistemic outcome, freeing working memory resources, and extending the window available for deliberative processing. The interaction regime produces a net reduction in displacement probability.</p>
+
+    <h3 class="subsection">4.3 The Prefrontal Bypass Condition</h3>
+    <p>LLM interaction decreases the probability of prefrontal activation — P(D) increases — when the interaction regime takes a different configuration. If output rate amplifies effective signal density (ΔL > 0), if prompt-response cycling minimises reflective latency (R → 0), if content carries high affective or identity-relevant loading (A ≥ A*), and if the user operates under a short temporal horizon (low δ<sub>agent</sub>), then LLM interaction does not reduce cognitive load but substitutes an external rapid-generation structure for endogenous deliberative processing.</p>
+    <p>In this regime, the structural advantage of LLM interaction — high-volume, high-fluency output — becomes a displacement accelerant rather than a deliberative aid. The user processes model output reactively, treats model responses as epistemic proxies rather than deliberative inputs, and reduces the reflective latency that would otherwise allow evaluation. The interaction produces displacement through the same mechanism as any other high-density information environment, with the additional feature that the density is composed of fluent, structurally coherent text that may feel more deliberative than it is.</p>
+
+    <div class="formula-block">
+      Prefrontal Amplification Condition (P1):<br>
+      P(D) decreases when ΔL ≤ 0 AND R > R<sub>threshold</sub> AND A &lt; A*<br><br>
+      Prefrontal Bypass Condition (P2):<br>
+      P(D) increases when ΔL > 0 AND R → 0 AND A ≥ A* AND δ<sub>agent</sub> is low<br><br>
+      LLM systems do not inherently produce either condition.<br>
+      The direction of effect depends on the interaction regime, not on model capability per se.
+    </div>
+
+    <h3 class="subsection">4.4 Implications for Continuity-Critical LLM Deployment</h3>
+    <p>The LLM modulation analysis has direct implications for the deployment of AI-assisted decision support in continuity-critical contexts. The displacement risk of LLM integration is not a function of model capability or reliability. It is a function of how the interaction regime is structured — specifically, whether the deployment architecture maintains R above threshold, whether it is designed to compress rather than amplify signal density, and whether it is calibrated to keep A below individual displacement thresholds by controlling the affective loading of model outputs.</p>
+    <p>Decision support systems that deliver LLM outputs at high velocity, require rapid human responses, or present high-affect synthetic content are operating under the Prefrontal Bypass Condition regardless of the underlying model quality. The risk is architectural, not computational. This is consistent with the broader ACI framework: system continuity depends on the design of the interaction architecture, not only on the capability of the components.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 2 — LLM Interaction Regime and Displacement Probability</div>
+      <table>
+        <thead><tr><th>Variable</th><th>P1: Amplification regime</th><th>P2: Bypass regime</th></tr></thead>
+        <tbody>
+          <tr><td>Signal density change (ΔL)</td><td>ΔL ≤ 0 (compression)</td><td>ΔL > 0 (amplification)</td></tr>
+          <tr><td>Reflective latency (R)</td><td>R > threshold (maintained)</td><td>R → 0 (suppressed)</td></tr>
+          <tr><td>Affective intensity (A)</td><td>A &lt; A* (sub-threshold)</td><td>A ≥ A* (at or above threshold)</td></tr>
+          <tr><td>Discount structure (δ)</td><td>High δ (long-horizon)</td><td>Low δ (short-horizon)</td></tr>
+          <tr><td>Net effect on P(D)</td><td>Decrease (deliberative enhancement)</td><td>Increase (deliberative suppression)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Intervention Design: Layer-Specific and Multi-Layer</h2></div>
+
+    <h3 class="subsection">5.1 Correspondence Between Causal Layer and Intervention Class</h3>
+    <p>The three-layer model generates a direct correspondence between causal mechanism and appropriate intervention. Architectural friction — reducing signal velocity, limiting notification density, introducing processing delays — addresses the trigger layer. It reduces L and extends R, thereby decreasing P(D) at the onset mechanism. It does not address the stabiliser layer (the reproduction of overload conditions) or the alternative equilibrium layer (status signalling). Its effects are immediate but conditional on architectural maintenance against competitive and social pressure to reduce friction.</p>
+    <p>Discount-rate reform — extending platform stability, strengthening identity continuity, restructuring ownership incentives, extending regulatory time horizons — addresses the stabiliser layer. It modifies δ across the relevant institutional levels, restoring the conditions under which self-correction can occur. It does not directly address bandwidth conditions or status signalling dynamics. Its effects are slow (measured in years) and require coordinated multi-level change, but they alter the structural conditions that determine whether the trigger layer's effects persist.</p>
+    <p>Norm and status restructuring — changing what counts as valued participation in a given discursive community, establishing deliberative reputation as a status-conferring achievement — addresses the alternative equilibrium layer. It modifies the payoff structure of status signalling, making deliberative contribution instrumentally attractive in contexts where it currently is not. Its effects are culturally mediated, slow, and fragile against structural pressure, but they address the only mechanism that can produce deliberative failure in the absence of the first two.</p>
+
+    <h3 class="subsection">5.2 The Partial Intervention Problem</h3>
+    <p>The practical consequence of the three-layer model is that reform programmes organised around any single mechanism will produce incomplete and potentially misleading results. An architecture that reduces bandwidth overload without addressing status incentives may produce more elaborate tribal argument — slow-packaged tribalism, as noted in Section 2.3. A discount-rate reform that extends institutional time horizons without addressing bandwidth conditions may produce long-horizon versions of the same reactive dynamics. Status norm reform without architectural support may prove fragile against the continuous pressure of high-signal environments.</p>
+    <p>Misleading results are a specific risk. An intervention that successfully addresses one causal layer may create the appearance of systemic improvement while leaving the others intact, redirecting analytical attention and reform energy away from the unaddressed mechanisms. A continuity system that addresses computational decision capacity without addressing cognitive decision capacity faces an equivalent problem: the intervention is real, its benefits are measurable, and it leaves the binding constraint in place.</p>
+
+    <h3 class="subsection">5.3 Operational Priorities for Continuity Systems</h3>
+    <p>For continuity-critical operational contexts, the layer-specific intervention priorities follow directly from the analysis. Architectural friction is the highest-priority near-term intervention: it addresses the trigger mechanism, operates immediately, and can be implemented at the level of specific operational environments without waiting for broader institutional change. The critical design requirement is that friction must be structural — built into the communication architecture — rather than behavioural, because behavioural friction is fragile against situational pressure.</p>
+    <p>Discount-rate considerations apply particularly to the design of information systems used in extended continuity operations: the stability and continuity of the information infrastructure itself, the identity continuity of operators across extended decision sequences, and the institutional time horizon of the authorities directing the operation. Systems with fragile information infrastructure, frequent personnel rotation, and short-horizon command structures are operating under the structural conditions that maximise P(D) in their decision layer.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">Design principle</div>
+      <p>Effective intervention against deliberative failure in continuity-critical systems requires simultaneous attention to all three causal layers at appropriate timescales. Near-term: architectural friction and R maintenance. Medium-term: discount-rate structures in information and command infrastructure. Long-term: status norm design in the communities of practice responsible for continuity-critical decisions. Single-layer interventions are necessary components, not sufficient solutions.</p>
+    </div>
+  </div>
+
+  <!-- §6 (v1.1) -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Framing Externalization as a Distinct Degradation Pathway</h2></div>
+
+    <p>The three-layer causal model developed in the preceding sections identifies cognitive bandwidth overload as the trigger mechanism for deliberative failure, and discount-rate misalignment as the stabilising mechanism that prevents self-correction. Both mechanisms operate on the volume and velocity of information processing: they describe conditions under which the quantity of incoming signal exceeds the capacity of reflective cognition.</p>
+
+    <p>A distinct degradation pathway exists that does not operate through overload. Deliberative capacity may be reduced not by the volume of information the individual must process, but by the structure in which that information arrives. When interpretive frames — the implicit organising structures that determine how a given set of facts connects to conclusions — are supplied rather than generated, the individual's deliberative contribution shifts from frame construction to frame evaluation or acceptance. This shift is not a function of cognitive load; it can occur under conditions of low signal density and extended reflective latency.</p>
+
+    <h3 class="subsection">6.1 The Externalization Mechanism</h3>
+
+    <p>Framing externalization is the process by which interpretive structures are provided to the individual through the information architecture rather than constructed by the individual through deliberative processing. The mechanism does not require intentional design toward specific outcomes. It emerges from the structural properties of any system that produces pre-organised, interpretively coherent outputs — including but not limited to LLM-mediated interaction.</p>
+
+    <p>The relevant distinction is between an information environment that delivers data and an environment that delivers structured interpretation. In the former, the individual must construct the organising frame; deliberative processing is engaged at the level of structure-building. In the latter, the organising frame is embedded in the output; deliberative processing is engaged, if at all, at the level of frame evaluation. These are not equivalent cognitive tasks. Frame evaluation operates within an already-established interpretive space; frame construction determines what that space contains.</p>
+
+    <div class="callout">
+      <p>Input is not only filtered before reaching the individual — it may be structured. The structuring of information into implicit interpretive frames shapes downstream reasoning independently of signal volume. A low-load, high-coherence information environment can produce framing externalization without triggering the bandwidth overload mechanism described in SP-004.</p>
+    </div>
+
+    <h3 class="subsection">6.2 LLM-Mediated Interaction and Framing</h3>
+
+    <p>LLM-mediated interaction introduces a specific variant of framing externalization that is structurally distinct from prior forms of mediated communication. Earlier intermediaries — institutional media, educational frameworks, political discourse — supplied interpretive frames that were identifiable as external and attributable to recognisable sources. The frame was visible as a frame; its origin was traceable; its bias was, in principle, legible.</p>
+
+    <p>LLM outputs are structurally different in three respects. They are generated in direct response to the individual's own inputs, producing the appearance of a frame that emerged from the interaction rather than being imported into it. They are presented in a register that does not signal institutional or ideological origin. And they are adaptive in the sense that the same underlying system produces different framings for different users and contexts, preventing the collective legibility that made prior framing sources recognisable over time.</p>
+
+    <p>These structural properties do not imply intentional framing toward specific outcomes. They are consequences of the architecture of interactive generative systems operating on patterns learned from large corpora. The effect on deliberative processing is not determined by intent but by structure — consistent with the broader analytical principle maintained throughout this series.</p>
+
+    <h3 class="subsection">6.3 Relationship to the P1/P2 Distinction</h3>
+
+    <p>The framing externalization mechanism modifies the P1/P2 boundary conditions developed in Section 4. The Prefrontal Amplification Condition (P1) specifies that LLM interaction can reduce displacement probability when it compresses effective signal density and maintains reflective latency. This condition remains valid for the bandwidth pathway. It does not, however, address the framing pathway: an interaction that is structurally P1 with respect to cognitive load may simultaneously involve framing externalization, depending on whether the interaction regime maintains space for independent frame construction.</p>
+
+    <p>A P1 interaction that also preserves independent framing would require not only low signal density and maintained reflective latency, but active engagement with the frame itself — questioning the organising structure, not only evaluating the content within it. This is a higher deliberative demand than P1 as originally specified, and it is not reliably produced by slow interaction alone.</p>
+
+    <div class="formula-block">
+      Extended P1 condition (framing-aware):<br>
+      P(D) decreases when ΔL ≤ 0 AND R > R<sub>threshold</sub> AND A &lt; A* AND F = 0<br><br>
+      where F denotes framing externalization:<br>
+      F = 0  when interpretive frame is independently constructed<br>
+      F = 1  when interpretive frame is supplied and accepted without reconstruction<br><br>
+      F is not determined by R or L alone.<br>
+      An interaction with R &gt; R<sub>threshold</sub> and ΔL ≤ 0 may nonetheless have F = 1.
+    </div>
+
+    <h3 class="subsection">6.4 Scope and Limits of the Present Analysis</h3>
+
+    <p>The externalization of framing is directly observable in the structure of LLM-mediated interaction: outputs are interpretively organised; users engage with that organisation; the degree to which they reconstruct or accept the supplied frame is a measurable property of the interaction. This is the claim advanced here.</p>
+
+    <p>A stronger claim is not advanced: whether persistent framing externalization leads to a degradation of independent framing capacity over time is a longitudinal question that the present analysis does not address. The structural mechanism is identified; its long-run trajectory is not assumed. That trajectory would constitute an instance of the Cognitive ITT dynamic — progressive loss of recoverability — applied specifically to framing capacity, and it would require separate empirical treatment.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">Section finding — v1.1 addition</div>
+      <p>Deliberative degradation may occur not only through overload but through the externalization of framing, whereby interpretive structures are supplied rather than generated. This pathway is distinct from the bandwidth mechanism, operates independently of signal density, and modifies the boundary conditions of the P1/P2 distinction. Whether framing externalization leads to longitudinal capacity degradation is an open empirical question, not an assumption of this framework.</p>
+    </div>
+
+  </div>
+
+  <!-- §7 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Relationship to ACI Compound Stress Framework</h2></div>
+    <p>The three-layer causal model exhibits the same structural logic as the compound stress framework developed across WP-004 and WP-005. In power system analysis, compound stress events are characterised by the simultaneous occurrence of multiple adverse conditions — low wind, high demand, constrained imports — whose joint probability is substantially higher than their individual independent probabilities. The severity of compound events cannot be assessed from the marginal distributions of individual stressors; it requires joint analysis of their interaction.</p>
+    <p>The cognitive compound stress event is structurally analogous. A decision environment that simultaneously imposes high signal density (L), high affective loading (A), short decision windows (R → 0), and institutional short-horizon pressure (low δ) does not produce a displacement probability equal to the sum of the individual effects. The joint effect is non-linear: the combination activates all three causal layers simultaneously, and the absence of any recovery mechanism makes the compound event more severe than the individual components would predict.</p>
+    <p>Acute crisis conditions in continuity-critical systems typically impose exactly this combination: high information velocity, high affective intensity, compressed decision windows, and short-horizon pressure from authorities seeking immediate situational assessment. The cognitive compound stress event occurs at the moment of maximum operational demand on the human decision layer.</p>
+
+    <div class="callout">
+      <p>The most dangerous point in any continuity scenario is the intersection of maximum external demand and maximum internal cognitive stress — the moment when the human decision layer is most needed and most likely to be operating under the conditions that maximise displacement probability. This intersection is not a coincidence. It is a structural feature of the relationship between crisis activation and information environment response.</p>
+    </div>
+  </div>
+
+  <!-- §8 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Limitations and Research Programme</h2></div>
+    <p>The three-layer model and the displacement probability function are theoretical constructs derived from the integration of existing empirical literatures. The central limitation is the absence of direct experimental validation of the integrated model. Component claims — dual-process architecture, bandwidth constraint, hyperbolic discounting, status signalling rationality — are individually well-supported; their joint parameterisation in P(D) = f(L, A, R, δ) has not been tested as an integrated model.</p>
+    <p>The empirical operationalisation of displacement probability is non-trivial. Laboratory measures of reflective processing activation (EEG frontal alpha asymmetry, response inhibition tasks, working memory load assessments) do not straightforwardly generalise to ecologically valid decision contexts. The A* threshold is both individually variable and context-sensitive in ways that make it difficult to standardise across experimental populations.</p>
+    <p>The LLM modulation corollary is the least empirically developed component of the framework. The propositions regarding P1 (amplification) and P2 (bypass) conditions are theoretically grounded but have not been directly tested. The specific relationship between interaction velocity, output density, and deliberative processing activation in LLM-mediated decision contexts is a research priority that the current analysis cannot address with available evidence.</p>
+    <p>The status signalling layer is treated here as a boundary condition — an independent alternative equilibrium force — rather than as a fully developed causal account. The conditions under which status signalling is dominant relative to the trigger and stabiliser mechanisms, and the institutional factors that modulate its strength, require separate analysis that exceeds the scope of this paper.</p>
+  </div>
+
+  <!-- §9 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Conclusion</h2></div>
+    <p>This paper has developed the full causal architecture of deliberative failure in high-frequency information environments, extending the trigger mechanism identified in SP-004 to account for persistence and resistance to correction. The three-layer model specifies the causal role of each mechanism, their interaction structure, and the class of intervention that corresponds to each layer.</p>
+    <p>The displacement probability function P(D) = f(L, A, R, δ) formalises this structure as a jointly determinative model: deliberative failure probability is a function of information load, affective intensity, reflective latency, and the composite discount structure governing the institutional environment. The function is not driven to zero by any single variable; it requires multi-layer intervention at different timescales and through different institutional channels.</p>
+    <p>The LLM modulation corollary establishes that AI-assisted decision support does not inherently reduce displacement risk. Its effect is determined by the interaction regime architecture — the same structural analysis that governs deliberative capacity in any information environment. Systems that deploy LLM assistance in continuity-critical contexts must design the interaction architecture for the Prefrontal Amplification Condition, or they will reproduce the Prefrontal Bypass Condition at higher processing velocity.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">SP-005 — Core finding</div>
+      <p>Deliberative instability in high-frequency information environments is structurally robust because it is produced by the interaction of three distinct causal mechanisms operating at different timescales and through different channels. Interventions that address only one layer are necessary but insufficient. The displacement probability function provides the analytical structure for assessing which layer is dominant in a specific operational context, and the three-layer model specifies the intervention design required to address it. For continuity-critical systems, this analysis implies that the human decision layer requires deliberate multi-layer maintenance — architectural, institutional, and normative — as a standard feature of continuity design, not as a residual or supplementary consideration.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ul class="ref-list">
+      <li>Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. <em>Nature Reviews Neuroscience</em>, 10(6), 410–422.</li>
+      <li>Brady, W. J., Wills, J. A., Jost, J. T., Tucker, J. A., &amp; Van Bavel, J. J. (2017). Emotion shapes the diffusion of moralized content in social networks. <em>Proceedings of the National Academy of Sciences</em>, 114(28), 7313–7318.</li>
+      <li>Engle, R. W. (2002). Working memory capacity as executive attention. <em>Current Directions in Psychological Science</em>, 11(1), 19–23.</li>
+      <li>Evans, J. S. B. T., &amp; Stanovich, K. E. (2013). Dual-process theories of higher cognition: Advancing the debate. <em>Perspectives on Psychological Science</em>, 8(3), 223–241.</li>
+      <li>Kahneman, D. (2011). <em>Thinking, fast and slow.</em> Farrar, Straus and Giroux.</li>
+      <li>Miller, E. K., &amp; Cohen, J. D. (2001). An integrative theory of prefrontal cortex function. <em>Annual Review of Neuroscience</em>, 24, 167–202.</li>
+      <li>Pennycook, G., Epstein, Z., Mosleh, M., Arechar, A. A., Eckles, D., &amp; Rand, D. G. (2021). Shifting attention to accuracy can reduce misinformation online. <em>Nature</em>, 592, 590–595.</li>
+      <li>Srnicek, N. (2017). <em>Platform capitalism.</em> Polity Press.</li>
+      <li>Sunstein, C. R. (2017). <em>#Republic: Divided democracy in the age of social media.</em> Princeton University Press.</li>
+      <li>Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science</em>, 12(2), 257–285.</li>
+      <li>Tajfel, H., &amp; Turner, J. C. (1979). An integrative theory of intergroup conflict. In W. G. Austin &amp; S. Worchel (Eds.), <em>The social psychology of intergroup relations</em> (pp. 33–47). Brooks/Cole.</li>
+      <li>Zuboff, S. (2019). <em>The age of surveillance capitalism: The fight for a human future at the new frontier of power.</em> PublicAffairs.</li>
+    </ul>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>Competing interests:</strong> None declared.<br>
+    <strong>Acknowledgements:</strong> This paper develops the causal architecture implicit in the companion attention economy analysis and SP-004. Research conducted independently; no external funding received.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-005 · v1.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-3 · D-5 · D-6<br>Companion: SP-004 · WP-006 · WP-007</div>
+</footer>
+
+</body>
+</html>

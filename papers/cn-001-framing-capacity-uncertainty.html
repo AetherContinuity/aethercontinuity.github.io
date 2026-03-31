@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI CN-001 — Framing Capacity Under Uncertainty</title>
+<meta name="description" content="ACI CN-001: Framing capacity under uncertainty. Design posture before evidence — the epistemological anchor for the SP-004/005/006 cognitive decision capacity series.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .status-table { margin: 2rem 0; border: 1px solid var(--rule); overflow: hidden; }
+  .status-row { display: grid; grid-template-columns: 140px 1fr; border-bottom: 1px solid var(--rule); }
+  .status-row:last-child { border-bottom: none; }
+  .status-key { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 0.85rem 1rem; background: var(--paper-2); display: flex; align-items: flex-start; }
+  .status-val { font-size: 0.92rem; line-height: 1.7; padding: 0.85rem 1.25rem; color: #2a2520; }
+
+  .design-block { margin: 2rem 0; }
+  .design-item { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; margin-bottom: 1.25rem; align-items: start; }
+  .design-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); padding-top: 0.35rem; }
+  .design-text { font-size: 0.97rem; line-height: 1.8; color: #2a2520; }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } .status-row { grid-template-columns: 1fr; } .status-key { border-bottom: 1px solid var(--rule); } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Continuity Note</span> &nbsp;·&nbsp; No. 001</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>CN</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Active</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">CN · 001 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Continuity Note No. 001</div>
+    <h1 class="paper-title">Framing Capacity Under Uncertainty: Design Posture Before Evidence</h1>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Continuity Note No. 001, 2026.<br>
+      Available at: https://aethercontinuity.org/notes/cn-001-framing-capacity-uncertainty.html<br>
+      Basis: SP-004 · SP-005 v1.1 · SP-006
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Temporal Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+    </div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Purpose of this note</div>
+    <p>Continuity Notes translate open analytical questions into design posture. They do not resolve uncertainty — they specify what systems must not assume while uncertainty persists. This note is based on the SP-004/SP-005/SP-006 series and addresses one question: how should continuity-critical systems be designed given that the trajectory of human framing capacity under LLM-mediated interaction is not yet established?</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">What Is Known and What Is Not</h2></div>
+
+    <div class="status-table">
+      <div class="status-row">
+        <div class="status-key">Known</div>
+        <div class="status-val">Cognitive bandwidth overload is a trigger for deliberative failure. High signal density and affective intensity reduce the probability of reflective processing activation, independent of individual intent. (SP-004)</div>
+      </div>
+      <div class="status-row">
+        <div class="status-key">Known</div>
+        <div class="status-val">Framing externalization occurs in LLM-mediated interaction. Interpretive structures are supplied through interaction rather than independently constructed. This constitutes a degradation pathway distinct from bandwidth overload and can operate under conditions of low cognitive load. (SP-005 v1.1)</div>
+      </div>
+      <div class="status-row">
+        <div class="status-key">Known</div>
+        <div class="status-val">The discount-rate structure of engagement-optimised information environments prevents self-correction of bandwidth overload conditions. The system does not self-repair because every institutional level is organised against doing so. (SP-005)</div>
+      </div>
+      <div class="status-row">
+        <div class="status-key">Not known</div>
+        <div class="status-val">Whether sustained framing externalization alters the trajectory of independent framing capacity over time. Four competing hypotheses — neutral, augmentation, substitution, degradation — remain empirically unresolved. (SP-006)</div>
+      </div>
+      <div class="status-row">
+        <div class="status-key">Not known</div>
+        <div class="status-val">The timescale over which trajectory effects, if any, would become detectable or irreversible.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">The Design Problem</h2></div>
+
+    <p>Continuity-critical systems that integrate LLM-assisted decision support face a design problem that cannot be resolved by waiting for the trajectory question to be answered. Deployment decisions are being made now. The empirical work required to resolve SP-006's central question is longitudinal and will take years. During that interval, systems are being built on assumptions about human cognitive capacity that have not been tested.</p>
+
+    <p>The relevant risk is not that LLM integration is harmful — the trajectory question is genuinely open, and augmentation (H2) is as plausible as degradation (H4). The risk is that deployment proceeds on the implicit assumption that human framing capacity is unchanged by LLM-mediated interaction, when that assumption has no established empirical basis in either direction.</p>
+
+    <div class="callout">
+      <p>Systems must not assume that externally supported cognition leaves independent capacity unchanged. This is not a claim that capacity changes — it is a claim that the assumption of stability is unwarranted before the trajectory question is resolved.</p>
+    </div>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Safe Design Posture</h2></div>
+
+    <p>A safe design posture is one that performs adequately under all four trajectory hypotheses. It does not require the degradation hypothesis to be true to justify its requirements, and it does not impose costs that would be unnecessary if the neutral or augmentation hypothesis proves correct. The following conditions define that posture.</p>
+
+    <div class="design-block">
+      <div class="design-item">
+        <div class="design-num">01</div>
+        <div class="design-text"><strong>Maintain independent framing practice.</strong> Continuity-critical decision-makers should retain regular practice on framing tasks conducted without LLM assistance. This is not predicated on degradation being real — it is a hedge against the possibility that substitution (H3) or degradation (H4) is occurring without detection. Under H1 or H2, the cost is minimal. Under H3 or H4, it is the primary protective mechanism.</div>
+      </div>
+      <div class="design-item">
+        <div class="design-num">02</div>
+        <div class="design-text"><strong>Do not treat LLM-supplied frames as outputs of independent deliberation.</strong> Where decisions of continuity significance are made, the interpretive frame applied to the decision should be traceable — either independently constructed by the decision-maker, or explicitly identified as externally supplied and subject to independent review. The absence of this traceability is the condition under which framing externalization is invisible to the system.</div>
+      </div>
+      <div class="design-item">
+        <div class="design-num">03</div>
+        <div class="design-text"><strong>Configure interaction regimes for P1 conditions.</strong> LLM-assisted decision support should be deployed under interaction architectures that maintain reflective latency, compress rather than amplify signal density, and preserve space for independent frame engagement. Systems configured for P2 conditions — rapid cycling, high output velocity, suppressed deliberative pause — reproduce the displacement conditions of SP-004 regardless of model capability.</div>
+      </div>
+      <div class="design-item">
+        <div class="design-num">04</div>
+        <div class="design-text"><strong>Monitor accumulated dependency, not only interaction quality.</strong> The trajectory risk identified in SP-006 is cumulative: D(t) — accumulated dependency on externally supplied framing — grows over time independently of whether any individual interaction is well-designed. Systems should maintain visibility into the degree to which their human decision layer has operated under high-externalization conditions over extended periods, not only into the quality of individual interactions.</div>
+      </div>
+      <div class="design-item">
+        <div class="design-num">05</div>
+        <div class="design-text"><strong>Preserve recovery pathways.</strong> The Cognitive ITT framework implies that the risk is not dependency per se but the loss of recoverability — the point at which the capacity to modulate or reverse dependency no longer scales with its rate of growth. Systems should ensure that recovery pathways exist and are periodically exercised: environments, protocols, and practices under which independent framing capacity can be maintained and, if necessary, restored.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">What This Note Does Not Claim</h2></div>
+
+    <p>This note does not claim that LLM integration degrades human framing capacity. The trajectory question is open; H1 and H2 are as consistent with current evidence as H3 and H4. The design posture above is calibrated to be appropriate under all four hypotheses, not to prejudge their resolution.</p>
+
+    <p>This note does not claim that LLM assistance should be avoided in continuity-critical contexts. The bandwidth and framing benefits of well-designed LLM interaction are real and documented in SP-005. The note addresses the conditions under which those benefits are realised without generating unmonitored dependency.</p>
+
+    <p>This note does not specify intervention targets beyond the design layer. It does not recommend regulatory action, procurement constraints, or institutional mandates. Its scope is design posture — what systems must not assume and what conditions they should maintain — not policy advocacy.</p>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Revision Condition</h2></div>
+
+    <p>This note will require revision when longitudinal empirical data bearing on the SP-006 trajectory question becomes available. If H1 or H2 receives robust support, conditions 01, 04, and 05 above may be relaxed for contexts where augmentation effects are confirmed. If H3 or H4 receives support, the design posture will require strengthening, and the note will be updated accordingly.</p>
+
+    <p>Until that evidence exists, the posture above represents the minimum design requirement for systems that cannot afford to have assumed incorrectly.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">CN-001 — Core posture</div>
+      <p>The trajectory of independent framing capacity under LLM-mediated interaction is not established. Continuity-critical systems must not assume stability. The safe design posture maintains independent framing practice, makes framing sources traceable, configures interaction for deliberative rather than reactive processing, monitors accumulated dependency, and preserves recovery pathways — regardless of which trajectory hypothesis proves correct.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">CN-001 · v1.0 · 2026<br>Active</div>
+  <div class="footer-col">Basis: SP-004 · SP-005 · SP-006</div>
+</footer>
+
+</body>
+</html>

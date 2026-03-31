@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-004 — Cognitive Bandwidth and Decision Capacity</title>
+<meta name="description" content="ACI SP-004: Cognitive bandwidth and decision capacity. Extends the WP-006 decision capacity invariant to the human cognitive layer — how bandwidth overload produces prefrontal displacement and why it persists under compound stress.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .highlights { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; }
+  .highlights-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .highlights ul { padding-left: 1.2rem; }
+  .highlights ul li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.3rem; color: #2a2520; }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+  .keywords strong { color: var(--ink); font-weight: 400; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2; color: var(--ink); }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; color: #3a3530; }
+  .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); font-family: var(--mono); }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 004</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">SP · 004 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 004</div>
+    <h1 class="paper-title">Cognitive Bandwidth and Decision Capacity: Prefrontal Displacement as a Continuity Failure Mode</h1>
+    <p class="paper-subtitle">Extending the Decision Capacity Invariant to the Human Layer</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 004, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-004-cognitive-bandwidth-decision-capacity.html<br>
+      Cross-references: WP-006 (Continuity Computing) · WP-007 (Situational Awareness Persistence) · WP-003 (Institutional Termination Time) · SP-005 (Three-Layer Causal Model)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Temporal Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+      <span class="domain-tag">D-6 · Situational Awareness</span>
+    </div>
+  </div>
+
+  <div class="highlights">
+    <div class="highlights-label">Highlights</div>
+    <ul>
+      <li>Decision capacity degradation in the human layer follows the same structural logic as computational and institutional failure modes identified in WP-006 and WP-007.</li>
+      <li>Prefrontal contextual displacement is not cognitive decline but a resource allocation shift — contextually induced, structurally reproducible, and in principle reversible.</li>
+      <li>The mechanism requires only that cognitive bandwidth threshold be exceeded; it does not require intent, ideology, or structural damage.</li>
+      <li>Engagement-maximising information architectures reproduce bandwidth overload conditions continuously, preventing the self-correction that would otherwise occur.</li>
+      <li>The human decision layer is the final operational layer; its degradation cannot be compensated by institutional or computational redundancy alone.</li>
+    </ul>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p><strong>Purpose:</strong> This paper extends the decision capacity invariant introduced in WP-006 to the human cognitive layer. WP-006 established that decision capability must be maintained as a system invariant under compound stress; this paper provides the mechanism by which that invariant is violated at the individual and collective level in high-frequency information environments.</p>
+    <p><strong>Framework:</strong> Drawing on the integrative theoretical synthesis developed in the companion attention economy analysis, we formalise the concept of prefrontal contextual displacement — the contextually induced suppression of reflective processing under conditions of elevated signal density and affective intensity. The mechanism is located within the dual-process cognitive architecture established in behavioral neuroscience, and its structural drivers are identified in the economic optimization functions of engagement-maximising digital platforms.</p>
+    <p><strong>Findings:</strong> Prefrontal displacement is not a cognitive pathology but a resource allocation shift triggered by information architecture. Under advertising-based engagement optimization, the conditions that produce displacement are continuously reproduced across all levels of the incentive hierarchy — user, platform, ownership, and regulatory — through a fractal discount-rate structure that prevents self-correction. The human decision layer thus exhibits a persistent, structurally driven reduction in reflective processing capacity that is analytically equivalent to the computational and institutional failure modes described in WP-006.</p>
+    <p><strong>Implications:</strong> Systems whose continuity depends on human decision capability under stress — including critical infrastructure operations, emergency management, and institutional governance — must account for the human layer's cognitive bandwidth constraints as a structural variable, not as a residual or behavioural assumption. Continuity design that treats human operators as reliable deliberative agents under high-frequency information stress is operating on an incorrect baseline.</p>
+    <div class="keywords"><strong>Keywords:</strong> Decision capacity · Prefrontal displacement · Cognitive bandwidth · Attention economy · Continuity failure · Dual-process cognition · Engagement optimization · System invariant</div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Relationship to ACI Series</div>
+    <p>This paper provides the human-layer cognitive foundation for the decision capacity arguments in <a href="/papers/wp-006-continuity-computing.html">WP-006</a> and <a href="/papers/wp-007-situational-awareness-persistence.html">WP-007</a>. The institutional termination time framework in <a href="/papers/wp-003-itt.html">WP-003</a> describes temporal decision capacity at the institutional level; this paper describes the same constraint at the individual cognitive level. The three-layer causal model that explains why displacement persists rather than self-correcting is developed in <a href="/papers/sp-005-information-architecture-deliberative-capacity.html">SP-005</a>.</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Introduction</h2></div>
+    <p>The ACI continuity framework treats decision capability as a system invariant: the capacity to generate and execute effective decisions must be maintained across layers and under stress conditions. WP-006 operationalised this invariant for computational systems, identifying the conditions under which processing capacity degrades below the threshold required for effective system operation. WP-007 extended the analysis to situational awareness — the informational precondition for decision-making — under compound stress.</p>
+    <p>Both papers treat the human layer as foundational. Computational systems process information; institutions aggregate and formalise decisions; but the terminal layer in every continuity-critical system is the human operator, commander, administrator, or elected official who must receive, evaluate, and act on information under conditions that may be far from the deliberative ideal. If this layer is structurally compromised, computational redundancy and institutional design provide incomplete protection.</p>
+    <p>This paper provides the mechanistic account of how and under what conditions the human decision layer degrades. The mechanism is not cognitive damage, biological limitation, or individual failure. It is a resource allocation shift induced by the structure of the information environment — specifically, by the volume, velocity, and affective calibration of information signals delivered by engagement-optimising platforms operating at scale.</p>
+
+    <div class="callout">
+      <p>The central claim is that prefrontal contextual displacement — the contextually induced reduction in reflective processing probability — is not an episodic deviation from normal cognitive function but a persistent structural condition in high-frequency digital information environments. Its persistence is not self-generating; it is reproduced by an economic architecture specifically optimised for the conditions that produce it.</p>
+    </div>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">The Dual-Process Architecture and Its Bandwidth Constraint</h2></div>
+
+    <h3 class="subsection">2.1 Reflective and Reactive Processing</h3>
+    <p>Cognitive neuroscience distinguishes reliably between two processing modes with different speed, resource cost, and reliability characteristics. Fast, affect-driven processing — associated with limbic system activation, particularly the amygdala — operates with low latency and low metabolic cost, and is calibrated for threat detection and reward signalling. Slow, deliberative processing — governed by the prefrontal cortex (PFC) — provides executive control, behavioural inhibition, working memory integration, and the capacity for long-horizon planning. The PFC is metabolically expensive and functionally sensitive to both cognitive load and stress (Arnsten, 2009).</p>
+    <p>The relative activation of these two processing modes is not fixed. It is a function of the current information environment: signal density, affective intensity, and prior cognitive load all modulate the probability that a given incoming signal is processed reflectively rather than reactively. Under low signal density and low arousal, reflective processing predominates. Under high signal density, high affective intensity, or accumulated cognitive fatigue, the probability distribution shifts toward reactive processing — not because reflective capacity is absent, but because the conditions for its activation are systematically constrained.</p>
+
+    <h3 class="subsection">2.2 The Bandwidth Constraint</h3>
+    <p>The critical insight for continuity analysis is that prefrontal processing operates under a hard bandwidth constraint. Working memory capacity — the operational substrate of reflective processing — is finite, individual, and depleting under load (Sweller, 1988; Engle, 2002). When the volume and velocity of incoming information saturates this capacity, the marginal signal is processed by the lower-cost reactive pathway, regardless of its actual importance or the operator's deliberative intent.</p>
+    <p>This is not a failure of motivation or discipline. It is a structural consequence of the architecture: the PFC cannot process more signals per unit time than its capacity allows, and in environments where signals arrive faster than that capacity, the excess is handled reactively. The continuity implication is direct: a human operator in a saturated information environment is operating with degraded deliberative capacity not because anything is broken, but because the system is working exactly as designed — for a different information density than the one it faces.</p>
+
+    <div class="callout">
+      <p>Prefrontal displacement is analytically equivalent to computational overload in WP-006: the processing resource is available but insufficient to handle the incoming load within the required decision window. The distinction between cognitive and computational failure modes is architectural, not structural.</p>
+    </div>
+
+    <h3 class="subsection">2.3 Displacement as Resource Allocation, Not Degradation</h3>
+    <p>The term prefrontal contextual displacement designates this condition precisely: the executive system is displaced from active operation not by damage or depletion of capacity, but by the contextual conditions that determine when and how it activates. The distinction matters for both theoretical precision and intervention design. A degraded system requires repair. A displaced system requires context change — specifically, the restoration of conditions under which reflective processing can activate.</p>
+    <p>This is also a distinction with empirical implications. Prefrontal displacement is neuroplastic and in principle reversible. The conditions that produce it — elevated signal density, sustained affective arousal, accumulated cognitive load — are not permanent features of the individual. They are features of the information environment, and environments can change. What prevents self-correction is not the irreversibility of displacement but the continuous reproduction of displacement conditions by the same architecture that produced them initially.</p>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">The Optimization Function and Its Neurobiological Consequence</h2></div>
+
+    <h3 class="subsection">3.1 Engagement Maximization as Affective Calibration</h3>
+    <p>Digital platforms operating under advertising-based revenue models optimise for measurable engagement: click-through rate, watch time, reaction frequency, and retention. These metrics function as proxies for revenue. The structural incentive is therefore to maximise time-on-platform and affective reactivity — not to inform, connect, or support deliberative processing.</p>
+    <p>The neurobiological consequence is not incidental. Emotionally salient stimuli — particularly high-arousal emotions including anger, moral outrage, and threat — increase engagement rates reliably (Brady et al., 2017). Algorithms trained on engagement signals converge, without explicit design intent, toward content that maximises affective activation. The result is an information environment systematically calibrated toward the conditions that activate reactive rather than reflective processing: high frequency, high affective intensity, continuous novelty.</p>
+
+    <h3 class="subsection">3.2 The Positive Feedback Structure</h3>
+    <p>The interaction between the optimization function and the neurobiological architecture produces a positive feedback loop that does not require individual bad actors or deliberate destabilisation to sustain itself. Emotionally salient content produces engagement. Engagement produces algorithmic amplification. Amplification produces increased exposure. Increased exposure produces norm reinforcement that lowers the threshold for equivalent content in future interactions. Each stage of this loop is individually rational from the perspective of the platform's optimization target; the aggregate consequence is a continuous upward pressure on signal density and affective intensity.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 1 — Feedback Loop Structure: Engagement Optimization and Cognitive Load</div>
+      <table>
+        <thead><tr><th>Stage</th><th>Mechanism</th><th>Cognitive Effect</th></tr></thead>
+        <tbody>
+          <tr><td>1. Content selection</td><td>Algorithm selects high-arousal content</td><td>Elevated affective intensity (A ↑)</td></tr>
+          <tr><td>2. Engagement response</td><td>User reactive processing activated</td><td>PFC activation probability decreases</td></tr>
+          <tr><td>3. Algorithmic amplification</td><td>Engagement signal drives further distribution</td><td>Signal density increases (L ↑)</td></tr>
+          <tr><td>4. Norm reinforcement</td><td>High-arousal content normalised</td><td>Displacement threshold lowers</td></tr>
+          <tr><td>5. Cycle repetition</td><td>Same process at higher baseline</td><td>Persistent bandwidth constraint</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">3.3 The Irreversibility Problem</h3>
+    <p>The feedback loop described above would produce only episodic displacement if interrupted — moments of cognitive overload that self-correct once signal density decreases. What prevents self-correction is the continuous reproduction of displacement conditions by the economic architecture. The platform cannot reduce signal density without reducing engagement. The optimization function cannot be modified without reducing revenue. The competitive structure prevents unilateral moderation. The result is a system in which the conditions for displacement are not occasional stress events but the normal operating baseline of daily information consumption.</p>
+    <p>From a continuity perspective, this is the structural finding: the human decision layer is not occasionally stressed. It is operating under persistent bandwidth constraint as its default condition. Any continuity model that assumes a deliberatively intact human operator must specify what conditions would produce that baseline, and in the current information environment, those conditions require deliberate maintenance rather than passive continuation.</p>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">The Fractal Discount Structure and Persistence</h2></div>
+    <p>The argument so far establishes the trigger mechanism: cognitive bandwidth overload is the proximate cause of prefrontal displacement. It does not yet explain why the conditions for displacement are continuously reproduced rather than corrected by the institutional mechanisms that might reasonably be expected to interrupt them. This explanation requires a second causal layer — the discount-rate structure that governs incentives at every level of the system simultaneously.</p>
+
+    <h3 class="subsection">4.1 Multi-Level Temporal Mismatch</h3>
+    <p>The mismatch between the timescale of displacement — instantaneous, within-session — and the timescale at which institutional correction could operate — regulatory, ownership, and cultural change measured in years — is not a bilateral asymmetry between users and institutions. It is a fractal structure in which every level of the system operates on a short time horizon that reinforces the short time horizons at every other level.</p>
+    <p>Individual users receive social feedback — affirmative reactions, shares, replies — for reactive content within seconds. Platform metrics register engagement within sessions. Ownership structures respond to quarterly earnings cycles. Regulatory bodies operate on electoral cycles of two to five years. No level of the hierarchy has the institutional structure, the incentive, and the authority simultaneously required to interrupt the reproduction of displacement conditions. The fractal structure is not metaphorical. It is mechanically present in the incentive architecture of each layer.</p>
+
+    <h3 class="subsection">4.2 The Internal Correction Impossibility</h3>
+    <p>The Folk Theorem in repeated game theory establishes that cooperative equilibria — in this context, deliberative rather than reactive communication norms — can be sustained only when participants sufficiently value future payoffs. The cooperative strategy (slow, reflective communication) is evolutionarily stable only when the discounted future value of deliberative reputation exceeds the immediate payoff of reactive content.</p>
+    <p>This condition requires three discount factors operating simultaneously: platform stability (δ<sub>platform</sub>), identity continuity (δ<sub>identity</sub>), and individual temporal valuation (δ<sub>agent</sub>). Platform architectures that change rules frequently suppress δ<sub>platform</sub>. Pseudonymous or easily-renewed identities suppress δ<sub>identity</sub>. High-frequency feedback environments that reward immediate reactions suppress δ<sub>agent</sub> through the well-documented mechanisms of hyperbolic discounting.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">Structural finding</div>
+      <p>Deliberative communication norms cannot be stabilised from within an engagement-maximising architecture because such an architecture suppresses all three components of the discount-factor condition required for cooperative equilibrium — not incidentally but structurally. The internal correction mechanism is absent not because it has not been tried but because it is constitutively incompatible with the system's primary optimisation target.</p>
+    </div>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Continuity Implications: The Human Layer as Failure Locus</h2></div>
+
+    <h3 class="subsection">5.1 Decision Capacity as a Human Layer Invariant</h3>
+    <p>WP-006 established decision capability as a system invariant: it must be maintained across compound stress conditions for the system to function. This paper establishes that the human layer of this invariant is structurally at risk not primarily from acute stress events — the scenario that continuity planning typically addresses — but from the chronic baseline condition of operating in a high-frequency engagement-optimised information environment.</p>
+    <p>The implications for continuity design are direct. A system whose human operators are embedded in this information environment for the majority of their working and non-working hours cannot assume a deliberatively intact baseline at the point of crisis activation. If the information environment has induced persistent bandwidth constraint, then crisis-induced stress is added to an already-loaded cognitive system, not to a rested and deliberatively functional one.</p>
+
+    <h3 class="subsection">5.2 Interaction with Situational Awareness Persistence</h3>
+    <p>WP-007 analysed the conditions under which situational awareness degrades under compound stress. Prefrontal displacement interacts with this analysis in two ways. First, accurate situational awareness requires the integration of multiple information streams into a coherent model of system state — a fundamentally reflective processing task that is directly degraded by bandwidth overload. An operator in a displaced state processes individual signals reactively but cannot readily maintain the integrated model that situational awareness requires.</p>
+    <p>Second, the information architecture that produces displacement also shapes what signals reach the operator. High-affective, high-velocity signals are algorithmically amplified; low-affect, high-epistemic-value signals are suppressed by the same mechanism. The situational awareness degradation identified in WP-007 is therefore not purely a function of stress-induced cognitive load; it is partly a function of the pre-stress information diet that has shaped both the operator's cognitive state and their information environment's selection function.</p>
+
+    <h3 class="subsection">5.3 Institutional Termination Time and the Cognitive Layer</h3>
+    <p>WP-003 introduced Institutional Termination Time (ITT) as the interval within which an institution must act to prevent irreversible capability loss. The cognitive analog is shorter and more individual: the window within which a displaced operator can restore reflective processing before a decision deadline expires. In acute continuity scenarios, this window may be measured in minutes to hours. If the operator's cognitive baseline is already displaced, the available decision window is reduced by the time required for cognitive recovery — a cost that standard ITT analysis does not capture.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 2 — Prefrontal Displacement Mapped Against ACI Framework Concepts</div>
+      <table>
+        <thead><tr><th>ACI Concept</th><th>Original Domain</th><th>Cognitive Layer Analog</th></tr></thead>
+        <tbody>
+          <tr><td>Decision capacity invariant (WP-006)</td><td>Computational systems</td><td>Reflective processing availability as minimum viable cognitive state</td></tr>
+          <tr><td>Situational awareness persistence (WP-007)</td><td>Information infrastructure</td><td>Integrated model maintenance under bandwidth constraint</td></tr>
+          <tr><td>Institutional termination time (WP-003)</td><td>Institutional decision cycles</td><td>Cognitive recovery window within decision deadline</td></tr>
+          <tr><td>Compound stress (WP-005)</td><td>Energy and infrastructure</td><td>Simultaneous bandwidth overload and affective stress under acute crisis</td></tr>
+          <tr><td>Duration adequacy (WP-001)</td><td>Energy reserve design</td><td>Cognitive reserve — sustained deliberative capacity across multi-hour decision sequences</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §6 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Intervention Design: Restoring the Cognitive Invariant</h2></div>
+
+    <h3 class="subsection">6.1 Architectural Friction</h3>
+    <p>The most direct intervention against bandwidth overload is reduction of signal velocity — the rate at which new signals reach the operator. This can be achieved through notification density controls, feed-rate limiting, or deliberate introduction of processing delays between content units. The empirical evidence for friction as a behavioural modifier is consistent: reducing signal velocity increases the probability that reflective processing activates before reactive response occurs (Pennycook et al., 2020).</p>
+    <p>The limitation of architectural friction as a sole intervention is equally clear: it addresses the trigger without addressing the incentive structure that reproduces the trigger conditions. A user who reduces their own notification density may restore cognitive function in their personal environment while remaining embedded in an institutional and social information architecture that has not changed. The individual restoration is real; its durability depends on sustained deliberate maintenance against continuous environmental pressure.</p>
+
+    <h3 class="subsection">6.2 Structural Separation of Critical Decision Contexts</h3>
+    <p>For continuity-critical operational contexts, the appropriate intervention is structural rather than individual: the separation of decision-critical information environments from general-purpose engagement-optimised platforms. Operators in continuity-critical roles — infrastructure managers, emergency coordinators, institutional decision-makers — should receive operational information through architectures designed for signal clarity rather than engagement maximisation, and should operate under communication protocols that enforce deliberative latency rather than optimising for response speed.</p>
+    <p>This is not a novel principle in operational settings. Military communication doctrine has long distinguished between deliberate and crisis decision cycles, and has designed communication architectures to match. The insight this analysis adds is that the risk does not begin at the moment of crisis activation; it begins at the baseline cognitive state that operators bring to crisis conditions, which is shaped by their pre-crisis information environment.</p>
+
+    <h3 class="subsection">6.3 Cognitive Reserve Maintenance</h3>
+    <p>The duration adequacy concept from WP-001 — the principle that reserves must be sized for the duration of compound stress events, not merely for peak demand — has a cognitive analog. Sustained decision sequences in continuity-critical scenarios may last hours to days. Cognitive reserve — the individual's maintained capacity for reflective processing across a multi-hour decision sequence — is a finite resource that depletes under load and requires both adequate baseline and deliberate management during extended operations.</p>
+    <p>Continuity planning for human-critical decision sequences should therefore include explicit cognitive resource management: decision scheduling that accounts for deliberative load accumulation, rotation of cognitive responsibility in extended operations, and environmental controls that limit displacement-inducing stimulus density during critical decision windows.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">Design principle</div>
+      <p>Continuity-critical human decision processes require not only adequate information and institutional authority, but adequate cognitive baseline — a state in which reflective processing can activate reliably. This baseline cannot be assumed; under current information environment conditions, it must be deliberately maintained. Systems that do not account for cognitive resource management are accepting an unquantified degradation in their human decision layer as a structural feature of their operational design.</p>
+    </div>
+  </div>
+
+  <!-- §7 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Limitations</h2></div>
+    <p>The prefrontal contextual displacement framework presented here is a theoretically grounded conceptual synthesis rather than an empirically validated model. The component claims draw on established neurobiological and behavioural research; the integrated framework has not been directly tested. In particular, the specific functional relationship between information architecture variables (signal density, notification frequency, affective intensity) and measurable deliberative processing outcomes has not been operationalised in controlled experimental settings at the scale implied by this analysis.</p>
+    <p>The framework does not model individual variation. Cognitive bandwidth capacity, affective threshold, and resistance to displacement vary substantially across individuals, contexts, and training conditions. The analysis describes population-level tendencies and structural pressures; it does not predict individual operator performance in specific continuity scenarios.</p>
+    <p>The economic analysis of engagement optimization is simplified relative to the actual competitive dynamics of digital platform markets. Platform architectures vary, and some have introduced design features that partially mitigate the feedback loop described here. The analysis characterises the structural tendency of advertising-funded engagement optimisation as a class; it does not represent the full heterogeneity of current platform designs.</p>
+  </div>
+
+  <!-- §8 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Conclusion</h2></div>
+    <p>This paper has extended the ACI decision capacity invariant to the human cognitive layer. The central finding is that prefrontal contextual displacement — the contextually induced reduction in reflective processing probability under conditions of elevated signal density and affective intensity — is not an episodic deviation from normal cognitive function but a persistent structural condition in high-frequency engagement-optimised information environments.</p>
+    <p>The mechanism operates through a two-layer causal structure. Cognitive bandwidth overload is the trigger: it creates the conditions under which reactive processing dominates, independently of the individual's motivation or the platform's explicit design. The fractal discount-rate structure is the stabiliser: it explains why the conditions for overload are continuously reproduced rather than corrected, because every level of the incentive hierarchy is oriented toward short-horizon returns that depend on maintaining those conditions.</p>
+    <p>The continuity implications are structural. Systems whose continuity depends on human decision capability cannot treat the human layer as a fixed reliable baseline. That baseline is shaped by the information environment in which operators are continuously embedded, and under current conditions, that environment is systematically calibrated against the cognitive requirements of deliberative decision-making. Continuity design must account for this as a structural variable — not as a behavioural residual or an individual failure mode.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">SP-004 — Core finding</div>
+      <p>The decision capacity invariant established in WP-006 is structurally at risk in the human layer under current information environment conditions. This risk is not event-driven but baseline-driven: it operates before crisis activation and shapes the cognitive resources available for crisis response. Continuity planning that does not account for cognitive resource management is accepting an unquantified degradation in its most critical decision layer.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ul class="ref-list">
+      <li>Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. <em>Nature Reviews Neuroscience</em>, 10(6), 410–422.</li>
+      <li>Brady, W. J., Wills, J. A., Jost, J. T., Tucker, J. A., &amp; Van Bavel, J. J. (2017). Emotion shapes the diffusion of moralized content in social networks. <em>Proceedings of the National Academy of Sciences</em>, 114(28), 7313–7318.</li>
+      <li>Engle, R. W. (2002). Working memory capacity as executive attention. <em>Current Directions in Psychological Science</em>, 11(1), 19–23.</li>
+      <li>Evans, J. S. B. T., &amp; Stanovich, K. E. (2013). Dual-process theories of higher cognition: Advancing the debate. <em>Perspectives on Psychological Science</em>, 8(3), 223–241.</li>
+      <li>Kahneman, D. (2011). <em>Thinking, fast and slow.</em> Farrar, Straus and Giroux.</li>
+      <li>Pennycook, G., Epstein, Z., Mosleh, M., Arechar, A. A., Eckles, D., &amp; Rand, D. G. (2021). Shifting attention to accuracy can reduce misinformation online. <em>Nature</em>, 592, 590–595.</li>
+      <li>Srnicek, N. (2017). <em>Platform capitalism.</em> Polity Press.</li>
+      <li>Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science</em>, 12(2), 257–285.</li>
+      <li>Wu, T. (2016). <em>The attention merchants: The epic scramble to get inside our heads.</em> Knopf.</li>
+      <li>Zuboff, S. (2019). <em>The age of surveillance capitalism: The fight for a human future at the new frontier of power.</em> PublicAffairs.</li>
+    </ul>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>Competing interests:</strong> None declared.<br>
+    <strong>Acknowledgements:</strong> This paper draws on the integrative theoretical synthesis developed in the companion analysis of attention economy dynamics and neurobiological constraints. Research conducted independently; no external funding received.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-004 · v1.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-3 · D-5 · D-6<br>Companion: WP-006 · WP-007 · WP-003 · SP-005</div>
+</footer>
+
+</body>
+</html>

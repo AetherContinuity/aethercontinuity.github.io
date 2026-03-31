@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-006 — Framing Externalization and Cognitive Trajectories</title>
+<meta name="description" content="ACI SP-006: Framing externalization and cognitive trajectories. Examines whether LLM-mediated environments affect long-term capacity for independent interpretive frame generation — the Cognitive ITT hypothesis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #a06020; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .highlights { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; }
+  .highlights-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .highlights ul { padding-left: 1.2rem; }
+  .highlights ul li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.3rem; color: #2a2520; }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+  .keywords strong { color: var(--ink); font-weight: 400; }
+
+  .open-question { border: 1px dashed var(--accent); padding: 1.25rem 1.5rem; margin: 2rem 0; background: var(--paper-2); }
+  .open-question-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+  .open-question p { font-size: 0.95rem; font-style: italic; line-height: 1.75; margin: 0; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2.2; color: var(--ink); }
+
+  .hypothesis-block { margin: 1.5rem 0; border-left: 2px solid var(--rule); padding: 1rem 1.5rem; }
+  .hypothesis-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .hypothesis-block p { font-size: 0.95rem; margin: 0; }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; color: #3a3530; }
+  .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); font-family: var(--mono); }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 006</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Research Question</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">Aether Continuity Institute</a>
+  <span class="nav-id">SP · 006 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 006</div>
+    <h1 class="paper-title">Framing Externalization and Cognitive Trajectories</h1>
+    <p class="paper-subtitle">An Open Research Question in LLM-Mediated Deliberative Capacity</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 006, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-006-framing-externalization-cognitive-trajectories.html<br>
+      Cross-references: SP-004 (Cognitive Bandwidth) · SP-005 (Information Architecture, v1.1) · WP-003 (Institutional Termination Time) · WP-006 (Continuity Computing)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Temporal Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+      <span class="domain-tag">D-6 · Situational Awareness</span>
+    </div>
+  </div>
+
+  <div class="highlights">
+    <div class="highlights-label">Highlights</div>
+    <ul>
+      <li>Framing externalization — the supply of interpretive structures through interaction rather than their independent construction — is directly observable in LLM-mediated environments.</li>
+      <li>Whether externalization affects the long-run trajectory of independent framing capacity is a distinct and open empirical question. No degradation is assumed.</li>
+      <li>Four competing hypotheses are specified: neutral effect, augmentation, substitution, and degradation. The paper does not adjudicate between them.</li>
+      <li>The trajectory question is formulated in terms of the Cognitive ITT framework: whether dE(t)/dt persistently exceeds the capacity for independent recovery F<sub>a</sub>(t).</li>
+      <li>Observable indicators at interaction, task, and longitudinal levels are identified as the empirical basis for future resolution of the trajectory question.</li>
+    </ul>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p><strong>Purpose:</strong> This paper examines whether the externalization of interpretive framing in LLM-mediated environments affects the long-term capacity of individuals to generate independent interpretive structures. Building on SP-004 (cognitive bandwidth) and SP-005 v1.1 (framing externalization as a distinct degradation pathway), the analysis distinguishes between the observable process of framing externalization and the unproven hypothesis of longitudinal capacity change.</p>
+    <p><strong>Framework:</strong> The trajectory question is formalised as a relationship between the rate of framing externalization E(t) and independent framing capacity F<sub>a</sub>(t) over time. Four competing hypotheses — neutral effect, augmentation, substitution, and degradation — are specified with distinct observable implications. The paper adopts the Cognitive ITT framework from WP-003 as the structural analogue: the risk is not a discrete threshold event but a progressive imbalance between externalization rate and recovery capacity.</p>
+    <p><strong>Status:</strong> This paper is explicitly structured as an open research question, not a concluded analysis. The mechanisms by which externalization could affect capacity — cognitive offloading, path dependence, and interaction frequency effects — are identified and characterised. Observable indicators at interaction, task, and longitudinal levels are specified as the empirical basis for future resolution. The paper does not assume a direction of effect.</p>
+    <div class="keywords"><strong>Keywords:</strong> Framing externalization · Cognitive trajectory · Independent framing capacity · LLM-mediated cognition · Cognitive ITT · Cognitive offloading · Path dependence · Deliberative capacity</div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Relationship to ACI Series</div>
+    <p>This paper follows directly from the framing externalization mechanism introduced in <a href="/papers/sp-005-information-architecture-deliberative-capacity.html">SP-005 v1.1</a>, §6. SP-005 v1.1 established that framing externalization is observable and constitutes a degradation pathway distinct from cognitive bandwidth overload. It explicitly deferred the trajectory question — whether externalization leads to longitudinal capacity change — to separate treatment. That question is the subject of this paper. The Cognitive ITT analogy is developed from the institutional framework in <a href="/papers/wp-003-itt.html">WP-003</a>; the decision capacity invariant from <a href="/papers/wp-006-continuity-computing.html">WP-006</a> provides the broader continuity context.</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">The Trajectory Question</h2></div>
+
+    <p>SP-005 v1.1 established a structural distinction. Framing externalization — the process by which interpretive structures are supplied through interaction rather than independently constructed — is directly observable in LLM-mediated environments. Its occurrence does not require inference; it is a property of the interaction structure itself, detectable in the relationship between model output and user processing.</p>
+
+    <p>What SP-005 v1.1 did not claim — and explicitly deferred — is whether framing externalization alters the trajectory of independent framing capacity over time. These are different questions. The first concerns what is happening in a given interaction. The second concerns where the system is going: whether sustained reliance on externally supplied frames changes the individual's capacity to construct frames without assistance.</p>
+
+    <p>The distinction matters for the same reason the A/B distinction mattered in SP-005: conflating observable process with unproven trajectory produces claims that overreach the evidence. The observable process is, in principle, confirmable now. The trajectory claim requires longitudinal data, controlled comparison, and operationalised measures of framing capacity that do not yet exist at the scale implied. Treating one as evidence for the other closes a question that should remain open.</p>
+
+    <div class="open-question">
+      <div class="open-question-label">Central research question</div>
+      <p>Does sustained framing externalization in LLM-mediated interaction alter the trajectory of independent framing capacity — and if so, in which direction and under what conditions?</p>
+    </div>
+
+    <p>This paper does not answer that question. It specifies it precisely enough to be answered, identifies the competing hypotheses with distinct observable implications, and characterises the mechanisms through which each hypothesis could operate. The purpose is analytical preparation for empirical resolution, not premature conclusion.</p>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">From Architecture to Trajectory: Locating SP-006</h2></div>
+
+    <h3 class="subsection">2.1 What the Prior Papers Established</h3>
+    <p>SP-004 established that cognitive bandwidth overload is a trigger mechanism for deliberative failure: when signal density exceeds the processing capacity of reflective cognition, reactive processing dominates. The mechanism operates through volume and velocity — it is a load constraint on the quantity of information the individual can deliberatively process.</p>
+    <p>SP-005 established that information architecture shapes deliberative capacity through two channels: the discount-rate structure that determines whether overload conditions persist, and — in v1.1 — the framing structure that determines how inputs are organised before the individual processes them. The framing pathway is distinct from the bandwidth pathway: it can operate under conditions of low cognitive load, and it affects the structure rather than the volume of deliberative input.</p>
+    <p>What neither paper addresses is the temporal dimension of the framing pathway. Both papers characterise what is happening in a given interaction or information environment. Neither asks whether repeated exposure to that environment changes the capacity that processes it. That is the trajectory question.</p>
+
+    <h3 class="subsection">2.2 The Scope of This Analysis</h3>
+    <p>SP-006 is not a paper about misinformation, persuasion, or ideological bias. These are separately studied phenomena with their own analytical frameworks. The trajectory question here is more specific and more structural: it concerns the capacity to generate interpretive structures, not the content of those structures. An individual might produce entirely accurate, unbiased judgements through externally supplied frames, and the trajectory question would still be open: whether the capacity to construct frames independently has changed.</p>
+    <p>The analysis is also scoped to LLM-mediated interaction as a specific environment, not to digital environments in general. LLMs introduce a particular combination of properties — interactive, personalised, high-coherence output, structurally non-attributable framing — that distinguishes them from prior information intermediaries. The trajectory question may apply more broadly, but the mechanism specification here is calibrated to this context.</p>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Formal Structure of the Trajectory Problem</h2></div>
+
+    <h3 class="subsection">3.1 Variables</h3>
+
+    <div class="formula-block">
+      E(t)   =  degree of framing externalization at time t<br>
+               (proportion of interpretive structure externally supplied vs. independently constructed)<br><br>
+      Fₐ(t)  =  independent framing capacity at time t<br>
+               (ability to construct interpretive structures without external scaffolding)<br><br>
+      D(t)   =  accumulated dependency on externally supplied framing<br><br>
+      Cₜ     =  capacity for transparency, control, and independent recovery<br>
+               (awareness of externalization; ability to reconstruct independently; access to alternatives)
+    </div>
+
+    <h3 class="subsection">3.2 The Trajectory Condition</h3>
+    <p>The trajectory question is not whether E(t) is non-zero at any given time — framing externalization at some level is a structural feature of any mediated information environment, and always has been. The question is whether changes in E(t) correlate with changes in F<sub>a</sub>(t) over time, and in which direction.</p>
+
+    <div class="formula-block">
+      Neutral trajectory:    dFₐ/dt ≈ 0 regardless of dE/dt<br><br>
+      Augmentation:          dFₐ/dt &gt; 0 when dE/dt &gt; 0<br>
+                             (externalization supports capacity development)<br><br>
+      Substitution:          dFₐ/dt → 0 as D(t) ↑<br>
+                             (capacity remains available but is less exercised)<br><br>
+      Degradation:           dFₐ/dt &lt; 0 when dE/dt &gt; 0 and Cₜ is insufficient<br>
+                             (capacity actively declines under sustained externalization)
+    </div>
+
+    <h3 class="subsection">3.3 The Cognitive ITT Analogy</h3>
+    <p>WP-003 introduced Institutional Termination Time as a trajectory concept: the progressive loss of an institution's ability to recover decision capacity once a degradation process is underway. The risk is not a discrete threshold event but a continuous imbalance between the rate of capability loss and the rate at which recovery mechanisms can operate.</p>
+    <p>The same structure applies to the degradation hypothesis here. Cognitive ITT for framing capacity would not manifest as a sudden loss of independent framing ability. It would manifest as a progressive imbalance: as D(t) increases and C<sub>t</sub> fails to scale correspondingly, the recoverability of F<sub>a</sub>(t) decreases. The system does not fail when dependency emerges — it enters a risk regime when the capacity to modulate or reverse dependency no longer scales with its rate of growth.</p>
+
+    <div class="callout">
+      <p>The Cognitive ITT analogy is structural, not predictive. It specifies what the degradation trajectory would look like if it occurred — progressive, cumulative, difficult to detect at the point of onset — without asserting that it does occur. The analogy is useful precisely because it prevents the trajectory question from being collapsed into a binary: "does externalization degrade capacity, yes or no?"</p>
+    </div>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Competing Hypotheses</h2></div>
+    <p>Four hypotheses are specified. They are not exhaustive, but they cover the space of directional possibilities and have sufficiently distinct observable implications to be distinguishable in principle. The paper does not adjudicate between them. Each is stated with its operative mechanism and its primary observable implication.</p>
+
+    <div class="hypothesis-block">
+      <div class="hypothesis-label">H1 — Neutral Effect</div>
+      <p>Framing externalization does not affect independent framing capacity. Individuals remain equally capable of constructing interpretive structures with or without extended LLM-mediated interaction. The external scaffolding is used when available and set aside when not; the underlying capacity is not altered by its presence or absence.</p>
+    </div>
+    <p><em>Operative mechanism:</em> Framing capacity is determined by factors independent of practice — general intelligence, prior education, domain knowledge — and is not meaningfully modulated by the specific format of information intermediation. Observable implication: no correlation between E(t) and F<sub>a</sub>(t) across individuals or time periods.</p>
+
+    <div class="hypothesis-block">
+      <div class="hypothesis-label">H2 — Augmentation</div>
+      <p>Framing externalization increases independent framing capacity over time. Exposure to well-structured external frames provides a model for frame construction; individuals learn from the scaffolding and develop more sophisticated independent framing through interaction with it.</p>
+    </div>
+    <p><em>Operative mechanism:</em> Cognitive scaffolding as developed in educational psychology — external structure that, when well-calibrated to the learner's zone of proximal development, supports the internalisation of the skills it temporarily provides. Observable implication: positive correlation between E(t) and F<sub>a</sub>(t); improvement in independent framing measurable after extended LLM-mediated interaction.</p>
+
+    <div class="hypothesis-block">
+      <div class="hypothesis-label">H3 — Substitution</div>
+      <p>Framing externalization reduces the exercise of independent framing capacity without eliminating it. The capacity remains structurally available but is less practised; performance on independent framing tasks degrades in the short term but is recoverable with deliberate effort or environmental change.</p>
+    </div>
+    <p><em>Operative mechanism:</em> Cognitive offloading — the transfer of cognitive tasks to external systems reduces the internal resource allocation for those tasks, producing a use-dependent performance decline without structural capacity loss. Observable implication: performance on independent framing tasks declines with increased D(t) but recovers under conditions of enforced independence; no permanent capacity change.</p>
+
+    <div class="hypothesis-block">
+      <div class="hypothesis-label">H4 — Degradation</div>
+      <p>Sustained framing externalization leads to a long-run decline in independent framing capacity. The capacity is not merely less exercised but structurally diminished: the neural and cognitive resources that support independent frame construction are reallocated or deprioritised under conditions of sustained externalization, producing a decline that is not readily reversed by environmental change alone.</p>
+    </div>
+    <p><em>Operative mechanism:</em> Experience-dependent neuroplasticity — cognitive capacities that are consistently unused undergo structural reorganisation over time. Observable implication: performance on independent framing tasks declines with D(t) and does not recover at rates consistent with H3 following enforced independence; longitudinal decline is measurable.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 1 — Competing Hypotheses: Mechanisms and Observable Implications</div>
+      <table>
+        <thead><tr><th>Hypothesis</th><th>Direction</th><th>Mechanism</th><th>Recovery under independence</th></tr></thead>
+        <tbody>
+          <tr><td>H1 — Neutral</td><td>No change in Fₐ(t)</td><td>Capacity independent of practice format</td><td>Not applicable</td></tr>
+          <tr><td>H2 — Augmentation</td><td>Fₐ(t) ↑</td><td>Scaffolding → internalisation</td><td>Exceeds baseline</td></tr>
+          <tr><td>H3 — Substitution</td><td>Fₐ(t) ↓ (reversible)</td><td>Cognitive offloading → disuse</td><td>Recovers to baseline</td></tr>
+          <tr><td>H4 — Degradation</td><td>Fₐ(t) ↓ (structural)</td><td>Experience-dependent reorganisation</td><td>Does not recover to baseline</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Mechanisms</h2></div>
+    <p>Three mechanisms are identified through which framing externalization could affect F<sub>a</sub>(t). These mechanisms are not exclusive to any single hypothesis: each can produce outcomes consistent with more than one directional prediction depending on parameters that cannot be specified in advance of empirical investigation.</p>
+
+    <h3 class="subsection">5.1 Cognitive Offloading</h3>
+    <p>Cognitive offloading — the transfer of cognitive tasks to external systems or environments — is well-documented in the extended mind literature (Clark &amp; Chalmers, 1998; Risko &amp; Gilbert, 2016). The relevant question for the trajectory problem is not whether offloading occurs — it does, and is partly its utility — but whether it affects the capacity for the offloaded task under conditions of enforced independence.</p>
+    <p>The evidence from prior forms of cognitive offloading is equivocal. Navigation offloading to GPS systems is associated with reduced performance on spatial navigation tasks under enforced independence (Dahmani &amp; Bohbot, 2020), consistent with H3 or H4. Calculation offloading to calculators does not show consistent effects on arithmetic capacity in educational settings, closer to H1. The difference appears to involve the degree to which the offloaded task was previously practised as a component skill versus whether it was ever primarily internal. Framing — interpretive structure construction — is a task for which prior practice patterns vary substantially across individuals.</p>
+
+    <h3 class="subsection">5.2 Path Dependence</h3>
+    <p>Path dependence in cognitive processing refers to the tendency for prior interpretive encounters to shape the frame space within which subsequent interpretation occurs. An individual who has repeatedly processed a domain through a particular set of externally supplied frames may find those frames structurally available — as default starting points — in ways that frames not encountered through interaction are not. This is not degradation in the sense of H4; it is a restructuring of the accessible frame space that does not necessarily reduce capacity but may alter its distribution.</p>
+    <p>The continuity relevance of path dependence is specific: in domains where LLM-supplied frames converge — where the same model produces structurally similar interpretive organisations across many users — path dependence could produce homogenisation of frame space across individuals without any single individual experiencing capacity loss. The aggregate effect on deliberative diversity may differ from the individual trajectory effect.</p>
+
+    <h3 class="subsection">5.3 Interaction Frequency Effects</h3>
+    <p>The relationship between interaction frequency and trajectory is not monotonic. At low interaction frequency, the mechanisms above are unlikely to operate at sufficient intensity to produce measurable trajectory effects. At high interaction frequency, the directionality depends on the interaction regime — specifically whether the interaction is configured for the P1 condition (compression, maintained reflective latency, active frame engagement) or the P2 condition (amplification, suppressed latency, passive frame acceptance) as specified in SP-005.</p>
+    <p>This implies that interaction frequency is not itself a sufficient predictor of trajectory. The same frequency of interaction could be consistent with H2 under P1 conditions or H3/H4 under P2 conditions. Frequency matters; regime matters more.</p>
+  </div>
+
+  <!-- §6 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Observable Indicators</h2></div>
+    <p>The hypotheses above are distinguishable in principle. Distinguishing them in practice requires operationalised measures at three levels. These are not proposed as a complete research design; they are identified as the necessary empirical structure for the trajectory question to be answerable.</p>
+
+    <h3 class="subsection">6.1 Interaction-Level Indicators</h3>
+    <p>At the level of individual interactions, framing externalization is measurable as the proportion of interpretive structure in user outputs that can be traced to model-supplied frames versus independently constructed frames. Operationalisation requires comparison between user responses that follow LLM interaction and equivalent responses produced without it, controlling for informational content. The degree to which users rephrase, reconstruct, or challenge supplied frames — versus accepting and extending them — provides a within-interaction measure of externalization degree.</p>
+
+    <h3 class="subsection">6.2 Task-Level Indicators</h3>
+    <p>At the task level, independent framing capacity is measurable as performance on framing tasks administered without LLM assistance, compared across groups differentiated by interaction history. Tasks would require participants to construct interpretive frames for novel domain problems — problems for which the frame space is not pre-determined by prior exposure — and would be scored on frame diversity, structural originality, and internal coherence. Performance differences between high-interaction and low-interaction groups, controlling for prior domain knowledge, would provide cross-sectional evidence relevant to H1 through H4.</p>
+
+    <h3 class="subsection">6.3 Longitudinal Indicators</h3>
+    <p>Neither interaction-level nor task-level measurement can resolve the trajectory question alone. H3 and H4 produce similar cross-sectional signals; they are distinguished only by the recovery rate following enforced independence. Longitudinal design requires repeated task-level measurement across groups under varying interaction regimes, with periods of enforced independence sufficient to observe recovery dynamics. The timescale over which trajectory effects would be detectable is not specified by the present analysis; it is itself an empirical unknown.</p>
+
+    <div class="table-wrap">
+      <div class="table-caption">Table 2 — Observable Indicators and Hypothesis Relevance</div>
+      <table>
+        <thead><tr><th>Indicator Level</th><th>Measurement</th><th>Distinguishes</th></tr></thead>
+        <tbody>
+          <tr><td>Interaction</td><td>Frame origin proportion; rephrasing vs. extension rate</td><td>Externalization degree (E(t)); not trajectory</td></tr>
+          <tr><td>Task (cross-sectional)</td><td>Independent framing performance by interaction history</td><td>H1 from H2/H3/H4; not H3 from H4</td></tr>
+          <tr><td>Longitudinal</td><td>Repeated task performance; recovery rate under independence</td><td>H3 from H4; trajectory direction</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §7 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Boundary Conditions</h2></div>
+    <p>The analysis is scoped by several explicit boundary conditions that limit its claims and prevent over-extension.</p>
+    <p>The trajectory question is about framing capacity, not framing content. The analysis makes no claim about the accuracy, bias, or political valence of externally supplied frames. An individual operating under conditions of high framing externalization might produce highly accurate, well-calibrated judgements; the trajectory question concerns the structural capacity to have produced them independently, not whether the output is correct.</p>
+    <p>The analysis does not imply intentional design toward any outcome. The framing effects described emerge from structural properties of interactive generative systems — properties that arise from training processes and interaction architecture rather than from design decisions directed at specific users or populations. Structure over intent is the consistent analytical principle.</p>
+    <p>The analysis is specific to LLM-mediated interaction as an environment. Prior information intermediaries — institutional media, educational systems, political discourse — also supply interpretive frames. Whether the trajectory effects identified here would apply to those environments is not addressed; the mechanism specification may or may not generalise, and the structural properties of LLM interaction that distinguish it from prior intermediaries (interactivity, personalisation, coherence, non-attributability) may be central to the mechanism or peripheral to it.</p>
+    <p>No population-level homogenisation claim is advanced in this paper. Path dependence at the individual level is identified as a mechanism; whether individual-level path dependence aggregates to collective frame homogenisation involves additional dynamics — network effects, differential adoption, market concentration — that are outside the scope of the present analysis.</p>
+  </div>
+
+  <!-- §8 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Implications Conditional on Evidence</h2></div>
+    <p>The implications of this analysis depend on which hypothesis receives empirical support. The paper does not assume a direction of effect; the implications below are stated conditionally.</p>
+    <p>If H1 (neutral effect) receives support, the framing externalization mechanism identified in SP-005 v1.1 remains an accurate characterisation of individual interactions but does not produce systemic trajectory risk. The continuity implications of the SP-004/SP-005 framework are not extended by a longitudinal framing dimension.</p>
+    <p>If H2 (augmentation) receives support, LLM-mediated interaction constitutes a net enhancement to deliberative capacity — a cognitive scaffolding system that develops independent framing capability through use. The continuity implication is positive: deployment of LLM assistance in deliberative contexts would strengthen rather than weaken the human decision layer over time, provided the interaction regime maintains the P1 conditions specified in SP-005.</p>
+    <p>If H3 (substitution) receives support, the framing pathway produces a reversible but persistent performance effect under high dependency conditions. The continuity implication is structural: systems that rely on LLM-assisted decision support should maintain independent framing practice among critical decision-makers, and should not assume that individuals with high interaction histories retain equivalent independent framing capacity to those without. Recovery pathways are available but must be deliberately maintained.</p>
+    <p>If H4 (degradation) receives support, the Cognitive ITT framework applies directly: the trajectory is progressive, the recoverability question becomes central, and the continuity implications of sustained framing externalization in critical decision contexts become a structural risk requiring explicit design response — analogous to the reserve duration requirements identified in SP-001 for energy systems.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">Conditional finding</div>
+      <p>The continuity implications of framing externalization in LLM-mediated environments are bounded by the empirical resolution of the trajectory question. H3 and H4 would, if supported, require explicit design response in continuity-critical human decision systems. H1 and H2 would not. The present analysis provides the analytical structure for that determination; it does not make it.</p>
+    </div>
+  </div>
+
+  <!-- §9 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 09</span><h2 class="section-title">Conclusion</h2></div>
+    <p>This paper has specified the trajectory question left open by SP-005 v1.1. Framing externalization — the supply of interpretive structures through interaction — is observable. Whether it alters the trajectory of independent framing capacity is not assumed; it is a distinct empirical question with four competing hypotheses and a defined structure of observable implications.</p>
+    <p>The Cognitive ITT framework provides the appropriate analytical analogy: the risk is not a threshold event but a progressive imbalance between externalization rate and recovery capacity. Whether that imbalance is occurring, at what rate, and whether it is reversible are empirical questions that the current analysis cannot resolve. It can only specify them clearly enough to be resolved.</p>
+    <p>The paper advances no conclusion about the direction of effect. It advances one structural claim: the trajectory question is real, is distinct from the externalization mechanism, and is consequential enough — given the conditional implications under H3 and H4 — to warrant empirical investigation before continuity-critical deployment decisions are made on assumptions that have not been tested.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">SP-006 — Core statement</div>
+      <p>The externalization of interpretive framing in LLM-mediated interaction is observable. Its effect on the long-run trajectory of independent framing capacity is not established. Four competing hypotheses — neutral, augmentation, substitution, degradation — are specified with distinct observable implications. The trajectory question is open. It should be treated as open in any continuity analysis that depends on assumptions about the deliberative capacity of human operators embedded in LLM-mediated information environments.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ul class="ref-list">
+      <li>Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. <em>Nature Reviews Neuroscience</em>, 10(6), 410–422.</li>
+      <li>Clark, A., &amp; Chalmers, D. (1998). The extended mind. <em>Analysis</em>, 58(1), 7–19.</li>
+      <li>Dahmani, L., &amp; Bohbot, V. D. (2020). Habitual use of GPS negatively impacts spatial memory during self-guided navigation. <em>Scientific Reports</em>, 10, 6310.</li>
+      <li>Engle, R. W. (2002). Working memory capacity as executive attention. <em>Current Directions in Psychological Science</em>, 11(1), 19–23.</li>
+      <li>Evans, J. S. B. T., &amp; Stanovich, K. E. (2013). Dual-process theories of higher cognition: Advancing the debate. <em>Perspectives on Psychological Science</em>, 8(3), 223–241.</li>
+      <li>Kahneman, D. (2011). <em>Thinking, fast and slow.</em> Farrar, Straus and Giroux.</li>
+      <li>Risko, E. F., &amp; Gilbert, S. J. (2016). Cognitive offloading. <em>Trends in Cognitive Sciences</em>, 20(9), 676–688.</li>
+      <li>Sparrow, B., Liu, J., &amp; Wegner, D. M. (2011). Google effects on memory: Cognitive consequences of having information at our fingertips. <em>Science</em>, 333(6043), 776–778.</li>
+      <li>Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science</em>, 12(2), 257–285.</li>
+      <li>Vygotsky, L. S. (1978). <em>Mind in society: The development of higher psychological processes.</em> Harvard University Press.</li>
+      <li>Wood, D., Bruner, J. S., &amp; Ross, G. (1976). The role of tutoring in problem solving. <em>Journal of Child Psychology and Psychiatry</em>, 17(2), 89–100.</li>
+    </ul>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>Status note:</strong> This paper is an open working document. The trajectory question it poses is explicitly unresolved. Revisions are anticipated as empirical evidence accumulates.<br>
+    <strong>Competing interests:</strong> None declared.<br>
+    <strong>Acknowledgements:</strong> This paper develops the open research question deferred in SP-005 v1.1. Research conducted independently; no external funding received.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-006 · v1.0 · 2026<br>Open Research Question</div>
+  <div class="footer-col">D-3 · D-5 · D-6<br>Companion: SP-004 · SP-005 · WP-003</div>
+</footer>
+
+</body>
+</html>
