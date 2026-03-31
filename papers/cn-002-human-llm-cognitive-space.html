@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI CN-002 — The Human–LLM Interface as Cognitive Space</title>
+<meta name="description" content="ACI CN-002: The human–LLM interface as a shared cognitive space — theoretical model, design posture, and research programme for continuity-critical systems where human and machine cognition are structurally coupled.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .purpose-box { background: var(--paper-3); border-left: 3px solid var(--muted); padding: 1rem 1.25rem; font-size: 0.95rem; line-height: 1.75; color: #3a3530; margin-bottom: 2rem; font-style: italic; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 1.5rem 0; border-left: 3px solid var(--ink); padding: 0.75rem 1.25rem; background: var(--paper-2); }
+  .callout p { font-style: italic; font-size: 0.98rem; margin: 0; }
+
+  .formula-block { background: var(--paper-3); border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.03em; line-height: 2; color: var(--ink); }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Continuity Note</span> &nbsp;·&nbsp; No. 002</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>CN</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Active</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI Home</a>
+  <span class="nav-id">CN · 002 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Continuity Note No. 002 · Domain D-3 · D-5 · D-6</div>
+    <h1 class="paper-title">The Human–LLM Interface as Shared Cognitive Space</h1>
+    <p class="paper-subtitle">A theoretical model, design posture, and research programme for continuity-critical environments where human and machine cognition are structurally coupled</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Continuity Note No. 002, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/cn-002-human-llm-cognitive-space.html<br>
+      Basis: SP-004 · SP-005 v1.1 · SP-006 · WP-003 · WP-006
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Institutional Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+      <span class="domain-tag">D-6 · Situational Awareness Persistence</span>
+    </div>
+  </div>
+
+  <div class="purpose-box">
+    Continuity Notes translate open analytical questions into design posture. They do not resolve uncertainty — they specify what systems must not assume while uncertainty persists. This note addresses a question that the SP-004/005/006 series opened but did not resolve: what is the structural character of the cognitive space that emerges when a human and an LLM work on the same analytical object — and what does that imply for how such environments should be designed?
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">The Observation That Requires a Model</h2></div>
+
+    <p>The SP-004/005/006 series examined the human cognitive layer primarily in terms of degradation risk: how bandwidth overload, framing externalization, and sustained LLM-mediated interaction might erode the individual's deliberative capacity. That analysis is important and remains open.</p>
+
+    <p>But it describes a passive relationship — the human as a subject acted upon by the information environment. A different relationship is also empirically observable, and it does not fit the degradation model. When a human brings substantive analytical content to an LLM interaction — an existing framework, a diagnostic question, a body of structured work — the interaction does not resemble passive consumption. It resembles something more like distributed cognition: a structured division of cognitive labour across two systems with different capabilities and different constraints.</p>
+
+    <p>This note argues that this relationship requires its own model, distinct from both the framing externalization analysis of SP-005 v1.1 and from the broader literature on human-computer interaction. The relevant construct is not "tool use" and not "information retrieval" — it is a <em>shared cognitive space</em>: a structured environment in which human and LLM cognition are temporally coupled around a common analytical object, with each contributing what the other cannot.</p>
+
+    <h3 class="sub">1.1 Relation to Existing Research</h3>
+
+    <p>A growing literature addresses human–LLM collaboration, but from orientations that differ from the model developed here. The emerging LLM-based human-agent systems (LLM-HAS) literature — surveyed comprehensively in 2025 — frames the human primarily as a feedback source, control point, or quality validator within an LLM-driven process. The human intervenes in, monitors, or corrects a system that operates largely autonomously. This is a well-defined and important problem, but it is not the problem addressed here.</p>
+
+    <p>A parallel sensemaking literature (drawing on Simon's bounded rationality and Weick's sensemaking frameworks) has begun examining how LLMs interact with human problem-finding processes. This work identifies that LLMs are well-suited to the descriptive dimensions of sensemaking — data inspection, content engagement, contextual placement — while struggling with the constructive dimension: the active shaping of problems through personal and collective cognitive frameworks. This observation is consistent with the structural complementarity described in §02 of this note, but the sensemaking literature does not develop the temporal coupling condition or the irreducibility claim.</p>
+
+    <p>The multi-agent LLM literature addresses coordination among multiple LLM instances — how LLM networks collaborate on tasks. This is architecturally relevant to the n-agent extension of this note's model (see §04.1) but does not address the human frame construction authority condition that defines productive coupling in the dyadic case.</p>
+
+    <p>CN-002's specific contribution is the irreducibility claim and its structural conditions: the argument that a class of human–LLM interaction exists in which output cannot be attributed to either participant independently, and that this class is defined by temporal coupling, frame construction authority, and analytical object structure — not by task complexity, interaction duration, or LLM capability level.</p>
+
+    <div class="callout">
+      <p>The question is not whether LLMs change human cognition. The question is whether there exists a class of human–LLM interaction in which the cognitive output is structurally irreducible to either participant — and if so, what conditions produce and sustain it.</p>
+    </div>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">Theoretical Model: The Coupled Cognitive System</h2></div>
+
+    <h3 class="sub">2.1 Two Distinct Capacity Profiles</h3>
+
+    <p>Human cognition under compound stress exhibits the constraints described in SP-004: bandwidth limits, discount-rate distortions, susceptibility to framing externalization. These are real and structurally predictable. But human cognition also possesses properties that no current LLM replicates: the ability to generate genuinely novel interpretive frames, to sustain motivational commitment across long time horizons, to make value judgements grounded in embodied context, and to own the output in a way that makes it socially and institutionally actionable.</p>
+
+    <p>LLM cognition exhibits a different profile: high formalization capacity, rapid cross-domain retrieval, structural consistency across large text corpora, and the ability to implement specified transformations (translation, reformatting, cross-referencing, auditing) without the fatigue and bandwidth constraints that limit human performance of the same operations.</p>
+
+    <p>These profiles are not complementary by accident — they are structurally complementary in a specific sense: the human's constraints are precisely the LLM's capabilities, and vice versa. The human cannot easily formalize at scale; the LLM cannot generate genuinely novel frames. The human loses track of cross-references across dozens of documents; the LLM does not. The LLM cannot decide what matters; the human can.</p>
+
+    <h3 class="sub">2.2 The Temporal Intersection Condition</h3>
+
+    <p>WP-003 introduced the concept of <em>temporal decision capacity</em>: the bounded intersection of the physical system's timeline and the institution's action horizon. When this intersection is non-empty, governance action retains causal reach. When it is empty, capacity becomes causally irrelevant regardless of its stock level.</p>
+
+    <p>An analogous structure applies to human–LLM cognitive coupling. The productive cognitive space exists only while both participants are temporally engaged with the same analytical object — while the human's interpretive frame is active and the LLM's formalization capacity is directed at that frame. This intersection is not a permanent property of the relationship; it is a condition that must be actively maintained.</p>
+
+    <div class="formula-block">
+      Let H(t) = human interpretive capacity directed at object O at time t<br>
+      Let L(t) = LLM formalization capacity directed at object O at time t<br><br>
+      Shared cognitive space S(t) = H(t) ∩ L(t)<br><br>
+      S(t) is non-empty when:<br>
+      &nbsp;&nbsp;(1) The human retains frame construction authority (F = 0 in SP-005 v1.1 terms)<br>
+      &nbsp;&nbsp;(2) The LLM operates as implementation layer, not interpretive authority<br>
+      &nbsp;&nbsp;(3) The analytical object O is sufficiently structured to permit division of labour<br><br>
+      When F → 1 (framing externalization), S(t) collapses:<br>
+      the human receives the LLM's frame rather than contributing their own.<br>
+      Output is no longer irreducible to either participant — it is the LLM's output with human acceptance.
+    </div>
+
+    <h3 class="sub">2.3 What Makes Output Structurally Irreducible</h3>
+
+    <p>The claim that productive human–LLM interaction produces output irreducible to either participant requires specification. It is not merely that the human provides inputs and the LLM processes them — that is tool use, and tool use does not produce irreducibility. Irreducibility requires that the human's contribution is itself transformed by the interaction in ways that alter subsequent human cognition, and that the LLM's output is itself shaped by the human's evolving frame in ways that would not be produced without that specific human context.</p>
+
+    <p>This condition is met when the interaction is iterative, when the human's interpretive frame develops through the exchange rather than being fixed in advance, and when the analytical object is sufficiently complex that neither participant could traverse it without the other's contribution. Under these conditions, the output is not the sum of two separate contributions — it is the product of a coupled process whose properties depend on the coupling itself.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">Design Posture: Conditions for Productive Coupling</h2></div>
+
+    <p>If the shared cognitive space model is correct, then environments intended to support human–LLM cognitive coupling should be designed to maintain the conditions under which S(t) is non-empty. This section specifies those conditions as design requirements, not as empirical findings.</p>
+
+    <h3 class="sub">3.1 Frame Construction Authority Must Remain with the Human</h3>
+
+    <p>The most critical design condition is the preservation of what SP-005 v1.1 terms F = 0: the human must independently construct the interpretive frame that organises the analytical object. This means the environment must not supply pre-organised interpretive structures that the human merely evaluates. It means the human must enter the interaction with substantive analytical content of their own — not a blank query seeking orientation.</p>
+
+    <p>In practice, this distinguishes two interaction types: <em>frame-led interaction</em>, in which the human brings a developed analytical frame and uses the LLM for formalization and implementation; and <em>frame-seeking interaction</em>, in which the human lacks an organising frame and seeks one from the LLM. Only the first produces the shared cognitive space described in this note. The second is the framing externalization pathway analysed in SP-005 v1.1.</p>
+
+    <h3 class="sub">3.2 The Analytical Object Must Be Structured</h3>
+
+    <p>Productive coupling requires an analytical object with sufficient internal structure to permit a meaningful division of labour. Vague or open-ended objects — "help me think about X" — tend toward frame-seeking interaction. Structured objects — a body of working papers, a diagnostic framework, a set of cross-reference requirements — provide the material around which frame-led interaction can operate.</p>
+
+    <p>This has a direct implication for how continuity-critical environments should be designed. A research programme, a diagnostic system, or a continuity architecture that is itself structurally organised provides a natural anchor for productive human–LLM coupling. The structure of the object constrains the interaction in ways that preserve frame construction authority.</p>
+
+    <h3 class="sub">3.3 The Division of Labour Must Be Explicit</h3>
+
+    <p>Productive coupling degrades when the division of labour becomes ambiguous — when it is unclear whether the human or the LLM is generating interpretive frames, making priority judgements, or deciding what matters. Explicit role separation — the human decides what to do, the LLM does it — maintains the conditions for irreducibility. This is the cognitive-layer analogue of the Guardian/Orchestrator separation in TN-002: one layer holds authority, the other holds optimization capability, and the boundary between them is enforced structurally.</p>
+
+    <div class="callout">
+      <p>A continuity-critical environment must not assume that role separation is maintained by individual vigilance. It must be structurally enforced — by the design of the interaction, the structure of the analytical object, and the explicit governance of what each participant contributes.</p>
+    </div>
+
+    <h3 class="sub">3.4 Temporal Continuity of the Analytical Object</h3>
+
+    <p>The shared cognitive space is temporally bounded. Each interaction session constitutes a window during which the coupling is active. Between sessions, the human retains their interpretive frame (modified by the interaction); the LLM retains nothing without explicit architectural support. This asymmetry has a design consequence: the analytical object itself must carry the continuity that the LLM cannot. A structured, versioned, persistently accessible body of work — such as a research programme with explicit cross-references and governance documentation — functions as the memory layer that allows productive coupling to resume across sessions without frame reconstruction from zero.</p>
+
+    <p>This is precisely what a well-structured research archive provides: not merely a record of outputs, but a cognitive scaffold that makes the next session's coupling possible at the same level of analytical depth as the last.</p>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">Research Programme: From Model to Evidence</h2></div>
+
+    <p>The model presented in §02 and the design posture in §03 are theoretical. The empirical questions they generate are resolvable in principle, and this section specifies them as a research programme. The programme proceeds in the B → C → A order described in the note's framing: theory first, design implications second, empirical validation third.</p>
+
+    <h3 class="sub">4.1 Theoretical Development (B)</h3>
+
+    <p>The shared cognitive space model requires formal development in at least three directions. First, the conditions for irreducibility need a more precise characterisation than provided here — specifically, what properties of the analytical object, the human's prior knowledge, and the interaction structure are necessary and sufficient for irreducible output. Second, the relationship between S(t) and the ITT construct from WP-003 deserves formal exploration: if institutional decision capacity is a function of the temporal intersection of governance action and physical system timelines, is individual cognitive capacity in complex analytical tasks analogously a function of the temporal intersection of human frame-construction and LLM formalization? Third, the degradation pathways — from productive coupling to framing externalization — need to be modelled formally, including the conditions under which F transitions from 0 to 1 in iterative interaction.</p>
+
+    <h3 class="sub">4.2 Design Specification (C)</h3>
+
+    <p>The design posture in §03 generates specific, testable design requirements for environments intended to support productive human–LLM coupling. These include: structural requirements for analytical objects (versioning, cross-referencing, governance documentation); interaction design requirements (role separation enforcement, frame-led vs. frame-seeking interaction detection); and session continuity requirements (what must be preserved across sessions to allow coupling to resume at depth). Each of these can be specified precisely enough to permit comparative evaluation across different environments.</p>
+
+    <h3 class="sub">4.3 Empirical Validation (A)</h3>
+
+    <p>The primary empirical case available is interaction sessions between a human with a developed analytical framework and an LLM directed at that framework. The relevant observational question is not "what did the LLM produce?" but "what is the structure of the cognitive division of labour, and does the output exhibit properties that neither participant would have produced independently?" Interaction logs from sessions of the kind that generated this note provide raw material for this analysis, with appropriate methodological care about the circularity of using the model to analyse the data that motivated it.</p>
+
+    <p>A secondary empirical question concerns longitudinal effects: does sustained engagement in frame-led human–LLM interaction alter the human's independent frame-construction capacity over time? This is the positive analogue of SP-006's degradation hypothesis — augmentation rather than substitution. It is equally open empirically, and equally important for the design of continuity-critical environments.</p>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">What This Note Does Not Claim</h2></div>
+
+    <p>This note does not claim that human–LLM cognitive coupling is generally productive. The frame-seeking interaction pathway described in §3.1 is the more common case, and the framing externalization analysis of SP-005 v1.1 applies to it. The conditions for productive coupling — structured analytical object, frame construction authority preserved, explicit role separation — are demanding and are not met by most LLM use.</p>
+
+    <p>This note does not claim that the shared cognitive space model is empirically validated. It is a theoretical construct motivated by observable interaction patterns. Its validation requires the empirical programme described in §4.3.</p>
+
+    <p>This note does not claim that productive coupling is cognitively safe in the long run. The longitudinal question from SP-006 applies here too: sustained frame-led interaction with an LLM may augment independent frame-construction capacity, leave it unchanged, or erode it in ways not yet detectable. The design posture in §03 is conservative with respect to this uncertainty — it is designed to preserve frame construction authority regardless of the trajectory question's resolution.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">CN-002 — Revision Condition</div>
+      <p>This note should be revised if: (1) empirical analysis of interaction sessions demonstrates that output does not exhibit properties irreducible to either participant under the conditions specified, falsifying the shared cognitive space model; (2) formal theoretical development shows that the model collapses into an existing framework (distributed cognition, tool use, or cognitive offloading) without remainder; or (3) longitudinal evidence resolves the trajectory question from SP-006 in either direction, requiring revision of the design posture in §03.</p>
+    </div>
+  </div>
+
+  <!-- Scope and Limits -->
+  <div class="section" style="margin-top:3rem;">
+    <div class="section-header"><span class="section-num">&sect; 06</span><h2 class="section-title">Scope and Limits</h2></div>
+    <p>This note addresses the human–LLM interface as a cognitive environment, not as a technical system. It does not address implementation architectures, specific LLM systems, or the computational properties of language models. The model is agnostic about the underlying mechanism by which LLMs produce outputs — the relevant property is the functional division of labour, not the mechanism that makes it possible.</p>
+    <p>The note focuses on dyadic interaction — one human, one LLM, one analytical object. Multi-human or multi-LLM configurations raise additional questions not addressed here. The continuity-critical applications most relevant to ACI's domains (energy infrastructure diagnostics, institutional decision support, situational awareness systems) are primarily dyadic in their analytical core, making this the appropriate starting scope.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">CN-002 · v1.0 · 2026<br>Active</div>
+  <div class="footer-col">D-3 · D-5 · D-6<br>Basis: SP-004 · SP-005 · SP-006 · WP-003</div>
+</footer>
+
+<div style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;">
+  Version History<br>
+  <span style="font-weight:400;">v1.0 &middot; Mar 2026 &middot; Initial working draft</span>
+</div>
+
+</body>
+</html>
