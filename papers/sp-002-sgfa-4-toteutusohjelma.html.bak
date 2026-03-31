@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ACI SP-002 — SGFA 4.0: Municipal Energy Stability Implementation Programme</title>
-<meta name="description" content="SGFA 4.0 is a municipal energy investment programme built on ACI's diagnostic framework. Seven Tier A nodes, CHP + PtX architecture, IRR 15–19%. Companion to WP-001, WP-004, WP-005, DA-001.">
+<title>ACI SP-002 — SGFA 4.0: Kunnallisen energiavakauden toteutusohjelma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -139,67 +138,67 @@
 <main class="paper">
 
   <div class="title-block">
-    <div class="paper-label">ACI Supporting Paper No. 002 · Implementation Programme</div>
+    <div class="paper-label">ACI Supporting Paper No. 002 · Toteutusohjelma</div>
     <h1 class="paper-title">SGFA 4.0 — Smart Grid Flexibility Alliance</h1>
-    <p class="paper-subtitle">Municipal Energy Stability Implementation Programme — Executive Summary v2.1</p>
+    <p class="paper-subtitle">Kunnallisen energiavakauden toteutusohjelma — Executive Summary v2.1</p>
     <div class="citation-box">
-      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 002, 2026.<br>
-      Available: https://aethercontinuity.org/papers/sp-002-sgfa-4-toteutusohjelma.html<br>
-      Architectural basis: ACI MESA v1.0 · Diagnostic framework: WP-001 · WP-004 · WP-005 · DA-001 · TN-001
+      Viite: Aether Continuity Institute (ACI), Supporting Paper No. 002, 2026.<br>
+      Saatavilla: https://aethercontinuity.org/papers/sp-002-sgfa-4-toteutusohjelma.html<br>
+      Arkkitehtuurinen perusta: ACI MESA v1.0 · Diagnostinen viitekehys: WP-001 · WP-004 · WP-005 · DA-001 · TN-001
     </div>
     <div class="domain-row">
-      <span class="domain-tag">D-1 · Duration Adequacy</span>
-      <span class="domain-tag">D-4 · Compound Stress</span>
-      <span class="domain-tag">MESA · Implementation</span>
+      <span class="domain-tag">D-1 · Kestävyysadekvaattisuus</span>
+      <span class="domain-tag">D-4 · Yhdistelmästressi</span>
+      <span class="domain-tag">MESA · Toteutus</span>
     </div>
   </div>
 
   <!-- Key metrics -->
   <div class="metrics-grid">
     <div class="metric-box">
-      <div class="metric-label">Phase 1 CAPEX</div>
-      <div class="metric-value">~€1.5 Bn</div>
-      <div class="metric-note">7 nodes · CHP core + partial PtX · Tier A</div>
+      <div class="metric-label">Vaihe 1 CAPEX</div>
+      <div class="metric-value">~1,5 Mrd €</div>
+      <div class="metric-note">7 solmua · CHP-ydin + osittainen PtX · Tier A</div>
     </div>
     <div class="metric-box">
-      <div class="metric-label">IRR (base model, WACC 5%)</div>
+      <div class="metric-label">IRR (perusmalli, WACC 5%)</div>
       <div class="metric-value">15–19 %</div>
-      <div class="metric-note">Stress test 8–12 %</div>
+      <div class="metric-note">Stressitesti 8–12 %</div>
     </div>
     <div class="metric-box">
-      <div class="metric-label">Discounted payback</div>
-      <div class="metric-value">5–7 yr</div>
-      <div class="metric-note">WACC 5% · municipal credit rating</div>
+      <div class="metric-label">Diskontattu takaisinmaksu</div>
+      <div class="metric-value">5–7 v</div>
+      <div class="metric-note">WACC 5 % · kunnallinen luottoluokitus</div>
     </div>
     <div class="metric-box">
-      <div class="metric-label">Reserve-eligible capacity</div>
-      <div class="metric-value">1.0–3.0 GW</div>
-      <div class="metric-note">VPP-optimised · FCR/aFRR/mFRR</div>
+      <div class="metric-label">Reservikelpoinen kapasiteetti</div>
+      <div class="metric-value">1,0–3,0 GW</div>
+      <div class="metric-note">VPP-optimoitu · FCR/aFRR/mFRR</div>
     </div>
   </div>
 
   <!-- §0 Kokonaisrakenne -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 00</span><h2 class="section-title">Overall Structure: Three Layers</h2></div>
-    <p>SGFA 4.0 is the operational implementation programme for ACI's diagnostic work. The three layers form a coherent whole — the direction is one-way: SGFA 4.0 references ACI, not the reverse. This preserves the diagnostic neutrality that makes ACI credible.</p>
+    <div class="section-header"><span class="section-num">§ 00</span><h2 class="section-title">Kokonaisrakenne: Kolme kerrosta</h2></div>
+    <p>SGFA 4.0 on ACI:n diagnostisen työn operatiivinen toteutusohjelma. Kolme kerrosta muodostavat yhtenäisen kokonaisuuden — suunta on yksisuuntainen: SGFA 4.0 viittaa ACI:hin, ei toisinpäin. Tämä säilyttää diagnostisen neutraaliuden joka tekee ACI:sta uskottavan.</p>
 
     <table class="layer-table">
-      <thead><tr><th>Layer</th><th>Function</th><th>Document</th></tr></thead>
+      <thead><tr><th>Kerros</th><th>Tehtävä</th><th>Dokumentti</th></tr></thead>
       <tbody>
         <tr>
           <td><span class="layer-id">ACI</span></td>
-          <td>Diagnoses structural energy system deficits. Does not advocate — identifies.</td>
+          <td>Diagnosoi rakenteelliset energiajärjestelmän vajeet. Ei advocoi — tunnistaa.</td>
           <td>aethercontinuity.org — WP-001–011, DA-001–006</td>
         </tr>
         <tr>
           <td><span class="layer-id">MESA</span></td>
-          <td>Describes the optimal municipal energy node architecture in technology-neutral terms.</td>
+          <td>Kuvaa optimaalisen kunnallisen energiasolmun arkkitehtuurin teknologianeutraalisti.</td>
           <td>ACI MESA Architecture v1.0</td>
         </tr>
         <tr>
           <td><span class="layer-id">SGFA 4.0</span></td>
-          <td>Implements the MESA architecture as a municipal investment programme — 7 Tier A nodes, unified financial model, financing structure. Architecture is designed for replication to Tier B municipalities.</td>
-          <td>This document</td>
+          <td>Toteuttaa MESA-arkkitehtuurin kunnallisena investointiohjelmana — 7 Tier A -solmua, yhtenäinen talousmalli, rahoitusrakenne. Arkkitehtuuri on suunniteltu replikoitavaksi Tier B -kaupunkeihin.</td>
+          <td>Tämä dokumentti</td>
         </tr>
       </tbody>
     </table>
@@ -207,202 +206,202 @@
 
   <!-- §1 Diagnosoitu ongelma -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Diagnosed Problem (ACI / DA-001)</h2></div>
-    <p>ACI's diagnostic assessment identifies three simultaneous structural deficits. These are not forecasts — they are processes already underway.</p>
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Diagnosoitu ongelma (ACI / DA-001)</h2></div>
+    <p>ACI:n diagnostinen arvio tunnistaa kolme samanaikaista rakenteellista vajetta. Nämä eivät ole ennusteita — ne ovat jo käynnissä olevia prosesseja.</p>
 
     <table class="deficit-table">
-      <thead><tr><th>Deficit</th><th>Status 2025</th><th>Trajectory</th></tr></thead>
+      <thead><tr><th>Vaje</th><th>Tila 2025</th><th>Kehityssuunta</th></tr></thead>
       <tbody>
         <tr>
-          <td><strong>Balancing capacity deficit 2–3 GW</strong></td>
-          <td>Winter peak hours covered by imports and fossil backup plants</td>
-          <td><span class="status-growing">Growing 2028–2035</span> as electrification accelerates</td>
+          <td><strong>Säätövoimavaje 2–3 GW</strong></td>
+          <td>Talven huipputunnit katetaan tuonnilla ja fossiilisilla varalaitoksilla</td>
+          <td><span class="status-growing">Kasvaa 2028–2035</span> sähköistymisen myötä</td>
         </tr>
         <tr>
-          <td><strong>Fuel import dependency</strong></td>
-          <td>80% of industrial and heating fuels imported</td>
-          <td><span class="status-active">EU ETS price increases cost directly</span></td>
+          <td><strong>Polttoaineriippuvuus</strong></td>
+          <td>80 % teollisuuden ja lämmön polttoaineista tuodaan</td>
+          <td><span class="status-active">EU ETS -hinta nostaa kustannuksia suoraan</span></td>
         </tr>
         <tr>
-          <td><strong>Biogenic CO₂ waste</strong></td>
-          <td>Biogenic CO₂ streams released to atmosphere</td>
-          <td><span class="status-growing">CO₂ window closes under RED III by 2030s</span></td>
+          <td><strong>CO₂-virtojen hukkakäyttö</strong></td>
+          <td>Biogeeniset CO₂-virrat vapautuvat ilmaan</td>
+          <td><span class="status-growing">CO₂-ikkuna sulkeutuu RED III:n myötä 2030-luvulla</span></td>
         </tr>
       </tbody>
     </table>
-    <p style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Source: ACI DA-001 Finland Pre-Shortage Phase 2026–2032 · WP-005 Compound Stress Finland 2025–2035</p>
+    <p style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">Lähde: ACI DA-001 Finland Pre-Shortage Phase 2026–2032 · WP-005 Compound Stress Finland 2025–2035</p>
   </div>
 
   <!-- §2 Ratkaisu -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Solution: MESA Architecture (SGFA 4.0 Node)</h2></div>
-    <p>Each SGFA 4.0 node is built from four functional layers following the MESA architecture:</p>
-    <p><strong>1. CHP core:</strong> Existing or new combined heat and power plant — base load, highest efficiency, municipal ownership.</p>
-    <p><strong>2. Electrolysis unit (PtX):</strong> Green hydrogen or methanol synthesis from surplus electricity. RFNBO-eligible — qualifies for EU funding.</p>
-    <p><strong>3. CO₂ capture:</strong> Biogenic CO₂ streams from CHP flue gas. Feed to PtX process or permanent storage.</p>
-    <p><strong>4. VPP interconnects:</strong> Fingrid markets (FCR/aFRR/mFRR) + demand response. Transforms the node from passive consumer to active market participant.</p>
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Ratkaisu: MESA-arkkitehtuuri (SGFA 4.0 -solmu)</h2></div>
+    <p>Jokainen SGFA 4.0 -solmu rakentuu neljästä toiminnallisesta kerroksesta MESA-arkkitehtuurin mukaisesti:</p>
+    <p><strong>1. CHP-ydin:</strong> Olemassa oleva tai uusi sähkön ja lämmön yhteistuotantolaitos — peruskuorma, korkein hyötysuhde, kunnallinen omistus.</p>
+    <p><strong>2. Elektrolyysiyksikkö (PtX):</strong> Vihreä vety tai metanolisynteesi ylijäämäsähköstä. RFNBO-kelpoinen — EU-rahoituskelpoisuus.</p>
+    <p><strong>3. CO₂-talteenotto:</strong> Biogeeniset CO₂-virrat CHP-savukaasusta. Syöttö PtX-prosessiin tai pysyvään varastointiin.</p>
+    <p><strong>4. VPP-liitynnät:</strong> Fingrid-markkinat (FCR/aFRR/mFRR) + kulutusjousto. Muuttaa solmun passiivisesta kuluttajasta aktiiviseksi markkinaosallistujaksi.</p>
 
     <div class="callout">
-      <p>The SGFA 4.0 node cash flow is built from three simultaneous sources: avoided costs (fuel, imported energy, CO₂ allowances), market revenues (electricity, heat, hydrogen, reserve services), and option value (carbon markets, H₂ exports, capacity markets). The deterministic portion covers the investment — the option upside is additional.</p>
+      <p>SGFA 4.0 -solmun kassavirta rakentuu kolmesta lähteestä samanaikaisesti: vältetyt kustannukset (polttoaine, tuontienergia, CO₂-päästöoikeudet), markkinatulot (sähkö, lämpö, vety, reservipalvelut) ja optioarvo (hiilimarkkinat, H₂-vienti, kapasiteettimarkkinat). Deterministinen osa kattaa investoinnin — optioyläpuoli on lisä.</p>
     </div>
   </div>
 
   <!-- §3 Talousmalli -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Financial Model</h2></div>
-    <p>The financial model is based on avoided costs rather than speculative market sales — this makes it low-risk from a lender's perspective.</p>
-    <p><strong>Overall efficiency:</strong> 80–88% (CHP core + PtX integration). <strong>Fuel:</strong> Agnostic — methanol, methane, biogas. <strong>IRR base model:</strong> 15–19% (WACC 5%). <strong>IRR stress test:</strong> 8–12%.</p>
-    <p>Municipal ownership implies the highest possible credit rating for infrastructure financing — no counterparty risk. Node-level balance sheets eliminate cross-guarantees across the consortium.</p>
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Talousmalli</h2></div>
+    <p>Talousmalli perustuu vältettyihin kustannuksiin spekulatiivisen markkinamyynnin sijaan — tämä tekee siitä rahoittajanäkökulmasta matalariskisen.</p>
+    <p><strong>Kokonaishyötysuhde:</strong> 80–88 % (CHP-ydin + PtX-integraatio). <strong>Polttoaine:</strong> Agnostinen — metanoli, metaani, biokaasu. <strong>IRR-perusmalli:</strong> 15–19 % (WACC 5 %). <strong>IRR-stressitesti:</strong> 8–12 %.</p>
+    <p>Kunnallinen omistus merkitsee korkeinta mahdollista luottoluokitusta infrarahoitukseen — ei vastapuoliriskiä. Solmukohtainen tase eliminoi ristiintakuut koko konsortiolle.</p>
   </div>
 
-  <!-- §4 Consortium Structure -->
+  <!-- §4 Konsortiorakenne -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Consortium Structure</h2></div>
-    <p><strong>SGFA Holding Oy</strong> — the consortium's joint holding company. Coordinates financing applications, supplier contracts, and EU funding processes. Does not operate nodes directly.</p>
-    <p><strong>Node companies (7)</strong> — each Tier A municipality establishes its own node company. 100% municipal ownership. Node-level balance sheet. Existing CHP infrastructure minimises greenfield risk.</p>
-    <p>The architecture is designed for replication: the Tier A node operating model serves directly as a template for Tier B municipalities where the scale is smaller but the logic is identical.</p>
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Konsortiorakenne</h2></div>
+    <p><strong>SGFA Holding Oy</strong> — konsortion yhteinen holdingyhtiö. Koordinoi rahoitushakemukset, sopimukset toimittajien kanssa ja EU-rahoitusprosessit. Ei operoi solmuja suoraan.</p>
+    <p><strong>Solmuyhtiöt (7 kpl)</strong> — kukin Tier A -kaupunki perustaa oman solmuyhtiön. 100 % kunnallinen omistus. Solmukohtainen tase. Olemassa oleva CHP-infrastruktuuri minimoi greenfield-riskin.</p>
+    <p>Arkkitehtuuri on suunniteltu replikoitavaksi: Tier A -solmujen toimintamalli toimii suoraan mallina Tier B -kaupungeille, joissa mittakaava on pienempi mutta logiikka identtinen.</p>
   </div>
 
-  <!-- §5 Competitive Position -->
+  <!-- §5 Kilpailuasema -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Competitive Position and Differentiators</h2></div>
-    <p>SGFA 4.0 does not compete with private energy companies — it fills a market gap they do not fill.</p>
-    <p><strong>Why municipal ownership wins here:</strong> A private PtX investor optimises returns, not system stability. A municipal owner generates revenues partly from avoided costs — cash flow is more deterministic. Fingrid's reserve markets pay for capacity regardless of whether it is activated — a municipal owner can commit to long-term reserve contracts without requiring a spot market return signal.</p>
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Kilpailuasema ja erottautumistekijät</h2></div>
+    <p>SGFA 4.0 ei kilpaile yksityisten energiayhtiöiden kanssa — se täyttää markkinaraon jota ne eivät täytä.</p>
+    <p><strong>Miksi kunnallinen omistus voittaa tässä:</strong> Yksityinen PtX-investoija optimoi tuottoa, ei järjestelmävakautta. Kunnallinen omistaja saa tulonsa osin vältetyistä kustannuksista — kassavirta on deterministisempi. Fingridin reservimarkkinat maksavat kapasiteetista riippumatta siitä, aktivoituuko se — kunnallinen omistaja voi sitoutua pitkäaikaisiin reservisopimuksiin ilman pörssituottosignaalia.</p>
   </div>
 
   <!-- §6 Rahoitusstrategia -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Financing Strategy</h2></div>
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Rahoitusstrategia</h2></div>
 
     <table class="finance-table">
-      <thead><tr><th>Source</th><th>Instrument</th><th>Eligibility basis</th><th>Priority</th></tr></thead>
+      <thead><tr><th>Lähde</th><th>Instrumentti</th><th>Kelpoisuusperuste</th><th>Prioriteetti</th></tr></thead>
       <tbody>
         <tr>
-          <td><strong>Municipal Finance</strong></td>
-          <td>Municipal infrastructure loan</td>
-          <td>Highest municipal credit rating, long-duration cash flow</td>
-          <td><span class="priority-high">High — base financing</span></td>
+          <td><strong>Kuntarahoitus</strong></td>
+          <td>Kunnallinen infralaina</td>
+          <td>Kuntien korkein luottoluokitus, pitkä kassavirta</td>
+          <td><span class="priority-high">Korkea — perusrahoitus</span></td>
         </tr>
         <tr>
           <td><strong>EIB</strong></td>
           <td>Green Infrastructure / InvestEU</td>
-          <td>RFNBO + CO₂ capture + replicability</td>
-          <td><span class="priority-high">High</span></td>
+          <td>RFNBO + CO₂-talteenotto + replikoitavuus</td>
+          <td><span class="priority-high">Korkea</span></td>
         </tr>
         <tr>
           <td><strong>EU Innovation Fund</strong></td>
-          <td>Large Scale application</td>
-          <td>RFNBO production + additionality</td>
-          <td><span class="priority-high">High — boosts IRR</span></td>
+          <td>Large Scale -hakemus</td>
+          <td>RFNBO-tuotanto + lisäisyys (additionality)</td>
+          <td><span class="priority-high">Korkea — nostaa IRR:ää</span></td>
         </tr>
         <tr>
           <td><strong>CEF Energy</strong></td>
-          <td>Energy infrastructure</td>
-          <td>Grid stability, PtX interconnects</td>
-          <td><span class="priority-mid">Moderate</span></td>
+          <td>Energiainfrastruktuuri</td>
+          <td>Sähköverkon vakaus, PtX-liitynnät</td>
+          <td><span class="priority-mid">Kohtalainen</span></td>
         </tr>
         <tr>
           <td><strong>NIB</strong></td>
-          <td>Nordic infrastructure investments</td>
-          <td>Nordic cooperation, energy independence</td>
-          <td><span class="priority-mid">Moderate</span></td>
+          <td>Pohjoismaiset infrainvestoinnit</td>
+          <td>Pohjoinen yhteistyö, omavaraisuus</td>
+          <td><span class="priority-mid">Kohtalainen</span></td>
         </tr>
       </tbody>
     </table>
 
-    <p>The EU Innovation Fund application is structured around the additionality criterion: SGFA 4.0 creates new RFNBO capacity that would not emerge without support, because the municipal risk profile differs from commercial PtX investment.</p>
+    <p>EU Innovation Fund -hakemus rakennetaan lisäisyys (additionality) -kriteerin ympärille: SGFA 4.0 luo uutta RFNBO-kapasiteettia jota ei syntyisi ilman tukea, koska kunnallinen riskiprofiili poikkeaa kaupallisesta PtX-investoinnista.</p>
   </div>
 
   <!-- §7 Toteutuspolku -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Implementation Pathway</h2></div>
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Toteutuspolku</h2></div>
 
     <div class="roadmap">
       <div class="roadmap-row" style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:.5rem;">
-        <span>Phase</span><span>Timeline</span><span>Action</span><span>Responsible</span>
+        <span>Vaihe</span><span>Aikataulu</span><span>Toimenpide</span><span>Vastuullinen</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">1</span>
-        <span class="roadmap-time">0–4 wk</span>
-        <span>Founding meeting — commitment from 7 municipalities to establish SGFA Holding Oy</span>
-        <span class="roadmap-resp">Invitation: leading Tier A cities</span>
+        <span class="roadmap-time">0–4 vk</span>
+        <span>Perustamiskokous — 7 kaupungin sitoutuminen SGFA Holding Oy:n perustamiseen</span>
+        <span class="roadmap-resp">Kutsu: johtavat Tier A -kaupungit</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">2</span>
-        <span class="roadmap-time">1–2 mo</span>
-        <span>SGFA Holding Oy established, board appointed</span>
-        <span class="roadmap-resp">Consortium legal counsel</span>
+        <span class="roadmap-time">1–2 kk</span>
+        <span>SGFA Holding Oy perustetaan, hallitus nimetty</span>
+        <span class="roadmap-resp">Konsortion lakimiehet</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">3</span>
-        <span class="roadmap-time">2–4 mo</span>
-        <span>EU funding consultant / project manager hired</span>
-        <span class="roadmap-resp">SGFA Holding board</span>
+        <span class="roadmap-time">2–4 kk</span>
+        <span>EU-rahoituskonsultti / projektipäällikkö palkataan</span>
+        <span class="roadmap-resp">SGFA Holding hallitus</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">4</span>
-        <span class="roadmap-time">2–6 mo</span>
-        <span>CO₂ balance, site survey, grid connection — per node</span>
-        <span class="roadmap-resp">Local energy utilities</span>
+        <span class="roadmap-time">2–6 kk</span>
+        <span>CO₂-tase, tonttikartoitus, sähköliityntä — per solmu</span>
+        <span class="roadmap-resp">Paikalliset energiayhtiöt</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">5</span>
-        <span class="roadmap-time">4–8 mo</span>
-        <span>EU Innovation Fund / CEF application submitted (additionality documentation)</span>
-        <span class="roadmap-resp">SGFA Holding + consultant</span>
+        <span class="roadmap-time">4–8 kk</span>
+        <span>EU Innovation Fund / CEF -hakemus jätetään (additionality-dokumentaatio)</span>
+        <span class="roadmap-resp">SGFA Holding + konsultti</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">6</span>
-        <span class="roadmap-time">6–12 mo</span>
-        <span>FEED + procurement decisions + permitting</span>
-        <span class="roadmap-resp">Node companies + equipment suppliers</span>
+        <span class="roadmap-time">6–12 kk</span>
+        <span>FEED + hankintapäätökset + luvitus</span>
+        <span class="roadmap-resp">Solmuyhtiöt + laitetoimittajat</span>
       </div>
       <div class="roadmap-row">
         <span class="roadmap-phase">7</span>
-        <span class="roadmap-time">12–24 mo</span>
-        <span>Construction and commissioning — first node</span>
-        <span class="roadmap-resp">Local node companies</span>
+        <span class="roadmap-time">12–24 kk</span>
+        <span>Rakentaminen ja käyttöönotto — ensimmäinen solmu</span>
+        <span class="roadmap-resp">Paikalliset solmuyhtiöt</span>
       </div>
     </div>
   </div>
 
   <!-- §8 Yhteenveto -->
   <div class="section">
-    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Summary</h2></div>
-    <p>SGFA 4.0 is the first municipal energy investment programme built on independent diagnostic analysis. It does not present the problem itself — it responds to an already-identified problem with a proven architecture.</p>
+    <div class="section-header"><span class="section-num">§ 08</span><h2 class="section-title">Yhteenveto</h2></div>
+    <p>SGFA 4.0 on ensimmäinen kunnallinen energiainvestointiohjelma joka on rakennettu riippumattoman diagnostisen analyysin päälle. Se ei esitä ongelmaa itse — se vastaa jo tunnistettuun ongelmaan todistetulla arkkitehtuurilla.</p>
 
     <table class="summary-table">
       <tbody>
         <tr>
-          <td class="summary-dim">Technical</td>
-          <td>Proven technology (CHP + electrolysis); 80–88% overall efficiency; fuel-agnostic (methanol, methane, biogas)</td>
+          <td class="summary-dim">Tekninen</td>
+          <td>Todistettu teknologia (CHP + elektrolyysi); 80–88 % kokonaishyötysuhde; polttoaineagnostinen (metanoli, metaani, biokaasu)</td>
         </tr>
         <tr>
-          <td class="summary-dim">Financial</td>
-          <td>Deterministic cash flow (avoided costs) + option upside (market sales). IRR 15–19% without subsidies. Stress-tested at 8–12%.</td>
+          <td class="summary-dim">Taloudellinen</td>
+          <td>Deterministinen kassavirta (vältetyt kustannukset) + optioyläpuoli (markkinamyynti). IRR 15–19 % ilman tukia. Stressitestattu 8–12 %.</td>
         </tr>
         <tr>
-          <td class="summary-dim">Municipal</td>
-          <td>100% local ownership; no counterparty risk; node-level balance sheet; highest credit rating for infrastructure financing</td>
+          <td class="summary-dim">Kunnallinen</td>
+          <td>100 % paikallinen omistus; ei vastapuoliriskiä; solmukohtainen tase; korkein luottoluokitus infrarahoitukseen</td>
         </tr>
         <tr>
-          <td class="summary-dim">National</td>
-          <td>1.0–3.0 GW reserve-eligible balancing capacity (VPP-optimised); addresses the winter deficit identified by Fingrid</td>
+          <td class="summary-dim">Kansallinen</td>
+          <td>1,0–3,0 GW reservikelpoista säätökapasiteettia (VPP-optimoitu); täyttää Fingridin tunnistaman talvivajeen</td>
         </tr>
         <tr>
-          <td class="summary-dim">European</td>
-          <td>Fulfils RFNBO obligations; high Innovation Fund / CEF eligibility; replicable to Tier B and Nordic municipalities</td>
+          <td class="summary-dim">Eurooppalainen</td>
+          <td>RFNBO-velvoitteiden täyttäminen; korkea Innovation Fund / CEF -kelpoisuus; replikoitava Tier B:hen ja Pohjoismaihin</td>
         </tr>
         <tr>
-          <td class="summary-dim">ACI Resilience</td>
-          <td>Compound stress-tested per MESA architecture; high RSM across all crisis scenarios</td>
+          <td class="summary-dim">ACI-resilienssi</td>
+          <td>Compound stress -testattu MESA-arkkitehtuurin mukaisesti; korkea RSM kaikissa kriisiskenaarioissa</td>
         </tr>
       </tbody>
     </table>
 
     <div class="finding-box">
-      <div class="finding-label">SP-002 — Core Thesis</div>
-      <p>SGFA 4.0 is a municipal risk management infrastructure that happens to produce energy.</p>
+      <div class="finding-label">SP-002 — Ydintees</div>
+      <p>SGFA 4.0 on kunnallinen riskinhallintainfrastruktuuri, joka sattuu tuottamaan energiaa.</p>
     </div>
   </div>
 
@@ -414,17 +413,5 @@
   <div class="footer-col">D-1 · D-4 · MESA<br>Perusta: WP-001 · WP-004 · WP-005 · DA-001</div>
 </footer>
 
-
-<div style="max-width:740px;margin:2rem auto;padding:0 2rem;">
-  <div style="border-top:1px solid #c8bfad;padding-top:1.25rem;margin-bottom:1.25rem;">
-    <span style="font-family:monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a7468;">Scope and Limits</span>
-  </div>
-  <p style="font-size:0.95rem;line-height:1.8;color:#3a3530;">This document is an executive summary and implementation programme — it does not constitute an independent diagnostic assessment. Financial projections are scenario parameters subject to local conditions, financing market changes, and regulatory evolution. The programme references ACI diagnostic work (WP-001, WP-005, DA-001) but is itself an application document, not a theoretical contribution. ACI does not endorse specific investment decisions, procurement processes, or implementing entities.</p>
-</div>
-
-<div style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;font-family:monospace;font-size:0.58rem;letter-spacing:0.12em;color:#7a7468;text-transform:uppercase;">
-  Version History<br>
-  <span style="font-weight:400;">v2.1 &middot; Mar 2026 &middot; Translated to English; Limits section added</span>
-</div>
 </body>
 </html>
