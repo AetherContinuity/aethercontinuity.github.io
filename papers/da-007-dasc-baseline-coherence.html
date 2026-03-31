@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI DA-007 — Baseline Coherence Assessment: DASC Experiment Analytical Object</title>
+<meta name="description" content="ACI DA-007: Baseline coherence assessment of the DASC experiment analytical object prior to experimental sessions. Applies WP-013's three-level coherence hierarchy to establish pre-experiment reference state.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .diag-box { background: var(--paper-3); border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+  .diag-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+  th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--rule); }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); color: #2a2520; }
+  tr:last-child td { border-bottom: none; }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+  .metric-card { background: var(--paper-2); padding: 1rem; text-align: center; border: 1px solid var(--rule); }
+  .metric-value { font-family: var(--mono); font-size: 1.4rem; color: var(--ink); display: block; margin-bottom: 0.25rem; }
+  .metric-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; } .dih { grid-template-columns: 1fr; } .metric-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Diagnostic Assessment</span> &nbsp;·&nbsp; No. 007</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>1.0</strong><br>Series &nbsp;<strong>DA</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Active</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI Home</a>
+  <span class="nav-id">DA · 007 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Diagnostic Assessment No. 007 · Domain D-3 · D-5</div>
+    <h1 class="paper-title">Baseline Coherence Assessment: DASC Experiment Analytical Object</h1>
+    <p class="paper-subtitle">Pre-experiment structural audit of the ACI research programme as distributed human–LLM analytical platform</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Diagnostic Assessment No. 007, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/da-007-dasc-baseline-coherence.html<br>
+      Framework: WP-013 · Session type: C-Full · Pilot session 001
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Institutional Decision Capacity</span>
+      <span class="domain-tag">D-5 · Continuity Computing</span>
+    </div>
+  </div>
+
+  <!-- Diagnostic Question -->
+  <div class="diag-box">
+    <div class="diag-label">Diagnostic Question</div>
+    <p>What is the baseline coherence state of the DASC experiment analytical object — the ACI research programme snapshot at March 2026 — prior to experimental sessions? Specifically: which structural properties relevant to WP-013's three-level coherence hierarchy (TC → FC → OC) are present, which are absent or degraded, and what are the structural risk factors for coherence fragmentation under n-participant experimental conditions?</p>
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">System Under Assessment</h2></div>
+
+    <p>The system assessed is the DASC experiment analytical object: a snapshot of the ACI research programme as committed to the Dasc-experiment repository on 31 March 2026. The snapshot comprises 30 published HTML documents and the ACI-STRUCTURE.md governance document. The assessment is conducted under the C-Full experimental condition — with the anchor document active and the governance layer explicit.</p>
+
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Total documents</td><td>30 (WP-001–013, SP-001–006, CN-001–002, WP-004 calibration series)</td></tr>
+      <tr><td>Research domains covered</td><td>D-1 through D-6 (D-2 underrepresented: 1 document)</td></tr>
+      <tr><td>Anchor document</td><td>ACI-STRUCTURE.md v1.3</td></tr>
+      <tr><td>Governance layer status</td><td>Explicit — §6 specifies permitted/restricted LLM operations</td></tr>
+      <tr><td>Version control</td><td>Git — full commit history available</td></tr>
+      <tr><td>Assessment date</td><td>31 March 2026</td></tr>
+    </table>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">Baseline Coherence Metrics</h2></div>
+
+    <p>The following metrics were computed programmatically from document content. They serve as observable proxies for the three coherence levels defined in WP-013 §02. They are structural indicators, not direct measurements of participant-level coherence — that measurement requires human session data.</p>
+
+    <div class="metric-row">
+      <div class="metric-card">
+        <span class="metric-value">0.87</span>
+        <span class="metric-label">Domain coverage<br>(TC proxy)</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">0.90</span>
+        <span class="metric-label">Scope/limits<br>coverage</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">1.00</span>
+        <span class="metric-label">Version history<br>coverage</span>
+      </div>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-card">
+        <span class="metric-value">0.73</span>
+        <span class="metric-label">Falsification<br>conditions (WPs)</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">1.8</span>
+        <span class="metric-label">Avg cross-refs<br>per document</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">D-3 / D-1</span>
+        <span class="metric-label">Dominant<br>domains</span>
+      </div>
+    </div>
+
+    <h3 class="sub">2.1 Terminological Coherence (TC) — Baseline</h3>
+
+    <p>Domain tag coverage of 0.87 indicates that 26 of 30 documents carry at least one explicit domain assignment. The four documents without domain tags are all WP-004 calibration and auxiliary documents — draft-series files that are present in the repository but not indexed in the primary publication list. This represents a structural risk for TC in experimental sessions: participants encountering these documents may draw terminological inferences from documents whose scope is ambiguous.</p>
+
+    <p>The anchor document (ACI-STRUCTURE.md §2) defines all six domains explicitly with core questions. This provides the primary TC maintenance mechanism for C-Full sessions. D-2 (Distributed Continuity Doctrine) has only one document assigned — the lowest coverage of any domain. Participants may interpret D-2's scope differently given the limited reference material.</p>
+
+    <h3 class="sub">2.2 Frame Coherence (FC) — Structural Indicators</h3>
+
+    <p>Frame coherence cannot be directly measured from document structure alone — it requires participant-level data. However, two structural properties are relevant pre-experiment. First, the scope/limits coverage of 0.90 indicates that 27 of 30 documents explicitly bound their claims. Documents with explicit scope statements constrain the interpretive frame available to participants, reducing the probability of frame divergence. Second, the anchor document's governance layer (§6) explicitly distinguishes what may be changed autonomously from what requires human decision — this is the primary FC maintenance mechanism in the anchor-document model.</p>
+
+    <p>The cross-reference density of 1.8 per document is low relative to the corpus size. A 30-document corpus with full bidirectional cross-referencing would have substantially higher density. Sparse cross-references increase the risk that participants develop disconnected interpretive sub-frames — understanding one cluster of documents without integrating it with the broader analytical structure.</p>
+
+    <h3 class="sub">2.3 Output Coherence (OC) — Pre-Experiment Note</h3>
+
+    <p>OC cannot be assessed before experimental sessions. The pre-experiment baseline for OC is definitionally absent — there is no prior distributed human–LLM output to attribute. The blind attribution test will establish OC measures once session data is available. This assessment establishes the structural conditions that should, according to WP-013's model, facilitate or impede OC under C-Full conditions.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">Structural Risk Factors</h2></div>
+
+    <p>Four structural risk factors for coherence fragmentation are identified from the baseline data. These are not predictions of failure — they are conditions that, per WP-013's model, increase the probability of coherence degradation under experimental conditions.</p>
+
+    <h3 class="sub">Risk 1 — D-2 Underrepresentation</h3>
+    <p>With only one document assigned to D-2, participants have minimal shared reference for Distributed Continuity Doctrine. If experimental tasks touch D-2, terminological coherence is likely to degrade without explicit anchor document consultation. <strong>Mitigation (C-Full):</strong> Refer participants to ACI-STRUCTURE.md §2 for D-2 definition before any D-2-adjacent task.</p>
+
+    <h3 class="sub">Risk 2 — Unlabelled WP-004 Auxiliary Documents</h3>
+    <p>Four WP-004 calibration/draft files are present in the papers directory without domain tags. These files are not in the primary publication index and were included in the snapshot as part of the repository copy. If participants encounter them, they may draw incorrect inferences about publication scope. <strong>Mitigation (C-Full):</strong> Participants should be informed that files outside the primary index are auxiliary and not part of the canonical analytical object for experimental tasks.</p>
+
+    <h3 class="sub">Risk 3 — Low Cross-Reference Density</h3>
+    <p>The average of 1.8 cross-references per document indicates that many documents have few or no explicit links to related documents. Under C-None conditions, participants are likely to develop fragmented interpretive sub-frames. Under C-Full conditions, the anchor document partially compensates by defining domain relationships, but individual document isolation remains a risk. <strong>Mitigation (C-Full):</strong> The anchor document's cross-reference integrity requirements (§5) provide the compensating mechanism.</p>
+
+    <h3 class="sub">Risk 4 — WP-004 Falsification Coverage</h3>
+    <p>The overall falsification condition coverage of 0.73 reflects that several working papers in the WP-004 series (calibration and auxiliary documents) do not carry falsification conditions. For the primary indexed WPs (001–013), coverage is complete. This risk is specific to participants who work primarily with WP-004 auxiliary documents.</p>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">Findings</h2></div>
+
+    <div class="finding-box">
+      <div class="finding-label">Finding 1 — TC Structural Baseline: Adequate</div>
+      <p>The analytical object's terminological coherence infrastructure is adequate for experimental use under C-Full conditions. Domain tag coverage (0.87), complete version history (1.00), and the anchor document's explicit domain definitions together provide sufficient TC scaffolding for participants who consult the anchor document. Risk is concentrated in D-2 and in the four unlabelled auxiliary documents.</p>
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Finding 2 — FC Structural Baseline: Adequate with Reservation</div>
+      <p>Frame coherence structural conditions are largely present — scope coverage (0.90) and explicit governance layer — but cross-reference density (1.8) is below what would fully support independent frame construction across 30 documents. The anchor document compensates under C-Full conditions; under C-None conditions, frame fragmentation risk is elevated by document isolation.</p>
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Finding 3 — Anchor Document Functional Assessment: Operational</div>
+      <p>ACI-STRUCTURE.md v1.3 meets the requirements specified in WP-013 §3.1 for anchor document function: it defines the analytical object (§1 Publication Types, §2 Domains), specifies terminology (§2 domain definitions), articulates the frame (§9 Core Axiom, §7 Positioning Invariants), and specifies what participants may and may not change autonomously (§6 LLM Governance Layer). The anchor document is assessed as functional for C-Full experimental conditions.</p>
+    </div>
+
+    <div class="finding-box">
+      <div class="finding-label">Finding 4 — Pre-Experiment Reference State Established</div>
+      <p>This assessment establishes the pre-experiment reference state for the DASC experiment. Subsequent session logs and post-experiment coherence measurements will be compared against these baseline values to assess whether experimental conditions produce coherence changes in the predicted direction.</p>
+    </div>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">Scope and Limits</h2></div>
+
+    <p>This assessment is structural — it analyses document properties, not participant behaviour. It cannot predict how individual participants will interpret the analytical object, how frame authority will be exercised in practice, or whether the anchor document will function as a coherence mechanism under actual experimental conditions. These are empirical questions that the DASC experiment is designed to answer.</p>
+
+    <p>The metrics reported are computed from document structure and should be treated as structural proxies, not direct coherence measurements. TC, FC, and OC as defined in WP-013 §02 require participant-level data for direct measurement. This assessment provides the structural baseline against which those measurements will be interpreted.</p>
+
+    <p>This assessment was produced in a C-Full experimental session — with the anchor document active and the governance layer consulted. The session is logged in DASC-experiment/INTERACTION-LOG.md as pilot session 001.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">DA-007 · v1.0 · 2026<br>Active</div>
+  <div class="footer-col">D-3 · D-5<br>Framework: WP-013</div>
+</footer>
+
+<div style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;">
+  Version History<br>
+  <span style="font-weight:400;">v1.0 &middot; Mar 2026 &middot; Initial diagnostic assessment — DASC pilot session 001</span>
+</div>
+
+</body>
+</html>

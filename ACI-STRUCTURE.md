@@ -211,7 +211,7 @@ As of March 2026 — update this table when new publications are added.
 |------|-------|---------|
 | Working Papers (WP) | WP-001 – WP-013 | WP-014 |
 | Supporting Papers (SP) | SP-001 – SP-006 | SP-007 |
-| Diagnostic Assessments (DA) | DA-001 – DA-006 | DA-007 |
+| Diagnostic Assessments (DA) | DA-001 – DA-007 | DA-008 |
 | Technical Notes (TN) | TN-001 – TN-006 | TN-007 |
 | Concept Notes (CN) | CN-001 – CN-002 | CN-003 |
 | Research Query Memos (RQM) | RQM-001 | RQM-002 |
