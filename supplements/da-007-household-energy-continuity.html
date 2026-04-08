@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA-007 — Household Energy Continuity: Structural Conditions for Effective Intervention · ACI</title>
+<meta name="description" content="Three structural conditions that any effective household energy continuity instrument must satisfy — and why current mechanisms satisfy none of them simultaneously.">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --mid: #555;
+    --light: #888;
+    --rule: #ddd;
+    --bg: #fafaf8;
+    --tag-bg: #f0f0ec;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--mid);
+  }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+
+  .doc-header {
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 2rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .doc-series {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 1.2rem;
+  }
+
+  .doc-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.2rem 2rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; }
+
+  .doc-title {
+    font-size: 1.85rem;
+    font-weight: normal;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6rem;
+  }
+
+  .doc-subtitle {
+    font-size: 1rem;
+    color: var(--mid);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .doc-cite {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--light);
+    line-height: 1.6;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .status-pill {
+    display: inline-block;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--mid);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .doc-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .section-marker {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--ink);
+    margin-top: 2rem;
+    margin-bottom: 0.7rem;
+  }
+
+  p { margin-bottom: 1.1rem; }
+
+  section {
+    margin-bottom: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  section:first-child { border-top: none; padding-top: 0; }
+
+  blockquote {
+    border-left: 2px solid var(--ink);
+    margin: 2rem 0;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    color: var(--mid);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* Condition boxes — core of DA-007 */
+  .condition {
+    border: 1px solid var(--ink);
+    padding: 1.4rem 1.6rem;
+    margin: 2rem 0;
+  }
+  .condition-header {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .condition-title {
+    font-size: 1.05rem;
+    font-weight: normal;
+    margin-bottom: 0.8rem;
+    color: var(--ink);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    margin: 1.5rem 0 2rem;
+  }
+  th {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 2px solid var(--ink);
+    letter-spacing: 0.02em;
+  }
+  td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  .check { color: #1a1a1a; font-weight: 600; }
+  .partial { color: var(--mid); }
+  .cross { color: var(--light); }
+
+  .finding {
+    background: var(--tag-bg);
+    border-left: 2px solid var(--ink);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .finding-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  .summary-box {
+    border: 1px solid var(--ink);
+    padding: 1.5rem 1.8rem;
+    margin: 2rem 0;
+  }
+  .summary-box-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .xref {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .xref:hover { color: var(--ink); border-color: var(--ink); }
+
+  .fc-list {
+    list-style: none;
+    margin: 1rem 0;
+  }
+  .fc-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.92rem;
+    padding-left: 0;
+  }
+  .fc-list li:last-child { border-bottom: none; }
+  .fc-tag {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-right: 0.8rem;
+  }
+
+  .doc-footer {
+    border-top: 2px solid var(--ink);
+    padding: 2rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--light);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 640px) {
+    html { font-size: 16px; }
+    .doc-header, .doc-body { padding-left: 1.2rem; padding-right: 1.2rem; }
+    nav { padding: 0.75rem 1.2rem; }
+    .doc-meta-grid { grid-template-columns: 1fr; }
+    .doc-title { font-size: 1.5rem; }
+    .doc-footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="https://aethercontinuity.org">Aether Continuity Institute · ACI</a></span>
+  <span class="nav-right">
+    <a href="https://aethercontinuity.org/research.html">Research Program</a>
+    <a href="https://aethercontinuity.org">aethercontinuity.org</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <p class="doc-series">Diagnostic Assessment · DA-007</p>
+  <div class="status-pill">Open Draft · Subject to Revision</div>
+
+  <div class="doc-meta-grid">
+    <span>Domain: <strong>D-3 · D-4</strong></span>
+    <span>Status: <strong>Open Working Draft</strong></span>
+    <span>Version: <strong>1.0 · April 2026</strong></span>
+    <span>Language: <strong>EN</strong></span>
+  </div>
+
+  <h1 class="doc-title">Household Energy Continuity: Structural Conditions for Effective Intervention</h1>
+  <p class="doc-subtitle">Three conditions any effective instrument must satisfy — and why no current mechanism satisfies all three simultaneously</p>
+
+  <div class="doc-cite">
+    Cite as: Aether Continuity Institute (ACI). (2026). Household Energy Continuity: Structural Conditions for Effective Intervention. ACI Diagnostic Assessment No. 007, v1.0. Available at: https://aethercontinuity.org<br>
+    Cross-references: <a class="xref" href="https://aethercontinuity.org/papers/wp-005-compound-stress-finland.html">WP-005</a> F-3 · F-6 · DA-001 S-3 · DA-003 I-2 · DA-006 LCR · CN-003 · WP-013 · <a class="xref" href="https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html">SP-001</a>
+  </div>
+</div>
+
+<div class="doc-body">
+
+  <!-- INTRO -->
+  <section>
+    <p>Finland's energy system is undergoing structural change whose timing, scope, and distributional effects do not align with each other.</p>
+    <p>Investment decisions are made now, but their consequences materialise in the 2030s — precisely when several other structural pressures converge on the same system. The change does not affect only the energy sector. It propagates through housing, public finances, labour markets, and social protection — but these sectors plan separately.</p>
+    <p>The distributional consequence is direct: the risks and benefits of the energy transition do not fall on the same populations. Large consumers have secured price stability through long-term Power Purchase Agreements. Households cannot access equivalent instruments. The district heating customer is a captive customer of a local monopoly, with no alternative supplier and no meaningful exit option.</p>
+
+    <blockquote>This is not a market malfunction. It is a design outcome. The system was optimised for production efficiency under normal conditions — not for distributing the costs of exceptional conditions fairly.</blockquote>
+
+    <p>This diagnostic assessment examines the structural conditions that any effective household energy continuity instrument must satisfy. It does not recommend a specific policy instrument. It identifies what properties such an instrument must have — and evaluates existing mechanisms against those properties.</p>
+    <p><em>Reader note: This assessment assumes interest in the subject matter, not technical expertise in energy systems.</em></p>
+  </section>
+
+  <!-- §01 -->
+  <section>
+    <span class="section-marker">§ 01</span>
+    <h2>Diagnostic starting point</h2>
+
+    <p>WP-005 identifies three structural features that together produce household energy vulnerability. First, value extraction asymmetry (CS-2): the benefits of the energy transition flow to capital; the costs are distributed broadly. Second, distributional asymmetry (F-3): the transition's costs fall disproportionately on those with the least capacity to absorb them. Third, PPA-driven structural displacement (F-6): long-term industrial contracts pre-allocate newly commissioned generation before it reaches the retail market, leaving households as residual price-takers.</p>
+
+    <p>DA-003 quantifies the mechanism: data centres and heavy industry secure electricity at 30–55 €/MWh on long-term contracts. Households face the spot market or short fixed-price contracts whose risk premium grows as tail-risk grows. SP-001 documents that the tail risk is growing — observed wind persistence exceeds calibrated model assumptions, meaning the Black Period endurance problem is larger than publicly reported.</p>
+
+    <p>CN-003 identified the clearest structural expression: a homeowner can stockpile firewood. A district heating apartment resident cannot do anything equivalent. This asymmetry is not incidental — it is architectural.</p>
+
+    <p>This assessment operationalises these findings as a question: what must an effective instrument structurally do, and does any existing mechanism do it?</p>
+  </section>
+
+  <!-- §02 -->
+  <section>
+    <span class="section-marker">§ 02</span>
+    <h2>Three structural conditions</h2>
+
+    <p>An effective household energy continuity instrument must satisfy three structural conditions simultaneously. These are not policy recommendations — they are logical necessities that follow directly from the structure of the vulnerability.</p>
+
+    <div class="condition">
+      <span class="condition-header">Condition I</span>
+      <p class="condition-title">Automaticity</p>
+      <p>The instrument must activate automatically — not on the basis of an application.</p>
+      <p>Energy poverty structurally affects those with the least institutional capacity to navigate support systems. DA-006 identifies the same population in the Labour Continuity Reserve analysis: the groups most exposed to energy cost increases are also the groups with the least administrative capacity to file claims, gather documentation, and track deadlines. An application-based system transfers the administrative burden precisely to where it is most onerous.</p>
+      <p>Automaticity does not mean universal support. It means that targeting is based on register data — income, housing type, heating system — rather than individual initiative. The Finnish housing benefit already operates on this principle. The 2022–2023 electricity support did not — and coverage gaps were documented.</p>
+    </div>
+
+    <div class="condition">
+      <span class="condition-header">Condition II</span>
+      <p class="condition-title">Anticipation</p>
+      <p>The instrument must operate before a crisis — not only in response to one.</p>
+      <p>WP-013 documents that institutional response latency in Finnish energy policy is 3–8 years from decision to implementation. SP-001's calibrated Black Period event lasts 72 hours. A household in crisis cannot benefit from support that is processed in three weeks. And a state cannot activate a new instrument during the crisis that necessitates it.</p>
+      <p>Anticipation requires two things: the instrument must be designed and legally established before the stress event, and its activation threshold must be tied to system parameters — such as Fingrid's endurance index — rather than to political discretion exercised after the fact.</p>
+    </div>
+
+    <div class="condition">
+      <span class="condition-header">Condition III</span>
+      <p class="condition-title">Recognition of captive customer status</p>
+      <p>The instrument must treat district heating customers as structurally distinct from electricity market consumers.</p>
+      <p>This is DA-007's analytically most important condition — and the one absent from all current instruments.</p>
+      <p>A district heating customer cannot change supplier. Cannot negotiate the price. Cannot shift consumption to a lower-cost time. Cannot exit the network without relocating. The connection fee has been paid; the equipment is installed; the network is the only option. This is a different structural position from an electricity market consumer who retains at least a theoretical ability to compete, switch, or reduce.</p>
+      <p>An instrument that does not distinguish between these positions applies a market-participant logic to a non-market participant. The result is systematically inadequate coverage of the most exposed group.</p>
+      <p><em>Note on instrument design tension:</em> Recognising captive customer status must not lock households into captive status where an alternative exists. The instrument should protect those without options — not create disincentives for those who could transition away from monopoly services.</p>
+    </div>
+  </section>
+
+  <!-- §03 -->
+  <section>
+    <span class="section-marker">§ 03</span>
+    <h2>Assessment of existing mechanisms</h2>
+
+    <p>Three existing mechanisms are evaluated against the three conditions.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mechanism</th>
+          <th>Condition I<br>Automaticity</th>
+          <th>Condition II<br>Anticipation</th>
+          <th>Condition III<br>Captive status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Housing benefit</strong></td>
+          <td class="partial">Partial — register-based income test, but does not separate energy cost</td>
+          <td class="cross">No — reactive to income, not to energy system state</td>
+          <td class="cross">No — does not distinguish heating type or supplier structure</td>
+        </tr>
+        <tr>
+          <td><strong>Electricity support 2022–23</strong></td>
+          <td class="cross">No — required individual application; significant non-take-up documented</td>
+          <td class="cross">No — activated after crisis onset, not before</td>
+          <td class="cross">No — did not distinguish district heating customers</td>
+        </tr>
+        <tr>
+          <td><strong>Energy poverty monitoring</strong></td>
+          <td class="cross">— (monitoring, not instrument)</td>
+          <td class="cross">— (monitoring, not instrument)</td>
+          <td class="cross">Absent — no systematic monitoring exists at national level</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>No existing mechanism satisfies all three conditions simultaneously. This is the diagnostic finding — not that individual mechanisms are poorly designed, but that the instrument space as a whole has a structural gap that none of its components fills.</p>
+  </section>
+
+  <!-- §04 -->
+  <section>
+    <span class="section-marker">§ 04</span>
+    <h2>The institutional gap</h2>
+
+    <p>Satisfying the three conditions is technically feasible. It does not require new infrastructure, new agencies, or substantial new budget. It requires three institutional changes.</p>
+
+    <h3>Ownership of monitoring</h3>
+    <p>Energy poverty must be defined, measured, and reported by a single agency with a clear mandate. Currently no such mandate exists. The Energy Authority monitors pricing. TEM coordinates energy policy. Statistics Finland tracks income. None tracks their intersection at household level. The absence of measurement is itself a diagnostic signal — what is not measured is not managed.</p>
+    <p>Statistics Finland is the natural candidate: it already holds the register data required, has the methodological capacity, and carries no sectoral policy mandate that would bias measurement.</p>
+
+    <h3>Linkage to system parameters</h3>
+    <p>Household energy continuity support must be linked to Fingrid's endurance index — the measure of how long the system can sustain a Black Period event at current reserve levels. When that index falls below a defined winter threshold, support activates automatically for qualifying households. This makes the instrument a system-responsive tool, not a political decision taken under pressure.</p>
+
+    <h3>Captive customer classification</h3>
+    <p>District heating customers must be classified as a distinct category in existing support frameworks. This does not require new legislation — it requires a regulatory interpretation that recognises the structural difference between a captive monopoly customer and a competitive market participant. The Energy Authority can issue this interpretation within its existing mandate.</p>
+
+    <h3>Why these changes have not happened</h3>
+    <p>The three changes are low-cost, technically straightforward, and would address a documented gap. They have not happened because no single institution owns the complete problem. Each agency manages its own domain rationally. The compound failure — the gap between domains — has no owner. This is the coordination deficit that recurs across ACI's diagnostic work. It is not a resource deficit. It is a structural feature of how sectoral governance is organised.</p>
+  </section>
+
+  <!-- §04b -->
+  <section>
+    <span class="section-marker">§ 04b</span>
+    <h2>Continuity of regulatory interpretation</h2>
+
+    <p>Three of the institutional changes described above could be implemented through regulatory interpretation rather than legislation — which makes them faster, but also more fragile.</p>
+
+    <p>An instrument that rests on a regulatory interpretation can be reversed when administrations change, when officials rotate, or when political priorities shift. A household that makes housing decisions on the assumption of an established protection mechanism faces a different risk profile if that mechanism can be withdrawn without parliamentary process.</p>
+
+    <p>Faster implementation and lower durability are not necessarily incompatible. But the trade-off must be explicit. An interpretation-based instrument should include at minimum: a published document stating the interpretation and its rationale, a cross-agency sign-off that raises the political cost of reversal, and a commitment to review at a defined interval rather than at administrative discretion.</p>
+
+    <p>Without these features, the instrument provides the appearance of protection without the structural guarantee that protection requires to change household behaviour durably.</p>
+  </section>
+
+  <!-- §05 -->
+  <section>
+    <span class="section-marker">§ 05</span>
+    <h2>Falsification conditions</h2>
+
+    <p>DA-007's findings should be treated as substantially revised if any of the following is demonstrated:</p>
+
+    <ul class="fc-list">
+      <li><span class="fc-tag">FC-1</span> If application-based support reaches over 80% of energy-poor households as defined by the Syke/Aalto multi-indicator methodology, the automaticity condition is overstated. Evidence from the 2022–23 electricity support does not support this.</li>
+      <li><span class="fc-tag">FC-2</span> If district heating customers have a technically and financially realistic exit path within a 3-year horizon, the captive customer classification is incorrect. Current connection fee structures, equipment costs, and building-level constraints do not support this for multi-unit housing.</li>
+      <li><span class="fc-tag">FC-3</span> If real wage growth covers energy cost increases for the lowest income quintile through 2030, the structural gap does not produce material household harm. Current trajectory data does not support this.</li>
+      <li><span class="fc-tag">FC-4</span> If an existing mechanism can be identified that satisfies all three conditions simultaneously and has been overlooked in this assessment, §03 requires revision.</li>
+    </ul>
+  </section>
+
+  <!-- §06 SUMMARY -->
+  <section>
+    <span class="section-marker">§ 06</span>
+    <h2>Summary — in plain language</h2>
+
+    <div class="summary-box">
+      <span class="summary-box-label">For any reader</span>
+      <p>The energy system is changing in ways that raise costs. This is foreseeable and not reversible in the short term. The question is who pays when costs rise and the system is under stress.</p>
+      <p>Currently, the answer is: those without options. The district heating apartment resident cannot change supplier. The low-income pensioner cannot invest in alternatives. The household without savings cannot absorb a bill spike.</p>
+      <p>Instruments that could protect these groups exist in principle. None of the existing ones does so fully — because they require applications, respond after crises rather than before, and treat a captive monopoly customer the same as a consumer with choices.</p>
+      <p style="margin-bottom:0">The gap is not a resource problem. It is a coordination problem: no single institution owns it. That is what this assessment documents — and what any effective response must address first.</p>
+    </div>
+  </section>
+
+  <!-- §07 -->
+  <section>
+    <span class="section-marker">§ 07</span>
+    <h2>Scope and limits</h2>
+
+    <p>DA-007 does not evaluate the economic efficiency, cost-benefit ratio, or political feasibility of specific policy instruments. It does not recommend which instrument is best. Those are choices that belong to institutions with democratic mandate.</p>
+
+    <p>DA-007 identifies structural conditions that any effective instrument must satisfy, and evaluates existing mechanisms against those conditions. The choice of instrument remains with elected and mandated decision-makers.</p>
+
+    <p>ACI acknowledges its own limit here: this assessment can identify the coordination gap, but cannot fill it. Filling it requires a political actor willing to take ownership of a problem that currently has no institutional home. That condition is the subject of DA-008.</p>
+  </section>
+
+</div>
+
+<div class="doc-footer">
+  <span>Aether Continuity Institute · aethercontinuity.org</span>
+  <span>DA-007 · v1.0 · April 2026</span>
+  <span>Domain D-3 · D-4</span>
+  <span>Open Draft · Subject to revision</span>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finland 2030 — A Compound Risk Diagnosis · ACI Synthesis Memo</title>
+<meta name="description" content="Five simultaneous structural pressures and the institutional gap between them. ACI Synthesis Memo, April 2026.">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --mid: #555;
+    --light: #888;
+    --rule: #ddd;
+    --bg: #fafaf8;
+    --accent: #1a1a1a;
+    --tag-bg: #f0f0ec;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 17px; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--mid);
+  }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+
+  /* ── HEADER BLOCK ── */
+  .doc-header {
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 2rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .doc-series {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 1.2rem;
+  }
+
+  .doc-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.2rem 2rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; }
+
+  .doc-title {
+    font-size: 1.95rem;
+    font-weight: normal;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6rem;
+    color: var(--ink);
+  }
+  .doc-title em { font-style: italic; }
+
+  .doc-subtitle {
+    font-size: 1rem;
+    color: var(--mid);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .doc-cite {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--light);
+    line-height: 1.6;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .status-pill {
+    display: inline-block;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--mid);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+
+  /* ── BODY ── */
+  .doc-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* Section markers */
+  .section-marker {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--ink);
+    margin-top: 2rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.01em;
+  }
+
+  p {
+    margin-bottom: 1.1rem;
+    color: var(--ink);
+  }
+
+  section {
+    margin-bottom: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  section:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* Pull quote */
+  blockquote {
+    border-left: 2px solid var(--ink);
+    margin: 2rem 0;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    color: var(--mid);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    margin: 1.5rem 0 2rem;
+    color: var(--ink);
+  }
+  th {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 2px solid var(--ink);
+    letter-spacing: 0.02em;
+  }
+  td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* Findings */
+  .finding {
+    background: var(--tag-bg);
+    border-left: 2px solid var(--ink);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .finding-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  /* Cross-reference links */
+  .xref {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .xref:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* Footer */
+  .doc-footer {
+    border-top: 2px solid var(--ink);
+    padding: 2rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    color: var(--light);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Conclusion box */
+  .conclusion {
+    border: 1px solid var(--ink);
+    padding: 1.5rem 1.8rem;
+    margin: 2rem 0;
+  }
+  .conclusion-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    html { font-size: 16px; }
+    .doc-header, .doc-body { padding-left: 1.2rem; padding-right: 1.2rem; }
+    nav { padding: 0.75rem 1.2rem; }
+    .doc-meta-grid { grid-template-columns: 1fr; }
+    .doc-title { font-size: 1.55rem; }
+    .doc-footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="https://aethercontinuity.org">Aether Continuity Institute · ACI</a></span>
+  <span class="nav-right">
+    <a href="https://aethercontinuity.org/research.html">Research Program</a>
+    <a href="https://aethercontinuity.org">aethercontinuity.org</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <p class="doc-series">Synthesis Memo · April 2026</p>
+  <div class="status-pill">Open Draft · Subject to Revision</div>
+
+  <div class="doc-meta-grid">
+    <span>Domain: <strong>D-1 · D-3 · D-4</strong></span>
+    <span>Status: <strong>Open Working Draft</strong></span>
+    <span>Version: <strong>1.0 · April 2026</strong></span>
+    <span>Language: <strong>EN</strong></span>
+  </div>
+
+  <h1 class="doc-title">Finland 2030 —<br>A Compound Risk Diagnosis</h1>
+  <p class="doc-subtitle">Five simultaneous structural pressures and the institutional gap between them</p>
+
+  <div class="doc-cite">
+    Cite as: Aether Continuity Institute (ACI). (2026). Finland 2030 — A Compound Risk Diagnosis. ACI Synthesis Memo, April 2026. Available at: https://aethercontinuity.org<br>
+    Cross-references: <a class="xref" href="https://aethercontinuity.org/papers/wp-001-duration-adequacy-2.html">WP-001</a> · <a class="xref" href="https://aethercontinuity.org/papers/wp-005-compound-stress-finland.html">WP-005</a> · DA-001 · DA-003 · SP-001 · CN-003 · WP-013 · DA-007
+  </div>
+</div>
+
+<div class="doc-body">
+
+  <!-- INTRO -->
+  <section>
+    <p>This memo does not describe a single crisis. It describes five simultaneous structural changes which, each in isolation, would be manageable — but which together constitute an exceptional stress load on Finnish households, public finances, and the energy system in the early 2030s.</p>
+    <p>These changes are not unpredictable. They are known. They have not been connected into a coherent analysis.</p>
+  </section>
+
+  <!-- I -->
+  <section>
+    <span class="section-marker">§ 01</span>
+    <h2>Energy system: the problem is not capacity, it is endurance</h2>
+
+    <p>Finland's electricity system is strong by conventional measures. Wind power is growing rapidly, nuclear capacity is in place, and Nordic interconnections are well developed. This is an accurate picture under normal conditions.</p>
+
+    <p>The picture changes when a different question is asked: how long does the system hold if wind output collapses for three days during a cold spell, while data centres draw at full capacity?</p>
+
+    <p>A peer-reviewed study by the University of Oulu (AIMS Energy, October 2025) finds that Finland remains electricity-negative during 61% of annual hours by 2030 — even as renewable capacity grows substantially. Calibrated modelling shows that extending dispatchable reserve from 48 to 72 hours would eliminate the most severe tail events almost entirely. But the capacity needed is not arriving. Wärtsilä and comparable suppliers face global order backlogs; delivery lead times are extending.</p>
+
+    <p>At the same time, data centre investments are locking in over 3 gigawatts of inflexible additional load. Each major new facility adds approximately 50,000 MWh to the Black Period energy requirement — while Finland's total battery storage covers approximately 9.5 minutes of the same requirement.</p>
+
+    <blockquote>This is not a capacity gap. It is an endurance gap. And it remains invisible as long as adequacy is measured in megawatts rather than megawatt-hours.</blockquote>
+  </section>
+
+  <!-- II -->
+  <section>
+    <span class="section-marker">§ 02</span>
+    <h2>Kuopio: a local example of a national dilemma</h2>
+
+    <p>Kuopio Energy's small modular reactor project is a bold response to a genuine necessity. The Haapaniemi 2 combined heat and power plant — which currently supplies district heating to approximately 100,000 residents in Kuopio, eastern Finland — is approaching end of operational life by 2035. Something must replace it.</p>
+
+    <p>SMR technology, however, remains in the pre-commercial phase. No reference plant of the proposed type has been built and operated. The fuel supplier has not been named. The price has not been disclosed. No contingency plan has been published.</p>
+
+    <p>A 2025 public survey by Innolink (N=1,424) found that 85% of Kuopio residents were aware of the project. But no one has publicly asked what happens if it is delayed or substantially more expensive than anticipated. The most likely interim solution — electric boilers — would add significant load to the national grid precisely at the moments of greatest system stress.</p>
+
+    <p>This is not a specifically Kuopio problem. It is a structural feature of all district heating systems whose production decisions still rest on unresolved technologies. The district heating customer is a captive customer of a local monopoly with no alternative supplier and no meaningful exit option.</p>
+  </section>
+
+  <!-- III -->
+  <section>
+    <span class="section-marker">§ 03</span>
+    <h2>Household finances: the squeeze tightens from three directions</h2>
+
+    <p>Electricity prices are rising for two reasons. First, forward prices increase as demand grows. Second — and more importantly — fixed-price contracts now carry a growing risk premium, as suppliers price the Black Period tail risk into their offers. This is actuarial necessity, not profiteering. Estimated range for fixed-price contracts in 2028–2030: 15–18 euro cents per kilowatt-hour, compared to approximately 9–11 cents today.</p>
+
+    <p>District heating prices are rising faster than the historical average rate of 4–6% per year, as biomass fuel costs increase under EU sustainability regulation and infrastructure investment costs are passed through to customers. Estimated increase by 2030: 30–50%.</p>
+
+    <p>Food, transport and services follow energy with a lag. Total consumer price inflation in 2026–2030 is likely to run at 2.5–4% per year — faster than real wage growth.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Necessity cost</th>
+          <th>2025 estimate</th>
+          <th>2030 estimate</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Electric heating (detached house)</td>
+          <td>3,000 €/yr</td>
+          <td>4,400–5,200 €/yr</td>
+          <td>+47–73%</td>
+        </tr>
+        <tr>
+          <td>District heating (apartment)</td>
+          <td>900 €/yr</td>
+          <td>1,200–1,350 €/yr</td>
+          <td>+33–50%</td>
+        </tr>
+        <tr>
+          <td>Food (single person)</td>
+          <td>4,500 €/yr</td>
+          <td>4,950–5,100 €/yr</td>
+          <td>+10–13%</td>
+        </tr>
+        <tr>
+          <td>Real wages</td>
+          <td>baseline</td>
+          <td>+8–13% nominal</td>
+          <td>≈ 0% real</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Syke (Finnish Environment Institute) and Aalto University research finds that 7–15% of Finnish households — up to 300,000 — are already energy poor by multi-indicator measures, compared to the IEA's 2% estimate. University of Eastern Finland research finds that one in five households in studied areas is financially vulnerable at electricity prices of 10–20 cents per kilowatt-hour. That price range is already current.</p>
+  </section>
+
+  <!-- IV -->
+  <section>
+    <span class="section-marker">§ 04</span>
+    <h2>Public finances: five competing expenditure pressures</h2>
+
+    <p>At the same time, the public sector is carrying five structural expenditure pressures simultaneously.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Expenditure category</th>
+          <th>2025</th>
+          <th>2030 estimate</th>
+          <th>Additional pressure</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sovereign debt interest</td>
+          <td>3.5 Mrd €</td>
+          <td>4.5–5.5 Mrd €</td>
+          <td>+1–2 Mrd €</td>
+        </tr>
+        <tr>
+          <td>Defence (NATO trajectory)</td>
+          <td>6.7 Mrd €</td>
+          <td>8.5–11 Mrd €</td>
+          <td>+2–4 Mrd €</td>
+        </tr>
+        <tr>
+          <td>Social and health (ageing)</td>
+          <td>~35 Mrd €</td>
+          <td>~38–40 Mrd €</td>
+          <td>+3–5 Mrd €</td>
+        </tr>
+        <tr>
+          <td>Energy poverty support</td>
+          <td>small</td>
+          <td>growing</td>
+          <td>+0.5–1 Mrd €</td>
+        </tr>
+        <tr>
+          <td>Infrastructure investment debt</td>
+          <td>growing</td>
+          <td>growing</td>
+          <td>+1–2 Mrd €</td>
+        </tr>
+        <tr>
+          <td><strong>Combined additional pressure</strong></td>
+          <td></td>
+          <td></td>
+          <td><strong>+7–14 Mrd €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Interest payments are rising as cheaper legacy bonds mature and are refinanced at higher rates. Each one percentage point increase in eurozone interest rates adds approximately 788 million euros to annual debt service. Finland's credit outlook was revised to negative by Fitch Ratings in August 2024.</p>
+
+    <p>Finland has committed to reaching at least 3% of GDP in defence expenditure by 2029 — a structural increase of 4–5 billion euros per year once the current fighter aircraft programme is complete. Social and health expenditure grows as the population ages; Finland's birth rate reached a historic low in 2023 at below 40,000 births per year.</p>
+
+    <p>Tax revenues grow slowly. GDP growth is projected at 1.5–2% per year. Fiscal space is historically narrow. When expenditure is constrained, the historical pattern is to cut from the areas of least political resistance: education, culture, preventive services — not interest payments, not defence, not pensions.</p>
+  </section>
+
+  <!-- V -->
+  <section>
+    <span class="section-marker">§ 05</span>
+    <h2>The institutional gap: no one owns the complete picture</h2>
+
+    <p>All of the above is foreseeable. Not precisely, but directionally. Yet it does not appear in public energy policy debate as a coherent whole.</p>
+
+    <p>Kuopio's public survey asked whether residents were supportive of the SMR project. It did not ask what should happen if the project fails. Fingrid reports capacity figures in megawatts — not in megawatt-hours. The defence budget is growing. No one has published an analysis of what this means for education or preventive services funding.</p>
+
+    <p>Syke and Aalto found energy poverty affecting 7–15% of households — not the 2% in the IEA estimate. The University of Eastern Finland found one in five households vulnerable at current price levels. The University of Oulu found electricity self-sufficiency to be a myth at hourly resolution. These findings exist. They have not been connected.</p>
+
+    <blockquote>This is an institutional blind spot — not a conspiracy, but a structural feature. Every institution sees its own sector. No one owns the complete picture.</blockquote>
+
+    <p>The diagnostic term for this condition is a coordination deficit — not a resource deficit, not a knowledge deficit. The information exists. The analytical capacity exists. The institutional structure that would integrate it across sectoral boundaries does not.</p>
+  </section>
+
+  <!-- FINDINGS -->
+  <section>
+    <span class="section-marker">§ 06</span>
+    <h2>Diagnostic findings</h2>
+
+    <div class="finding">
+      <span class="finding-label">F-1 · Compound stress is not decomposable</span>
+      The five pressures described in this memo interact in ways that cannot be addressed by summing individual responses. Planning frameworks that treat these as separable domains will systematically underestimate the compound risk.
+    </div>
+
+    <div class="finding">
+      <span class="finding-label">F-2 · The endurance gap is the primary energy risk</span>
+      The adequacy problem is not annual megawatt-hour balance — it is sustained power delivery across 48–72 hour periods of compound weather and demand stress. This gap is not captured by conventional capacity metrics.
+    </div>
+
+    <div class="finding">
+      <span class="finding-label">F-3 · Distributional asymmetry creates a secondary continuity risk</span>
+      The costs of the energy transition fall disproportionately on low-income households, captive district heating customers, and pensioners. The benefits flow to capital. This asymmetry generates political continuity risk that operates on the same time scale as the technical risks.
+    </div>
+
+    <div class="finding">
+      <span class="finding-label">F-4 · Fiscal space is structurally constrained</span>
+      Five simultaneous mandatory expenditure pressures — interest, defence, ageing, energy poverty, infrastructure — are competing for revenues that grow at 1.5–2% per year. The state cannot protect households and simultaneously fund all structural commitments without explicit prioritisation choices that have not been made.
+    </div>
+
+    <div class="finding">
+      <span class="finding-label">F-5 · The intervention window is open and narrowing</span>
+      The compound stress configuration is in its early phase. Industrial commitments are being made; infrastructure planning is active; policy frameworks are not yet locked. This is the phase in which trajectory correction is feasible without systemic disruption. The window is not permanently open.
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section>
+    <span class="section-marker">§ 07</span>
+    <h2>Conclusion</h2>
+
+    <div class="conclusion">
+      <span class="conclusion-label">Diagnostic Summary</span>
+      <p>Finland 2030 is a society doing everything simultaneously on historically narrow fiscal margins. It is defending itself with growing budgets. Caring for an ageing population with growing costs. Servicing interest on growing debt. Attempting to build an energy system whose dispatchable backup solution is delayed and whose most prominent local replacement technology is unresolved. And doing all of this while its households — particularly low-income residents, pensioners, and captive customers of district heating monopolies — face rising necessity costs that real wage growth cannot cover.</p>
+      <p style="margin-bottom:0">None of these pressures would individually collapse the system. Together they constitute what ACI's diagnostic framework calls a compound stress condition: the combined effect of simultaneous pressures that exceeds what any single disruption would produce. The intervention window is still open. But it is narrowing faster than public debate recognises. Naming the problem is the first step.</p>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section>
+    <span class="section-marker">§ 08</span>
+    <h2>Related ACI publications</h2>
+
+    <table>
+      <thead>
+        <tr><th>Document</th><th>Topic</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a class="xref" href="https://aethercontinuity.org/papers/wp-001-duration-adequacy-2.html">WP-001</a></td>
+          <td>Duration adequacy and continuity risk in high-electrification power systems</td>
+        </tr>
+        <tr>
+          <td><a class="xref" href="https://aethercontinuity.org/papers/wp-005-compound-stress-finland.html">WP-005</a></td>
+          <td>Compound stress and system continuity: Finland 2025–2035</td>
+        </tr>
+        <tr>
+          <td>WP-013</td>
+          <td>Two scenarios 2030: the structural role of institutional delay</td>
+        </tr>
+        <tr>
+          <td>DA-001</td>
+          <td>Finland pre-shortage phase 2026–2032</td>
+        </tr>
+        <tr>
+          <td>DA-007</td>
+          <td>Household energy continuity: structural conditions for effective intervention</td>
+        </tr>
+        <tr>
+          <td><a class="xref" href="https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html">SP-001</a></td>
+          <td>Power adequacy under compound stress: reserve duration and tail-risk contraction</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div><!-- /doc-body -->
+
+<div class="doc-footer">
+  <span>Aether Continuity Institute · aethercontinuity.org</span>
+  <span>Synthesis Memo · April 2026 · v1.0</span>
+  <span>Domain D-1 · D-3 · D-4</span>
+  <span>Open Draft · Subject to revision</span>
+</div>
+
+</body>
+</html>
