@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OGAS2 — System Health Simulator · ACI</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c0f;
+  --surface: #111418;
+  --surface-2: #181c22;
+  --border: #242830;
+  --border-2: #2e3440;
+  --text: #d4d8e0;
+  --text-muted: #5a6070;
+  --text-dim: #3a4050;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --green: #3ddc84;
+  --yellow: #f5c842;
+  --orange: #f07030;
+  --red: #e04040;
+  --accent: #4080ff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
+  pointer-events: none; z-index: 1000;
+}
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+  display: flex; align-items: baseline; gap: 2rem;
+}
+.header-logo { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+.header-logo span { color: var(--accent); }
+.header-title { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em; color: var(--text); }
+.header-note { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-left: auto; }
+
+.main { max-width: 1160px; margin: 0 auto; padding: 1.5rem 2rem; display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+
+.panel { background: var(--surface); border: 1px solid var(--border); padding: 1.5rem; }
+.panel-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+
+/* SHI */
+.shi-panel { position: relative; overflow: hidden; }
+.shi-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--state-col, var(--accent)); transition: background 0.4s; }
+.shi-row { display: flex; align-items: flex-end; gap: 2.5rem; flex-wrap: wrap; }
+.shi-num { font-family: var(--mono); font-size: 3.5rem; font-weight: 500; line-height: 1; color: var(--state-col, var(--text)); transition: color 0.4s; }
+.shi-st { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.3em; color: var(--state-col, var(--text)); margin-top: 0.4rem; transition: color 0.4s; }
+.shi-meta-grid { display: grid; grid-template-columns: repeat(4, auto); gap: 1.5rem; }
+.shi-meta-item { font-family: var(--mono); font-size: 0.58rem; color: var(--text-muted); line-height: 1.9; }
+.shi-meta-item strong { color: var(--text); font-weight: 500; }
+.coupling-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(224,64,64,0.12); border: 1px solid var(--red); padding: 0.3rem 0.75rem; margin-top: 1rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--red); opacity: 0; transition: opacity 0.3s; }
+.coupling-badge.on { opacity: 1; }
+.c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* Layers */
+.layer-row { margin-bottom: 1.1rem; }
+.layer-hdr { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.35rem; }
+.layer-name { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-muted); }
+.layer-val { font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 500; }
+.layer-track { height: 3px; background: var(--border-2); margin-bottom: 0.25rem; }
+.layer-fill { height: 100%; transition: width 0.2s, background 0.2s; }
+input[type=range] { width: 100%; -webkit-appearance: none; height: 3px; background: var(--border-2); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; background: var(--text); border-radius: 50%; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb:hover { background: var(--accent); }
+.lock-row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.2rem; }
+.lock-lbl { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
+.lock-val { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
+
+/* Actions */
+.action-item { display: flex; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.action-item:last-child { border-bottom: none; }
+.action-item:hover .action-title { color: var(--accent); }
+.action-check { width: 13px; height: 13px; border: 1px solid var(--border-2); flex-shrink: 0; margin-top: 0.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.action-check.on { background: var(--accent); border-color: var(--accent); }
+.action-check.on::after { content: '✓'; font-size: 0.58rem; color: #fff; }
+.action-title { font-size: 0.68rem; color: var(--text); line-height: 1.35; }
+.action-meta { font-family: var(--mono); font-size: 0.52rem; color: var(--text-muted); margin-top: 0.15rem; }
+.cLOW { color: var(--green); }
+.cMEDIUM { color: var(--yellow); }
+.cHIGH { color: var(--orange); }
+.cVERY_HIGH { color: var(--red); }
+
+/* Forecast */
+.forecast-full { grid-column: 1 / -1; }
+.tab-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+.tab { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; padding: 0.3rem 0.9rem; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.tab.active, .tab:hover { border-color: var(--accent); color: var(--accent); }
+.preset-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.preset-btn { font-family: var(--mono); font-size: 0.58rem; padding: 0.28rem 0.7rem; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.chart-wrap { width: 100%; height: 220px; position: relative; }
+svg.cht { width: 100%; height: 100%; }
+
+.fcast-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--border); margin-top: 1.25rem; }
+.fcast-cell { background: var(--surface); padding: 0.9rem; }
+.fcast-cell-hdr { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.6rem; }
+.fcast-sc { margin-bottom: 0.4rem; }
+.fcast-sc-lbl { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
+.fcast-sc-val { font-family: var(--mono); font-size: 1rem; font-weight: 500; line-height: 1.2; }
+.fcast-sc-st { font-family: var(--mono); font-size: 0.52rem; }
+.delta { font-family: var(--mono); font-size: 0.52rem; }
+.dpos { color: var(--red); }
+.dneg { color: var(--green); }
+
+.legend-row { display: flex; gap: 1.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.55rem; color: var(--text-muted); }
+.legend-line { width: 20px; height: 2px; }
+
+.citation { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); margin-top: 1rem; letter-spacing: 0.04em; line-height: 1.7; }
+
+.two-red-note {
+  margin-top: 1.25rem;
+  background: rgba(224,64,64,0.06);
+  border: 1px solid rgba(224,64,64,0.2);
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.two-red-item { font-family: var(--mono); font-size: 0.58rem; line-height: 1.8; }
+.two-red-item .lbl { color: var(--red); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.two-red-item .val { color: var(--text-muted); }
+.two-red-item strong { color: var(--text); }
+
+@media (max-width: 800px) {
+  .main { grid-template-columns: 1fr; }
+  .fcast-grid { grid-template-columns: repeat(3,1fr); }
+  .two-red-note { grid-template-columns: 1fr; }
+  .shi-meta-grid { grid-template-columns: repeat(2,auto); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">ACI · <span>OGAS2</span></div>
+  <div class="header-title">System Health Index Simulator</div>
+  <div class="header-note">v1.2 · Backtest-validated 2021–2026 · WP-004 / WP-013</div>
+</div>
+
+<div class="main">
+
+  <!-- SHI panel -->
+  <div class="panel shi-panel" id="shiPanel">
+    <div class="panel-label">System Health Index · Finland</div>
+    <div class="shi-row">
+      <div>
+        <div class="shi-num" id="shiNum">—</div>
+        <div class="shi-st" id="shiSt">CALCULATING</div>
+      </div>
+      <div class="shi-meta-grid">
+        <div class="shi-meta-item">Snapshot<br><strong id="metaSnap">2026-04</strong></div>
+        <div class="shi-meta-item">Coupling<br><strong id="metaCoup">—</strong></div>
+        <div class="shi-meta-item">Avg stress<br><strong id="metaStr">—</strong></div>
+        <div class="shi-meta-item">Avg buffer<br><strong id="metaBuf">—</strong></div>
+      </div>
+    </div>
+    <div class="coupling-badge" id="coupBadge"><span class="c-dot"></span>COMPOUND STRESS ACTIVE · S_ENERGY + R_PUBLIC &gt; 55 · −10 pts</div>
+  </div>
+
+  <!-- Right: layers + actions -->
+  <div style="display:flex;flex-direction:column;gap:1.5rem;">
+    <div class="panel">
+      <div class="panel-label">System Layers — Stress Input</div>
+      <div id="layerCtrl"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Intervention Matrix (WP-013 L6)</div>
+      <div id="actionList"></div>
+    </div>
+  </div>
+
+  <!-- Full-width forecast + history -->
+  <div class="panel forecast-full">
+    <div class="panel-label">Trajectory Analysis</div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+      <div class="tab-row">
+        <div class="tab active" id="tabForecast" onclick="setTab('forecast')">FORECAST</div>
+        <div class="tab" id="tabHistory" onclick="setTab('history')">BACKTEST 2021–2026</div>
+      </div>
+      <div class="preset-row">
+        <button class="preset-btn" onclick="loadPreset('2026')">2026-04</button>
+        <button class="preset-btn" onclick="loadPreset('2025')">2025-04</button>
+        <button class="preset-btn" onclick="loadPreset('stress')">Stress</button>
+        <button class="preset-btn" onclick="selAll()">All Actions</button>
+        <button class="preset-btn" onclick="selNone()">Clear</button>
+      </div>
+    </div>
+
+    <div id="viewForecast">
+      <div class="chart-wrap"><svg class="cht" id="chartForecast"></svg></div>
+      <div class="fcast-grid" id="fcastGrid"></div>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-line" style="background:rgba(224,64,64,0.7);border-top:1px dashed rgba(224,64,64,0.7);"></div>No action</div>
+        <div class="legend-item"><div class="legend-line" style="background:#4080ff;"></div>With selected actions</div>
+      </div>
+    </div>
+
+    <div id="viewHistory" style="display:none;">
+      <div class="chart-wrap"><svg class="cht" id="chartHistory"></svg></div>
+      <div class="two-red-note">
+        <div class="two-red-item">
+          <div class="lbl">2022-Q4 · SHI 22.2 RED</div>
+          <div class="val"><strong>External shock</strong> — V-shape recovery<br>
+          NordPool FI &gt;500 €/MWh · Invasion shock<br>
+          Coupling active: S_ENERGY 76 + R_PUBLIC 56<br>
+          Recovery: +16 pts in one quarter (2023-Q1)</div>
+        </div>
+        <div class="two-red-item">
+          <div class="lbl">2026-Q1 · SHI 32.1 RED</div>
+          <div class="val"><strong>Structural collapse</strong> — L-shape trajectory<br>
+          F-35 +500–700M€/y · Sote · Debt service<br>
+          Coupling active: S_ENERGY 61 + R_PUBLIC 58<br>
+          No natural recovery path without intervention</div>
+        </div>
+      </div>
+      <div class="citation">
+        Backtest validated against public Finnish energy price data (NordPool FI),
+        state budget reports (VM), and ACI diagnostic corpus (DA-001 – DA-007, WP-001 – WP-013).
+        Layer values are reconstructed estimates; not audited financial data.
+        ACI · aethercontinuity.org
+      </div>
+    </div>
+
+    <div class="citation" id="forecastCitation">
+      ACI WP-004 · Coupling penalty −10 when S_ENERGY &gt; 55 AND R_PUBLIC &gt; 55 ·
+      Decision window closure: WP-013 · Full action set cannot restore GREEN within 24 months.
+      Source: aethercontinuity.org
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Model ──────────────────────────────────────────────────────────────────
+const W = {S_ENERGY:0.35, R_PUBLIC:0.30, E_REAL:0.20, X_EXTERNAL:0.15};
+const DRIFT = {S_ENERGY:0.4, R_PUBLIC:0.35, E_REAL:0.20, X_EXTERNAL:0.15};
+const LDRIFT = {S_ENERGY:-0.3, R_PUBLIC:-0.4, E_REAL:-0.15, X_EXTERNAL:-0.10};
+
+function calcSHI(l, lk) {
+  let ws = Object.entries(W).reduce((s,[k,w])=>s+l[k]*w, 0);
+  let la = 0;
+  for (const [k,w] of Object.entries(W)) {
+    const v = lk[k];
+    la += v>50 ? (v-50)*0.5*w : -(50-v)*0.3*w;
+  }
+  const cp = l.S_ENERGY>55 && l.R_PUBLIC>55 ? 10 : 0;
+  const bon = Object.values(lk).filter(v=>v>65).length>=3 ? 10 : 0;
+  return +Math.max(0,Math.min(100,100-ws+la-cp+bon)).toFixed(1);
+}
+function stOf(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
+function colOf(s){return {GREEN:'#3ddc84',YELLOW:'#f5c842',ORANGE:'#f07030',RED:'#e04040'}[s]||'#4080ff';}
+
+function driftN(l0,lk0,m){
+  const l={...l0},lk={...lk0};
+  for(let i=0;i<m;i++){
+    for(const k in l){l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)).toFixed(1));lk[k]=Math.max(0,+(lk[k]+(LDRIFT[k]||0)).toFixed(1));}
+  }
+  return {l,lk,shi:calcSHI(l,lk)};
+}
+
+function applyAct(l0,lk0,m,acts){
+  const l={...l0},lk={...lk0};
+  for(const a of acts){
+    const lead=a.meta.lead;
+    if(m<lead)continue;
+    let sc=a.meta.profile==='RAMP'?Math.min(1,(m-lead)/12):a.meta.profile==='DELAYED'?m>lead+6?1:0:1;
+    for(const p of a.patch){
+      if(p.sv!=null)l[p.k]=Math.max(0,Math.min(100,+(l[p.k]+p.sv*sc).toFixed(1)));
+      if(p.lv!=null)lk[p.k]=Math.max(0,Math.min(100,+(lk[p.k]+p.lv*sc).toFixed(1)));
+    }
+  }
+  return driftN(l,lk,m);
+}
+
+// ── Data ───────────────────────────────────────────────────────────────────
+const PRESETS = {
+  '2026':{l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49}},
+  '2025':{l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54}},
+  'stress':{l:{S_ENERGY:72,R_PUBLIC:68,E_REAL:64,X_EXTERNAL:58},lk:{S_ENERGY:32,R_PUBLIC:28,E_REAL:38,X_EXTERNAL:42}}
+};
+
+const HISTORY = [
+  {p:'2021-Q3',l:{S_ENERGY:44,R_PUBLIC:38,E_REAL:41,X_EXTERNAL:32},lk:{S_ENERGY:62,R_PUBLIC:55,E_REAL:60,X_EXTERNAL:58},note:'Pre-crisis baseline'},
+  {p:'2021-Q4',l:{S_ENERGY:51,R_PUBLIC:40,E_REAL:44,X_EXTERNAL:36},lk:{S_ENERGY:58,R_PUBLIC:53,E_REAL:57,X_EXTERNAL:55},note:'Early signals'},
+  {p:'2022-Q1',l:{S_ENERGY:64,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:58},lk:{S_ENERGY:51,R_PUBLIC:51,E_REAL:53,X_EXTERNAL:46},note:'Invasion shock −13'},
+  {p:'2022-Q2',l:{S_ENERGY:68,R_PUBLIC:48,E_REAL:56,X_EXTERNAL:62},lk:{S_ENERGY:47,R_PUBLIC:50,E_REAL:50,X_EXTERNAL:42},note:'Escalation'},
+  {p:'2022-Q3',l:{S_ENERGY:74,R_PUBLIC:52,E_REAL:62,X_EXTERNAL:64},lk:{S_ENERGY:42,R_PUBLIC:48,E_REAL:46,X_EXTERNAL:40},note:'Peak crisis'},
+  {p:'2022-Q4',l:{S_ENERGY:76,R_PUBLIC:56,E_REAL:64,X_EXTERNAL:61},lk:{S_ENERGY:39,R_PUBLIC:45,E_REAL:43,X_EXTERNAL:41},note:'MIN 22.2 · Coupling active'},
+  {p:'2023-Q1',l:{S_ENERGY:68,R_PUBLIC:55,E_REAL:58,X_EXTERNAL:55},lk:{S_ENERGY:44,R_PUBLIC:44,E_REAL:46,X_EXTERNAL:43},note:'Recovery +16'},
+  {p:'2023-Q2',l:{S_ENERGY:59,R_PUBLIC:51,E_REAL:52,X_EXTERNAL:48},lk:{S_ENERGY:48,R_PUBLIC:46,E_REAL:50,X_EXTERNAL:46},note:'Partial recovery'},
+  {p:'2023-Q4',l:{S_ENERGY:55,R_PUBLIC:50,E_REAL:49,X_EXTERNAL:44},lk:{S_ENERGY:50,R_PUBLIC:46,E_REAL:52,X_EXTERNAL:48},note:'New baseline'},
+  {p:'2024-Q2',l:{S_ENERGY:57,R_PUBLIC:53,E_REAL:50,X_EXTERNAL:43},lk:{S_ENERGY:51,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:49},note:'Structural pressure'},
+  {p:'2025-Q1',l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54},note:'SHI 53.9 ORANGE'},
+  {p:'2026-Q1',l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49},note:'32.1 · Coupling active −22'},
+];
+
+const ACTIONS = [
+  {id:'K1',title:'K1: Fingrid diagnostinen läpinäkyvyys',meta:{lead:3,cost:'LOW',profile:'IMMEDIATE'},
+   patch:[{k:'S_ENERGY',sv:-4,lv:6}]},
+  {id:'K2',title:'K2: Kulutusjoustosopimukset 0-48h',meta:{lead:12,cost:'MEDIUM',profile:'RAMP'},
+   patch:[{k:'S_ENERGY',sv:-8,lv:10},{k:'E_REAL',sv:-3}]},
+  {id:'K3',title:'K3: Kuntien varasuunnitelmavelvoite 72h',meta:{lead:9,cost:'LOW',profile:'DELAYED'},
+   patch:[{k:'S_ENERGY',sv:-5,lv:8},{k:'R_PUBLIC',lv:4}]},
+  {id:'SGFA_K',title:'SGFA-solmu Kuopio: CHP-PtX',meta:{lead:18,cost:'HIGH',profile:'RAMP'},
+   patch:[{k:'S_ENERGY',sv:-12,lv:10},{k:'E_REAL',sv:-6,lv:5}]},
+  {id:'SGFA_7',title:'SGFA 7-solmun konsortio (1.19 Mrd€)',meta:{lead:30,cost:'VERY_HIGH',profile:'RAMP'},
+   patch:[{k:'S_ENERGY',sv:-18,lv:15},{k:'E_REAL',sv:-10,lv:8},{k:'R_PUBLIC',sv:-4,lv:5}]},
+  {id:'LDR50',title:'LDR-50 Kuopio (käyttöönotto 2032)',meta:{lead:48,cost:'HIGH',profile:'DELAYED'},
+   patch:[{k:'S_ENERGY',sv:-14,lv:12},{k:'E_REAL',sv:-8}]},
+  {id:'FISCAL',title:'Energiatukimekanismi kotitalouksille',meta:{lead:6,cost:'MEDIUM',profile:'IMMEDIATE'},
+   patch:[{k:'E_REAL',sv:-7,lv:8},{k:'R_PUBLIC',sv:3}]},
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let state = {l:{...PRESETS['2026'].l}, lk:{...PRESETS['2026'].lk}};
+let sel = new Set();
+let activeTab = 'forecast';
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function update() {
+  const {l,lk} = state;
+  const shi = calcSHI(l,lk);
+  const st = stOf(shi);
+  const col = colOf(st);
+  const cp = l.S_ENERGY>55 && l.R_PUBLIC>55;
+
+  document.getElementById('shiNum').textContent = shi.toFixed(1);
+  document.getElementById('shiSt').textContent = st;
+  document.getElementById('shiPanel').style.setProperty('--state-col', col);
+  document.getElementById('coupBadge').className = 'coupling-badge' + (cp?' on':'');
+  document.getElementById('metaCoup').textContent = cp ? 'ACTIVE −10' : 'INACTIVE';
+  document.getElementById('metaStr').textContent = (Object.values(l).reduce((a,b)=>a+b,0)/4).toFixed(1);
+  document.getElementById('metaBuf').textContent = (Object.values(lk).reduce((a,b)=>a+b,0)/4).toFixed(1);
+
+  renderLayers();
+  renderActions();
+  if (activeTab==='forecast') renderForecast();
+  else renderHistory();
+}
+
+function renderLayers() {
+  const {l,lk} = state;
+  const c = document.getElementById('layerCtrl');
+  const LNAMES = {S_ENERGY:'S_ENERGY — Energy',R_PUBLIC:'R_PUBLIC — Public Finance',E_REAL:'E_REAL — Real Economy',X_EXTERNAL:'X_EXTERNAL — External'};
+  if (!c.children.length) {
+    c.innerHTML = '';
+    for (const k of Object.keys(W)) {
+      const col = l[k]>65?'#e04040':l[k]>55?'#f07030':l[k]>45?'#f5c842':'#3ddc84';
+      c.insertAdjacentHTML('beforeend', `<div class="layer-row">
+        <div class="layer-hdr"><span class="layer-name">${LNAMES[k]}</span><span class="layer-val" id="v_${k}">${l[k]}</span></div>
+        <div class="layer-track"><div class="layer-fill" id="f_${k}" style="width:${l[k]}%;background:${col}"></div></div>
+        <input type="range" min="0" max="100" value="${l[k]}" oninput="onL('${k}',+this.value)">
+        <div class="lock-row">
+          <span class="lock-lbl">BUFFER</span>
+          <input type="range" min="0" max="100" value="${lk[k]}" style="width:100px;height:3px;background:var(--border-2);-webkit-appearance:none;" oninput="onLk('${k}',+this.value)">
+          <span class="lock-val" id="lv_${k}">${lk[k]}</span>
+        </div></div>`);
+    }
+  } else {
+    for (const k of Object.keys(W)) {
+      const col = l[k]>65?'#e04040':l[k]>55?'#f07030':l[k]>45?'#f5c842':'#3ddc84';
+      document.getElementById('v_'+k).textContent = l[k];
+      document.getElementById('f_'+k).style.cssText = `width:${l[k]}%;background:${col}`;
+      document.getElementById('lv_'+k).textContent = lk[k];
+    }
+  }
+}
+
+function renderActions() {
+  const c = document.getElementById('actionList');
+  if (!c.children.length) {
+    for (const a of ACTIONS) {
+      c.insertAdjacentHTML('beforeend', `<div class="action-item" onclick="togAct('${a.id}')">
+        <div class="action-check${sel.has(a.id)?' on':''}" id="chk_${a.id}"></div>
+        <div><div class="action-title">${a.title}</div>
+        <div class="action-meta">${a.meta.lead}mo · <span class="c${a.meta.cost}">${a.meta.cost}</span> · ${a.meta.profile}</div></div>
+      </div>`);
+    }
+  } else {
+    for (const a of ACTIONS) document.getElementById('chk_'+a.id).className='action-check'+(sel.has(a.id)?' on':'');
+  }
+}
+
+function renderForecast() {
+  const {l,lk} = state;
+  const shi0 = calcSHI(l,lk);
+  const acts = ACTIONS.filter(a=>sel.has(a.id));
+  const horizons = [1,6,12,24];
+  const pts = [{x:0,na:shi0,wa:acts.length?shi0:null}];
+  for (const h of horizons) {
+    const na = driftN(l,lk,h).shi;
+    const wa = acts.length ? applyAct(l,lk,h,acts).shi : null;
+    pts.push({x:h,na,wa});
+  }
+
+  // Chart
+  drawFchart(pts, 'chartForecast');
+
+  // Table
+  const grid = document.getElementById('fcastGrid');
+  grid.innerHTML = '';
+  const col0 = colOf(stOf(shi0));
+  grid.insertAdjacentHTML('beforeend', `<div class="fcast-cell">
+    <div class="fcast-cell-hdr">NOW</div>
+    <div class="fcast-sc"><div class="fcast-sc-lbl">CURRENT SHI</div>
+    <div class="fcast-sc-val" style="color:${col0}">${shi0.toFixed(1)}</div>
+    <div class="fcast-sc-st" style="color:${col0}">${stOf(shi0)}</div></div></div>`);
+
+  for (const h of horizons) {
+    const na = driftN(l,lk,h).shi;
+    const wa = acts.length ? applyAct(l,lk,h,acts).shi : null;
+    const naCol = colOf(stOf(na)); const naDelta = na-shi0;
+    let waHTML = '';
+    if (wa!=null) {
+      const waCol = colOf(stOf(wa)); const waDelta = wa-shi0;
+      waHTML = `<div class="fcast-sc" style="margin-top:0.5rem;">
+        <div class="fcast-sc-lbl">WITH ACTIONS</div>
+        <div class="fcast-sc-val" style="color:${waCol}">${wa.toFixed(1)}</div>
+        <div class="fcast-sc-st" style="color:${waCol}">${stOf(wa)}
+          <span class="delta ${waDelta>=0?'dpos':'dneg'}">(${waDelta>=0?'+':''}${waDelta.toFixed(1)})</span></div></div>`;
+    }
+    grid.insertAdjacentHTML('beforeend', `<div class="fcast-cell">
+      <div class="fcast-cell-hdr">+${h} MO</div>
+      <div class="fcast-sc"><div class="fcast-sc-lbl">NO ACTION</div>
+      <div class="fcast-sc-val" style="color:${naCol}">${na.toFixed(1)}</div>
+      <div class="fcast-sc-st" style="color:${naCol}">${stOf(na)}
+        <span class="delta ${naDelta>=0?'dpos':'dneg'}">(${naDelta>=0?'+':''}${naDelta.toFixed(1)})</span></div></div>
+      ${waHTML}</div>`);
+  }
+}
+
+function renderHistory() {
+  const histPts = HISTORY.map((h,i)=>({
+    x:i, label:h.p,
+    shi: calcSHI(h.l,h.lk),
+    coupling: h.l.S_ENERGY>55 && h.l.R_PUBLIC>55
+  }));
+  drawHchart(histPts, 'chartHistory');
+}
+
+// ── Charts ─────────────────────────────────────────────────────────────────
+function drawFchart(pts, id) {
+  const svg = document.getElementById(id);
+  const W2 = svg.parentElement.clientWidth||700, H2=220;
+  const pad={t:10,b:25,l:30,r:15};
+  const cw=W2-pad.l-pad.r, ch=H2-pad.t-pad.b;
+  const xS=x=>pad.l+(x/24)*cw, yS=y=>pad.t+ch-((y/100)*ch);
+  let html='';
+  // zones
+  [[75,100,'rgba(61,220,132,0.06)'],[58,75,'rgba(245,200,66,0.06)'],[40,58,'rgba(240,112,48,0.06)'],[0,40,'rgba(224,64,64,0.06)']].forEach(([mn,mx,c])=>{
+    html+=`<rect x="${pad.l}" y="${yS(mx)}" width="${cw}" height="${yS(mn)-yS(mx)}" fill="${c}"/>`;
+  });
+  [0,25,50,75,100].forEach(y=>{
+    html+=`<line x1="${pad.l}" y1="${yS(y)}" x2="${pad.l+cw}" y2="${yS(y)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+    html+=`<text x="${pad.l-3}" y="${yS(y)+3}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="end">${y}</text>`;
+  });
+  [0,1,6,12,24].forEach(x=>{
+    html+=`<text x="${xS(x)}" y="${H2-6}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="middle">+${x}</text>`;
+  });
+  const naPath=pts.map((p,i)=>`${i?'L':'M'}${xS(p.x)},${yS(p.na)}`).join(' ');
+  html+=`<path d="${naPath}" fill="none" stroke="rgba(224,64,64,0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>`;
+  pts.forEach(p=>{ html+=`<circle cx="${xS(p.x)}" cy="${yS(p.na)}" r="2.5" fill="rgba(224,64,64,0.8)"/>`; });
+  const waPts=pts.filter(p=>p.wa!=null);
+  if(waPts.length>1){
+    const waPath=waPts.map((p,i)=>`${i?'L':'M'}${xS(p.x)},${yS(p.wa)}`).join(' ');
+    html+=`<path d="${waPath}" fill="none" stroke="rgba(64,128,255,0.85)" stroke-width="2"/>`;
+    waPts.forEach(p=>{ html+=`<circle cx="${xS(p.x)}" cy="${yS(p.wa)}" r="2.5" fill="#4080ff"/>`; });
+  }
+  svg.setAttribute('viewBox',`0 0 ${W2} ${H2}`);
+  svg.innerHTML=html;
+}
+
+function drawHchart(pts, id) {
+  const svg = document.getElementById(id);
+  const W2 = svg.parentElement.clientWidth||700, H2=220;
+  const pad={t:14,b:32,l:30,r:15};
+  const cw=W2-pad.l-pad.r, ch=H2-pad.t-pad.b;
+  const n=pts.length-1;
+  const xS=i=>pad.l+(i/n)*cw, yS=y=>pad.t+ch-((y/100)*ch);
+  let html='';
+  [[75,100,'rgba(61,220,132,0.06)'],[58,75,'rgba(245,200,66,0.06)'],[40,58,'rgba(240,112,48,0.06)'],[0,40,'rgba(224,64,64,0.06)']].forEach(([mn,mx,c])=>{
+    html+=`<rect x="${pad.l}" y="${yS(mx)}" width="${cw}" height="${yS(mn)-yS(mx)}" fill="${c}"/>`;
+  });
+  [0,25,50,75,100].forEach(y=>{
+    html+=`<line x1="${pad.l}" y1="${yS(y)}" x2="${pad.l+cw}" y2="${yS(y)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+    html+=`<text x="${pad.l-3}" y="${yS(y)+3}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="end">${y}</text>`;
+  });
+  // X labels every other
+  pts.forEach((p,i)=>{
+    if(i%2===0) html+=`<text x="${xS(i)}" y="${H2-4}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(255,255,255,0.18)" text-anchor="middle">${p.label.replace('-Q','\nQ')}</text>`;
+  });
+  // Line
+  const path=pts.map((p,i)=>`${i?'L':'M'}${xS(i)},${yS(p.shi)}`).join(' ');
+  html+=`<path d="${path}" fill="none" stroke="rgba(64,128,255,0.5)" stroke-width="1.5"/>`;
+  // Fill under
+  const fill=`${path} L${xS(n)},${yS(0)} L${xS(0)},${yS(0)} Z`;
+  html+=`<path d="${fill}" fill="rgba(64,128,255,0.05)"/>`;
+  // Dots — color by state
+  pts.forEach((p,i)=>{
+    const col=colOf(stOf(p.shi));
+    html+=`<circle cx="${xS(i)}" cy="${yS(p.shi)}" r="4" fill="${col}" stroke="var(--bg)" stroke-width="1.5"/>`;
+    // Coupling marker
+    if(p.coupling) html+=`<circle cx="${xS(i)}" cy="${yS(p.shi)}" r="7" fill="none" stroke="rgba(224,64,64,0.5)" stroke-width="1"/>`;
+  });
+  // Special labels: 2022-Q4 and 2026-Q1
+  const min22 = pts.find(p=>p.label==='2022-Q4');
+  const cur26 = pts.find(p=>p.label==='2026-Q1');
+  if(min22){
+    const i=pts.indexOf(min22);
+    html+=`<text x="${xS(i)-2}" y="${yS(min22.shi)-10}" font-family="IBM Plex Mono" font-size="7.5" fill="#e04040" text-anchor="middle">${min22.shi.toFixed(1)}</text>`;
+    html+=`<text x="${xS(i)-2}" y="${yS(min22.shi)-20}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(224,64,64,0.6)" text-anchor="middle">SHOCK</text>`;
+  }
+  if(cur26){
+    const i=pts.indexOf(cur26);
+    html+=`<text x="${xS(i)+2}" y="${yS(cur26.shi)-10}" font-family="IBM Plex Mono" font-size="7.5" fill="#e04040" text-anchor="middle">${cur26.shi.toFixed(1)}</text>`;
+    html+=`<text x="${xS(i)+2}" y="${yS(cur26.shi)-20}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(224,64,64,0.6)" text-anchor="middle">STRUCTURAL</text>`;
+  }
+  // Legend
+  html+=`<circle cx="${W2-100}" cy="12" r="4" fill="${colOf('RED')}"/><text x="${W2-92}" y="16" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.3)">RED state</text>`;
+  html+=`<circle cx="${W2-100}" cy="26" r="4" fill="none" stroke="rgba(224,64,64,0.5)" stroke-width="1"/><circle cx="${W2-100}" cy="26" r="2" fill="${colOf('RED')}"/><text x="${W2-92}" y="30" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.3)">+ Coupling</text>`;
+  svg.setAttribute('viewBox',`0 0 ${W2} ${H2}`);
+  svg.innerHTML=html;
+}
+
+// ── Events ─────────────────────────────────────────────────────────────────
+function onL(k,v){state.l[k]=v;update();}
+function onLk(k,v){state.lk[k]=v;update();}
+function togAct(id){sel.has(id)?sel.delete(id):sel.add(id);update();}
+function loadPreset(n){state={l:{...PRESETS[n].l},lk:{...PRESETS[n].lk}};document.getElementById('layerCtrl').innerHTML='';update();}
+function selAll(){ACTIONS.forEach(a=>sel.add(a.id));update();}
+function selNone(){sel.clear();update();}
+function setTab(t){
+  activeTab=t;
+  document.getElementById('viewForecast').style.display=t==='forecast'?'':'none';
+  document.getElementById('viewHistory').style.display=t==='history'?'':'none';
+  document.getElementById('forecastCitation').style.display=t==='forecast'?'':'none';
+  document.getElementById('tabForecast').className='tab'+(t==='forecast'?' active':'');
+  document.getElementById('tabHistory').className='tab'+(t==='history'?' active':'');
+  update();
+}
+
+update();
+window.addEventListener('resize',update);
+</script>
+</body>
+</html>
