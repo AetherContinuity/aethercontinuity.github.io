@@ -287,6 +287,7 @@ function SHI(l,lk){
 }
 function cpV(l){return+(18*Math.min(1,Math.max(0,l.S_ENERGY-50)*Math.max(0,l.R_PUBLIC-50)/2500)).toFixed(1);}
 function stO(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
+const stOf=stO; // alias for MC context
 function scol(s){return{GREEN:'var(--sg)',YELLOW:'var(--sy)',ORANGE:'var(--so)',RED:'var(--sr)'}[s]||'var(--muted)';}
 function bcol(v){return v>65?'#c42020':v>55?'#c46020':v>45?'#c49a20':'#4a9460';}
 function svc(s){return{GREEN:'#2d6b3a',YELLOW:'#7a6010',ORANGE:'#8b3a10',RED:'#8b1010'}[s]||'#7a7468';}
@@ -528,8 +529,6 @@ function rForecast(){
   </div>`;
   document.getElementById('rS').innerHTML=mcHTML+(acts.length>0?buildROI(l,lk,acts):'');
 }
-
-function stOf(v){return v>=75?'GREEN':v>=58?'YELLOW':v>=40?'ORANGE':'RED';}
 
 function buildROI(l,lk,acts){
   const na24=drift(l,lk,24).shi;
