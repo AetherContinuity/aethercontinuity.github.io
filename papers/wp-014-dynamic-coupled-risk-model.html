@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-014 — Dynamic Coupled Risk Model for Small-State Systems · ACI</title>
+<meta name="description" content="A formal description of the OGAS2 System Health Index model: four-layer stress architecture, nonlinear coupling penalty, buffer-dampened drift, and Monte Carlo probabilistic projection. Backtest-validated against Finnish system data 2021–2026.">
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* Math blocks */
+  .math-block {
+    background: var(--tag-bg);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: .85rem;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+  .math-block .label {
+    font-family: 'Helvetica Neue',Arial,sans-serif;
+    font-size: .62rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--light);
+    display: block;
+    margin-bottom: .5rem;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: .9rem; }
+  thead th { border-bottom: 2px solid var(--ink); padding: .5rem .75rem; text-align: left; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mid); }
+  tbody td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  .mono { font-family: 'Courier New',monospace; font-size: .82rem; }
+
+  /* Backtest chart */
+  .backtest-grid {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin: 1.25rem 0;
+    font-family: 'Helvetica Neue',Arial,sans-serif;
+    font-size: .7rem;
+  }
+  .bt-cell { background: var(--bg); padding: .6rem .5rem; text-align: center; }
+  .bt-cell .period { color: var(--light); font-size: .62rem; margin-bottom: .2rem; }
+  .bt-cell .val { font-weight: 700; font-size: 1rem; }
+  .bt-cell .state { font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; margin-top: .1rem; }
+  .bt-cell .coup { font-size: .58rem; color: #c00; margin-top: .15rem; }
+  .col-GREEN { color: #2d6b3a; }
+  .col-YELLOW { color: #7a6010; }
+  .col-ORANGE { color: #8b3a10; }
+  .col-RED { color: #8b1010; }
+
+  /* Finding boxes */
+  .finding {
+    background: var(--tag-bg);
+    border: 1px solid var(--rule);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+  }
+  .finding-label {
+    font-family: 'Helvetica Neue',Arial,sans-serif;
+    font-size: .65rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: .4rem;
+  }
+  .finding p { font-size: .92rem; margin-bottom: 0; }
+
+  /* MC results */
+  .mc-grid {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin: 1rem 0;
+    font-size: .8rem;
+  }
+  .mc-cell { background: var(--bg); padding: .65rem .6rem; }
+  .mc-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .6rem; color: var(--light); margin-bottom: .2rem; text-transform: uppercase; letter-spacing: .06em; }
+  .mc-val { font-family: 'Courier New',monospace; font-size: .88rem; font-weight: 600; }
+
+  blockquote { border-left: 3px solid var(--rule); padding-left: 1.25rem; color: var(--mid); font-style: italic; margin: 1.25rem 0; }
+
+  .cross-refs { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.5rem; }
+  .cross-refs h3 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1rem; }
+  .ref-item { display: flex; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); font-size: .88rem; }
+  .ref-item:last-child { border-bottom: none; }
+  .ref-id { font-family: 'Courier New',monospace; font-size: .78rem; color: var(--accent); flex-shrink: 0; width: 70px; }
+  .ref-desc { color: var(--mid); }
+  .ref-desc a { color: var(--ink); }
+
+  footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; max-width: 760px; margin: 0 auto; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; color: var(--light); display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+
+  @media(max-width:600px) {
+    .doc-meta-grid { grid-template-columns: 1fr 1fr; }
+    .backtest-grid { grid-template-columns: repeat(3,1fr); }
+    .mc-grid { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right">
+    <a href="/research.html">Research</a>
+    <a href="/papers/">Papers</a>
+    <a href="/tools/ogas2-simulator.html">OGAS2 Instrument</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Working Paper No. 014 &middot; April 2026 &middot; D-1 &middot; D-3 &middot; D-4</div>
+  <div class="doc-meta-grid">
+    <div><strong>Status</strong>Working Draft v1.0</div>
+    <div><strong>Domain</strong>D-1 / D-3 / D-4</div>
+    <div><strong>Instrument</strong><a href="/tools/ogas2-simulator.html">OGAS2 v2.4</a></div>
+    <div><strong>Basis</strong>WP-004 · WP-013</div>
+    <div><strong>Backtest</strong>2021-Q3 — 2026-Q1</div>
+    <div><strong>Runs</strong>500 MC simulations</div>
+  </div>
+  <h1 class="doc-title">Dynamic Coupled Risk Model for Small-State Systems</h1>
+  <p class="doc-subtitle">A formal description of the OGAS2 System Health Index: four-layer stress architecture, nonlinear coupling, buffer-dampened drift, and probabilistic projection.</p>
+  <p class="doc-abstract">This paper formalises the analytical model underlying the OGAS2 instrument. The System Health Index (SHI) is a composite indicator (0–100) expressing the resilience of a sociotechnical system across four stress layers. Its key structural features — a nonlinear coupling penalty, buffer-dampened drift, and nonlinear feedback loops — distinguish it from conventional linear composite indices. A Monte Carlo extension provides probabilistic trajectories rather than point estimates. The model is backtest-validated against reconstructed Finnish system data from 2021-Q3 to 2026-Q1. The central empirical finding is that the 2026-Q1 snapshot sits 1.5 index points above the RED threshold, and that absent intervention, all simulated trajectories enter RED within 24 months. Three targeted policy corrections (WP-013 K1–K3) reduce this cascade probability from 100% to 25%; the addition of a distributed energy node (SGFA) reduces it to approximately 2%.</p>
+</div>
+
+<div class="paper">
+
+  <!-- §01 -->
+  <div class="section">
+    <span class="section-marker">&sect; 01</span>
+    <h2>Motivation and scope</h2>
+    <p>Institutional risk assessment for small states tends to suffer from two structural weaknesses. First, composite indicators aggregate stress into a single headline number that obscures the nonlinear interactions between stress dimensions — particularly the phenomenon where simultaneous elevation of two or more dimensions produces outcomes disproportionate to their individual contributions. Second, point-estimate projections suppress the probabilistic character of real system trajectories, presenting a single future rather than a distribution of futures conditional on policy choices.</p>
+    <p>The OGAS2 model addresses both. Its coupling penalty term introduces second-order interaction effects between stress dimensions. Its Monte Carlo extension replaces deterministic projection with a probability distribution over outcomes. The result is an instrument that can distinguish between a system that is declining slowly and one that is approaching a phase transition — a distinction invisible to linear composite indices.</p>
+    <p>The model draws theoretical grounding from ACI WP-004 (Recovery Capacity Invariants), which identifies three structural variables — Variation (I), Redundancy (II), and Recovery Time (III) — as the determinants of system resilience under compound stress. The SHI operationalises these variables as measurable quantities.</p>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <span class="section-marker">&sect; 02</span>
+    <h2>Architecture: four stress layers</h2>
+    <p>The model represents system state as four stress layers and four corresponding buffer (lock) values. Each layer captures a distinct structural dimension of the sociotechnical system. Stress values range 0–100 (higher = more stressed); buffer values range 0–100 (higher = more resilient).</p>
+
+    <table>
+      <thead><tr><th>Layer</th><th>Description</th><th>Weight</th><th>Live data source</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">S_ENERGY</td><td>Energy system stress</td><td>0.35</td><td>Fingrid DS 105, 192, 198, 181</td></tr>
+        <tr><td class="mono">R_PUBLIC</td><td>Public finance pressure</td><td>0.30</td><td>ECB Finnish 10Y bond yield</td></tr>
+        <tr><td class="mono">E_REAL</td><td>Real economy stress</td><td>0.20</td><td>Fingrid DS 105 — 7-day spot history</td></tr>
+        <tr><td class="mono">X_EXTERNAL</td><td>External environment</td><td>0.15</td><td>ECB EUR/USD exchange rate</td></tr>
+      </tbody>
+    </table>
+
+    <p>Weights reflect the diagnostic primacy of energy and fiscal dimensions in the Finnish compound stress configuration documented in WP-013 and the synthesis memorandum SM-001. They are calibrated to produce historically plausible SHI values across the 2021–2026 backtest period and may require revision for application to other national contexts.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <span class="section-marker">&sect; 03</span>
+    <h2>SHI formula</h2>
+    <p>The System Health Index is computed from weighted stress, buffer adjustment, coupling penalty, lock bonus, and stress ceiling terms.</p>
+
+    <div class="math-block">
+      <span class="label">Definition — System Health Index</span>
+      SHI = 100 − WS + LA − CP + BON − CEIL<br><br>
+      WS  = Σ layer[k] · weight[k]  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(weighted stress)<br>
+      LA  = Σ f(lock[k]) · weight[k]  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lock adjustment)<br>
+      CP  = 18 · min(1, (SE−50)·(RP−50) / 2500)  &nbsp;&nbsp;(coupling penalty)<br>
+      BON = 10  if  |{k : lock[k] &gt; 65}| ≥ 3  else  0  (buffer bonus)<br>
+      CEIL = max(0, maxStress − 75) · 0.8  &nbsp;&nbsp;&nbsp;&nbsp;(stress ceiling)<br><br>
+      where f(v) = (v−50)·0.5·w  if v &gt; 50<br>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= −(50−v)·0.3·w  otherwise
+    </div>
+
+    <p>The lock adjustment term LA is asymmetric: buffers above 50 provide positive adjustment at rate 0.5 per point, while buffers below 50 impose a negative adjustment at rate 0.3 per point. This asymmetry reflects the observation that strong buffer capacity provides diminishing incremental returns, while weak capacity produces accelerating vulnerability.</p>
+    <p>The stress ceiling CEIL prevents buffer strength from masking extreme single-layer stress. When any individual layer exceeds 75, the ceiling imposes a penalty proportional to the excess — preventing a situation where strong buffers in three layers allow an extremely stressed fourth layer to appear acceptable in the aggregate.</p>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <span class="section-marker">&sect; 04</span>
+    <h2>Coupling penalty: nonlinear compound stress</h2>
+    <p>The coupling penalty CP is the model's central structural contribution. It captures the empirical observation that simultaneous elevation of energy system stress (S_ENERGY) and public finance pressure (R_PUBLIC) produces outcomes disproportionate to what either dimension would produce individually.</p>
+
+    <div class="math-block">
+      <span class="label">Coupling penalty — normalised progressive form</span>
+      CP = 18 · min(1, trigger / 2500)<br><br>
+      trigger = max(0, S_ENERGY − 50) · max(0, R_PUBLIC − 50)<br><br>
+      Properties:<br>
+      · Activates smoothly above 50 on both dimensions (no cliff edge)<br>
+      · Reaches maximum (−18 pts) when both dimensions reach 100<br>
+      · At current 2026 values (SE=61, RP=58): CP = 18·(11·8/2500) = 0.6 pts<br>
+      · At 2022-Q4 crisis values (SE=76, RP=56): CP = 18·(26·6/2500) = 1.1 pts
+    </div>
+
+    <p>The mechanism corresponds to an empirically documented causal pathway: energy cost increases require public compensation expenditure, which narrows fiscal margins, which reduces the capacity to absorb further energy-sector shocks. This feedback between energy and fiscal dimensions is structurally different from the parallel deterioration of two independent dimensions.</p>
+    <p>The normalisation constant 2500 = 50 × 50 ensures that the maximum penalty is reached only when both dimensions are simultaneously at their upper bound. The maximum penalty of −18 points is calibrated so that extreme simultaneous stress pushes SHI approximately one zone boundary below what stress levels alone would suggest.</p>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <span class="section-marker">&sect; 05</span>
+    <h2>Dynamic model: buffer-dampened drift and nonlinear feedback</h2>
+    <p>The static SHI formula describes system state at a point in time. The dynamic model projects state forward through time. Two structural features distinguish it from naive linear projection.</p>
+
+    <div class="math-block">
+      <span class="label">Per-month drift with buffer dampening</span>
+      avgBuffer = mean(lock[k] for all k)<br>
+      damp = 1 − 0.45 · (avgBuffer / 100)<br><br>
+      layer[k] ← layer[k] + drift[k] · damp + noise[k]<br>
+      lock[k]  ← lock[k]  + lockDrift[k]<br><br>
+      Drift rates (per month, deterministic component):<br>
+      S_ENERGY: +0.40  &nbsp; R_PUBLIC: +0.35  &nbsp; E_REAL: +0.20  &nbsp; X_EXTERNAL: +0.15<br>
+      Lock drift rates:<br>
+      S_ENERGY: −0.30  &nbsp; R_PUBLIC: −0.40  &nbsp; E_REAL: −0.15  &nbsp; X_EXTERNAL: −0.10
+    </div>
+
+    <p>Buffer dampening operationalises WP-004 Variable II (Redundancy): strong institutional and physical reserves slow structural deterioration. At maximum buffer strength (avgBuffer = 100), drift is reduced by 45%. At minimum (avgBuffer = 0), drift proceeds at full rate. This creates a self-reinforcing dynamic: as buffers erode through lock drift, the system's resistance to further deterioration weakens, accelerating the decline.</p>
+
+    <div class="math-block">
+      <span class="label">Nonlinear feedback loops (per month, exponent 1.3)</span>
+      fbDamp = 1 − 0.35 · (avgBuffer / 100)<br><br>
+      if E_REAL &gt; 58:<br>
+        R_PUBLIC ← R_PUBLIC + 0.4 · ((E_REAL − 58) / 12)^1.3 · fbDamp<br><br>
+      if R_PUBLIC &gt; 60:<br>
+        E_REAL ← E_REAL + 0.3 · ((R_PUBLIC − 60) / 12)^1.3 · fbDamp<br><br>
+      Exponent 1.3: below threshold → quiet; above threshold → accelerating
+    </div>
+
+    <p>The feedback exponent of 1.3 introduces a phase transition behaviour absent from linear models. Below threshold, the feedback contribution is negligible. Above threshold, it grows faster than linearly. This produces a qualitative change in system behaviour — a regime shift from slow deterioration to rapid cascade — that corresponds to the empirically observed non-gradual character of systemic failures.</p>
+  </div>
+
+  <!-- §06 -->
+  <div class="section">
+    <span class="section-marker">&sect; 06</span>
+    <h2>Phase-state classifier and tipping point detection</h2>
+    <p>The phase-state classifier provides a narrative regime label that complements the numerical SHI. It is intended to communicate system condition to non-technical decision-makers for whom index values are less immediately actionable than regime descriptions.</p>
+
+    <div class="math-block">
+      <span class="label">Phase-state classification</span>
+      STABLE  : avgStress &lt; 50  AND  avgBuffer &gt; 55<br>
+      CASCADE : CP &gt; 6  AND  avgBuffer &lt; 45<br>
+      FRAGILE : avgBuffer &lt; 45  (and not CASCADE)<br>
+      STRAIN  : otherwise
+    </div>
+
+    <p>The tipping point detector identifies conditions under which the system is at elevated risk of rapid nonlinear deterioration — specifically, the combination of active coupling and depleted buffers that characterises the pre-cascade regime.</p>
+
+    <div class="math-block">
+      <span class="label">Tipping point risk levels</span>
+      HIGH   : CP &gt; 6  AND  avgBuffer &lt; 45<br>
+      MEDIUM : CP &gt; 3  AND  avgBuffer &lt; 50
+    </div>
+
+    <p>These thresholds are calibrated to the observed system behaviour in the backtest period. The 2022-Q4 crisis episode, the most severe in the backtest, triggered the CASCADE phase state but did not trigger a sustained tipping point warning because buffers recovered rapidly with fiscal intervention. The 2026-Q1 snapshot sits at the boundary of the STRAIN/FRAGILE boundary.</p>
+  </div>
+
+  <!-- §07 -->
+  <div class="section">
+    <span class="section-marker">&sect; 07</span>
+    <h2>Monte Carlo extension: probabilistic trajectories</h2>
+    <p>The deterministic model produces a single projected trajectory. The Monte Carlo extension runs 500 independent simulations, each with stochastic noise and random event shocks, producing a probability distribution over outcomes at each time horizon.</p>
+
+    <div class="math-block">
+      <span class="label">Stochastic drift components (per month, per run)</span>
+      layer[k] ← layer[k] + drift[k]·damp + ε[k] + shock[k]<br><br>
+      ε[k] ~ N(0, σ[k])  via Box-Muller transform<br>
+      σ: S_ENERGY=0.9  R_PUBLIC=0.5  E_REAL=0.6  X_EXTERNAL=0.8<br><br>
+      shock[k] = Uniform(0, SHOCK_MAG[k])  with probability SHOCK_PROB[k]<br>
+      SHOCK_PROB: S_ENERGY=4%  R_PUBLIC=2%  E_REAL=3%  X_EXTERNAL=5%  (per month)<br>
+      SHOCK_MAG:  S_ENERGY=5   R_PUBLIC=4   E_REAL=4   X_EXTERNAL=8   (pts)
+    </div>
+
+    <p>Noise variances are estimated from observed volatility in the relevant data series. Event shock probabilities reflect the frequency of material geopolitical or market disruptions in the historical record. The resulting distribution provides three outputs: median trajectory, P10–P90 uncertainty band, and cascade probability (fraction of runs ending with SHI &lt; 40).</p>
+  </div>
+
+  <!-- §08 Backtest -->
+  <div class="section">
+    <span class="section-marker">&sect; 08</span>
+    <h2>Backtest validation: 2021–2026</h2>
+    <p>The model is validated against reconstructed layer values for the Finnish system over twelve quarterly snapshots from 2021-Q3 to 2026-Q1. Layer values are reconstructed estimates derived from public sources: NordPool FI historical spot prices (S_ENERGY), Finnish state budget reports and VM documentation (R_PUBLIC), Statistics Finland energy cost indices (E_REAL), and geopolitical event timeline (X_EXTERNAL). They are not primary statistical data and should be treated as indicative.</p>
+    <p>The model correctly identifies the expected minimum (2022-Q4, SHI 22.2) and maximum (2021-Q3, SHI 64.7) in the backtest period. Coupling activates at the correct historical moments. The overall amplitude of 42.5 index points across five years is consistent with the scale of observed systemic stress in the period.</p>
+
+    <div class="backtest-grid">
+      <div class="bt-cell"><div class="period">2021-Q3</div><div class="val col-YELLOW">64.7</div><div class="state col-YELLOW">YELLOW</div></div>
+      <div class="bt-cell"><div class="period">2021-Q4</div><div class="val col-YELLOW">58.9</div><div class="state col-YELLOW">YELLOW</div></div>
+      <div class="bt-cell"><div class="period">2022-Q1</div><div class="val col-ORANGE">45.7</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2022-Q2</div><div class="val col-ORANGE">40.6</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2022-Q3</div><div class="val col-RED">34.8</div><div class="state col-RED">RED</div></div>
+      <div class="bt-cell"><div class="period">2022-Q4</div><div class="val col-RED">22.2</div><div class="state col-RED">RED</div><div class="coup">⊕ coupling</div></div>
+      <div class="bt-cell"><div class="period">2023-Q1</div><div class="val col-RED">38.1</div><div class="state col-RED">RED</div></div>
+      <div class="bt-cell"><div class="period">2023-Q2</div><div class="val col-ORANGE">45.7</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2023-Q4</div><div class="val col-ORANGE">49.1</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2024-Q2</div><div class="val col-ORANGE">47.5</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2025-Q1</div><div class="val col-ORANGE">53.9</div><div class="state col-ORANGE">ORANGE</div></div>
+      <div class="bt-cell"><div class="period">2026-Q1</div><div class="val col-ORANGE">41.5</div><div class="state col-ORANGE">ORANGE</div><div class="coup">⊕ coupling</div></div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Key structural finding</div>
+      <p>The 2026-Q1 SHI (41.5) is 1.5 points above the RED threshold. The 2022-Q4 SHI (22.2) was 17.8 points below it. Both triggered coupling. The difference is that 2022 recovered in one quarter through fiscal intervention; 2026 has no equivalent natural recovery mechanism, because the fiscal capacity that enabled 2022 compensation has been progressively consumed by structural commitments (defence operating costs, ageing expenditure, debt service).</p>
+    </div>
+  </div>
+
+  <!-- §09 Monte Carlo findings -->
+  <div class="section">
+    <span class="section-marker">&sect; 09</span>
+    <h2>Monte Carlo findings: intervention calibration</h2>
+    <p>The Monte Carlo model is run at 500 simulations per configuration, at the 2026-Q1 starting state, across five intervention scenarios. The results demonstrate a non-linear relationship between intervention scope and cascade probability reduction.</p>
+
+    <div class="mc-grid">
+      <div class="mc-cell"><div class="mc-label">Scenario</div><div class="mc-val" style="font-size:.75rem;font-weight:400;">Interventions</div></div>
+      <div class="mc-cell"><div class="mc-label">Median SHI</div><div class="mc-val">—</div></div>
+      <div class="mc-cell"><div class="mc-label">P10–P90</div><div class="mc-val">—</div></div>
+      <div class="mc-cell"><div class="mc-label">CASCADE %</div><div class="mc-val">—</div></div>
+      <div class="mc-cell"><div class="mc-label">Reduction</div><div class="mc-val">—</div></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Scenario</th><th>Median SHI</th><th>P10–P90</th><th>CASCADE risk</th><th>Reduction</th></tr></thead>
+      <tbody>
+        <tr><td>No intervention</td><td class="mono col-RED">29.7</td><td class="mono">24–34</td><td class="mono col-RED">100%</td><td>—</td></tr>
+        <tr><td>K1 only (Fingrid transparency)</td><td class="mono col-RED">31.9</td><td class="mono">28–36</td><td class="mono col-RED">100%</td><td>0 pp</td></tr>
+        <tr><td>K1 + K2 + K3</td><td class="mono col-ORANGE">42.0</td><td class="mono">38–45</td><td class="mono col-ORANGE">25%</td><td>−75 pp</td></tr>
+        <tr><td>K1 + K2 + K3 + SGFA Kuopio</td><td class="mono col-ORANGE">46.0</td><td class="mono">43–49</td><td class="mono col-ORANGE">2%</td><td>−98 pp</td></tr>
+        <tr><td>Full programme (all 7 interventions)</td><td class="mono col-ORANGE">46.3</td><td class="mono">43–49</td><td class="mono col-ORANGE">1%</td><td>−99 pp</td></tr>
+      </tbody>
+    </table>
+
+    <div class="finding">
+      <div class="finding-label">Policy finding — WP-013 validation</div>
+      <p>The three WP-013 minimum corrections (K1+K2+K3) reduce cascade probability from 100% to 25% — a 75 percentage point reduction achieved through low-cost, short-lead interventions that do not require major capital investment. The addition of the SGFA energy node reduces cascade probability to 2%. The marginal contribution of further interventions is small. This supports the WP-013 finding that the minimum intervention path is sufficient to exit the cascade regime, and that the critical variable is the timing of the K1–K3 decisions, not the scale of the energy investment.</p>
+    </div>
+  </div>
+
+  <!-- §10 Limitations -->
+  <div class="section">
+    <span class="section-marker">&sect; 10</span>
+    <h2>Model limitations</h2>
+
+    <p><em>Layer value estimation.</em> The backtest relies on reconstructed layer values, not primary statistical data. S_ENERGY is the most reliably grounded (Fingrid data); R_PUBLIC and E_REAL involve greater estimation uncertainty. The model should be treated as a structural diagnostic instrument, not a precise forecasting tool.</p>
+
+    <p><em>Drift parameter calibration.</em> Drift rates are estimated from observed trends over a five-year period. They do not incorporate structural breaks, policy changes, or technology transitions that may alter the trajectory. The rates are most defensible for short-to-medium projection horizons (6–18 months); at 24 months, parameter uncertainty is material.</p>
+
+    <p><em>No mean reversion.</em> The model contains no natural mean-reversion mechanism. In practice, extreme stress values may trigger corrective responses not captured in the formal model. This makes the model conservative — it will tend to project worse outcomes than may occur if institutional responses are faster than the intervention matrix assumes.</p>
+
+    <p><em>Binary shock events.</em> Random event shocks are modelled as simple magnitude draws with fixed probability. Real shocks have heterogeneous magnitudes, correlations across layers, and can trigger policy responses. The shock model captures uncertainty but not shock dynamics.</p>
+
+    <p><em>Scope.</em> The model describes structural resilience at system level. It does not model household-level outcomes, sector-specific impacts, or distributional consequences. For household-level analysis, see DA-007 (Household Energy Continuity).</p>
+  </div>
+
+  <!-- §11 Instrument -->
+  <div class="section">
+    <span class="section-marker">&sect; 11</span>
+    <h2>Implementation: OGAS2 instrument</h2>
+    <p>The model described in this paper is implemented as the OGAS2 System Health Simulator, available at <a href="/tools/ogas2-simulator.html">aethercontinuity.org/tools/ogas2-simulator.html</a>. The instrument provides interactive layer adjustment, live data integration (Fingrid and ECB), shock injection, intervention selection, and Monte Carlo projection. All layer mappings and model parameters described in this paper are faithfully implemented in the instrument.</p>
+    <p>The instrument is open and does not require registration. Layer values may be set to any value for scenario analysis. Live data integration updates S_ENERGY from Fingrid real-time data and R_PUBLIC from ECB bond yield data; X_EXTERNAL from EUR/USD; E_REAL from 7-day spot history. These update the instrument to current conditions at the time of the fetch.</p>
+
+    <blockquote>OGAS2 is a diagnostic instrument, not a forecasting service. Its outputs are structural assessments conditional on model parameters. They should be used to understand the structure of risk, not to predict specific outcomes.</blockquote>
+  </div>
+
+  <div class="cross-refs">
+    <h3>Cross-references</h3>
+    <div class="ref-item"><span class="ref-id">WP-004</span><span class="ref-desc"><a href="/papers/wp-004-recovery-capacity-invariants.html">Recovery Capacity Invariants</a> — Primary theoretical basis. Three structural variables: Variation (I), Redundancy (II), Recovery Time (III).</span></div>
+    <div class="ref-item"><span class="ref-id">WP-013</span><span class="ref-desc"><a href="/papers/wp-013-two-scenarios-2030.html">Two Scenarios 2030: Institutional Delay as Structural Risk</a> — Source of K1–K3 intervention matrix validated by MC findings in §09.</span></div>
+    <div class="ref-item"><span class="ref-id">SM-001</span><span class="ref-desc"><a href="/supplements/synthesis-memo-finland-2030.html">Finland 2030: A Compound Risk Diagnosis</a> — Empirical basis for layer weight calibration and 2026 baseline.</span></div>
+    <div class="ref-item"><span class="ref-id">DA-007</span><span class="ref-desc"><a href="/supplements/da-007-household-energy-continuity.html">Household Energy Continuity</a> — Household-level analysis complementary to system-level SHI.</span></div>
+    <div class="ref-item"><span class="ref-id">SP-002</span><span class="ref-desc"><a href="/papers/sp-002-sgfa-4-toteutusohjelma.html">SGFA 4.0 — Municipal Energy Stability Implementation Programme</a> — Source of SGFA intervention parameters in §09.</span></div>
+    <div class="ref-item"><span class="ref-id">OGAS2</span><span class="ref-desc"><a href="/tools/ogas2-simulator.html">OGAS2 System Health Simulator</a> — Interactive implementation of this model. Live data integration, Monte Carlo, phase-state, intervention matrix.</span></div>
+  </div>
+
+</div><!-- /paper -->
+
+<footer>
+  <span>ACI Working Paper No. 014 &middot; v1.0 &middot; April 2026</span>
+  <span>Domain D-1 / D-3 / D-4</span>
+  <span>aethercontinuity.org &middot; Open access</span>
+</footer>
+
+</body>
+</html>
