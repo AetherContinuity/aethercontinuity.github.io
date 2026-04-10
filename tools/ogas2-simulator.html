@@ -159,7 +159,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <button class="cb" onclick="loadP('2026')">2026-04 Current</button>
         <button class="cb" onclick="loadP('2025')">2025-04 Reference</button>
         <button class="cb" onclick="loadP('stress')">Stress Scenario</button>
-        <button class="cb" id="btnLive" onclick="fetchFingrid()" style="border-color:var(--accent);color:var(--accent);">&#9654; Load live S_ENERGY</button>
+        <button class="cb" id="btnLive" onclick="fetchAllLive()" style="border-color:var(--accent);color:var(--accent);">&#9654; Load all live data</button>
       </div>
       <div class="cr" style="margin-top:-.75rem;">
         <span style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);align-self:center;">Shock:</span>
@@ -226,10 +226,10 @@ const W={S_ENERGY:.35,R_PUBLIC:.30,E_REAL:.20,X_EXTERNAL:.15};
 const DRIFT={S_ENERGY:.4,R_PUBLIC:.35,E_REAL:.20,X_EXTERNAL:.15};
 const LD={S_ENERGY:-.3,R_PUBLIC:-.4,E_REAL:-.15,X_EXTERNAL:-.10};
 const LI={
-  S_ENERGY:{name:'Energy System Stress',src:'NordPool FI spot price volatility · Fingrid capacity margin · District heating replacement gap (Haapaniemi 2 EOL 2035) · LDR-50 pre-commercial status',w:'35%'},
-  R_PUBLIC:{name:'Public Finance Pressure',src:'F-35 operating costs 500–700 M€/yr · State debt trajectory · Ageing-driven social expenditure · Fiscal consolidation margin (VM)',w:'30%'},
-  E_REAL:{name:'Real Economy Stress',src:'Energy cost share of household budgets · Corporate energy margin compression · NordPool spot exposure for non-PPA consumers · Payment default indices',w:'20%'},
-  X_EXTERNAL:{name:'External Environment',src:'Geopolitical event index (Ukraine war, drone incidents) · Baltic interconnection status · EUR/USD · Nordic energy market coupling',w:'15%'}
+  S_ENERGY:{name:'Energy System Stress',src:'<strong>Live:</strong> Fingrid DS 105 (spot €/MWh) · DS 192 (production) · DS 198 (surplus) · DS 181 (wind). Proxy: aci-fingrid-proxy.ruotsalainen-marko.workers.dev',w:'35%'},
+  R_PUBLIC:{name:'Public Finance Pressure',src:'<strong>Live:</strong> ECB Finnish 10Y government bond yield (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y) · F-35 operating costs 500–700 M€/yr · Ageing-driven expenditure (VM)',w:'30%'},
+  E_REAL:{name:'Real Economy Stress',src:'<strong>Live:</strong> Fingrid DS 105 7-day spot price history — volatility + level index. Supplemented by: household energy cost exposure, payment default indices (Statistics Finland)',w:'20%'},
+  X_EXTERNAL:{name:'External Environment',src:'<strong>Live:</strong> ECB EUR/USD exchange rate (EXR/D.USD.EUR.SP00.A) · Geopolitical event baseline · Baltic interconnection status · Nordic energy market coupling',w:'15%'}
 };
 const AI={
   K1:{src:'WP-013 Appendix 1 v1.1 · K1: Diagnostic transparency. Owner: Fingrid. 3–6 months.'},
@@ -638,97 +638,159 @@ function conflictAdj(acts,l,lk){
   }
 }
 
-// ── Fingrid live integration ───────────────────────────────────────────────
+// ── Full 4-layer live integration ─────────────────────────────────────────
 const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
 
 async function fetchDS(dsId, windowMinutes=90) {
-  const now = new Date();
-  const from = new Date(now - windowMinutes*60000);
-  const url = `${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=5`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
-  const j = await r.json();
-  const rows = (j.data||j).filter(d=>d.value!=null&&d.value!==0);
-  if (!rows.length) throw new Error(`DS ${dsId} empty`);
+  const now=new Date(), from=new Date(now-windowMinutes*60000);
+  const url=`${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=5`;
+  const r=await fetch(url);
+  if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
+  const j=await r.json();
+  const rows=(j.data||j).filter(d=>d.value!=null&&d.value!==0);
+  if(!rows.length)throw new Error(`DS ${dsId} empty`);
   return rows[rows.length-1].value;
 }
 
-function spotToStress(eur) {
-  // Map €/MWh to S_ENERGY stress component (0-100)
-  // 0-30: very low, 30-60: normal, 60-120: elevated, 120-200: high, >200: crisis
-  if (eur < 30)  return 18;
-  if (eur < 60)  return 30 + (eur-30)*0.4;
-  if (eur < 120) return 42 + (eur-60)*0.35;
-  if (eur < 200) return 63 + (eur-120)*0.22;
-  return Math.min(95, 80 + (eur-200)*0.08);
+async function fetchDSMulti(dsId, windowDays=7, size=20) {
+  const now=new Date(), from=new Date(now-windowDays*86400000);
+  const url=`${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=${size}`;
+  const r=await fetch(url);
+  if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
+  const j=await r.json();
+  return(j.data||j).filter(d=>d.value!=null&&d.value!==0).map(d=>d.value);
 }
 
-function marginToAdj(surplusMW, prodMW) {
-  // Surplus margin as fraction of production → stress adjustment
-  const margin = surplusMW / Math.max(prodMW, 1);
-  if (margin > 0.15) return -8;   // strong surplus → relief
-  if (margin > 0.05) return -3;
-  if (margin > -0.02) return +5;  // tight
-  return +14;                      // deficit
+async function fetchBondYield() {
+  // ECB Finnish 10Y government bond — CORS-free
+  const url='https://data-api.ecb.europa.eu/service/data/YC/'+
+    'B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y?lastNObservations=1&format=jsondata';
+  const r=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error(`ECB bond HTTP ${r.status}`);
+  const j=await r.json();
+  const series=j.dataSets?.[0]?.series;
+  if(!series)throw new Error('ECB no series');
+  const obs=Object.values(series)[0]?.observations;
+  const latest=Object.values(obs).sort((a,b)=>b[0]-a[0])[0];
+  return latest[0]; // yield in %
 }
 
-function windToAdj(windMW, prodMW) {
-  // High wind fraction → intermittency uncertainty
-  const frac = windMW / Math.max(prodMW, 1);
-  if (frac > 0.55) return +8;
-  if (frac > 0.35) return +4;
-  return 0;
+async function fetchEURUSD() {
+  // ECB EUR/USD exchange rate — CORS-free
+  const url='https://data-api.ecb.europa.eu/service/data/EXR/'+
+    'D.USD.EUR.SP00.A?lastNObservations=1&format=jsondata';
+  const r=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error(`ECB EUR/USD HTTP ${r.status}`);
+  const j=await r.json();
+  const series=j.dataSets?.[0]?.series;
+  const obs=Object.values(series)[0]?.observations;
+  const latest=Object.values(obs).sort((a,b)=>b[0]-a[0])[0];
+  return latest[0];
 }
 
-async function fetchFingrid() {
-  const btn = document.getElementById('btnLive');
-  const status = document.getElementById('liveStatus');
-  btn.textContent = '⟳ Fetching…';
-  btn.disabled = true;
-  status.textContent = 'Connecting to Fingrid proxy…';
-  status.style.color = 'var(--muted)';
+// ── Layer mapping functions ────────────────────────────────────────────────
 
+function calcSEnergy(spot, surp, prod, wind) {
+  const base=spot<30?18:spot<60?30+(spot-30)*0.4:spot<120?42+(spot-60)*0.35:spot<200?63+(spot-120)*0.22:Math.min(95,80+(spot-200)*0.08);
+  const marginAdj=surp/Math.max(prod,1)>0.15?-8:surp/Math.max(prod,1)>0.05?-3:surp/Math.max(prod,1)>-0.02?+5:+14;
+  const windAdj=wind/Math.max(prod,1)>0.55?+8:wind/Math.max(prod,1)>0.35?+4:0;
+  return Math.max(10,Math.min(95,Math.round(base+marginAdj+windAdj)));
+}
+
+function calcRPublic(bondYield) {
+  // Finnish 10Y bond yield % → fiscal stress
+  // Normal 2-3%: low stress. Rising 3-4%: medium. >4%: high. >5%: crisis.
+  if(bondYield<2.5)return 28;
+  if(bondYield<3.0)return 35+(bondYield-2.5)*14;
+  if(bondYield<3.5)return 42+(bondYield-3.0)*16;
+  if(bondYield<4.5)return 50+(bondYield-3.5)*12;
+  return Math.min(88,62+(bondYield-4.5)*10);
+}
+
+function calcEReal(spotHistory) {
+  if(!spotHistory||spotHistory.length<3)return 52; // fallback
+  const avg=spotHistory.reduce((a,b)=>a+b,0)/spotHistory.length;
+  const latest=spotHistory[spotHistory.length-1];
+  const volatility=Math.sqrt(spotHistory.reduce((s,v)=>s+Math.pow(v-avg,2),0)/spotHistory.length);
+  // Stress = combination of level and volatility
+  const levelStress=avg<40?20:avg<80?30+(avg-40)*0.5:avg<150?50+(avg-80)*0.29:70+Math.min(20,(avg-150)*0.1);
+  const volStress=volatility<10?0:volatility<30?volatility*0.5:15+volatility*0.2;
+  return Math.max(15,Math.min(90,Math.round(levelStress+volStress*0.4)));
+}
+
+function calcXExternal(eurusd) {
+  // EUR/USD → external stress
+  // Strong EUR (>1.12): low external pressure
+  // Weak EUR (<1.05): high external pressure (energy imports, geopolitics)
+  if(eurusd>1.14)return 28;
+  if(eurusd>1.10)return 35+(1.14-eurusd)*37;
+  if(eurusd>1.05)return 49+(1.10-eurusd)*30;
+  return Math.min(78,64+(1.05-eurusd)*60);
+}
+
+async function fetchAllLive() {
+  const btn=document.getElementById('btnLive');
+  const status=document.getElementById('liveStatus');
+  btn.textContent='⟳ Fetching…';btn.disabled=true;
+  status.style.color='var(--muted)';
+
+  const results={};const errors=[];
+
+  // S_ENERGY — Fingrid (rate-limited, sequential)
   try {
-    status.textContent = 'Fetching spot price (DS 105)…';
-    const spot = await fetchDS(105, 180);
-    await new Promise(r=>setTimeout(r,1500)); // rate limit
-
-    status.textContent = 'Fetching production (DS 192)…';
-    const prod = await fetchDS(192, 90);
+    status.textContent='S_ENERGY: spot price (Fingrid DS 105)…';
+    const spot=await fetchDS(105,180);results.spot=spot;
     await new Promise(r=>setTimeout(r,1500));
-
-    status.textContent = 'Fetching surplus (DS 198)…';
-    const surp = await fetchDS(198, 90);
+    status.textContent='S_ENERGY: production (DS 192)…';
+    const prod=await fetchDS(192,90);results.prod=prod;
     await new Promise(r=>setTimeout(r,1500));
+    status.textContent='S_ENERGY: surplus (DS 198)…';
+    const surp=await fetchDS(198,90);results.surp=surp;
+    await new Promise(r=>setTimeout(r,1500));
+    status.textContent='S_ENERGY: wind (DS 181)…';
+    const wind=await fetchDS(181,90);results.wind=wind;
+    st.l.S_ENERGY=calcSEnergy(spot,surp,prod,wind);
+  } catch(e){errors.push(`S_ENERGY: ${e.message}`);}
 
-    status.textContent = 'Fetching wind (DS 181)…';
-    const wind = await fetchDS(181, 90);
+  // E_REAL — spot history 7 days (Fingrid DS 105)
+  try {
+    await new Promise(r=>setTimeout(r,1500));
+    status.textContent='E_REAL: 7-day spot history (DS 105)…';
+    const hist=await fetchDSMulti(105,7,24);results.spotHist=hist;
+    st.l.E_REAL=calcEReal(hist);
+  } catch(e){errors.push(`E_REAL: ${e.message}`);}
 
-    // Calculate S_ENERGY from live data
-    const base = spotToStress(spot);
-    const adj  = marginToAdj(surp, prod) + windToAdj(wind, prod);
-    const sEnergy = Math.max(10, Math.min(95, Math.round(base + adj)));
+  // R_PUBLIC — ECB Finnish 10Y bond yield
+  try {
+    status.textContent='R_PUBLIC: ECB Finnish 10Y bond yield…';
+    const bond=await fetchBondYield();results.bond=bond;
+    st.l.R_PUBLIC=calcRPublic(bond);
+  } catch(e){errors.push(`R_PUBLIC: ${e.message}`);}
 
-    // Update only S_ENERGY — other layers keep preset values
-    st.l.S_ENERGY = sEnergy;
-    document.getElementById('lCtrl').innerHTML = '';
+  // X_EXTERNAL — ECB EUR/USD
+  try {
+    status.textContent='X_EXTERNAL: ECB EUR/USD…';
+    const eurusd=await fetchEURUSD();results.eurusd=eurusd;
+    st.l.X_EXTERNAL=calcXExternal(eurusd);
+  } catch(e){errors.push(`X_EXTERNAL: ${e.message}`);}
 
-    const ts = new Date().toLocaleTimeString('fi-FI');
-    status.innerHTML = `&#9679; Live data loaded ${ts} &nbsp;&middot;&nbsp; `+
-      `Spot <strong>${spot.toFixed(1)} €/MWh</strong> &nbsp;&middot;&nbsp; `+
-      `Surplus <strong>${Math.round(surp)} MW</strong> &nbsp;&middot;&nbsp; `+
-      `Wind <strong>${Math.round(wind/prod*100)}%</strong> &nbsp;&middot;&nbsp; `+
-      `S_ENERGY <strong>${sEnergy}</strong>`;
-    status.style.color = 'var(--sg)';
-    upd();
-  } catch(e) {
-    status.textContent = `⚠ ${e.message} — using preset values`;
-    status.style.color = 'var(--so)';
-  } finally {
-    btn.textContent = '&#9654; Load live S_ENERGY';
-    btn.disabled = false;
-  }
+  // Update UI
+  document.getElementById('lCtrl').innerHTML='';
+  const ts=new Date().toLocaleTimeString('fi-FI');
+  const errNote=errors.length?` &nbsp;⚠ ${errors.length} error(s):`+errors.join(', '):'';
+  status.innerHTML=`&#9679; <strong>All layers live</strong> ${ts}`+
+    (results.spot?` &nbsp;&middot; Spot <strong>${results.spot.toFixed(1)}€/MWh</strong>`:'') +
+    (results.bond?` &middot; FI 10Y <strong>${results.bond.toFixed(2)}%</strong>`:'') +
+    (results.eurusd?` &middot; EUR/USD <strong>${results.eurusd.toFixed(4)}</strong>`:'') +
+    (results.spotHist?` &middot; 7d avg <strong>${(results.spotHist.reduce((a,b)=>a+b,0)/results.spotHist.length).toFixed(1)}€</strong>`:'') +
+    errNote;
+  status.style.color=errors.length?'var(--so)':'var(--sg)';
+  upd();
+  btn.textContent='&#9654; Refresh live data';btn.disabled=false;
 }
+
+// Keep old alias for button
+const fetchFingrid=fetchAllLive;
 
 upd();
 window.addEventListener('resize',upd);
