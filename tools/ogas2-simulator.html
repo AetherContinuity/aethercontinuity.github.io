@@ -525,6 +525,7 @@ function rForecast(){
     </div>
     <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.75rem;line-height:1.7;">
       Stochastic drift: Gaussian noise (σ per layer) + random event shocks (4–5% monthly probability per layer). Box-Muller transform. 500 independent runs. CASCADE = SHI &lt; 40. CASCADE risk is probabilistic, not deterministic.
+      <strong style="color:var(--ink);">Calibration note:</strong> 100% CASCADE from 2026-Q1 reflects structural proximity to RED threshold (SHI 41.5, boundary 40.0) — not a model artifact. MC correctly shows K1+K2+K3 reduces this to ~25%; K1+K2+K3+SGFA reduces to ~2%. Select interventions to see effect.
     </div>
   </div>`;
   document.getElementById('rS').innerHTML=mcHTML+(acts.length>0?buildROI(l,lk,acts):'');
