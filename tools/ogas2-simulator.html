@@ -153,7 +153,9 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <button class="cb" onclick="loadP('2026')">2026-04 Current</button>
         <button class="cb" onclick="loadP('2025')">2025-04 Reference</button>
         <button class="cb" onclick="loadP('stress')">Stress Scenario</button>
+        <button class="cb" id="btnLive" onclick="fetchFingrid()" style="border-color:var(--accent);color:var(--accent);">&#9654; Load live S_ENERGY</button>
       </div>
+      <div id="liveStatus" style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:1rem;min-height:1.2rem;"></div>
       <div id="lCtrl"></div>
     </div>
     <div>
@@ -275,9 +277,18 @@ function svc(s){return{GREEN:'#2d6b3a',YELLOW:'#7a6010',ORANGE:'#8b3a10',RED:'#8
 function drift(l0,lk0,m){
   const l={...l0},lk={...lk0};
   for(let i=0;i<m;i++){
-    for(const k in l){l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)).toFixed(1));lk[k]=Math.max(0,+(lk[k]+(LD[k]||0)).toFixed(1));}
-    if(l.E_REAL>58)l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+.2*(l.E_REAL-58)/12).toFixed(1));
-    if(l.R_PUBLIC>60)l.E_REAL=Math.min(100,+(l.E_REAL+.15*(l.R_PUBLIC-60)/12).toFixed(1));
+    // Buffer dampening: strong buffers slow drift and feedback
+    // ACI WP-004 Variable II — redundancy absorbs pressure over time
+    const avgBuf=Object.values(lk).reduce((a,b)=>a+b,0)/4;
+    const damp=1-0.45*(avgBuf/100); // high buffers slow drift by up to 45%
+    for(const k in l){
+      l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)*damp).toFixed(1));
+      lk[k]=Math.max(0,+(lk[k]+(LD[k]||0)).toFixed(1));
+    }
+    // Feedback loops — also dampened by buffers
+    const fbDamp=1-0.35*(avgBuf/100);
+    if(l.E_REAL>58)l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+.2*(l.E_REAL-58)/12*fbDamp).toFixed(1));
+    if(l.R_PUBLIC>60)l.E_REAL=Math.min(100,+(l.E_REAL+.15*(l.R_PUBLIC-60)/12*fbDamp).toFixed(1));
   }
   return{l,lk,shi:SHI(l,lk)};
 }
@@ -430,6 +441,98 @@ function setTab(t){
   document.getElementById('tH').className='cb'+(t==='h'?' on':'');
   upd();
 }
+// ── Fingrid live integration ───────────────────────────────────────────────
+const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
+
+async function fetchDS(dsId, windowMinutes=90) {
+  const now = new Date();
+  const from = new Date(now - windowMinutes*60000);
+  const url = `${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=5`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
+  const j = await r.json();
+  const rows = (j.data||j).filter(d=>d.value!=null&&d.value!==0);
+  if (!rows.length) throw new Error(`DS ${dsId} empty`);
+  return rows[rows.length-1].value;
+}
+
+function spotToStress(eur) {
+  // Map €/MWh to S_ENERGY stress component (0-100)
+  // 0-30: very low, 30-60: normal, 60-120: elevated, 120-200: high, >200: crisis
+  if (eur < 30)  return 18;
+  if (eur < 60)  return 30 + (eur-30)*0.4;
+  if (eur < 120) return 42 + (eur-60)*0.35;
+  if (eur < 200) return 63 + (eur-120)*0.22;
+  return Math.min(95, 80 + (eur-200)*0.08);
+}
+
+function marginToAdj(surplusMW, prodMW) {
+  // Surplus margin as fraction of production → stress adjustment
+  const margin = surplusMW / Math.max(prodMW, 1);
+  if (margin > 0.15) return -8;   // strong surplus → relief
+  if (margin > 0.05) return -3;
+  if (margin > -0.02) return +5;  // tight
+  return +14;                      // deficit
+}
+
+function windToAdj(windMW, prodMW) {
+  // High wind fraction → intermittency uncertainty
+  const frac = windMW / Math.max(prodMW, 1);
+  if (frac > 0.55) return +8;
+  if (frac > 0.35) return +4;
+  return 0;
+}
+
+async function fetchFingrid() {
+  const btn = document.getElementById('btnLive');
+  const status = document.getElementById('liveStatus');
+  btn.textContent = '⟳ Fetching…';
+  btn.disabled = true;
+  status.textContent = 'Connecting to Fingrid proxy…';
+  status.style.color = 'var(--muted)';
+
+  try {
+    status.textContent = 'Fetching spot price (DS 105)…';
+    const spot = await fetchDS(105, 180);
+    await new Promise(r=>setTimeout(r,1500)); // rate limit
+
+    status.textContent = 'Fetching production (DS 192)…';
+    const prod = await fetchDS(192, 90);
+    await new Promise(r=>setTimeout(r,1500));
+
+    status.textContent = 'Fetching surplus (DS 198)…';
+    const surp = await fetchDS(198, 90);
+    await new Promise(r=>setTimeout(r,1500));
+
+    status.textContent = 'Fetching wind (DS 181)…';
+    const wind = await fetchDS(181, 90);
+
+    // Calculate S_ENERGY from live data
+    const base = spotToStress(spot);
+    const adj  = marginToAdj(surp, prod) + windToAdj(wind, prod);
+    const sEnergy = Math.max(10, Math.min(95, Math.round(base + adj)));
+
+    // Update only S_ENERGY — other layers keep preset values
+    st.l.S_ENERGY = sEnergy;
+    document.getElementById('lCtrl').innerHTML = '';
+
+    const ts = new Date().toLocaleTimeString('fi-FI');
+    status.innerHTML = `&#9679; Live data loaded ${ts} &nbsp;&middot;&nbsp; `+
+      `Spot <strong>${spot.toFixed(1)} €/MWh</strong> &nbsp;&middot;&nbsp; `+
+      `Surplus <strong>${Math.round(surp)} MW</strong> &nbsp;&middot;&nbsp; `+
+      `Wind <strong>${Math.round(wind/prod*100)}%</strong> &nbsp;&middot;&nbsp; `+
+      `S_ENERGY <strong>${sEnergy}</strong>`;
+    status.style.color = 'var(--sg)';
+    upd();
+  } catch(e) {
+    status.textContent = `⚠ ${e.message} — using preset values`;
+    status.style.color = 'var(--so)';
+  } finally {
+    btn.textContent = '&#9654; Load live S_ENERGY';
+    btn.disabled = false;
+  }
+}
+
 upd();
 window.addEventListener('resize',upd);
 </script>
