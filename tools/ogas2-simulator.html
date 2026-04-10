@@ -197,7 +197,8 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       </div>
       <table class="fct"><thead><tr>
         <th>Horizon</th><th>No action SHI</th><th>State</th>
-        <th>With actions SHI</th><th>State</th><th>&Delta; (action vs no-action)</th>
+        <th>MC range P10–P90</th><th>CASCADE risk</th>
+        <th>With actions SHI</th><th>State</th><th>&Delta;</th>
       </tr></thead><tbody id="fB"></tbody></table>
       <div id="rS"></div>
       <div class="cite">Model basis: ACI WP-004 · Coupling: progressive, max −18 pts · Drift rates: estimated from public Finnish energy and fiscal data · Intervention parameters: WP-013 Appendix 1 v1.1, SP-002 SGFA 4.0 · Source: <a href="https://aethercontinuity.org">aethercontinuity.org</a></div>
@@ -344,6 +345,70 @@ function apAct(l0,lk0,m,acts){
   return drift(l,lk,m);
 }
 
+// ── Monte Carlo engine ─────────────────────────────────────────────────────
+// Stochastic noise scales (σ per month, calibrated to Finnish data variance)
+const NOISE = {S_ENERGY:0.9, R_PUBLIC:0.5, E_REAL:0.6, X_EXTERNAL:0.8};
+// Shock probability per month (geo/market events)
+const SHOCK_PROB = {S_ENERGY:0.04, X_EXTERNAL:0.05, R_PUBLIC:0.02, E_REAL:0.03};
+const SHOCK_MAG  = {S_ENERGY:5,    X_EXTERNAL:8,    R_PUBLIC:4,    E_REAL:4};
+
+function gaussNoise(){
+  // Box-Muller transform → standard normal
+  let u=0,v=0;
+  while(u===0)u=Math.random();
+  while(v===0)v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+
+function driftStochastic(l0,lk0,m,acts){
+  const l={...l0},lk={...lk0};
+  // Apply interventions first
+  for(const a of acts){
+    if(m<a.meta.lead)continue;
+    let sc=a.meta.profile==='RAMP'?Math.min(1,(m-a.meta.lead)/12):a.meta.profile==='DELAYED'?m>a.meta.lead+6?1:0:1;
+    for(const p of a.patch){
+      if(p.sv!=null)l[p.k]=Math.max(0,Math.min(100,l[p.k]+p.sv*sc));
+      if(p.lv!=null)lk[p.k]=Math.max(0,Math.min(100,lk[p.k]+p.lv*sc));
+    }
+  }
+  if(m>=12)conflictAdj(acts,l,lk);
+
+  // Month-by-month stochastic simulation
+  for(let i=0;i<m;i++){
+    const avgBuf=Object.values(lk).reduce((a,b)=>a+b,0)/4;
+    const damp=1-0.45*(avgBuf/100);
+    const fbDamp=1-0.35*(avgBuf/100);
+    for(const k in l){
+      const noise=gaussNoise()*NOISE[k];
+      // Random spike event
+      const spike=Math.random()<SHOCK_PROB[k]?SHOCK_MAG[k]*Math.random():0;
+      l[k]=Math.min(100,Math.max(0,l[k]+(DRIFT[k]||0)*damp+noise+spike));
+      lk[k]=Math.max(0,Math.min(100,lk[k]+(LD[k]||0)));
+    }
+    const fbE=Math.max(0,l.E_REAL-58);
+    const fbR=Math.max(0,l.R_PUBLIC-60);
+    if(fbE>0)l.R_PUBLIC=Math.min(100,l.R_PUBLIC+0.4*Math.pow(fbE/12,1.3)*fbDamp);
+    if(fbR>0)l.E_REAL=Math.min(100,l.E_REAL+0.3*Math.pow(fbR/12,1.3)*fbDamp);
+  }
+  return SHI(l,lk);
+}
+
+function pct(arr,p){
+  const s=[...arr].sort((a,b)=>a-b);
+  return s[Math.floor(s.length*(p/100))]||s[0];
+}
+
+function monteCarlo(l0,lk0,acts,months,runs=500){
+  const results=[];
+  for(let r=0;r<runs;r++) results.push(driftStochastic(l0,lk0,months,acts));
+  const med=pct(results,50);
+  const p10=pct(results,10);
+  const p90=pct(results,90);
+  const cascadeP=+(results.filter(s=>s<40).length/runs*100).toFixed(0);
+  const fragileP=+(results.filter(s=>s<58).length/runs*100).toFixed(0);
+  return{med,p10,p90,cascadeP,fragileP,runs};
+}
+
 function upd(){
   const{l,lk}=st;
   const shi=SHI(l,lk),s=stO(shi),c=scol(s),cp=cpV(l),on=cp>.3;
@@ -400,27 +465,81 @@ function rActions(){
 
 function rForecast(){
   const{l,lk}=st;const s0=SHI(l,lk);const acts=AC.filter(a=>sel.has(a.id));
-  const pts=[{x:0,na:s0,wa:acts.length?s0:null}];
+  const horizons=[1,6,12,24];
+
+  // Deterministic paths
+  const pts=[{x:0,na:s0,wa:acts.length?s0:null,p10:s0,p90:s0,wp10:acts.length?s0:null,wp90:acts.length?s0:null}];
   const tb=document.getElementById('fB');tb.innerHTML='';
-  for(const h of[1,6,12,24]){
-    const na=drift(l,lk,h).shi,wa=acts.length?apAct(l,lk,h,acts).shi:null;
-    pts.push({x:h,na,wa});
+
+  for(const h of horizons){
+    const na=drift(l,lk,h).shi;
+    const wa=acts.length?apAct(l,lk,h,acts).shi:null;
+    // Monte Carlo at key horizons (12 and 24 only for performance)
+    let mc=null,mcWa=null;
+    if(h===12||h===24){
+      mc=monteCarlo(l,lk,[],h,400);
+      if(acts.length)mcWa=monteCarlo(l,lk,acts,h,400);
+    }
+    pts.push({x:h,na,wa,
+      p10:mc?mc.p10:null,p90:mc?mc.p90:null,
+      wp10:mcWa?mcWa.p10:null,wp90:mcWa?mcWa.p90:null});
     const naS=stO(na),naD=na-s0;
-    const waC=wa!=null?`<td class="fs" style="color:${scol(stO(wa))}">${wa.toFixed(1)}</td><td><span class="fst" style="color:${scol(stO(wa))}">${stO(wa)}</span></td><td class="fd ${wa-na<0?'dn':'dp'}">${wa-na<0?'':'+'}${(wa-na).toFixed(1)}</td>`:`<td colspan="3" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);">— select interventions —</td>`;
-    tb.insertAdjacentHTML('beforeend',`<tr><td style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">+${h} mo</td><td class="fs" style="color:${scol(naS)}">${na.toFixed(1)}</td><td><span class="fst" style="color:${scol(naS)}">${naS}</span><span class="fd ${naD>=0?'dp':'dn'}">(${naD>=0?'+':''}${naD.toFixed(1)})</span></td>${waC}</tr>`);
+
+    // MC summary cells
+    let mcCell='';
+    if(mc){
+      const cCol=mc.cascadeP>30?'var(--sr)':mc.cascadeP>15?'var(--so)':'var(--muted)';
+      mcCell=`<td style="font-family:var(--mono);font-size:.65rem;"><span style="color:var(--muted);">[${mc.p10.toFixed(0)}–${mc.p90.toFixed(0)}]</span></td>
+              <td style="font-family:var(--mono);font-size:.65rem;color:${cCol};">${mc.cascadeP}%</td>`;
+    }else{
+      mcCell=`<td colspan="2" style="font-family:var(--mono);font-size:.58rem;color:var(--paper-3);">—</td>`;
+    }
+
+    const waC=wa!=null
+      ?`<td class="fs" style="color:${scol(stOf(wa))}">${wa.toFixed(1)}</td><td><span class="fst" style="color:${scol(stOf(wa))}">${stO(wa)}</span></td><td class="fd ${wa-na<0?'dn':'dp'}">${wa-na<0?'':'+'}${(wa-na).toFixed(1)}</td>`
+      :`<td colspan="3" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);">—</td>`;
+    tb.insertAdjacentHTML('beforeend',`<tr>
+      <td style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">+${h} mo</td>
+      <td class="fs" style="color:${scol(naS)}">${na.toFixed(1)}</td>
+      <td><span class="fst" style="color:${scol(naS)}">${naS}</span><span class="fd ${naD>=0?'dp':'dn'}">(${naD>=0?'+':''}${naD.toFixed(1)})</span></td>
+      ${mcCell}
+      ${waC}
+    </tr>`);
   }
   drawF(pts);
-  const rS=document.getElementById('rS');
-  if(acts.length>0){
-    const na24=drift(l,lk,24).shi;
-    let rows='';
-    for(const a of acts){
-      const g=+(apAct(l,lk,24,[a]).shi-na24).toFixed(1);
-      const ef=COSTS[a.id]>0?+(Math.abs(g)/COSTS[a.id]*100).toFixed(1):0;
-      rows+=`<tr><td style="font-size:.8rem;">${a.title}</td><td class="${g<0?'rg':''}" style="font-family:var(--mono);">${g>0?'+':''}${g}</td><td style="font-family:var(--mono);color:var(--muted);">${COSTS[a.id]}M€</td><td style="font-family:var(--mono);color:var(--muted);">${ef}</td></tr>`;
-    }
-    rS.innerHTML=`<div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule);"><div class="shdr" style="margin-bottom:.75rem;"><span class="snum">&sect; 04b</span><span class="stit" style="font-size:.95rem;">Intervention ROI at +24 months</span></div><p style="font-size:.82rem;font-style:italic;color:var(--muted);margin-bottom:.75rem;">SHI gain of each selected intervention individually against no-action baseline at +24 months. Negative = improvement. Efficiency = pts gained per 100M€ invested.</p><table class="rt"><thead><tr><th>Intervention</th><th>SHI gain @ +24mo</th><th>Est. cost</th><th>pts / 100M€</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  }else rS.innerHTML='';
+
+  // MC summary panel for 24mo
+  const mc24=monteCarlo(l,lk,[],24,500);
+  const mc24wa=acts.length?monteCarlo(l,lk,acts,24,500):null;
+  const cCol=mc24.cascadeP>30?'var(--sr)':mc24.cascadeP>15?'var(--so)':'var(--sg)';
+  let mcHTML=`<div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--paper-2);border:1px solid var(--rule);">
+    <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">§ 04c &nbsp; Monte Carlo — 500 simulations, +24 months</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;">
+      <div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">MEDIAN SHI</div><div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:${scol(stO(mc24.med.toFixed(0)*1))};">${mc24.med.toFixed(1)}</div></div>
+      <div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">RANGE (P10–P90)</div><div style="font-family:var(--mono);font-size:1.1rem;">${mc24.p10.toFixed(0)} – ${mc24.p90.toFixed(0)}</div></div>
+      <div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">CASCADE RISK</div><div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:${cCol};">${mc24.cascadeP}%</div></div>
+      <div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">BELOW YELLOW</div><div style="font-family:var(--mono);font-size:1.1rem;color:var(--so);">${mc24.fragileP}%</div></div>
+      ${mc24wa?`<div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">WITH ACTIONS — CASCADE</div><div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:${mc24wa.cascadeP>20?'var(--so)':'var(--sg)'};">${mc24wa.cascadeP}%</div></div>
+      <div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:.2rem;">WITH ACTIONS — MEDIAN</div><div style="font-family:var(--mono);font-size:1.1rem;color:${scol(stO(mc24wa.med.toFixed(0)*1))};">${mc24wa.med.toFixed(1)}</div></div>`:''}
+    </div>
+    <div style="font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-top:.75rem;line-height:1.7;">
+      Stochastic drift: Gaussian noise (σ per layer) + random event shocks (4–5% monthly probability per layer). Box-Muller transform. 500 independent runs. CASCADE = SHI &lt; 40. CASCADE risk is probabilistic, not deterministic.
+    </div>
+  </div>`;
+  document.getElementById('rS').innerHTML=mcHTML+(acts.length>0?buildROI(l,lk,acts):'');
+}
+
+function stOf(v){return v>=75?'GREEN':v>=58?'YELLOW':v>=40?'ORANGE':'RED';}
+
+function buildROI(l,lk,acts){
+  const na24=drift(l,lk,24).shi;
+  let rows='';
+  for(const a of acts){
+    const g=+(apAct(l,lk,24,[a]).shi-na24).toFixed(1);
+    const ef=COSTS[a.id]>0?+(Math.abs(g)/COSTS[a.id]*100).toFixed(1):0;
+    rows+=`<tr><td style="font-size:.8rem;">${a.title}</td><td class="${g<0?'rg':''}" style="font-family:var(--mono);">${g>0?'+':''}${g}</td><td style="font-family:var(--mono);color:var(--muted);">${COSTS[a.id]}M€</td><td style="font-family:var(--mono);color:var(--muted);">${ef}</td></tr>`;
+  }
+  return`<div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule);"><div class="shdr" style="margin-bottom:.75rem;"><span class="snum">&sect; 04b</span><span class="stit" style="font-size:.95rem;">Intervention ROI at +24 months (deterministic)</span></div><p style="font-size:.82rem;font-style:italic;color:var(--muted);margin-bottom:.75rem;">SHI gain of each selected intervention individually against no-action baseline at +24 months.</p><table class="rt"><thead><tr><th>Intervention</th><th>SHI gain</th><th>Cost</th><th>pts/100M€</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function rHistory(){
@@ -430,7 +549,7 @@ function rHistory(){
 
 function drawF(pts){
   const sv=document.getElementById('chF');
-  const TW=sv.parentElement.clientWidth||800,TH=200;
+  const TW=sv.parentElement.clientWidth||800,TH=220;
   const p={t:10,b:28,l:32,r:16};const cw=TW-p.l-p.r,ch=TH-p.t-p.b;
   const xS=x=>p.l+(x/24)*cw,yS=y=>p.t+ch-((y/100)*ch);
   let h='';
@@ -438,6 +557,12 @@ function drawF(pts){
   [0,25,50,75,100].forEach(y=>{h+=`<line x1="${p.l}" y1="${yS(y)}" x2="${p.l+cw}" y2="${yS(y)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;h+=`<text x="${p.l-3}" y="${yS(y)+3}" font-family="DM Mono" font-size="7" fill="#7a7468" text-anchor="end">${y}</text>`;});
   [{y:87,l:'GREEN'},{y:66,l:'YELLOW'},{y:49,l:'ORANGE'},{y:20,l:'RED'}].forEach(z=>{h+=`<text x="${p.l+4}" y="${yS(z.y)+3}" font-family="DM Mono" font-size="6.5" fill="${svc(z.l)}" opacity=".45" letter-spacing="1">${z.l}</text>`;});
   [0,1,6,12,24].forEach(x=>{h+=`<text x="${xS(x)}" y="${TH-6}" font-family="DM Mono" font-size="7" fill="#7a7468" text-anchor="middle">+${x}</text>`;});
+  // MC uncertainty bands (P10-P90) at 12 and 24
+  pts.filter(pt=>pt.p10!=null).forEach(pt=>{
+    h+=`<line x1="${xS(pt.x)}" y1="${yS(pt.p10)}" x2="${xS(pt.x)}" y2="${yS(pt.p90)}" stroke="#8b1010" stroke-width="4" opacity=".18"/>`;
+    if(pt.wp10!=null) h+=`<line x1="${xS(pt.x)+4}" y1="${yS(pt.wp10)}" x2="${xS(pt.x)+4}" y2="${yS(pt.wp90)}" stroke="#8b4513" stroke-width="4" opacity=".18"/>`;
+  });
+  // Deterministic paths
   const naP=pts.map((pt,i)=>`${i?'L':'M'}${xS(pt.x)},${yS(pt.na)}`).join(' ');
   h+=`<path d="${naP}" fill="none" stroke="#8b1010" stroke-width="1.5" stroke-dasharray="5,3" opacity=".7"/>`;
   pts.forEach(pt=>{h+=`<circle cx="${xS(pt.x)}" cy="${yS(pt.na)}" r="3" fill="#8b1010" opacity=".8"/>`;});
