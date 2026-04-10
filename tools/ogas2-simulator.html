@@ -171,7 +171,7 @@ svg.cht { width: 100%; height: 100%; }
         <div class="shi-meta-item">Avg buffer<br><strong id="metaBuf">—</strong></div>
       </div>
     </div>
-    <div class="coupling-badge" id="coupBadge"><span class="c-dot"></span>COMPOUND STRESS ACTIVE · S_ENERGY + R_PUBLIC &gt; 55 · −10 pts</div>
+    <div class="coupling-badge" id="coupBadge"><span class="c-dot"></span>COMPOUND STRESS ACTIVE · progressive penalty · S_ENERGY + R_PUBLIC</div>
   </div>
 
   <!-- Right: layers + actions -->
@@ -207,6 +207,7 @@ svg.cht { width: 100%; height: 100%; }
     <div id="viewForecast">
       <div class="chart-wrap"><svg class="cht" id="chartForecast"></svg></div>
       <div class="fcast-grid" id="fcastGrid"></div>
+      <div id="roiTable"></div>
       <div class="legend-row">
         <div class="legend-item"><div class="legend-line" style="background:rgba(224,64,64,0.7);border-top:1px dashed rgba(224,64,64,0.7);"></div>No action</div>
         <div class="legend-item"><div class="legend-line" style="background:#4080ff;"></div>With selected actions</div>
@@ -261,9 +262,21 @@ function calcSHI(l, lk) {
     const v = lk[k];
     la += v>50 ? (v-50)*0.5*w : -(50-v)*0.3*w;
   }
-  const cp = l.S_ENERGY>55 && l.R_PUBLIC>55 ? 10 : 0;
+  // Progressive coupling — not binary. Activates above 45, grows nonlinearly.
+  // ACI WP-004: compound stress is continuous, not threshold-triggered.
+  const se = Math.max(0, l.S_ENERGY - 45);
+  const rp = Math.max(0, l.R_PUBLIC - 45);
+  const cp = Math.min(18, (se/10) * (rp/10) * 15);
+  // Feedback: high E_REAL feeds back into R_PUBLIC stress (social costs)
+  const fb = l.E_REAL > 58 ? (l.E_REAL - 58) * 0.15 * W.R_PUBLIC : 0;
   const bon = Object.values(lk).filter(v=>v>65).length>=3 ? 10 : 0;
-  return +Math.max(0,Math.min(100,100-ws+la-cp+bon)).toFixed(1);
+  return +Math.max(0,Math.min(100,100-ws+la-cp-fb+bon)).toFixed(1);
+}
+
+function couplingVal(l) {
+  const se = Math.max(0, l.S_ENERGY - 45);
+  const rp = Math.max(0, l.R_PUBLIC - 45);
+  return +Math.min(18, (se/10) * (rp/10) * 15).toFixed(1);
 }
 function stOf(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
 function colOf(s){return {GREEN:'#3ddc84',YELLOW:'#f5c842',ORANGE:'#f07030',RED:'#e04040'}[s]||'#4080ff';}
@@ -340,13 +353,16 @@ function update() {
   const shi = calcSHI(l,lk);
   const st = stOf(shi);
   const col = colOf(st);
-  const cp = l.S_ENERGY>55 && l.R_PUBLIC>55;
+  const cp = couplingVal(l);
+  const cpActive = cp > 0.5;
 
   document.getElementById('shiNum').textContent = shi.toFixed(1);
   document.getElementById('shiSt').textContent = st;
   document.getElementById('shiPanel').style.setProperty('--state-col', col);
-  document.getElementById('coupBadge').className = 'coupling-badge' + (cp?' on':'');
-  document.getElementById('metaCoup').textContent = cp ? 'ACTIVE −10' : 'INACTIVE';
+  document.getElementById('coupBadge').className = 'coupling-badge' + (cpActive?' on':'');
+  document.getElementById('coupBadge').querySelector('span.c-dot').nextSibling.textContent =
+    `COMPOUND STRESS · −${cp.toFixed(1)} pts · S_ENERGY + R_PUBLIC progressive`;
+  document.getElementById('metaCoup').textContent = cpActive ? `−${cp.toFixed(1)}` : 'INACTIVE';
   document.getElementById('metaStr').textContent = (Object.values(l).reduce((a,b)=>a+b,0)/4).toFixed(1);
   document.getElementById('metaBuf').textContent = (Object.values(lk).reduce((a,b)=>a+b,0)/4).toFixed(1);
 
@@ -445,13 +461,42 @@ function renderForecast() {
         <span class="delta ${naDelta>=0?'dpos':'dneg'}">(${naDelta>=0?'+':''}${naDelta.toFixed(1)})</span></div></div>
       ${waHTML}</div>`);
   }
+
+  // ROI table
+  const COSTS = {K1:2,K2:15,K3:5,SGFA_K:150,SGFA_7:1190,LDR50:100,FISCAL:50};
+  const roiDiv = document.getElementById('roiTable');
+  if (acts.length > 0) {
+    const shi24na = driftN(l,lk,24).shi;
+    let roiHTML = `<div style="margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:0.75rem;">
+        INTERVENTION ROI — SHI gain at +24mo vs baseline, per intervention
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:1px;background:var(--border);">`;
+    for (const a of acts) {
+      const single = applyAct(l,lk,24,[a]).shi;
+      const gain = +(single - shi24na).toFixed(1);
+      const cost = COSTS[a.id]||50;
+      const eff = cost > 0 ? +(Math.abs(gain)/cost*100).toFixed(1) : 0;
+      const gainCol = gain < 0 ? 'var(--green)' : '#888';
+      roiHTML += `<div style="background:var(--surface);padding:0.75rem;">
+        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-dim);margin-bottom:0.25rem;">${a.id}</div>
+        <div style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:${gainCol};">${gain>0?'+':''}${gain} <span style="font-size:0.6rem;font-weight:400;">SHI pts</span></div>
+        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-muted);margin-top:0.2rem;">${cost}M€ investment</div>
+        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-dim);">${eff} pts / 100M€</div>
+      </div>`;
+    }
+    roiHTML += `</div></div>`;
+    roiDiv.innerHTML = roiHTML;
+  } else {
+    roiDiv.innerHTML = '';
+  }
 }
 
 function renderHistory() {
   const histPts = HISTORY.map((h,i)=>({
     x:i, label:h.p,
     shi: calcSHI(h.l,h.lk),
-    coupling: h.l.S_ENERGY>55 && h.l.R_PUBLIC>55
+    coupling: couplingVal(h.l) > 0.5
   }));
   drawHchart(histPts, 'chartHistory');
 }
