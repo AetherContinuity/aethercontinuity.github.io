@@ -658,21 +658,33 @@ async function fetchDSMulti(dsId, windowDays=7, size=20) {
   const r=await fetch(url);
   if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
   const j=await r.json();
-  return(j.data||j).filter(d=>d.value!=null&&d.value!==0).map(d=>d.value);
+  const values=(j.data||j).filter(d=>d.value!=null&&d.value!==0).map(d=>d.value);
+  if(!values.length)throw new Error(`DS ${dsId} multi empty`);
+  return values;
 }
 
 async function fetchBondYield() {
   // ECB Finnish 10Y government bond — CORS-free
-  const url='https://data-api.ecb.europa.eu/service/data/YC/'+
-    'B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y?lastNObservations=1&format=jsondata';
-  const r=await fetch(url,{headers:{'Accept':'application/json'}});
-  if(!r.ok)throw new Error(`ECB bond HTTP ${r.status}`);
-  const j=await r.json();
-  const series=j.dataSets?.[0]?.series;
-  if(!series)throw new Error('ECB no series');
-  const obs=Object.values(series)[0]?.observations;
-  const latest=Object.values(obs).sort((a,b)=>b[0]-a[0])[0];
-  return latest[0]; // yield in %
+  // Primary: yield curve series. Fallback: try alternative endpoint.
+  const urls=[
+    'https://data-api.ecb.europa.eu/service/data/YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y?lastNObservations=3&format=jsondata',
+    'https://data-api.ecb.europa.eu/service/data/IRS/M.FI.L.L40.CI.0.EUR.N.Z?lastNObservations=1&format=jsondata'
+  ];
+  for(const url of urls){
+    try{
+      const r=await fetch(url,{headers:{'Accept':'application/json'}});
+      if(!r.ok)continue;
+      const j=await r.json();
+      const series=j.dataSets?.[0]?.series;
+      if(!series)continue;
+      const obs=Object.values(series)[0]?.observations;
+      if(!obs)continue;
+      const vals=Object.values(obs).map(v=>v[0]).filter(v=>!isNaN(v)&&v>0);
+      if(!vals.length)continue;
+      return vals[vals.length-1]; // most recent
+    }catch(e){continue;}
+  }
+  throw new Error('ECB bond: all endpoints failed');
 }
 
 async function fetchEURUSD() {
@@ -782,7 +794,7 @@ async function fetchAllLive() {
     (results.spot?` &nbsp;&middot; Spot <strong>${results.spot.toFixed(1)}€/MWh</strong>`:'') +
     (results.bond?` &middot; FI 10Y <strong>${results.bond.toFixed(2)}%</strong>`:'') +
     (results.eurusd?` &middot; EUR/USD <strong>${results.eurusd.toFixed(4)}</strong>`:'') +
-    (results.spotHist?` &middot; 7d avg <strong>${(results.spotHist.reduce((a,b)=>a+b,0)/results.spotHist.length).toFixed(1)}€</strong>`:'') +
+    (results.spotHist&&results.spotHist.length?` &middot; 7d avg <strong>${(results.spotHist.reduce((a,b)=>a+b,0)/results.spotHist.length).toFixed(1)}€</strong>`:'') +
     errNote;
   status.style.color=errors.length?'var(--so)':'var(--sg)';
   upd();
