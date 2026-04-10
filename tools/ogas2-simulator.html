@@ -267,16 +267,16 @@ function calcSHI(l, lk) {
   const se = Math.max(0, l.S_ENERGY - 45);
   const rp = Math.max(0, l.R_PUBLIC - 45);
   const cp = Math.min(18, (se/10) * (rp/10) * 15);
-  // Feedback: high E_REAL feeds back into R_PUBLIC stress (social costs)
-  const fb = l.E_REAL > 58 ? (l.E_REAL - 58) * 0.15 * W.R_PUBLIC : 0;
   const bon = Object.values(lk).filter(v=>v>65).length>=3 ? 10 : 0;
-  return +Math.max(0,Math.min(100,100-ws+la-cp-fb+bon)).toFixed(1);
+  return +Math.max(0,Math.min(100,100-ws+la-cp+bon)).toFixed(1);
 }
 
 function couplingVal(l) {
-  const se = Math.max(0, l.S_ENERGY - 45);
-  const rp = Math.max(0, l.R_PUBLIC - 45);
-  return +Math.min(18, (se/10) * (rp/10) * 15).toFixed(1);
+  // Normalised progressive coupling — ACI WP-004
+  // Activates above 50, grows smoothly to max 18, no cliff edge
+  const trigger = Math.max(0, l.S_ENERGY - 50) * Math.max(0, l.R_PUBLIC - 50);
+  const norm = Math.min(1, trigger / (50 * 50));
+  return +(18 * norm).toFixed(1);
 }
 function stOf(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
 function colOf(s){return {GREEN:'#3ddc84',YELLOW:'#f5c842',ORANGE:'#f07030',RED:'#e04040'}[s]||'#4080ff';}
@@ -285,6 +285,10 @@ function driftN(l0,lk0,m){
   const l={...l0},lk={...lk0};
   for(let i=0;i<m;i++){
     for(const k in l){l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)).toFixed(1));lk[k]=Math.max(0,+(lk[k]+(LDRIFT[k]||0)).toFixed(1));}
+    // Feedback: real economy stress feeds into public finance (social costs)
+    if(l.E_REAL>58) l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+0.2*(l.E_REAL-58)/12).toFixed(1));
+    // Symmetric: public finance stress feeds into real economy (austerity)
+    if(l.R_PUBLIC>60) l.E_REAL=Math.min(100,+(l.E_REAL+0.15*(l.R_PUBLIC-60)/12).toFixed(1));
   }
   return {l,lk,shi:calcSHI(l,lk)};
 }
