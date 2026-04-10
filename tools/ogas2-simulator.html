@@ -4,610 +4,434 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OGAS2 — System Health Simulator · ACI</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0c0f;
-  --surface: #111418;
-  --surface-2: #181c22;
-  --border: #242830;
-  --border-2: #2e3440;
-  --text: #d4d8e0;
-  --text-muted: #5a6070;
-  --text-dim: #3a4050;
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'IBM Plex Sans', sans-serif;
-  --green: #3ddc84;
-  --yellow: #f5c842;
-  --orange: #f07030;
-  --red: #e04040;
-  --accent: #4080ff;
+  --ink:#0e0d0b; --paper:#f5f0e8; --paper-2:#ede7d8; --paper-3:#e4dccb;
+  --accent:#8b4513; --muted:#7a7468; --rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
+  --sg:#2d6b3a; --sy:#7a6010; --so:#8b3a10; --sr:#8b1010;
+  --bg-g:#eef6f0; --bg-y:#faf6e8; --bg-o:#faf0e8; --bg-r:#faf0f0;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  line-height: 1.6;
-  min-height: 100vh;
-}
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
-  pointer-events: none; z-index: 1000;
-}
-.header {
-  border-bottom: 1px solid var(--border);
-  padding: 1.25rem 2rem;
-  display: flex; align-items: baseline; gap: 2rem;
-}
-.header-logo { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
-.header-logo span { color: var(--accent); }
-.header-title { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em; color: var(--text); }
-.header-note { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-left: auto; }
-
-.main { max-width: 1160px; margin: 0 auto; padding: 1.5rem 2rem; display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
-
-.panel { background: var(--surface); border: 1px solid var(--border); padding: 1.5rem; }
-.panel-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
+.dih-l{display:flex;flex-direction:column;gap:.15rem;}
+.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.dih-ser span{color:var(--accent);}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
+.page{max-width:1060px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+.shdr{display:flex;align-items:baseline;gap:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--rule);margin-bottom:1.25rem;}
+.snum{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);flex-shrink:0;}
+.stit{font-size:1.1rem;font-weight:500;}
+.snote{font-size:.875rem;font-style:italic;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
 /* SHI */
-.shi-panel { position: relative; overflow: hidden; }
-.shi-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--state-col, var(--accent)); transition: background 0.4s; }
-.shi-row { display: flex; align-items: flex-end; gap: 2.5rem; flex-wrap: wrap; }
-.shi-num { font-family: var(--mono); font-size: 3.5rem; font-weight: 500; line-height: 1; color: var(--state-col, var(--text)); transition: color 0.4s; }
-.shi-st { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.3em; color: var(--state-col, var(--text)); margin-top: 0.4rem; transition: color 0.4s; }
-.shi-meta-grid { display: grid; grid-template-columns: repeat(4, auto); gap: 1.5rem; }
-.shi-meta-item { font-family: var(--mono); font-size: 0.58rem; color: var(--text-muted); line-height: 1.9; }
-.shi-meta-item strong { color: var(--text); font-weight: 500; }
-.coupling-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(224,64,64,0.12); border: 1px solid var(--red); padding: 0.3rem 0.75rem; margin-top: 1rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--red); opacity: 0; transition: opacity 0.3s; }
-.coupling-badge.on { opacity: 1; }
-.c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); animation: blink 1.5s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
+.shi-blk{display:grid;grid-template-columns:auto 1fr;gap:2.5rem;align-items:start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);}
+.shi-val{font-family:var(--mono);font-size:4.5rem;font-weight:500;line-height:1;letter-spacing:-.02em;transition:color .4s;}
+.shi-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--rule);padding:.2rem .75rem;margin-top:.5rem;transition:border-color .4s;}
+.shi-badge-txt{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;transition:color .4s;}
+.shi-dot{width:6px;height:6px;border-radius:50%;transition:background .4s;}
+.shi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem 2rem;padding-top:.25rem;}
+.shi-gi{}
+.shi-gl{font-family:var(--mono);font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem;}
+.shi-gv{font-family:var(--mono);font-size:.9rem;font-weight:500;}
+.shi-gd{font-size:.8rem;color:var(--muted);line-height:1.5;margin-top:.15rem;}
+.coup-warn{grid-column:1/-1;display:flex;align-items:flex-start;gap:.75rem;background:var(--bg-r);border:1px solid #c4a0a0;border-left:3px solid var(--sr);padding:.75rem 1rem;opacity:0;transition:opacity .35s;}
+.coup-warn.on{opacity:1;}
+.coup-dot{width:6px;height:6px;border-radius:50%;background:var(--sr);margin-top:.35rem;flex-shrink:0;animation:blink 1.8s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.coup-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sr);margin-bottom:.2rem;}
+.coup-body{font-size:.82rem;color:var(--muted);line-height:1.5;}
+.coup-body strong{color:var(--ink);}
+/* Two-col */
+.two-col{display:grid;grid-template-columns:1fr 340px;gap:3rem;margin-top:2.5rem;}
 /* Layers */
-.layer-row { margin-bottom: 1.1rem; }
-.layer-hdr { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.35rem; }
-.layer-name { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-muted); }
-.layer-val { font-family: var(--mono); font-size: 0.68rem; color: var(--text); font-weight: 500; }
-.layer-track { height: 3px; background: var(--border-2); margin-bottom: 0.25rem; }
-.layer-fill { height: 100%; transition: width 0.2s, background 0.2s; }
-input[type=range] { width: 100%; -webkit-appearance: none; height: 3px; background: var(--border-2); outline: none; cursor: pointer; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; background: var(--text); border-radius: 50%; cursor: pointer; }
-input[type=range]::-webkit-slider-thumb:hover { background: var(--accent); }
-.lock-row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.2rem; }
-.lock-lbl { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
-.lock-val { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
-
+.li{padding:1rem 0;border-bottom:1px solid var(--rule);}
+.li:last-child{border-bottom:none;}
+.li-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem;}
+.li-id{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--accent);}
+.li-num{font-family:var(--mono);font-size:.8rem;font-weight:500;}
+.li-name{font-size:.875rem;font-weight:500;margin-bottom:.2rem;}
+.li-src{font-size:.78rem;font-style:italic;color:var(--muted);margin-bottom:.6rem;line-height:1.5;}
+.bar-t{height:5px;background:var(--paper-3);border:1px solid var(--rule);margin-bottom:.3rem;}
+.bar-f{height:100%;transition:width .25s,background .25s;}
+.rr{display:grid;grid-template-columns:55px 1fr 30px;align-items:center;gap:.5rem;margin-bottom:.2rem;}
+.rl{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--paper-3);border:1px solid var(--rule);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--ink);border-radius:50%;cursor:pointer;transition:background .15s;}
+input[type=range]::-webkit-slider-thumb:hover{background:var(--accent);}
+.rv{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-align:right;}
 /* Actions */
-.action-item { display: flex; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); cursor: pointer; }
-.action-item:last-child { border-bottom: none; }
-.action-item:hover .action-title { color: var(--accent); }
-.action-check { width: 13px; height: 13px; border: 1px solid var(--border-2); flex-shrink: 0; margin-top: 0.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-.action-check.on { background: var(--accent); border-color: var(--accent); }
-.action-check.on::after { content: '✓'; font-size: 0.58rem; color: #fff; }
-.action-title { font-size: 0.68rem; color: var(--text); line-height: 1.35; }
-.action-meta { font-family: var(--mono); font-size: 0.52rem; color: var(--text-muted); margin-top: 0.15rem; }
-.cLOW { color: var(--green); }
-.cMEDIUM { color: var(--yellow); }
-.cHIGH { color: var(--orange); }
-.cVERY_HIGH { color: var(--red); }
-
+.ai{display:flex;gap:.75rem;padding:.85rem 0;border-bottom:1px solid var(--rule);cursor:pointer;}
+.ai:last-child{border-bottom:none;}
+.ai:hover .an{color:var(--accent);}
+.ach{width:14px;height:14px;border:1px solid var(--rule);flex-shrink:0;margin-top:.25rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.ach.on{background:var(--accent);border-color:var(--accent);}
+.ach.on::after{content:'✓';font-size:.6rem;color:#fff;font-family:var(--mono);}
+.an{font-size:.9rem;line-height:1.4;}
+.am{font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;color:var(--muted);margin-top:.15rem;}
+.am .cLOW{color:var(--sg);} .am .cMEDIUM{color:var(--sy);} .am .cHIGH{color:var(--so);} .am .cVERY_HIGH{color:var(--sr);}
+.as{font-size:.75rem;font-style:italic;color:var(--muted);margin-top:.15rem;line-height:1.4;}
+/* Controls */
+.cr{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.cb{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.3rem .8rem;background:transparent;border:1px solid var(--rule);color:var(--muted);cursor:pointer;transition:all .15s;}
+.cb:hover,.cb.on{border-color:var(--accent);color:var(--accent);}
 /* Forecast */
-.forecast-full { grid-column: 1 / -1; }
-.tab-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
-.tab { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; padding: 0.3rem 0.9rem; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.tab.active, .tab:hover { border-color: var(--accent); color: var(--accent); }
-.preset-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.preset-btn { font-family: var(--mono); font-size: 0.58rem; padding: 0.28rem 0.7rem; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.preset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.chart-wrap { width: 100%; height: 220px; position: relative; }
-svg.cht { width: 100%; height: 100%; }
-
-.fcast-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--border); margin-top: 1.25rem; }
-.fcast-cell { background: var(--surface); padding: 0.9rem; }
-.fcast-cell-hdr { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.6rem; }
-.fcast-sc { margin-bottom: 0.4rem; }
-.fcast-sc-lbl { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); }
-.fcast-sc-val { font-family: var(--mono); font-size: 1rem; font-weight: 500; line-height: 1.2; }
-.fcast-sc-st { font-family: var(--mono); font-size: 0.52rem; }
-.delta { font-family: var(--mono); font-size: 0.52rem; }
-.dpos { color: var(--red); }
-.dneg { color: var(--green); }
-
-.legend-row { display: flex; gap: 1.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
-.legend-item { display: flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.55rem; color: var(--text-muted); }
-.legend-line { width: 20px; height: 2px; }
-
-.citation { font-family: var(--mono); font-size: 0.52rem; color: var(--text-dim); margin-top: 1rem; letter-spacing: 0.04em; line-height: 1.7; }
-
-.two-red-note {
-  margin-top: 1.25rem;
-  background: rgba(224,64,64,0.06);
-  border: 1px solid rgba(224,64,64,0.2);
-  padding: 1rem 1.25rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-.two-red-item { font-family: var(--mono); font-size: 0.58rem; line-height: 1.8; }
-.two-red-item .lbl { color: var(--red); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
-.two-red-item .val { color: var(--text-muted); }
-.two-red-item strong { color: var(--text); }
-
-@media (max-width: 800px) {
-  .main { grid-template-columns: 1fr; }
-  .fcast-grid { grid-template-columns: repeat(3,1fr); }
-  .two-red-note { grid-template-columns: 1fr; }
-  .shi-meta-grid { grid-template-columns: repeat(2,auto); }
-}
+.fsec{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--rule);}
+.fct{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.72rem;margin-top:1rem;}
+.fct th{border-bottom:1px solid var(--ink);padding:.5rem .75rem;text-align:left;letter-spacing:.1em;font-weight:500;font-size:.6rem;text-transform:uppercase;color:var(--muted);}
+.fct td{padding:.6rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+.fct tr:last-child td{border-bottom:none;}
+.fs{font-size:1rem;font-weight:500;}
+.fst{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.1rem;}
+.fd{font-size:.6rem;color:var(--muted);}
+.dn{color:var(--sg);} .dp{color:var(--sr);}
+.rt{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;margin-top:.75rem;}
+.rt th{border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;}
+.rt td{padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);}
+.rt tr:last-child td{border-bottom:none;}
+.rg{color:var(--sg);font-weight:500;}
+.chart-w{width:100%;height:200px;margin:1.5rem 0 .5rem;}
+svg.cht{width:100%;height:100%;}
+.hn{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;}
+.hni{background:var(--paper-2);border:1px solid var(--rule);border-left:3px solid var(--sr);padding:1rem 1.25rem;}
+.hnt{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sr);margin-bottom:.5rem;}
+.hnb{font-size:.82rem;color:var(--muted);line-height:1.6;}
+.hnb strong{color:var(--ink);}
+.leg{display:flex;gap:1.5rem;margin-top:.5rem;flex-wrap:wrap;}
+.lgi{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;color:var(--muted);}
+.ll{width:22px;height:2px;}
+.cite{font-family:var(--mono);font-size:.55rem;color:var(--muted);line-height:1.8;margin-top:1.25rem;padding-top:.75rem;border-top:1px solid var(--rule);letter-spacing:.04em;}
+.cite a{color:var(--accent);text-decoration:none;}
+footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:2;}
+@media(max-width:760px){.two-col{grid-template-columns:1fr;gap:2rem;}.shi-blk{grid-template-columns:1fr;gap:1.25rem;}.shi-grid{grid-template-columns:1fr 1fr;}.hn{grid-template-columns:1fr;}footer{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-logo">ACI · <span>OGAS2</span></div>
-  <div class="header-title">System Health Index Simulator</div>
-  <div class="header-note">v1.2 · Backtest-validated 2021–2026 · WP-004 / WP-013</div>
+<div class="dih">
+  <div class="dih-l">
+    <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
+    <div class="dih-ser">OGAS2 &middot; <span>System Health Simulator</span> &middot; v2.0</div>
+  </div>
+  <div class="dih-meta">Instrument &middot; April 2026<br>Basis: WP-004 &middot; WP-013<br>Backtest-validated 2021&ndash;2026</div>
 </div>
+<div class="page">
 
-<div class="main">
-
-  <!-- SHI panel -->
-  <div class="panel shi-panel" id="shiPanel">
-    <div class="panel-label">System Health Index · Finland</div>
-    <div class="shi-row">
+  <!-- §01 SHI -->
+  <div style="margin-bottom:2.5rem;">
+    <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">System Health Index</span></div>
+    <p class="snote">SHI is a composite index (0–100) expressing overall resilience across four stress layers, derived from WP-004's recovery capacity variables: Variation (I), Redundancy (II), Recovery Time (III). Thresholds: GREEN ≥75 &middot; YELLOW ≥58 &middot; ORANGE ≥40 &middot; RED &lt;40.</p>
+    <div class="shi-blk">
       <div>
-        <div class="shi-num" id="shiNum">—</div>
-        <div class="shi-st" id="shiSt">CALCULATING</div>
+        <div class="shi-val" id="shiV">—</div>
+        <div class="shi-badge" id="shiB"><div class="shi-dot" id="shiD"></div><span class="shi-badge-txt" id="shiT">—</span></div>
       </div>
-      <div class="shi-meta-grid">
-        <div class="shi-meta-item">Snapshot<br><strong id="metaSnap">2026-04</strong></div>
-        <div class="shi-meta-item">Coupling<br><strong id="metaCoup">—</strong></div>
-        <div class="shi-meta-item">Avg stress<br><strong id="metaStr">—</strong></div>
-        <div class="shi-meta-item">Avg buffer<br><strong id="metaBuf">—</strong></div>
-      </div>
-    </div>
-    <div class="coupling-badge" id="coupBadge"><span class="c-dot"></span>COMPOUND STRESS ACTIVE · progressive penalty · S_ENERGY + R_PUBLIC</div>
-  </div>
-
-  <!-- Right: layers + actions -->
-  <div style="display:flex;flex-direction:column;gap:1.5rem;">
-    <div class="panel">
-      <div class="panel-label">System Layers — Stress Input</div>
-      <div id="layerCtrl"></div>
-    </div>
-    <div class="panel">
-      <div class="panel-label">Intervention Matrix (WP-013 L6)</div>
-      <div id="actionList"></div>
-    </div>
-  </div>
-
-  <!-- Full-width forecast + history -->
-  <div class="panel forecast-full">
-    <div class="panel-label">Trajectory Analysis</div>
-
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
-      <div class="tab-row">
-        <div class="tab active" id="tabForecast" onclick="setTab('forecast')">FORECAST</div>
-        <div class="tab" id="tabHistory" onclick="setTab('history')">BACKTEST 2021–2026</div>
-      </div>
-      <div class="preset-row">
-        <button class="preset-btn" onclick="loadPreset('2026')">2026-04</button>
-        <button class="preset-btn" onclick="loadPreset('2025')">2025-04</button>
-        <button class="preset-btn" onclick="loadPreset('stress')">Stress</button>
-        <button class="preset-btn" onclick="selAll()">All Actions</button>
-        <button class="preset-btn" onclick="selNone()">Clear</button>
-      </div>
-    </div>
-
-    <div id="viewForecast">
-      <div class="chart-wrap"><svg class="cht" id="chartForecast"></svg></div>
-      <div class="fcast-grid" id="fcastGrid"></div>
-      <div id="roiTable"></div>
-      <div class="legend-row">
-        <div class="legend-item"><div class="legend-line" style="background:rgba(224,64,64,0.7);border-top:1px dashed rgba(224,64,64,0.7);"></div>No action</div>
-        <div class="legend-item"><div class="legend-line" style="background:#4080ff;"></div>With selected actions</div>
-      </div>
-    </div>
-
-    <div id="viewHistory" style="display:none;">
-      <div class="chart-wrap"><svg class="cht" id="chartHistory"></svg></div>
-      <div class="two-red-note">
-        <div class="two-red-item">
-          <div class="lbl">2022-Q4 · SHI 22.2 RED</div>
-          <div class="val"><strong>External shock</strong> — V-shape recovery<br>
-          NordPool FI &gt;500 €/MWh · Invasion shock<br>
-          Coupling active: S_ENERGY 76 + R_PUBLIC 56<br>
-          Recovery: +16 pts in one quarter (2023-Q1)</div>
-        </div>
-        <div class="two-red-item">
-          <div class="lbl">2026-Q1 · SHI 32.1 RED</div>
-          <div class="val"><strong>Structural collapse</strong> — L-shape trajectory<br>
-          F-35 +500–700M€/y · Sote · Debt service<br>
-          Coupling active: S_ENERGY 61 + R_PUBLIC 58<br>
-          No natural recovery path without intervention</div>
+      <div class="shi-grid">
+        <div class="shi-gi"><div class="shi-gl">Snapshot</div><div class="shi-gv">2026-04</div><div class="shi-gd">Reference period for current layer values</div></div>
+        <div class="shi-gi"><div class="shi-gl">Compound stress</div><div class="shi-gv" id="mC">—</div><div class="shi-gd">Progressive coupling penalty when S_ENERGY and R_PUBLIC are simultaneously elevated (WP-004)</div></div>
+        <div class="shi-gi"><div class="shi-gl">Avg layer stress</div><div class="shi-gv" id="mS">—</div><div class="shi-gd">Unweighted mean across four layers (0–100)</div></div>
+        <div class="shi-gi"><div class="shi-gl">Avg buffer</div><div class="shi-gv" id="mB">—</div><div class="shi-gd">Mean lock value — institutional and physical reserve capacity</div></div>
+        <div class="coup-warn" id="cW">
+          <div class="coup-dot"></div>
+          <div><div class="coup-title">Compound Stress Active &mdash; <span id="cV">—</span> pts penalty</div>
+          <div class="coup-body"><strong>S_ENERGY and R_PUBLIC are simultaneously elevated.</strong> Energy costs require public compensation, which narrows fiscal margins, which reduces capacity to buffer further energy shocks. Penalty is progressive: (SE−50)·(RP−50)/2500 · 18. ACI WP-004.</div></div>
         </div>
       </div>
-      <div class="citation">
-        Backtest validated against public Finnish energy price data (NordPool FI),
-        state budget reports (VM), and ACI diagnostic corpus (DA-001 – DA-007, WP-001 – WP-013).
-        Layer values are reconstructed estimates; not audited financial data.
-        ACI · aethercontinuity.org
-      </div>
-    </div>
-
-    <div class="citation" id="forecastCitation">
-      ACI WP-004 · Coupling penalty −10 when S_ENERGY &gt; 55 AND R_PUBLIC &gt; 55 ·
-      Decision window closure: WP-013 · Full action set cannot restore GREEN within 24 months.
-      Source: aethercontinuity.org
     </div>
   </div>
 
+  <!-- Two-col: §02 + §03 -->
+  <div class="two-col">
+    <div>
+      <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Stress Layers &amp; Buffers</span></div>
+      <p class="snote">Each layer represents a structural stress dimension. Stress (0–100): higher is worse. Buffer (lock): reserve capacity — institutional, physical, fiscal — that absorbs shocks. Buffers above 65 provide non-linear protection. Feedback loops: E_REAL&gt;58 incrementally raises R_PUBLIC; R_PUBLIC&gt;60 incrementally raises E_REAL.</p>
+      <div class="cr">
+        <button class="cb" onclick="loadP('2026')">2026-04 Current</button>
+        <button class="cb" onclick="loadP('2025')">2025-04 Reference</button>
+        <button class="cb" onclick="loadP('stress')">Stress Scenario</button>
+      </div>
+      <div id="lCtrl"></div>
+    </div>
+    <div>
+      <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Intervention Matrix</span></div>
+      <p class="snote">Interventions derived from WP-013 Appendix 1 v1.1 and SP-002 (SGFA 4.0). Select any combination to model joint effect. Profile: IMMEDIATE = full effect at lead; RAMP = linear over 12 months; DELAYED = activates at lead+6.</p>
+      <div class="cr">
+        <button class="cb" onclick="sAll()">Select all</button>
+        <button class="cb" onclick="sNone()">Clear</button>
+      </div>
+      <div id="aList"></div>
+    </div>
+  </div>
+
+  <!-- §04 Forecast -->
+  <div class="fsec">
+    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Trajectory Forecast &amp; Backtest</span></div>
+    <div class="cr">
+      <button class="cb on" id="tF" onclick="setTab('f')">Forecast (+24 months)</button>
+      <button class="cb" id="tH" onclick="setTab('h')">Backtest 2021&ndash;2026</button>
+    </div>
+    <div id="vF">
+      <p class="snote">Structural drift continues at estimated rates (S_ENERGY +0.4/mo, R_PUBLIC +0.35/mo, buffers declining). Feedback loops active per §02. Intervention effects applied at stated lead times and profiles.</p>
+      <div class="chart-w"><svg class="cht" id="chF"></svg></div>
+      <div class="leg" style="margin-bottom:1.5rem;">
+        <div class="lgi"><div class="ll" style="background:var(--sr);opacity:.7;border-top:1px dashed var(--sr);"></div>No action</div>
+        <div class="lgi"><div class="ll" style="background:var(--accent);"></div>With selected interventions</div>
+      </div>
+      <table class="fct"><thead><tr>
+        <th>Horizon</th><th>No action SHI</th><th>State</th>
+        <th>With actions SHI</th><th>State</th><th>&Delta; (action vs no-action)</th>
+      </tr></thead><tbody id="fB"></tbody></table>
+      <div id="rS"></div>
+      <div class="cite">Model basis: ACI WP-004 · Coupling: progressive, max −18 pts · Drift rates: estimated from public Finnish energy and fiscal data · Intervention parameters: WP-013 Appendix 1 v1.1, SP-002 SGFA 4.0 · Source: <a href="https://aethercontinuity.org">aethercontinuity.org</a></div>
+    </div>
+    <div id="vH" style="display:none;">
+      <p class="snote">Historical reconstruction using reconstructed layer values from public sources: NordPool FI spot prices (S_ENERGY), Finnish state budget reports/VM (R_PUBLIC), Statistics Finland energy cost indices (E_REAL), geopolitical event timeline (X_EXTERNAL). Not audited financial data. Purpose: model validation.</p>
+      <div class="chart-w"><svg class="cht" id="chH"></svg></div>
+      <div class="hn">
+        <div class="hni"><div class="hnt">2022-Q4 &mdash; SHI 22.2 &mdash; External Shock</div><div class="hnb"><strong>V-shape trajectory.</strong> NordPool FI peak &gt;500 €/MWh. Invasion shock. Coupling active: S_ENERGY 76 + R_PUBLIC 56. Recovery: +16 pts within one quarter. Government compensation packages absorbed the shock; fiscal buffers consumed but not exhausted.</div></div>
+        <div class="hni"><div class="hnt">2026-Q1 &mdash; SHI 32.1 &mdash; Structural Collapse</div><div class="hnb"><strong>L-shape trajectory. No natural recovery path.</strong> F-35 operating costs 500–700 M€/yr. Ageing sote. Debt service. Coupling active: S_ENERGY 61 + R_PUBLIC 58. Drop of −22 pts from 2025-Q1: larger than the 2022 invasion shock (−13 pts). Difference: 2022 was external; 2026 is endogenous and structural.</div></div>
+      </div>
+      <div class="cite">Backtest sources: NordPool FI historical spot prices · Finnish State Budget (VM) · Statistics Finland · ACI diagnostic corpus DA-001–DA-007, WP-001–WP-013 · Coupling activates correctly at 2022-Q4 and 2026-Q1 (model validated). Source: <a href="https://aethercontinuity.org">aethercontinuity.org</a></div>
+    </div>
+  </div>
 </div>
+
+<footer>
+  <div>Aether Continuity Institute<br>OGAS2 &mdash; System Health Simulator<br>Version 2.0 · April 2026</div>
+  <div>Basis: WP-004 · WP-013 · SP-002<br>Backtest: 2021-Q3 → 2026-Q1<br>Coupling: progressive, max −18</div>
+  <div>aethercontinuity.org<br>Open diagnostic instrument<br>Not audited financial data</div>
+</footer>
 
 <script>
-// ── Model ──────────────────────────────────────────────────────────────────
-const W = {S_ENERGY:0.35, R_PUBLIC:0.30, E_REAL:0.20, X_EXTERNAL:0.15};
-const DRIFT = {S_ENERGY:0.4, R_PUBLIC:0.35, E_REAL:0.20, X_EXTERNAL:0.15};
-const LDRIFT = {S_ENERGY:-0.3, R_PUBLIC:-0.4, E_REAL:-0.15, X_EXTERNAL:-0.10};
+const W={S_ENERGY:.35,R_PUBLIC:.30,E_REAL:.20,X_EXTERNAL:.15};
+const DRIFT={S_ENERGY:.4,R_PUBLIC:.35,E_REAL:.20,X_EXTERNAL:.15};
+const LD={S_ENERGY:-.3,R_PUBLIC:-.4,E_REAL:-.15,X_EXTERNAL:-.10};
+const LI={
+  S_ENERGY:{name:'Energy System Stress',src:'NordPool FI spot price volatility · Fingrid capacity margin · District heating replacement gap (Haapaniemi 2 EOL 2035) · LDR-50 pre-commercial status',w:'35%'},
+  R_PUBLIC:{name:'Public Finance Pressure',src:'F-35 operating costs 500–700 M€/yr · State debt trajectory · Ageing-driven social expenditure · Fiscal consolidation margin (VM)',w:'30%'},
+  E_REAL:{name:'Real Economy Stress',src:'Energy cost share of household budgets · Corporate energy margin compression · NordPool spot exposure for non-PPA consumers · Payment default indices',w:'20%'},
+  X_EXTERNAL:{name:'External Environment',src:'Geopolitical event index (Ukraine war, drone incidents) · Baltic interconnection status · EUR/USD · Nordic energy market coupling',w:'15%'}
+};
+const AI={
+  K1:{src:'WP-013 Appendix 1 v1.1 · K1: Diagnostic transparency. Owner: Fingrid. 3–6 months.'},
+  K2:{src:'WP-013 Appendix 1 v1.1 · K2: Demand response contracts 0–48h. Owner: Fingrid + Energy Authority.'},
+  K3:{src:'WP-013 Appendix 1 v1.1 · K3: Municipal contingency plan obligation 72h. Owner: Energy Authority + Luova.'},
+  SGFA_K:{src:'SP-002 SGFA 4.0 · Kuopio node: CHP–PtX with Haapaniemi CO₂ stream. CAPEX 120–180 M€. IRR 14–20%.'},
+  SGFA_7:{src:'SP-002 SGFA 4.0 · 7-node consortium. CAPEX 1.19 Mrd€. EBITDA 185 M€/yr. IRR 14.7%.'},
+  LDR50:{src:'Steady Energy Oy · LDR-50 SMR, 50 MW thermal. STUK concept assessment June 2025. Operations target 2032.'},
+  FISCAL:{src:'DA-007 · Household energy continuity: automatic, anticipatory support mechanism.'}
+};
+const PR={
+  '2026':{l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49}},
+  '2025':{l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54}},
+  'stress':{l:{S_ENERGY:72,R_PUBLIC:68,E_REAL:64,X_EXTERNAL:58},lk:{S_ENERGY:32,R_PUBLIC:28,E_REAL:38,X_EXTERNAL:42}}
+};
+const HI=[
+  {p:'2021-Q3',l:{S_ENERGY:44,R_PUBLIC:38,E_REAL:41,X_EXTERNAL:32},lk:{S_ENERGY:62,R_PUBLIC:55,E_REAL:60,X_EXTERNAL:58}},
+  {p:'2021-Q4',l:{S_ENERGY:51,R_PUBLIC:40,E_REAL:44,X_EXTERNAL:36},lk:{S_ENERGY:58,R_PUBLIC:53,E_REAL:57,X_EXTERNAL:55}},
+  {p:'2022-Q1',l:{S_ENERGY:64,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:58},lk:{S_ENERGY:51,R_PUBLIC:51,E_REAL:53,X_EXTERNAL:46}},
+  {p:'2022-Q2',l:{S_ENERGY:68,R_PUBLIC:48,E_REAL:56,X_EXTERNAL:62},lk:{S_ENERGY:47,R_PUBLIC:50,E_REAL:50,X_EXTERNAL:42}},
+  {p:'2022-Q3',l:{S_ENERGY:74,R_PUBLIC:52,E_REAL:62,X_EXTERNAL:64},lk:{S_ENERGY:42,R_PUBLIC:48,E_REAL:46,X_EXTERNAL:40}},
+  {p:'2022-Q4',l:{S_ENERGY:76,R_PUBLIC:56,E_REAL:64,X_EXTERNAL:61},lk:{S_ENERGY:39,R_PUBLIC:45,E_REAL:43,X_EXTERNAL:41}},
+  {p:'2023-Q1',l:{S_ENERGY:68,R_PUBLIC:55,E_REAL:58,X_EXTERNAL:55},lk:{S_ENERGY:44,R_PUBLIC:44,E_REAL:46,X_EXTERNAL:43}},
+  {p:'2023-Q2',l:{S_ENERGY:59,R_PUBLIC:51,E_REAL:52,X_EXTERNAL:48},lk:{S_ENERGY:48,R_PUBLIC:46,E_REAL:50,X_EXTERNAL:46}},
+  {p:'2023-Q4',l:{S_ENERGY:55,R_PUBLIC:50,E_REAL:49,X_EXTERNAL:44},lk:{S_ENERGY:50,R_PUBLIC:46,E_REAL:52,X_EXTERNAL:48}},
+  {p:'2024-Q2',l:{S_ENERGY:57,R_PUBLIC:53,E_REAL:50,X_EXTERNAL:43},lk:{S_ENERGY:51,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:49}},
+  {p:'2025-Q1',l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54}},
+  {p:'2026-Q1',l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49}},
+];
+const AC=[
+  {id:'K1',title:'K1: Fingrid — diagnostinen läpinäkyvyys',meta:{lead:3,cost:'LOW',profile:'IMMEDIATE'},patch:[{k:'S_ENERGY',sv:-4,lv:6}]},
+  {id:'K2',title:'K2: Kulutusjoustosopimukset 0–48h',meta:{lead:12,cost:'MEDIUM',profile:'RAMP'},patch:[{k:'S_ENERGY',sv:-8,lv:10},{k:'E_REAL',sv:-3}]},
+  {id:'K3',title:'K3: Kuntien varasuunnitelmavelvoite 72h',meta:{lead:9,cost:'LOW',profile:'DELAYED'},patch:[{k:'S_ENERGY',sv:-5,lv:8},{k:'R_PUBLIC',lv:4}]},
+  {id:'SGFA_K',title:'SGFA-solmu Kuopio: CHP–PtX Haapaniemen CO₂-virralla',meta:{lead:18,cost:'HIGH',profile:'RAMP'},patch:[{k:'S_ENERGY',sv:-12,lv:10},{k:'E_REAL',sv:-6,lv:5}]},
+  {id:'SGFA_7',title:'SGFA 7-solmun konsortio — 1.19 Mrd€, IRR 14.7%',meta:{lead:30,cost:'VERY_HIGH',profile:'RAMP'},patch:[{k:'S_ENERGY',sv:-18,lv:15},{k:'E_REAL',sv:-10,lv:8},{k:'R_PUBLIC',sv:-4,lv:5}]},
+  {id:'LDR50',title:'LDR-50 Kuopio — käyttöönotto 2032',meta:{lead:48,cost:'HIGH',profile:'DELAYED'},patch:[{k:'S_ENERGY',sv:-14,lv:12},{k:'E_REAL',sv:-8}]},
+  {id:'FISCAL',title:'Energiatukimekanismi kotitalouksille',meta:{lead:6,cost:'MEDIUM',profile:'IMMEDIATE'},patch:[{k:'E_REAL',sv:-7,lv:8},{k:'R_PUBLIC',sv:3}]},
+];
+const COSTS={K1:2,K2:15,K3:5,SGFA_K:150,SGFA_7:1190,LDR50:100,FISCAL:50};
 
-function calcSHI(l, lk) {
-  let ws = Object.entries(W).reduce((s,[k,w])=>s+l[k]*w, 0);
-  let la = 0;
-  for (const [k,w] of Object.entries(W)) {
-    const v = lk[k];
-    la += v>50 ? (v-50)*0.5*w : -(50-v)*0.3*w;
-  }
-  // Progressive coupling — not binary. Activates above 45, grows nonlinearly.
-  // ACI WP-004: compound stress is continuous, not threshold-triggered.
-  const se = Math.max(0, l.S_ENERGY - 45);
-  const rp = Math.max(0, l.R_PUBLIC - 45);
-  const cp = Math.min(18, (se/10) * (rp/10) * 15);
-  const bon = Object.values(lk).filter(v=>v>65).length>=3 ? 10 : 0;
-  return +Math.max(0,Math.min(100,100-ws+la-cp+bon)).toFixed(1);
+let st={l:{...PR['2026'].l},lk:{...PR['2026'].lk}};
+let sel=new Set();
+let tab='f';
+
+function SHI(l,lk){
+  let ws=Object.entries(W).reduce((s,[k,w])=>s+l[k]*w,0);
+  let la=0;
+  for(const[k,w]of Object.entries(W)){const v=lk[k];la+=v>50?(v-50)*.5*w:-(50-v)*.3*w;}
+  const cp=+(18*Math.min(1,Math.max(0,l.S_ENERGY-50)*Math.max(0,l.R_PUBLIC-50)/2500)).toFixed(1);
+  const bon=Object.values(lk).filter(v=>v>65).length>=3?10:0;
+  return+Math.max(0,Math.min(100,100-ws+la-cp+bon)).toFixed(1);
 }
-
-function couplingVal(l) {
-  // Normalised progressive coupling — ACI WP-004
-  // Activates above 50, grows smoothly to max 18, no cliff edge
-  const trigger = Math.max(0, l.S_ENERGY - 50) * Math.max(0, l.R_PUBLIC - 50);
-  const norm = Math.min(1, trigger / (50 * 50));
-  return +(18 * norm).toFixed(1);
-}
-function stOf(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
-function colOf(s){return {GREEN:'#3ddc84',YELLOW:'#f5c842',ORANGE:'#f07030',RED:'#e04040'}[s]||'#4080ff';}
-
-function driftN(l0,lk0,m){
+function cpV(l){return+(18*Math.min(1,Math.max(0,l.S_ENERGY-50)*Math.max(0,l.R_PUBLIC-50)/2500)).toFixed(1);}
+function stO(s){return s>=75?'GREEN':s>=58?'YELLOW':s>=40?'ORANGE':'RED';}
+function scol(s){return{GREEN:'var(--sg)',YELLOW:'var(--sy)',ORANGE:'var(--so)',RED:'var(--sr)'}[s]||'var(--muted)';}
+function bcol(v){return v>65?'#c42020':v>55?'#c46020':v>45?'#c49a20':'#4a9460';}
+function svc(s){return{GREEN:'#2d6b3a',YELLOW:'#7a6010',ORANGE:'#8b3a10',RED:'#8b1010'}[s]||'#7a7468';}
+function drift(l0,lk0,m){
   const l={...l0},lk={...lk0};
   for(let i=0;i<m;i++){
-    for(const k in l){l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)).toFixed(1));lk[k]=Math.max(0,+(lk[k]+(LDRIFT[k]||0)).toFixed(1));}
-    // Feedback: real economy stress feeds into public finance (social costs)
-    if(l.E_REAL>58) l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+0.2*(l.E_REAL-58)/12).toFixed(1));
-    // Symmetric: public finance stress feeds into real economy (austerity)
-    if(l.R_PUBLIC>60) l.E_REAL=Math.min(100,+(l.E_REAL+0.15*(l.R_PUBLIC-60)/12).toFixed(1));
+    for(const k in l){l[k]=Math.min(100,+(l[k]+(DRIFT[k]||0)).toFixed(1));lk[k]=Math.max(0,+(lk[k]+(LD[k]||0)).toFixed(1));}
+    if(l.E_REAL>58)l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+.2*(l.E_REAL-58)/12).toFixed(1));
+    if(l.R_PUBLIC>60)l.E_REAL=Math.min(100,+(l.E_REAL+.15*(l.R_PUBLIC-60)/12).toFixed(1));
   }
-  return {l,lk,shi:calcSHI(l,lk)};
+  return{l,lk,shi:SHI(l,lk)};
 }
-
-function applyAct(l0,lk0,m,acts){
+function apAct(l0,lk0,m,acts){
   const l={...l0},lk={...lk0};
   for(const a of acts){
-    const lead=a.meta.lead;
-    if(m<lead)continue;
-    let sc=a.meta.profile==='RAMP'?Math.min(1,(m-lead)/12):a.meta.profile==='DELAYED'?m>lead+6?1:0:1;
+    if(m<a.meta.lead)continue;
+    let sc=a.meta.profile==='RAMP'?Math.min(1,(m-a.meta.lead)/12):a.meta.profile==='DELAYED'?m>a.meta.lead+6?1:0:1;
     for(const p of a.patch){
       if(p.sv!=null)l[p.k]=Math.max(0,Math.min(100,+(l[p.k]+p.sv*sc).toFixed(1)));
       if(p.lv!=null)lk[p.k]=Math.max(0,Math.min(100,+(lk[p.k]+p.lv*sc).toFixed(1)));
     }
   }
-  return driftN(l,lk,m);
+  return drift(l,lk,m);
 }
 
-// ── Data ───────────────────────────────────────────────────────────────────
-const PRESETS = {
-  '2026':{l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49}},
-  '2025':{l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54}},
-  'stress':{l:{S_ENERGY:72,R_PUBLIC:68,E_REAL:64,X_EXTERNAL:58},lk:{S_ENERGY:32,R_PUBLIC:28,E_REAL:38,X_EXTERNAL:42}}
-};
-
-const HISTORY = [
-  {p:'2021-Q3',l:{S_ENERGY:44,R_PUBLIC:38,E_REAL:41,X_EXTERNAL:32},lk:{S_ENERGY:62,R_PUBLIC:55,E_REAL:60,X_EXTERNAL:58},note:'Pre-crisis baseline'},
-  {p:'2021-Q4',l:{S_ENERGY:51,R_PUBLIC:40,E_REAL:44,X_EXTERNAL:36},lk:{S_ENERGY:58,R_PUBLIC:53,E_REAL:57,X_EXTERNAL:55},note:'Early signals'},
-  {p:'2022-Q1',l:{S_ENERGY:64,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:58},lk:{S_ENERGY:51,R_PUBLIC:51,E_REAL:53,X_EXTERNAL:46},note:'Invasion shock −13'},
-  {p:'2022-Q2',l:{S_ENERGY:68,R_PUBLIC:48,E_REAL:56,X_EXTERNAL:62},lk:{S_ENERGY:47,R_PUBLIC:50,E_REAL:50,X_EXTERNAL:42},note:'Escalation'},
-  {p:'2022-Q3',l:{S_ENERGY:74,R_PUBLIC:52,E_REAL:62,X_EXTERNAL:64},lk:{S_ENERGY:42,R_PUBLIC:48,E_REAL:46,X_EXTERNAL:40},note:'Peak crisis'},
-  {p:'2022-Q4',l:{S_ENERGY:76,R_PUBLIC:56,E_REAL:64,X_EXTERNAL:61},lk:{S_ENERGY:39,R_PUBLIC:45,E_REAL:43,X_EXTERNAL:41},note:'MIN 22.2 · Coupling active'},
-  {p:'2023-Q1',l:{S_ENERGY:68,R_PUBLIC:55,E_REAL:58,X_EXTERNAL:55},lk:{S_ENERGY:44,R_PUBLIC:44,E_REAL:46,X_EXTERNAL:43},note:'Recovery +16'},
-  {p:'2023-Q2',l:{S_ENERGY:59,R_PUBLIC:51,E_REAL:52,X_EXTERNAL:48},lk:{S_ENERGY:48,R_PUBLIC:46,E_REAL:50,X_EXTERNAL:46},note:'Partial recovery'},
-  {p:'2023-Q4',l:{S_ENERGY:55,R_PUBLIC:50,E_REAL:49,X_EXTERNAL:44},lk:{S_ENERGY:50,R_PUBLIC:46,E_REAL:52,X_EXTERNAL:48},note:'New baseline'},
-  {p:'2024-Q2',l:{S_ENERGY:57,R_PUBLIC:53,E_REAL:50,X_EXTERNAL:43},lk:{S_ENERGY:51,R_PUBLIC:44,E_REAL:52,X_EXTERNAL:49},note:'Structural pressure'},
-  {p:'2025-Q1',l:{S_ENERGY:58,R_PUBLIC:42,E_REAL:47,X_EXTERNAL:39},lk:{S_ENERGY:55,R_PUBLIC:52,E_REAL:56,X_EXTERNAL:54},note:'SHI 53.9 ORANGE'},
-  {p:'2026-Q1',l:{S_ENERGY:61,R_PUBLIC:58,E_REAL:52,X_EXTERNAL:47},lk:{S_ENERGY:44,R_PUBLIC:38,E_REAL:51,X_EXTERNAL:49},note:'32.1 · Coupling active −22'},
-];
-
-const ACTIONS = [
-  {id:'K1',title:'K1: Fingrid diagnostinen läpinäkyvyys',meta:{lead:3,cost:'LOW',profile:'IMMEDIATE'},
-   patch:[{k:'S_ENERGY',sv:-4,lv:6}]},
-  {id:'K2',title:'K2: Kulutusjoustosopimukset 0-48h',meta:{lead:12,cost:'MEDIUM',profile:'RAMP'},
-   patch:[{k:'S_ENERGY',sv:-8,lv:10},{k:'E_REAL',sv:-3}]},
-  {id:'K3',title:'K3: Kuntien varasuunnitelmavelvoite 72h',meta:{lead:9,cost:'LOW',profile:'DELAYED'},
-   patch:[{k:'S_ENERGY',sv:-5,lv:8},{k:'R_PUBLIC',lv:4}]},
-  {id:'SGFA_K',title:'SGFA-solmu Kuopio: CHP-PtX',meta:{lead:18,cost:'HIGH',profile:'RAMP'},
-   patch:[{k:'S_ENERGY',sv:-12,lv:10},{k:'E_REAL',sv:-6,lv:5}]},
-  {id:'SGFA_7',title:'SGFA 7-solmun konsortio (1.19 Mrd€)',meta:{lead:30,cost:'VERY_HIGH',profile:'RAMP'},
-   patch:[{k:'S_ENERGY',sv:-18,lv:15},{k:'E_REAL',sv:-10,lv:8},{k:'R_PUBLIC',sv:-4,lv:5}]},
-  {id:'LDR50',title:'LDR-50 Kuopio (käyttöönotto 2032)',meta:{lead:48,cost:'HIGH',profile:'DELAYED'},
-   patch:[{k:'S_ENERGY',sv:-14,lv:12},{k:'E_REAL',sv:-8}]},
-  {id:'FISCAL',title:'Energiatukimekanismi kotitalouksille',meta:{lead:6,cost:'MEDIUM',profile:'IMMEDIATE'},
-   patch:[{k:'E_REAL',sv:-7,lv:8},{k:'R_PUBLIC',sv:3}]},
-];
-
-// ── State ──────────────────────────────────────────────────────────────────
-let state = {l:{...PRESETS['2026'].l}, lk:{...PRESETS['2026'].lk}};
-let sel = new Set();
-let activeTab = 'forecast';
-
-// ── Render ─────────────────────────────────────────────────────────────────
-function update() {
-  const {l,lk} = state;
-  const shi = calcSHI(l,lk);
-  const st = stOf(shi);
-  const col = colOf(st);
-  const cp = couplingVal(l);
-  const cpActive = cp > 0.5;
-
-  document.getElementById('shiNum').textContent = shi.toFixed(1);
-  document.getElementById('shiSt').textContent = st;
-  document.getElementById('shiPanel').style.setProperty('--state-col', col);
-  document.getElementById('coupBadge').className = 'coupling-badge' + (cpActive?' on':'');
-  document.getElementById('coupBadge').querySelector('span.c-dot').nextSibling.textContent =
-    `COMPOUND STRESS · −${cp.toFixed(1)} pts · S_ENERGY + R_PUBLIC progressive`;
-  document.getElementById('metaCoup').textContent = cpActive ? `−${cp.toFixed(1)}` : 'INACTIVE';
-  document.getElementById('metaStr').textContent = (Object.values(l).reduce((a,b)=>a+b,0)/4).toFixed(1);
-  document.getElementById('metaBuf').textContent = (Object.values(lk).reduce((a,b)=>a+b,0)/4).toFixed(1);
-
-  renderLayers();
-  renderActions();
-  if (activeTab==='forecast') renderForecast();
-  else renderHistory();
+function upd(){
+  const{l,lk}=st;
+  const shi=SHI(l,lk),s=stO(shi),c=scol(s),cp=cpV(l),on=cp>.3;
+  document.getElementById('shiV').textContent=shi.toFixed(1);
+  document.getElementById('shiV').style.color=c;
+  document.getElementById('shiB').style.borderColor=c;
+  document.getElementById('shiD').style.background=c;
+  document.getElementById('shiT').textContent=s;
+  document.getElementById('shiT').style.color=c;
+  document.getElementById('mC').textContent=on?`−${cp} pts`:'Inactive';
+  document.getElementById('mC').style.color=on?'var(--sr)':'var(--ink)';
+  document.getElementById('mS').textContent=(Object.values(l).reduce((a,b)=>a+b,0)/4).toFixed(1);
+  document.getElementById('mB').textContent=(Object.values(lk).reduce((a,b)=>a+b,0)/4).toFixed(1);
+  document.getElementById('cW').className='coup-warn'+(on?' on':'');
+  document.getElementById('cV').textContent=cp;
+  rLayers();rActions();
+  if(tab==='f')rForecast();else rHistory();
 }
 
-function renderLayers() {
-  const {l,lk} = state;
-  const c = document.getElementById('layerCtrl');
-  const LNAMES = {S_ENERGY:'S_ENERGY — Energy',R_PUBLIC:'R_PUBLIC — Public Finance',E_REAL:'E_REAL — Real Economy',X_EXTERNAL:'X_EXTERNAL — External'};
-  if (!c.children.length) {
-    c.innerHTML = '';
-    for (const k of Object.keys(W)) {
-      const col = l[k]>65?'#e04040':l[k]>55?'#f07030':l[k]>45?'#f5c842':'#3ddc84';
-      c.insertAdjacentHTML('beforeend', `<div class="layer-row">
-        <div class="layer-hdr"><span class="layer-name">${LNAMES[k]}</span><span class="layer-val" id="v_${k}">${l[k]}</span></div>
-        <div class="layer-track"><div class="layer-fill" id="f_${k}" style="width:${l[k]}%;background:${col}"></div></div>
-        <input type="range" min="0" max="100" value="${l[k]}" oninput="onL('${k}',+this.value)">
-        <div class="lock-row">
-          <span class="lock-lbl">BUFFER</span>
-          <input type="range" min="0" max="100" value="${lk[k]}" style="width:100px;height:3px;background:var(--border-2);-webkit-appearance:none;" oninput="onLk('${k}',+this.value)">
-          <span class="lock-val" id="lv_${k}">${lk[k]}</span>
-        </div></div>`);
+function rLayers(){
+  const{l,lk}=st;const c=document.getElementById('lCtrl');
+  if(!c.children.length){
+    c.innerHTML='';
+    for(const k of Object.keys(W)){
+      const i=LI[k];
+      c.insertAdjacentHTML('beforeend',`<div class="li"><div class="li-top"><span class="li-id">${k} <span style="font-size:.5rem;color:var(--muted);">${i.w}</span></span><span class="li-num" id="v_${k}">${l[k]}</span></div><div class="li-name">${i.name}</div><div class="li-src">${i.src}</div><div class="bar-t"><div class="bar-f" id="f_${k}" style="width:${l[k]}%;background:${bcol(l[k])}"></div></div><div class="rr"><span class="rl">Stress</span><input type="range" min="0" max="100" value="${l[k]}" oninput="oL('${k}',+this.value)"><span class="rv" id="rv_${k}">${l[k]}</span></div><div class="rr"><span class="rl">Buffer</span><input type="range" min="0" max="100" value="${lk[k]}" oninput="oLk('${k}',+this.value)"><span class="rv" id="lv_${k}">${lk[k]}</span></div></div>`);
     }
-  } else {
-    for (const k of Object.keys(W)) {
-      const col = l[k]>65?'#e04040':l[k]>55?'#f07030':l[k]>45?'#f5c842':'#3ddc84';
-      document.getElementById('v_'+k).textContent = l[k];
-      document.getElementById('f_'+k).style.cssText = `width:${l[k]}%;background:${col}`;
-      document.getElementById('lv_'+k).textContent = lk[k];
+  }else{
+    for(const k of Object.keys(W)){
+      document.getElementById('v_'+k).textContent=l[k];
+      document.getElementById('rv_'+k).textContent=l[k];
+      document.getElementById('lv_'+k).textContent=lk[k];
+      document.getElementById('f_'+k).style.cssText=`width:${l[k]}%;background:${bcol(l[k])}`;
     }
   }
 }
 
-function renderActions() {
-  const c = document.getElementById('actionList');
-  if (!c.children.length) {
-    for (const a of ACTIONS) {
-      c.insertAdjacentHTML('beforeend', `<div class="action-item" onclick="togAct('${a.id}')">
-        <div class="action-check${sel.has(a.id)?' on':''}" id="chk_${a.id}"></div>
-        <div><div class="action-title">${a.title}</div>
-        <div class="action-meta">${a.meta.lead}mo · <span class="c${a.meta.cost}">${a.meta.cost}</span> · ${a.meta.profile}</div></div>
-      </div>`);
+function rActions(){
+  const c=document.getElementById('aList');
+  if(!c.children.length){
+    for(const a of AC){
+      const i=AI[a.id];
+      c.insertAdjacentHTML('beforeend',`<div class="ai" onclick="tA('${a.id}')"><div class="ach${sel.has(a.id)?' on':''}" id="ch_${a.id}"></div><div><div class="an">${a.title}</div><div class="am">Lead: ${a.meta.lead} mo &middot; Cost: <span class="c${a.meta.cost}">${a.meta.cost}</span> &middot; ${a.meta.profile} &middot; ${COSTS[a.id]}M€</div><div class="as">${i.src}</div></div></div>`);
     }
-  } else {
-    for (const a of ACTIONS) document.getElementById('chk_'+a.id).className='action-check'+(sel.has(a.id)?' on':'');
-  }
+  }else{for(const a of AC)document.getElementById('ch_'+a.id).className='ach'+(sel.has(a.id)?' on':'');}
 }
 
-function renderForecast() {
-  const {l,lk} = state;
-  const shi0 = calcSHI(l,lk);
-  const acts = ACTIONS.filter(a=>sel.has(a.id));
-  const horizons = [1,6,12,24];
-  const pts = [{x:0,na:shi0,wa:acts.length?shi0:null}];
-  for (const h of horizons) {
-    const na = driftN(l,lk,h).shi;
-    const wa = acts.length ? applyAct(l,lk,h,acts).shi : null;
+function rForecast(){
+  const{l,lk}=st;const s0=SHI(l,lk);const acts=AC.filter(a=>sel.has(a.id));
+  const pts=[{x:0,na:s0,wa:acts.length?s0:null}];
+  const tb=document.getElementById('fB');tb.innerHTML='';
+  for(const h of[1,6,12,24]){
+    const na=drift(l,lk,h).shi,wa=acts.length?apAct(l,lk,h,acts).shi:null;
     pts.push({x:h,na,wa});
+    const naS=stO(na),naD=na-s0;
+    const waC=wa!=null?`<td class="fs" style="color:${scol(stO(wa))}">${wa.toFixed(1)}</td><td><span class="fst" style="color:${scol(stO(wa))}">${stO(wa)}</span></td><td class="fd ${wa-na<0?'dn':'dp'}">${wa-na<0?'':'+'}${(wa-na).toFixed(1)}</td>`:`<td colspan="3" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);">— select interventions —</td>`;
+    tb.insertAdjacentHTML('beforeend',`<tr><td style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">+${h} mo</td><td class="fs" style="color:${scol(naS)}">${na.toFixed(1)}</td><td><span class="fst" style="color:${scol(naS)}">${naS}</span><span class="fd ${naD>=0?'dp':'dn'}">(${naD>=0?'+':''}${naD.toFixed(1)})</span></td>${waC}</tr>`);
   }
-
-  // Chart
-  drawFchart(pts, 'chartForecast');
-
-  // Table
-  const grid = document.getElementById('fcastGrid');
-  grid.innerHTML = '';
-  const col0 = colOf(stOf(shi0));
-  grid.insertAdjacentHTML('beforeend', `<div class="fcast-cell">
-    <div class="fcast-cell-hdr">NOW</div>
-    <div class="fcast-sc"><div class="fcast-sc-lbl">CURRENT SHI</div>
-    <div class="fcast-sc-val" style="color:${col0}">${shi0.toFixed(1)}</div>
-    <div class="fcast-sc-st" style="color:${col0}">${stOf(shi0)}</div></div></div>`);
-
-  for (const h of horizons) {
-    const na = driftN(l,lk,h).shi;
-    const wa = acts.length ? applyAct(l,lk,h,acts).shi : null;
-    const naCol = colOf(stOf(na)); const naDelta = na-shi0;
-    let waHTML = '';
-    if (wa!=null) {
-      const waCol = colOf(stOf(wa)); const waDelta = wa-shi0;
-      waHTML = `<div class="fcast-sc" style="margin-top:0.5rem;">
-        <div class="fcast-sc-lbl">WITH ACTIONS</div>
-        <div class="fcast-sc-val" style="color:${waCol}">${wa.toFixed(1)}</div>
-        <div class="fcast-sc-st" style="color:${waCol}">${stOf(wa)}
-          <span class="delta ${waDelta>=0?'dpos':'dneg'}">(${waDelta>=0?'+':''}${waDelta.toFixed(1)})</span></div></div>`;
+  drawF(pts);
+  const rS=document.getElementById('rS');
+  if(acts.length>0){
+    const na24=drift(l,lk,24).shi;
+    let rows='';
+    for(const a of acts){
+      const g=+(apAct(l,lk,24,[a]).shi-na24).toFixed(1);
+      const ef=COSTS[a.id]>0?+(Math.abs(g)/COSTS[a.id]*100).toFixed(1):0;
+      rows+=`<tr><td style="font-size:.8rem;">${a.title}</td><td class="${g<0?'rg':''}" style="font-family:var(--mono);">${g>0?'+':''}${g}</td><td style="font-family:var(--mono);color:var(--muted);">${COSTS[a.id]}M€</td><td style="font-family:var(--mono);color:var(--muted);">${ef}</td></tr>`;
     }
-    grid.insertAdjacentHTML('beforeend', `<div class="fcast-cell">
-      <div class="fcast-cell-hdr">+${h} MO</div>
-      <div class="fcast-sc"><div class="fcast-sc-lbl">NO ACTION</div>
-      <div class="fcast-sc-val" style="color:${naCol}">${na.toFixed(1)}</div>
-      <div class="fcast-sc-st" style="color:${naCol}">${stOf(na)}
-        <span class="delta ${naDelta>=0?'dpos':'dneg'}">(${naDelta>=0?'+':''}${naDelta.toFixed(1)})</span></div></div>
-      ${waHTML}</div>`);
-  }
-
-  // ROI table
-  const COSTS = {K1:2,K2:15,K3:5,SGFA_K:150,SGFA_7:1190,LDR50:100,FISCAL:50};
-  const roiDiv = document.getElementById('roiTable');
-  if (acts.length > 0) {
-    const shi24na = driftN(l,lk,24).shi;
-    let roiHTML = `<div style="margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem;">
-      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:0.75rem;">
-        INTERVENTION ROI — SHI gain at +24mo vs baseline, per intervention
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:1px;background:var(--border);">`;
-    for (const a of acts) {
-      const single = applyAct(l,lk,24,[a]).shi;
-      const gain = +(single - shi24na).toFixed(1);
-      const cost = COSTS[a.id]||50;
-      const eff = cost > 0 ? +(Math.abs(gain)/cost*100).toFixed(1) : 0;
-      const gainCol = gain < 0 ? 'var(--green)' : '#888';
-      roiHTML += `<div style="background:var(--surface);padding:0.75rem;">
-        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-dim);margin-bottom:0.25rem;">${a.id}</div>
-        <div style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:${gainCol};">${gain>0?'+':''}${gain} <span style="font-size:0.6rem;font-weight:400;">SHI pts</span></div>
-        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-muted);margin-top:0.2rem;">${cost}M€ investment</div>
-        <div style="font-family:var(--mono);font-size:0.52rem;color:var(--text-dim);">${eff} pts / 100M€</div>
-      </div>`;
-    }
-    roiHTML += `</div></div>`;
-    roiDiv.innerHTML = roiHTML;
-  } else {
-    roiDiv.innerHTML = '';
-  }
+    rS.innerHTML=`<div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule);"><div class="shdr" style="margin-bottom:.75rem;"><span class="snum">&sect; 04b</span><span class="stit" style="font-size:.95rem;">Intervention ROI at +24 months</span></div><p style="font-size:.82rem;font-style:italic;color:var(--muted);margin-bottom:.75rem;">SHI gain of each selected intervention individually against no-action baseline at +24 months. Negative = improvement. Efficiency = pts gained per 100M€ invested.</p><table class="rt"><thead><tr><th>Intervention</th><th>SHI gain @ +24mo</th><th>Est. cost</th><th>pts / 100M€</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }else rS.innerHTML='';
 }
 
-function renderHistory() {
-  const histPts = HISTORY.map((h,i)=>({
-    x:i, label:h.p,
-    shi: calcSHI(h.l,h.lk),
-    coupling: couplingVal(h.l) > 0.5
-  }));
-  drawHchart(histPts, 'chartHistory');
+function rHistory(){
+  const pts=HI.map((h,i)=>({i,label:h.p,shi:SHI(h.l,h.lk),cp:cpV(h.l)>.3}));
+  drawH(pts);
 }
 
-// ── Charts ─────────────────────────────────────────────────────────────────
-function drawFchart(pts, id) {
-  const svg = document.getElementById(id);
-  const W2 = svg.parentElement.clientWidth||700, H2=220;
-  const pad={t:10,b:25,l:30,r:15};
-  const cw=W2-pad.l-pad.r, ch=H2-pad.t-pad.b;
-  const xS=x=>pad.l+(x/24)*cw, yS=y=>pad.t+ch-((y/100)*ch);
-  let html='';
-  // zones
-  [[75,100,'rgba(61,220,132,0.06)'],[58,75,'rgba(245,200,66,0.06)'],[40,58,'rgba(240,112,48,0.06)'],[0,40,'rgba(224,64,64,0.06)']].forEach(([mn,mx,c])=>{
-    html+=`<rect x="${pad.l}" y="${yS(mx)}" width="${cw}" height="${yS(mn)-yS(mx)}" fill="${c}"/>`;
-  });
-  [0,25,50,75,100].forEach(y=>{
-    html+=`<line x1="${pad.l}" y1="${yS(y)}" x2="${pad.l+cw}" y2="${yS(y)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
-    html+=`<text x="${pad.l-3}" y="${yS(y)+3}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="end">${y}</text>`;
-  });
-  [0,1,6,12,24].forEach(x=>{
-    html+=`<text x="${xS(x)}" y="${H2-6}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="middle">+${x}</text>`;
-  });
-  const naPath=pts.map((p,i)=>`${i?'L':'M'}${xS(p.x)},${yS(p.na)}`).join(' ');
-  html+=`<path d="${naPath}" fill="none" stroke="rgba(224,64,64,0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>`;
-  pts.forEach(p=>{ html+=`<circle cx="${xS(p.x)}" cy="${yS(p.na)}" r="2.5" fill="rgba(224,64,64,0.8)"/>`; });
-  const waPts=pts.filter(p=>p.wa!=null);
+function drawF(pts){
+  const sv=document.getElementById('chF');
+  const TW=sv.parentElement.clientWidth||800,TH=200;
+  const p={t:10,b:28,l:32,r:16};const cw=TW-p.l-p.r,ch=TH-p.t-p.b;
+  const xS=x=>p.l+(x/24)*cw,yS=y=>p.t+ch-((y/100)*ch);
+  let h='';
+  [[75,100,'#eef6f0'],[58,75,'#faf6e8'],[40,58,'#faf0e8'],[0,40,'#faf0f0']].forEach(([mn,mx,c])=>{h+=`<rect x="${p.l}" y="${yS(mx)}" width="${cw}" height="${Math.max(0,yS(mn)-yS(mx))}" fill="${c}" opacity=".7"/>`;});
+  [0,25,50,75,100].forEach(y=>{h+=`<line x1="${p.l}" y1="${yS(y)}" x2="${p.l+cw}" y2="${yS(y)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;h+=`<text x="${p.l-3}" y="${yS(y)+3}" font-family="DM Mono" font-size="7" fill="#7a7468" text-anchor="end">${y}</text>`;});
+  [{y:87,l:'GREEN'},{y:66,l:'YELLOW'},{y:49,l:'ORANGE'},{y:20,l:'RED'}].forEach(z=>{h+=`<text x="${p.l+4}" y="${yS(z.y)+3}" font-family="DM Mono" font-size="6.5" fill="${svc(z.l)}" opacity=".45" letter-spacing="1">${z.l}</text>`;});
+  [0,1,6,12,24].forEach(x=>{h+=`<text x="${xS(x)}" y="${TH-6}" font-family="DM Mono" font-size="7" fill="#7a7468" text-anchor="middle">+${x}</text>`;});
+  const naP=pts.map((pt,i)=>`${i?'L':'M'}${xS(pt.x)},${yS(pt.na)}`).join(' ');
+  h+=`<path d="${naP}" fill="none" stroke="#8b1010" stroke-width="1.5" stroke-dasharray="5,3" opacity=".7"/>`;
+  pts.forEach(pt=>{h+=`<circle cx="${xS(pt.x)}" cy="${yS(pt.na)}" r="3" fill="#8b1010" opacity=".8"/>`;});
+  const waPts=pts.filter(pt=>pt.wa!=null);
   if(waPts.length>1){
-    const waPath=waPts.map((p,i)=>`${i?'L':'M'}${xS(p.x)},${yS(p.wa)}`).join(' ');
-    html+=`<path d="${waPath}" fill="none" stroke="rgba(64,128,255,0.85)" stroke-width="2"/>`;
-    waPts.forEach(p=>{ html+=`<circle cx="${xS(p.x)}" cy="${yS(p.wa)}" r="2.5" fill="#4080ff"/>`; });
+    const waP=waPts.map((pt,i)=>`${i?'L':'M'}${xS(pt.x)},${yS(pt.wa)}`).join(' ');
+    h+=`<path d="${waP}" fill="none" stroke="#8b4513" stroke-width="2"/>`;
+    waPts.forEach(pt=>{h+=`<circle cx="${xS(pt.x)}" cy="${yS(pt.wa)}" r="3" fill="#8b4513"/>`;});
   }
-  svg.setAttribute('viewBox',`0 0 ${W2} ${H2}`);
-  svg.innerHTML=html;
+  sv.setAttribute('viewBox',`0 0 ${TW} ${TH}`);sv.innerHTML=h;
 }
 
-function drawHchart(pts, id) {
-  const svg = document.getElementById(id);
-  const W2 = svg.parentElement.clientWidth||700, H2=220;
-  const pad={t:14,b:32,l:30,r:15};
-  const cw=W2-pad.l-pad.r, ch=H2-pad.t-pad.b;
-  const n=pts.length-1;
-  const xS=i=>pad.l+(i/n)*cw, yS=y=>pad.t+ch-((y/100)*ch);
-  let html='';
-  [[75,100,'rgba(61,220,132,0.06)'],[58,75,'rgba(245,200,66,0.06)'],[40,58,'rgba(240,112,48,0.06)'],[0,40,'rgba(224,64,64,0.06)']].forEach(([mn,mx,c])=>{
-    html+=`<rect x="${pad.l}" y="${yS(mx)}" width="${cw}" height="${yS(mn)-yS(mx)}" fill="${c}"/>`;
+function drawH(pts){
+  const sv=document.getElementById('chH');
+  const TW=sv.parentElement.clientWidth||800,TH=200;
+  const p={t:14,b:34,l:32,r:16};const cw=TW-p.l-p.r,ch=TH-p.t-p.b;
+  const n=pts.length-1;const xS=i=>p.l+(i/n)*cw,yS=y=>p.t+ch-((y/100)*ch);
+  let h='';
+  [[75,100,'#eef6f0'],[58,75,'#faf6e8'],[40,58,'#faf0e8'],[0,40,'#faf0f0']].forEach(([mn,mx,c])=>{h+=`<rect x="${p.l}" y="${yS(mx)}" width="${cw}" height="${Math.max(0,yS(mn)-yS(mx))}" fill="${c}" opacity=".7"/>`;});
+  [0,25,50,75,100].forEach(y=>{h+=`<line x1="${p.l}" y1="${yS(y)}" x2="${p.l+cw}" y2="${yS(y)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;h+=`<text x="${p.l-3}" y="${yS(y)+3}" font-family="DM Mono" font-size="7" fill="#7a7468" text-anchor="end">${y}</text>`;});
+  pts.forEach((pt,i)=>{if(i%2===0)h+=`<text x="${xS(i)}" y="${TH-4}" font-family="DM Mono" font-size="6" fill="#7a7468" text-anchor="middle">${pt.label}</text>`;});
+  const path=pts.map((pt,i)=>`${i?'L':'M'}${xS(i)},${yS(pt.shi)}`).join(' ');
+  h+=`<path d="${path} L${xS(n)},${yS(0)} L${xS(0)},${yS(0)} Z" fill="#8b4513" opacity=".06"/>`;
+  h+=`<path d="${path}" fill="none" stroke="#8b4513" stroke-width="1.5" opacity=".5"/>`;
+  pts.forEach((pt,i)=>{
+    const c=svc(stO(pt.shi));
+    h+=`<circle cx="${xS(i)}" cy="${yS(pt.shi)}" r="4" fill="${c}" stroke="var(--paper)" stroke-width="1.5"/>`;
+    if(pt.cp)h+=`<circle cx="${xS(i)}" cy="${yS(pt.shi)}" r="7" fill="none" stroke="${svc('RED')}" stroke-width="1" opacity=".5"/>`;
   });
-  [0,25,50,75,100].forEach(y=>{
-    html+=`<line x1="${pad.l}" y1="${yS(y)}" x2="${pad.l+cw}" y2="${yS(y)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
-    html+=`<text x="${pad.l-3}" y="${yS(y)+3}" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.18)" text-anchor="end">${y}</text>`;
-  });
-  // X labels every other
-  pts.forEach((p,i)=>{
-    if(i%2===0) html+=`<text x="${xS(i)}" y="${H2-4}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(255,255,255,0.18)" text-anchor="middle">${p.label.replace('-Q','\nQ')}</text>`;
-  });
-  // Line
-  const path=pts.map((p,i)=>`${i?'L':'M'}${xS(i)},${yS(p.shi)}`).join(' ');
-  html+=`<path d="${path}" fill="none" stroke="rgba(64,128,255,0.5)" stroke-width="1.5"/>`;
-  // Fill under
-  const fill=`${path} L${xS(n)},${yS(0)} L${xS(0)},${yS(0)} Z`;
-  html+=`<path d="${fill}" fill="rgba(64,128,255,0.05)"/>`;
-  // Dots — color by state
-  pts.forEach((p,i)=>{
-    const col=colOf(stOf(p.shi));
-    html+=`<circle cx="${xS(i)}" cy="${yS(p.shi)}" r="4" fill="${col}" stroke="var(--bg)" stroke-width="1.5"/>`;
-    // Coupling marker
-    if(p.coupling) html+=`<circle cx="${xS(i)}" cy="${yS(p.shi)}" r="7" fill="none" stroke="rgba(224,64,64,0.5)" stroke-width="1"/>`;
-  });
-  // Special labels: 2022-Q4 and 2026-Q1
-  const min22 = pts.find(p=>p.label==='2022-Q4');
-  const cur26 = pts.find(p=>p.label==='2026-Q1');
-  if(min22){
-    const i=pts.indexOf(min22);
-    html+=`<text x="${xS(i)-2}" y="${yS(min22.shi)-10}" font-family="IBM Plex Mono" font-size="7.5" fill="#e04040" text-anchor="middle">${min22.shi.toFixed(1)}</text>`;
-    html+=`<text x="${xS(i)-2}" y="${yS(min22.shi)-20}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(224,64,64,0.6)" text-anchor="middle">SHOCK</text>`;
-  }
-  if(cur26){
-    const i=pts.indexOf(cur26);
-    html+=`<text x="${xS(i)+2}" y="${yS(cur26.shi)-10}" font-family="IBM Plex Mono" font-size="7.5" fill="#e04040" text-anchor="middle">${cur26.shi.toFixed(1)}</text>`;
-    html+=`<text x="${xS(i)+2}" y="${yS(cur26.shi)-20}" font-family="IBM Plex Mono" font-size="6.5" fill="rgba(224,64,64,0.6)" text-anchor="middle">STRUCTURAL</text>`;
-  }
-  // Legend
-  html+=`<circle cx="${W2-100}" cy="12" r="4" fill="${colOf('RED')}"/><text x="${W2-92}" y="16" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.3)">RED state</text>`;
-  html+=`<circle cx="${W2-100}" cy="26" r="4" fill="none" stroke="rgba(224,64,64,0.5)" stroke-width="1"/><circle cx="${W2-100}" cy="26" r="2" fill="${colOf('RED')}"/><text x="${W2-92}" y="30" font-family="IBM Plex Mono" font-size="7" fill="rgba(255,255,255,0.3)">+ Coupling</text>`;
-  svg.setAttribute('viewBox',`0 0 ${W2} ${H2}`);
-  svg.innerHTML=html;
+  const m22=pts.find(pt=>pt.label==='2022-Q4'),m26=pts.find(pt=>pt.label==='2026-Q1');
+  if(m22){const i=pts.indexOf(m22);h+=`<text x="${xS(i)}" y="${yS(m22.shi)-12}" font-family="DM Mono" font-size="7.5" fill="${svc('RED')}" text-anchor="middle" font-weight="500">${m22.shi.toFixed(1)}</text>`;h+=`<text x="${xS(i)}" y="${yS(m22.shi)-22}" font-family="DM Mono" font-size="6" fill="${svc('RED')}" text-anchor="middle" opacity=".7">SHOCK</text>`;}
+  if(m26){const i=pts.indexOf(m26);h+=`<text x="${xS(i)}" y="${yS(m26.shi)-12}" font-family="DM Mono" font-size="7.5" fill="${svc('RED')}" text-anchor="middle" font-weight="500">${m26.shi.toFixed(1)}</text>`;h+=`<text x="${xS(i)}" y="${yS(m26.shi)-22}" font-family="DM Mono" font-size="6" fill="${svc('RED')}" text-anchor="middle" opacity=".7">STRUCTURAL</text>`;}
+  sv.setAttribute('viewBox',`0 0 ${TW} ${TH}`);sv.innerHTML=h;
 }
 
-// ── Events ─────────────────────────────────────────────────────────────────
-function onL(k,v){state.l[k]=v;update();}
-function onLk(k,v){state.lk[k]=v;update();}
-function togAct(id){sel.has(id)?sel.delete(id):sel.add(id);update();}
-function loadPreset(n){state={l:{...PRESETS[n].l},lk:{...PRESETS[n].lk}};document.getElementById('layerCtrl').innerHTML='';update();}
-function selAll(){ACTIONS.forEach(a=>sel.add(a.id));update();}
-function selNone(){sel.clear();update();}
+function oL(k,v){st.l[k]=v;upd();}
+function oLk(k,v){st.lk[k]=v;upd();}
+function tA(id){sel.has(id)?sel.delete(id):sel.add(id);upd();}
+function loadP(n){st={l:{...PR[n].l},lk:{...PR[n].lk}};document.getElementById('lCtrl').innerHTML='';upd();}
+function sAll(){AC.forEach(a=>sel.add(a.id));upd();}
+function sNone(){sel.clear();upd();}
 function setTab(t){
-  activeTab=t;
-  document.getElementById('viewForecast').style.display=t==='forecast'?'':'none';
-  document.getElementById('viewHistory').style.display=t==='history'?'':'none';
-  document.getElementById('forecastCitation').style.display=t==='forecast'?'':'none';
-  document.getElementById('tabForecast').className='tab'+(t==='forecast'?' active':'');
-  document.getElementById('tabHistory').className='tab'+(t==='history'?' active':'');
-  update();
+  tab=t;
+  document.getElementById('vF').style.display=t==='f'?'':'none';
+  document.getElementById('vH').style.display=t==='h'?'':'none';
+  document.getElementById('tF').className='cb'+(t==='f'?' on':'');
+  document.getElementById('tH').className='cb'+(t==='h'?' on':'');
+  upd();
 }
-
-update();
-window.addEventListener('resize',update);
+upd();
+window.addEventListener('resize',upd);
 </script>
 </body>
 </html>
