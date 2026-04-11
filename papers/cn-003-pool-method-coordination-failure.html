@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI CN-003 — The Pool Method: Institutional Innovation Under Coordination Failure</title>
+<meta name="description" content="ACI CN-003: The pool method as a structural solution to coordination failure — applied to Finnish energy governance 2026–2030. Historical analogue, structural translation, and measurable trigger conditions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .purpose-box { background: var(--paper-3); border-left: 3px solid var(--muted); padding: 1rem 1.25rem; font-size: 0.95rem; line-height: 1.75; color: #3a3530; margin-bottom: 2rem; font-style: italic; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 1.5rem 0; border-left: 3px solid var(--ink); padding: 0.75rem 1.25rem; background: var(--paper-2); }
+  .callout p { font-style: italic; font-size: 0.98rem; margin: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+  th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--rule); }
+  td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; color: #2a2520; }
+  tr:last-child td { border-bottom: none; }
+
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  .trigger-box { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+  .trigger-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Concept Note</span> &nbsp;·&nbsp; No. 003</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>0.2</strong><br>Series &nbsp;<strong>CN</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Active</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI Home</a>
+  <span class="nav-id">CN · 003 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Concept Note No. 003 · Domain D-3 · D-4</div>
+    <h1 class="paper-title">The Pool Method: Institutional Innovation Under Coordination Failure</h1>
+    <p class="paper-subtitle">Applied to Finnish energy governance 2026–2030</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI). (2026). The Pool Method: Institutional Innovation Under Coordination Failure. ACI Concept Note No. 003, v0.2. Available at: https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html<br>
+      Cross-references: WP-003 (ITT) · WP-005 (Compound Stress Finland) · WP-013 (Two Scenarios 2030) · DA-001 (Signal Framework)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-3 · Institutional Decision Capacity</span>
+      <span class="domain-tag">D-4 · Compound Stress Evaluation</span>
+    </div>
+  </div>
+
+  <div class="purpose-box">
+    WP-013 identifies three low-cost corrections (K1–K3) sufficient to materially reduce cascade probability in Finland's energy system by 2030. WP-013 Annex 2 names the structural limit: ACI can document the coordination gap but cannot produce the coordinator. This note examines a historical case of successful institutional innovation under analogous coordination failure — the Italian anti-mafia pool (1980–1992) — and derives from it a structural method applicable to the Finnish governance context. The central finding is that the binding constraint in both cases is not information, resources, or formal authority. It is the absence of a structure that makes individual action collectively safe.
+  </div>
+
+  <!-- §01 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 01</span><h2 class="section-title">The Coordination Problem ACI Cannot Solve</h2></div>
+
+    <p>WP-013 §08 closes with three unresolved gaps. The third is political agency: who initiates the corrections? The paper identifies what must happen and names which institutions must act. It does not identify who makes it happen.</p>
+
+    <p>This is not an oversight. It reflects a genuine structural condition. The K1–K3 corrections have not been initiated not because the relevant actors lack information, resources, or formal authority. DA-001's signal framework documents that the situation is understood at institutional level. WP-005 §03 identifies why no single actor initiates: each faces an asymmetry of consequences in which inaction is individually safe and action is individually costly.</p>
+
+    <p>This asymmetry has a historical analogue precise enough to be analytically useful.</p>
+  </div>
+
+  <!-- §02 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 02</span><h2 class="section-title">The Italian Case: What Failed and What Worked</h2></div>
+
+    <p>By the late 1970s, the Italian state possessed extensive knowledge of Cosa Nostra's structure, operations, and political connections. The problem was not informational. Prosecutions consistently failed or were reversed. Individual magistrates who pursued cases became isolated, exposed, and — in several cases — killed.</p>
+
+    <p>The structural diagnosis is precise: individual action against a networked adversary, within a fragmented institutional environment, produces costs concentrated on the individual actor and benefits diffused across the system. No rational actor facing this payoff structure initiates. The result is not corruption or cowardice — it is the expected equilibrium of a coordination game with asymmetric individual consequences.</p>
+
+    <p>Giovanni Falcone and Paolo Borsellino did not solve this problem by being more courageous than their predecessors. They changed the structure of the game.</p>
+
+    <p>The pool method (<em>il pool antimafia</em>, Palermo, 1982–1992) had three structural features:</p>
+
+    <h3 class="sub">Shared information architecture</h3>
+    <p>All case files, informant testimony, and investigative intelligence were pooled across the team. No individual magistrate held unique information that could be extracted by removing them. Eliminating one member degraded but did not destroy the collective knowledge base.</p>
+
+    <h3 class="sub">Distributed accountability</h3>
+    <p>Decisions were made collectively and documented collectively. No single actor could be identified as the decision-maker for any specific prosecution. This did not eliminate individual risk — both Falcone and Borsellino were killed — but it changed the adversary's calculus: eliminating individuals no longer terminated investigations.</p>
+
+    <h3 class="sub">Explicit mandate from above</h3>
+    <p>The pool operated under formal institutional protection from the Chief Prosecutor's office. This did not prevent political interference, but it created a documented chain of accountability that made interference visible and costly.</p>
+
+    <p>The <em>maxiprocesso</em> (1986–1992) was the result: 474 convictions, the first systematic dismantling of Cosa Nostra's command structure. It was not produced by individual heroism. It was produced by institutional design.</p>
+  </div>
+
+  <!-- §03 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 03</span><h2 class="section-title">The Finnish Analogue</h2></div>
+
+    <p>The Finnish coordination failure described in WP-005 §03 and WP-013 §08 is structurally parallel, with one critical difference: there is no criminal adversary. The adversary is the payoff structure itself.</p>
+
+    <p><em>Fingrid's grid planning director</em> states publicly that the situation cannot be resolved within his institutional mandate. This is not evasion — it is accurate. A grid operator cannot unilaterally set industrial location policy.</p>
+
+    <p><em>A senior official at the Ministry of Economic Affairs and Employment (TEM)</em> who proposes datacenter location guidance faces coordinated opposition from municipal economic development offices, business associations, and opposition parties framing any constraint as investment deterrence.</p>
+
+    <p><em>The municipal manager</em> who declines a datacenter connection on grid stability grounds loses the investment to the neighbouring municipality. Local optimisation is individually rational; system-level deterioration is the aggregate result.</p>
+
+    <p>Each actor is behaving rationally within their institutional context. No actor is the adversary. The adversary is the absence of a structure that makes collective action individually safe.</p>
+
+    <h3 class="sub">The pool method translated</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pool method (1982)</th>
+          <th>Finnish equivalent (2026)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Shared information architecture</td>
+          <td>Fingrid endurance index (K1)</td>
+        </tr>
+        <tr>
+          <td>Distributed accountability</td>
+          <td>Cross-ministry working group</td>
+        </tr>
+        <tr>
+          <td>Explicit mandate from above</td>
+          <td>Prime Minister or President of the Republic mandate</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>K1 as shared information architecture.</strong> Fingrid's endurance index — if published systematically rather than disclosed reactively in media interviews — functions as a pooled information resource. When the headline figure is public and indexed, no single actor can be isolated as the source of inconvenient information. The data speaks independently of any individual.</p>
+
+    <p><strong>Cross-ministry working group as distributed accountability.</strong> WP-013's minimum path (four actions, three institutions) requires a coordinating structure in which no single ministry owns the problem alone. A formally constituted cross-ministry group with documented mandate distributes both the credit and the risk. Interference becomes visible.</p>
+
+    <p><strong>Mandate from the Prime Minister or President of the Republic as explicit protection.</strong> The pool required formal institutional cover to survive political pressure. The Finnish equivalent is a direct mandate from the Prime Minister's office or the President — not because the corrections are controversial, but because the mandate creates a documented accountability structure that makes non-action politically costly for anyone who obstructs.</p>
+
+    <div class="callout">
+      <p>These three elements are not independent measures. They constitute a mutually reinforcing logic: the endurance index produces a shared factual baseline that no single actor controls. The cross-ministry working group ensures that no single actor carries the accountability alone. The prime ministerial mandate ensures that no single actor can halt the process alone. No individual element functions without the others. Together, they change the structure of the game — from a coordination problem in which individual inaction is rational to one in which collective action is individually safe. This is what the pool method was: not a collection of good ideas, but an integrated structure in which each component protected the others.</p>
+    </div>
+  </div>
+
+  <!-- §04 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 04</span><h2 class="section-title">The First Follower Problem and Its Resolution</h2></div>
+
+    <p>WP-013 §08 does not name the First Follower problem explicitly, but it is implicit in the coordination gap. The pool method's structural insight is that the first follower problem dissolves when the second actor can observe that the first actor is structurally protected rather than individually exposed.</p>
+
+    <p>Fingrid's grid planning director's April 2026 public statement — that datacenter connection queries now exceed three times Finland's current peak electricity consumption, and that the situation is unprecedented — is the closest observable analogue to a first public signal. It is not yet a structural commitment. It is a media statement. Its diagnostic value is that it tests whether a second institutional voice will follow within a measurable time horizon.</p>
+
+    <p>DA-001's trigger event framework (T1–T3) is extended here to capture this:</p>
+
+    <div class="trigger-box">
+      <div class="trigger-label">T4 — Second Institutional Voice</div>
+      <p><strong>Reference date:</strong> 10 April 2026 (Fingrid grid planning director's public statement, Yle).</p>
+      <p style="margin-top:0.75rem;"><strong>Threshold condition:</strong> within six months of this date — by 10 October 2026 — a second named institutional actor references the endurance gap in formal proceedings, defined as distinct from media commentary.</p>
+      <p style="margin-top:0.75rem;">The distinction matters and requires operationalisation. <em>Media commentary</em> — a minister stating in a Yle interview that "this deserves attention", or an official answering a journalist's question affirmatively — does not satisfy T4. It is individually costless and institutionally non-binding.</p>
+      <p style="margin-top:0.75rem;"><em>Formal proceedings</em> include: the Parliamentary Economic Committee requesting a written endurance assessment from Fingrid; the Ministry of Economic Affairs and Employment publishing an official communication announcing a cross-ministry review; the Energy Authority incorporating an endurance gap assessment into its annual reporting obligations; or Fingrid's board formally commissioning the endurance index as a standing publication rather than a reactive disclosure.</p>
+      <p style="margin-top:0.75rem;">The operationalisation is necessary because the T4 threshold can otherwise be satisfied by the functional equivalent of inaction dressed as response. The diagnostic purpose of T4 is to distinguish signal from noise in the institutional response — to identify whether the grid planning director's statement initiates a structural response or is absorbed as a media event.</p>
+      <p style="margin-top:0.75rem;"><strong>If T4 is not satisfied by 10 October 2026,</strong> DA-001's S3 signal (institutional signal suppression) should be assessed for upgrade from active to confirmed.</p>
+    </div>
+  </div>
+
+  <!-- §05 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 05</span><h2 class="section-title">What the Analogy Does Not Transfer</h2></div>
+
+    <p>The Falcone–Borsellino case ended in their deaths. The analogy should not obscure this. The Finnish coordination failure carries no comparable individual risk. The consequence of inaction is system-level deterioration at a pace and scale that distributes harm across populations rather than concentrating it on individuals. This makes the Finnish case structurally easier to address — the individual cost of action is lower — and structurally harder to motivate — the individual cost of inaction is also lower.</p>
+
+    <p>The pool method worked because the adversary's violence created urgency that overcame the coordination equilibrium. The Finnish case has no equivalent forcing event — yet. WP-013 Scenario A projects that the forcing event (a severe Black Period stress event with visible household impact) arrives before 2030 if corrections are not initiated. The pool method's lesson is that it is structurally preferable to build the coordinating structure before the forcing event, because the forcing event is a costly and unreliable substitute for institutional design.</p>
+
+    <p>A further disanalogy: the pool's mission was prosecution — an adversarial process with a defined endpoint. The Finnish coordination problem has no endpoint. Energy infrastructure governance is continuous. The structural implication is that the Finnish equivalent of the pool must be a permanent institutional arrangement, not a temporary task force. This raises the bar for institutional design while lowering the bar for initiation: a standing cross-ministry working group with indexed public reporting is a lower-cost commitment than a criminal prosecution pool, and a higher-durability one.</p>
+  </div>
+
+  <!-- §06 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">&sect; 06</span><h2 class="section-title">Diagnostic Position of This Note</h2></div>
+
+    <p>This note identifies a structural method, not a policy recommendation. ACI does not advocate for the formation of any specific working group, for any specific mandate, or for any specific actor to assume a coordinating role.</p>
+
+    <p>The diagnostic finding is: the coordination failure described in WP-013 has a known structural solution class. The pool method is one historical instance of that class. The structural features that made it effective — shared information architecture, distributed accountability, explicit mandate from above — are translatable to the Finnish institutional context without requiring new legislation, significant capital, or organisational restructuring.</p>
+
+    <div class="finding-box">
+      <div class="finding-label">CN-003 — Core Diagnostic Finding</div>
+      <p>The binding constraint in the Finnish energy governance coordination failure is not information, resources, or formal authority — all of which are present. It is the absence of a structure that makes individual action collectively safe. The pool method demonstrates that this constraint has been resolved in comparable coordination failures through institutional design rather than individual courage. The structural features of that design are translatable. Whether any actor chooses to apply them is outside ACI's diagnostic scope. That they exist and are applicable is within it.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">CN-003 · v0.2 · April 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-3 · D-4<br>Basis: WP-003 · WP-005 · WP-013 · DA-001</div>
+</footer>
+
+<div style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;">
+  Version History<br>
+  <span style="font-weight:400;">v0.1 &middot; Apr 2026 &middot; Initial working draft</span><br>
+  <span style="font-weight:400;">v0.2 &middot; Apr 2026 &middot; §03 integrated logic added &middot; T4 trigger operationalised with reference date and formal proceedings definition &middot; §05 third disanalogy (continuity vs. endpoint) added</span>
+</div>
+
+</body>
+</html>
