@@ -284,6 +284,18 @@
           <tr><td>Reserve energy budget (T<sub>R</sub> = 72 h)</td><td>21,600 MWh</td></tr>
         </tbody>
       </table>
+
+      <div class="table-caption" style="margin-top:1.5rem">Table 3a — Augmented Load Scenario (v1.1 · April 2026)</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Baseline (v1.0)</th><th>Augmented (v1.1)</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>System winter peak demand</td><td>15,000 MW</td><td>~20,000 MW</td><td>Fingrid 10 Apr 2026: ~5,000 MW realistic datacenter materialisation</td></tr>
+          <tr><td>Non-flexible base load share</td><td>Moderate</td><td>Elevated</td><td>Datacenter load is continuous and non-interruptible under standard PPA terms</td></tr>
+          <tr><td>Black Period energy integral (72 h)</td><td>~1,080,000 MWh</td><td>~1,440,000 MWh</td><td>+33% increase from augmented peak; reserve shortfall grows proportionally</td></tr>
+          <tr><td>72 h reserve adequacy (T<sub>R</sub> = 72 h, R<sub>max</sub> = 300 MW)</td><td>P99 LOLE = 0.00 h/yr</td><td>Requires recalibration</td><td>Original R<sub>max</sub> = 300 MW designed for 15,000 MW peak; augmented scenario likely requires proportional reserve scaling to maintain P99 = 0 outcome</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.85rem;color:var(--muted);font-style:italic;margin-top:0.75rem">The augmented scenario uses Fingrid's publicly confirmed realistic materialisation figure (10% of 50,000 MW queries = 5,000 MW). Full recalibration of the Monte Carlo model under the augmented load profile is a priority for SP-001 v1.2. The directional finding is unambiguous: a 33% increase in non-flexible base load increases the Black Period energy integral by the same proportion, requiring proportionally larger reserve duration or capacity to maintain equivalent P99 protection. See WP-013 v1.1 §02 baseline and DA-001 v1.2 M4.</p>
     </div>
 
     <p><em>Validation note:</em> Subsequent validation against Finnish hourly data (2015–2024) indicates that observed AR(1) persistence (ρ ≈ 0.992) exceeds the calibrated model value (ρ = 0.9315). This implies the model parameter represents a conservative lower bound on actual wind persistence — the identified non-linear threshold effect should be interpreted as a conservative lower-bound estimate of the true system requirement.</p>
@@ -444,7 +456,7 @@
 
 <footer>
   <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
-  <div class="footer-col">SP-001 · v1.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">SP-001 · v1.1 · 2026<br>Open Working Draft</div>
   <div class="footer-col">D-1 · D-4<br>Companion: WP-001 · WP-005 · DA-001</div>
 </footer>
 
@@ -452,6 +464,7 @@
 <div class="changelog" style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;">
   <div style="font-family:monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a7468;margin-bottom:0.6rem;">Version History</div>
   <div style="font-family:monospace;font-size:0.65rem;color:#7a7468;">v1.0 &middot; Jan 2026 &middot; Initial working draft</div>
+  <div style="font-family:monospace;font-size:0.65rem;color:#7a7468;">v1.1 &middot; Apr 2026 &middot; Table 3a added — augmented load scenario following Fingrid public statement 10 April 2026 (50,000 MW datacenter queries; ~5,000 MW realistic materialisation). Full Monte Carlo recalibration deferred to v1.2.</div>
 </div>
 </body>
 </html>
