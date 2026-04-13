@@ -211,7 +211,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.2</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.3</div>
   </div>
   <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 87 · 191 · 181 · 105</div>
 </div>
@@ -239,7 +239,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="epp-badge-dot" id="eppDot"></div>
           <span class="epp-badge-txt" id="eppTxt">—</span>
         </div>
-        <div class="epp-sub" id="eppSub">W168 · v3: (1−FS)×0.35 + SP×0.30 + DP_s×0.20 + WR×0.15</div>
+        <div class="epp-sub" id="eppSub">W168 · v3+T: (1−FS)×0.35 + SP×0.30 + DP_t×0.20 + WR×0.15</div>
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -534,7 +534,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
       <li><strong>Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
-      <li><strong>Rakenteellinen rajoite 2 — Ei lämpötilakontekstia:</strong> Suomen energiajärjestelmä on fundamentaalisesti lämpötilasidonnainen. Sama EPP-arvo tammikuussa normaalivuodella vs. poikkeuksellisella pakkassäällä (−20°C+) on täysin eri asia. DP_s käyttää kuukausibaseline-normalisointia mutta ei todellista säädataa. Säädatan integrointi (esim. FMI) parantaisi diagnostiikkaa merkittävästi.</li>
+      <li><strong>Lämpötiladata:</strong> DP_t käyttää Open-Meteo-lämpötiladataa (Helsinki 60.17°N, 24.94°E) lämpötilakorjattuun kysyntäpaineeseen. Malli C_exp(T)=7000+max(0,18−T)×350 MW/°C on lineaarinen approksimaatio — todelliset alueelliset vaihtelut (Lappi vs. Etelä-Suomi) eivät näy. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
       <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
       <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
@@ -592,6 +592,18 @@ const MONTHLY_BASELINE = {
 };
 const SEASONAL_SIGMA = 1800; // MW — tyypillinen kuukausinsisäinen vaihteluväli / 2
 
+// Lämpötilamalli: Suomen kulutus-lämpötilarelatio
+// C_expected(T) = 7000 + max(0, 18−T)×350 MW/°C (lämmityskausi)
+//                + max(0, T−22)×60 MW/°C (jäähdytys, pieni)
+const TEMP_HEAT_BASE   = 18;   // °C — lämmitysrajan lähtöpiste
+const TEMP_HEAT_SLOPE  = 350;  // MW per °C alle lähtöpisteen
+const TEMP_COOL_BASE   = 22;   // °C — jäähdytysraja
+const TEMP_COOL_SLOPE  = 60;   // MW per °C yli jäähdytysrajan
+const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
+const TEMP_SIGMA       = 900;  // MW — tyypillinen hajonta suhteessa ennusteeseen
+const TEMP_API = 'https://api.open-meteo.com/v1/forecast';
+const TEMP_LAT = 60.17, TEMP_LON = 24.94; // Helsinki
+
 let rawData = []; // merged hourly { time, c, p, gap, nuc, hyd, wnd }
 let layerData = { nuc: [], hyd: [], wnd: [] }; // raw layer series for alignment
 let chartWindow = 72;
@@ -616,7 +628,7 @@ function snapHour(ts) {
   return d.getTime();
 }
 
-function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows) {
+function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap) {
   const cMap = new Map(), pMap = new Map();
   const nucMap = new Map(), hydMap = new Map(), wndMap = new Map(), chpDHMap = new Map(), chpIndMap = new Map();
   const snap = ts => { const d = new Date(ts); d.setMinutes(0,0,0); return d.getTime(); };
@@ -638,6 +650,7 @@ function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRow
         hyd: hydMap.get(k) ?? null,
         wnd: wndMap.get(k) ?? null,
         chp: (chpDHMap.get(k) != null || chpIndMap.get(k) != null) ? (chpDHMap.get(k) ?? 0) + (chpIndMap.get(k) ?? 0) : null,
+        temp: tempMap ? (tempMap.get(k) ?? null) : null,
       });
     }
   });
@@ -669,6 +682,15 @@ function calcWindow(slice) {
   const stressH = slice.filter(d => d.gap > d.c * STRESS_THRESHOLD).length;
   const sp = stressH / n;
 
+  // Lämpötilakorjattu kysyntäpaine
+  const tSlice = slice.filter(d => d.temp != null);
+  let avgTemp = null, dp_t = null, avgCexpected = null;
+  if (tSlice.length >= Math.min(6, n * 0.3)) {
+    avgTemp = tSlice.reduce((s,d) => s+d.temp,0) / tSlice.length;
+    avgCexpected = expectedConsumption(avgTemp);
+    dp_t = Math.min(1, Math.max(0, (avgC - avgCexpected) / TEMP_SIGMA));
+  }
+
   // Layer metrics
   const lSlice = slice.filter(d => d.nuc != null && d.hyd != null);
   let eci=null, eciSemi=null, avgNuc=null, avgHyd=null, avgWnd=null, avgChp=null;
@@ -691,19 +713,20 @@ function calcWindow(slice) {
     if (fs != null && wr != null) eppMode = 'v3';
   }
 
-  // EPP laskenta
-  let epp;
+  // EPP laskenta — DP: lämpötilakorjattu > kausikorjattu > absoluuttinen
+  const dp_used = dp_t ?? dp_s;
+  let epp, eppFull;
   if (eppMode === 'v3') {
-    // v3: riippumattomat komponentit, kausikorjattu DP
-    // (1-FS)*0.35 + SP*0.30 + DP_s*0.20 + WR*0.15
-    epp = Math.min(1, Math.max(0, (1-fs)*0.35 + sp*0.30 + dp_s*0.20 + wr*0.15));
+    epp = Math.min(1, Math.max(0, (1-fs)*0.35 + sp*0.30 + dp_used*0.20 + wr*0.15));
+    eppFull = dp_t != null ? 'v3+T' : 'v3';
   } else {
-    // Fallback: (1-DC)*0.35 + SP*0.30 + DP_s*0.20 + NIR*0.15
-    epp = Math.min(1, Math.max(0, (1-dc)*0.35 + sp*0.30 + dp_s*0.20 + nir*0.15));
+    epp = Math.min(1, Math.max(0, (1-dc)*0.35 + sp*0.30 + dp_used*0.20 + nir*0.15));
+    eppFull = dp_t != null ? 'fallback+T' : 'fallback';
   }
 
-  return { avgC, avgP, avgGap, dp, dp_s, dc, nir, sp, epp, eppMode,
-           stressH, n, modalMonth, baselineC,
+  return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp,
+           eppMode: eppFull, stressH, n, modalMonth, baselineC,
+           avgTemp, avgCexpected,
            eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp };
 }
 
@@ -779,8 +802,10 @@ function renderPosture(m, spot) {
       eciEl.textContent = (w24.eci * 100).toFixed(1) + ' %';
       eciEl.style.color = w24.eci >= 0.60 ? '#2d6b3a' : w24.eci >= 0.40 ? '#7a6010' : '#8b1010';
     }
-    const blEl = document.getElementById('pgBaseline');
-    if (blEl && w24.baselineC) blEl.textContent = Math.round(w24.baselineC).toLocaleString('fi-FI') + ' MW';
+    const tEl = document.getElementById('pgTemp');
+    if (tEl && w24.avgTemp != null) { tEl.textContent = w24.avgTemp.toFixed(1) + ' °C'; tEl.style.color = w24.avgTemp < 0 ? '#3a5fa0' : w24.avgTemp < 8 ? '#7a6010' : '#2d6b3a'; }
+    const cExpEl = document.getElementById('pgCexp');
+    if (cExpEl && w24.avgCexpected != null) cExpEl.textContent = Math.round(w24.avgCexpected).toLocaleString('fi-FI') + ' MW';
     const modeEl = document.getElementById('pgMode');
     if (modeEl) { modeEl.textContent = w24.eppMode === 'v3' ? 'v3 (FS+WR)' : 'fallback (DC/NIR)'; modeEl.style.color = w24.eppMode === 'v3' ? 'var(--sg)' : 'var(--sy)'; }
     if (w24.avgNuc != null) document.getElementById('pgNuc').textContent = fmt.mw(w24.avgNuc);
@@ -799,9 +824,9 @@ function renderMetrics(m) {
 
   const metrics = [
     {
-    { id:'A · DP_s', name:'Demand Pressure — kausikorjattu',
-      desc:'Kulutuksen poikkeama kuukauden historiallisesta baselinesta (σ=1800 MW). DP_s=0 = odotuksen mukainen. DP_s=1 = poikkeuksellinen huippu. Korvaa absoluuttisen DP-mittarin.',
-      vals:[w24?.dp_s, w72?.dp_s, w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
+    { id:'A · DP', name:'Demand Pressure — lämpötilakorjattu (DP_t) / kausikorjattu (DP_s)',
+      desc:'DP_t: todellinen kulutus vs. lämpötilamallin ennuste C_exp(T)=7000+max(0,18−T)×350 MW/°C. Käytetään kun Open-Meteo-data saatavilla. Fallback: DP_s (kuukausibaseline σ=1800 MW).',
+      vals:[w24?.dp_t ?? w24?.dp_s, w72?.dp_t ?? w72?.dp_s, w168?.dp_t ?? w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
     },
     { id:'B · FS', name:'FirmShare — firm capacity coverage',
       desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS). Vaatii DS 87+191.',
@@ -816,11 +841,11 @@ function renderMetrics(m) {
       vals:[w24?.sp, w72?.sp, w168?.sp], weight:'0.30', fmt: v => fmt.pct(v), useSP: true,
     },
     { id:'— DC', name:'Domestic Coverage (info — ei EPP:ssä)',
-      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.2:ssa. Esitetään kontekstiarvona.',
+      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.3:ssa. Esitetään kontekstiarvona.',
       vals:[w24?.dc, w72?.dc, w168?.dc], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'— NIR', name:'Net Import Reliance (info — ei EPP:ssä)',
-      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.2:ssa.',
+      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.3:ssa.',
       vals:[w24?.nir, w72?.nir, w168?.nir], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'E · EPP', name:'Endurance Pressure Proxy',
@@ -1304,6 +1329,13 @@ async function init() {
 
   await new Promise(r => setTimeout(r, 800));
 
+  // Fetch temperature (Open-Meteo, optional, no rate limit needed)
+  let tempMap = null;
+  try {
+    setStatus('loading', [['Open-Meteo', 'lämpötila Helsinki…']]);
+    tempMap = await fetchTemperature(175);
+  } catch (e) { layerErrors.push('lämpötila'); }
+
   // Fetch spot (optional)
   try {
     setStatus('loading', [['DS 105', 'spot €/MWh…']]);
@@ -1319,7 +1351,7 @@ async function init() {
       ['Virhe', errors.join(' · '), true],
     ]);
   } else {
-    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows);
+    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
     lastFetch = new Date();
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const statusItems = [
@@ -1369,7 +1401,11 @@ function generateSynthetic(hours) {
     const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 800 + 900 + (Math.random() - 0.5) * 400);
     const residual = 600 + (Math.random() - 0.5) * 200;
     const p = nuc + hyd + wnd + chp + residual;
-    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd, chp });
+    // Lämpötila: kausiaalto + päivittäinen vaihtelu
+    const dayOfYear = Math.round(i / 24) % 365;
+    const seasonTemp = -8 + 24 * Math.sin((dayOfYear - 80) / 365 * 2 * Math.PI);
+    const temp = Math.round((seasonTemp + (Math.random()-0.5)*4)*10)/10;
+    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd, chp, temp });
   }
   return out;
 }
