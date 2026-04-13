@@ -1630,6 +1630,19 @@ async function init() {
     setStatus('error', [['Virhe', renderErr.message, true]]);
   }
 
+  // Post-render: jos rawData on oikeaa dataa, korjaa Demo-data label → Live
+  if (rawData.length >= 48) {
+    const isReal = rawData.some(d => d.c > 5000 && d.c < 16000 && d.p > 3000);
+    const sDot = document.getElementById('sDot');
+    if (isReal && sDot && sDot.className.includes('demo')) {
+      setStatus('live', [
+        ['Tila', 'Live (puskuri)'],
+        ['Pisteet', rawData.length + ' h ✓'],
+        ['Päivitetty', new Date(lastFetch).toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'})],
+      ]);
+    }
+  }
+
   btn.disabled = false;
 }
 
