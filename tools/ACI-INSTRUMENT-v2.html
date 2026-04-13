@@ -1482,57 +1482,6 @@ function setStatus(state, items) {
 }
 
 // ── Main init ─────────────────────────────────────────────────────────────────
-
-// ── buildW168 — yhdistää live-datan + kausibaselinella täytetyn 168h ikkunan ──
-// Kukin historiatunti saa oman kuukautensa MONTHLY_BASELINE-arvon → toimii
-// oikein myös kesäkuussa, tammikuussa jne.
-function buildW168(liveData) {
-  const now = new Date();
-  const W = 168;
-  if (!liveData.length) return generateSynthetic(W);
-
-  // Live-datan kalibrointikerroin
-  const avgC = liveData.reduce((s,d)=>s+d.c,0)/liveData.length;
-  const refBase = MONTHLY_BASELINE[now.getMonth()+1] || 9000;
-  const scalC = avgC / refBase;
-
-  // Rakennetaan 168h aikasarja tunneittain
-  const result = [];
-  const liveMap = new Map(liveData.map(d => [
-    Date.UTC(d.time.getUTCFullYear(), d.time.getUTCMonth(),
-             d.time.getUTCDate(), d.time.getUTCHours()), d
-  ]));
-
-  for (let i = W-1; i >= 0; i--) {
-    const t = new Date(now.getTime() - i*3.6e6);
-    const tKey = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(),
-                          t.getUTCDate(), t.getUTCHours());
-
-    if (liveMap.has(tKey)) {
-      result.push(liveMap.get(tKey));
-    } else {
-      // Baseline-estimaatti — käyttää tunnin omaa kuukautta
-      const month = t.getMonth()+1;
-      const monthBase = MONTHLY_BASELINE[month] || 9000;
-      const h = t.getUTCHours(), dow = t.getUTCDay();
-      const isWe = dow===0||dow===6;
-      const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
-      const c = Math.max(0, monthBase*scalC + diurnal*(isWe?0.85:1));
-      const nuc = 2800;
-      // Kesällä CHP lähes nollassa, talvella korkealla
-      const coldFactor = Math.max(0, (4-month)/4 + (month-9)/4);
-      const chp = Math.max(400, 1700*coldFactor*scalC + 600*(1-coldFactor));
-      const wnd = Math.max(0, 900 + Math.sin(i/36*Math.PI)*400);
-      const hyd = Math.max(300, c - nuc - chp - wnd - 300);
-      const p = nuc + hyd + chp + wnd;
-      result.push({ time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
-                    temp:null, tempHki:null, tempKuo:null, tempRov:null,
-                    _baseline:true });
-    }
-  }
-  return result;
-}
-
 async function init() {
   const btn = document.getElementById('btnRefresh');
   btn.disabled = true;
@@ -1547,70 +1496,67 @@ async function init() {
   let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
   const errors = [], layerErrors = [];
 
-  // Lataa olemassaoleva puskuri
-  // Yksinkertainen haku — yksi pyyntö per datasetti, nopea
-  // Live-haku: yksinkertainen yksi kutsu, 28h, ei sivutusta
-  const liveFetch = async (dsId, label) => {
+  // Haku: yksi sivutettu kutsu, size=500 → max 2 sivua koko W168:lle
+  const fetchLive = async (dsId, label) => {
+    setStatus('loading', [[label, 'haetaan 168h…']]);
     const now = new Date();
-    const from = new Date(now - 28*3.6e6);
-    const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(now.toISOString())}&size=200`;
-    setStatus('loading', [[label, 'haetaan…']]);
-    for (let attempt = 0; attempt < 3; attempt++) {
-      try {
-        const r = await fetch(url);
-        if (r.status === 429) {
-          if (attempt < 2) { await new Promise(res => setTimeout(res, 2000*(attempt+1))); continue; }
-          throw new Error('HTTP 429');
+    const from = new Date(now - 175 * 3.6e6);
+    let all = [], page = 1;
+    for (let i = 0; i < 5; i++) {
+      const url = `${PROXY}?ds=${dsId}` +
+        `&start=${encodeURIComponent(from.toISOString())}` +
+        `&end=${encodeURIComponent(now.toISOString())}` +
+        `&size=500&page=${page}`;
+      let resp;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const r = await fetch(url);
+          if (r.status === 429) {
+            await new Promise(res => setTimeout(res, 3000*(attempt+1)));
+            continue;
+          }
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          resp = await r.json();
+          break;
+        } catch(e) {
+          if (attempt === 2) throw e;
         }
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const j = await r.json();
-        const rows = (j.data||j).filter(d => d.value != null && d.value > 0);
-        return aggregateToHourly(rows);
-      } catch(e) {
-        if (attempt === 2) throw e;
-        await new Promise(res => setTimeout(res, 1000));
       }
+      if (!resp) break;
+      const rows = (resp.data||resp).filter(d => d.value != null && d.value > 0);
+      all = all.concat(rows);
+      if (resp.pagination?.nextPage) { page = resp.pagination.nextPage; }
+      else break;
     }
+    return aggregateToHourly(all);
   };
 
-  try { cRows = await liveFetch(DS.consumption, 'DS 124'); }
+  try { cRows = await fetchLive(DS.consumption, 'DS 124'); }
   catch(e) { errors.push('DS 124: ' + e.message); cRows = []; }
 
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1200));
 
-  try { pRows = await liveFetch(DS.production, 'DS 192'); }
+  try { pRows = await fetchLive(DS.production, 'DS 192'); }
   catch(e) {
-    try { pRows = await liveFetch(DS.production2, 'DS 74'); errors.push('DS 192→74'); }
+    try { pRows = await fetchLive(DS.production2, 'DS 74'); errors.push('DS 192→74'); }
     catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
 
   if (!cRows.length || !pRows.length) {
-    // Jos puskurissa on oikeaa dataa, käytetään sitä eikä synteettistä
-    if (cachedData.length >= 48) {
-      rawData = cachedData;
-      setStatus('live', [
-        ['Tila', 'Live (puskuri)'],
-        ['Puskuri', cacheInfo.hours + 'h / 168h ✓'],
-        ['Huom', 'Uusin haku epäonnistui — puskuridata käytössä', true],
-      ]);
-    } else {
-      rawData = generateSynthetic(168);
-      setStatus('demo', [
-        ['Tila', 'Demo-data (API-virhe)'],
-        ['Virhe', errors.join(' · '), true],
-      ]);
-    }
+    rawData = generateSynthetic(168);
+    setStatus('demo', [
+      ['Tila', 'Demo-data (API-virhe)'],
+      ['Virhe', errors.join(' · '), true],
+    ]);
   } else {
-    const liveData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
+    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
     lastFetch = new Date();
-    rawData = buildW168(liveData);
     const layerCount = rawData.filter(d => d.nuc != null).length;
-    const tempCount  = rawData.filter(d => d.temp != null).length;
-    const liveCount  = liveData.length;
+    const tempCount = rawData.filter(d => d.temp != null).length;
+    const dataWarn = rawData.length < 48;
     const statusItems = [
-      ['Tila',  liveCount >= 12 ? 'Live' : 'Live (osittainen)'],
-      ['Live',  liveCount + ' h · viimeisin data'],
-      ['W168',  rawData.length + ' h · live + kausibaseline'],
+      ['Tila', dataWarn ? 'Live — kerätään dataa' : 'Live'],
+      ['Pisteet', rawData.length + ' h' + (dataWarn ? ' — EPP alustava' : '')],
       ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
       ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' : 'ei saatavilla', tempCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
@@ -1635,20 +1581,6 @@ async function init() {
   } catch (renderErr) {
     console.error('Render error:', renderErr);
     setStatus('error', [['Virhe', renderErr.message, true]]);
-  }
-
-  // Post-render status-korjaus: jos rawData on aitoa dataa, näytetään Live
-  if (rawData.length >= 48) {
-    const isReal = rawData.some(d => d.temp != null || d.nuc != null ||
-      (d.c > 5000 && d.c < 16000 && d.p > 3000)); // sanity check
-    const curStatus = document.getElementById('sDot').className;
-    if (isReal && curStatus.includes('demo')) {
-      setStatus('live', [
-        ['Tila', 'Live (puskuri)'],
-        ['Pisteet', rawData.length + ' h ✓'],
-        ['Huom', 'Haku epäonnistui — sessiodata käytössä', true],
-      ]);
-    }
   }
 
   btn.disabled = false;
@@ -2046,10 +1978,9 @@ function cacheMerge(existing, newData) {
 }
 
 function cacheStats(data) {
-  if (!data.length) return { hours: 0, oldest: null, newest: null };
-  const times = data.map(d => new Date(d.time).getTime());
-  const oldest = new Date(Math.min(...times));
-  const newest = new Date(Math.max(...times));
+  if (!data.length) return { hours: 0, oldest: null };
+  const oldest = new Date(Math.min(...data.map(d => d.time.getTime())));
+  const newest = new Date(Math.max(...data.map(d => d.time.getTime())));
   const hours = Math.round((newest - oldest) / 3.6e6) + 1;
   return { hours, oldest, newest };
 }
