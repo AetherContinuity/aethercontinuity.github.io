@@ -163,6 +163,38 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* ── §06 Boundaries ── */
 .bounds-section{margin-bottom:3rem;}
+
+/* ── §10 Rakenteellinen paine ── */
+.struct-section{margin-bottom:3rem;}
+.struct-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;}
+.struct-panel{background:var(--paper-2);border:1px solid var(--rule);padding:1.25rem 1.5rem;}
+.struct-panel-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;border-bottom:1px solid var(--rule);padding-bottom:.5rem;}
+.dc-slider-wrap{margin-bottom:1.25rem;}
+.dc-slider-lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem;}
+.dc-slider-name{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.06em;}
+.dc-slider-val{font-family:var(--mono);font-size:.85rem;font-weight:500;}
+input.dc-range{-webkit-appearance:none;width:100%;height:4px;background:var(--paper-3);border:1px solid var(--rule);outline:none;cursor:pointer;margin-bottom:.2rem;}
+input.dc-range::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--ink);border-radius:50%;cursor:pointer;}
+input.dc-range::-webkit-slider-thumb:hover{background:var(--accent);}
+.struct-epp-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.struct-epp-card{border:1px solid var(--rule);padding:.85rem 1rem;background:var(--paper);}
+.struct-epp-card.baseline{border-top:3px solid var(--rule);}
+.struct-epp-card.dc1{border-top:3px solid var(--sy);}
+.struct-epp-card.dc2{border-top:3px solid var(--sr);}
+.struct-epp-lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.struct-epp-val{font-family:var(--mono);font-size:1.4rem;font-weight:500;line-height:1.1;}
+.struct-epp-cls{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem;}
+.struct-epp-delta{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.2rem;}
+.chp-trend-bar{height:16px;background:var(--paper-3);border:1px solid var(--rule);display:flex;margin:.4rem 0;overflow:hidden;}
+.chp-trend-seg{height:100%;transition:width .4s;}
+.struct-scen-tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.65rem;margin-top:1rem;}
+.struct-scen-tbl th{border-bottom:1px solid var(--ink);padding:.45rem .6rem;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;text-align:left;}
+.struct-scen-tbl th.rh{text-align:right;}
+.struct-scen-tbl td{padding:.55rem .6rem;border-bottom:1px solid var(--paper-3);vertical-align:middle;}
+.struct-scen-tbl td.rh{text-align:right;}
+.struct-scen-tbl tr:last-child td{border-bottom:none;}
+.struct-warn{display:flex;align-items:flex-start;gap:.75rem;background:var(--bg-o);border:1px solid #c4a080;border-left:3px solid var(--so);padding:.85rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--muted);line-height:1.6;}
+.struct-warn strong{color:var(--ink);}
 .bounds-list{list-style:none;border-top:1px solid var(--rule);}
 .bounds-list li{padding:.7rem 0;border-bottom:1px solid var(--rule);font-size:.85rem;display:flex;gap:1rem;line-height:1.6;}
 .bounds-list li::before{content:'—';font-family:var(--mono);color:var(--muted);flex-shrink:0;}
@@ -211,7 +243,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.5</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.6</div>
   </div>
   <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 87 · 191 · 181 · 105</div>
 </div>
@@ -526,6 +558,99 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="bt-annot">
       TP (True Positive) = EPP ≥ 0.50 &amp; tunnettu stressiperiodi &nbsp;·&nbsp; FN (False Negative) = EPP &lt; 0.50 &amp; tunnettu stressi &nbsp;·&nbsp; FP (False Positive) = EPP ≥ 0.50 &amp; ei tunnettua stressiä &nbsp;·&nbsp; TN (True Negative) = EPP &lt; 0.50 &amp; ei stressiä<br>
       Stressikriteerit: energiakriisi 2022-Q3–Q4 (NordPool FI &gt;200 €/MWh) · 2023-Q1 (jälkikriisi, hinnat &gt;100 €/MWh) · muut periodit = ei tunnettua makrostressiä
+    </div>
+  </div>
+
+  <!-- §10 Rakenteellinen paine -->
+  <div class="struct-section">
+    <div class="shdr"><span class="snum">&sect; 10</span><span class="stit">Rakenteellinen paine — CHP-purkaminen &amp; DC-kuorma</span></div>
+    <p class="snote">Kaksi rakenteellista muutosta heikentävät Suomen talven endurance-kapasiteettia samanaikaisesti: (1) CHP-kapasiteettia puretaan EU-kehyksen (ETS, Fit for 55) ohjaamana — semi-vakaa talvipuskuri pienenee, (2) data center -investoinnit lisäävät kulutusta 2–3 GW litteällä, lämpötilariippumattomalla profiililla — C_exp(T)-malli systemaattisesti aliarvioi todellista paineetta. Instrumentti ei voi mitata tätä suoraan live-datasta, mutta alla oleva skenaarioanalyysi laskee EPP:n parametrisoidusti. Viitteet: WP-001 (168h stress-ikkuna) · WP-008 (jatkuvan kuorman allokaatio).</p>
+
+    <div class="struct-warn">
+      <div style="color:var(--so);font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;flex-shrink:0;">⚠</div>
+      <div><strong>Rakenteellinen divergenssi:</strong> Data center -kuorma on 24/7-litteä — se ei reagoi lämpötilaan. Tämä tarkoittaa, että C_exp(T)-mallimme aliarvioi todellista paineeta systemaattisesti kun DC-kapasiteetti kasvaa. Samanaikaisesti CHP-kapasiteetin purkaminen poistaa sen kerroksen, joka kompensoi juuri talvihuippua. Nämä muutokset liikkuvat samaan suuntaan.</div>
+    </div>
+
+    <div class="struct-grid">
+      <!-- DC-kuormaparametri -->
+      <div class="struct-panel">
+        <div class="struct-panel-title">Data center -kuormaparametri</div>
+        <div class="dc-slider-wrap">
+          <div class="dc-slider-lbl">
+            <span class="dc-slider-name">DC-lisäkuorma (MW, litteä 24/7)</span>
+            <span class="dc-slider-val" id="dcVal">0 MW</span>
+          </div>
+          <input type="range" class="dc-range" id="dcSlider" min="0" max="3000" step="100" value="0" oninput="onDCSlider(+this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.5rem;color:var(--muted);">
+            <span>0</span><span>Nyt ~500</span><span>2027 ~1500</span><span>2030 ~3000</span>
+          </div>
+        </div>
+        <div class="dc-slider-wrap">
+          <div class="dc-slider-lbl">
+            <span class="dc-slider-name">CHP-kapasiteettimuutos (%)</span>
+            <span class="dc-slider-val" id="chpDeltaVal">0 %</span>
+          </div>
+          <input type="range" class="dc-range" id="chpSlider" min="-50" max="20" step="5" value="0" oninput="onCHPSlider(+this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.5rem;color:var(--muted);">
+            <span>−50%</span><span>−20% (2027)</span><span>0</span><span>+20%</span>
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);line-height:1.9;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--rule);">
+          DC-kuorma nostetaan suoraan kulutukseen (litteä profiili). CHP-muutos skaalaa avgChp-arvoa. Vaikuttaa FS:ään, SP:hen, DP_t:hen ja EPP:hen.
+        </div>
+      </div>
+
+      <!-- CHP-trendi backtestistä -->
+      <div class="struct-panel">
+        <div class="struct-panel-title">CHP-osuustrendi — backtest-data</div>
+        <div id="chpTrendContent" style="font-family:var(--mono);font-size:.6rem;color:var(--muted);">Aja §09 backtest nähdäksesi CHP-trendi historiasta</div>
+      </div>
+    </div>
+
+    <!-- Skenaario EPP-kortit -->
+    <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">EPP W168 — skenaariovertailu</div>
+    <div class="struct-epp-row">
+      <div class="struct-epp-card baseline">
+        <div class="struct-epp-lbl">Nykytila</div>
+        <div class="struct-epp-val" id="sEPP0">—</div>
+        <div class="struct-epp-cls" id="sEPP0cls">—</div>
+        <div class="struct-epp-delta">Live W168 · ei muutoksia</div>
+      </div>
+      <div class="struct-epp-card dc1">
+        <div class="struct-epp-lbl">+ DC-kuorma</div>
+        <div class="struct-epp-val" id="sEPP1">—</div>
+        <div class="struct-epp-cls" id="sEPP1cls">—</div>
+        <div class="struct-epp-delta" id="sEPP1delta">—</div>
+      </div>
+      <div class="struct-epp-card dc2">
+        <div class="struct-epp-lbl">+ DC-kuorma + CHP-muutos</div>
+        <div class="struct-epp-val" id="sEPP2">—</div>
+        <div class="struct-epp-cls" id="sEPP2cls">—</div>
+        <div class="struct-epp-delta" id="sEPP2delta">—</div>
+      </div>
+    </div>
+
+    <!-- Skenaariomatriisi -->
+    <table class="struct-scen-tbl">
+      <thead>
+        <tr>
+          <th>Skenaario</th>
+          <th class="rh">DC MW</th>
+          <th class="rh">CHP Δ</th>
+          <th class="rh">EPP</th>
+          <th class="rh">Luokka</th>
+          <th class="rh">FS</th>
+          <th class="rh">SP</th>
+          <th class="rh">DP_t</th>
+          <th class="rh">Δ EPP</th>
+        </tr>
+      </thead>
+      <tbody id="structScenBody">
+        <tr><td colspan="9" style="color:var(--muted);padding:1.5rem .6rem;">Ladataan live-dataa…</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.75rem;line-height:1.9;">
+      DC-kuorma on litteä 24/7 — ei reagoi lämpötilaan, eikä C_exp(T) huomioi sitä. Todellinen DP_t-paine on tätä korkeampi. · CHP-muutos skaalaa semi-vakaa-kerroksen — sen väheneminen kasvattaa (1−FS):ää ja SP:tä samanaikaisesti. · Molemmat muutokset liikkuvat samaan suuntaan.
     </div>
   </div>
 
@@ -937,11 +1062,11 @@ function renderMetrics(m) {
       vals:[w24?.sp, w72?.sp, w168?.sp], weight:'0.30', fmt: v => fmt.pct(v), useSP: true,
     },
     { id:'— DC', name:'Domestic Coverage (info — ei EPP:ssä)',
-      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.5:ssa. Esitetään kontekstiarvona.',
+      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.6:ssa. Esitetään kontekstiarvona.',
       vals:[w24?.dc, w72?.dc, w168?.dc], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'— NIR', name:'Net Import Reliance (info — ei EPP:ssä)',
-      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.5:ssa.',
+      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.6:ssa.',
       vals:[w24?.nir, w72?.nir, w168?.nir], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'E · EPP', name:'Endurance Pressure Proxy',
@@ -1475,6 +1600,7 @@ async function init() {
   const chartSlice = rawData.slice(-chartWindow);
   drawMainChart(chartSlice);
   drawEPPChart(epp, rawData);
+  renderStructural();
 
   btn.disabled = false;
 }
@@ -1746,6 +1872,142 @@ async function runBacktest() {
   drawBTTimeline(results);
   renderBTTable(results);
   renderBTSignal(results);
+  renderCHPTrend();
+}
+
+// ── §10 Rakenteellinen paine ─────────────────────────────────────────────────
+
+let dcLoad = 0;      // MW, litteä 24/7 DC-lisäkuorma
+let chpDelta = 0;    // %, CHP-kapasiteettimuutos
+
+// Laske EPP skenaariolle: DC-lisäkuorma + CHP-muutos
+function calcWindowScenario(slice, dcMW, chpPct) {
+  if (!slice.length) return null;
+  // Muokataan datapisteitä: lisätään DC-kuorma kulutukseen, skaalataan CHP
+  const modified = slice.map(d => ({
+    ...d,
+    c: d.c + dcMW,
+    gap: (d.c + dcMW) - d.p,
+    chp: d.chp != null ? d.chp * (1 + chpPct / 100) : null,
+  }));
+  return calcWindow(modified);
+}
+
+const SCENARIOS = [
+  { label: 'Nykytila',            dc:    0, chp:   0 },
+  { label: '2027: +500 MW DC',    dc:  500, chp:  -5 },
+  { label: '2027: +1500 MW DC',   dc: 1500, chp: -15 },
+  { label: '2030: +3000 MW DC',   dc: 3000, chp: -30 },
+  { label: '2030 + CHP −40%',     dc: 3000, chp: -40 },
+];
+
+function renderStructural() {
+  if (!rawData.length) return;
+  const slice = rawData.slice(-168);
+  const baseline = calcWindow(slice);
+  if (!baseline) return;
+
+  // Update slider EPP cards
+  const s0 = baseline;
+  const s1 = calcWindowScenario(slice, dcLoad, 0);
+  const s2 = calcWindowScenario(slice, dcLoad, chpDelta);
+
+  const setCard = (sfx, m, ref) => {
+    if (!m) return;
+    const pc = classify(m.epp);
+    document.getElementById('sEPP'+sfx).textContent = m.epp.toFixed(3);
+    document.getElementById('sEPP'+sfx).style.color = pc.color;
+    document.getElementById('sEPP'+sfx+'cls').textContent = pc.label;
+    document.getElementById('sEPP'+sfx+'cls').style.color = pc.color;
+    if (sfx !== '0' && ref) {
+      const delta = m.epp - ref.epp;
+      const el = document.getElementById('sEPP'+sfx+'delta');
+      if (el) {
+        el.textContent = (delta >= 0 ? '+' : '') + (delta*100).toFixed(1) + ' pp vs nykytila'
+          + (dcLoad ? ` · +${dcLoad} MW DC` : '')
+          + (chpDelta ? ` · CHP ${chpDelta}%` : '');
+        el.style.color = delta > 0.05 ? '#8b1010' : delta > 0.02 ? '#8b3a10' : '#7a7468';
+      }
+    }
+  };
+  setCard('0', s0, null);
+  setCard('1', s1, s0);
+  setCard('2', s2, s0);
+
+  // Scenario matrix
+  const tbody = document.getElementById('structScenBody');
+  tbody.innerHTML = '';
+  SCENARIOS.forEach(scen => {
+    const m = calcWindowScenario(slice, scen.dc, scen.chp);
+    if (!m) return;
+    const pc = classify(m.epp);
+    const delta = m.epp - baseline.epp;
+    tbody.insertAdjacentHTML('beforeend', `<tr>
+      <td style="font-size:.8rem;">${scen.label}</td>
+      <td class="rh">${scen.dc > 0 ? '+'+scen.dc.toLocaleString('fi-FI') : '0'}</td>
+      <td class="rh" style="color:${scen.chp<0?'#8b1010':scen.chp>0?'#2d6b3a':'var(--muted)'};">${scen.chp > 0 ? '+' : ''}${scen.chp}%</td>
+      <td class="rh" style="color:${pc.color};font-weight:500;">${m.epp.toFixed(3)}</td>
+      <td class="rh" style="color:${pc.color};font-size:.6rem;letter-spacing:.08em;">${pc.label}</td>
+      <td class="rh">${m.fs != null ? (m.fs*100).toFixed(1)+'%' : '—'}</td>
+      <td class="rh">${(m.sp*100).toFixed(1)}%</td>
+      <td class="rh">${m.dp_t != null ? (m.dp_t*100).toFixed(1)+'%' : (m.dp_s*100).toFixed(1)+'%'}</td>
+      <td class="rh" style="color:${delta>0.05?'#8b1010':delta>0.02?'#8b3a10':'var(--muted)'};">${delta>=0?'+':''}${(delta*100).toFixed(1)} pp</td>
+    </tr>`);
+  });
+}
+
+// Render CHP trend from backtest results
+function renderCHPTrend() {
+  const el = document.getElementById('chpTrendContent');
+  if (!btResults || !btResults.length || btResults.every(r => r.eci == null)) {
+    el.innerHTML = 'Aja §09 backtest nähdäksesi CHP-trendi historiasta';
+    return;
+  }
+  const withData = btResults.filter(r => r.epp != null && r.id !== 'current');
+  if (!withData.length) { el.innerHTML = 'Ei riittävästi historiadataa'; return; }
+
+  let html = '';
+  withData.forEach(r => {
+    const chpShare = r.avgChp && r.avgP ? (r.avgChp / r.avgP) : null;
+    const eci = r.eci;
+    html += `<div style="margin-bottom:.6rem;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.2rem;">
+        <span style="font-weight:500;">${r.label}</span>
+        <span style="color:var(--muted);">${chpShare != null ? 'CHP '+( chpShare*100).toFixed(1)+'%' : '—'} · ECI ${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</span>
+      </div>
+      <div class="chp-trend-bar">
+        ${eci != null ? `<div class="chp-trend-seg" style="width:${(eci*100).toFixed(1)}%;background:#3a5fa0;" title="ECI firm ${(eci*100).toFixed(1)}%"></div>` : ''}
+        ${chpShare != null ? `<div class="chp-trend-seg" style="width:${(chpShare*100).toFixed(1)}%;background:#a05c30;" title="CHP ${(chpShare*100).toFixed(1)}%"></div>` : ''}
+      </div>
+    </div>`;
+  });
+
+  // Trend direction
+  const first = withData.find(r => r.avgChp && r.avgP);
+  const last  = [...withData].reverse().find(r => r.avgChp && r.avgP);
+  if (first && last && first !== last) {
+    const f = first.avgChp / first.avgP, l = last.avgChp / last.avgP;
+    const delta = l - f;
+    const arrow = delta < -0.02 ? '↓ Laskee' : delta > 0.02 ? '↑ Nousee' : '→ Vakaa';
+    const col = delta < -0.02 ? '#8b1010' : delta > 0.02 ? '#2d6b3a' : '#7a7468';
+    html += `<div style="font-family:var(--mono);font-size:.6rem;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--rule);">
+      CHP-osuustrendi: <span style="color:${col};font-weight:500;">${arrow}</span>
+      &nbsp;${(f*100).toFixed(1)}% → ${(l*100).toFixed(1)}% (${first.label}→${last.label})
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function onDCSlider(val) {
+  dcLoad = val;
+  document.getElementById('dcVal').textContent = val.toLocaleString('fi-FI') + ' MW';
+  renderStructural();
+}
+
+function onCHPSlider(val) {
+  chpDelta = val;
+  document.getElementById('chpDeltaVal').textContent = (val > 0 ? '+' : '') + val + ' %';
+  renderStructural();
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
