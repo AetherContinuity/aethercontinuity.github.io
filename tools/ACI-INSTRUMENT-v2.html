@@ -1495,6 +1495,44 @@ function setStatus(state, items) {
 }
 
 // ── Main init ─────────────────────────────────────────────────────────────────
+
+// ── buildW168 — täyttää 168h ikkunan: live-data + kuukausibaseline ────────────
+function buildW168(liveData) {
+  const now = new Date();
+  const W = 168;
+  if (!liveData.length) return generateSynthetic(W);
+
+  const avgC = liveData.reduce((s,d)=>s+d.c,0)/liveData.length;
+  const refBase = MONTHLY_BASELINE[now.getMonth()+1] || 9000;
+  const scalC = avgC / refBase;
+
+  const liveMap = new Map(liveData.map(d => [snapHour(d.time), d]));
+
+  const result = [];
+  for (let i = W-1; i >= 0; i--) {
+    const t = new Date(now.getTime() - i*3.6e6);
+    const key = snapHour(t);
+    if (liveMap.has(key)) {
+      result.push(liveMap.get(key));
+    } else {
+      const month = t.getMonth()+1;
+      const base = MONTHLY_BASELINE[month] || 9000;
+      const h = t.getUTCHours(), dow = t.getUTCDay();
+      const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
+      const c = Math.max(0, base*scalC + diurnal*(dow===0||dow===6?0.85:1));
+      const nuc = 2800;
+      const coldF = Math.max(0, Math.cos((month-1)/12*2*Math.PI)*0.5+0.3);
+      const chp = Math.max(400, 1700*coldF + (c-base*scalC)*0.15);
+      const wnd = Math.max(0, 900+(Math.random()-0.5)*400);
+      const hyd = Math.max(300, c - nuc - chp - wnd - 200);
+      const p = nuc + hyd + chp + wnd;
+      result.push({time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
+                   temp:null, tempHki:null, tempKuo:null, tempRov:null});
+    }
+  }
+  return result;
+}
+
 async function init() {
   const btn = document.getElementById('btnRefresh');
   btn.disabled = true;
@@ -1509,88 +1547,34 @@ async function init() {
   let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
   const errors = [], layerErrors = [];
 
-  // Fetch consumption
-  try {
-    setStatus('loading', [['DS 124', 'kulutus…']]);
-    cRows = await fetchSeries(DS.consumption, 175, 200);
-  } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
+  // Hae eilinen päivä — historiallinen data on luotettavaa, ei rate-limit ongelmia
+  const fetchYesterday = async (dsId, label) => {
+    const now = new Date();
+    // Eilen: 48h sitten → 2h sitten (varmistetaan että data on valmis)
+    const end   = new Date(now - 2   * 3.6e6);
+    const start = new Date(now - 48  * 3.6e6);
+    setStatus('loading', [[label, 'haetaan eilen…']]);
+    const url = `${PROXY}?ds=${dsId}` +
+      `&start=${encodeURIComponent(start.toISOString())}` +
+      `&end=${encodeURIComponent(end.toISOString())}` +
+      `&size=200`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j = await r.json();
+    return aggregateToHourly((j.data||j).filter(d => d.value != null && d.value > 0));
+  };
 
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch total production — DS 192 ensin, DS 74 fallbackina
-  try {
-    setStatus('loading', [['DS 192', 'tuotanto…']]);
-    pRows = await fetchSeries(DS.production, 175, 200);
-  } catch (e) {
-    try {
-      setStatus('loading', [['DS 74', 'tuotanto (fallback)…']]);
-      pRows = await fetchSeries(DS.production2, 175, 200);
-      errors.push('DS 192 → DS 74 (fallback käytössä)');
-    } catch (e2) {
-      errors.push('DS 192+74: ' + e2.message);
-      pRows = [];
-    }
-  }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch nuclear (DS 87)
-  try {
-    setStatus('loading', [['DS 87', 'ydinvoima…']]);
-    nucRows = await fetchSeries(DS.nuclear, 175, 200);
-  } catch (e) { layerErrors.push('DS 87'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch hydro (DS 191)
-  try {
-    setStatus('loading', [['DS 191', 'vesivoima…']]);
-    hydRows = await fetchSeries(DS.hydro, 175, 200);
-  } catch (e) { layerErrors.push('DS 191'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch wind (DS 181)
-  try {
-    setStatus('loading', [['DS 181', 'tuulivoima…']]);
-    wndRows = await fetchSeries(DS.wind, 175, 200);
-  } catch (e) { layerErrors.push('DS 181'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch CHP district heating (DS 201)
-  let chpDHRows = null;
-  try {
-    setStatus('loading', [['DS 201', 'CHP kaukolämpö…']]);
-    chpDHRows = await fetchSeries(DS.chpDH, 175, 200);
-  } catch (e) { layerErrors.push('DS 201'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch CHP industrial (DS 202)
-  let chpIndRows = null;
-  try {
-    setStatus('loading', [['DS 202', 'CHP teollisuus…']]);
-    chpIndRows = await fetchSeries(DS.chpInd, 175, 200);
-  } catch (e) { layerErrors.push('DS 202'); }
+  try { cRows = await fetchYesterday(DS.consumption, 'DS 124'); }
+  catch(e) { errors.push('DS 124: ' + e.message); cRows = []; }
 
   await new Promise(r => setTimeout(r, 800));
 
-  // Fetch temperature (Open-Meteo, optional, no rate limit needed)
-  let tempMap = null;
-  try {
-    setStatus('loading', [['Open-Meteo', 'Helsinki · Kuopio · Rovaniemi…']]);
-    tempMap = await fetchTemperature();
-  } catch (e) { layerErrors.push('lämpötila'); }
+  try { pRows = await fetchYesterday(DS.production, 'DS 192'); }
+  catch(e) {
+    try { pRows = await fetchYesterday(DS.production2, 'DS 74'); errors.push('DS 192→74'); }
+    catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
+  }
 
-  // Fetch spot (optional)
-  try {
-    setStatus('loading', [['DS 105', 'spot €/MWh…']]);
-    const sRows = await fetchSeries(DS.spot, 6, 10);
-    if (sRows.length) spotVal = sRows[sRows.length - 1].value;
-  } catch (e) { /* optional */ }
-
-  // Merge
   if (!cRows.length || !pRows.length) {
     rawData = generateSynthetic(168);
     setStatus('demo', [
@@ -1598,8 +1582,9 @@ async function init() {
       ['Virhe', errors.join(' · '), true],
     ]);
   } else {
-    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
-    lastFetch = new Date();
+    const liveData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
+    rawData = buildW168(liveData);
+    lastFetch = new Date();;
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const tempCount = rawData.filter(d => d.temp != null).length;
     const statusItems = [
