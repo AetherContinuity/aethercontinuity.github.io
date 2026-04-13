@@ -1482,6 +1482,57 @@ function setStatus(state, items) {
 }
 
 // ── Main init ─────────────────────────────────────────────────────────────────
+
+// ── buildW168 — yhdistää live-datan + kausibaselinella täytetyn 168h ikkunan ──
+// Kukin historiatunti saa oman kuukautensa MONTHLY_BASELINE-arvon → toimii
+// oikein myös kesäkuussa, tammikuussa jne.
+function buildW168(liveData) {
+  const now = new Date();
+  const W = 168;
+  if (!liveData.length) return generateSynthetic(W);
+
+  // Live-datan kalibrointikerroin
+  const avgC = liveData.reduce((s,d)=>s+d.c,0)/liveData.length;
+  const refBase = MONTHLY_BASELINE[now.getMonth()+1] || 9000;
+  const scalC = avgC / refBase;
+
+  // Rakennetaan 168h aikasarja tunneittain
+  const result = [];
+  const liveMap = new Map(liveData.map(d => [
+    Date.UTC(d.time.getUTCFullYear(), d.time.getUTCMonth(),
+             d.time.getUTCDate(), d.time.getUTCHours()), d
+  ]));
+
+  for (let i = W-1; i >= 0; i--) {
+    const t = new Date(now.getTime() - i*3.6e6);
+    const tKey = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(),
+                          t.getUTCDate(), t.getUTCHours());
+
+    if (liveMap.has(tKey)) {
+      result.push(liveMap.get(tKey));
+    } else {
+      // Baseline-estimaatti — käyttää tunnin omaa kuukautta
+      const month = t.getMonth()+1;
+      const monthBase = MONTHLY_BASELINE[month] || 9000;
+      const h = t.getUTCHours(), dow = t.getUTCDay();
+      const isWe = dow===0||dow===6;
+      const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
+      const c = Math.max(0, monthBase*scalC + diurnal*(isWe?0.85:1));
+      const nuc = 2800;
+      // Kesällä CHP lähes nollassa, talvella korkealla
+      const coldFactor = Math.max(0, (4-month)/4 + (month-9)/4);
+      const chp = Math.max(400, 1700*coldFactor*scalC + 600*(1-coldFactor));
+      const wnd = Math.max(0, 900 + Math.sin(i/36*Math.PI)*400);
+      const hyd = Math.max(300, c - nuc - chp - wnd - 300);
+      const p = nuc + hyd + chp + wnd;
+      result.push({ time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
+                    temp:null, tempHki:null, tempKuo:null, tempRov:null,
+                    _baseline:true });
+    }
+  }
+  return result;
+}
+
 async function init() {
   const btn = document.getElementById('btnRefresh');
   btn.disabled = true;
@@ -1497,144 +1548,27 @@ async function init() {
   const errors = [], layerErrors = [];
 
   // Lataa olemassaoleva puskuri
-  const cachedData = cacheLoad();
-  const cacheInfo = cacheStats(cachedData);
-  const missingHours = Math.max(0, 168 - cacheInfo.hours);
-  // Ohita chunked-haku jos data on tuoretta (<2h vanha) tai auto-refresh
-  const cacheAge = cacheInfo.newest ? (Date.now() - new Date(cacheInfo.newest).getTime()) / 3.6e6 : 999;
-  const needsChunked = missingHours > 24 && cacheAge > 2;
+  // Yksinkertainen haku — yksi pyyntö per datasetti, nopea
+  setStatus('loading', [['DS 124', 'kulutus…']]);
+  try {
+    cRows = await fetchSeriesRange(DS.consumption,
+      new Date(Date.now() - 28*3.6e6), new Date(), 500);
+  } catch(e) { errors.push('DS 124: ' + e.message); cRows = []; }
 
-  // Edistymispalkki näkyviin jos tarvitaan chunked-haku
-  const progEl = document.getElementById('fetchProgress');
-  const barEl  = document.getElementById('fetchBar');
-  const msgEl  = document.getElementById('fetchMsg');
-  const showProgress = (cur, tot, label) => {
-    if (progEl) {
-      progEl.style.display = 'block';
-      if (barEl) barEl.style.width = (cur / tot * 100).toFixed(0) + '%';
-      if (msgEl) msgEl.textContent = label || `Chunk ${cur}/${tot}…`;
-    }
-  };
+  await new Promise(r => setTimeout(r, 1500));
 
-  const chunksTotal = needsChunked ? Math.ceil(missingHours / 48) * 2 : 2;
-  const etaSec = needsChunked ? Math.ceil(chunksTotal * 1.5) : 4;
-  setStatus('loading', [['Ladataan', needsChunked
-    ? 'W168-historia — odota ~' + etaSec + 's (' + Math.ceil(missingHours/48) + '+' + Math.ceil(missingHours/48) + ' kutsua)'
-    : 'uusimmat ' + (168 - cacheInfo.hours) + 'h…']]);
-
-  if (needsChunked) {
-    // Chunked-haku: 24h palasissa taaksepäin
-    const chunksNeeded = Math.ceil(missingHours / 24);
+  setStatus('loading', [['DS 192', 'tuotanto…']]);
+  try {
+    pRows = await fetchSeriesRange(DS.production,
+      new Date(Date.now() - 28*3.6e6), new Date(), 500);
+  } catch(e) {
     try {
-      cRows = await fetchHistoryChunked(DS.consumption, missingHours, 48,
-        (cur, tot) => {
-          showProgress(cur, tot * 2, `DS 124 kulutus: chunk ${cur}/${tot}…`);
-          setStatus('loading', [['DS 124', `historia chunk ${cur}/${tot}…`]]);
-        });
-    } catch(e) { errors.push('DS 124: ' + e.message); cRows = []; }
-
-    try {
-      cRows = cRows.concat(await fetchSeries(DS.consumption, 14, 20));
-    } catch(e) { /* live chunk optional */ }
-
-    await new Promise(r => setTimeout(r, 1000));
-
-    try {
-      pRows = await fetchHistoryChunked(DS.production, missingHours, 48,
-        (cur, tot) => {
-          showProgress(tot + cur, tot * 2, `DS 192 tuotanto: chunk ${cur}/${tot}…`);
-          setStatus('loading', [['DS 192', `historia chunk ${cur}/${tot}…`]]);
-        });
-    } catch(e) {
-      try { pRows = await fetchHistoryChunked(DS.production2, missingHours, 48); }
-      catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
-    }
-
-    try {
-      pRows = pRows.concat(await fetchSeries(DS.production, 14, 20));
-    } catch(e) { /* live chunk optional */ }
-
-  } else {
-    // Normaali: vain viimeisin ~14h
-    try {
-      setStatus('loading', [['DS 124', 'kulutus (live)…']]);
-      cRows = await fetchSeries(DS.consumption, 14, 20);
-    } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
-
-    await new Promise(r => setTimeout(r, 1500));
-
-    try {
-      setStatus('loading', [['DS 192', 'tuotanto (live)…']]);
-      pRows = await fetchSeries(DS.production, 14, 20);
-    } catch (e) {
-      try {
-        pRows = await fetchSeries(DS.production2, 14, 20);
-        errors.push('DS 192 → DS 74');
-      } catch (e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
-    }
+      pRows = await fetchSeriesRange(DS.production2,
+        new Date(Date.now() - 28*3.6e6), new Date(), 500);
+      errors.push('DS 192 → DS 74');
+    } catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
 
-  if (progEl) progEl.style.display = 'none';
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch nuclear (DS 87)
-  try {
-    setStatus('loading', [['DS 87', 'ydinvoima…']]);
-    nucRows = await fetchSeries(DS.nuclear, 175, 200);
-  } catch (e) { layerErrors.push('DS 87'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch hydro (DS 191)
-  try {
-    setStatus('loading', [['DS 191', 'vesivoima…']]);
-    hydRows = await fetchSeries(DS.hydro, 175, 200);
-  } catch (e) { layerErrors.push('DS 191'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch wind (DS 181)
-  try {
-    setStatus('loading', [['DS 181', 'tuulivoima…']]);
-    wndRows = await fetchSeries(DS.wind, 175, 200);
-  } catch (e) { layerErrors.push('DS 181'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch CHP district heating (DS 201)
-  let chpDHRows = null;
-  try {
-    setStatus('loading', [['DS 201', 'CHP kaukolämpö…']]);
-    chpDHRows = await fetchSeries(DS.chpDH, 175, 200);
-  } catch (e) { layerErrors.push('DS 201'); }
-
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Fetch CHP industrial (DS 202)
-  let chpIndRows = null;
-  try {
-    setStatus('loading', [['DS 202', 'CHP teollisuus…']]);
-    chpIndRows = await fetchSeries(DS.chpInd, 175, 200);
-  } catch (e) { layerErrors.push('DS 202'); }
-
-  await new Promise(r => setTimeout(r, 800));
-
-  // Fetch temperature (Open-Meteo, optional, no rate limit needed)
-  let tempMap = null;
-  try {
-    setStatus('loading', [['Open-Meteo', 'Helsinki · Kuopio · Rovaniemi…']]);
-    tempMap = await fetchTemperature();
-  } catch (e) { layerErrors.push('lämpötila'); }
-
-  // Fetch spot (optional)
-  try {
-    setStatus('loading', [['DS 105', 'spot €/MWh…']]);
-    const sRows = await fetchSeries(DS.spot, 6, 10);
-    if (sRows.length) spotVal = sRows[sRows.length - 1].value;
-  } catch (e) { /* optional */ }
-
-  // Merge
   if (!cRows.length || !pRows.length) {
     // Jos puskurissa on oikeaa dataa, käytetään sitä eikä synteettistä
     if (cachedData.length >= 48) {
@@ -1652,19 +1586,16 @@ async function init() {
       ]);
     }
   } else {
-    const newData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
-    // Yhdistä puskuriin ja tallenna
-    rawData = cacheMerge(cachedData, newData);
-    cacheSave(rawData);
+    const liveData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
     lastFetch = new Date();
-    const stats = cacheStats(rawData);
+    rawData = buildW168(liveData);
     const layerCount = rawData.filter(d => d.nuc != null).length;
-    const tempCount = rawData.filter(d => d.temp != null).length;
-    const dataWarn = rawData.length < 48;
+    const tempCount  = rawData.filter(d => d.temp != null).length;
+    const liveCount  = liveData.length;
     const statusItems = [
-      ['Tila', dataWarn ? 'Live — kerätään dataa' : 'Live'],
-      ['Puskuri', stats.hours + 'h / 168h' + (dataWarn ? ' ⚠' : ' ✓')],
-      ['Pisteet', rawData.length + ' h' + (dataWarn ? ' — EPP alustava' : '')],
+      ['Tila',  liveCount >= 12 ? 'Live' : 'Live (osittainen)'],
+      ['Live',  liveCount + ' h · viimeisin data'],
+      ['W168',  rawData.length + ' h · live + kausibaseline'],
       ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
       ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' : 'ei saatavilla', tempCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
