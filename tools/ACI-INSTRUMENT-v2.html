@@ -257,6 +257,12 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <span class="status-item" id="sMsg">Ladataan dataa…</span>
     </div>
     <button class="btn-refresh" id="btnRefresh" onclick="init()" disabled>&#9654;&nbsp; Päivitä</button>
+    <div id="fetchProgress" style="display:none;font-family:var(--mono);font-size:.55rem;color:var(--muted);width:100%;margin-top:.4rem;">
+      <div style="height:3px;background:var(--paper-3);border:1px solid var(--rule);margin-bottom:.3rem;">
+        <div id="fetchBar" style="height:100%;background:var(--accent);width:0%;transition:width .3s;"></div>
+      </div>
+      <span id="fetchMsg">Haetaan…</span>
+    </div>
   </div>
 
   <!-- §01 Current posture -->
@@ -1514,33 +1520,76 @@ async function init() {
   // Lataa olemassaoleva puskuri
   const cachedData = cacheLoad();
   const cacheInfo = cacheStats(cachedData);
-  const needsFullFetch = cacheInfo.hours < 12; // ensimmäinen lataus
-  const fetchHours = needsFullFetch ? 175 : 14; // normaali: vain viimeisin ~12h
+  const missingHours = Math.max(0, 168 - cacheInfo.hours);
+  const needsChunked = missingHours > 24;
 
-  setStatus('loading', [['Puskuri', cacheInfo.hours + 'h / 168h — haetaan uusimmat…']]);
+  // Edistymispalkki näkyviin jos tarvitaan chunked-haku
+  const progEl = document.getElementById('fetchProgress');
+  const barEl  = document.getElementById('fetchBar');
+  const msgEl  = document.getElementById('fetchMsg');
+  const showProgress = (cur, tot, label) => {
+    if (progEl) {
+      progEl.style.display = 'block';
+      if (barEl) barEl.style.width = (cur / tot * 100).toFixed(0) + '%';
+      if (msgEl) msgEl.textContent = label || `Chunk ${cur}/${tot}…`;
+    }
+  };
 
-  // Fetch consumption
-  try {
-    setStatus('loading', [['DS 124', 'kulutus ' + fetchHours + 'h…']]);
-    cRows = await fetchSeries(DS.consumption, fetchHours, 200);
-  } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
+  setStatus('loading', [['Puskuri', cacheInfo.hours + 'h / 168h — ' + (needsChunked ? 'haetaan historia…' : 'haetaan uusimmat…')]]);
 
-  await new Promise(r => setTimeout(r, 1500));
-
-  // Fetch total production — DS 192 ensin, DS 74 fallbackina
-  try {
-    setStatus('loading', [['DS 192', 'tuotanto…']]);
-    pRows = await fetchSeries(DS.production, fetchHours, 200);
-  } catch (e) {
+  if (needsChunked) {
+    // Chunked-haku: 24h palasissa taaksepäin
+    const chunksNeeded = Math.ceil(missingHours / 24);
     try {
-      setStatus('loading', [['DS 74', 'tuotanto (fallback)…']]);
-      pRows = await fetchSeries(DS.production2, fetchHours, 200);
-      errors.push('DS 192 → DS 74');
-    } catch (e2) {
-      errors.push('DS 192+74: ' + e2.message);
-      pRows = [];
+      cRows = await fetchHistoryChunked(DS.consumption, missingHours, 24,
+        (cur, tot) => {
+          showProgress(cur, tot * 2, `DS 124 kulutus: chunk ${cur}/${tot}…`);
+          setStatus('loading', [['DS 124', `historia chunk ${cur}/${tot}…`]]);
+        });
+    } catch(e) { errors.push('DS 124: ' + e.message); cRows = []; }
+
+    try {
+      cRows = cRows.concat(await fetchSeries(DS.consumption, 14, 20));
+    } catch(e) { /* live chunk optional */ }
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    try {
+      pRows = await fetchHistoryChunked(DS.production, missingHours, 24,
+        (cur, tot) => {
+          showProgress(tot + cur, tot * 2, `DS 192 tuotanto: chunk ${cur}/${tot}…`);
+          setStatus('loading', [['DS 192', `historia chunk ${cur}/${tot}…`]]);
+        });
+    } catch(e) {
+      try { pRows = await fetchHistoryChunked(DS.production2, missingHours, 24); }
+      catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
+    }
+
+    try {
+      pRows = pRows.concat(await fetchSeries(DS.production, 14, 20));
+    } catch(e) { /* live chunk optional */ }
+
+  } else {
+    // Normaali: vain viimeisin ~14h
+    try {
+      setStatus('loading', [['DS 124', 'kulutus (live)…']]);
+      cRows = await fetchSeries(DS.consumption, 14, 20);
+    } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
+
+    await new Promise(r => setTimeout(r, 1500));
+
+    try {
+      setStatus('loading', [['DS 192', 'tuotanto (live)…']]);
+      pRows = await fetchSeries(DS.production, 14, 20);
+    } catch (e) {
+      try {
+        pRows = await fetchSeries(DS.production2, 14, 20);
+        errors.push('DS 192 → DS 74');
+      } catch (e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
     }
   }
+
+  if (progEl) progEl.style.display = 'none';
 
   await new Promise(r => setTimeout(r, 1200));
 
@@ -2047,6 +2096,45 @@ function cacheStats(data) {
   const newest = new Date(Math.max(...data.map(d => d.time.getTime())));
   const hours = Math.round((newest - oldest) / 3.6e6) + 1;
   return { hours, oldest, newest };
+}
+
+
+// ── Chunk-pohjainen historiahaku ──────────────────────────────────────────────
+async function fetchSeriesRange(dsId, startDate, endDate, size = 30) {
+  const url = `${PROXY}?ds=${dsId}` +
+    `&start=${encodeURIComponent(startDate.toISOString())}` +
+    `&end=${encodeURIComponent(endDate.toISOString())}` +
+    `&size=${size}`;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await fetch(url);
+    if (r.status === 429) {
+      await new Promise(res => setTimeout(res, 3000 * (attempt + 1)));
+      continue;
+    }
+    if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
+    const j = await r.json();
+    const rows = (j.data || j).filter(d => d.value != null && d.value > 0);
+    return rows;
+  }
+  throw new Error(`DS ${dsId} rate limited`);
+}
+
+async function fetchHistoryChunked(dsId, totalHours = 168, chunkHours = 24, onProgress) {
+  const now = new Date();
+  const numChunks = Math.ceil(totalHours / chunkHours);
+  const allRows = [];
+
+  for (let i = numChunks - 1; i >= 0; i--) {
+    const chunkEnd   = new Date(now.getTime() - i * chunkHours * 3.6e6);
+    const chunkStart = new Date(chunkEnd.getTime() - chunkHours * 3.6e6);
+    if (onProgress) onProgress(numChunks - i, numChunks);
+    try {
+      const rows = await fetchSeriesRange(dsId, chunkStart, chunkEnd, 30);
+      allRows.push(...rows);
+    } catch(e) { /* ohita epäonnistunut chunk */ }
+    if (i > 0) await new Promise(r => setTimeout(r, 1500));
+  }
+  return allRows;
 }
 
 // ── §10 Rakenteellinen paine ─────────────────────────────────────────────────
