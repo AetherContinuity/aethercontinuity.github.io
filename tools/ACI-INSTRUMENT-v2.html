@@ -1630,11 +1630,21 @@ async function init() {
 
   // Merge
   if (!cRows.length || !pRows.length) {
-    rawData = generateSynthetic(168);
-    setStatus('demo', [
-      ['Tila', 'Demo-data (API-virhe)'],
-      ['Virhe', errors.join(' · '), true],
-    ]);
+    // Jos puskurissa on oikeaa dataa, käytetään sitä eikä synteettistä
+    if (cachedData.length >= 48) {
+      rawData = cachedData;
+      setStatus('live', [
+        ['Tila', 'Live (puskuri)'],
+        ['Puskuri', cacheInfo.hours + 'h / 168h ✓'],
+        ['Huom', 'Uusin haku epäonnistui — puskuridata käytössä', true],
+      ]);
+    } else {
+      rawData = generateSynthetic(168);
+      setStatus('demo', [
+        ['Tila', 'Demo-data (API-virhe)'],
+        ['Virhe', errors.join(' · '), true],
+      ]);
+    }
   } else {
     const newData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
     // Yhdistä puskuriin ja tallenna
