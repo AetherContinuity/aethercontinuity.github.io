@@ -211,7 +211,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.1</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.2</div>
   </div>
   <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 87 · 191 · 181 · 105</div>
 </div>
@@ -239,7 +239,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="epp-badge-dot" id="eppDot"></div>
           <span class="epp-badge-txt" id="eppTxt">—</span>
         </div>
-        <div class="epp-sub" id="eppSub">W168 · synteettinen · DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20</div>
+        <div class="epp-sub" id="eppSub">W168 · v3: (1−FS)×0.35 + SP×0.30 + DP_s×0.20 + WR×0.15</div>
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -533,13 +533,13 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <div class="bounds-section">
     <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
-      <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä.</li>
-      <li>Posture-luokittelu ei ennusta yksittäisiä sähkökatkoja tai spot-hinnan kehitystä.</li>
-      <li>EPP on synteettinen indeksi — komponenttiarvot (DP, DC, NIR, SP) ovat ensisijainen tulkinnan lähde.</li>
-      <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä.</li>
-      <li>MW ≠ MWh. Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa — keskeistä on kestävyyskerros ajan yli.</li>
-      <li>Riskisiirto on rakenteellinen havainto, ei moraalinen arvio yksittäisistä toimijoista.</li>
-      <li>Fingrid-data on tuntiresoluutiota — lyhytaikaiset piikkit eivät näy suoraan indikaattoreissa.</li>
+      <li><strong>Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
+      <li><strong>Rakenteellinen rajoite 2 — Ei lämpötilakontekstia:</strong> Suomen energiajärjestelmä on fundamentaalisesti lämpötilasidonnainen. Sama EPP-arvo tammikuussa normaalivuodella vs. poikkeuksellisella pakkassäällä (−20°C+) on täysin eri asia. DP_s käyttää kuukausibaseline-normalisointia mutta ei todellista säädataa. Säädatan integrointi (esim. FMI) parantaisi diagnostiikkaa merkittävästi.</li>
+      <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
+      <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
+      <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
+      <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
+      <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
     </ul>
   </div>
 
@@ -584,6 +584,13 @@ const DS = {
 const BASELINE = { cLow: 6500, cHigh: 13500 }; // MW range for DP normalization
 const STRESS_THRESHOLD = 0.05; // 5% gap = stress hour
 const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
+
+// Kausikorjaus: kuukausittaiset kulutusbaselinet (MW, Suomi, historiallinen ka)
+const MONTHLY_BASELINE = {
+  1:11200, 2:10800, 3:10000, 4:8800,  5:7800,  6:7200,
+  7:7000,  8:7400,  9:8200, 10:9200, 11:10400, 12:11000
+};
+const SEASONAL_SIGMA = 1800; // MW — tyypillinen kuukausinsisäinen vaihteluväli / 2
 
 let rawData = []; // merged hourly { time, c, p, gap, nuc, hyd, wnd }
 let layerData = { nuc: [], hyd: [], wnd: [] }; // raw layer series for alignment
@@ -641,37 +648,65 @@ function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRow
 function calcWindow(slice) {
   if (!slice.length) return null;
   const n = slice.length;
-  const avgC = slice.reduce((s, d) => s + d.c, 0) / n;
-  const avgP = slice.reduce((s, d) => s + d.p, 0) / n;
+  const avgC = slice.reduce((s,d) => s + d.c, 0) / n;
+  const avgP = slice.reduce((s,d) => s + d.p, 0) / n;
   const avgGap = avgC - avgP;
 
-  const dp = Math.min(1, Math.max(0, (avgC - BASELINE.cLow) / (BASELINE.cHigh - BASELINE.cLow)));
-  const dc = Math.min(1, Math.max(0, avgP / avgC));
+  // Kausikorjattu DP: poikkeama kuukauden historiallisesta baselinesta
+  const modalMonth = (() => {
+    const counts = {};
+    slice.forEach(d => { const m = d.time.getMonth()+1; counts[m] = (counts[m]||0)+1; });
+    return +Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+  })();
+  const baselineC = MONTHLY_BASELINE[modalMonth] || 9200;
+  const dp_s = Math.min(1, Math.max(0, (avgC - baselineC) / SEASONAL_SIGMA));
+
+  // Legacy — säilytetään infoksi, ei enää EPP:n pääkomponentteina
+  const dp  = Math.min(1, Math.max(0, (avgC - BASELINE.cLow) / (BASELINE.cHigh - BASELINE.cLow)));
+  const dc  = Math.min(1, Math.max(0, avgP / avgC));
   const nir = Math.min(1, Math.max(0, Math.max(0, avgGap) / avgC));
 
   const stressH = slice.filter(d => d.gap > d.c * STRESS_THRESHOLD).length;
   const sp = stressH / n;
 
-  const epp = Math.min(1, Math.max(0, (1 - dc) * 0.30 + sp * 0.30 + dp * 0.20 + nir * 0.20));
-
-  // Layer composition (only where data exists)
+  // Layer metrics
   const lSlice = slice.filter(d => d.nuc != null && d.hyd != null);
-  let eci = null, avgNuc = null, avgHyd = null, avgWnd = null;
-  if (lSlice.length > 0) {
-    avgNuc = lSlice.reduce((s,d) => s + d.nuc, 0) / lSlice.length;
-    avgHyd = lSlice.reduce((s,d) => s + d.hyd, 0) / lSlice.length;
+  let eci=null, eciSemi=null, avgNuc=null, avgHyd=null, avgWnd=null, avgChp=null;
+  let fs=null, wr=null, eppMode='fallback';
+
+  if (lSlice.length >= Math.min(12, Math.max(1, n * 0.5))) {
+    avgNuc = lSlice.reduce((s,d)=>s+d.nuc,0)/lSlice.length;
+    avgHyd = lSlice.reduce((s,d)=>s+d.hyd,0)/lSlice.length;
     const wSlice = slice.filter(d => d.wnd != null);
-    avgWnd = wSlice.length ? wSlice.reduce((s,d) => s + d.wnd, 0) / wSlice.length : null;
+    avgWnd = wSlice.length ? wSlice.reduce((s,d)=>s+d.wnd,0)/wSlice.length : null;
     const chpSlice = slice.filter(d => d.chp != null);
-    const avgChpVal = chpSlice.length ? chpSlice.reduce((s,d) => s + d.chp, 0) / chpSlice.length : null;
-    const avgPl = lSlice.reduce((s,d) => s + d.p, 0) / lSlice.length;
-    eci = avgPl > 0 ? Math.min(1, (avgNuc + avgHyd) / avgPl) : null;
-    var eciSemi = (avgPl > 0 && avgChpVal != null) ? Math.min(1, (avgNuc + avgHyd + avgChpVal) / avgPl) : null;
-    var avgChp = avgChpVal;
+    avgChp = chpSlice.length ? chpSlice.reduce((s,d)=>s+d.chp,0)/chpSlice.length : null;
+    const avgPl = lSlice.reduce((s,d)=>s+d.p,0)/lSlice.length;
+    eci = avgPl > 0 ? Math.min(1, (avgNuc+avgHyd)/avgPl) : null;
+    eciSemi = (avgPl>0 && avgChp!=null) ? Math.min(1,(avgNuc+avgHyd+avgChp)/avgPl) : null;
+    // FS: firm capacity / kulutus — riippumaton muuttuja
+    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
+    // WR: tuulivoiman osuus — variabiliteettiriski
+    wr = (avgWnd!=null && avgPl>0) ? Math.min(1, avgWnd/avgPl) : null;
+    if (fs != null && wr != null) eppMode = 'v3';
   }
 
-  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n, eci, eciSemi: (typeof eciSemi !== 'undefined' ? eciSemi : null), avgNuc, avgHyd, avgWnd, avgChp: (typeof avgChp !== 'undefined' ? avgChp : null) };
+  // EPP laskenta
+  let epp;
+  if (eppMode === 'v3') {
+    // v3: riippumattomat komponentit, kausikorjattu DP
+    // (1-FS)*0.35 + SP*0.30 + DP_s*0.20 + WR*0.15
+    epp = Math.min(1, Math.max(0, (1-fs)*0.35 + sp*0.30 + dp_s*0.20 + wr*0.15));
+  } else {
+    // Fallback: (1-DC)*0.35 + SP*0.30 + DP_s*0.20 + NIR*0.15
+    epp = Math.min(1, Math.max(0, (1-dc)*0.35 + sp*0.30 + dp_s*0.20 + nir*0.15));
+  }
+
+  return { avgC, avgP, avgGap, dp, dp_s, dc, nir, sp, epp, eppMode,
+           stressH, n, modalMonth, baselineC,
+           eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp };
 }
+
 
 function computeAll(data) {
   return {
@@ -744,6 +779,10 @@ function renderPosture(m, spot) {
       eciEl.textContent = (w24.eci * 100).toFixed(1) + ' %';
       eciEl.style.color = w24.eci >= 0.60 ? '#2d6b3a' : w24.eci >= 0.40 ? '#7a6010' : '#8b1010';
     }
+    const blEl = document.getElementById('pgBaseline');
+    if (blEl && w24.baselineC) blEl.textContent = Math.round(w24.baselineC).toLocaleString('fi-FI') + ' MW';
+    const modeEl = document.getElementById('pgMode');
+    if (modeEl) { modeEl.textContent = w24.eppMode === 'v3' ? 'v3 (FS+WR)' : 'fallback (DC/NIR)'; modeEl.style.color = w24.eppMode === 'v3' ? 'var(--sg)' : 'var(--sy)'; }
     if (w24.avgNuc != null) document.getElementById('pgNuc').textContent = fmt.mw(w24.avgNuc);
     if (w24.avgWnd != null) document.getElementById('pgWind').textContent = fmt.mw(w24.avgWnd);
   }
@@ -760,39 +799,34 @@ function renderMetrics(m) {
 
   const metrics = [
     {
-      id: 'A · DP', name: 'Demand Pressure',
-      desc: 'Kulutuspaine suhteessa historialliseen vaihteluväliin (6 500–13 500 MW). Korkea DP = korkea kysyntä.',
-      vals: [w24?.dp, w72?.dp, w168?.dp], weight: '0.20',
-      fmt: v => fmt.pct(v),
+    { id:'A · DP_s', name:'Demand Pressure — kausikorjattu',
+      desc:'Kulutuksen poikkeama kuukauden historiallisesta baselinesta (σ=1800 MW). DP_s=0 = odotuksen mukainen. DP_s=1 = poikkeuksellinen huippu. Korvaa absoluuttisen DP-mittarin.',
+      vals:[w24?.dp_s, w72?.dp_s, w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
     },
-    {
-      id: 'B · DC', name: 'Domestic Coverage',
-      desc: 'Kotimainen tuotanto / kulutus. DC = 1.0 tarkoittaa täyttä omavaraisuutta. EPP-painossa käytetään (1 − DC).',
-      vals: [w24?.dc, w72?.dc, w168?.dc], weight: '0.30',
-      fmt: v => fmt.pct(v),
-      invert: true,
+    { id:'B · FS', name:'FirmShare — firm capacity coverage',
+      desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS). Vaatii DS 87+191.',
+      vals:[w24?.fs, w72?.fs, w168?.fs], weight:'0.35', fmt: v => v != null ? fmt.pct(v) : '—', invert: true,
     },
-    {
-      id: 'C · NIR', name: 'Net Import Reliance',
-      desc: 'max(0, kulutus − tuotanto) / kulutus. Mittaa nettomaahantuonnin osuuden kulutuksesta.',
-      vals: [w24?.nir, w72?.nir, w168?.nir], weight: '0.20',
-      fmt: v => fmt.pct(v),
+    { id:'C · WR', name:'WindRisk — variabiliteettiriski',
+      desc:'Tuulivoiman osuus kokonaistuotannosta. Korkea WR = endurance-riski tuulikato-skenaariossa. Riippumaton FS:stä ja SP:stä. Vaatii DS 181.',
+      vals:[w24?.wr, w72?.wr, w168?.wr], weight:'0.15', fmt: v => v != null ? fmt.pct(v) : '—',
     },
-    {
-      id: 'D · SP', name: 'Stress Persistence',
-      desc: 'Stressituntien osuus ikkunasta. Stressitunti = kulutus > 1.05 × tuotanto. Threshold: Normal < 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like > 50 %.',
-      vals: [w24?.sp, w72?.sp, w168?.sp], weight: '0.30',
-      fmt: v => fmt.pct(v),
-      useSP: true,
+    { id:'D · SP', name:'Stress Persistence',
+      desc:'Stressituntien osuus ikkunasta. Stressitunti = kulutus > 1.05 × tuotanto. Normal <15% · Tight 15–30% · Elevated 30–50% · BP-like >50%.',
+      vals:[w24?.sp, w72?.sp, w168?.sp], weight:'0.30', fmt: v => fmt.pct(v), useSP: true,
     },
-    {
-      id: 'E · EPP', name: 'Endurance Pressure Proxy',
-      desc: 'Synteettinen yhdistelmäindeksi [0–1]. Komponenttipainot: DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20. Korkea EPP = korkea kestävyyspaine.',
-      vals: [w24?.epp, w72?.epp, w168?.epp], weight: '—',
-      fmt: v => v.toFixed(3),
-      isEPP: true,
+    { id:'— DC', name:'Domestic Coverage (info — ei EPP:ssä)',
+      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.2:ssa. Esitetään kontekstiarvona.',
+      vals:[w24?.dc, w72?.dc, w168?.dc], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
-  ];
+    { id:'— NIR', name:'Net Import Reliance (info — ei EPP:ssä)',
+      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.2:ssa.',
+      vals:[w24?.nir, w72?.nir, w168?.nir], weight:'info', fmt: v => fmt.pct(v), info: true,
+    },
+    { id:'E · EPP', name:'Endurance Pressure Proxy',
+      desc:'v3 (layer-data saatavilla): (1−FS)×0.35 + SP×0.30 + DP_s×0.20 + WR×0.15. Fallback: (1−DC)×0.35 + SP×0.30 + DP_s×0.20 + NIR×0.15.',
+      vals:[w24?.epp, w72?.epp, w168?.epp], weight:'—', fmt: v => v.toFixed(3), isEPP: true,
+    },
 
   const tbody = document.getElementById('metBody');
   tbody.innerHTML = '';
