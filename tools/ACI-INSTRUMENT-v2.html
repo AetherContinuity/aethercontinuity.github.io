@@ -835,21 +835,24 @@ async function fetchTemperature() {
 
 function snapHour(ts) {
   const d = new Date(ts);
-  d.setMinutes(0, 0, 0);
-  return d.getTime();
+  // UTC-pohjainen — välttää timezone-mismatchin
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours());
 }
 
 function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap) {
   const cMap = new Map(), pMap = new Map();
   const nucMap = new Map(), hydMap = new Map(), wndMap = new Map(), chpDHMap = new Map(), chpIndMap = new Map();
-  const snap = ts => { const d = new Date(ts); d.setMinutes(0,0,0); return d.getTime(); };
-  cRows.forEach(r => cMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  pRows.forEach(r => pMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  if (nucRows) nucRows.forEach(r => nucMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  if (hydRows) hydRows.forEach(r => hydMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  if (wndRows) wndRows.forEach(r => wndMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  if (chpDHRows) chpDHRows.forEach(r => chpDHMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
-  if (chpIndRows) chpIndRows.forEach(r => chpIndMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  const snap = ts => snapHour(ts); // UTC-pohjainen
+  const snapR = r => snap(r.start_time||r.startTime||r.time||r.timestamp);
+  cRows.forEach(r => { if(r.value != null && r.value > 0) cMap.set(snapR(r), r.value); });
+  pRows.forEach(r => { if(r.value != null && r.value > 0) pMap.set(snapR(r), r.value); });
+  const snapVal = r => snap(r.start_time||r.startTime||r.time||r.timestamp);
+  const pos = v => v != null && v >= 0 ? v : null; // filtteröi negatiiviset
+  if (nucRows)  nucRows.forEach(r  => { const v=pos(r.value); if(v!=null) nucMap.set(snapVal(r), v); });
+  if (hydRows)  hydRows.forEach(r  => { const v=pos(r.value); if(v!=null) hydMap.set(snapVal(r), v); });
+  if (wndRows)  wndRows.forEach(r  => { const v=pos(r.value); if(v!=null) wndMap.set(snapVal(r), v); });
+  if (chpDHRows) chpDHRows.forEach(r => { const v=pos(r.value); if(v!=null) chpDHMap.set(snapVal(r), v); });
+  if (chpIndRows) chpIndRows.forEach(r => { const v=pos(r.value); if(v!=null) chpIndMap.set(snapVal(r), v); });
   const allKeys = new Set([...cMap.keys(), ...pMap.keys()]);
   const merged = [];
   allKeys.forEach(k => {
@@ -1601,9 +1604,10 @@ async function init() {
     lastFetch = new Date();
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const tempCount = rawData.filter(d => d.temp != null).length;
+    const dataWarn = rawData.length < 48;
     const statusItems = [
-      ['Tila', 'Live'],
-      ['Pisteet', rawData.length + ' h'],
+      ['Tila', dataWarn ? 'Live — vähän dataa' : 'Live'],
+      ['Pisteet', rawData.length + ' h' + (dataWarn ? ' ⚠ alle 48h — EPP epäluotettava' : '')],
       ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
       ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' : 'ei saatavilla', tempCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
