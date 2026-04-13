@@ -97,7 +97,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .layer-legend{display:flex;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.25rem;}
 .layer-lg{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);}
 .layer-swatch{width:12px;height:12px;flex-shrink:0;}
-.layer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.layer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem;}
 .layer-card{background:var(--paper-2);border:1px solid var(--rule);padding:.85rem 1rem;}
 .layer-card-lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
 .layer-card-val{font-family:var(--mono);font-size:1.1rem;font-weight:500;line-height:1.1;}
@@ -316,7 +316,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §03 Layer Composition -->
   <div class="layer-section">
     <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Tuotantorakenne — Layer Composition &amp; ECI</span></div>
-    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 87) + vesivoima (DS 191). Variabili kerros: tuulivoima (DS 181). Jäännös (muu) = kokonaistuotanto − ydin − hydro − tuuli ≈ CHP, biomassa, lauhdutus. ECI-kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
+    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 87) + vesivoima (DS 191). Semi-vakaa: yhteistuotanto CHP (DS 201 kaukolämpö + DS 202 teollisuus) — negatiivinen korrelaatio lämpötilaan, eli korkeimmillaan juuri talvihuipun aikana. Variabili: tuulivoima (DS 181). ECI (firm) = (ydin+hydro)/tuotanto · ECI (semi) = (ydin+hydro+CHP)/tuotanto. Kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
 
     <!-- Stacked bar W24 -->
     <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">W24 · Tuotantorakenne (%)</div>
@@ -324,14 +324,16 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="layer-bar-outer" id="layerBar">
         <div class="layer-seg" id="lsNuc" style="background:#3a5fa0;" data-tip="Ydinvoima"></div>
         <div class="layer-seg" id="lsHyd" style="background:#2d6b3a;" data-tip="Vesivoima"></div>
+        <div class="layer-seg" id="lsCHP" style="background:#a05c30;" data-tip="Yhteistuotanto (CHP)"></div>
         <div class="layer-seg" id="lsWnd" style="background:#7a9cc0;" data-tip="Tuulivoima"></div>
-        <div class="layer-seg" id="lsOth" style="background:#c8bfad;" data-tip="Muu (CHP, biomassa…)"></div>
+        <div class="layer-seg" id="lsOth" style="background:#c8bfad;" data-tip="Residuaali (biomassa, lauhdutus…)"></div>
       </div>
       <div class="layer-legend">
         <div class="layer-lg"><div class="layer-swatch" style="background:#3a5fa0;"></div>Ydinvoima · DS 87 · vakaa</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#2d6b3a;"></div>Vesivoima · DS 191 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#a05c30;"></div>Yhteistuotanto CHP · DS 201+202 · semi-vakaa · talvikorrelaatio ↑</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#7a9cc0;"></div>Tuulivoima · DS 181 · variabili</div>
-        <div class="layer-lg"><div class="layer-swatch" style="background:#c8bfad;"></div>Muu (CHP, biomassa, lauhdutus)</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#c8bfad;"></div>Residuaali (biomassa, lauhdutus…)</div>
       </div>
     </div>
 
@@ -364,6 +366,16 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div class="layer-card-val" id="lcWnd">—</div>
         <div class="layer-card-sub">MW ka · DS 181 · variabili</div>
       </div>
+      <div class="layer-card" style="border-left:3px solid #a05c30;">
+        <div class="layer-card-lbl">CHP W24</div>
+        <div class="layer-card-val" id="lcCHP">—</div>
+        <div class="layer-card-sub">MW ka · DS 201+202 · semi-vakaa</div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-card-lbl">CHP-talvikorrelaatio</div>
+        <div class="layer-card-val" id="lcCHPCorr">—</div>
+        <div class="layer-card-sub">CHP/kulutus-suhde W24 vs W168</div>
+      </div>
     </div>
 
     <!-- Layer area chart -->
@@ -378,10 +390,12 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <th class="rh">ECI</th>
           <th class="rh">Ydin MW</th>
           <th class="rh">Hydro MW</th>
+          <th class="rh">CHP MW</th>
           <th class="rh">Tuuli MW</th>
-          <th class="rh">Muu MW</th>
-          <th class="rh">Tuotanto yhteensä</th>
-          <th class="rh">ECI-luokka</th>
+          <th class="rh">Residuaali MW</th>
+          <th class="rh">Tuotanto yht.</th>
+          <th class="rh">ECI firm</th>
+          <th class="rh">ECI semi</th>
         </tr>
       </thead>
       <tbody id="eciTableBody">
@@ -511,6 +525,8 @@ const DS = {
   nuclear:      87,  // Ydinvoima
   hydro:       191,  // Vesivoima
   wind:        181,  // Tuulivoima
+  chpDH:       201,  // Kaukolämmön yhteistuotanto
+  chpInd:      202,  // Teollisuuden yhteistuotanto
   spot:        105,  // Spot-hinta €/MWh
 };
 const BASELINE = { cLow: 6500, cHigh: 13500 }; // MW range for DP normalization
@@ -541,15 +557,17 @@ function snapHour(ts) {
   return d.getTime();
 }
 
-function mergeData(cRows, pRows, nucRows, hydRows, wndRows) {
+function mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows) {
   const cMap = new Map(), pMap = new Map();
-  const nucMap = new Map(), hydMap = new Map(), wndMap = new Map();
+  const nucMap = new Map(), hydMap = new Map(), wndMap = new Map(), chpDHMap = new Map(), chpIndMap = new Map();
   const snap = ts => { const d = new Date(ts); d.setMinutes(0,0,0); return d.getTime(); };
   cRows.forEach(r => cMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   pRows.forEach(r => pMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   if (nucRows) nucRows.forEach(r => nucMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   if (hydRows) hydRows.forEach(r => hydMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   if (wndRows) wndRows.forEach(r => wndMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  if (chpDHRows) chpDHRows.forEach(r => chpDHMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  if (chpIndRows) chpIndRows.forEach(r => chpIndMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   const allKeys = new Set([...cMap.keys(), ...pMap.keys()]);
   const merged = [];
   allKeys.forEach(k => {
@@ -560,6 +578,7 @@ function mergeData(cRows, pRows, nucRows, hydRows, wndRows) {
         nuc: nucMap.get(k) ?? null,
         hyd: hydMap.get(k) ?? null,
         wnd: wndMap.get(k) ?? null,
+        chp: (chpDHMap.get(k) != null || chpIndMap.get(k) != null) ? (chpDHMap.get(k) ?? 0) + (chpIndMap.get(k) ?? 0) : null,
       });
     }
   });
@@ -591,11 +610,15 @@ function calcWindow(slice) {
     avgHyd = lSlice.reduce((s,d) => s + d.hyd, 0) / lSlice.length;
     const wSlice = slice.filter(d => d.wnd != null);
     avgWnd = wSlice.length ? wSlice.reduce((s,d) => s + d.wnd, 0) / wSlice.length : null;
+    const chpSlice = slice.filter(d => d.chp != null);
+    const avgChpVal = chpSlice.length ? chpSlice.reduce((s,d) => s + d.chp, 0) / chpSlice.length : null;
     const avgPl = lSlice.reduce((s,d) => s + d.p, 0) / lSlice.length;
     eci = avgPl > 0 ? Math.min(1, (avgNuc + avgHyd) / avgPl) : null;
+    var eciSemi = (avgPl > 0 && avgChpVal != null) ? Math.min(1, (avgNuc + avgHyd + avgChpVal) / avgPl) : null;
+    var avgChp = avgChpVal;
   }
 
-  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n, eci, avgNuc, avgHyd, avgWnd };
+  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n, eci, eciSemi: (typeof eciSemi !== 'undefined' ? eciSemi : null), avgNuc, avgHyd, avgWnd, avgChp: (typeof avgChp !== 'undefined' ? avgChp : null) };
 }
 
 function computeAll(data) {
@@ -786,12 +809,15 @@ function renderLayerComp(m) {
     const tot = w24.avgP || 1;
     const pNuc = Math.max(0, w24.avgNuc / tot * 100);
     const pHyd = Math.max(0, (w24.avgHyd ?? 0) / tot * 100);
+    const pCHP = Math.max(0, (w24.avgChp ?? 0) / tot * 100);
     const pWnd = Math.max(0, (w24.avgWnd ?? 0) / tot * 100);
-    const pOth = Math.max(0, 100 - pNuc - pHyd - pWnd);
+    const pOth = Math.max(0, 100 - pNuc - pHyd - pCHP - pWnd);
     document.getElementById('lsNuc').style.width = pNuc.toFixed(1) + '%';
     document.getElementById('lsNuc').dataset.tip = `Ydinvoima ${pNuc.toFixed(1)}% · ${Math.round(w24.avgNuc)} MW`;
     document.getElementById('lsHyd').style.width = pHyd.toFixed(1) + '%';
     document.getElementById('lsHyd').dataset.tip = `Vesivoima ${pHyd.toFixed(1)}% · ${Math.round(w24.avgHyd ?? 0)} MW`;
+    document.getElementById('lsCHP').style.width = pCHP.toFixed(1) + '%';
+    document.getElementById('lsCHP').dataset.tip = `CHP ${pCHP.toFixed(1)}% · ${Math.round(w24.avgChp ?? 0)} MW`;
     document.getElementById('lsWnd').style.width = pWnd.toFixed(1) + '%';
     document.getElementById('lsWnd').dataset.tip = `Tuulivoima ${pWnd.toFixed(1)}% · ${Math.round(w24.avgWnd ?? 0)} MW`;
     document.getElementById('lsOth').style.width = pOth.toFixed(1) + '%';
@@ -811,6 +837,14 @@ function renderLayerComp(m) {
   };
   setECI('24',  w24?.eci);
   setECI('168', w168?.eci);
+  // Show eciSemi in sub
+  ['24','168'].forEach(sfx => {
+    const el = document.getElementById('eciW'+sfx);
+    const d = sfx==='24' ? w24 : w168;
+    if (el && d && d.eciSemi != null) {
+      el.title = `ECI semi (incl. CHP): ${(d.eciSemi*100).toFixed(1)}%`;
+    }
+  });
 
   // Layer cards
   const setCard = (id, val) => {
@@ -820,6 +854,18 @@ function renderLayerComp(m) {
   setCard('lcNuc', w24?.avgNuc);
   setCard('lcHyd', w24?.avgHyd);
   setCard('lcWnd', w24?.avgWnd);
+  setCard('lcCHP', w24?.avgChp);
+  // CHP winter correlation: CHP/consumption ratio W24 vs W168
+  if (w24?.avgChp != null && w168?.avgChp != null && w24.avgC > 0 && w168.avgC > 0) {
+    const r24 = w24.avgChp / w24.avgC;
+    const r168 = w168.avgChp / w168.avgC;
+    const corrEl = document.getElementById('lcCHPCorr');
+    if (corrEl) {
+      const delta = r24 - r168;
+      corrEl.textContent = (r24 * 100).toFixed(1) + '% / ' + (r168 * 100).toFixed(1) + '%';
+      corrEl.style.color = delta > 0.01 ? '#2d6b3a' : delta < -0.01 ? '#8b1010' : '#0e0d0b';
+    }
+  }
 
   // ECI table
   const tbody = document.getElementById('eciTableBody');
@@ -829,18 +875,21 @@ function renderLayerComp(m) {
     const eci = d.eci;
     const nuc = d.avgNuc != null ? Math.round(d.avgNuc) : '—';
     const hyd = d.avgHyd != null ? Math.round(d.avgHyd) : '—';
+    const chp = d.avgChp != null ? Math.round(d.avgChp) : '—';
     const wnd = d.avgWnd != null ? Math.round(d.avgWnd) : '—';
-    const stableSum = (d.avgNuc ?? 0) + (d.avgHyd ?? 0);
+    const stableSum = (d.avgNuc ?? 0) + (d.avgHyd ?? 0) + (d.avgChp ?? 0);
     const oth = d.avgNuc != null ? Math.round(Math.max(0, d.avgP - stableSum - (d.avgWnd ?? 0))) : '—';
     tbody.insertAdjacentHTML('beforeend', `<tr>
       <td style="font-family:var(--mono);font-weight:500;">${lbl}</td>
       <td class="rh" style="color:${eciColor(eci)};font-weight:500;">${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</td>
       <td class="rh">${nuc != '—' ? nuc.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${hyd != '—' ? hyd.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh" style="color:#a05c30;">${chp != '—' ? chp.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${wnd != '—' ? wnd.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${oth != '—' ? oth.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${Math.round(d.avgP).toLocaleString('fi-FI')}</td>
-      <td class="rh" style="color:${eciColor(eci)};font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;">${eciLabel(eci)}</td>
+      <td class="rh" style="color:${eciColor(eci)};font-weight:500;">${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</td>
+      <td class="rh" style="color:${eciColor(d.eciSemi)};">${d.eciSemi != null ? (d.eciSemi*100).toFixed(1)+'%' : '—'}</td>
     </tr>`);
   });
 
@@ -875,12 +924,14 @@ function drawLayerChart(data) {
 
   const nucTop  = d => d.nuc;
   const hydTop  = d => d.nuc + (d.hyd ?? 0);
-  const wndTop  = d => d.nuc + (d.hyd ?? 0) + (d.wnd ?? 0);
+  const chpTop  = d => d.nuc + (d.hyd ?? 0) + (d.chp ?? 0);
+  const wndTop  = d => d.nuc + (d.hyd ?? 0) + (d.chp ?? 0) + (d.wnd ?? 0);
   const allTop  = d => d.p;
 
   h += `<path d="${stackedPath(() => 0, nucTop)}" fill="#3a5fa0" opacity=".75"/>`;
   h += `<path d="${stackedPath(nucTop, hydTop)}" fill="#2d6b3a" opacity=".75"/>`;
-  h += `<path d="${stackedPath(hydTop, wndTop)}" fill="#7a9cc0" opacity=".65"/>`;
+  h += `<path d="${stackedPath(hydTop, chpTop)}" fill="#a05c30" opacity=".70"/>`;
+  h += `<path d="${stackedPath(chpTop, wndTop)}" fill="#7a9cc0" opacity=".65"/>`;
   h += `<path d="${stackedPath(wndTop, allTop)}" fill="#c8bfad" opacity=".55"/>`;
 
   // Consumption line
@@ -1147,6 +1198,24 @@ async function init() {
     wndRows = await fetchSeries(DS.wind, 175, 200);
   } catch (e) { layerErrors.push('DS 181'); }
 
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch CHP district heating (DS 201)
+  let chpDHRows = null;
+  try {
+    setStatus('loading', [['DS 201', 'CHP kaukolämpö…']]);
+    chpDHRows = await fetchSeries(DS.chpDH, 175, 200);
+  } catch (e) { layerErrors.push('DS 201'); }
+
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch CHP industrial (DS 202)
+  let chpIndRows = null;
+  try {
+    setStatus('loading', [['DS 202', 'CHP teollisuus…']]);
+    chpIndRows = await fetchSeries(DS.chpInd, 175, 200);
+  } catch (e) { layerErrors.push('DS 202'); }
+
   await new Promise(r => setTimeout(r, 800));
 
   // Fetch spot (optional)
@@ -1164,7 +1233,7 @@ async function init() {
       ['Virhe', errors.join(' · '), true],
     ]);
   } else {
-    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows);
+    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows);
     lastFetch = new Date();
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const statusItems = [
@@ -1207,11 +1276,14 @@ function generateSynthetic(hours) {
     const c = Math.max(0, 9200 + diurnal + (isWe ? -700 : 0) + (Math.random() - 0.5) * 500);
     // Realistic Finnish production layers
     const nuc = 2800 + (Math.random() - 0.5) * 100;           // ~2800 MW vakaa
-    const hyd = 1600 + Math.sin(i / 48 * Math.PI) * 400 + (Math.random() - 0.5) * 200;  // 1200–2000 MW
+    // CHP correlates with demand (cold = more heating = more CHP)
+    const chpBase = 1800 + (c - 9200) * 0.25;  // scales with demand
+    const chp = Math.max(800, chpBase + (Math.random() - 0.5) * 300);
+    const hyd = 1600 + Math.sin(i / 48 * Math.PI) * 400 + (Math.random() - 0.5) * 200;
     const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 800 + 900 + (Math.random() - 0.5) * 400);
-    const chp = 2200 + (Math.random() - 0.5) * 300;
-    const p = nuc + hyd + wnd + chp;
-    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd });
+    const residual = 600 + (Math.random() - 0.5) * 200;
+    const p = nuc + hyd + wnd + chp + residual;
+    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd, chp });
   }
   return out;
 }
