@@ -1685,6 +1685,20 @@ async function init() {
     setStatus('error', [['Virhe', renderErr.message, true]]);
   }
 
+  // Post-render status-korjaus: jos rawData on aitoa dataa, näytetään Live
+  if (rawData.length >= 48) {
+    const isReal = rawData.some(d => d.temp != null || d.nuc != null ||
+      (d.c > 5000 && d.c < 16000 && d.p > 3000)); // sanity check
+    const curStatus = document.getElementById('sDot').className;
+    if (isReal && curStatus.includes('demo')) {
+      setStatus('live', [
+        ['Tila', 'Live (puskuri)'],
+        ['Pisteet', rawData.length + ' h ✓'],
+        ['Huom', 'Haku epäonnistui — sessiodata käytössä', true],
+      ]);
+    }
+  }
+
   btn.disabled = false;
 }
 
