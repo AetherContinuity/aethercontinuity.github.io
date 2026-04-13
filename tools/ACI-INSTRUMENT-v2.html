@@ -1679,7 +1679,9 @@ async function fetchHistorical(dsId, startISO, hours = 168) {
 
 async function fetchPeriodData(period) {
   if (period.start === null) {
-    return rawData.slice(-168);
+    // Käytä rawData sellaisenaan — demo-tilassa voi olla lyhyt
+    const cur = rawData.slice(-168);
+    return cur.length > 0 ? cur : generateSynthetic(168);
   }
   // Sequential haku rate-limittauksen välttämiseksi
   const cRows = await fetchHistorical(DS.consumption, period.start);
@@ -1806,7 +1808,7 @@ function renderBTTable(results) {
       <td class="rh">${r.eci != null ? (r.eci * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.sp != null ? (r.sp * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.dc != null ? (r.dc * 100).toFixed(1) + '%' : '—'}</td>
-      <td class="rh" style="color:${r.pts != null && r.pts < 48 ? 'var(--so)' : 'var(--muted)'};" title="${r.pts != null && r.pts < 48 ? '⚠ Liian vähän dataa — proxy palautti matalan resoluution' : ''}">${r.pts ?? '—'}${r.pts != null && r.pts < 48 ? ' ⚠' : ''}</td>
+      <td class="rh" style="color:${r.pts != null && r.pts < 20 ? 'var(--so)' : 'var(--muted)'};" title="Datan laatu: ${r.dataQuality ?? '—'}">${r.pts ?? '—'} <span style="font-size:.5rem;">${r.dataQuality ? '('+r.dataQuality+')' : ''}</span></td>
       <td class="rh ${sigClass}" style="font-weight:500;">${sigLabel}</td>
     </tr>`);
   });
@@ -1860,14 +1862,15 @@ async function runBacktest() {
       const data = await fetchPeriodData(p);
       if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 3500)); // rate limit
 
-      if (data.length < 48) throw new Error(`vain ${data.length} datapistettä — proxy matala resoluutio`);
+      if (data.length < 3) throw new Error(`vain ${data.length} datapistettä`);
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
 
       results.push({
         ...p,
         epp: m.epp, eci: m.eci, sp: m.sp, dc: m.dc,
-        dp: m.dp, nir: m.nir, pts: m.n,
+        dp: m.dp, nir: m.nir, pts: data.length,
+        dataQuality, avgNuc: m.avgNuc, avgChp: m.avgChp, avgP: m.avgP,
         error: null,
       });
     } catch (e) {
@@ -1980,7 +1983,7 @@ function renderCHPTrend() {
 
   let html = '';
   withData.forEach(r => {
-    const chpShare = r.avgChp && r.avgP ? (r.avgChp / r.avgP) : null;
+    const chpShare = (r.avgChp != null && r.avgP && r.avgP > 0) ? (r.avgChp / r.avgP) : null;
     const eci = r.eci;
     html += `<div style="margin-bottom:.6rem;">
       <div style="display:flex;justify-content:space-between;margin-bottom:.2rem;">
