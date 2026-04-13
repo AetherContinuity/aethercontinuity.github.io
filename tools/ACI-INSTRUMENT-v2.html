@@ -211,7 +211,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.4</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.5</div>
   </div>
   <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 87 · 191 · 181 · 105</div>
 </div>
@@ -239,7 +239,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="epp-badge-dot" id="eppDot"></div>
           <span class="epp-badge-txt" id="eppTxt">—</span>
         </div>
-        <div class="epp-sub" id="eppSub">W168 · v3+T: (1−FS)×0.35 + SP×0.30 + DP_t×0.20 + WR×0.15</div>
+        <div class="epp-sub" id="eppSub">W168 · v3+T: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20</div>
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -534,8 +534,9 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
       <li><strong>Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
-      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Lineaarinen kulutus-lämpötilamalli on approksimaatio — ei huomioi sääolosuhteiden (tuulisuus, kosteus) lisävaikutusta. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
+      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Paloittain lineaarinen kulutus-lämpötilamalli, katto 13 500 MW (Suomen realistinen huippukulutus). Alle −5°C hidastuu 180 MW/°C (lämmitys lähestyy kyllästystä). Ei huomioi sääolosuhteiden (tuulisuus, kosteus) lisävaikutusta. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
       <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
+      <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
       <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
       <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
@@ -601,6 +602,7 @@ const TEMP_COOL_BASE   = 22;   // °C — jäähdytysraja
 const TEMP_COOL_SLOPE  = 60;   // MW per °C yli jäähdytysrajan
 const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
 const TEMP_SIGMA       = 900;  // MW — tyypillinen hajonta suhteessa ennusteeseen
+const TEMP_CEILING     = 13500; // MW — Suomen huippukulutuksen katto C_exp-mallissa
 const TEMP_API = 'https://api.open-meteo.com/v1/forecast';
 // Kolmen mittauspisteen verkko — painotettu energiankulutuksen mukaan
 const TEMP_STATIONS = [
@@ -627,6 +629,21 @@ async function fetchSeries(dsId, hours, size) {
   return rows.filter(d => d.value != null);
 }
 
+
+function expectedConsumption(tempC) {
+  // Paloittain lineaarinen — katto 13 500 MW (Suomen realistinen huippukulutus)
+  // ≥ 18°C: ei lämmitystä | -5°C..18°C: 350 MW/°C | < -5°C: 180 MW/°C (kyllästyy)
+  let heating;
+  if (tempC >= TEMP_HEAT_BASE) {
+    heating = 0;
+  } else if (tempC >= -5) {
+    heating = (TEMP_HEAT_BASE - tempC) * TEMP_HEAT_SLOPE;
+  } else {
+    heating = (TEMP_HEAT_BASE + 5) * TEMP_HEAT_SLOPE + (-5 - tempC) * 180;
+  }
+  const cooling = Math.max(0, tempC - TEMP_COOL_BASE) * TEMP_COOL_SLOPE;
+  return Math.min(TEMP_CEILING, TEMP_BASE_LOAD + heating + cooling);
+}
 
 // ── Lämpötilahaku — kolme asemaa (Open-Meteo, ei API-avainta) ─────────────────
 async function fetchStationTemp(station) {
@@ -783,10 +800,10 @@ function calcWindow(slice) {
   const dp_used = dp_t ?? dp_s;
   let epp, eppFull;
   if (eppMode === 'v3') {
-    epp = Math.min(1, Math.max(0, (1-fs)*0.35 + sp*0.30 + dp_used*0.20 + wr*0.15));
+    epp = Math.min(1, Math.max(0, (1-fs)*0.30 + sp*0.30 + dp_used*0.20 + wr*0.20));
     eppFull = dp_t != null ? 'v3+T' : 'v3';
   } else {
-    epp = Math.min(1, Math.max(0, (1-dc)*0.35 + sp*0.30 + dp_used*0.20 + nir*0.15));
+    epp = Math.min(1, Math.max(0, (1-dc)*0.30 + sp*0.30 + dp_used*0.20 + nir*0.20));
     eppFull = dp_t != null ? 'fallback+T' : 'fallback';
   }
 
@@ -904,31 +921,31 @@ function renderMetrics(m) {
   const metrics = [
     {
     { id:'A · DP', name:'Demand Pressure — lämpötilakorjattu (DP_t) / kausikorjattu (DP_s)',
-      desc:'DP_t: todellinen kulutus vs. lämpötilamallin ennuste C_exp(T)=7000+max(0,18−T)×350 MW/°C. Käytetään kun Open-Meteo-data saatavilla. Fallback: DP_s (kuukausibaseline σ=1800 MW).',
+      desc:'DP_t: todellinen kulutus vs. C_exp(T) — paloittain lineaarinen, katto 13 500 MW. ≥18°C: 0, −5..18°C: 350 MW/°C, <−5°C: 180 MW/°C. Fallback: DP_s (kuukausibaseline).',
       vals:[w24?.dp_t ?? w24?.dp_s, w72?.dp_t ?? w72?.dp_s, w168?.dp_t ?? w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
     },
     { id:'B · FS', name:'FirmShare — firm capacity coverage',
-      desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS). Vaatii DS 87+191.',
-      vals:[w24?.fs, w72?.fs, w168?.fs], weight:'0.35', fmt: v => v != null ? fmt.pct(v) : '—', invert: true,
+      desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS)×0.30. Huom: vesivoima olettaa normaalin vesitilannon. Vaatii DS 87+191.',
+      vals:[w24?.fs, w72?.fs, w168?.fs], weight:'0.30', fmt: v => v != null ? fmt.pct(v) : '—', invert: true,
     },
     { id:'C · WR', name:'WindRisk — variabiliteettiriski',
-      desc:'Tuulivoiman osuus kokonaistuotannosta. Korkea WR = endurance-riski tuulikato-skenaariossa. Riippumaton FS:stä ja SP:stä. Vaatii DS 181.',
-      vals:[w24?.wr, w72?.wr, w168?.wr], weight:'0.15', fmt: v => v != null ? fmt.pct(v) : '—',
+      desc:'Tuulivoiman osuus kokonaistuotannosta. Korkea WR = endurance-riski tuulikato-skenaariossa (kylmä+tyyni). Riippumaton FS:stä ja SP:stä. Paino nostettu 0.20:een — kylmä+tyyni-skenaariossa kriittinen. Vaatii DS 181.',
+      vals:[w24?.wr, w72?.wr, w168?.wr], weight:'0.20', fmt: v => v != null ? fmt.pct(v) : '—',
     },
     { id:'D · SP', name:'Stress Persistence',
       desc:'Stressituntien osuus ikkunasta. Stressitunti = kulutus > 1.05 × tuotanto. Normal <15% · Tight 15–30% · Elevated 30–50% · BP-like >50%.',
       vals:[w24?.sp, w72?.sp, w168?.sp], weight:'0.30', fmt: v => fmt.pct(v), useSP: true,
     },
     { id:'— DC', name:'Domestic Coverage (info — ei EPP:ssä)',
-      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.4:ssa. Esitetään kontekstiarvona.',
+      desc:'Kotimainen tuotanto / kulutus. Korreloisi NIR:n kanssa — poistettu EPP:stä v2.5:ssa. Esitetään kontekstiarvona.',
       vals:[w24?.dc, w72?.dc, w168?.dc], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'— NIR', name:'Net Import Reliance (info — ei EPP:ssä)',
-      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.4:ssa.',
+      desc:'max(0,kulutus−tuotanto)/kulutus. Huom: rakenteellinen tuonti ≤2500 MW Norjasta/Ruotsista ≠ stressitilanteen tuonti. Poistettu EPP:stä v2.5:ssa.',
       vals:[w24?.nir, w72?.nir, w168?.nir], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'E · EPP', name:'Endurance Pressure Proxy',
-      desc:'v3 (layer-data saatavilla): (1−FS)×0.35 + SP×0.30 + DP_s×0.20 + WR×0.15. Fallback: (1−DC)×0.35 + SP×0.30 + DP_s×0.20 + NIR×0.15.',
+      desc:'v3 (layer-data saatavilla): (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20. Fallback: (1−DC)×0.30 + SP×0.30 + DP_t×0.20 + NIR×0.20.',
       vals:[w24?.epp, w72?.epp, w168?.epp], weight:'—', fmt: v => v.toFixed(3), isEPP: true,
     },
 
