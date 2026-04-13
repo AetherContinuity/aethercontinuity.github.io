@@ -1044,7 +1044,6 @@ function renderMetrics(m) {
   if (!w168) return;
 
   const metrics = [
-    {
     { id:'A · DP', name:'Demand Pressure — lämpötilakorjattu (DP_t) / kausikorjattu (DP_s)',
       desc:'DP_t: todellinen kulutus vs. C_exp(T) — paloittain lineaarinen, katto 13 500 MW. ≥18°C: 0, −5..18°C: 350 MW/°C, <−5°C: 180 MW/°C. Fallback: DP_s (kuukausibaseline).',
       vals:[w24?.dp_t ?? w24?.dp_s, w72?.dp_t ?? w72?.dp_s, w168?.dp_t ?? w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
@@ -1073,6 +1072,7 @@ function renderMetrics(m) {
       desc:'v3 (layer-data saatavilla): (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20. Fallback: (1−DC)×0.30 + SP×0.30 + DP_t×0.20 + NIR×0.20.',
       vals:[w24?.epp, w72?.epp, w168?.epp], weight:'—', fmt: v => v.toFixed(3), isEPP: true,
     },
+  ];
 
   const tbody = document.getElementById('metBody');
   tbody.innerHTML = '';
