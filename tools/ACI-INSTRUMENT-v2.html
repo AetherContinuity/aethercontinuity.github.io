@@ -752,28 +752,7 @@ let lastFetch = null;
 async function fetchSeries(dsId, hours, size, retries = 3) {
   const now = new Date();
   const from = new Date(now - hours * 3.6e6);
-  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(now.toISOString())}&size=${size}`;
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      const r = await fetch(url);
-      if (r.status === 429) {
-        if (attempt < retries - 1) {
-          const wait = 3000 * (attempt + 1); // 3s, 6s, 9s
-          setStatus('loading', [[`DS ${dsId}`, `429 rate limit — odotetaan ${wait/1000}s (yritys ${attempt+2}/${retries})…`]]);
-          await new Promise(res => setTimeout(res, wait));
-          continue;
-        }
-        throw new Error(`DS ${dsId}: HTTP 429 (rate limit — yritä uudelleen hetken kuluttua)`);
-      }
-      if (!r.ok) throw new Error(`DS ${dsId}: HTTP ${r.status}`);
-      const j = await r.json();
-      const rows = (j.data || j);
-      if (!Array.isArray(rows) || !rows.length) throw new Error(`DS ${dsId}: no data`);
-      return rows.filter(d => d.value != null);
-    } catch(e) {
-      if (attempt === retries - 1) throw e;
-    }
-  }
+  return await fetchSeriesRange(dsId, from, now, size);
 }
 
 
@@ -2099,29 +2078,71 @@ function cacheStats(data) {
 }
 
 
-// ── Chunk-pohjainen historiahaku ──────────────────────────────────────────────
-async function fetchSeriesRange(dsId, startDate, endDate, size = 30) {
-  const url = `${PROXY}?ds=${dsId}` +
-    `&start=${encodeURIComponent(startDate.toISOString())}` +
-    `&end=${encodeURIComponent(endDate.toISOString())}` +
-    `&size=${size}`;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const r = await fetch(url);
-    if (r.status === 429) {
-      await new Promise(res => setTimeout(res, 3000 * (attempt + 1)));
-      continue;
+// ── Sivutettu haku + 15min→h aggregointi ─────────────────────────────────────
+async function fetchSeriesRange(dsId, startDate, endDate, size = 500) {
+  // Hae kaikki sivut
+  let allRows = [];
+  let page = 1;
+  const maxPages = 10;
+
+  while (page <= maxPages) {
+    const url = `${PROXY}?ds=${dsId}` +
+      `&start=${encodeURIComponent(startDate.toISOString())}` +
+      `&end=${encodeURIComponent(endDate.toISOString())}` +
+      `&size=${size}&page=${page}`;
+
+    let r;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const resp = await fetch(url);
+      if (resp.status === 429) {
+        await new Promise(res => setTimeout(res, 3000 * (attempt + 1)));
+        continue;
+      }
+      if (!resp.ok) throw new Error(`DS ${dsId} HTTP ${resp.status}`);
+      r = await resp.json();
+      break;
     }
-    if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
-    const j = await r.json();
-    const rows = (j.data || j).filter(d => d.value != null && d.value > 0);
-    return rows;
+    if (!r) throw new Error(`DS ${dsId} rate limited`);
+
+    const rows = (r.data || r);
+    if (!Array.isArray(rows) || !rows.length) break;
+    allRows = allRows.concat(rows.filter(d => d.value != null && d.value > 0));
+
+    // Sivutus: jatka jos on seuraava sivu
+    if (r.pagination && r.pagination.nextPage) {
+      page = r.pagination.nextPage;
+    } else {
+      break;
+    }
   }
-  throw new Error(`DS ${dsId} rate limited`);
+
+  // Aggregoi tuntikohtaisesti (15min → 1h)
+  return aggregateToHourly(allRows);
+}
+
+function aggregateToHourly(rows) {
+  // Ryhmittele tunnin tarkkuudella, laske keskiarvo
+  const buckets = new Map();
+  rows.forEach(r => {
+    const ts = r.start_time || r.startTime || r.time || r.timestamp;
+    const hourKey = snapHour(ts);
+    if (!buckets.has(hourKey)) buckets.set(hourKey, []);
+    buckets.get(hourKey).push(r.value);
+  });
+  const result = [];
+  buckets.forEach((vals, hourKey) => {
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    result.push({
+      value: avg,
+      start_time: new Date(hourKey).toISOString(),
+    });
+  });
+  return result.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 }
 
 async function fetchHistoryChunked(dsId, totalHours = 168, chunkHours = 24, onProgress) {
   const now = new Date();
-  const numChunks = Math.ceil(totalHours / chunkHours);
+  const numChunks = Math.ceil(totalHours / chunkHours); // 15min→h aggregointi fetchSeriesRange:ssa
   const allRows = [];
 
   for (let i = numChunks - 1; i >= 0; i--) {
