@@ -1575,6 +1575,7 @@ async function init() {
     rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
     lastFetch = new Date();
     const layerCount = rawData.filter(d => d.nuc != null).length;
+    const tempCount = rawData.filter(d => d.temp != null).length;
     const statusItems = [
       ['Tila', 'Live'],
       ['Pisteet', rawData.length + ' h'],
@@ -1587,20 +1588,22 @@ async function init() {
     setStatus(errors.length ? 'error' : 'live', statusItems);
   }
 
-  // Compute
-  const m = computeAll(rawData);
-  const epp = rollingEPP(rawData);
-
-  // Render
-  renderPosture(m, spotVal);
-  renderMetrics(m);
-  renderLayerComp(m);
-  renderSP(m);
-
-  const chartSlice = rawData.slice(-chartWindow);
-  drawMainChart(chartSlice);
-  drawEPPChart(epp, rawData);
-  renderStructural();
+  // Compute & Render — wrapped in try-catch so errors are visible
+  try {
+    const m = computeAll(rawData);
+    const epp = rollingEPP(rawData);
+    renderPosture(m, spotVal);
+    renderMetrics(m);
+    renderLayerComp(m);
+    renderSP(m);
+    const chartSlice = rawData.slice(-chartWindow);
+    drawMainChart(chartSlice);
+    drawEPPChart(epp, rawData);
+    renderStructural();
+  } catch (renderErr) {
+    console.error('Render error:', renderErr);
+    setStatus('error', [['Virhe', renderErr.message, true]]);
+  }
 
   btn.disabled = false;
 }
@@ -1864,7 +1867,8 @@ async function runBacktest() {
     }
   }
 
-  prog.textContent = `Valmis — ${results.filter(r => r.epp != null).length} / ${BT_PERIODS.length} periodia onnistui`;
+  const ok = results.filter(r => r.epp != null).length;
+  prog.textContent = ok > 0 ? `Valmis — ${ok} / ${BT_PERIODS.length} periodia onnistui` : 'Epäonnistui — tarkista proxy-yhteys';
   prog.style.color = 'var(--sg)';
   btn.disabled = false;
 
@@ -2011,6 +2015,13 @@ function onCHPSlider(val) {
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
+// Expose to global scope (called from HTML onclick)
+window.init        = init;
+window.runBacktest = runBacktest;
+window.onDCSlider  = onDCSlider;
+window.onCHPSlider = onCHPSlider;
+window.setChartWindow = setChartWindow;
+
 window.addEventListener('load', init);
 window.addEventListener('resize', () => {
   if (rawData.length) {
