@@ -1937,6 +1937,9 @@ async function runBacktest() {
       if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 200));
 
       if (data.length < 3) throw new Error(`vain ${data.length} datapistettä`);
+      const dataQuality = BT_BASELINES[p.id] ? 'rekons.' :
+        p.id === 'current' ? 'live' :
+        data.length >= 100 ? '1h' : data.length >= 20 ? '~12h' : `~${Math.round(168/data.length)}h`;
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
 
