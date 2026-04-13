@@ -350,7 +350,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §02 Core metrics table -->
   <div class="metrics-section">
     <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Core Metrics — W24 · W72 · W168</span></div>
-    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP-komponenttipainot: DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20. Luokittelu jokaiselle ikkunalle erikseen.</p>
+    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP v3: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20. DC ja NIR esitetään infona. Luokittelu jokaiselle ikkunalle erikseen.</p>
     <table class="met-tbl" id="metTable">
       <thead>
         <tr>
@@ -487,7 +487,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
     <p class="snote">Rullaava EPP lasketaan jokaiselle tunnille käyttäen 24h taaksepäin suuntautuvaa ikkunaa (W24-EPP) koko W168-datassa. Värikynnykset: Normal &lt; 0.25 · Tight 0.25–0.50 · Elevated 0.50–0.75 · BP-like &gt; 0.75.</p>
     <div class="epp-trend-wrap"><svg id="chEPP" style="width:100%;height:100%;"></svg></div>
-    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20 · Laskettu Fingrid-datasta</div>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · v3+T: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 · Laskettu Fingrid-datasta</div>
   </div>
 
   <!-- §05 Stress Persistence -->
@@ -1660,7 +1660,7 @@ const EPP_STRESS_THRESHOLD = 0.50; // EPP ≥ 0.50 = Elevated+ = signal flagged
 async function fetchHistorical(dsId, startISO, hours = 168) {
   const from = new Date(startISO);
   const to   = new Date(from.getTime() + hours * 3.6e6);
-  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=200`;
+  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=180`;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
   const j = await r.json();
@@ -1671,13 +1671,12 @@ async function fetchHistorical(dsId, startISO, hours = 168) {
 
 async function fetchPeriodData(period) {
   if (period.start === null) {
-    // Current period — use rawData
     return rawData.slice(-168);
   }
-  const [cRows, pRows] = await Promise.all([
-    fetchHistorical(DS.consumption, period.start),
-    fetchHistorical(DS.production,  period.start),
-  ]);
+  // Sequential haku rate-limittauksen välttämiseksi
+  const cRows = await fetchHistorical(DS.consumption, period.start);
+  await new Promise(r => setTimeout(r, 2000));
+  const pRows = await fetchHistorical(DS.production, period.start);
   return mergeData(cRows, pRows, null, null, null, null, null);
 }
 
@@ -1844,14 +1843,14 @@ async function runBacktest() {
 
   for (let i = 0; i < BT_PERIODS.length; i++) {
     const p = BT_PERIODS[i];
-    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label} (${p.id === 'current' ? 'live data' : 'DS 124+192'})…`;
+    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label} · odota (proxy rate-limit 3.5s/periodi ~25s)…`;
     prog.style.color = 'var(--sy)';
 
     await new Promise(r => setTimeout(r, 200)); // allow UI update
 
     try {
       const data = await fetchPeriodData(p);
-      await new Promise(r => setTimeout(r, i < BT_PERIODS.length - 1 ? 1500 : 0)); // rate limit gap
+      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 3500)); // rate limit
 
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
