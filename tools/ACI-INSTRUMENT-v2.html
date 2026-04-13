@@ -88,6 +88,31 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .met-tbl tr.epp-row .met-name{font-size:1rem;}
 .weight-chip{font-family:var(--mono);font-size:.5rem;letter-spacing:.06em;color:var(--muted);background:var(--paper-3);padding:.1rem .35rem;border:1px solid var(--rule);display:inline-block;margin-left:.35rem;vertical-align:middle;}
 
+/* ── §03b Layer Composition ── */
+.layer-section{margin-bottom:3rem;}
+.layer-stack-wrap{margin-bottom:1.5rem;}
+.layer-bar-outer{height:28px;background:var(--paper-3);border:1px solid var(--rule);display:flex;overflow:hidden;margin-bottom:.4rem;}
+.layer-seg{height:100%;transition:width .5s;position:relative;}
+.layer-seg:hover::after{content:attr(data-tip);position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.52rem;padding:.15rem .4rem;white-space:nowrap;pointer-events:none;z-index:10;}
+.layer-legend{display:flex;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+.layer-lg{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);}
+.layer-swatch{width:12px;height:12px;flex-shrink:0;}
+.layer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.layer-card{background:var(--paper-2);border:1px solid var(--rule);padding:.85rem 1rem;}
+.layer-card-lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.layer-card-val{font-family:var(--mono);font-size:1.1rem;font-weight:500;line-height:1.1;}
+.layer-card-sub{font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.2rem;}
+.layer-card.eci{border-left:3px solid var(--accent);background:var(--paper-2);}
+.eci-bar-outer{height:5px;background:var(--paper-3);border:1px solid var(--rule);margin-top:.5rem;}
+.eci-bar{height:100%;transition:width .4s,background .4s;}
+.layer-chart-wrap{width:100%;height:160px;margin-bottom:.5rem;}
+.eci-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;margin-top:1rem;}
+.eci-table th{border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;}
+.eci-table th.rh{text-align:right;}
+.eci-table td{padding:.55rem .6rem;border-bottom:1px solid var(--paper-3);}
+.eci-table tr:last-child td{border-bottom:none;}
+.eci-table td.rh{text-align:right;font-family:var(--mono);}
+
 /* ── §03 Chart ── */
 .chart-section{margin-bottom:3rem;}
 .chart-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
@@ -163,9 +188,9 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.0</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.1</div>
   </div>
-  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>Source: Fingrid Open Data</div>
+  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 87 · 191 · 181 · 105</div>
 </div>
 
 <div class="page">
@@ -182,7 +207,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §01 Current posture -->
   <div style="margin-bottom:3rem;">
     <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">Nykyinen posture — EPP (W168)</span></div>
-    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: Fingrid Open Data DS&nbsp;124 (kulutus) · DS&nbsp;192 (tuotanto).</p>
+    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: DS 124 (kulutus) · DS 192 (tuotanto) · DS 87 (ydin) · DS 191 (hydro) · DS 181 (tuuli).</p>
 
     <div class="posture-blk">
       <div class="posture-epp">
@@ -223,6 +248,21 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="pg-lbl">Import-gap (W24 ka)</div>
           <div class="pg-val" id="pgG">—</div>
           <div class="pg-desc">MW · kulutus − tuotanto</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">ECI (W24)</div>
+          <div class="pg-val" id="pgECI">—</div>
+          <div class="pg-desc">Endurance Compatibility Index · (ydin+hydro)/tuotanto</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Tuulivoima (W24 ka)</div>
+          <div class="pg-val" id="pgWind">—</div>
+          <div class="pg-desc">MW · DS 181 · variabili</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Ydinvoima (W24 ka)</div>
+          <div class="pg-val" id="pgNuc">—</div>
+          <div class="pg-desc">MW · DS 87 · vakaa</div>
         </div>
       </div>
     </div>
@@ -273,9 +313,89 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     </table>
   </div>
 
-  <!-- §03 Time series chart -->
+  <!-- §03 Layer Composition -->
+  <div class="layer-section">
+    <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Tuotantorakenne — Layer Composition &amp; ECI</span></div>
+    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 87) + vesivoima (DS 191). Variabili kerros: tuulivoima (DS 181). Jäännös (muu) = kokonaistuotanto − ydin − hydro − tuuli ≈ CHP, biomassa, lauhdutus. ECI-kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
+
+    <!-- Stacked bar W24 -->
+    <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">W24 · Tuotantorakenne (%)</div>
+    <div class="layer-stack-wrap">
+      <div class="layer-bar-outer" id="layerBar">
+        <div class="layer-seg" id="lsNuc" style="background:#3a5fa0;" data-tip="Ydinvoima"></div>
+        <div class="layer-seg" id="lsHyd" style="background:#2d6b3a;" data-tip="Vesivoima"></div>
+        <div class="layer-seg" id="lsWnd" style="background:#7a9cc0;" data-tip="Tuulivoima"></div>
+        <div class="layer-seg" id="lsOth" style="background:#c8bfad;" data-tip="Muu (CHP, biomassa…)"></div>
+      </div>
+      <div class="layer-legend">
+        <div class="layer-lg"><div class="layer-swatch" style="background:#3a5fa0;"></div>Ydinvoima · DS 87 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#2d6b3a;"></div>Vesivoima · DS 191 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#7a9cc0;"></div>Tuulivoima · DS 181 · variabili</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#c8bfad;"></div>Muu (CHP, biomassa, lauhdutus)</div>
+      </div>
+    </div>
+
+    <!-- Layer cards -->
+    <div class="layer-grid">
+      <div class="layer-card eci">
+        <div class="layer-card-lbl">ECI · W24</div>
+        <div class="layer-card-val" id="eciW24">—</div>
+        <div class="layer-card-sub">(ydin+hydro) / tuotanto</div>
+        <div class="eci-bar-outer"><div class="eci-bar" id="eciBarW24"></div></div>
+      </div>
+      <div class="layer-card eci">
+        <div class="layer-card-lbl">ECI · W168</div>
+        <div class="layer-card-val" id="eciW168">—</div>
+        <div class="layer-card-sub">7 vrk keskiarvo</div>
+        <div class="eci-bar-outer"><div class="eci-bar" id="eciBarW168"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-card-lbl">Ydinvoima W24</div>
+        <div class="layer-card-val" id="lcNuc">—</div>
+        <div class="layer-card-sub">MW ka · DS 87</div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-card-lbl">Vesivoima W24</div>
+        <div class="layer-card-val" id="lcHyd">—</div>
+        <div class="layer-card-sub">MW ka · DS 191</div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-card-lbl">Tuulivoima W24</div>
+        <div class="layer-card-val" id="lcWnd">—</div>
+        <div class="layer-card-sub">MW ka · DS 181 · variabili</div>
+      </div>
+    </div>
+
+    <!-- Layer area chart -->
+    <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;" id="layerChartTitle">W72 · Tuotantorakenne ajassa (MW)</div>
+    <div class="layer-chart-wrap"><svg id="chLayer" style="width:100%;height:100%;"></svg></div>
+
+    <!-- ECI comparison table -->
+    <table class="eci-table">
+      <thead>
+        <tr>
+          <th>Ikkuna</th>
+          <th class="rh">ECI</th>
+          <th class="rh">Ydin MW</th>
+          <th class="rh">Hydro MW</th>
+          <th class="rh">Tuuli MW</th>
+          <th class="rh">Muu MW</th>
+          <th class="rh">Tuotanto yhteensä</th>
+          <th class="rh">ECI-luokka</th>
+        </tr>
+      </thead>
+      <tbody id="eciTableBody">
+        <tr><td colspan="8" style="color:var(--muted);padding:1rem .6rem;">Ladataan…</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.75rem;line-height:1.9;">
+      ECI ≥ 0.60 = Korkea kestävyysyhteensopivuus · 0.40–0.60 = Kohtalainen · &lt; 0.40 = Matala (tuulivoimavaltainen tai tuontiriippuvainen) · Vakaa = ydin + hydro · Variabili = tuuli
+    </div>
+  </div>
+
+  <!-- §04 Time series chart -->
   <div class="chart-section">
-    <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Aikasarjat — MW · tuntidatan kelluva ikkuna</span></div>
+    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Aikasarjat — MW · tuntidatan kelluva ikkuna</span></div>
     <div class="chart-controls">
       <button class="cb" id="cbW24" onclick="setChartWindow(24)">W24</button>
       <button class="cb on" id="cbW72" onclick="setChartWindow(72)">W72</button>
@@ -295,7 +415,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
   <!-- §04 EPP Trend -->
   <div style="margin-bottom:3rem;">
-    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
+    <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
     <p class="snote">Rullaava EPP lasketaan jokaiselle tunnille käyttäen 24h taaksepäin suuntautuvaa ikkunaa (W24-EPP) koko W168-datassa. Värikynnykset: Normal &lt; 0.25 · Tight 0.25–0.50 · Elevated 0.50–0.75 · BP-like &gt; 0.75.</p>
     <div class="epp-trend-wrap"><svg id="chEPP" style="width:100%;height:100%;"></svg></div>
     <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20 · Laskettu Fingrid-datasta</div>
@@ -303,7 +423,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
   <!-- §05 Stress Persistence -->
   <div class="sp-section">
-    <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Stress Persistence — SP (D)</span></div>
+    <div class="shdr"><span class="snum">&sect; 06</span><span class="stit">Stress Persistence — SP (D)</span></div>
     <p class="snote">Stressipersistenssi mittaa osuuden tunneista, joissa kulutus ylittää kotimaisen tuotannon yli 5 %. Threshold-vyöhykkeet: Normal &lt; 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like &gt; 50 %. Viite: WP-001 (168h stress-ikkuna).</p>
     <div class="sp-grid">
       <div class="sp-blk" id="spW24">
@@ -345,7 +465,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
   <!-- §06 Instrument boundaries -->
   <div class="bounds-section">
-    <div class="shdr"><span class="snum">&sect; 06</span><span class="stit">Instrumentin rajaukset</span></div>
+    <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä.</li>
       <li>Posture-luokittelu ei ennusta yksittäisiä sähkökatkoja tai spot-hinnan kehitystä.</li>
@@ -359,7 +479,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
   <!-- References -->
   <div class="refs-section">
-    <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Viitteet</span></div>
+    <div class="shdr"><span class="snum">&sect; 08</span><span class="stit">Viitteet</span></div>
     <ul class="ref-list">
       <li><span class="ref-id">WP-001</span>Capacity vs. Duration — Black Period 168h stress window</li>
       <li><span class="ref-id">DA-001</span>Early warning logic — "Concern trending toward Danger"</li>
@@ -385,12 +505,20 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <script>
 // ── Config ────────────────────────────────────────────────────────────────────
 const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
-const DS = { consumption: 124, production: 192, spot: 105 };
+const DS = {
+  consumption: 124,  // Sähkönkulutus Suomessa
+  production:  192,  // Sähköntuotanto Suomessa (kokonais)
+  nuclear:      87,  // Ydinvoima
+  hydro:       191,  // Vesivoima
+  wind:        181,  // Tuulivoima
+  spot:        105,  // Spot-hinta €/MWh
+};
 const BASELINE = { cLow: 6500, cHigh: 13500 }; // MW range for DP normalization
 const STRESS_THRESHOLD = 0.05; // 5% gap = stress hour
 const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
 
-let rawData = []; // merged hourly { time, c, p, gap }
+let rawData = []; // merged hourly { time, c, p, gap, nuc, hyd, wnd }
+let layerData = { nuc: [], hyd: [], wnd: [] }; // raw layer series for alignment
 let chartWindow = 72;
 let lastFetch = null;
 
@@ -413,16 +541,26 @@ function snapHour(ts) {
   return d.getTime();
 }
 
-function mergeData(cRows, pRows) {
+function mergeData(cRows, pRows, nucRows, hydRows, wndRows) {
   const cMap = new Map(), pMap = new Map();
-  cRows.forEach(r => cMap.set(snapHour(r.start_time || r.startTime || r.time || r.timestamp), r.value));
-  pRows.forEach(r => pMap.set(snapHour(r.start_time || r.startTime || r.time || r.timestamp), r.value));
+  const nucMap = new Map(), hydMap = new Map(), wndMap = new Map();
+  const snap = ts => { const d = new Date(ts); d.setMinutes(0,0,0); return d.getTime(); };
+  cRows.forEach(r => cMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  pRows.forEach(r => pMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  if (nucRows) nucRows.forEach(r => nucMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  if (hydRows) hydRows.forEach(r => hydMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
+  if (wndRows) wndRows.forEach(r => wndMap.set(snap(r.start_time||r.startTime||r.time||r.timestamp), r.value));
   const allKeys = new Set([...cMap.keys(), ...pMap.keys()]);
   const merged = [];
   allKeys.forEach(k => {
     const c = cMap.get(k), p = pMap.get(k);
     if (c != null && p != null) {
-      merged.push({ time: new Date(k), c, p, gap: c - p });
+      merged.push({
+        time: new Date(k), c, p, gap: c - p,
+        nuc: nucMap.get(k) ?? null,
+        hyd: hydMap.get(k) ?? null,
+        wnd: wndMap.get(k) ?? null,
+      });
     }
   });
   return merged.sort((a, b) => a.time - b.time);
@@ -445,7 +583,19 @@ function calcWindow(slice) {
 
   const epp = Math.min(1, Math.max(0, (1 - dc) * 0.30 + sp * 0.30 + dp * 0.20 + nir * 0.20));
 
-  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n };
+  // Layer composition (only where data exists)
+  const lSlice = slice.filter(d => d.nuc != null && d.hyd != null);
+  let eci = null, avgNuc = null, avgHyd = null, avgWnd = null;
+  if (lSlice.length > 0) {
+    avgNuc = lSlice.reduce((s,d) => s + d.nuc, 0) / lSlice.length;
+    avgHyd = lSlice.reduce((s,d) => s + d.hyd, 0) / lSlice.length;
+    const wSlice = slice.filter(d => d.wnd != null);
+    avgWnd = wSlice.length ? wSlice.reduce((s,d) => s + d.wnd, 0) / wSlice.length : null;
+    const avgPl = lSlice.reduce((s,d) => s + d.p, 0) / lSlice.length;
+    eci = avgPl > 0 ? Math.min(1, (avgNuc + avgHyd) / avgPl) : null;
+  }
+
+  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n, eci, avgNuc, avgHyd, avgWnd };
 }
 
 function computeAll(data) {
@@ -514,6 +664,13 @@ function renderPosture(m, spot) {
     const gEl = document.getElementById('pgG');
     gEl.textContent = (w24.avgGap >= 0 ? '+' : '') + fmt.mw(w24.avgGap);
     gEl.style.color = w24.avgGap > 0 ? '#8b1010' : '#2d6b3a';
+    const eciEl = document.getElementById('pgECI');
+    if (w24.eci != null) {
+      eciEl.textContent = (w24.eci * 100).toFixed(1) + ' %';
+      eciEl.style.color = w24.eci >= 0.60 ? '#2d6b3a' : w24.eci >= 0.40 ? '#7a6010' : '#8b1010';
+    }
+    if (w24.avgNuc != null) document.getElementById('pgNuc').textContent = fmt.mw(w24.avgNuc);
+    if (w24.avgWnd != null) document.getElementById('pgWind').textContent = fmt.mw(w24.avgWnd);
   }
 
   // Alerts
@@ -611,7 +768,150 @@ function renderMetrics(m) {
   });
 }
 
-// ── Render §05 SP blocks ──────────────────────────────────────────────────────
+// ── Render §03 Layer Composition ─────────────────────────────────────────────
+function eciColor(v) {
+  if (v == null) return '#7a7468';
+  return v >= 0.60 ? '#2d6b3a' : v >= 0.40 ? '#7a6010' : '#8b1010';
+}
+function eciLabel(v) {
+  if (v == null) return '—';
+  return v >= 0.60 ? 'Korkea' : v >= 0.40 ? 'Kohtalainen' : 'Matala';
+}
+
+function renderLayerComp(m) {
+  const { w24, w72, w168 } = m;
+
+  // Stacked bar (W24)
+  if (w24 && w24.avgNuc != null) {
+    const tot = w24.avgP || 1;
+    const pNuc = Math.max(0, w24.avgNuc / tot * 100);
+    const pHyd = Math.max(0, (w24.avgHyd ?? 0) / tot * 100);
+    const pWnd = Math.max(0, (w24.avgWnd ?? 0) / tot * 100);
+    const pOth = Math.max(0, 100 - pNuc - pHyd - pWnd);
+    document.getElementById('lsNuc').style.width = pNuc.toFixed(1) + '%';
+    document.getElementById('lsNuc').dataset.tip = `Ydinvoima ${pNuc.toFixed(1)}% · ${Math.round(w24.avgNuc)} MW`;
+    document.getElementById('lsHyd').style.width = pHyd.toFixed(1) + '%';
+    document.getElementById('lsHyd').dataset.tip = `Vesivoima ${pHyd.toFixed(1)}% · ${Math.round(w24.avgHyd ?? 0)} MW`;
+    document.getElementById('lsWnd').style.width = pWnd.toFixed(1) + '%';
+    document.getElementById('lsWnd').dataset.tip = `Tuulivoima ${pWnd.toFixed(1)}% · ${Math.round(w24.avgWnd ?? 0)} MW`;
+    document.getElementById('lsOth').style.width = pOth.toFixed(1) + '%';
+  }
+
+  // ECI cards
+  const setECI = (sfx, val) => {
+    const el = document.getElementById('eciW' + sfx);
+    const bar = document.getElementById('eciBarW' + sfx);
+    if (!el) return;
+    if (val != null) {
+      el.textContent = (val * 100).toFixed(1) + ' %';
+      el.style.color = eciColor(val);
+      bar.style.width = (val * 100).toFixed(1) + '%';
+      bar.style.background = eciColor(val);
+    }
+  };
+  setECI('24',  w24?.eci);
+  setECI('168', w168?.eci);
+
+  // Layer cards
+  const setCard = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val != null) el.textContent = fmt.mw(val);
+  };
+  setCard('lcNuc', w24?.avgNuc);
+  setCard('lcHyd', w24?.avgHyd);
+  setCard('lcWnd', w24?.avgWnd);
+
+  // ECI table
+  const tbody = document.getElementById('eciTableBody');
+  tbody.innerHTML = '';
+  [[w24,'W24'],[w72,'W72'],[w168,'W168']].forEach(([d, lbl]) => {
+    if (!d) return;
+    const eci = d.eci;
+    const nuc = d.avgNuc != null ? Math.round(d.avgNuc) : '—';
+    const hyd = d.avgHyd != null ? Math.round(d.avgHyd) : '—';
+    const wnd = d.avgWnd != null ? Math.round(d.avgWnd) : '—';
+    const stableSum = (d.avgNuc ?? 0) + (d.avgHyd ?? 0);
+    const oth = d.avgNuc != null ? Math.round(Math.max(0, d.avgP - stableSum - (d.avgWnd ?? 0))) : '—';
+    tbody.insertAdjacentHTML('beforeend', `<tr>
+      <td style="font-family:var(--mono);font-weight:500;">${lbl}</td>
+      <td class="rh" style="color:${eciColor(eci)};font-weight:500;">${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</td>
+      <td class="rh">${nuc != '—' ? nuc.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh">${hyd != '—' ? hyd.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh">${wnd != '—' ? wnd.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh">${oth != '—' ? oth.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh">${Math.round(d.avgP).toLocaleString('fi-FI')}</td>
+      <td class="rh" style="color:${eciColor(eci)};font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;">${eciLabel(eci)}</td>
+    </tr>`);
+  });
+
+  // Layer area chart
+  drawLayerChart(rawData.slice(-chartWindow));
+}
+
+function drawLayerChart(data) {
+  const svg = document.getElementById('chLayer');
+  const W = svg.parentElement.clientWidth || 800;
+  const H = svg.parentElement.clientHeight || 160;
+  const pad = { t: 10, b: 24, l: 56, r: 12 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+
+  // Filter to points with layer data
+  const lData = data.filter(d => d.nuc != null && d.hyd != null);
+  document.getElementById('layerChartTitle').textContent =
+    `W${chartWindow} · Tuotantorakenne ajassa (MW) · ${lData.length} datapistettä`;
+  if (!lData.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#7a7468">Kerrosaineisto ei saatavilla</text>'; return; }
+
+  const n = lData.length;
+  const maxV = Math.max(...lData.map(d => d.p)) * 1.05;
+  const xS = i => pad.l + (i / Math.max(1, n-1)) * cW;
+  const yS = v => pad.t + cH - (v / maxV) * cH;
+
+  let h = '';
+
+  // Stacked areas: nuclear (bottom) → hydro → wind → other (top)
+  const stackedPath = (getBot, getTop) =>
+    lData.map((d,i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(getTop(d)).toFixed(1)}`).join(' ') +
+    [...lData].reverse().map((d,i) => ` L${xS(n-1-i).toFixed(1)},${yS(getBot(d)).toFixed(1)}`).join('') + ' Z';
+
+  const nucTop  = d => d.nuc;
+  const hydTop  = d => d.nuc + (d.hyd ?? 0);
+  const wndTop  = d => d.nuc + (d.hyd ?? 0) + (d.wnd ?? 0);
+  const allTop  = d => d.p;
+
+  h += `<path d="${stackedPath(() => 0, nucTop)}" fill="#3a5fa0" opacity=".75"/>`;
+  h += `<path d="${stackedPath(nucTop, hydTop)}" fill="#2d6b3a" opacity=".75"/>`;
+  h += `<path d="${stackedPath(hydTop, wndTop)}" fill="#7a9cc0" opacity=".65"/>`;
+  h += `<path d="${stackedPath(wndTop, allTop)}" fill="#c8bfad" opacity=".55"/>`;
+
+  // Consumption line
+  const fullData = data.filter(d => d.c != null);
+  if (fullData.length > 1) {
+    const xSf = i => pad.l + (i / Math.max(1, fullData.length-1)) * cW;
+    const cPath = fullData.map((d,i) => `${i===0?'M':'L'}${xSf(i).toFixed(1)},${yS(d.c).toFixed(1)}`).join(' ');
+    h += `<path d="${cPath}" fill="none" stroke="#0e0d0b" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+  }
+
+  // Y ticks
+  [0, maxV*0.25, maxV*0.5, maxV*0.75, maxV].forEach(v => {
+    h += `<line x1="${pad.l}" y1="${yS(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yS(v).toFixed(1)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;
+    h += `<text x="${pad.l-5}" y="${(yS(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#7a7468">${(v/1000).toFixed(1)}k</text>`;
+  });
+
+  // X ticks
+  lData.forEach((d, i) => {
+    if (d.time.getHours() === 0) {
+      h += `<text x="${xS(i).toFixed(1)}" y="${H-4}" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#7a7468">${d.time.toLocaleDateString('fi-FI', { weekday:'short', day:'numeric' })}</text>`;
+    }
+  });
+
+  h += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+cH}" stroke="#c8bfad"/>`;
+  h += `<line x1="${pad.l}" y1="${pad.t+cH}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#c8bfad"/>`;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = h;
+}
+
+// ── Render §06 SP blocks ──────────────────────────────────────────────────────
 function renderSP(m) {
   const windows = [
     { key: 'w24', sufW: 'spW24', sufV: 'sp24v', sufL: 'sp24l', sufH: 'sp24h', label: 'W24' },
@@ -781,6 +1081,7 @@ function setChartWindow(w) {
   });
   const slice = rawData.slice(-w);
   drawMainChart(slice);
+  drawLayerChart(slice);
 }
 
 // ── Status bar ────────────────────────────────────────────────────────────────
@@ -805,58 +1106,75 @@ async function init() {
   document.getElementById('hdrDate').textContent = dateStr;
   document.getElementById('footerDate').textContent = now.getFullYear();
 
-  let cRows, pRows, spotVal = null;
-  const errors = [];
+  let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
+  const errors = [], layerErrors = [];
 
   // Fetch consumption
   try {
     setStatus('loading', [['DS 124', 'kulutus…']]);
     cRows = await fetchSeries(DS.consumption, 175, 200);
-  } catch (e) {
-    errors.push('DS 124: ' + e.message);
-    cRows = [];
-  }
+  } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
 
-  // Delay between requests (proxy rate limit)
   await new Promise(r => setTimeout(r, 1200));
 
-  // Fetch production
+  // Fetch total production
   try {
     setStatus('loading', [['DS 192', 'tuotanto…']]);
     pRows = await fetchSeries(DS.production, 175, 200);
-  } catch (e) {
-    errors.push('DS 192: ' + e.message);
-    pRows = [];
-  }
+  } catch (e) { errors.push('DS 192: ' + e.message); pRows = []; }
 
   await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch nuclear (DS 87)
+  try {
+    setStatus('loading', [['DS 87', 'ydinvoima…']]);
+    nucRows = await fetchSeries(DS.nuclear, 175, 200);
+  } catch (e) { layerErrors.push('DS 87'); }
+
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch hydro (DS 191)
+  try {
+    setStatus('loading', [['DS 191', 'vesivoima…']]);
+    hydRows = await fetchSeries(DS.hydro, 175, 200);
+  } catch (e) { layerErrors.push('DS 191'); }
+
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch wind (DS 181)
+  try {
+    setStatus('loading', [['DS 181', 'tuulivoima…']]);
+    wndRows = await fetchSeries(DS.wind, 175, 200);
+  } catch (e) { layerErrors.push('DS 181'); }
+
+  await new Promise(r => setTimeout(r, 800));
 
   // Fetch spot (optional)
   try {
     setStatus('loading', [['DS 105', 'spot €/MWh…']]);
     const sRows = await fetchSeries(DS.spot, 6, 10);
     if (sRows.length) spotVal = sRows[sRows.length - 1].value;
-  } catch (e) {
-    // spot is optional — don't add to errors
-  }
+  } catch (e) { /* optional */ }
 
   // Merge
   if (!cRows.length || !pRows.length) {
-    // Fallback to synthetic
     rawData = generateSynthetic(168);
     setStatus('demo', [
       ['Tila', 'Demo-data (API-virhe)'],
       ['Virhe', errors.join(' · '), true],
     ]);
   } else {
-    rawData = mergeData(cRows, pRows);
+    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows);
     lastFetch = new Date();
+    const layerCount = rawData.filter(d => d.nuc != null).length;
     const statusItems = [
       ['Tila', 'Live'],
       ['Pisteet', rawData.length + ' h'],
+      ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
     ];
     if (errors.length) statusItems.push(['Huom', errors.join(', '), true]);
+    if (layerErrors.length) statusItems.push(['Layer-virheet', layerErrors.join(', '), true]);
     setStatus(errors.length ? 'error' : 'live', statusItems);
   }
 
@@ -867,6 +1185,7 @@ async function init() {
   // Render
   renderPosture(m, spotVal);
   renderMetrics(m);
+  renderLayerComp(m);
   renderSP(m);
 
   const chartSlice = rawData.slice(-chartWindow);
@@ -886,9 +1205,13 @@ function generateSynthetic(hours) {
     const isWe = dow === 0 || dow === 6;
     const diurnal = Math.sin(((h - 7) / 24) * 2 * Math.PI) * 1400;
     const c = Math.max(0, 9200 + diurnal + (isWe ? -700 : 0) + (Math.random() - 0.5) * 500);
-    const wind = Math.sin((i / 36) * Math.PI) * 700 + Math.random() * 300 + 800;
-    const p = Math.max(0, 2800 + 1900 + wind + 2300 + (Math.random() - 0.5) * 400);
-    out.push({ time: t, c, p, gap: c - p });
+    // Realistic Finnish production layers
+    const nuc = 2800 + (Math.random() - 0.5) * 100;           // ~2800 MW vakaa
+    const hyd = 1600 + Math.sin(i / 48 * Math.PI) * 400 + (Math.random() - 0.5) * 200;  // 1200–2000 MW
+    const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 800 + 900 + (Math.random() - 0.5) * 400);
+    const chp = 2200 + (Math.random() - 0.5) * 300;
+    const p = nuc + hyd + wnd + chp;
+    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd });
   }
   return out;
 }
@@ -897,7 +1220,9 @@ function generateSynthetic(hours) {
 window.addEventListener('load', init);
 window.addEventListener('resize', () => {
   if (rawData.length) {
-    drawMainChart(rawData.slice(-chartWindow));
+    const slice = rawData.slice(-chartWindow);
+    drawMainChart(slice);
+    drawLayerChart(slice);
     drawEPPChart(rollingEPP(rawData), rawData);
   }
 });
