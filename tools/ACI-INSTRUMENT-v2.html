@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winter Endurance Monitor · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0e0d0b; --paper:#f5f0e8; --paper-2:#ede7d8; --paper-3:#e4dccb;
+  --accent:#8b4513; --muted:#7a7468; --rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
+  --sg:#2d6b3a; --sy:#7a6010; --so:#8b3a10; --sr:#8b1010;
+  --bg-g:#eef6f0; --bg-y:#faf6e8; --bg-o:#faf0e8; --bg-r:#faf0f0;
+  --cn:#4a7ec0; --bg-n:#eef2fa;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
+
+/* ── Header ── */
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
+.dih-l{display:flex;flex-direction:column;gap:.15rem;}
+.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.dih-ser span{color:var(--accent);}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
+
+/* ── Page ── */
+.page{max-width:1060px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* ── Section headers ── */
+.shdr{display:flex;align-items:baseline;gap:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--rule);margin-bottom:1.25rem;}
+.snum{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);flex-shrink:0;}
+.stit{font-size:1.1rem;font-weight:500;}
+.snote{font-size:.875rem;font-style:italic;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+
+/* ── Status bar ── */
+.status-bar{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--paper-2);border:1px solid var(--rule);margin-bottom:2rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.status-dot.live{background:var(--sg);animation:pulse 2.5s infinite;}
+.status-dot.loading{background:var(--sy);animation:blink 1s infinite;}
+.status-dot.error{background:var(--sr);}
+.status-dot.demo{background:var(--cn);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.status-items{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;}
+.status-item{color:var(--muted);}
+.status-item strong{color:var(--ink);}
+.status-item.warn{color:var(--so);}
+.btn-refresh{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.3rem .85rem;background:transparent;border:1px solid var(--rule);color:var(--muted);cursor:pointer;transition:all .15s;margin-left:auto;}
+.btn-refresh:hover{border-color:var(--accent);color:var(--accent);}
+.btn-refresh:disabled{opacity:.4;cursor:default;}
+
+/* ── §01 Posture block ── */
+.posture-blk{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);}
+.posture-epp{display:flex;flex-direction:column;gap:.5rem;}
+.epp-val{font-family:var(--mono);font-size:5rem;font-weight:500;line-height:1;letter-spacing:-.02em;transition:color .5s;}
+.epp-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--rule);padding:.25rem .9rem;transition:border-color .5s;}
+.epp-badge-dot{width:6px;height:6px;border-radius:50%;transition:background .5s;}
+.epp-badge-txt{font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;transition:color .5s;}
+.epp-sub{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.08em;margin-top:.4rem;}
+
+.posture-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem 2rem;}
+.pg-item{}
+.pg-lbl{font-family:var(--mono);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem;}
+.pg-val{font-family:var(--mono);font-size:.92rem;font-weight:500;}
+.pg-desc{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:.15rem;}
+
+/* ── §02 Metrics table ── */
+.metrics-section{margin-bottom:3rem;}
+.met-tbl{width:100%;border-collapse:collapse;font-size:.85rem;}
+.met-tbl th{border-bottom:1px solid var(--ink);padding:.5rem .75rem;text-align:left;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400;}
+.met-tbl th.rh{text-align:right;}
+.met-tbl td{padding:.75rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+.met-tbl tr:last-child td{border-bottom:none;}
+.met-id{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;color:var(--accent);display:block;margin-bottom:.1rem;}
+.met-name{font-weight:500;font-size:.92rem;}
+.met-desc{font-size:.78rem;font-style:italic;color:var(--muted);margin-top:.2rem;line-height:1.5;}
+.met-num{font-family:var(--mono);font-size:.9rem;font-weight:500;text-align:right;white-space:nowrap;}
+.met-sub{font-family:var(--mono);font-size:.55rem;color:var(--muted);display:block;text-align:right;margin-top:.15rem;}
+.met-cls{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;text-align:right;white-space:nowrap;}
+.met-bar-wrap{width:60px;height:4px;background:var(--paper-3);border:1px solid var(--rule);display:inline-block;vertical-align:middle;margin-right:.4rem;}
+.met-bar{height:100%;transition:width .4s,background .4s;}
+.met-tbl tr.epp-row td{background:var(--paper-2);}
+.met-tbl tr.epp-row .met-name{font-size:1rem;}
+.weight-chip{font-family:var(--mono);font-size:.5rem;letter-spacing:.06em;color:var(--muted);background:var(--paper-3);padding:.1rem .35rem;border:1px solid var(--rule);display:inline-block;margin-left:.35rem;vertical-align:middle;}
+
+/* ── §03 Chart ── */
+.chart-section{margin-bottom:3rem;}
+.chart-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.cb{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;padding:.3rem .8rem;background:transparent;border:1px solid var(--rule);color:var(--muted);cursor:pointer;transition:all .15s;}
+.cb:hover,.cb.on{border-color:var(--accent);color:var(--accent);}
+.chart-wrap{width:100%;height:220px;margin-bottom:.75rem;}
+.chart-legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:.5rem;}
+.lg-item{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;color:var(--muted);}
+.lg-line{width:24px;height:2px;}
+
+/* ── §04 EPP Trend ── */
+.epp-trend-wrap{width:100%;height:100px;margin-bottom:.5rem;}
+
+/* ── §05 SP Detail ── */
+.sp-section{margin-bottom:3rem;}
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem;}
+.sp-blk{background:var(--paper-2);border:1px solid var(--rule);border-top:3px solid var(--rule);padding:1rem 1.25rem;}
+.sp-blk.tight{border-top-color:var(--sy);}
+.sp-blk.elevated{border-top-color:var(--so);}
+.sp-blk.bp{border-top-color:var(--sr);}
+.sp-win{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.sp-val{font-family:var(--mono);font-size:1.6rem;font-weight:500;line-height:1.1;}
+.sp-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;}
+.sp-hours{font-size:.8rem;color:var(--muted);margin-top:.2rem;}
+
+/* ── §06 Boundaries ── */
+.bounds-section{margin-bottom:3rem;}
+.bounds-list{list-style:none;border-top:1px solid var(--rule);}
+.bounds-list li{padding:.7rem 0;border-bottom:1px solid var(--rule);font-size:.85rem;display:flex;gap:1rem;line-height:1.6;}
+.bounds-list li::before{content:'—';font-family:var(--mono);color:var(--muted);flex-shrink:0;}
+
+/* ── References ── */
+.refs-section{margin-bottom:2rem;}
+.ref-list{list-style:none;border-top:1px solid var(--rule);}
+.ref-list li{padding:.5rem 0;border-bottom:1px solid var(--rule);display:flex;gap:1.25rem;align-items:baseline;font-size:.82rem;}
+.ref-id{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--accent);flex-shrink:0;min-width:60px;}
+
+/* ── Alert ── */
+.alert-blk{display:flex;align-items:flex-start;gap:.75rem;border:1px solid;border-left-width:3px;padding:.85rem 1rem;margin-bottom:1.5rem;opacity:0;transition:opacity .3s;pointer-events:none;}
+.alert-blk.on{opacity:1;pointer-events:auto;}
+.alert-dot{width:6px;height:6px;border-radius:50%;margin-top:.4rem;flex-shrink:0;}
+.alert-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem;}
+.alert-body{font-size:.82rem;color:var(--muted);line-height:1.5;}
+.alert-body strong{color:var(--ink);}
+.alert-blk.warn{background:var(--bg-o);border-color:#c4a080;border-left-color:var(--so);}
+.alert-blk.warn .alert-dot{background:var(--so);}
+.alert-blk.warn .alert-title{color:var(--so);}
+.alert-blk.danger{background:var(--bg-r);border-color:#c4a0a0;border-left-color:var(--sr);}
+.alert-blk.danger .alert-dot{background:var(--sr);animation:blink 1.8s infinite;}
+.alert-blk.danger .alert-title{color:var(--sr);}
+
+/* ── Footer ── */
+footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:2;}
+
+/* ── Threshold zones ── */
+.zone-blk{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1.5rem;}
+.zone-item{padding:.5rem .75rem;border:1px solid var(--rule);background:var(--paper-2);}
+.zone-val{font-family:var(--mono);font-size:.65rem;font-weight:500;}
+.zone-lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.15rem;}
+.zone-rng{font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:.1rem;}
+
+@media(max-width:760px){
+  .posture-blk{grid-template-columns:1fr;gap:1.5rem;}
+  .posture-grid{grid-template-columns:1fr 1fr;}
+  .sp-grid{grid-template-columns:1fr;}
+  .zone-blk{grid-template-columns:1fr 1fr;}
+  footer{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-l">
+    <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.0</div>
+  </div>
+  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>Source: Fingrid Open Data</div>
+</div>
+
+<div class="page">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-dot loading" id="sDot"></div>
+    <div class="status-items" id="sItems">
+      <span class="status-item" id="sMsg">Ladataan dataa…</span>
+    </div>
+    <button class="btn-refresh" id="btnRefresh" onclick="init()" disabled>&#9654;&nbsp; Päivitä</button>
+  </div>
+
+  <!-- §01 Current posture -->
+  <div style="margin-bottom:3rem;">
+    <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">Nykyinen posture — EPP (W168)</span></div>
+    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: Fingrid Open Data DS&nbsp;124 (kulutus) · DS&nbsp;192 (tuotanto).</p>
+
+    <div class="posture-blk">
+      <div class="posture-epp">
+        <div class="epp-val" id="eppVal">—</div>
+        <div class="epp-badge" id="eppBadge">
+          <div class="epp-badge-dot" id="eppDot"></div>
+          <span class="epp-badge-txt" id="eppTxt">—</span>
+        </div>
+        <div class="epp-sub" id="eppSub">W168 · synteettinen · DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20</div>
+      </div>
+      <div class="posture-grid">
+        <div class="pg-item">
+          <div class="pg-lbl">Päivitys</div>
+          <div class="pg-val" id="pgTs">—</div>
+          <div class="pg-desc">Viimeisin Fingrid-haku</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Datapisteet</div>
+          <div class="pg-val" id="pgPts">—</div>
+          <div class="pg-desc">Tuntidata W168-ikkunassa</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Spot (viimeisin)</div>
+          <div class="pg-val" id="pgSpot">—</div>
+          <div class="pg-desc">DS 105 · €/MWh</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Kulutus (W24 ka)</div>
+          <div class="pg-val" id="pgC">—</div>
+          <div class="pg-desc">MW · DS 124</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Tuotanto (W24 ka)</div>
+          <div class="pg-val" id="pgP">—</div>
+          <div class="pg-desc">MW · DS 192</div>
+        </div>
+        <div class="pg-item">
+          <div class="pg-lbl">Import-gap (W24 ka)</div>
+          <div class="pg-val" id="pgG">—</div>
+          <div class="pg-desc">MW · kulutus − tuotanto</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="alert-blk danger" id="alertBP">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">BP-like — kriittinen kestävyyspaine</div>
+        <div class="alert-body">EPP ylittää 0.75. Monipäiväinen endurance-kapasiteetti on kriittisesti ohut suhteessa jatkuvan kuorman sitoumuksiin. Tämä ei ole toiminnallinen hälytys — se on rakenteellinen diagnoosi. Viitteet: WP-001 (168h stress-ikkuna) · DA-003 (kerrosdivergenssi).</div>
+      </div>
+    </div>
+    <div class="alert-blk warn" id="alertEl">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">Elevated — kestävyyspaine kasvussa</div>
+        <div class="alert-body">EPP välillä 0.50–0.75. Stressipersistenssi ja tuontiriippuvuus koholla. Suositus: seuraa DA-001 varhaisvaroituslogiikan mukaisesti (concern trending toward danger). Viite: WP-008 (jatkuvan kuorman allokaatio).</div>
+      </div>
+    </div>
+
+    <!-- Threshold zones -->
+    <div class="zone-blk">
+      <div class="zone-item"><div class="zone-val" style="color:var(--sg);">Normal</div><div class="zone-lbl" style="color:var(--sg);">0.00 – 0.25</div><div class="zone-rng">Endurance buffer riittävä</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--sy);">Tight</div><div class="zone-lbl" style="color:var(--sy);">0.25 – 0.50</div><div class="zone-rng">Marginaalit supistuvat</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--so);">Elevated</div><div class="zone-lbl" style="color:var(--so);">0.50 – 0.75</div><div class="zone-rng">Stressipersistenssi koholla</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--sr);">BP-like</div><div class="zone-lbl" style="color:var(--sr);">0.75 – 1.00</div><div class="zone-rng">Kriittinen — Black Period -paine</div></div>
+    </div>
+  </div>
+
+  <!-- §02 Core metrics table -->
+  <div class="metrics-section">
+    <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Core Metrics — W24 · W72 · W168</span></div>
+    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP-komponenttipainot: DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20. Luokittelu jokaiselle ikkunalle erikseen.</p>
+    <table class="met-tbl" id="metTable">
+      <thead>
+        <tr>
+          <th style="width:28%;">Metriikka</th>
+          <th class="rh">W24</th>
+          <th class="rh">W72</th>
+          <th class="rh">W168</th>
+          <th class="rh">Paino</th>
+          <th class="rh">Luokka (W168)</th>
+        </tr>
+      </thead>
+      <tbody id="metBody">
+        <tr><td colspan="6" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:1.5rem .75rem;">Ladataan…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §03 Time series chart -->
+  <div class="chart-section">
+    <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Aikasarjat — MW · tuntidatan kelluva ikkuna</span></div>
+    <div class="chart-controls">
+      <button class="cb" id="cbW24" onclick="setChartWindow(24)">W24</button>
+      <button class="cb on" id="cbW72" onclick="setChartWindow(72)">W72</button>
+      <button class="cb" id="cbW168" onclick="setChartWindow(168)">W168</button>
+    </div>
+    <div class="chart-wrap"><svg id="chMain" style="width:100%;height:100%;"></svg></div>
+    <div class="chart-legend">
+      <div class="lg-item"><div class="lg-line" style="background:var(--ink);"></div>Kulutus (DS 124)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sg);"></div>Kotimainen tuotanto (DS 192)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.7;"></div>Import-gap (kulutus − tuotanto)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.2;height:8px;"></div>Stressitunti (gap > 5% kulutuksesta)</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);line-height:1.9;padding-top:.5rem;border-top:1px solid var(--rule);">
+      MW ≠ MWh · Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa · Import-gap positiivinen = nettomaahantuonti · Stressitunti = kulutus &gt; 1.05 × tuotanto
+    </div>
+  </div>
+
+  <!-- §04 EPP Trend -->
+  <div style="margin-bottom:3rem;">
+    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
+    <p class="snote">Rullaava EPP lasketaan jokaiselle tunnille käyttäen 24h taaksepäin suuntautuvaa ikkunaa (W24-EPP) koko W168-datassa. Värikynnykset: Normal &lt; 0.25 · Tight 0.25–0.50 · Elevated 0.50–0.75 · BP-like &gt; 0.75.</p>
+    <div class="epp-trend-wrap"><svg id="chEPP" style="width:100%;height:100%;"></svg></div>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20 · Laskettu Fingrid-datasta</div>
+  </div>
+
+  <!-- §05 Stress Persistence -->
+  <div class="sp-section">
+    <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Stress Persistence — SP (D)</span></div>
+    <p class="snote">Stressipersistenssi mittaa osuuden tunneista, joissa kulutus ylittää kotimaisen tuotannon yli 5 %. Threshold-vyöhykkeet: Normal &lt; 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like &gt; 50 %. Viite: WP-001 (168h stress-ikkuna).</p>
+    <div class="sp-grid">
+      <div class="sp-blk" id="spW24">
+        <div class="sp-win">W24</div>
+        <div class="sp-val" id="sp24v">—</div>
+        <div class="sp-label" id="sp24l">—</div>
+        <div class="sp-hours" id="sp24h">—</div>
+      </div>
+      <div class="sp-blk" id="spW72">
+        <div class="sp-win">W72</div>
+        <div class="sp-val" id="sp72v">—</div>
+        <div class="sp-label" id="sp72l">—</div>
+        <div class="sp-hours" id="sp72h">—</div>
+      </div>
+      <div class="sp-blk" id="spW168">
+        <div class="sp-win">W168</div>
+        <div class="sp-val" id="sp168v">—</div>
+        <div class="sp-label" id="sp168l">—</div>
+        <div class="sp-hours" id="sp168h">—</div>
+      </div>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;margin-top:.75rem;">
+      <thead>
+        <tr>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">SP-vyöhyke</th>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Osuus</th>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Tulkinta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sg);">Normal</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-family:var(--mono);">&lt; 15 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Endurance-kapasiteetti riittävä</td></tr>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sy);">Tight</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">15–30 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Marginaalit supistuvat — seuraa</td></tr>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--so);">Elevated</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">30–50 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Stressitunteja liikaa — DA-001 -kynnys</td></tr>
+        <tr><td style="padding:.5rem .6rem;color:var(--sr);">BP-like</td><td style="padding:.5rem .6rem;">&gt; 50 %</td><td style="padding:.5rem .6rem;font-size:.8rem;color:var(--muted);">Black Period -analogia — kriittinen</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §06 Instrument boundaries -->
+  <div class="bounds-section">
+    <div class="shdr"><span class="snum">&sect; 06</span><span class="stit">Instrumentin rajaukset</span></div>
+    <ul class="bounds-list">
+      <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä.</li>
+      <li>Posture-luokittelu ei ennusta yksittäisiä sähkökatkoja tai spot-hinnan kehitystä.</li>
+      <li>EPP on synteettinen indeksi — komponenttiarvot (DP, DC, NIR, SP) ovat ensisijainen tulkinnan lähde.</li>
+      <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä.</li>
+      <li>MW ≠ MWh. Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa — keskeistä on kestävyyskerros ajan yli.</li>
+      <li>Riskisiirto on rakenteellinen havainto, ei moraalinen arvio yksittäisistä toimijoista.</li>
+      <li>Fingrid-data on tuntiresoluutiota — lyhytaikaiset piikkit eivät näy suoraan indikaattoreissa.</li>
+    </ul>
+  </div>
+
+  <!-- References -->
+  <div class="refs-section">
+    <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Viitteet</span></div>
+    <ul class="ref-list">
+      <li><span class="ref-id">WP-001</span>Capacity vs. Duration — Black Period 168h stress window</li>
+      <li><span class="ref-id">DA-001</span>Early warning logic — "Concern trending toward Danger"</li>
+      <li><span class="ref-id">DA-003</span>Layer divergence — L1–L2 vs. L3 endurance gap</li>
+      <li><span class="ref-id">WP-008</span>Continuous load allocation and endurance pressure</li>
+      <li><span class="ref-id">TN-001</span>PPA structure and residual risk transfer</li>
+    </ul>
+    <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:1.25rem;line-height:1.9;border-top:1px solid var(--rule);padding-top:.75rem;">
+      The instrument does not ask whether Finland has power in a given hour.<br>
+      It asks whether Finland's winter system is becoming more dependent on thin endurance margins<br>
+      as continuous load commitments grow faster than the multi-day layer that sustains them.
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  <div>Aether Continuity Institute<br>Winter Endurance Monitor<br>v2.0 · <span id="footerDate">2026</span></div>
+  <div>Basis: WP-001 · DA-003 · WP-008<br>Source: Fingrid Open Data<br>Proxy: aci-fingrid-proxy.ruotsalainen-marko.workers.dev</div>
+  <div>aethercontinuity.org<br>Open diagnostic instrument<br>Not an operational alert system</div>
+</footer>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
+const DS = { consumption: 124, production: 192, spot: 105 };
+const BASELINE = { cLow: 6500, cHigh: 13500 }; // MW range for DP normalization
+const STRESS_THRESHOLD = 0.05; // 5% gap = stress hour
+const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
+
+let rawData = []; // merged hourly { time, c, p, gap }
+let chartWindow = 72;
+let lastFetch = null;
+
+// ── Data fetch ────────────────────────────────────────────────────────────────
+async function fetchSeries(dsId, hours, size) {
+  const now = new Date();
+  const from = new Date(now - hours * 3.6e6);
+  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(now.toISOString())}&size=${size}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`DS ${dsId}: HTTP ${r.status}`);
+  const j = await r.json();
+  const rows = (j.data || j);
+  if (!Array.isArray(rows) || !rows.length) throw new Error(`DS ${dsId}: no data`);
+  return rows.filter(d => d.value != null);
+}
+
+function snapHour(ts) {
+  const d = new Date(ts);
+  d.setMinutes(0, 0, 0);
+  return d.getTime();
+}
+
+function mergeData(cRows, pRows) {
+  const cMap = new Map(), pMap = new Map();
+  cRows.forEach(r => cMap.set(snapHour(r.start_time || r.startTime || r.time || r.timestamp), r.value));
+  pRows.forEach(r => pMap.set(snapHour(r.start_time || r.startTime || r.time || r.timestamp), r.value));
+  const allKeys = new Set([...cMap.keys(), ...pMap.keys()]);
+  const merged = [];
+  allKeys.forEach(k => {
+    const c = cMap.get(k), p = pMap.get(k);
+    if (c != null && p != null) {
+      merged.push({ time: new Date(k), c, p, gap: c - p });
+    }
+  });
+  return merged.sort((a, b) => a.time - b.time);
+}
+
+// ── Metrics ───────────────────────────────────────────────────────────────────
+function calcWindow(slice) {
+  if (!slice.length) return null;
+  const n = slice.length;
+  const avgC = slice.reduce((s, d) => s + d.c, 0) / n;
+  const avgP = slice.reduce((s, d) => s + d.p, 0) / n;
+  const avgGap = avgC - avgP;
+
+  const dp = Math.min(1, Math.max(0, (avgC - BASELINE.cLow) / (BASELINE.cHigh - BASELINE.cLow)));
+  const dc = Math.min(1, Math.max(0, avgP / avgC));
+  const nir = Math.min(1, Math.max(0, Math.max(0, avgGap) / avgC));
+
+  const stressH = slice.filter(d => d.gap > d.c * STRESS_THRESHOLD).length;
+  const sp = stressH / n;
+
+  const epp = Math.min(1, Math.max(0, (1 - dc) * 0.30 + sp * 0.30 + dp * 0.20 + nir * 0.20));
+
+  return { avgC, avgP, avgGap, dp, dc, nir, sp, epp, stressH, n };
+}
+
+function computeAll(data) {
+  return {
+    w24:  calcWindow(data.slice(-24)),
+    w72:  calcWindow(data.slice(-72)),
+    w168: calcWindow(data.slice(-168)),
+  };
+}
+
+// Rolling EPP for trend chart (W24 rolling over full dataset)
+function rollingEPP(data) {
+  return data.map((_, i) => {
+    const start = Math.max(0, i - 23);
+    const m = calcWindow(data.slice(start, i + 1));
+    return m ? m.epp : 0;
+  });
+}
+
+// ── Classify ──────────────────────────────────────────────────────────────────
+const POSTURES = [
+  { label: 'Normal',   max: 0.25, color: '#2d6b3a', bg: '#eef6f0', cls: '' },
+  { label: 'Tight',    max: 0.50, color: '#7a6010', bg: '#faf6e8', cls: 'tight' },
+  { label: 'Elevated', max: 0.75, color: '#8b3a10', bg: '#faf0e8', cls: 'elevated' },
+  { label: 'BP-like',  max: 1.01, color: '#8b1010', bg: '#faf0f0', cls: 'bp' },
+];
+function classify(v) { return POSTURES.find(p => v < p.max) || POSTURES[0]; }
+
+function spLabel(sp) {
+  if (sp < SP_THRESHOLDS[0]) return { label: 'Normal',   color: '#2d6b3a', cls: '' };
+  if (sp < SP_THRESHOLDS[1]) return { label: 'Tight',    color: '#7a6010', cls: 'tight' };
+  if (sp < SP_THRESHOLDS[2]) return { label: 'Elevated', color: '#8b3a10', cls: 'elevated' };
+  return { label: 'BP-like', color: '#8b1010', cls: 'bp' };
+}
+
+// ── Format helpers ────────────────────────────────────────────────────────────
+const fmt = {
+  pct: v => (v * 100).toFixed(1) + ' %',
+  dec: v => v.toFixed(3),
+  mw:  v => Math.round(v).toLocaleString('fi-FI') + ' MW',
+  num: v => v.toFixed(2),
+};
+
+// ── Render §01 Posture ────────────────────────────────────────────────────────
+function renderPosture(m, spot) {
+  const { w24, w168 } = m;
+  if (!w168) return;
+  const p = classify(w168.epp);
+
+  document.getElementById('eppVal').textContent = w168.epp.toFixed(3);
+  document.getElementById('eppVal').style.color = p.color;
+  const badge = document.getElementById('eppBadge');
+  badge.style.borderColor = p.color;
+  document.getElementById('eppDot').style.background = p.color;
+  document.getElementById('eppTxt').textContent = p.label;
+  document.getElementById('eppTxt').style.color = p.color;
+
+  const now = new Date();
+  document.getElementById('pgTs').textContent = now.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('pgPts').textContent = rawData.length + ' / 168';
+  document.getElementById('pgSpot').textContent = spot != null ? spot.toFixed(1) + ' €/MWh' : '—';
+
+  if (w24) {
+    document.getElementById('pgC').textContent = fmt.mw(w24.avgC);
+    document.getElementById('pgP').textContent = fmt.mw(w24.avgP);
+    const gEl = document.getElementById('pgG');
+    gEl.textContent = (w24.avgGap >= 0 ? '+' : '') + fmt.mw(w24.avgGap);
+    gEl.style.color = w24.avgGap > 0 ? '#8b1010' : '#2d6b3a';
+  }
+
+  // Alerts
+  document.getElementById('alertBP').className = 'alert-blk danger' + (w168.epp >= 0.75 ? ' on' : '');
+  document.getElementById('alertEl').className  = 'alert-blk warn'  + (w168.epp >= 0.50 && w168.epp < 0.75 ? ' on' : '');
+}
+
+// ── Render §02 Metrics table ──────────────────────────────────────────────────
+function renderMetrics(m) {
+  const { w24, w72, w168 } = m;
+  if (!w168) return;
+
+  const metrics = [
+    {
+      id: 'A · DP', name: 'Demand Pressure',
+      desc: 'Kulutuspaine suhteessa historialliseen vaihteluväliin (6 500–13 500 MW). Korkea DP = korkea kysyntä.',
+      vals: [w24?.dp, w72?.dp, w168?.dp], weight: '0.20',
+      fmt: v => fmt.pct(v),
+    },
+    {
+      id: 'B · DC', name: 'Domestic Coverage',
+      desc: 'Kotimainen tuotanto / kulutus. DC = 1.0 tarkoittaa täyttä omavaraisuutta. EPP-painossa käytetään (1 − DC).',
+      vals: [w24?.dc, w72?.dc, w168?.dc], weight: '0.30',
+      fmt: v => fmt.pct(v),
+      invert: true,
+    },
+    {
+      id: 'C · NIR', name: 'Net Import Reliance',
+      desc: 'max(0, kulutus − tuotanto) / kulutus. Mittaa nettomaahantuonnin osuuden kulutuksesta.',
+      vals: [w24?.nir, w72?.nir, w168?.nir], weight: '0.20',
+      fmt: v => fmt.pct(v),
+    },
+    {
+      id: 'D · SP', name: 'Stress Persistence',
+      desc: 'Stressituntien osuus ikkunasta. Stressitunti = kulutus > 1.05 × tuotanto. Threshold: Normal < 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like > 50 %.',
+      vals: [w24?.sp, w72?.sp, w168?.sp], weight: '0.30',
+      fmt: v => fmt.pct(v),
+      useSP: true,
+    },
+    {
+      id: 'E · EPP', name: 'Endurance Pressure Proxy',
+      desc: 'Synteettinen yhdistelmäindeksi [0–1]. Komponenttipainot: DC 0.30 · SP 0.30 · DP 0.20 · NIR 0.20. Korkea EPP = korkea kestävyyspaine.',
+      vals: [w24?.epp, w72?.epp, w168?.epp], weight: '—',
+      fmt: v => v.toFixed(3),
+      isEPP: true,
+    },
+  ];
+
+  const tbody = document.getElementById('metBody');
+  tbody.innerHTML = '';
+
+  metrics.forEach(met => {
+    const v168 = met.vals[2];
+    const cls = v168 != null ? (met.useSP ? spLabel(v168) : classify(v168)) : null;
+
+    const renderNum = (v, idx) => {
+      if (v == null) return '<td class="met-num"><span style="color:var(--muted);">—</span></td>';
+      const c = met.useSP ? spLabel(v) : classify(v);
+      const bar = met.isEPP
+        ? `<span class="met-bar-wrap"><span class="met-bar" style="width:${(v*100).toFixed(1)}%;background:${c.color};"></span></span>`
+        : '';
+      return `<td class="met-num">${bar}${met.fmt(v)}<span class="met-sub">${met.useSP ? `${Math.round(met.vals[idx] != null ? (idx===0?w24:idx===1?w72:w168).stressH : 0)} / ${idx===0?w24:idx===1?w72:w168 ? (idx===0?w24:idx===1?w72:w168).n : '—'} h` : ''}</span></td>`;
+    };
+
+    const stressH = [w24, w72, w168];
+    const nums = met.vals.map((v, i) => {
+      if (v == null) return '<td class="met-num"><span style="color:var(--muted);">—</span></td>';
+      const c = met.useSP ? spLabel(v) : classify(v);
+      const bar = met.isEPP
+        ? `<span class="met-bar-wrap"><span class="met-bar" style="width:${(v*100).toFixed(1)}%;background:${c.color};"></span></span>`
+        : '';
+      const sub = met.useSP && stressH[i]
+        ? `<span class="met-sub">${stressH[i].stressH} / ${stressH[i].n} h</span>`
+        : '';
+      return `<td class="met-num" style="color:${c.color};">${bar}${met.fmt(v)}${sub}</td>`;
+    }).join('');
+
+    const clsCell = cls
+      ? `<td class="met-cls" style="color:${cls.color};">${cls.label}</td>`
+      : `<td class="met-cls" style="color:var(--muted);">—</td>`;
+
+    const rowClass = met.isEPP ? ' class="epp-row"' : '';
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr${rowClass}>
+        <td>
+          <span class="met-id">${met.id}${met.invert ? ' <span style="font-size:.48rem;color:var(--muted);">(1−DC in EPP)</span>' : ''}</span>
+          <span class="met-name">${met.name}${met.isEPP ? '' : `<span class="weight-chip">w=${met.weight}</span>`}</span>
+          <div class="met-desc">${met.desc}</div>
+        </td>
+        ${nums}
+        <td class="met-num" style="color:var(--muted);font-size:.6rem;">${met.weight}</td>
+        ${clsCell}
+      </tr>
+    `);
+  });
+}
+
+// ── Render §05 SP blocks ──────────────────────────────────────────────────────
+function renderSP(m) {
+  const windows = [
+    { key: 'w24', sufW: 'spW24', sufV: 'sp24v', sufL: 'sp24l', sufH: 'sp24h', label: 'W24' },
+    { key: 'w72', sufW: 'spW72', sufV: 'sp72v', sufL: 'sp72l', sufH: 'sp72h', label: 'W72' },
+    { key: 'w168', sufW: 'spW168', sufV: 'sp168v', sufL: 'sp168l', sufH: 'sp168h', label: 'W168' },
+  ];
+  windows.forEach(w => {
+    const d = m[w.key];
+    if (!d) return;
+    const sp = spLabel(d.sp);
+    document.getElementById(w.sufW).className = `sp-blk ${sp.cls}`;
+    document.getElementById(w.sufV).textContent = fmt.pct(d.sp);
+    document.getElementById(w.sufV).style.color = sp.color;
+    document.getElementById(w.sufL).textContent = sp.label;
+    document.getElementById(w.sufL).style.color = sp.color;
+    document.getElementById(w.sufH).textContent = `${d.stressH} stressituntia / ${d.n} h`;
+  });
+}
+
+// ── SVG chart helpers ─────────────────────────────────────────────────────────
+function drawMainChart(data) {
+  const svg = document.getElementById('chMain');
+  const W = svg.parentElement.clientWidth || 800;
+  const H = svg.parentElement.clientHeight || 220;
+  const pad = { t: 12, b: 28, l: 56, r: 12 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  if (!data.length) { svg.innerHTML = ''; return; }
+
+  const allVals = data.flatMap(d => [d.c, d.p, Math.max(0, d.gap)]);
+  const minV = Math.min(...allVals) * 0.95;
+  const maxV = Math.max(...allVals) * 1.02;
+  const n = data.length;
+  const xS = i => pad.l + (i / Math.max(1, n - 1)) * cW;
+  const yS = v => pad.t + cH - ((v - minV) / (maxV - minV)) * cH;
+
+  // Y ticks
+  const steps = 5;
+  const yTicks = Array.from({ length: steps + 1 }, (_, i) => minV + (maxV - minV) * i / steps);
+
+  // X ticks (every 12h or 24h depending on window)
+  const xInterval = data.length > 100 ? 24 : 12;
+  const xTicks = [];
+  data.forEach((d, i) => {
+    if (d.time.getHours() === 0 || (d.time.getHours() % xInterval === 0 && i === 0)) {
+      xTicks.push({ i, label: d.time.toLocaleDateString('fi-FI', { weekday: 'short', day: 'numeric' }) });
+    }
+  });
+
+  let h = `<defs>
+    <clipPath id="clip"><rect x="${pad.l}" y="${pad.t}" width="${cW}" height="${cH}"/></clipPath>
+    <linearGradient id="gapGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8b1010" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#8b1010" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>`;
+
+  // Grid
+  yTicks.forEach(v => {
+    h += `<line x1="${pad.l}" y1="${yS(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yS(v).toFixed(1)}" stroke="#c8bfad" stroke-width=".5" opacity=".6"/>`;
+    h += `<text x="${pad.l-5}" y="${(yS(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#7a7468">${(v/1000).toFixed(1)}k</text>`;
+  });
+
+  // Stress bands
+  data.forEach((d, i) => {
+    if (d.gap > d.c * STRESS_THRESHOLD) {
+      const x = xS(i), bw = Math.max(1, cW / n);
+      h += `<rect x="${(x - bw/2).toFixed(1)}" y="${pad.t}" width="${(bw+1).toFixed(1)}" height="${cH}" fill="#8b1010" opacity=".07" clip-path="url(#clip)"/>`;
+    }
+  });
+
+  // Import-gap area
+  const gapPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(Math.max(0,d.gap)).toFixed(1)}`).join(' ');
+  const gapZero = yS(0) > pad.t + cH ? pad.t + cH : yS(0);
+  h += `<path d="${gapPath} L${xS(n-1).toFixed(1)},${gapZero.toFixed(1)} L${xS(0).toFixed(1)},${gapZero.toFixed(1)} Z" fill="url(#gapGrad)" clip-path="url(#clip)"/>`;
+  h += `<path d="${gapPath}" fill="none" stroke="#8b1010" stroke-width="1" opacity=".6" clip-path="url(#clip)"/>`;
+
+  // Production
+  const pPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(d.p).toFixed(1)}`).join(' ');
+  h += `<path d="${pPath}" fill="none" stroke="#2d6b3a" stroke-width="1.5" clip-path="url(#clip)"/>`;
+
+  // Consumption
+  const cPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(d.c).toFixed(1)}`).join(' ');
+  h += `<path d="${cPath}" fill="none" stroke="#0e0d0b" stroke-width="1.75" clip-path="url(#clip)"/>`;
+
+  // X labels
+  xTicks.forEach(t => {
+    h += `<line x1="${xS(t.i).toFixed(1)}" y1="${pad.t}" x2="${xS(t.i).toFixed(1)}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;
+    h += `<text x="${xS(t.i).toFixed(1)}" y="${H-6}" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#7a7468">${t.label}</text>`;
+  });
+
+  // Axes
+  h += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width="1"/>`;
+  h += `<line x1="${pad.l}" y1="${pad.t+cH}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width="1"/>`;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = h;
+}
+
+function drawEPPChart(eppSeries, data) {
+  const svg = document.getElementById('chEPP');
+  const W = svg.parentElement.clientWidth || 800;
+  const H = svg.parentElement.clientHeight || 100;
+  const pad = { t: 6, b: 16, l: 40, r: 12 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  const n = eppSeries.length;
+  if (!n) return;
+
+  const xS = i => pad.l + (i / Math.max(1, n - 1)) * cW;
+  const yS = v => pad.t + cH - v * cH;
+
+  const currentEPP = eppSeries[n - 1];
+  const pc = classify(currentEPP);
+
+  let h = `<defs>
+    <linearGradient id="eppG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${pc.color}" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="${pc.color}" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>`;
+
+  // Threshold zones background
+  [[0,0.25,'#eef6f0'],[0.25,0.50,'#faf6e8'],[0.50,0.75,'#faf0e8'],[0.75,1.0,'#faf0f0']].forEach(([mn,mx,bg])=>{
+    h += `<rect x="${pad.l}" y="${yS(mx).toFixed(1)}" width="${cW}" height="${Math.max(0,yS(mn)-yS(mx)).toFixed(1)}" fill="${bg}" opacity=".7"/>`;
+  });
+
+  // Threshold lines
+  [[0.25,'#7a6010'],[0.50,'#8b3a10'],[0.75,'#8b1010']].forEach(([v,c])=>{
+    h += `<line x1="${pad.l}" y1="${yS(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yS(v).toFixed(1)}" stroke="${c}" stroke-width=".75" stroke-dasharray="4,4" opacity=".5"/>`;
+  });
+
+  const path = eppSeries.map((v, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(v).toFixed(1)}`).join(' ');
+  const area = `${path} L${xS(n-1).toFixed(1)},${yS(0).toFixed(1)} L${xS(0).toFixed(1)},${yS(0).toFixed(1)} Z`;
+
+  h += `<path d="${area}" fill="url(#eppG)"/>`;
+  h += `<path d="${path}" fill="none" stroke="${pc.color}" stroke-width="1.5"/>`;
+
+  // Y labels
+  [0, 0.25, 0.50, 0.75, 1.0].forEach(v => {
+    h += `<text x="${pad.l-4}" y="${(yS(v)+3).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="7.5" fill="#7a7468">${v.toFixed(2)}</text>`;
+  });
+
+  // Current value marker
+  const lastX = xS(n - 1), lastY = yS(currentEPP);
+  h += `<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="3" fill="${pc.color}" stroke="var(--paper)" stroke-width="1.5"/>`;
+  h += `<text x="${(lastX - 4).toFixed(1)}" y="${(lastY - 7).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="${pc.color}" font-weight="500">${currentEPP.toFixed(3)}</text>`;
+
+  // X labels (days)
+  data.forEach((d, i) => {
+    if (d.time.getHours() === 0) {
+      h += `<text x="${xS(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-family="DM Mono" font-size="7.5" fill="#7a7468">${d.time.toLocaleDateString('fi-FI', { weekday: 'short', day: 'numeric' })}</text>`;
+    }
+  });
+
+  // Axes
+  h += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width="1"/>`;
+  h += `<line x1="${pad.l}" y1="${pad.t+cH}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width="1"/>`;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = h;
+}
+
+// ── Chart window toggle ───────────────────────────────────────────────────────
+function setChartWindow(w) {
+  chartWindow = w;
+  ['W24','W72','W168'].forEach(s => {
+    document.getElementById('cb'+s).className = 'cb' + (parseInt(s.replace('W','')) === w ? ' on' : '');
+  });
+  const slice = rawData.slice(-w);
+  drawMainChart(slice);
+}
+
+// ── Status bar ────────────────────────────────────────────────────────────────
+function setStatus(state, items) {
+  const dot = document.getElementById('sDot');
+  dot.className = `status-dot ${state}`;
+  const el = document.getElementById('sItems');
+  el.innerHTML = items.map(([k, v, warn]) =>
+    `<span class="status-item${warn?' warn':''}">${k}: <strong>${v}</strong></span>`
+  ).join('');
+}
+
+// ── Main init ─────────────────────────────────────────────────────────────────
+async function init() {
+  const btn = document.getElementById('btnRefresh');
+  btn.disabled = true;
+  setStatus('loading', [['Tila', 'Ladataan…']]);
+
+  // Update header date
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fi-FI', { month: 'long', year: 'numeric' });
+  document.getElementById('hdrDate').textContent = dateStr;
+  document.getElementById('footerDate').textContent = now.getFullYear();
+
+  let cRows, pRows, spotVal = null;
+  const errors = [];
+
+  // Fetch consumption
+  try {
+    setStatus('loading', [['DS 124', 'kulutus…']]);
+    cRows = await fetchSeries(DS.consumption, 175, 200);
+  } catch (e) {
+    errors.push('DS 124: ' + e.message);
+    cRows = [];
+  }
+
+  // Delay between requests (proxy rate limit)
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch production
+  try {
+    setStatus('loading', [['DS 192', 'tuotanto…']]);
+    pRows = await fetchSeries(DS.production, 175, 200);
+  } catch (e) {
+    errors.push('DS 192: ' + e.message);
+    pRows = [];
+  }
+
+  await new Promise(r => setTimeout(r, 1200));
+
+  // Fetch spot (optional)
+  try {
+    setStatus('loading', [['DS 105', 'spot €/MWh…']]);
+    const sRows = await fetchSeries(DS.spot, 6, 10);
+    if (sRows.length) spotVal = sRows[sRows.length - 1].value;
+  } catch (e) {
+    // spot is optional — don't add to errors
+  }
+
+  // Merge
+  if (!cRows.length || !pRows.length) {
+    // Fallback to synthetic
+    rawData = generateSynthetic(168);
+    setStatus('demo', [
+      ['Tila', 'Demo-data (API-virhe)'],
+      ['Virhe', errors.join(' · '), true],
+    ]);
+  } else {
+    rawData = mergeData(cRows, pRows);
+    lastFetch = new Date();
+    const statusItems = [
+      ['Tila', 'Live'],
+      ['Pisteet', rawData.length + ' h'],
+      ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
+    ];
+    if (errors.length) statusItems.push(['Huom', errors.join(', '), true]);
+    setStatus(errors.length ? 'error' : 'live', statusItems);
+  }
+
+  // Compute
+  const m = computeAll(rawData);
+  const epp = rollingEPP(rawData);
+
+  // Render
+  renderPosture(m, spotVal);
+  renderMetrics(m);
+  renderSP(m);
+
+  const chartSlice = rawData.slice(-chartWindow);
+  drawMainChart(chartSlice);
+  drawEPPChart(epp, rawData);
+
+  btn.disabled = false;
+}
+
+// ── Synthetic fallback ────────────────────────────────────────────────────────
+function generateSynthetic(hours) {
+  const now = new Date();
+  const out = [];
+  for (let i = hours - 1; i >= 0; i--) {
+    const t = new Date(now - i * 3.6e6);
+    const h = t.getHours(), dow = t.getDay();
+    const isWe = dow === 0 || dow === 6;
+    const diurnal = Math.sin(((h - 7) / 24) * 2 * Math.PI) * 1400;
+    const c = Math.max(0, 9200 + diurnal + (isWe ? -700 : 0) + (Math.random() - 0.5) * 500);
+    const wind = Math.sin((i / 36) * Math.PI) * 700 + Math.random() * 300 + 800;
+    const p = Math.max(0, 2800 + 1900 + wind + 2300 + (Math.random() - 0.5) * 400);
+    out.push({ time: t, c, p, gap: c - p });
+  }
+  return out;
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', init);
+window.addEventListener('resize', () => {
+  if (rawData.length) {
+    drawMainChart(rawData.slice(-chartWindow));
+    drawEPPChart(rollingEPP(rawData), rawData);
+  }
+});
+// Auto-refresh every 30 min
+setInterval(init, 30 * 60 * 1000);
+</script>
+</body>
+</html>
