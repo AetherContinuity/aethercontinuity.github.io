@@ -1511,23 +1511,31 @@ async function init() {
   let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
   const errors = [], layerErrors = [];
 
+  // Lataa olemassaoleva puskuri
+  const cachedData = cacheLoad();
+  const cacheInfo = cacheStats(cachedData);
+  const needsFullFetch = cacheInfo.hours < 12; // ensimmäinen lataus
+  const fetchHours = needsFullFetch ? 175 : 14; // normaali: vain viimeisin ~12h
+
+  setStatus('loading', [['Puskuri', cacheInfo.hours + 'h / 168h — haetaan uusimmat…']]);
+
   // Fetch consumption
   try {
-    setStatus('loading', [['DS 124', 'kulutus…']]);
-    cRows = await fetchSeries(DS.consumption, 175, 200);
+    setStatus('loading', [['DS 124', 'kulutus ' + fetchHours + 'h…']]);
+    cRows = await fetchSeries(DS.consumption, fetchHours, 200);
   } catch (e) { errors.push('DS 124: ' + e.message); cRows = []; }
 
-  await new Promise(r => setTimeout(r, 1200));
+  await new Promise(r => setTimeout(r, 1500));
 
   // Fetch total production — DS 192 ensin, DS 74 fallbackina
   try {
     setStatus('loading', [['DS 192', 'tuotanto…']]);
-    pRows = await fetchSeries(DS.production, 175, 200);
+    pRows = await fetchSeries(DS.production, fetchHours, 200);
   } catch (e) {
     try {
       setStatus('loading', [['DS 74', 'tuotanto (fallback)…']]);
-      pRows = await fetchSeries(DS.production2, 175, 200);
-      errors.push('DS 192 → DS 74 (fallback käytössä)');
+      pRows = await fetchSeries(DS.production2, fetchHours, 200);
+      errors.push('DS 192 → DS 74');
     } catch (e2) {
       errors.push('DS 192+74: ' + e2.message);
       pRows = [];
@@ -1600,14 +1608,19 @@ async function init() {
       ['Virhe', errors.join(' · '), true],
     ]);
   } else {
-    rawData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
+    const newData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
+    // Yhdistä puskuriin ja tallenna
+    rawData = cacheMerge(cachedData, newData);
+    cacheSave(rawData);
     lastFetch = new Date();
+    const stats = cacheStats(rawData);
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const tempCount = rawData.filter(d => d.temp != null).length;
     const dataWarn = rawData.length < 48;
     const statusItems = [
-      ['Tila', dataWarn ? 'Live — vähän dataa' : 'Live'],
-      ['Pisteet', rawData.length + ' h' + (dataWarn ? ' ⚠ alle 48h — EPP epäluotettava' : '')],
+      ['Tila', dataWarn ? 'Live — kerätään dataa' : 'Live'],
+      ['Puskuri', stats.hours + 'h / 168h' + (dataWarn ? ' ⚠' : ' ✓')],
+      ['Pisteet', rawData.length + ' h' + (dataWarn ? ' — EPP alustava' : '')],
       ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
       ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' : 'ei saatavilla', tempCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
@@ -1994,6 +2007,46 @@ async function runBacktest() {
   renderBTTable(results);
   renderBTSignal(results);
   renderCHPTrend();
+}
+
+
+// ── Paikallinen aikasarjapuskuri — kerää 168h vähitellen ─────────────────────
+const CACHE_KEY = 'aci_wem_timeseries';
+const CACHE_MAX_AGE_H = 180; // säilytä max 180h
+
+function cacheLoad() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    // Muunna time-kentät takaisin Date-olioiksi
+    return parsed.map(d => ({ ...d, time: new Date(d.time) }));
+  } catch(e) { return []; }
+}
+
+function cacheSave(data) {
+  try {
+    const cutoff = Date.now() - CACHE_MAX_AGE_H * 3.6e6;
+    const trimmed = data.filter(d => new Date(d.time).getTime() > cutoff);
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify(trimmed));
+  } catch(e) { /* localStorage full — ohita */ }
+}
+
+function cacheMerge(existing, newData) {
+  // Yhdistä uusi data olemassaolevaan, päivitä arvojen mukaan jos sama timestamp
+  const map = new Map(existing.map(d => [d.time.getTime(), d]));
+  newData.forEach(d => map.set(d.time.getTime(), d));
+  const merged = [...map.values()].sort((a, b) => a.time - b.time);
+  const cutoff = Date.now() - CACHE_MAX_AGE_H * 3.6e6;
+  return merged.filter(d => d.time.getTime() > cutoff);
+}
+
+function cacheStats(data) {
+  if (!data.length) return { hours: 0, oldest: null };
+  const oldest = new Date(Math.min(...data.map(d => d.time.getTime())));
+  const newest = new Date(Math.max(...data.map(d => d.time.getTime())));
+  const hours = Math.round((newest - oldest) / 3.6e6) + 1;
+  return { hours, oldest, newest };
 }
 
 // ── §10 Rakenteellinen paine ─────────────────────────────────────────────────
