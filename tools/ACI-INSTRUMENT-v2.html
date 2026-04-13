@@ -689,7 +689,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 </div><!-- /page -->
 
 <footer>
-  <div>Aether Continuity Institute<br>Winter Endurance Monitor<br>v2.0 · <span id="footerDate">2026</span></div>
+  <div>Aether Continuity Institute<br>Winter Endurance Monitor<br>v2.6 · <span id="footerDate">2026</span></div>
   <div>Basis: WP-001 · DA-003 · WP-008<br>Source: Fingrid Open Data<br>Proxy: Fingrid Open Data API</div>
   <div>aethercontinuity.org<br>Open diagnostic instrument<br>Not an operational alert system</div>
 </footer>
@@ -1609,34 +1609,42 @@ async function init() {
 }
 
 // ── Synthetic fallback ────────────────────────────────────────────────────────
-function generateSynthetic(hours) {
+function generateSynthetic(hours = 168) {
   const now = new Date();
   const out = [];
+  const monthNow = now.getMonth() + 1;
+  const monthBase = MONTHLY_BASELINE[monthNow] || 9200;
+
   for (let i = hours - 1; i >= 0; i--) {
     const t = new Date(now - i * 3.6e6);
     const h = t.getHours(), dow = t.getDay();
     const isWe = dow === 0 || dow === 6;
-    const diurnal = Math.sin(((h - 7) / 24) * 2 * Math.PI) * 1400;
-    const c = Math.max(0, 9200 + diurnal + (isWe ? -700 : 0) + (Math.random() - 0.5) * 500);
-    // Realistic Finnish production layers
-    const nuc = 2800 + (Math.random() - 0.5) * 100;           // ~2800 MW vakaa
-    // CHP correlates with demand (cold = more heating = more CHP)
-    const chpBase = 1800 + (c - 9200) * 0.25;  // scales with demand
-    const chp = Math.max(800, chpBase + (Math.random() - 0.5) * 300);
-    const hyd = 1600 + Math.sin(i / 48 * Math.PI) * 400 + (Math.random() - 0.5) * 200;
-    const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 800 + 900 + (Math.random() - 0.5) * 400);
-    const residual = 600 + (Math.random() - 0.5) * 200;
-    const p = nuc + hyd + wnd + chp + residual;
+
+    // Kulutus: kausibaseline + diurnaali + viikonloppu
+    const diurnal = Math.sin(((h - 7) / 24) * 2 * Math.PI) * 1100;
+    const c = Math.max(0, monthBase + diurnal + (isWe ? -600 : 0) + (Math.random() - 0.5) * 400);
+
     // Lämpötila: kausiaalto + alueelliset erot
     const dayOfYear = Math.round(i / 24) % 365;
     const baseTemp = -8 + 24 * Math.sin((dayOfYear - 80) / 365 * 2 * Math.PI);
-    const noise = (Math.random()-0.5)*3;
-    const tempHki = Math.round((baseTemp + 3  + noise)*10)/10;  // Helsinki +3°C
-    const tempKuo = Math.round((baseTemp - 2  + noise + (Math.random()-0.5)*2)*10)/10; // Kuopio -2°C
-    const tempRov = Math.round((baseTemp - 7  + noise + (Math.random()-0.5)*3)*10)/10; // Rovaniemi -7°C
-    const temp = Math.round((tempHki*0.45 + tempKuo*0.30 + tempRov*0.25)*10)/10;
-    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd, chp,
-               temp, tempHki, tempKuo, tempRov });
+    const noise = (Math.random() - 0.5) * 3;
+    const tempHki = Math.round((baseTemp + 3 + noise) * 10) / 10;
+    const tempKuo = Math.round((baseTemp - 2 + noise + (Math.random()-0.5)*2) * 10) / 10;
+    const tempRov = Math.round((baseTemp - 7 + noise + (Math.random()-0.5)*3) * 10) / 10;
+    const temp = Math.round((tempHki * 0.45 + tempKuo * 0.30 + tempRov * 0.25) * 10) / 10;
+
+    // Tuotanto — kalibroitu niin että p ≈ c (Suomi tuo ~300 MW nettona)
+    const nuc = 2800 + (Math.random() - 0.5) * 80;
+    const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 700 + 800 + (Math.random()-0.5)*350);
+    // Kohdetuotanto: kulutus - tyypillinen nettoimportti (300 MW)
+    const targetP = c - 300 - (Math.random() - 0.5) * 600;
+    // CHP korreloi lämpötilan kanssa
+    const chp = Math.max(600, 1700 + Math.max(0, 18 - temp) * 30 + (Math.random()-0.5)*200);
+    // Hydro täyttää loput
+    const hyd = Math.max(400, targetP - nuc - wnd - chp);
+    const p = nuc + hyd + wnd + chp;
+
+    out.push({ time: t, c, p, gap: c - p, nuc, hyd, wnd, chp, temp, tempHki, tempKuo, tempRov });
   }
   return out;
 }
@@ -1660,7 +1668,7 @@ const EPP_STRESS_THRESHOLD = 0.50; // EPP ≥ 0.50 = Elevated+ = signal flagged
 async function fetchHistorical(dsId, startISO, hours = 168) {
   const from = new Date(startISO);
   const to   = new Date(from.getTime() + hours * 3.6e6);
-  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=180`;
+  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=300`;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
   const j = await r.json();
@@ -1798,7 +1806,7 @@ function renderBTTable(results) {
       <td class="rh">${r.eci != null ? (r.eci * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.sp != null ? (r.sp * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.dc != null ? (r.dc * 100).toFixed(1) + '%' : '—'}</td>
-      <td class="rh" style="color:var(--muted);">${r.pts ?? '—'}</td>
+      <td class="rh" style="color:${r.pts != null && r.pts < 48 ? 'var(--so)' : 'var(--muted)'};" title="${r.pts != null && r.pts < 48 ? '⚠ Liian vähän dataa — proxy palautti matalan resoluution' : ''}">${r.pts ?? '—'}${r.pts != null && r.pts < 48 ? ' ⚠' : ''}</td>
       <td class="rh ${sigClass}" style="font-weight:500;">${sigLabel}</td>
     </tr>`);
   });
@@ -1852,6 +1860,7 @@ async function runBacktest() {
       const data = await fetchPeriodData(p);
       if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 3500)); // rate limit
 
+      if (data.length < 48) throw new Error(`vain ${data.length} datapistettä — proxy matala resoluutio`);
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
 
