@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-015 — Residual Market Failure and Elasticity Collapse · ACI</title>
+<meta name="description" content="Three simultaneous structural shifts — demand rigidification, buffer erosion, and spot market residualization — combine to produce an elasticity collapse in the Nordic power system during the 2027–2030 window. This working paper maps the interactions and their implications for EPP and OGAS2 instrumentation.">
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  .finding p { font-size: .92rem; margin-bottom: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: .88rem; }
+  thead th { border-bottom: 2px solid var(--ink); padding: .5rem .75rem; text-align: left; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mid); }
+  tbody td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .shift-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--rule); margin: 1.25rem 0; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; }
+  .shift-cell { background: var(--bg); padding: .85rem .9rem; }
+  .shift-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  .shift-title { font-weight: 700; font-size: .85rem; margin-bottom: .4rem; }
+  .shift-items { font-size: .78rem; color: var(--mid); line-height: 1.6; }
+
+  .phase-map { background: var(--tag-bg); border: 1px solid var(--rule); padding: 1.25rem; margin: 1.25rem 0; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .82rem; }
+  .phase-map-title { font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .75rem; }
+  .phase-row { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: .5rem; }
+  .phase-axis { min-width: 90px; font-weight: 600; font-size: .78rem; color: var(--mid); }
+  .phase-desc { color: var(--ink); font-size: .82rem; line-height: 1.5; }
+
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: .4rem 0; border-bottom: 1px solid var(--rule); font-size: .85rem; line-height: 1.5; }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-id { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .08em; color: var(--light); margin-right: .6rem; }
+
+  blockquote { border-left: 3px solid var(--rule); padding-left: 1.25rem; color: var(--mid); font-style: italic; margin: 1.25rem 0; line-height: 1.65; }
+  .scope-note { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; color: var(--mid); border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1.25rem 0; line-height: 1.55; }
+
+  footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; max-width: 760px; margin: 0 auto; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; color: var(--light); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right">
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+    <a href="/tools/">Tools</a>
+    <a href="/about.html">About</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · WP-015 · Working Paper · Domain D-1 / D-4 · Open Working Draft</div>
+  <div class="doc-meta-grid">
+    <span><strong>Version</strong>1.0 · April 2026</span>
+    <span><strong>Domain</strong>D-1 Energy · D-4 Market</span>
+    <span><strong>Status</strong>Open Working Draft</span>
+    <span><strong>Basis</strong>WP-001 · WP-008 · TN-001</span>
+    <span><strong>Relates to</strong>WP-014 · TN-002</span>
+    <span><strong>Keywords</strong>elasticity collapse · PPA · residual market · CHP · hydro</span>
+  </div>
+  <h1 class="doc-title">Residual Market Failure and Elasticity Collapse in the Nordic Power System</h1>
+  <p class="doc-subtitle">Three Simultaneous Structural Shifts and Their Interaction in the 2027–2030 Window</p>
+  <div class="doc-abstract">
+    <p>The Nordic power system is undergoing three simultaneous structural shifts: demand is rigidifying as data centres, hydrogen industry, and heat pumps add inflexible baseload; the thermally-correlated supply buffer is eroding as combined heat and power capacity is phased out and hydropower becomes stochastically unreliable; and the spot market is residualising as long-term power purchase agreements pre-allocate capacity before market clearing. This paper maps the interactions between these shifts and argues that their combination produces an elasticity collapse — not a gradual stress increase but a structural discontinuity in the system's capacity to redistribute load under compound stress. The empirical window for the first full-stack test is 2027–2030. The implications for EPP and OGAS2 instrumentation are identified.</p>
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="scope-note">
+    This paper describes structural dynamics derivable from publicly available data and peer-reviewed research. It does not predict specific outages, price levels, or investment outcomes. Quantitative estimates are indicative and subject to the data limitations noted in §7. The phase transition map in §5 is conceptual: empirical calibration of trigger thresholds requires data not currently available in public sources.
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 01</span>
+    <h2>System Definition: Three Simultaneous Structural Shifts</h2>
+
+    <p>The conventional frame for Nordic energy analysis treats supply and demand as separately evolving, with the spot market as the mechanism that balances them. This frame is becoming inadequate. Three structural shifts are now advancing simultaneously, and their interaction — not any single shift — is the analytical object of this paper.</p>
+
+    <div class="shift-grid">
+      <div class="shift-cell">
+        <div class="shift-label">Shift I</div>
+        <div class="shift-title">Demand Rigidification</div>
+        <div class="shift-items">
+          Data centres: rigid 24/7 baseload<br>
+          HYBRIT / PtX: semi-rigid industrial<br>
+          Heat pumps: thermally-coupled peak<br>
+          Electric boilers: price-responsive buffer<br><br>
+          Estimated 2030 addition: +3–10 GW
+        </div>
+      </div>
+      <div class="shift-cell">
+        <div class="shift-label">Shift II</div>
+        <div class="shift-title">Buffer Erosion</div>
+        <div class="shift-items">
+          CHP reduction: thermally-correlated supply disappears<br>
+          Hydropower: seasonal profile shifts, variability increases<br>
+          SE1 (North Sweden): transitions from reserve to competitor<br><br>
+          Direction: all three move simultaneously
+        </div>
+      </div>
+      <div class="shift-cell">
+        <div class="shift-label">Shift III</div>
+        <div class="shift-title">Market Residualisation</div>
+        <div class="shift-items">
+          PPA penetration increases: capacity locked before spot clearing<br>
+          Spot becomes residual balancing market, not price discovery<br>
+          Price signal weakens precisely when stress is highest<br><br>
+          Nordic PPA volume: −43% 2021→2024, then rising
+        </div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">System-level observation</div>
+      <p>The Nordic power system is transitioning from a state in which supply, demand, and market mechanism are independently adjustable to a state in which all three are simultaneously constrained. This is not a quantity problem — it is a structural problem of reduced systemic degrees of freedom.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 02</span>
+    <h2>Demand Rigidification: Three Load Categories</h2>
+
+    <p>New demand entering the Finnish and Nordic system is not homogeneous. Its structural significance depends on its flexibility profile — how it responds to price signals, temperature, and system stress. Three categories are analytically distinct.</p>
+
+    <p><strong>Rigid baseload (data centres).</strong> Data centre demand is effectively constant across all hours, price levels, and weather conditions. Fingrid reports that over 50% of new consumption connection inquiries are related to data centres, with total query volume exceeding 37 GW against a current system peak of approximately 15–16 GW. The realistic 2030 addition is 1–3 GW of continuous load — but the pipeline is structurally larger than any prior demand category in Finnish energy history.</p>
+
+    <p><strong>Semi-rigid industrial baseload (hydrogen and steel).</strong> Hydrogen-based steelmaking (HYBRIT/SSAB, Stegra/Boden) and power-to-X processes require large continuous electricity inputs. SSAB's current production target requires approximately 15 TWh per year; full LKAB conversion requires up to 55 TWh per year. These processes have hydrogen storage that allows limited temporal shifting, but the annual energy volume is structurally fixed. This is not demand response — it is a new form of industrial baseload with constrained but non-zero flexibility. The Stegra liquidity crisis (2025) and Northvolt bankruptcy introduce uncertainty on timing, but the SE1 region's industrial electricity demand trajectory is directionally clear.</p>
+
+    <p><strong>Thermally-coupled demand (heat pumps and electric boilers).</strong> Heat pumps and electric boilers are the load category most directly relevant to WP-001's Black Period scenario. Their consumption is temperature-correlated: it peaks precisely when the system is already under maximum stress from cold weather. Fingrid reports over 3 GW of electric boiler capacity entering the system. Heat pump additions are estimated at 300–800 MW additional winter peak demand. Unlike data centres, these loads have theoretical price-response capability — but this capability depends on functioning spot market price signals, which is exactly what Shift III undermines.</p>
+
+    <table>
+      <thead>
+        <tr><th>Category</th><th>Est. 2030 (GW)</th><th>Flexibility</th><th>Temperature correlation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Data centres</td><td>1–3</td><td>None</td><td>None</td></tr>
+        <tr><td>HYBRIT / PtX</td><td>1–5+</td><td>Low (hydrogen buffer)</td><td>None</td></tr>
+        <tr><td>Heat pumps</td><td>0.3–0.8</td><td>Moderate</td><td>High (amplifies peaks)</td></tr>
+        <tr><td>Electric boilers</td><td>1–3</td><td>High (price-responsive)</td><td>High</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>3–10</strong></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p>The critical structural observation is that the rigid and semi-rigid categories (data centres, HYBRIT) add load that cannot respond to stress signals, while the thermally-coupled categories (heat pumps, boilers) add load whose theoretical flexibility is contingent on functioning price signals — which Shift III is simultaneously degrading.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 03</span>
+    <h2>Buffer Erosion: CHP, Hydropower, and SE1</h2>
+
+    <p>The supply-side structural change is the simultaneous weakening of three buffering mechanisms that historically provided the Nordic system with resilience under compound stress.</p>
+
+    <p><strong>Combined heat and power reduction.</strong> CHP is not merely a generation source — it is a thermally-correlated buffer. Its output is highest precisely when heating demand is highest, creating a natural covariance between supply and demand that stabilises the system during cold periods. EU ETS and Fit-for-55 policy frameworks are structurally reducing CHP capacity: ACI's backtest data shows the CHP share of Finnish production falling from approximately 36% (2022) to 25% (2024). When CHP is removed, the temporal alignment between peak demand and thermal supply disappears. The Firm Share metric (ECI) may remain nominally adequate while its timing properties deteriorate — a form of structural misrepresentation that requires explicit acknowledgement in instrumentation.</p>
+
+    <p><strong>Hydrological regime change.</strong> Finnish and Nordic hydropower faces a climate-driven regime shift that is already observable in SYKE monitoring data. The mechanism is not simple reduction in total water availability but a seasonal profile shift: warmer winters cause mid-winter snowmelt, reducing the spring inflow peak that traditionally fills reservoirs, and increasing summer drought probability through higher evapotranspiration. SYKE's 2025 report documents this explicitly: spring floods are decreasing, summer and early autumn low water levels are increasing, particularly in southern and central Finland. Jääskeläinen et al. (2018) modelled the 1939–1942 reference drought and found it would reduce Finnish hydropower generation by approximately 42%. Crucially, the same study found that the energy security impact increases dramatically when drought simultaneously affects Norway and Sweden — reducing import availability precisely when domestic generation is lowest. Nature Energy (2024) confirms the European dimension: low spring inflows can quadruple summer and winter energy drought risks through compounding dynamics.</p>
+
+    <p><strong>SE1 transition from reserve to competitor.</strong> Northern Sweden (SE1) has historically functioned as Finland's primary import reserve — a structurally surplus region whose excess hydropower was available during Finnish stress events. This role is changing. HYBRIT's Luleå facilities, Stegra's Boden plant, Northvolt's Skellefteå operations, and associated green hydrogen production are collectively adding thousands of megawatts of new industrial demand to SE1. Energimyndigheten's assessments project SE1 facing generation deficits by 2030 in some scenarios. The transmission asymmetry identified in Aalto (2024) — 1,500 MW from SE1 to Finland but only 1,100 MW in the reverse direction — means this transition has asymmetric consequences for Finnish energy security: reduced import capacity cannot be compensated by increased export capability.</p>
+
+    <div class="finding">
+      <div class="finding-label">Buffer erosion — structural observation</div>
+      <p>All three buffering mechanisms move in the same direction simultaneously. CHP removal eliminates thermally-correlated supply. Hydrological regime change makes hydropower stochastically unreliable in the seasons when it is most needed. SE1 industrialisation converts a structural import reserve into a competitive consumption region. None of these individually constitutes a crisis. Their simultaneity is the analytical object.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 04</span>
+    <h2>Spot Market Residualisation: Allocation Failure</h2>
+
+    <p>The Nordic spot market (Nord Pool) performs two functions: price discovery and capacity allocation. These functions depend on a sufficiently large fraction of total capacity being offered into the market at marginal cost. When a significant share of capacity is pre-committed through long-term contracts — PPAs, bilateral industrial agreements, intra-group transfers — the market operates on the residual volume only. It discovers the price of marginal capacity, not of the system.</p>
+
+    <p>The evidence for increasing PPA penetration is mixed but directional. AFRY data shows the Nordic PPA market declined 43% from 2021 to 2024, reflecting post-crisis uncertainty. However, the industrial offtake agreements being signed by SSAB/Vattenfall, Stegra, and hyperscale data centre operators represent a qualitatively different form of capacity commitment — not corporate PPAs for renewable certificates but structural energy supply agreements that remove capacity from spot dispatch.</p>
+
+    <p>The consequence is not simply higher average prices. The consequence is that the price signal becomes structurally unreliable as a stress indicator precisely when stress is highest. When cold, still weather creates peak demand and simultaneously reduces wind generation, the spot price should signal scarcity and activate demand response (flexible boilers, industrial curtailment). If the capacity that would normally respond to this signal is contractually committed to other users, the signal activates nothing — or activates it too late. Stress Persistence (SP) in the EPP framework increases not because of physical generation shortfalls but because market-mediated reallocation has failed.</p>
+
+    <p>This is TN-001's structural observation reformulated at the market level: the system is not short of physical capacity — it is short of <em>dispatchable</em> capacity. The distinction matters because the conventional policy response (build more capacity) does not address a residualisation problem. Residualisation requires either reversing PPA penetration (unlikely given industrial investment logic) or creating capacity mechanisms that ensure a minimum volume of dispatchable capacity regardless of contractual commitments.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 05</span>
+    <h2>Interaction I — Peak Alignment: The Black Period Test</h2>
+
+    <p>The first interaction between the three shifts is straightforward in structure but extreme in consequence. Under compound winter stress conditions — cold weather, low wind, and constrained interconnection — all demand categories simultaneously peak while all supply buffers simultaneously weaken.</p>
+
+    <p>Cold weather activates heat pump and electric boiler demand (thermally-coupled load). Low wind eliminates the variable generation that has grown substantially in recent years. Data centres and HYBRIT continue their constant draw regardless of system state. Hydropower may be at seasonal low if preceded by dry autumn. SE1 is occupied by industrial demand. The spot market attempts to allocate the residual — but if residualisation has advanced, the signal reaches only a small fraction of total system capacity.</p>
+
+    <p>WP-001 defines the Black Period as a multi-day event requiring 168 hours of sustained adequacy — not a single-hour peak. The EPP framework's W168 window was designed precisely to capture this duration dimension. The interaction described here explains why the 2027–2030 window is the first empirical test of the full-stack hypothesis: it is the first period in which all three shifts are simultaneously active at meaningful scale.</p>
+
+    <div class="finding">
+      <div class="finding-label">Interaction I — finding</div>
+      <p>Peak demand, minimum supply buffering, and market allocation failure are now correlated events — they are driven by the same meteorological conditions. This correlation is the structural feature that distinguishes the 2027–2030 system from prior historical configurations. Previous stress events (2002–2003 drought, 2022 price crisis) involved one or two simultaneous stressors. The 2027–2030 configuration involves all three.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 06</span>
+    <h2>Interaction II — Thermal Decoupling: Why ECI Is Insufficient</h2>
+
+    <p>The Endurance Compatibility Index measures the share of production from firm sources (nuclear plus hydropower). A high ECI indicates that production is not dominated by variable sources. This is a valid indicator — but it is insensitive to the temporal dimension that CHP removal introduces.</p>
+
+    <p>CHP is thermally correlated: its output is highest when ambient temperature is lowest and heating demand is highest. It is not firm in the sense of being weather-independent, but it is firm in the sense of being reliably available precisely when the system most needs additional supply. When CHP is removed, ECI may remain stable (nuclear output is unchanged; hydropower is unchanged in expectation) while the system's ability to respond to peak demand deteriorates. The index correctly describes the average composition but incorrectly implies stability under stress.</p>
+
+    <p>The relevant variable is not ECI itself but the covariance between firm supply availability and peak demand intensity. CHP provided positive covariance — higher when needed. Its removal reduces this covariance toward zero or makes it negative (if variable renewables, which have negative covariance with cold still weather, fill the gap). This is not captured in current EPP instrumentation and represents a structural limitation of the framework as currently specified.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 07</span>
+    <h2>Interaction III — Elasticity Collapse: Drift to Jump</h2>
+
+    <p>The combined effect of the three shifts produces what this paper terms elasticity collapse: the system's capacity to redistribute load in response to stress signals falls abruptly rather than gradually as structural thresholds are crossed.</p>
+
+    <p>In a drift regime, stress accumulates gradually and the system responds through marginal adjustments — price-induced demand reduction, import activation, reserve dispatch. Each incremental increase in stress produces a proportional response. This is the regime for which current EPP instrumentation was designed.</p>
+
+    <p>In a jump regime, the response function becomes discontinuous. A small increase in stress — one additional cold day, one SE1 line constraint, one further PPA commitment — crosses a structural threshold and produces a disproportionate system response. The threshold is determined by the three-dimensional interaction of demand rigidity, supply buffer availability, and market depth. Below the threshold the system behaves normally. Above it, the normal redistribution mechanisms have been consumed and no equivalent replacement exists.</p>
+
+    <div class="phase-map">
+      <div class="phase-map-title">Conceptual Phase Transition Map — Trigger Dimensions (qualitative; empirical calibration required)</div>
+      <div class="phase-row">
+        <span class="phase-axis">Axis I</span>
+        <span class="phase-desc">DC + PtX load (GW continuous) — as this increases, the fraction of demand that cannot respond to price signals grows. Threshold: unknown; plausible range 3–5 GW additional continuous load.</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-axis">Axis II</span>
+        <span class="phase-desc">Hydro reliability factor (dimensionless, 0–1) — as hydrological variability increases, the effective firm capacity of hydro decreases. Current value: approximately 0.85–0.90. Climate trajectory: declining.</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-axis">Axis III</span>
+        <span class="phase-desc">CHP residual capacity (GW) — as CHP is phased out, the thermally-correlated supply buffer disappears. Current trajectory: 36% of production in 2022 → 25% in 2024, continuing.</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-axis">Boundary</span>
+        <span class="phase-desc">The jump-regime boundary is the surface in this three-dimensional space at which elasticity collapse occurs. Its location is not empirically determined. This paper identifies its existence and the variables that define it. Calibration requires data not currently available in public sources (Q-1).</span>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Central finding</div>
+      <p>The Nordic power system is transitioning from a drift regime — in which stress accumulates gradually and is absorbed through marginal adjustments — to the vicinity of a jump regime boundary, in which structural thresholds determine whether the system's redistribution capacity is available or exhausted. The 2027–2030 window is the first period in which the three trigger dimensions may simultaneously approach the boundary. EPP instrumentation designed for drift-regime behaviour will systematically underestimate stress in the jump-regime vicinity.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 08</span>
+    <h2>Empirical Window: 2027–2030</h2>
+
+    <p>The argument of this paper is not that collapse is certain or imminent. It is that 2027–2030 constitutes the first window in which all three structural shifts are simultaneously active at system-relevant scale — and therefore the first empirical test of whether elasticity collapse is a realistic outcome or a theoretical artefact.</p>
+
+    <p>The timing basis is as follows. Data centre capacity additions currently in Fingrid's connection queue are expected to begin materialising in 2026–2028. HYBRIT's demonstration plant in Gällivare is targeted for 2026; SSAB has committed to large-scale fossil-free steel from 2026 onward. SE1 industrial demand growth from these and other projects is projected to be significant by 2028. CHP capacity reduction is already underway and will continue through this period. Hydrological regime change is already observable in SYKE monitoring data and is not reversible on this timescale.</p>
+
+    <p>The winter of 2028–2029 is the first instance where all variables are plausibly in the range that defines the jump-regime boundary. This does not make it the date of a predicted event — it makes it the date of the first full-stack structural test.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 09</span>
+    <h2>Implications for EPP and OGAS2 Instrumentation</h2>
+
+    <p>The EPP framework as currently specified (v3+T) measures demand pressure, firm share, wind risk, and stress persistence. These are appropriate variables for a drift regime. Three modifications are identified as necessary to extend the framework to the jump-regime vicinity.</p>
+
+    <p><strong>Probabilistic Firm Share.</strong> FS currently treats hydropower as a deterministic component. Under hydrological regime change, hydro availability is a distribution rather than a fixed value. FS should be extended to FS(p) — the firm share at a given probability level — with the distribution width as an explicit uncertainty indicator. This requires seasonal reservoir monitoring data, which is available from SYKE and Nord Pool but not currently integrated into EPP calculation.</p>
+
+    <p><strong>Distribution-aware Stress Persistence.</strong> SP currently measures the fraction of hours in which consumption exceeds production by more than 5%. This correctly captures mean stress level but is insensitive to the tail risk structure that elasticity collapse introduces. A distribution-aware SP would track not only the fraction of stress hours but their serial correlation — the probability of extended stress sequences (168h blocks). This is the direct instrument for detecting the transition from drift to jump behaviour.</p>
+
+    <p><strong>Market depth indicator.</strong> Neither EPP nor OGAS2 currently includes a variable for spot market depth or PPA penetration. The development of such an indicator faces a fundamental data problem: PPA contract details are not public. Proxy approaches using spot price volatility relative to consumption (DS 105 / DS 124) and the long-run trend in price–consumption correlation are identified as candidates for investigation, but are not yet operational. This is noted as a development requirement rather than a current capability.</p>
+
+    <p>Hydrological change is the only dimension among those discussed in this paper that is currently measurable through public Finnish data sources (SYKE, vesi.fi). The remaining structural variables — PPA penetration, SE1 industrial demand, CHP covariance loss — require either new data sources or proxy development.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 10</span>
+    <h2>Open Questions</h2>
+
+    <p><strong>Q-1: Phase transition boundary calibration.</strong> The conceptual phase transition map in §7 identifies three trigger dimensions but does not specify the threshold values. Empirical calibration requires data on PPA penetration rates, SE1 industrial demand growth, and CHP covariance properties that are not currently available in public sources.</p>
+
+    <p><strong>Q-2: HYBRIT flexibility characterisation.</strong> The paper treats HYBRIT as semi-rigid industrial baseload. The actual flexibility of hydrogen storage as a demand-response mechanism at full commercial scale is not determined — HYBRIT's pilot results suggest 25–40% cost reduction from hydrogen buffering, but the system-level dispatchability at scale is unknown. This affects Axis I calibration in the phase transition map.</p>
+
+    <p><strong>Q-3: SE1 surplus erosion timeline.</strong> The transition of SE1 from structural surplus to competitive consumption depends on the pace of industrial electrification relative to renewable capacity additions. The Stegra financing crisis introduces uncertainty that may delay SE1 demand growth. The timeline remains open.</p>
+
+    <p><strong>Q-4: Capacity mechanism design.</strong> The analysis implies that residualisation cannot be addressed by supply additions alone — it requires mechanisms that ensure dispatchable capacity regardless of PPA commitments. Finland lacks a capacity mechanism. Fingrid has called for one. The design of such a mechanism and its interaction with the structural dynamics described here is not addressed in this paper.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 11</span>
+    <h2>References</h2>
+    <ul class="ref-list">
+      <li><span class="ref-id">WP-001</span>ACI. Duration Adequacy and the Black Period Hypothesis. aethercontinuity.org.</li>
+      <li><span class="ref-id">WP-008</span>ACI. Institutional Allocation and Continuous Load Commitments. aethercontinuity.org.</li>
+      <li><span class="ref-id">WP-014</span>ACI. Dynamic Coupled Risk Model for Small-State Systems. aethercontinuity.org.</li>
+      <li><span class="ref-id">TN-001</span>ACI. Duration-Capable Local Energy Node: Structural Properties. aethercontinuity.org.</li>
+      <li><span class="ref-id">R-01</span>Jääskeläinen et al. (2018). Energy security impacts of a severe drought on the future Finnish energy system. <em>Journal of Environmental Management</em>, 217, 542–554.</li>
+      <li><span class="ref-id">R-02</span>Veijalainen et al. (2019). Severe Drought in Finland: Modeling Effects on Water Resources and Assessing Climate Change Impacts. <em>Sustainability</em>, 11(8), 2450.</li>
+      <li><span class="ref-id">R-03</span>van der Meer et al. (2024). Temporally compounding energy droughts in European electricity systems with hydropower. <em>Nature Energy</em>.</li>
+      <li><span class="ref-id">R-04</span>Aalto University (2024). Analysis of Severe Scarcity Situations in Finland's Low Carbon Electricity System Until 2030. <em>Energies</em>, 17(23), 5928.</li>
+      <li><span class="ref-id">R-05</span>Larsen et al. (2025). Trends in hydroclimate extremes: how changes in winter affect water storage and baseflow. <em>Hydrology and Earth System Sciences</em>, 29, 4055–4080.</li>
+      <li><span class="ref-id">R-06</span>SYKE (2025). Ilmastonmuutokseen sopeutuminen vesihuollossa. Suomen ympäristökeskuksen raportteja 28/2025.</li>
+      <li><span class="ref-id">R-07</span>Fingrid (2026). Sähkön riittävyys — neuvottelukunnan katsaus. March 2026.</li>
+      <li><span class="ref-id">R-08</span>AFRY Management Consulting (2025). Power Purchase Agreements and their use in the Nordics. Nordic Energy Research.</li>
+      <li><span class="ref-id">R-09</span>SSAB/LKAB/Vattenfall (2021). HYBRIT: First hydrogen-reduced sponge iron. Press release.</li>
+      <li><span class="ref-id">R-10</span>IEA (2022). Norway and Finland Climate Resilience Policy Indicators. International Energy Agency.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  ACI Working Paper No. 015 · Residual Market Failure and Elasticity Collapse in the Nordic Power System<br>
+  Version 1.0 · April 2026 · Domain D-1 / D-4 · Open Working Draft · Subject to revision<br>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  This document describes structural dynamics derivable from publicly available data and peer-reviewed research. It does not advocate specific investments, policies, or operational decisions.
+</footer>
+
+</body>
+</html>
