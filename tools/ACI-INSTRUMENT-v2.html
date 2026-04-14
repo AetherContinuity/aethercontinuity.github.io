@@ -1752,11 +1752,23 @@ async function init() {
     catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
 
-  // DS 105: Spot-hinnat MD_proxy:tä varten (ei kriittinen, virhettä ei raportoida)
+  // DS 105: Spot-hinnat MD_proxy:tä varten — suora haku, ei aggregointia
   let spotRows = [];
   try {
-    const sr = await fetchYesterday(DS.spot, 'DS 105');
-    spotRows = sr.filter(d => d.c != null && d.c >= 0).map(d => ({ value: d.c }));
+    const spotNow = new Date();
+    const spotEnd   = new Date(spotNow - 2 * 3.6e6);
+    const spotStart = new Date(spotNow - 48 * 3.6e6);
+    const spotUrl = PROXY + '?ds=105' +
+      '&start=' + encodeURIComponent(spotStart.toISOString()) +
+      '&end='   + encodeURIComponent(spotEnd.toISOString()) +
+      '&size=200';
+    const sr = await fetch(spotUrl);
+    if (sr.ok) {
+      const sj = await sr.json();
+      spotRows = (sj.data||sj)
+        .filter(d => d.value != null && d.value >= 0)
+        .map(d => ({ value: d.value }));
+    }
   } catch(e) { /* MD_proxy putoaa fallback-tilaan */ }
 
   if (!cRows.length || !pRows.length) {
