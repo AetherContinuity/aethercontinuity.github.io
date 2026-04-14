@@ -1129,10 +1129,10 @@ function computeAll(data) {
 // Korkea arvo = spot-hinta heilahtelee paljon suhteessa kulutukseen → residualisaatioriski
 function calcMDProxy(spotData, consumptionData) {
   if (!spotData || spotData.length < 12) return null;
-  const prices = spotData.map(d => d.value).filter(v => v != null && v >= 0);
+  const prices = spotData.map(d => d.value).filter(v => v != null);
   if (prices.length < 6) return null;
   const mean = prices.reduce((s,v) => s+v, 0) / prices.length;
-  if (mean < 1) return null; // vältetään nollahintojen vääristymä
+  // Huom: negatiiviset hinnat sallittu — ne ovat markkinainformaatiota
   const variance = prices.reduce((s,v) => s+(v-mean)**2, 0) / prices.length;
   const cv = Math.sqrt(variance) / mean; // coefficient of variation
   // Normalisoi: CV < 0.3 = Normal, 0.3-0.6 = Elevated, > 0.6 = High
@@ -1765,11 +1765,21 @@ async function init() {
     const sr = await fetch(spotUrl);
     if (sr.ok) {
       const sj = await sr.json();
-      spotRows = (sj.data||sj)
-        .filter(d => d.value != null && d.value >= 0)
-        .map(d => ({ value: d.value }));
+      const raw = sj.data || sj;
+      spotRows = Array.isArray(raw)
+        ? raw.filter(d => d.value != null).map(d => ({ value: d.value }))
+        : [];
+      // Debug: päivitä MD-kortti datamäärällä
+      const dbg = document.getElementById('v4MDn');
+      if (dbg) dbg.textContent = spotRows.length + ' (haettu)';
+    } else {
+      const dbg = document.getElementById('v4MDn');
+      if (dbg) dbg.textContent = 'HTTP ' + sr.status;
     }
-  } catch(e) { /* MD_proxy putoaa fallback-tilaan */ }
+  } catch(e) {
+    const dbg = document.getElementById('v4MDn');
+    if (dbg) dbg.textContent = 'virhe: ' + e.message.slice(0,30);
+  }
 
   if (!cRows.length || !pRows.length) {
     rawData = generateSynthetic(168);
