@@ -138,6 +138,28 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sp-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;}
 .sp-hours{font-size:.8rem;color:var(--muted);margin-top:.2rem;}
 
+
+/* ── §11 EPP v4 ── */
+.v4-section { border-top: 1px solid var(--rule); padding: 1.5rem 0; }
+.v4-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.v4-card { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: .9rem 1rem; }
+.v4-card-title { font-family: var(--mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.v4-card-value { font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: .2rem; }
+.v4-card-sub { font-family: var(--mono); font-size: .65rem; color: var(--muted); }
+.v4-card-regime { display: inline-block; padding: .15rem .4rem; border-radius: 2px; font-family: var(--mono); font-size: .6rem; letter-spacing: .06em; }
+.v4-regime-drift { background: #e8f5e9; color: #2e7d32; }
+.v4-regime-metastable { background: #fff8e1; color: #f57f17; }
+.v4-regime-jump { background: #fce4ec; color: #b71c1c; }
+.v4-cluster-bars { display: flex; gap: 2px; height: 40px; align-items: flex-end; margin: .5rem 0; }
+.v4-cluster-bar { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; transition: height .3s; }
+.v4-cluster-bar-1 { background: var(--green); }
+.v4-cluster-bar-2 { background: #f0b429; }
+.v4-cluster-bar-3 { background: #e25822; }
+.v4-cluster-bar-4 { background: #b71c1c; }
+.v4-cluster-labels { display: flex; gap: 2px; font-family: var(--mono); font-size: .55rem; color: var(--muted); }
+.v4-cluster-label { flex: 1; text-align: center; }
+.v4-hydro-rf { font-size: .75rem; font-family: var(--mono); color: var(--muted); margin-top: .3rem; }
+
 /* ── §09 Backtest ── */
 .bt-section{margin-bottom:3rem;}
 .bt-controls{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
@@ -669,6 +691,58 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     </ul>
   </div>
 
+
+  <!-- §11 EPP v4 -->
+  <div class="v4-section">
+    <div class="shdr"><span class="snum">&sect; 11</span><span class="stit">EPP v4 — Regiimitunnistus · SP_cluster · FS(p) · MD_proxy</span></div>
+    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä.</p>
+
+    <div class="v4-grid">
+      <!-- SP_cluster -->
+      <div class="v4-card">
+        <div class="v4-card-title">SP_cluster — Stressijaksojen pituus</div>
+        <div class="v4-card-value" id="v4RegimeLabel">—</div>
+        <div class="v4-card-sub">T₁₆₈: <span id="v4T168">—</span> h &nbsp;·&nbsp; jaksoja: <span id="v4Episodes">—</span></div>
+        <div class="v4-cluster-bars" id="v4ClusterBars">
+          <div class="v4-cluster-bar v4-cluster-bar-1" id="v4Bar1" style="height:0%"></div>
+          <div class="v4-cluster-bar v4-cluster-bar-2" id="v4Bar2" style="height:0%"></div>
+          <div class="v4-cluster-bar v4-cluster-bar-3" id="v4Bar3" style="height:0%"></div>
+          <div class="v4-cluster-bar v4-cluster-bar-4" id="v4Bar4" style="height:0%"></div>
+        </div>
+        <div class="v4-cluster-labels">
+          <span class="v4-cluster-label">1–6h</span>
+          <span class="v4-cluster-label">6–24h</span>
+          <span class="v4-cluster-label">24–72h</span>
+          <span class="v4-cluster-label">72–168h</span>
+        </div>
+      </div>
+
+      <!-- FS(p) -->
+      <div class="v4-card">
+        <div class="v4-card-title">FS(p) — Probabilistinen Firm Share</div>
+        <div class="v4-card-value" id="v4FSp">—</div>
+        <div class="v4-card-sub">FS nominaali: <span id="v4FSnom">—</span> &nbsp;·&nbsp; hydro_RF: <span id="v4HydroRF">—</span></div>
+        <div class="v4-hydro-rf" id="v4NVELabel">NVE reservoaaridata: ladataan…</div>
+      </div>
+
+      <!-- MD_proxy -->
+      <div class="v4-card">
+        <div class="v4-card-title">MD_proxy — Markkinasyvyys (DS 105)</div>
+        <div class="v4-card-value" id="v4MDLabel">—</div>
+        <div class="v4-card-sub">Hintavolatiliteetti (CV): <span id="v4MDCV">—</span></div>
+        <div class="v4-card-sub">Spot ka: <span id="v4MDPrice">—</span> €/MWh &nbsp;·&nbsp; n=<span id="v4MDn">—</span>h</div>
+      </div>
+    </div>
+
+    <div class="snote" style="margin-top:.75rem;">
+      <strong>Regiimitulkinta:</strong>
+      <span class="v4-card-regime v4-regime-drift">Drift</span> T₁₆₈ &lt; 24h — stressi sirpaloitunutta, markkina allokoi normaalisti &nbsp;·&nbsp;
+      <span class="v4-card-regime v4-regime-metastable">Metastable</span> T₁₆₈ 24–72h — stressiä klusteroituu &nbsp;·&nbsp;
+      <span class="v4-card-regime v4-regime-jump">Jump</span> T₁₆₈ ≥ 72h — pitkä yhtenäinen stressijakso, jump-regiimin indikaattori
+      &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 105 · WP-015 §9
+    </div>
+  </div>
+
   <!-- References -->
   <div class="refs-section">
     <div class="shdr"><span class="snum">&sect; 08</span><span class="stit">Viitteet</span></div>
@@ -713,6 +787,55 @@ const STRESS_THRESHOLD = 0.05; // 5% gap = stress hour
 const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
 
 // Kausikorjaus: kuukausittaiset kulutusbaselinet (MW, Suomi, historiallinen ka)
+// ── EPP v4: Hydro Reliability Factor (NVE reservoaaridata) ───────────────────
+let hydroRF = 1.0;          // 1.0 = normaali, <1.0 = kuivuus
+let hydroRFLabel = 'ei dataa';
+let hydroRFWeek = null;
+
+async function fetchHydroRF() {
+  // NVE Magasinstatistikk — avoin API, ei API-avainta
+  // omrType=EL = koko maa, Uke = viikkonumero, fyllingsgrad = täyttöaste %
+  const NVE_DATA_URL  = 'https://nvebiapi.nve.no/api/Magasinstatistikk/HentOffentligData';
+  const NVE_STATS_URL = 'https://nvebiapi.nve.no/api/Magasinstatistikk/HentOffentligDataMinMaxMedian';
+  try {
+    const [dataRes, statsRes] = await Promise.all([
+      fetch(NVE_DATA_URL),
+      fetch(NVE_STATS_URL)
+    ]);
+    if (!dataRes.ok || !statsRes.ok) throw new Error('NVE HTTP error');
+    const data  = await dataRes.json();
+    const stats = await statsRes.json();
+
+    // Suodata: omrType=EL (koko Norja), viimeisin vuosi ja viikko
+    const elData  = data.filter(d => d.omrType === 'EL');
+    const elStats = stats.filter(d => d.omrType === 'EL');
+    if (!elData.length || !elStats.length) throw new Error('Ei NVE dataa');
+
+    // Viimeisin havainto
+    const latest = elData.reduce((a,b) =>
+      (a.Aar > b.Aar || (a.Aar===b.Aar && a.Uke > b.Uke)) ? a : b);
+    const currentFill = latest.fyllingsgrad;  // 0–1 desimaali tai 0–100 %
+    const fill = currentFill > 1 ? currentFill / 100 : currentFill; // normalisoi 0–1
+
+    // Mediaani samalle viikolle
+    const medianRec = elStats.find(d => d.Uke === latest.Uke);
+    const medianFill = medianRec
+      ? (medianRec.medFyllingsgrad > 1 ? medianRec.medFyllingsgrad/100 : medianRec.medFyllingsgrad)
+      : 0.65; // fallback jos mediaania ei löydy
+
+    // hydroRF: 1.0 = mediaani, lineaarinen skaala
+    // 0.0% = RF 0.65 (worst historical ref), 100% = RF 1.10 (ylijäämä)
+    const ratio = medianFill > 0 ? fill / medianFill : 1.0;
+    hydroRF = Math.min(1.15, Math.max(0.60, 0.60 + ratio * 0.40));
+    hydroRFLabel = `${(fill*100).toFixed(1)}% (mediaani ${(medianFill*100).toFixed(1)}%)`;
+    hydroRFWeek = `Vk ${latest.Uke}/${latest.Aar}`;
+  } catch(e) {
+    hydroRF = 1.0; // fallback: ei vaikutusta
+    hydroRFLabel = 'NVE ei saatavilla';
+    hydroRFWeek = null;
+  }
+}
+
 const MONTHLY_BASELINE = {
   1:11200, 2:10800, 3:10000, 4:8800,  5:7800,  6:7200,
   7:7000,  8:7400,  9:8200, 10:9200, 11:10400, 12:11000
@@ -897,6 +1020,37 @@ function calcWindow(slice) {
   const stressH = slice.filter(d => d.gap > d.c * STRESS_THRESHOLD).length;
   const sp = stressH / n;
 
+  // SP_cluster v4: stressijaksojen pituusjakauma + T168
+  const spCluster = (() => {
+    const episodes = [];
+    let run = 0;
+    for (const d of slice) {
+      if (d.gap > d.c * STRESS_THRESHOLD) { run++; }
+      else if (run > 0) { episodes.push(run); run = 0; }
+    }
+    if (run > 0) episodes.push(run);
+    const bands = { b1_6: 0, b6_24: 0, b24_72: 0, b72_168: 0 };
+    let maxBlock = 0;
+    for (const e of episodes) {
+      if (e > maxBlock) maxBlock = e;
+      if (e <= 6) bands.b1_6++;
+      else if (e <= 24) bands.b6_24++;
+      else if (e <= 72) bands.b24_72++;
+      else bands.b72_168++;
+    }
+    const total = episodes.length || 1;
+    return {
+      b1_6:  bands.b1_6  / total,
+      b6_24: bands.b6_24 / total,
+      b24_72: bands.b24_72 / total,
+      b72_168: bands.b72_168 / total,
+      t168: maxBlock,   // pisin yhtäjaksoinen stressijakso tunteina
+      episodes: episodes.length,
+      // regiimisignaali: jump = pitkiä klustereita
+      regime: maxBlock >= 72 ? 'jump' : maxBlock >= 24 ? 'metastable' : 'drift'
+    };
+  })();
+
   // Lämpötilakorjattu kysyntäpaine
   const tSlice = slice.filter(d => d.temp != null);
   let avgTemp=null, avgTempHki=null, avgTempKuo=null, avgTempRov=null;
@@ -932,7 +1086,12 @@ function calcWindow(slice) {
     eci = avgPl > 0 ? Math.min(1, (avgNuc+avgHyd)/avgPl) : null;
     eciSemi = (avgPl>0 && avgChp!=null) ? Math.min(1,(avgNuc+avgHyd+avgChp)/avgPl) : null;
     // FS: firm capacity / kulutus — riippumaton muuttuja
-    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
+    // FS(p): hydroRF skaalaa vesivoimakomponentin luotettavuuden mukaan
+    const hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0;
+    const avgHydAdj = avgHyd * hydRF;
+    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj)/avgC) : null;
+    // Tallenna myös nominaali FS vertailua varten
+    const fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
     // WR: tuulivoiman osuus — variabiliteettiriski
     wr = (avgWnd!=null && avgPl>0) ? Math.min(1, avgWnd/avgPl) : null;
     if (fs != null && wr != null) eppMode = 'v3';
@@ -952,7 +1111,9 @@ function calcWindow(slice) {
   return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp,
            eppMode: eppFull, stressH, n, modalMonth, baselineC,
            avgTemp, avgTempHki, avgTempKuo, avgTempRov, tempSpread, avgCexpected,
-           eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp };
+           eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp, spCluster,
+           fsNominal: (typeof fsNominal !== 'undefined') ? fsNominal : null,
+           hydRF: (typeof hydRF !== 'undefined') ? hydRF : 1.0 };
 }
 
 
@@ -962,6 +1123,22 @@ function computeAll(data) {
     w72:  calcWindow(data.slice(-72)),
     w168: calcWindow(data.slice(-168)),
   };
+}
+
+// MD_proxy v4: markkinasyvyysindeksi (DS 105 volatiliteetti / kulutus)
+// Korkea arvo = spot-hinta heilahtelee paljon suhteessa kulutukseen → residualisaatioriski
+function calcMDProxy(spotData, consumptionData) {
+  if (!spotData || spotData.length < 12) return null;
+  const prices = spotData.map(d => d.value).filter(v => v != null && v >= 0);
+  if (prices.length < 6) return null;
+  const mean = prices.reduce((s,v) => s+v, 0) / prices.length;
+  if (mean < 1) return null; // vältetään nollahintojen vääristymä
+  const variance = prices.reduce((s,v) => s+(v-mean)**2, 0) / prices.length;
+  const cv = Math.sqrt(variance) / mean; // coefficient of variation
+  // Normalisoi: CV < 0.3 = Normal, 0.3-0.6 = Elevated, > 0.6 = High
+  const mdProxy = Math.min(1, cv / 0.6);
+  const mdLabel = cv < 0.3 ? 'Normal' : cv < 0.6 ? 'Elevated' : 'High';
+  return { cv: cv.toFixed(3), mdProxy, mdLabel, meanPrice: mean.toFixed(1), n: prices.length };
 }
 
 // Rolling EPP for trend chart (W24 rolling over full dataset)
@@ -1629,6 +1806,12 @@ async function init() {
     }
   }
 
+  // §11 EPP v4 render
+  try {
+    const spotArr = Object.values(spotMap || {});
+    renderV4(metrics?.w168, spotArr);
+  } catch(e) {}
+
   btn.disabled = false;
 }
 
@@ -1737,6 +1920,61 @@ function generateFromBaseline(baseline, startISO) {
                tempHki: temp+3, tempKuo: temp-1, tempRov: temp-5 });
   }
   return out;
+}
+
+
+// ── §11 EPP v4 render ────────────────────────────────────────────────────────
+function renderV4(w168, spotRows) {
+  // SP_cluster
+  const sc = w168?.spCluster;
+  if (sc) {
+    const regime = sc.regime;
+    const el = document.getElementById('v4RegimeLabel');
+    if (el) {
+      el.textContent = regime === 'jump' ? 'Jump-regiimi' : regime === 'metastable' ? 'Metastable' : 'Drift';
+      el.className = 'v4-card-value v4-card-regime v4-regime-' + regime;
+    }
+    const t = document.getElementById('v4T168');
+    if (t) t.textContent = sc.t168;
+    const ep = document.getElementById('v4Episodes');
+    if (ep) ep.textContent = sc.episodes;
+    // Palkki-visualisointi
+    const bars = [sc.b1_6, sc.b6_24, sc.b24_72, sc.b72_168];
+    const maxBar = Math.max(...bars, 0.01);
+    ['v4Bar1','v4Bar2','v4Bar3','v4Bar4'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.style.height = Math.round((bars[i]/maxBar)*100) + '%';
+    });
+  }
+
+  // FS(p)
+  const fsp = w168?.fs;
+  const fsn = w168?.fsNominal;
+  const rf  = w168?.hydRF;
+  const elFSp = document.getElementById('v4FSp');
+  if (elFSp && fsp != null) elFSp.textContent = (fsp*100).toFixed(1) + '%';
+  const elFSn = document.getElementById('v4FSnom');
+  if (elFSn && fsn != null) elFSn.textContent = (fsn*100).toFixed(1) + '%';
+  const elRF = document.getElementById('v4HydroRF');
+  if (elRF && rf != null) elRF.textContent = rf.toFixed(3);
+  // NVE label
+  const nveEl = document.getElementById('v4NVELabel');
+  if (nveEl) {
+    const label = typeof hydroRFLabel !== 'undefined' ? hydroRFLabel : '—';
+    const week  = typeof hydroRFWeek  !== 'undefined' ? hydroRFWeek  : '';
+    nveEl.textContent = `NVE reservoaaridata: ${label}${week ? ' · ' + week : ''}`;
+  }
+
+  // MD_proxy
+  const md = calcMDProxy(spotRows, null);
+  const elMD = document.getElementById('v4MDLabel');
+  if (elMD) elMD.textContent = md ? md.mdLabel : (spotRows?.length ? 'Spot-data ohut' : 'Ei spot-dataa');
+  const elCV = document.getElementById('v4MDCV');
+  if (elCV) elCV.textContent = md ? md.cv : '—';
+  const elPrice = document.getElementById('v4MDPrice');
+  if (elPrice) elPrice.textContent = md ? md.meanPrice : '—';
+  const elN = document.getElementById('v4MDn');
+  if (elN) elN.textContent = md ? md.n : '—';
 }
 
 // ── §09 Backtest ──────────────────────────────────────────────────────────────
