@@ -791,6 +791,7 @@ const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
 let hydroRF = 1.0;          // 1.0 = normaali, <1.0 = kuivuus
 let hydroRFLabel = 'ei dataa';
 let hydroRFWeek = null;
+let globalSpotRows = [];    // DS 105 spot-hinnat MD_proxy:lle
 
 async function fetchHydroRF() {
   // NVE Magasinstatistikk — avoin API, ei API-avainta
@@ -1766,19 +1767,17 @@ async function init() {
     if (sr.ok) {
       const sj = await sr.json();
       const raw = sj.data || sj;
-      spotRows = Array.isArray(raw)
+      globalSpotRows = Array.isArray(raw)
         ? raw.filter(d => d.value != null).map(d => ({ value: d.value }))
         : [];
-      // Debug: päivitä MD-kortti datamäärällä
-      const dbg = document.getElementById('v4MDn');
-      if (dbg) dbg.textContent = spotRows.length + ' (haettu)';
-    } else {
-      const dbg = document.getElementById('v4MDn');
-      if (dbg) dbg.textContent = 'HTTP ' + sr.status;
     }
-  } catch(e) {
-    const dbg = document.getElementById('v4MDn');
-    if (dbg) dbg.textContent = 'virhe: ' + e.message.slice(0,30);
+  } catch(e) { /* MD_proxy putoaa fallback-tilaan */ }
+  // Päivitä MD_proxy nyt kun spot-data on saatavilla
+  if (globalSpotRows.length >= 6) {
+    try {
+      const m4 = computeAll(rawData);
+      if (m4) renderV4(m4.w168, globalSpotRows);
+    } catch(e) {}
   }
 
   if (!cRows.length || !pRows.length) {
@@ -1839,7 +1838,7 @@ async function init() {
   try {
     const m4 = computeAll(rawData);
     // MD_proxy: spot-hinnat rawData:sta jos saatavilla (spotPrice-kenttä)
-    renderV4(m4 ? m4.w168 : null, typeof spotRows !== 'undefined' && spotRows.length >= 6 ? spotRows : null);
+    renderV4(m4 ? m4.w168 : null, globalSpotRows.length >= 6 ? globalSpotRows : null);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
