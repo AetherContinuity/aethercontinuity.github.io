@@ -695,7 +695,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §11 EPP v4 -->
   <div class="v4-section">
     <div class="shdr"><span class="snum">&sect; 11</span><span class="stit">EPP v4 — Regiimitunnistus · SP_cluster · FS(p) · MD_proxy</span></div>
-    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy (DS 105) edellyttää erillistä spot-hintaendpointia — nykyinen proxy tukee vain teho-datasettejä. NVE-reservoaaridata rajoitettu CORS-politiikalla selaimessa; hydro_RF = 1.0 (fallback, ei vaikuta laskentaan).</p>
+    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy lasketaan import-gapin (kulutus−tuotanto) volatiliteetista W168-ikkunassa — ei tarvita erillistä spot-hintadatalähdettä. NVE-reservoaaridata rajoitettu CORS-politiikalla selaimessa; hydro_RF = 1.0 (fallback, ei vaikuta laskentaan).</p>
 
     <div class="v4-grid">
       <!-- SP_cluster -->
@@ -727,10 +727,10 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
       <!-- MD_proxy -->
       <div class="v4-card">
-        <div class="v4-card-title">MD_proxy — Markkinasyvyys (DS 105)</div>
+        <div class="v4-card-title">MD_proxy — Import-gap volatiliteetti (W168)</div>
         <div class="v4-card-value" id="v4MDLabel">—</div>
         <div class="v4-card-sub">Hintavolatiliteetti (CV): <span id="v4MDCV">—</span></div>
-        <div class="v4-card-sub">Spot ka: <span id="v4MDPrice">—</span> €/MWh &nbsp;·&nbsp; n=<span id="v4MDn">—</span>h</div>
+        <div class="v4-card-sub">Gap ka: <span id="v4MDPrice">—</span> &nbsp;·&nbsp; n=<span id="v4MDn">—</span>h</div>
       </div>
     </div>
 
@@ -739,7 +739,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <span class="v4-card-regime v4-regime-drift">Drift</span> T₁₆₈ &lt; 24h — stressi sirpaloitunutta, markkina allokoi normaalisti &nbsp;·&nbsp;
       <span class="v4-card-regime v4-regime-metastable">Metastable</span> T₁₆₈ 24–72h — stressiä klusteroituu &nbsp;·&nbsp;
       <span class="v4-card-regime v4-regime-jump">Jump</span> T₁₆₈ ≥ 72h — pitkä yhtenäinen stressijakso, jump-regiimin indikaattori
-      &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 105 · WP-015 §9
+      &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 124+192 (import-gap CV) · WP-015 §9
     </div>
   </div>
 
@@ -791,7 +791,6 @@ const SP_THRESHOLDS = [0.15, 0.30, 0.50]; // normal/tight/elevated/bp
 let hydroRF = 1.0;          // 1.0 = normaali, <1.0 = kuivuus
 let hydroRFLabel = 'ei dataa';
 let hydroRFWeek = null;
-let globalSpotRows = [];    // DS 105 spot-hinnat MD_proxy:lle
 
 async function fetchHydroRF() {
   // NVE Magasinstatistikk — avoin API, ei API-avainta
@@ -1126,20 +1125,28 @@ function computeAll(data) {
   };
 }
 
-// MD_proxy v4: markkinasyvyysindeksi (DS 105 volatiliteetti / kulutus)
-// Korkea arvo = spot-hinta heilahtelee paljon suhteessa kulutukseen → residualisaatioriski
-function calcMDProxy(spotData, consumptionData) {
-  if (!spotData || spotData.length < 12) return null;
-  const prices = spotData.map(d => d.value).filter(v => v != null);
-  if (prices.length < 6) return null;
-  const mean = prices.reduce((s,v) => s+v, 0) / prices.length;
-  // Huom: negatiiviset hinnat sallittu — ne ovat markkinainformaatiota
-  const variance = prices.reduce((s,v) => s+(v-mean)**2, 0) / prices.length;
-  const cv = Math.sqrt(variance) / mean; // coefficient of variation
-  // Normalisoi: CV < 0.3 = Normal, 0.3-0.6 = Elevated, > 0.6 = High
-  const mdProxy = Math.min(1, cv / 0.6);
-  const mdLabel = cv < 0.3 ? 'Normal' : cv < 0.6 ? 'Elevated' : 'High';
-  return { cv: cv.toFixed(3), mdProxy, mdLabel, meanPrice: mean.toFixed(1), n: prices.length };
+// MD_proxy v4: markkinasyvyysindeksi — import-gap volatiliteetti
+// Lasketaan rawData:sta, ei tarvita erillistä spot-hintadatalähdettä.
+// Korkea CV = import-gap heilahtelee paljon suhteessa kulutukseen
+// → järjestelmä hakee tasapainoa useammin → residualisaatioriskin proxy
+function calcMDProxy(rawSlice) {
+  if (!rawSlice || rawSlice.length < 12) return null;
+  const gaps = rawSlice.map(d => d.gap).filter(v => v != null);
+  const cons = rawSlice.map(d => d.c).filter(v => v != null && v > 0);
+  if (gaps.length < 12 || cons.length < 12) return null;
+  const meanC = cons.reduce((s,v) => s+v, 0) / cons.length;
+  const meanG = gaps.reduce((s,v) => s+v, 0) / gaps.length;
+  const stdG  = Math.sqrt(gaps.reduce((s,v) => s+(v-meanG)**2, 0) / gaps.length);
+  // CV normalisoitu kulutukseen (ei gappiin koska gap voi olla lähellä nollaa)
+  const cv = stdG / meanC;
+  // Kynnykset: Normal <0.04, Elevated 0.04-0.08, High >0.08
+  const mdLabel = cv < 0.04 ? 'Normal' : cv < 0.08 ? 'Elevated' : 'High';
+  const mdProxy = Math.min(1, cv / 0.08);
+  return {
+    cv: cv.toFixed(4), mdProxy, mdLabel,
+    meanGap: meanG.toFixed(0), stdGap: stdG.toFixed(0),
+    n: gaps.length
+  };
 }
 
 // Rolling EPP for trend chart (W24 rolling over full dataset)
@@ -1753,32 +1760,7 @@ async function init() {
     catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
 
-  // DS 105: Spot-hinnat MD_proxy:tä varten — suora haku, ei aggregointia
-  let spotRows = [];
-  try {
-    const spotNow = new Date();
-    const spotEnd   = new Date(spotNow - 2 * 3.6e6);
-    const spotStart = new Date(spotNow - 48 * 3.6e6);
-    const spotUrl = PROXY + '?ds=105' +
-      '&start=' + encodeURIComponent(spotStart.toISOString()) +
-      '&end='   + encodeURIComponent(spotEnd.toISOString()) +
-      '&size=200';
-    const sr = await fetch(spotUrl);
-    if (sr.ok) {
-      const sj = await sr.json();
-      const raw = sj.data || sj;
-      globalSpotRows = Array.isArray(raw)
-        ? raw.filter(d => d.value != null).map(d => ({ value: d.value }))
-        : [];
-    }
-  } catch(e) { /* MD_proxy putoaa fallback-tilaan */ }
-  // Päivitä MD_proxy nyt kun spot-data on saatavilla
-  if (globalSpotRows.length >= 6) {
-    try {
-      const m4 = computeAll(rawData);
-      if (m4) renderV4(m4.w168, globalSpotRows);
-    } catch(e) {}
-  }
+  // MD_proxy käyttää import-gap CV:tä rawData:sta — ei tarvita DS 105 -hakua
 
   if (!cRows.length || !pRows.length) {
     rawData = generateSynthetic(168);
@@ -1838,7 +1820,7 @@ async function init() {
   try {
     const m4 = computeAll(rawData);
     // MD_proxy: spot-hinnat rawData:sta jos saatavilla (spotPrice-kenttä)
-    renderV4(m4 ? m4.w168 : null, globalSpotRows.length >= 6 ? globalSpotRows : null);
+    renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
@@ -1953,7 +1935,7 @@ function generateFromBaseline(baseline, startISO) {
 
 
 // ── §11 EPP v4 render ────────────────────────────────────────────────────────
-function renderV4(w168, spotRows) {
+function renderV4(w168, rawSlice) {
   // SP_cluster
   const sc = w168?.spCluster;
   if (sc) {
@@ -1994,14 +1976,14 @@ function renderV4(w168, spotRows) {
     nveEl.textContent = label === 'ei dataa' ? 'NVE: CORS-rajoite (selain) — hydro_RF = 1.0 (fallback)' : `NVE: ${label}${week ? ' · ' + week : ''}`;
   }
 
-  // MD_proxy
-  const md = calcMDProxy(spotRows, null);
+  // MD_proxy — lasketaan w168 rawData-siivusta
+  const md = calcMDProxy(rawSlice || null);
   const elMD = document.getElementById('v4MDLabel');
-  if (elMD) elMD.textContent = md ? md.mdLabel : (spotRows?.length ? 'Spot-data ohut' : 'Kehitysvaihe');
+  if (elMD) elMD.textContent = md ? md.mdLabel : '—';
   const elCV = document.getElementById('v4MDCV');
   if (elCV) elCV.textContent = md ? md.cv : '—';
   const elPrice = document.getElementById('v4MDPrice');
-  if (elPrice) elPrice.textContent = md ? md.meanPrice : '—';
+  if (elPrice) elPrice.textContent = md ? (md.meanGap + ' MW gap ka') : '—';
   const elN = document.getElementById('v4MDn');
   if (elN) elN.textContent = md ? md.n : '—';
 }
