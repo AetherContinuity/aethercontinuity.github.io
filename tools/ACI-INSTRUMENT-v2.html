@@ -1087,11 +1087,11 @@ function calcWindow(slice) {
     eciSemi = (avgPl>0 && avgChp!=null) ? Math.min(1,(avgNuc+avgHyd+avgChp)/avgPl) : null;
     // FS: firm capacity / kulutus — riippumaton muuttuja
     // FS(p): hydroRF skaalaa vesivoimakomponentin luotettavuuden mukaan
-    const hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0;
+    hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0;
     const avgHydAdj = avgHyd * hydRF;
     fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj)/avgC) : null;
     // Tallenna myös nominaali FS vertailua varten
-    const fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
+    fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
     // WR: tuulivoiman osuus — variabiliteettiriski
     wr = (avgWnd!=null && avgPl>0) ? Math.min(1, avgWnd/avgPl) : null;
     if (fs != null && wr != null) eppMode = 'v3';
@@ -1752,6 +1752,13 @@ async function init() {
     catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
 
+  // DS 105: Spot-hinnat MD_proxy:tä varten (ei kriittinen, virhettä ei raportoida)
+  let spotRows = [];
+  try {
+    const sr = await fetchYesterday(DS.spot, 'DS 105');
+    spotRows = sr.filter(d => d.c != null && d.c >= 0).map(d => ({ value: d.c }));
+  } catch(e) { /* MD_proxy putoaa fallback-tilaan */ }
+
   if (!cRows.length || !pRows.length) {
     rawData = generateSynthetic(168);
     setStatus('demo', [
@@ -1810,10 +1817,7 @@ async function init() {
   try {
     const m4 = computeAll(rawData);
     // MD_proxy: spot-hinnat rawData:sta jos saatavilla (spotPrice-kenttä)
-    const spotArr = rawData
-      .map(d => ({ value: d.spotPrice ?? null }))
-      .filter(d => d.value != null && d.value >= 0);
-    renderV4(m4 ? m4.w168 : null, spotArr.length >= 6 ? spotArr : null);
+    renderV4(m4 ? m4.w168 : null, typeof spotRows !== 'undefined' && spotRows.length >= 6 ? spotRows : null);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
