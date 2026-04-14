@@ -695,7 +695,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §11 EPP v4 -->
   <div class="v4-section">
     <div class="shdr"><span class="snum">&sect; 11</span><span class="stit">EPP v4 — Regiimitunnistus · SP_cluster · FS(p) · MD_proxy</span></div>
-    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä.</p>
+    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy (DS 105) edellyttää erillistä spot-hintaendpointia — nykyinen proxy tukee vain teho-datasettejä. NVE-reservoaaridata rajoitettu CORS-politiikalla selaimessa; hydro_RF = 1.0 (fallback, ei vaikuta laskentaan).</p>
 
     <div class="v4-grid">
       <!-- SP_cluster -->
@@ -1991,13 +1991,13 @@ function renderV4(w168, spotRows) {
   if (nveEl) {
     const label = typeof hydroRFLabel !== 'undefined' ? hydroRFLabel : '—';
     const week  = typeof hydroRFWeek  !== 'undefined' ? hydroRFWeek  : '';
-    nveEl.textContent = `NVE reservoaaridata: ${label}${week ? ' · ' + week : ''}`;
+    nveEl.textContent = label === 'ei dataa' ? 'NVE: CORS-rajoite (selain) — hydro_RF = 1.0 (fallback)' : `NVE: ${label}${week ? ' · ' + week : ''}`;
   }
 
   // MD_proxy
   const md = calcMDProxy(spotRows, null);
   const elMD = document.getElementById('v4MDLabel');
-  if (elMD) elMD.textContent = md ? md.mdLabel : (spotRows?.length ? 'Spot-data ohut' : 'Ei spot-dataa');
+  if (elMD) elMD.textContent = md ? md.mdLabel : (spotRows?.length ? 'Spot-data ohut' : 'Kehitysvaihe');
   const elCV = document.getElementById('v4MDCV');
   if (elCV) elCV.textContent = md ? md.cv : '—';
   const elPrice = document.getElementById('v4MDPrice');
