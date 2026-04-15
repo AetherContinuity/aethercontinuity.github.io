@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rikkinäinen Uuni — Pertti Vatanen ja elastisuusromahdus</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --mid: #444;
+    --light: #888;
+    --rule: #ddd;
+    --bg: #fafaf8;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* Cover */
+  .cover {
+    text-align: center;
+    padding: 4rem 0 3rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 3rem;
+  }
+  .cover-series {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .7rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 2rem;
+  }
+  .cover h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    margin-bottom: 1rem;
+  }
+  .cover .subtitle {
+    font-size: 1.1rem;
+    color: var(--mid);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+  .cover .meta {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .75rem;
+    color: var(--light);
+    line-height: 2;
+  }
+
+  /* Chapter */
+  .chapter {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chapter:last-of-type { border-bottom: none; }
+
+  .chapter-num {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .65rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--light);
+    display: block;
+    margin-bottom: .5rem;
+  }
+  .chapter h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  p { margin-bottom: 1.1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* Monitor data */
+  .monitor-data {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .82rem;
+    background: #f0f0ec;
+    border-left: 3px solid var(--accent);
+    padding: .9rem 1.1rem;
+    margin: 1.2rem 0;
+    line-height: 1.9;
+  }
+  .monitor-data strong { color: var(--accent); }
+
+  /* Quote / dialogue emphasis */
+  blockquote {
+    border-left: 2px solid var(--rule);
+    padding-left: 1.2rem;
+    color: var(--mid);
+    font-style: italic;
+    margin: 1.2rem 0;
+  }
+
+  /* Appendix */
+  .appendix {
+    background: #f0f0ec;
+    border: 1px solid var(--rule);
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+  .appendix-header {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .65rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 1rem;
+  }
+  .appendix h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+  .appendix ol {
+    padding-left: 1.5rem;
+    margin: .8rem 0;
+  }
+  .appendix ol li { margin-bottom: .4rem; font-size: .9rem; }
+
+  /* Footer */
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: .7rem;
+    color: var(--light);
+    line-height: 1.8;
+  }
+
+  @media print {
+    body { max-width: 100%; padding: 2cm; font-size: 11pt; }
+    .chapter { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-series">Aether Continuity Institute · Kaunokirjallisuus · 2030</div>
+  <h1>Rikkinäinen Uuni</h1>
+  <div class="subtitle">Pertti Vatanen ja elastisuusromahdus</div>
+  <div class="meta">
+    Kymmenen lukua, epilogi ja virallinen vastine<br>
+    Pohjois-Savo · Helsinki · Luulaja · 2029–2032<br><br>
+    Perustuu WP-015 · Winter Endurance Monitor v2.6 · EPP v4<br>
+    ACI — aethercontinuity.org
+  </div>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 1</span>
+  <h2>Jossa jääkaappi lakkaa hyräilemästä ja naapurit saapuvat</h2>
+
+  <p>Joulukuun kahdentenakymmenentenäneljäntenä päivänä vuonna 2029 Pertti Vatanen havahtui siihen, että jääkaappi oli hiljaa. Tämä ei ollut epätavallista sinänsä – laite oli vanha Rosenlew ja piti ajoittain meteliä, joka kuulosti siltä kuin joku olisi yrittänyt käynnistää mopoa olohuoneessa. Hiljaisuus oli kuitenkin erilaista. Se oli täydellistä, syvää, ja se oli levinnyt koko taloon.</p>
+
+  <p>Ulkona pakkasta oli 26 astetta. Järven jää oli lähtenyt edellisenä keväänä 11. huhtikuuta, mikä oli Vatasen mielestä kolme päivää myöhässä pitkäaikaisesta keskiarvosta, mutta ei mitenkään hälyttävää. Nyt järvi oli pelkkä valkoinen kenttä, ja taivaalta putoili hiljalleen lisää lunta ikään kuin joku olisi päättänyt täyttää Pohjois-Savon kuin jättimäistä tyrnirasiaa.</p>
+
+  <p>Vatanen avasi eteisen sähkökaapin oven. Taskulamppu oli hänen kädessään, vaikka vielä ei ollut pimeää – hämärä laskeutui näillä leveysasteilla jo kahden jälkeen. Kännykän näytöllä oli Aether Continuity Instituten Winter Endurance Monitor v2.6, ainoa asia, jota Vatanen seurasi uskollisemmin kuin sääennustetta tai veronpalautuksia. Hänen silmänsä pysähtyivät W168-arvoon.</p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,73</strong> · Luokka: Elevated<br>
+    SP_cluster: Metastable · Pisin stressijakso: 41 tuntia<br>
+    MD_proxy: Elevated · Import-gapin CV: 0,091
+  </div>
+
+  <p>"Se on noussut", Vatanen mutisi. "Kohta se on BP-like."</p>
+
+  <p>Ovi kävi, ja sisään astui naapurin Koistinen. Hän oli tuonut mukanaan pakkasilmaa, huurteiset viikset ja vanhan jatkojohdon, joka näytti siltä kuin sen olisi valmistanut joku, joka ei ollut koskaan nähnyt sähköjohtoa.</p>
+
+  <p>"Pertti, onko sulla antaa jatkojohtoa? Autotallin lämmitys ei pelaa enää. Tais mennä sulake."</p>
+
+  <p>"Sulake on kunnossa", Vatanen sanoi ja osoitti kännykkäänsä. "Ongelma on SE1:n kuormitusasteen ja Norjan vesivarantojen korrelaatio."</p>
+
+  <p>Koistinen katsoi häntä kuin tämä olisi ilmoittanut nähneensä metsäkauriin, jolla oli kolme päätä.</p>
+
+  <p>"Mitä se meinaa?"</p>
+
+  <p>"Se meinaa", Vatanen sanoi ja sulki sähkökaapin oven, "että Tukholmassa Wallenbergien sijoitusyhtiö pelasti eilen vihreän terästehtaan, joka kuluttaa 15 terawattituntia vuodessa. Se on suunnilleen sama määrä kuin koko Keski-Suomen maakunnan sähkönkulutus. Tehdas sijaitsee Luulajassa, mikä sattuu olemaan juuri se sama SE1-alue, josta Suomi tuo talvisin varavoimaa."</p>
+
+  <p>"Mutta Luulaja on Ruotsissa", Koistinen sanoi.</p>
+
+  <p>"Niin on."</p>
+
+  <p>"Ja me olemme Suomessa."</p>
+
+  <p>"Niin olemme."</p>
+
+  <p>"Miten Luulajan terästehdas voi viedä minun autotallini lämmityksen?"</p>
+
+  <p>"Siirtoyhteydet", Vatanen sanoi. "Ruotsista Suomeen tulee maksimissaan 1500 megawattia, mutta toiseen suuntaan vain 1100. Se on rakenteellinen asymmetria. Kun Luulaja kuluttaa enemmän, Suomen tuontikapasiteetti pienenee. Samaan aikaan täällä on pakkasta, tyyntä, ja CHP-laitoksia on ajettu alas. Norjan vesivarannot ovat historiallisen matalalla, koska kevättulva jäi tulematta. Näiden tekijöiden yhteisvaikutus tuottaa ilmiön, jota kutsun elastisuusromahdukseksi."</p>
+
+  <p>Koistinen räpytteli silmiään. Lopulta hän kysyi: "Eli jatkojohtoa ei ole?"</p>
+
+  <p>Vatanen ojensi hänelle jatkojohdon. Se ei auttaisi autotallin lämmitystä, mutta se oli inhimillinen ele maailmassa, jossa rakenteelliset ongelmat tuntuivat käsittämättömän kaukaisilta ja samalla kiusallisen läheisiltä.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 2</span>
+  <h2>Jossa tuulivoima pitää lomaa ja CHP-muistot haihtuvat savuna ilmaan</h2>
+
+  <p>Tapaninpäivän aamuna Vatanen heräsi siihen, että huoneessa oli kylmä. Tarkemmin sanottuna se oli kylmempi kuin yöllä, mikä oli huolestuttavaa, koska yöllä lämpötila oli pudonnut alle kolmenkymmenen asteen. Hän käveli keittiöön ja katsoi patteria. Se oli haalea, kuten aina nykyään.</p>
+
+  <p>Ennen, muisteli Vatanen, tähän aikaan vuodesta patterit olivat olleet polttavan kuumia. Se johtui siitä, että kaukolämpö tuotettiin sähkön ja lämmön yhteistuotantolaitoksissa – CHP:ssä – jotka sijaitsivat kaupungeissa ja teollisuuspaikkakunnilla. Ne olivat nerokkaita laitoksia: mitä kylmempää ulkona oli, sitä enemmän ne tuottivat sekä lämpöä että sähköä. Ne toimivat kuin luonnon oma puskuri talven huippukulutusta vastaan.</p>
+
+  <p>Mutta EU:n päästökauppajärjestelmä ja Fit for 55 -paketti olivat tehneet CHP:stä kalliimpaa kuin vaihtoehdoista. Vaihtoehdot – tuulivoima, aurinko, lämpöpumput – olivat hyviä asioita, paitsi silloin kun ei tuullut eikä paistanut ja pakkasta oli 30 astetta. Tapaninpäivänä 2029 ei tuullut.</p>
+
+  <div class="monitor-data">
+    <strong>WindRisk (WR): 0,09</strong> · Tuulivoima 10 % nimelliskapasiteetista<br>
+    CHP-osuus: 25 % (vs. 36 % vuonna 2022)
+  </div>
+
+  <p>Vatanen avasi uutiset. "Fingrid: Sähkön riittävyys haastavaa – kulutusjoustoa tarvitaan." Haastavaa. Se oli viranomaisten suosikkisana, kun asiat olivat menossa pieleen. Se tarkoitti: emme voi luvata mitään, mutta toivomme että ihmiset eivät huomaa.</p>
+
+  <p>Kulutusjousto oli toinen suosikkikäsite. Se tarkoitti, että ihmisten toivottiin sammuttavan saunansa ja jättävän jouluvalot sytyttämättä, jotta teollisuus saisi jatkaa toimintaansa. Käytännössä se tarkoitti, että Pertti Vatanen ja Koistinen joustivat, jotta Luulajan terästehdas ei joutuisi joustamaan.</p>
+
+  <p>Hänen puhelimensa soi. Soittaja oli hänen serkkunsa Pirkko, joka asui Jyväskylässä ja työskenteli Energiavirastossa.</p>
+
+  <p>"Pertti, miksi sinä seuraat sitä ACI:n monitoria? Sehän on jonkun harrastelijan tekemä."</p>
+
+  <p>"Se harrastelija on ainoa, joka ymmärtää mitä tapahtuu. Teidän viralliset ennusteenne perustuvat keskimääräisiin talviin ja normaaleihin vesivuosiin. Mutta ei ole enää normaaleja vesivuosia. SYKEn raportti sanoo, että kevättulvat vähenevät ja kesäkuivuudet lisääntyvät. Hydrologinen korrelaatio Norjan ja Suomen välillä kasvaa. Se tarkoittaa, että kun meillä on kuivaa, Norjassakin on kuivaa."</p>
+
+  <p>"Meillä on varasuunnitelmia", Pirkko sanoi.</p>
+
+  <p>"Teillä on työryhmä, joka pohtii kapasiteettimekanismin käyttöönottoa. Se kokoontui ensimmäisen kerran viime viikolla."</p>
+
+  <p>"Se on hyvä alku."</p>
+
+  <p>"Kapasiteettimekanismi olisi pitänyt olla voimassa jo kaksi vuotta sitten."</p>
+
+  <p>Pirkko vaikeni. Vatanen tiesi, että hän oli oikeassa, ja Pirkko tiesi, että Vatanen tiesi. Mutta byrokratian rattaat pyörivät hitaasti, eikä niitä voinut nopeuttaa pelkällä tosiasioiden tunnustamisella.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 3</span>
+  <h2>Jossa työryhmä kokoontuu ja pöytäkirjaan kirjataan huoli</h2>
+
+  <p>Helsingissä, Pasilan virastokorttelissa, kokoontui 27. joulukuuta työryhmä, jonka virallinen nimi oli "Sähköjärjestelmän kapasiteettimekanismin tarpeita arvioiva poikkihallinnollinen selvitysryhmä". Lyhyemmin sanottuna kapasiteettimekanismityöryhmä. Se oli asetettu edellisenä keväänä, mutta se oli saanut kokoonpanonsa valmiiksi vasta marraskuussa, ja joulukuun kokous oli vasta toinen laatuaan.</p>
+
+  <p>Paikalla oli edustajia Energiavirastosta, Fingridistä, työ- ja elinkeinoministeriöstä, Suomen Elfiasta, ja yksi ympäristöjärjestöjen edustaja, jonka tehtävä oli varmistaa, ettei kapasiteettimekanismi johtaisi fossiilisten polttoaineiden paluuseen. Kahvia oli termarissa, pullaa oli tarjolla, ja seinällä oli valkotaulu, johon oli kirjoitettu tussilla: "Huoltovarmuus – hinta – ympäristö".</p>
+
+  <p>Puheenjohtaja, TEM:n ylijohtaja, avasi kokouksen. "Kuten tiedämme, sähköjärjestelmämme on murroksessa. Uutta kysyntää syntyy datakeskuksista ja teollisuuden sähköistymisestä. Samalla vanhaa säätövoimaa poistuu markkinalta. Meidän on arvioitava, tarvitaanko Suomessa kapasiteettimekanismia, ja jos tarvitaan, millainen sen tulisi olla."</p>
+
+  <p>Fingridin edustaja nosti kätensä. "Meidän näkemyksemme on, että sähkön riittävyys ei ratkea markkinaehtoisesti. Tarvitsemme mekanismin, joka takaa riittävän tuotantokapasiteetin myös harvinaisissa sääolosuhteissa."</p>
+
+  <p>Keskustelu jatkui kaksi tuntia. Lopuksi puheenjohtaja summasi: "Olemme yhtä mieltä siitä, että kapasiteettimekanismille on perusteita. Seuraava askel on laatia vaihtoehtoisten mallien vertailu ja vaikutusarviointi. Tavoitteena on, että hallituksen esitys olisi valmis vuonna 2031."</p>
+
+  <p>Pöytäkirjaan kirjattiin: <em>"Työryhmä tunnistaa sähköjärjestelmän kasvavan haavoittuvuuden ja pitää tärkeänä, että kapasiteettimekanismin suunnittelua jatketaan kiireellisesti."</em></p>
+
+  <p>Sana "kiireellisesti" oli alleviivattu, mikä byrokratian kielessä tarkoitti, että asiaa pidettiin tärkeänä, mutta ei niin tärkeänä, että sitä varten olisi peruttu joululomia. Kokous päättyi kahviin ja joulutorttuihin.</p>
+
+  <p>Samana iltana Pertti Vatanen luki uutisen työryhmän kokouksesta ja laski, että vuoteen 2031 oli vielä kaksi talvea. Toinen niistä oli käsillä juuri nyt.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 4</span>
+  <h2>Jossa Wallenbergit siunaavat terästehtaan ja sähkö virtaa länteen</h2>
+
+  <p>Tukholmassa, eräässä arvokkaassa mutta ei pröystäilevässä toimistorakennuksessa Östermalmilla, oli pidetty kokous jo ennen joulua. Kokouksen osapuolet olivat Wallenbergien sijoitusyhtiön edustajat ja Stegra-nimisen vihreän terästehtaan johto. Stegra oli ollut konkurssin partaalla, koska sen sähkönkulutus oli valtavaa ja sähkön hinta oli noussut, mutta se lupasi tuottaa terästä ilman hiilidioksidipäästöjä.</p>
+
+  <p>Wallenbergit olivat päättäneet pelastaa Stegran. Päätös ei perustunut pelkästään ympäristöarvoihin, vaan myös kylmään laskelmaan: kun EU:n hiilitullit astuisivat voimaan, fossiilisesti tuotettu teräs tulisi kalliiksi. Vihreä teräs olisi kilpailuetu.</p>
+
+  <p>Päätös oli hyvä Wallenbergeille, hyvä Stegralle, ja hyvä ilmastolle. Ainoa haittapuoli oli, että Stegra sijaitsi Luulajassa, SE1-hinta-alueella, samalla alueelta, josta Suomi oli tottunut tuomaan sähköä talvipakkasilla.</p>
+
+  <div class="monitor-data">
+    <strong>SE1-tuonnin proxy:</strong> 850 MW / 1500 MW<br>
+    Tuontia tuli, mutta ei läheskään maksimikapasiteettia.<br>
+    Syy: Luulaja kuluttaa.
+  </div>
+
+  <p>Vatanen selitti tätä Koistiselle, joka oli tullut kylään mukanaan termospullollinen kahvia.</p>
+
+  <p>"Eli minun telkkarini sammuu, koska ruotsalainen terästehdas tarvitsee sähköä."</p>
+
+  <p>"Kyllä. Ja koska Norjan vesivarastot ovat alhaalla, emme saa sieltäkään apua."</p>
+
+  <p>"Mitä me voimme tehdä?"</p>
+
+  <p>"Emme mitään", Vatanen sanoi. "Paitsi ehkä rakentaa oman pienen ydinvoimalan pihalle. Mutta se vaatisi luvat, ja lupaprosessi kestää kymmenen vuotta."</p>
+
+  <p>Koistinen katsoi ulos ikkunasta. Järven jää hohti kuun valossa. Hän mietti, olisiko sittenkin helpompaa muuttaa takaisin kaupunkiin, missä sähkökatkot olivat harvinaisempia, koska siellä ei ollut varaa omakotitaloon eikä autotallin lämmitykseen.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 5</span>
+  <h2>Jossa uudenvuodenaatto tuo toivoa, mutta Vatanen ei juhli</h2>
+
+  <p>Uudenvuodenaattona 2029 pakkanen hellitti hetkeksi. Lämpötila nousi 15 asteeseen – siis miinus 15:een – ja tuulikin heräsi henkiin. Monitorin arvot paranivat.</p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,52</strong> (Tight)<br>
+    SP_cluster: Drift · Pisin stressijakso: 8 tuntia<br>
+    MD_proxy: Normal
+  </div>
+
+  <p>Kylällä ammuttiin raketteja ja juotiin kuohuviiniä. Vatanen istui kotonaan ja tuijotti monitoria. Hän ei ollut huolissaan tästä illasta. Hän oli huolissaan tammikuusta, helmikuusta ja siitä tosiasiasta, että sääennuste lupasi uutta kylmää aaltoa loppiaiseksi.</p>
+
+  <p>Koistinen soitti ja toivotti hyvää uutta vuotta.</p>
+
+  <p>"Hyvää uutta vuotta", Vatanen vastasi. "Muista säästää sähköä. Tammikuussa voi tulla kylmää."</p>
+
+  <p>"Joo joo", Koistinen sanoi. "Kai sitä nyt yhden illan voi valoja pitää päällä."</p>
+
+  <p>Vatanen ei vastannut. Hän katsoi monitorin viimeistä riviä:</p>
+
+  <blockquote>The instrument does not ask whether Finland has power in a given hour. It asks whether Finland's winter system is becoming more dependent on thin endurance margins as continuous load commitments grow faster than the multi-day layer that sustains them.</blockquote>
+
+  <p>Hän sammutti valot, meni ikkunaan ja katseli raketteja. Ensi vuonna sama, hän ajatteli. Ja sitä seuraavana. Ja sitä seuraavana. Kunnes jonain päivänä järjestelmä oppisi sanomaan "ei", ja silloin kaikki olisivat yllättyneitä – paitsi hän ja ACI:n monitori.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 6</span>
+  <h2>Jossa pakkanen palaa ja monitori siirtyy Elevatediin</h2>
+
+  <p>Tammikuun viidentenä päivänä 2030 pakkanen palasi. Se ei tullut varkain tai yllättäen – Ilmatieteen laitos oli varoittanut siitä jo viikkoa aiemmin – mutta suomalaiset suhtautuivat pakkaseen samalla tavalla kuin veronpalautukseen: se tiedettiin tulevaksi, mutta silti se aina hieman ärsytti.</p>
+
+  <p>Vatanen heräsi aamulla siihen, että ikkunan sisäpinnalla oli jäätä. Se ei ollut tapahtunut sitten vuoden 1987. Hän avasi Winter Endurance Monitorin.</p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,68</strong> · Luokka: Elevated<br>
+    SP: 48,2 % · Elevated<br>
+    SP_cluster: Metastable · Pisin stressijakso: 56 tuntia<br>
+    <strong>FS(p): 42,1 %</strong> · hydro_RF 0,78 (Norjan vesivarannot 22 % alle normaalin)<br>
+    MD_proxy: Elevated · CV: 0,112
+  </div>
+
+  <p>Järjestelmä ei ollut vielä romahtanut, mutta se hengitti raskaasti. Vatanen tiesi, että tämä oli WP-015:n kuvaama elastisuusromahduksen esivaihe: järjestelmä ei enää palautunut normaalitilaan stressipiikkien jälkeen, vaan jäi roikkumaan kohonneeseen painetilaan. Kuin kuminauha, joka oli venytetty liian pitkäksi.</p>
+
+  <p>Hän puki päälleen villapaidan, toisen villapaidan, ja meni ulos mittaamaan pakkasta. Mittari näytti –34 astetta. Tuulimittari ei liikahtanut. Täydellinen tyyni pakkanen. Pahin mahdollinen skenaario.</p>
+
+  <p>Koistinen soitti. "Pertti, sähkökatko on kestänyt nyt kahdeksan tuntia. Autotallissa on jo kylmempää kuin ulkona. Mitä minä teen?"</p>
+
+  <p>"Älä avaa autotallin ovea", Vatanen sanoi. "Ja varaudu siihen, että katko voi kestää pitkään."</p>
+
+  <p>"Miten pitkään?"</p>
+
+  <p>Vatanen katsoi SP_cluster-arvoa. "Vaikea sanoa. Ehkä vuorokauden. Ehkä kaksi."</p>
+
+  <p>"Kaksi vuorokautta! Mitä minä syön? Pakastin sulaa!"</p>
+
+  <p>"Syö nopeasti."</p>
+
+  <p>Koistinen kirosi ja lopetti puhelun. Vatanen käynnisti aggregaatin, ja jääkaappi heräsi taas hyräilemään.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 7</span>
+  <h2>Jossa Fingrid pitää tiedotustilaisuuden ja käyttää sanaa "poikkeuksellinen"</h2>
+
+  <p>Samana päivänä Helsingissä Fingrid järjesti tiedotustilaisuuden. Fingridin viestintäjohtaja avasi tilaisuuden:</p>
+
+  <p>"Suomen sähköjärjestelmä on tällä hetkellä poikkeuksellisessa tilanteessa. Yhdistelmä korkeaa pakkasta, vähäistä tuulisuutta, ja rajoitettua tuontikapasiteettia on johtanut siihen, että olemme joutuneet turvautumaan kulutuksen hallintaan."</p>
+
+  <p>Toimittaja Yleltä kysyi: "Kuinka monta kotitaloutta on ilman sähköä?"</p>
+
+  <p>"Noin 80 000."</p>
+
+  <p>"Kuinka kauan tilanne jatkuu?"</p>
+
+  <p>"Riippuu säästä. Ennusteen mukaan pakkanen hellittää kolmen päivän kuluttua."</p>
+
+  <p>"Onko tämä se 'Black Period', josta Aether Continuity Institute on varoittanut?"</p>
+
+  <p>Fingridin käyttöpäällikkö, harmaantunut insinööri, joka oli nähnyt järjestelmän kehittyvän 1980-luvulta asti, otti mikrofonin. "Me emme käytä tuota termiä. Se on akateeminen käsite."</p>
+
+  <p>"Mutta kuvaako se tilannetta?"</p>
+
+  <p>Käyttöpäällikkö katsoi viestintäjohtajaan. "Keskitymme nyt operatiiviseen tilanteeseen. Seuraava kysymys."</p>
+
+  <p>Kukaan ei kysynyt, miksi kapasiteettimekanismityöryhmä ei ollut saanut aikaan mitään konkreettista. Toimittajat kirjoittivat muistiin sanan "poikkeuksellinen" ja lähettivät uutiset eteenpäin.</p>
+
+  <p>Pohjois-Savossa Vatanen katsoi tiedotustilaisuuden suorana lähetyksenä ja tunsi olonsa sekä oikeutetuksi että turhautuneeksi. Oikeutetuksi, koska hän oli nähnyt tämän tulevan. Turhautuneeksi, koska kukaan ei tuntunut tietävän, mitä tehdä seuraavaksi.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 8</span>
+  <h2>Jossa Koistinen oppii sanan "asymmetria" ja Vatanen selittää traktorin</h2>
+
+  <p>Kahden päivän sähkökatkon jälkeen Koistinen saapui Vatasen ovelle mukanaan termospullo ja kysymys, joka oli vaivannut häntä koko yön.</p>
+
+  <p>"Pertti, miksi Ruotsissa on sähköä ja meillä ei? Eikö meillä ole se siirtoyhteys?"</p>
+
+  <p>"On. Se on 1500 megawattia Suomeen päin."</p>
+
+  <p>"No miksi se ei tuo sähköä?"</p>
+
+  <p>"Koska Ruotsin SE1-alueella, josta se yhteys tulee, on nyt suurempi kysyntä kuin tarjonta. Luulajan terästehdas kuluttaa 800 megawattia yksinään. Samaan aikaan tuulivoima ei tuota mitään. Norjan vesivoima on vähissä. Joten Ruotsin oma hinta on noussut niin korkeaksi, ettei sähköä kannata myydä Suomeen."</p>
+
+  <p>"Mutta meillä on se toinen yhteys, se 1100 megawattia Ruotsiin päin. Eikö se auta?"</p>
+
+  <p>"Se auttaa, jos meillä olisi ylijäämäsähköä myytäväksi. Mutta meillä ei ole."</p>
+
+  <p>Koistinen mietti hetken. "Eli meillä on kaksi siirtoyhteyttä, mutta kumpikaan ei auta?"</p>
+
+  <p>"Juuri niin. Se on rakenteellinen asymmetria."</p>
+
+  <p>"Se on kuin", Koistinen etsi sanoja, "jos naapurilla on traktori, mutta sillä on itsekin lumityöt kesken."</p>
+
+  <p>"Juuri niin. Paitsi että naapuri on myös lainannut traktorinsa osia toiselle naapurille, ja varaosat ovat Norjassa, jossa on loma."</p>
+
+  <p>Koistinen joi kahvinsa loppuun. "Mitä me teemme?"</p>
+
+  <p>"Odotamme, että pakkanen hellittää. Ja toivomme, että ensi talvena kapasiteettimekanismi on valmis."</p>
+
+  <p>"Onko se varmaa?"</p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,71</strong> · SP_cluster: 62 tuntia
+  </div>
+
+  <p>"Ei. Mutta toivo on halpaa."</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 9</span>
+  <h2>Jossa etelän toimittaja saapuu Pohjois-Savoon ja hämmästyy</h2>
+
+  <p>Tammikuun yhdeksäntenä päivänä kylälle saapui Helsingin Sanomien toimittaja, nuori nainen nimeltä Saara, joka oli saanut vinkin "Pohjois-Savon oraakkelista".</p>
+
+  <p>Hän löysi Vatasen talon ja koputti oveen. Vatanen avasi oven villapaidassaan, aggregaatin huristessa taustalla.</p>
+
+  <p>"Oletko Pertti Vatanen?"</p>
+
+  <p>"Olen."</p>
+
+  <p>Saara pääsi sisään. Sisällä oli lämmintä, noin 18 astetta, ja jääkaappi hyrisi. Hän huomasi monitorin läppärillä keittiön pöydällä.</p>
+
+  <p>Vatanen selitti. Hän kertoi EPP:stä, SP:stä, FS(p):stä, CHP:n alasajosta, SE1:n teollistumisesta, Norjan vesivarantojen korrelaatiosta, ja kapasiteettimekanismityöryhmän hitaudesta. Saara kirjoitti kaiken muistiin, vaikka ymmärsi vain puolet.</p>
+
+  <p>"Mutta miksi viranomaiset eivät ole toimineet?" Saara kysyi.</p>
+
+  <p>"Koska he odottavat, että markkinat ratkaisevat ongelman. Mutta markkinat eivät ratkaise ongelmaa, joka on rakenteellinen. Se on kuin yrittäisi sammuttaa tulipaloa huutokaupalla. Korkein tarjous voittaa, mutta talo palaa sillä aikaa."</p>
+
+  <p>Saara lähti ja kirjoitti artikkelin, jonka otsikko oli: <em>"Pohjois-Savon oraakkeli: 'Sähkökatkot olivat ennustettavissa – kukaan ei vain kuunnellut.'"</em></p>
+
+  <p>Fingridin viestintäosasto joutui vastaamaan kysymyksiin, miksi he eivät olleet kuunnelleet oraakkelia. Viestintäjohtaja vastasi: "Arvostamme kaikkia näkemyksiä, mutta operatiiviset päätökset perustuvat virallisiin ennusteisiin."</p>
+
+  <p>Vatanen luki vastauksen ja totesi, että byrokratian kyky olla oppimatta mitään oli vaikuttava luonnonvoima itsessään – verrattavissa painovoimaan tai verottajan joustamattomuuteen.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Luku 10</span>
+  <h2>Jossa pakkanen lopulta hellittää ja monitori palaa Normaaliin, mutta Vatanen ei huokaa helpotuksesta</h2>
+
+  <p>Tammikuun kahdentenatoista päivänä 2030 tuuli kääntyi lounaaseen. Lämpötila nousi nollaan, ja taivaalta alkoi sataa räntää. Tuulivoiman tuotanto kaksinkertaistui, sitten kolminkertaistui.</p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,31</strong> (Tight)<br>
+    SP: 18,4 % (Tight) · SP_cluster: Drift · Pisin stressijakso: 12 tuntia<br>
+    FS(p): 48,7 % · hydro_RF 0,85<br>
+    MD_proxy: Normal · CV: 0,041
+  </div>
+
+  <p>Järjestelmä palasi drift-regiimiin. Sähkökatkot loppuivat. Koistisen autotalli lämpeni jälleen. Kylällä juotiin kahvia ja puhuttiin siitä, kuinka "onneksi säät suosivat".</p>
+
+  <p>Vatanen istui keittiössään ja tuijotti monitoria. Hän ei tuntenut helpotusta. Hän tunsi, että järjestelmä oli juuri ja juuri selvinnyt – ei siksi, että se olisi ollut vahva, vaan siksi, että stressin kesto ei ollut aivan ylittänyt kriittistä kynnystä. Se oli kuin olisi ajanut autolla jäällä, joka petti vasta viimeisellä metrillä.</p>
+
+  <p>Hän ajatteli, että ehkä hänen pitäisi kirjoittaa muistio. Ei Fingridille – heillä oli jo tarpeeksi muistioita. Ei Energiavirastolle – heillä oli työryhmiä. Vaan naapureille. Yksinkertainen opas siitä, miten selvitä talvesta, kun sähköjärjestelmä ei enää ollut luotettava. Otsikoksi hän mietti: "Älä luota markkinoihin, kun pakkanen paukkuu."</p>
+
+  <p>Mutta se saisi odottaa. Nyt oli aika lähteä kauppaan ostamaan uutta bensiiniä aggregaattiin. Ensi talvea varten.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">Epilogi · Maaliskuu 2030</span>
+  <h2>Jossa Vatanen tapaa vihdoin ACI:n tutkijan ja saa kuulla, miksi asiat ovat vielä hullummin kuin luulikaan</h2>
+
+  <p>Maaliskuussa 2030 Vatanen sai sähköpostia. Se oli lyhyt, kuiva ja allekirjoitettu nimikirjaimilla "ACI — DA".</p>
+
+  <p><em>"Herra Vatanen, olemme seuranneet monitorin käyttölokeja. Te olette ainoa Suomessa, joka on tarkistanut SP_cluster-arvon joka päivä viimeisen kolmen kuukauden ajan. Tule käymään, jos olette Helsingissä. Kahvi on mustaa."</em></p>
+
+  <p>Vatanen matkusti Helsinkiin. ACI:n toimisto sijaitsi erään entisen paperitehtaan konttorissa Sörnäisissä, huoneessa, jossa oli enemmän näyttöjä kuin ikkunoita. Pöydän takana istui keski-ikäinen nainen, jolla oli silmälasit ja ilme, joka kertoi, että hän oli nähnyt liian monta ennustetta toteutuvan.</p>
+
+  <p>"Oletko sinä se oraakkeli?" Vatanen kysyi.</p>
+
+  <p>"En", nainen sanoi. "Minä olen vain se, joka kirjoittaa muistiot, joita kukaan ei lue. Mutta koska sinä luet monitoria, olet meidän paras asiakkaamme."</p>
+
+  <p>Hän kaatoi kahvia. Mustaa, kuten luvattu.</p>
+
+  <p>"Halusitko tietää, miksi järjestelmä ei romahtanut tänä talvena?"</p>
+
+  <p>"Se ei romahtanut, koska Stegran terästehdas kärsi juuri tammikuussa viikon mittaisesta tuotantokatkoksesta. Rikkoutunut uuni. Sattumaa. Jos uuni olisi ollut päällä, SE1:n tuonti olisi pudonnut nollaan ja SP_cluster olisi ylittänyt 72 tuntia. Silloin olisimme nähneet jump-regiimin."</p>
+
+  <p>Vatanen tunsi kylmän väristyksen, vaikka huoneessa oli lämmintä.</p>
+
+  <p>"Eli meidät pelasti... rikkinäinen uuni Ruotsissa?"</p>
+
+  <p>"Kyllä. Ja se, että kapasiteettimekanismia ei ollut, mutta kukaan ei huomannut, koska markkinat hinnoittelivat riskin väärin."</p>
+
+  <p>"Mitä tapahtuu ensi talvena?"</p>
+
+  <p>Nainen kääntyi kohti yhtä näyttöä, jossa pyöri WP-015:n vaihesiirtymäkartta. "Ensi talvena Stegran uuni on korjattu. Datakeskuksia on 500 megawattia lisää. CHP:tä on ajettu alas 10 prosenttia lisää. Norjan vesivarannot ovat edelleen alhaiset. Ja kapasiteettimekanismityöryhmä on edennyt siihen pisteeseen, että se on perustanut alatyöryhmän pohtimaan vaikutusarvioinnin laajuutta."</p>
+
+  <p>Vatanen laski kahvikupin pöydälle. "Eli ensi talvena romahtaa."</p>
+
+  <p>"Emme sano niin. Me sanomme: 'Todennäköisyys elastisuusromahdukselle kasvaa merkittävästi.' Mutta kyllä. Käytännössä romahtaa."</p>
+
+  <p>"Mitä minä voin tehdä?"</p>
+
+  <p>Nainen ojensi paperin.</p>
+
+  <div class="appendix">
+    <div class="appendix-header">ACI Open Grid Instrument — Käyttöopas kotitalouksille (lyhennelmä)</div>
+    <ol>
+      <li>Hanki aggregaatti.</li>
+      <li>Hanki bensiiniä.</li>
+      <li>Opettele selittämään naapureille, miksi tämä ei ole sinun syytäsi.</li>
+      <li>Seuraa monitoria, mutta älä usko, että se muuttaa mitään.</li>
+    </ol>
+  </div>
+
+  <p>"Se on vähän lyhyt opas", Vatanen sanoi.</p>
+
+  <p>"Me emme harrasta turhia sanoja."</p>
+
+  <p>Oviaukossa hän kääntyi. "Vielä yksi kysymys. Miksi teette tätä? Kukaan ei kuuntele."</p>
+
+  <p>Nainen hymyili ensimmäisen kerran. Se oli hymy, joka näytti siltä kuin se olisi harjoiteltu peilin edessä vuosikausia, kunnes se oli täydellisen neutraali ja samalla täydellisen paljastava.</p>
+
+  <p>"Koska", hän sanoi, "jonain päivänä joku kysyy: 'Miksi kukaan ei varoittanut?' Ja silloin meillä on vastaus: 'Varoitimme. Tässä ovat monitorin lokit, WP-sarja, ja epilogi, jossa kerrotaan, että teidät pelasti rikkinäinen uuni Ruotsissa.' Se ei auta ketään, mutta se on totta."</p>
+
+  <p>Vatanen nyökkäsi ja lähti. Ulkona satoi räntää. Taskussaan hänellä oli opas, jossa oli neljä kohtaa, ja mielessään kuva rikkinäisestä uunista Luulajassa – metallijärkäleestä, joka oli sattumalta pelastanut Suomen sähköjärjestelmän talvella 2030.</p>
+
+  <p>Hän ajatteli, että onni oli ehtyvä luonnonvara.</p>
+
+  <p>Junassa hän avasi Winter Endurance Monitorin.</p>
+
+  <div class="monitor-data"><strong>EPP: 0,28</strong> (Tight)</div>
+
+  <p>Hän sulki kannettavan ja katsoi ikkunasta ohi kiitävää metsää. Ensi talveen oli kahdeksan kuukautta.</p>
+
+  <p>Hän toivoi, että Ruotsissa olisi taas rikkinäinen uuni.</p>
+</div>
+
+<div class="chapter">
+  <span class="chapter-num">ACI · Liite WP-015-A · Julkinen vastine · Huhtikuu 2032</span>
+  <h2>Vastine kapasiteettimekanismityöryhmän loppuraporttiin (TEM 2032:14)</h2>
+
+  <p>Aether Continuity Institute on tutustunut työ- ja elinkeinoministeriön asettaman Sähköjärjestelmän kapasiteettimekanismin tarpeita arvioineen poikkihallinnollisen selvitysryhmän loppuraporttiin, joka julkaistiin 14. maaliskuuta 2032. Raportti on 247-sivuinen, sisältää 12 liitettä, ja sen keskeinen johtopäätös on:</p>
+
+  <blockquote>"Työryhmä katsoo, että kapasiteettimekanismin käyttöönotolle on perusteita. Mekanismin yksityiskohtainen suunnittelu tulisi käynnistää viipymättä."</blockquote>
+
+  <p><strong>1. Ajoitus</strong></p>
+
+  <p>Raportti julkaistiin kaksi vuotta myöhässä alkuperäisestä tavoiteaikataulusta. Tämä on ymmärrettävää, sillä työryhmä joutui perustamaan alatyöryhmän arvioimaan vaikutusarvioinnin laajuutta, minkä jälkeen perustettiin toinen alatyöryhmä arvioimaan ensimmäisen alatyöryhmän kokoonpanoa. Lisäksi kaksi jäsentä jäi äitiyslomalle, yksi siirtyi yksityiselle sektorille konsultoimaan samaa asiaa, ja yksi kuoli (luonnollisista syistä, ei sähkökatkoon).</p>
+
+  <p>Näiden viivästysten aikana Suomen sähköjärjestelmä koki kaksi Black Period -kaltaista stressijaksoa (talvet 2030–2031 ja 2031–2032), joiden aikana sähkökatkot kestivät yhteensä 187 tuntia ja aiheuttivat arviolta 420 miljoonan euron vahingot. Raportissa näitä jaksoja kuvataan "arvokkaaksi empiiriseksi aineistoksi".</p>
+
+  <p><strong>2. Talvi 2031–2032: Tapausesimerkki</strong></p>
+
+  <div class="monitor-data">
+    <strong>EPP: 0,81</strong> (BP-like)<br>
+    SP_cluster: Jump · Pisin stressijakso: 94 tuntia<br>
+    MD_proxy: Extreme · CV: 0,187
+  </div>
+
+  <p>Nämä arvot ylittivät WP-015:ssä määritellyn jump-regiimin kynnyksen. Raportti ei viittaa ACI:n havaintoihin, mikä on johdonmukaista, sillä ACI ei ole virallinen taho, vaan ainoastaan se taho, joka ennusti tapahtumat etukäteen.</p>
+
+  <p><strong>3. Johtopäätös</strong></p>
+
+  <p>ACI kiittää kapasiteettimekanismityöryhmää perusteellisesta työstä ja toteaa, että raportti on erinomainen dokumentaatio siitä, miten Suomen sähköjärjestelmän rakenteelliset haavoittuvuudet tunnistettiin, analysoitiin, ja dokumentoitiin samalla kun ne realisoituivat.</p>
+
+  <p>ACI:n oma suositus on yksinkertaisempi:</p>
+
+  <div class="appendix">
+    <ol>
+      <li>Ottakaa kapasiteettimekanismi käyttöön välittömästi, vaikka tilapäisenä.</li>
+      <li>Älkää perustako enää yhtään työryhmää.</li>
+      <li>Seuratkaa monitoria. Se on ilmainen.</li>
+    </ol>
+  </div>
+
+  <p>Tämä vastine on julkinen. Sitä ei ole osoitettu kenellekään erityisesti, koska ACI:lla ei ole virallista asemaa eikä vastaanottajaa, joka vastaisi.</p>
+
+  <p style="margin-top:1.5rem; font-family:'Helvetica Neue',Arial,sans-serif; font-size:.85rem; color:var(--mid);">
+    Aether Continuity Institute<br>
+    Helsinki, 2. huhtikuuta 2032
+  </p>
+</div>
+
+<footer>
+  <strong>Rikkinäinen Uuni</strong> — Pertti Vatanen ja elastisuusromahdus<br>
+  Kymmenen lukua, epilogi ja virallinen vastine · 2029–2032<br><br>
+  Perustuu Aether Continuity Instituten tutkimusaineistoon:<br>
+  WP-015 · Winter Endurance Monitor v2.6 · EPP v4 · SP_cluster · FS(p)<br><br>
+  Fiktio. Henkilöt ovat kuvitteellisia. Sähköjärjestelmän rakenteelliset ongelmat eivät ole.<br><br>
+  aethercontinuity.org · 2030
+</footer>
+
+</body>
+</html>
