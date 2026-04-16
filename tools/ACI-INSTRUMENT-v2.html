@@ -695,7 +695,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §11 EPP v4 -->
   <div class="v4-section">
     <div class="shdr"><span class="snum">&sect; 11</span><span class="stit">EPP v4 — Regiimitunnistus · SP_cluster · FS(p) · MD_proxy</span></div>
-    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy lasketaan import-gapin (kulutus−tuotanto) volatiliteetista W168-ikkunassa — ei tarvita erillistä spot-hintadatalähdettä. NVE-reservoaaridata rajoitettu CORS-politiikalla selaimessa; hydro_RF = 1.0 (fallback, ei vaikuta laskentaan).</p>
+    <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy lasketaan import-gapin (kulutus−tuotanto) volatiliteetista W168-ikkunassa — ei tarvita erillistä spot-hintadatalähdettä. NVE Magasinstatistikk haetaan proxyn kautta (aci-nve-proxy). hydro_RF skaalaa vesivoimakomponentin Norjan täyttöasteen mukaan.</p>
 
     <div class="v4-grid">
       <!-- SP_cluster -->
@@ -1798,6 +1798,10 @@ async function init() {
     const m4 = computeAll(rawData);
     // MD_proxy: spot-hinnat rawData:sta jos saatavilla (spotPrice-kenttä)
     renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
+    // Hae NVE hydro_RF ja päivitä §11 kun valmis
+    fetchHydroRF().then(() => {
+      renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
+    });
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
