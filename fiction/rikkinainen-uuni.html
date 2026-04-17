@@ -137,6 +137,14 @@
   .appendix ol li { margin-bottom: .4rem; font-size: .9rem; }
 
   /* Footer */
+
+  .tts-bar{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 2.5rem;padding:.75rem 1rem;background:#f0f0ec;border-radius:3px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:.78rem;}
+  .tts-btn{padding:.35rem .9rem;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:.75rem;border-radius:2px;color:#1a1a1a;}
+  .tts-btn:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+  .tts-btn:disabled{opacity:.35;cursor:default;}
+  .tts-prog{flex:1;height:3px;background:#ddd;border-radius:2px;overflow:hidden;}
+  .tts-prog-inner{height:100%;background:#1a1a1a;width:0%;transition:width .4s;}
+  .tts-pct{font-size:.7rem;color:#888;min-width:3rem;text-align:right;}
   footer {
     margin-top: 4rem;
     padding-top: 1.5rem;
@@ -166,6 +174,56 @@
     ACI — aethercontinuity.org
   </div>
 </div>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="ttsPlay" onclick="ttsToggle()">&#9654; Kuuntele</button>
+  <button class="tts-btn" id="ttsStop" onclick="ttsStop()" disabled>&#9632; Lopeta</button>
+  <div class="tts-prog"><div class="tts-prog-inner" id="ttsPI"></div></div>
+  <span class="tts-pct" id="ttsPct">&ndash;</span>
+</div>
+<script>
+(function(){
+  var synth=window.speechSynthesis, chunks=[], idx=0, playing=false, paused=false;
+  function collect(){
+    var r=[];
+    document.querySelectorAll('.chapter h2,.chapter p').forEach(function(el){
+      var t=el.innerText.trim(); if(t) r.push(t);
+    });
+    return r.length ? r : [document.body.innerText];
+  }
+  function upd(){
+    var pct=chunks.length?Math.round(idx/chunks.length*100):0;
+    document.getElementById('ttsPI').style.width=pct+'%';
+    document.getElementById('ttsPct').textContent=pct+'%';
+  }
+  function next(){
+    if(!playing||idx>=chunks.length){ttsStop();return;}
+    upd();
+    var u=new SpeechSynthesisUtterance(chunks[idx]);
+    u.lang='fi-FI'; u.rate=0.92;
+    u.onend=function(){idx++;next();};
+    u.onerror=function(){idx++;next();};
+    synth.speak(u);
+  }
+  window.ttsToggle=function(){
+    if(!synth){alert('Puhesynteesi ei tuettu tässä selaimessa');return;}
+    if(paused){synth.resume();paused=false;document.getElementById('ttsPlay').innerHTML='⏸ Tauko';return;}
+    if(playing){synth.pause();paused=true;document.getElementById('ttsPlay').innerHTML='&#9654; Jatka';return;}
+    chunks=collect(); idx=0; playing=true; paused=false;
+    document.getElementById('ttsPlay').innerHTML='⏸ Tauko';
+    document.getElementById('ttsStop').disabled=false;
+    next();
+  };
+  window.ttsStop=function(){
+    synth.cancel(); playing=false; paused=false; idx=0; chunks=[];
+    document.getElementById('ttsPlay').innerHTML='&#9654; Kuuntele';
+    document.getElementById('ttsStop').disabled=true;
+    document.getElementById('ttsPI').style.width='0%';
+    document.getElementById('ttsPct').textContent='–';
+  };
+  window.addEventListener('beforeunload',function(){synth.cancel();});
+})();
+</script>
 
 <div class="chapter">
   <span class="chapter-num">Luku 1</span>
