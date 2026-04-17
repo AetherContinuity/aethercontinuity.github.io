@@ -221,6 +221,22 @@ input.dc-range::-webkit-slider-thumb:hover{background:var(--accent);}
 .bounds-list li{padding:.7rem 0;border-bottom:1px solid var(--rule);font-size:.85rem;display:flex;gap:1rem;line-height:1.6;}
 .bounds-list li::before{content:'—';font-family:var(--mono);color:var(--muted);flex-shrink:0;}
 
+
+/* ── §12 Transmission & Endurance ── */
+.s12-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1rem 0;}
+.s12-card{background:#fff;border:1px solid var(--rule);padding:.9rem 1rem;}
+.s12-card-title{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.s12-value{font-size:1.6rem;font-weight:700;font-family:var(--mono);line-height:1;}
+.s12-sub{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+.s12-status{display:inline-block;padding:.15rem .5rem;font-size:.65rem;font-weight:700;border-radius:2px;margin-top:.4rem;}
+.s12-normal{background:#e8f5e9;color:#2a6e3f;}
+.s12-tight{background:#fff8e1;color:#8b6000;}
+.s12-elevated{background:#fff3e0;color:#e65100;}
+.s12-critical{background:#fce4ec;color:#880e4f;}
+.s12-chart-wrap{background:#fff;border:1px solid var(--rule);padding:.9rem 1rem;margin:.75rem 0;}
+.s12-chart-title{font-size:.72rem;color:var(--muted);margin-bottom:.5rem;}
+canvas.s12-canvas{width:100%;height:80px;display:block;}
+@media(max-width:600px){.s12-grid{grid-template-columns:1fr 1fr;}}
 /* ── References ── */
 .refs-section{margin-bottom:2rem;}
 .ref-list{list-style:none;border-top:1px solid var(--rule);}
@@ -740,6 +756,71 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <span class="v4-card-regime v4-regime-metastable">Metastable</span> T₁₆₈ 24–72h — stressiä klusteroituu &nbsp;·&nbsp;
       <span class="v4-card-regime v4-regime-jump">Jump</span> T₁₆₈ ≥ 72h — pitkä yhtenäinen stressijakso, jump-regiimin indikaattori
       &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 124+192 (import-gap CV) · WP-015 §9
+    </div>
+  </div>
+
+
+  <!-- §12 Transmission & Endurance Layer -->
+  <div class="section" id="s12">
+    <div class="shdr"><span class="snum">&sect; 12</span><span class="stit">Siirtoyhteydet &amp; Energiakestävyys — Transmission &amp; Endurance Layer</span></div>
+    <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60, DS 87, DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — vaatii transmission-proxyn.</p>
+
+    <div class="s12-grid">
+      <!-- TRR -->
+      <div class="s12-card">
+        <div class="s12-card-title">TRR &mdash; SE1→FI realisoitumisaste</div>
+        <div class="s12-value" id="s12TRR">—</div>
+        <div class="s12-sub">Toteutunut / NTC kapasiteetti</div>
+        <div class="s12-status s12-normal" id="s12TRRlabel">ladataan…</div>
+      </div>
+      <!-- P1 sisäinen siirto -->
+      <div class="s12-card">
+        <div class="s12-card-title">P1 &mdash; Sisäinen siirto pohj.→etelä</div>
+        <div class="s12-value" id="s12P1">—</div>
+        <div class="s12-sub">DS 30 · MW · W24 ka</div>
+        <div class="s12-status s12-normal" id="s12P1label">ladataan…</div>
+      </div>
+      <!-- Shortage Status -->
+      <div class="s12-card">
+        <div class="s12-card-title">Shortage Status &mdash; DS 336</div>
+        <div class="s12-value" id="s12SS">—</div>
+        <div class="s12-sub">0=normaali · 1–3=hälytys</div>
+        <div class="s12-status s12-normal" id="s12SSlabel">ladataan…</div>
+      </div>
+      <!-- Taajuus -->
+      <div class="s12-card">
+        <div class="s12-card-title">Taajuus &mdash; DS 177</div>
+        <div class="s12-value" id="s12Freq">—</div>
+        <div class="s12-sub">Hz · reaaliaikainen</div>
+        <div class="s12-status s12-normal" id="s12Freqlabel">ladataan…</div>
+      </div>
+      <!-- mFRR suunta -->
+      <div class="s12-card">
+        <div class="s12-card-title">mFRR-suunta &mdash; DS 369</div>
+        <div class="s12-value" id="s12mFRR">—</div>
+        <div class="s12-sub">−1=alas · 0=neutr · +1=ylös</div>
+        <div class="s12-status s12-normal" id="s12mFRRlabel">ladataan…</div>
+      </div>
+      <!-- Kumulatiivinen energiatasapaino -->
+      <div class="s12-card">
+        <div class="s12-card-title">Energia-alijäämä &mdash; 72h</div>
+        <div class="s12-value" id="s12CEB">—</div>
+        <div class="s12-sub">MWh · kumulatiivinen alijäämä</div>
+        <div class="s12-status s12-normal" id="s12CEBlabel">ladataan…</div>
+      </div>
+    </div>
+
+    <!-- SE1→FI siirto aikasarja -->
+    <div class="s12-chart-wrap">
+      <div class="s12-chart-title">SE1→FI fyysinen siirto W72 — DS 87 (MW · 3min) &nbsp;·&nbsp; <span id="s12ChartNote" style="color:var(--muted)">ladataan…</span></div>
+      <canvas class="s12-canvas" id="s12Chart" height="80"></canvas>
+    </div>
+
+    <div class="snote" style="margin-top:.75rem;">
+      <strong>Lähde:</strong> Fingrid Open Data (uusi API) · DS 87 SE1→FI reaaliaikainen · DS 30 P1-siirto · DS 336 shortage status · DS 177 taajuus · DS 369 mFRR-suunta &nbsp;·&nbsp;
+      <strong>TRR:</strong> toteutunut siirto / suunniteltu NTC (DS 24) &nbsp;·&nbsp;
+      <strong>Energia-alijäämä:</strong> Σ max(0, kulutus−tuotanto) 72h:ssa &nbsp;·&nbsp;
+      Yhteys: <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a>
     </div>
   </div>
 
@@ -1802,6 +1883,8 @@ async function init() {
     fetchHydroRF().then(() => {
       renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
     });
+    // §12 Transmission & Endurance Layer
+    renderS12(rawData);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
@@ -2376,6 +2459,189 @@ window.addEventListener('resize', () => {
 });
 // Auto-refresh every 30 min
 setInterval(init, 30 * 60 * 1000);
+
+// ── §12 Transmission & Endurance Layer ──────────────────────────────────────
+const TX_PROXY = 'https://aci-transmission-proxy.ruotsalainen-marko.workers.dev';
+
+function s12Status(val, thresholds, labels, classes) {
+  for (let i = 0; i < thresholds.length; i++) {
+    if (val <= thresholds[i]) return { label: labels[i], cls: classes[i] };
+  }
+  return { label: labels[labels.length-1], cls: classes[classes.length-1] };
+}
+
+async function fetchTX(ds, hours, size) {
+  const now = new Date();
+  const end = new Date(now - 2*3.6e6);
+  const start = new Date(now - (hours||4)*3.6e6);
+  const url = TX_PROXY + '/?ds=' + ds +
+    '&start=' + encodeURIComponent(start.toISOString()) +
+    '&end='   + encodeURIComponent(end.toISOString()) +
+    '&size='  + (size||96);
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('TX proxy ' + r.status + ' ds=' + ds);
+  const j = await r.json();
+  return j.data || [];
+}
+
+function avg(arr) {
+  if (!arr.length) return null;
+  return arr.reduce((a,b) => a + b, 0) / arr.length;
+}
+
+async function renderS12(rawData) {
+  try {
+    // 1. SE1→FI reaaliaikainen siirto (DS 87, 3min, W24)
+    const se1Data = await fetchTX(87, 26, 120);
+    const se1Vals = se1Data.map(d => d.value).filter(v => v != null);
+    const se1Avg = avg(se1Vals);
+
+    // 2. NTC kapasiteetti SE1→FI (DS 24, W24 viimeisin)
+    const ntcData = await fetchTX(24, 30, 24);
+    const ntcVals = ntcData.map(d => d.value).filter(v => v != null && v > 0);
+    const ntcAvg = avg(ntcVals) || 900; // fallback 900 MW
+
+    // TRR
+    const trrVal = se1Avg != null ? Math.abs(se1Avg) / ntcAvg : null;
+    if (trrVal != null) {
+      document.getElementById('s12TRR').textContent = (trrVal*100).toFixed(0) + '%';
+      const st = s12Status(trrVal,
+        [0.5, 0.75, 0.90],
+        ['Low','Moderate','High','Saturated'],
+        ['s12-normal','s12-tight','s12-elevated','s12-critical']
+      );
+      const lbl = document.getElementById('s12TRRlabel');
+      lbl.textContent = st.label + ' (' + (se1Avg!=null?Math.abs(se1Avg).toFixed(0):'—') + '/' + ntcAvg.toFixed(0) + ' MW)';
+      lbl.className = 's12-status ' + st.cls;
+    }
+
+    // 3. P1-siirto pohjoinen→etelä (DS 30, W24)
+    let p1Avg = null;
+    try {
+      const p1Data = await fetchTX(30, 26, 100);
+      const p1Vals = p1Data.map(d => d.value).filter(v => v != null);
+      p1Avg = avg(p1Vals);
+      if (p1Avg != null) {
+        document.getElementById('s12P1').textContent = p1Avg.toFixed(0) + ' MW';
+        const p1pct = p1Avg / 4000;
+        const st = s12Status(p1pct, [0.5,0.75,0.90],
+          ['Normal','Tight','High','Saturated'],
+          ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+        const lbl = document.getElementById('s12P1label');
+        lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW)';
+        lbl.className = 's12-status ' + st.cls;
+      }
+    } catch(e) { document.getElementById('s12P1').textContent = 'N/A'; document.getElementById('s12P1label').textContent = e.message.slice(0,40); }
+
+    // 4. Shortage Status (DS 336)
+    try {
+      const ssData = await fetchTX(336, 2, 5);
+      const ssVal = ssData.length ? ssData[0].value : 0;
+      document.getElementById('s12SS').textContent = ssVal != null ? ssVal : '0';
+      const ssLabels = ['Normal','Watch','Warning','Emergency'];
+      const ssCls = ['s12-normal','s12-tight','s12-elevated','s12-critical'];
+      const ssIdx = Math.min(Math.max(Math.round(ssVal||0), 0), 3);
+      const lbl = document.getElementById('s12SSlabel');
+      lbl.textContent = ssLabels[ssIdx];
+      lbl.className = 's12-status ' + ssCls[ssIdx];
+    } catch(e) { document.getElementById('s12SS').textContent = '0'; document.getElementById('s12SSlabel').textContent = 'Normal'; }
+
+    // 5. Taajuus (DS 177)
+    try {
+      const fqData = await fetchTX(177, 1, 5);
+      const fqVal = fqData.length ? fqData[0].value : null;
+      if (fqVal != null) {
+        document.getElementById('s12Freq').textContent = fqVal.toFixed(3) + ' Hz';
+        const dev = Math.abs(fqVal - 50.0);
+        const st = s12Status(dev, [0.1, 0.2, 0.5],
+          ['Stable','Watch','Warning','Critical'],
+          ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+        const lbl = document.getElementById('s12Freqlabel');
+        lbl.textContent = st.label + ' (±' + dev.toFixed(3) + ' Hz)';
+        lbl.className = 's12-status ' + st.cls;
+      }
+    } catch(e) { document.getElementById('s12Freq').textContent = 'N/A'; }
+
+    // 6. mFRR-suunta (DS 369)
+    try {
+      const mfData = await fetchTX(369, 2, 5);
+      const mfVal = mfData.length ? mfData[0].value : 0;
+      const mfLabels = {'-1':'▼ Alas (alassäätö)', '0':'● Neutraali', '1':'▲ Ylös (ylössäätö)'};
+      const mfCls = {'-1':'s12-normal', '0':'s12-normal', '1':'s12-elevated'};
+      const mk = String(Math.round(mfVal||0));
+      document.getElementById('s12mFRR').textContent = mk;
+      const lbl = document.getElementById('s12mFRRlabel');
+      lbl.textContent = mfLabels[mk] || '—';
+      lbl.className = 's12-status ' + (mfCls[mk] || 's12-normal');
+    } catch(e) { document.getElementById('s12mFRR').textContent = '0'; }
+
+    // 7. Energia-alijäämä 72h (laskennallinen rawData:sta)
+    if (rawData && rawData.length >= 72) {
+      const slice72 = rawData.slice(-72);
+      let cumDeficit = 0;
+      slice72.forEach(d => {
+        const gap = (d.consumption || 0) - (d.production || 0);
+        if (gap > 0) cumDeficit += gap;
+      });
+      document.getElementById('s12CEB').textContent = Math.round(cumDeficit).toLocaleString('fi') + ' MWh';
+      const st = s12Status(cumDeficit, [5000, 15000, 30000],
+        ['Normal','Tight','Elevated','Critical'],
+        ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+      const lbl = document.getElementById('s12CEBlabel');
+      lbl.textContent = st.label;
+      lbl.className = 's12-status ' + st.cls;
+    }
+
+    // 8. SE1→FI aikasarjakaavio
+    if (se1Data.length > 0) {
+      drawS12Chart(se1Data.slice(0,72).reverse());
+      document.getElementById('s12ChartNote').textContent =
+        'n=' + se1Data.length + ' · ka ' + (se1Avg!=null?se1Avg.toFixed(0):'—') + ' MW · NTC ~' + ntcAvg.toFixed(0) + ' MW';
+    }
+
+  } catch(e) {
+    console.warn('§12 render error:', e.message);
+  }
+}
+
+function drawS12Chart(data) {
+  const canvas = document.getElementById('s12Chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * (window.devicePixelRatio||1);
+  canvas.height = 80 * (window.devicePixelRatio||1);
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W = canvas.offsetWidth, H = 80;
+  ctx.clearRect(0,0,W,H);
+
+  const vals = data.map(d => Math.abs(d.value||0));
+  if (!vals.length) return;
+  const mx = Math.max(...vals, 500);
+
+  ctx.fillStyle = '#f0f0ec';
+  ctx.fillRect(0,0,W,H);
+
+  // NTC viiva ~900 MW
+  const ntcY = H - (900/mx)*H*0.85 - 5;
+  ctx.strokeStyle = '#e07000';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(0,ntcY); ctx.lineTo(W,ntcY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#e07000'; ctx.font = '9px sans-serif';
+  ctx.fillText('NTC ~900', 4, ntcY-3);
+
+  // Siirtokäyrä
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  data.forEach((d, i) => {
+    const x = (i / (data.length-1)) * W;
+    const y = H - (Math.abs(d.value||0) / mx) * H * 0.85 - 5;
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
 </script>
 </body>
 </html>
