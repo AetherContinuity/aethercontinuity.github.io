@@ -2490,92 +2490,9 @@ function avg(arr) {
 }
 
 async function renderS12(rawData) {
+  // §12: käytetään rawData:ta (vanha proxy) + transmission-proxy niille jotka toimii
   try {
-    // 1. SE1→FI reaaliaikainen siirto (DS 87, 3min, W24)
-    const se1Data = await fetchTX(87, 26, 120);
-    const se1Vals = se1Data.map(d => d.value).filter(v => v != null);
-    const se1Avg = avg(se1Vals);
-
-    // 2. NTC kapasiteetti SE1→FI (DS 24, W24 viimeisin)
-    const ntcData = await fetchTX(24, 30, 24);
-    const ntcVals = ntcData.map(d => d.value).filter(v => v != null && v > 0);
-    const ntcAvg = avg(ntcVals) || 900; // fallback 900 MW
-
-    // TRR
-    const trrVal = se1Avg != null ? Math.abs(se1Avg) / ntcAvg : null;
-    if (trrVal != null) {
-      document.getElementById('s12TRR').textContent = (trrVal*100).toFixed(0) + '%';
-      const st = s12Status(trrVal,
-        [0.5, 0.75, 0.90],
-        ['Low','Moderate','High','Saturated'],
-        ['s12-normal','s12-tight','s12-elevated','s12-critical']
-      );
-      const lbl = document.getElementById('s12TRRlabel');
-      lbl.textContent = st.label + ' (' + (se1Avg!=null?Math.abs(se1Avg).toFixed(0):'—') + '/' + ntcAvg.toFixed(0) + ' MW)';
-      lbl.className = 's12-status ' + st.cls;
-    }
-
-    // 3. P1-siirto pohjoinen→etelä (DS 30, W24)
-    let p1Avg = null;
-    try {
-      const p1Data = await fetchTX(30, 26, 100);
-      const p1Vals = p1Data.map(d => d.value).filter(v => v != null);
-      p1Avg = avg(p1Vals);
-      if (p1Avg != null) {
-        document.getElementById('s12P1').textContent = p1Avg.toFixed(0) + ' MW';
-        const p1pct = p1Avg / 4000;
-        const st = s12Status(p1pct, [0.5,0.75,0.90],
-          ['Normal','Tight','High','Saturated'],
-          ['s12-normal','s12-tight','s12-elevated','s12-critical']);
-        const lbl = document.getElementById('s12P1label');
-        lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW)';
-        lbl.className = 's12-status ' + st.cls;
-      }
-    } catch(e) { document.getElementById('s12P1').textContent = 'N/A'; document.getElementById('s12P1label').textContent = e.message.slice(0,40); }
-
-    // 4. Shortage Status (DS 336)
-    try {
-      const ssData = await fetchTX(336, 2, 5);
-      const ssVal = ssData.length ? ssData[0].value : 0;
-      document.getElementById('s12SS').textContent = ssVal != null ? ssVal : '0';
-      const ssLabels = ['Normal','Watch','Warning','Emergency'];
-      const ssCls = ['s12-normal','s12-tight','s12-elevated','s12-critical'];
-      const ssIdx = Math.min(Math.max(Math.round(ssVal||0), 0), 3);
-      const lbl = document.getElementById('s12SSlabel');
-      lbl.textContent = ssLabels[ssIdx];
-      lbl.className = 's12-status ' + ssCls[ssIdx];
-    } catch(e) { document.getElementById('s12SS').textContent = '0'; document.getElementById('s12SSlabel').textContent = 'Normal'; }
-
-    // 5. Taajuus (DS 177)
-    try {
-      const fqData = await fetchTX(177, 1, 5);
-      const fqVal = fqData.length ? fqData[0].value : null;
-      if (fqVal != null) {
-        document.getElementById('s12Freq').textContent = fqVal.toFixed(3) + ' Hz';
-        const dev = Math.abs(fqVal - 50.0);
-        const st = s12Status(dev, [0.1, 0.2, 0.5],
-          ['Stable','Watch','Warning','Critical'],
-          ['s12-normal','s12-tight','s12-elevated','s12-critical']);
-        const lbl = document.getElementById('s12Freqlabel');
-        lbl.textContent = st.label + ' (±' + dev.toFixed(3) + ' Hz)';
-        lbl.className = 's12-status ' + st.cls;
-      }
-    } catch(e) { document.getElementById('s12Freq').textContent = 'N/A'; }
-
-    // 6. mFRR-suunta (DS 369)
-    try {
-      const mfData = await fetchTX(369, 2, 5);
-      const mfVal = mfData.length ? mfData[0].value : 0;
-      const mfLabels = {'-1':'▼ Alas (alassäätö)', '0':'● Neutraali', '1':'▲ Ylös (ylössäätö)'};
-      const mfCls = {'-1':'s12-normal', '0':'s12-normal', '1':'s12-elevated'};
-      const mk = String(Math.round(mfVal||0));
-      document.getElementById('s12mFRR').textContent = mk;
-      const lbl = document.getElementById('s12mFRRlabel');
-      lbl.textContent = mfLabels[mk] || '—';
-      lbl.className = 's12-status ' + (mfCls[mk] || 's12-normal');
-    } catch(e) { document.getElementById('s12mFRR').textContent = '0'; }
-
-    // 7. Energia-alijäämä 72h (laskennallinen rawData:sta)
+    // Energia-alijäämä 72h — laskennallinen rawData:sta (ei vaadi uutta proxyä)
     if (rawData && rawData.length >= 72) {
       const slice72 = rawData.slice(-72);
       let cumDeficit = 0;
@@ -2592,11 +2509,111 @@ async function renderS12(rawData) {
       lbl.className = 's12-status ' + st.cls;
     }
 
-    // 8. SE1→FI aikasarjakaavio
-    if (se1Data.length > 0) {
-      drawS12Chart(se1Data.slice(0,72).reverse());
-      document.getElementById('s12ChartNote').textContent =
-        'n=' + se1Data.length + ' · ka ' + (se1Avg!=null?se1Avg.toFixed(0):'—') + ' MW · NTC ~' + ntcAvg.toFixed(0) + ' MW';
+    // Reaaliaikaiset DS:t transmission-proxystä — try/catch per mittari
+    const txBase = 'https://aci-transmission-proxy.ruotsalainen-marko.workers.dev';
+
+    // SE1→FI siirto (DS 60, 15min)
+    try {
+      const now = new Date();
+      const end = new Date(now - 2*3.6e6);
+      const start = new Date(now - 28*3.6e6);
+      const r = await fetch(txBase + '/?ds=60&start=' + encodeURIComponent(start.toISOString()) +
+        '&end=' + encodeURIComponent(end.toISOString()) + '&size=120');
+      if (r.ok) {
+        const j = await r.json();
+        const vals = (j.data||[]).map(d => d.value).filter(v => v != null);
+        const se1Avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+        const ntcApprox = 900;
+        if (se1Avg != null) {
+          const trrVal = Math.abs(se1Avg) / ntcApprox;
+          document.getElementById('s12TRR').textContent = (trrVal*100).toFixed(0) + '%';
+          const st = s12Status(trrVal, [0.5,0.75,0.90],
+            ['Low','Moderate','High','Saturated'],
+            ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+          const lbl = document.getElementById('s12TRRlabel');
+          lbl.textContent = st.label + ' (' + Math.abs(se1Avg).toFixed(0) + '/' + ntcApprox + ' MW)';
+          lbl.className = 's12-status ' + st.cls;
+          drawS12Chart((j.data||[]).slice(0,96).reverse());
+          document.getElementById('s12ChartNote').textContent =
+            'n=' + vals.length + ' · ka ' + se1Avg.toFixed(0) + ' MW · NTC ~' + ntcApprox + ' MW';
+        }
+      }
+    } catch(e) {
+      document.getElementById('s12TRR').textContent = 'N/A';
+      document.getElementById('s12TRRlabel').textContent = 'TX proxy ei saatavilla';
+    }
+
+    // P1 sisäinen siirto (DS 30)
+    try {
+      const now = new Date();
+      const end = new Date(now - 2*3.6e6);
+      const start = new Date(now - 26*3.6e6);
+      const r = await fetch(txBase + '/?ds=30&start=' + encodeURIComponent(start.toISOString()) +
+        '&end=' + encodeURIComponent(end.toISOString()) + '&size=100');
+      if (r.ok) {
+        const j = await r.json();
+        const vals = (j.data||[]).map(d => d.value).filter(v => v != null);
+        const p1Avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+        if (p1Avg != null) {
+          document.getElementById('s12P1').textContent = p1Avg.toFixed(0) + ' MW';
+          const p1pct = p1Avg / 4000;
+          const st = s12Status(p1pct, [0.5,0.75,0.90],
+            ['Normal','Tight','High','Saturated'],
+            ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+          const lbl = document.getElementById('s12P1label');
+          lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW)';
+          lbl.className = 's12-status ' + st.cls;
+        }
+      }
+    } catch(e) {
+      document.getElementById('s12P1').textContent = 'N/A';
+      document.getElementById('s12P1label').textContent = 'TX proxy ei saatavilla';
+    }
+
+    // Shortage Status DS 336, Taajuus DS 177, mFRR DS 369
+    for (const [ds, elId, labelId, transform, thresholds, labels, classes] of [
+      [336, 's12SS', 's12SSlabel', v=>Math.round(v||0), [0,1,2], ['Normal','Watch','Warning','Emergency'], ['s12-normal','s12-tight','s12-elevated','s12-critical']],
+      [177, 's12Freq', 's12Freqlabel', v=>v, null, null, null],
+      [369, 's12mFRR', 's12mFRRlabel', v=>Math.round(v||0), null, null, null],
+    ]) {
+      try {
+        const now = new Date();
+        const end = new Date(now - 60000);
+        const start = new Date(now - 3.6e6);
+        const r = await fetch(txBase + '/?ds=' + ds +
+          '&start=' + encodeURIComponent(start.toISOString()) +
+          '&end=' + encodeURIComponent(end.toISOString()) + '&size=5');
+        if (r.ok) {
+          const j = await r.json();
+          const row = (j.data||[])[0];
+          if (row) {
+            const val = transform(row.value);
+            if (ds === 336) {
+              document.getElementById(elId).textContent = val;
+              const idx = Math.min(Math.max(val, 0), 3);
+              document.getElementById(labelId).textContent = labels[idx];
+              document.getElementById(labelId).className = 's12-status ' + classes[idx];
+            } else if (ds === 177) {
+              document.getElementById(elId).textContent = (row.value||0).toFixed(3) + ' Hz';
+              const dev = Math.abs((row.value||50) - 50.0);
+              const st = s12Status(dev, [0.1,0.2,0.5],
+                ['Stable','Watch','Warning','Critical'],
+                ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+              document.getElementById(labelId).textContent = st.label + ' (±' + dev.toFixed(3) + ' Hz)';
+              document.getElementById(labelId).className = 's12-status ' + st.cls;
+            } else if (ds === 369) {
+              const mk = String(val);
+              const mfLabels = {'-1':'▼ Alassäätö', '0':'● Neutraali', '1':'▲ Ylössäätö'};
+              document.getElementById(elId).textContent = mk;
+              document.getElementById(labelId).textContent = mfLabels[mk] || '—';
+              document.getElementById(labelId).className = 's12-status ' + (val > 0 ? 's12-elevated' : 's12-normal');
+            }
+          }
+        }
+      } catch(e) {
+        document.getElementById(elId).textContent = 'N/A';
+        document.getElementById(labelId).textContent = 'TX proxy ei saatavilla';
+      }
     }
 
   } catch(e) {
