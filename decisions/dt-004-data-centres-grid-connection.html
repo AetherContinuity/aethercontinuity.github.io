@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DT-004 · Data Centre Grid Connection Terms · Finland · ACI</title>
+<style>
+  :root{--ink:#1a1a1a;--mid:#444;--light:#888;--rule:#ddd;--bg:#fafaf8;--accent:#8b2500;--green:#2a6e3f;--amber:#8b6000;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem;font-size:.9rem;line-height:1.7;}
+  nav{border-bottom:1px solid var(--rule);padding:.75rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--mid);margin-bottom:3rem;}
+  nav a{color:inherit;text-decoration:none;}nav a:hover{color:var(--ink);}
+  .nav-left{font-weight:600;color:var(--ink);}
+  .nav-right{display:flex;gap:1.5rem;}
+  .doc-header{border-bottom:2px solid var(--ink);padding-bottom:1.5rem;margin-bottom:2rem;}
+  .doc-series{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--light);margin-bottom:.5rem;}
+  .doc-title{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;}
+  .doc-sub{font-size:.9rem;color:var(--mid);margin-bottom:1rem;}
+  .doc-meta{font-size:.75rem;color:var(--light);line-height:2;}
+  .status-badge{display:inline-block;padding:.2rem .6rem;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border-radius:2px;}
+  .status-active{background:#e8f5e9;color:var(--green);border:1px solid #a5d6a7;}
+  h2{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+  p{margin-bottom:.9rem;color:var(--mid);}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem;}
+  th{text-align:left;padding:.5rem .75rem;background:#f0f0ec;font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mid);border-bottom:2px solid var(--rule);}
+  td{padding:.5rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .td-date{white-space:nowrap;color:var(--light);font-size:.78rem;}
+  .callout{background:#fff8f5;border:1px solid #f0c0a0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout strong{color:var(--accent);}
+  .wem-box{background:#f0f0ec;border-left:3px solid var(--accent);padding:1rem 1.2rem;margin:1rem 0;font-size:.82rem;line-height:2;}
+  .wem-box strong{color:var(--accent);}
+  .gap-high{color:var(--accent);font-weight:600;}
+  .gap-med{color:var(--amber);font-weight:600;}
+  .gap-ok{color:var(--green);font-weight:600;}
+  .actor-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1rem 0;}
+  .actor-card{border:1px solid var(--rule);padding:.8rem 1rem;font-size:.82rem;}
+  .actor-card-title{font-weight:700;font-size:.78rem;margin-bottom:.3rem;}
+  .actor-card-pos{color:var(--mid);margin-bottom:.3rem;}
+  .actor-card-aci{font-size:.72rem;color:var(--light);border-top:1px solid var(--rule);padding-top:.3rem;margin-top:.3rem;}
+  .note{font-size:.78rem;color:var(--light);border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;line-height:1.8;}
+  a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
+  @media(max-width:550px){.actor-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right"><a href="/papers/">Papers</a><a href="/decisions/">Decisions</a><a href="/tools/">Tools</a><a href="/fiction/">Fiction</a><a href="/about.html">About</a></span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · Decision Track · DT-004 · Domain D-4 · Open Log</div>
+  <div class="doc-title">Data Centre Grid Connection Terms and Flexibility Obligations · Finland</div>
+  <div class="doc-sub">Tracking whether rigid load growth is matched by binding additionality and flexibility requirements</div>
+  <div class="doc-meta">
+    Version 1.0 · 17 April 2026 &nbsp;·&nbsp;
+    <span class="status-badge status-active">Active</span>
+    &nbsp;· Basis: WP-015 §2, §4 · WP-001 · DA-003<br>
+    Tracking window: 2023–present · Updated on significant policy or investment developments
+  </div>
+</div>
+
+<p>Finland is experiencing an unprecedented data centre investment wave — from 285 MW in 2024 to a projected 1.5 GW by 2030, with 3.4 GW in the planning pipeline. These facilities operate 24/7 with near-zero short-term price elasticity. WP-015 §2 identifies this as Shift I: demand rigidification. The structural question this log tracks is whether connection terms require data centres to contribute to system resilience, or whether they simply add inelastic load to an already tightening grid.</p>
+
+<div class="callout">
+<strong>Central finding:</strong> Finland has no binding additionality requirement for data centre grid connections. Data centres can connect to the grid by signing PPAs with existing generation — without creating new capacity. The TEM flexibility mechanism proposal (800 MW by 2030) is voluntary and market-based. No irruptibility obligation, no energy reserve requirement, no priority inversion framework exists. The structural gap is widening as load commitments grow faster than the policy response.
+</div>
+
+<h2>1 · The Additionality Problem</h2>
+<p>The distinction that determines whether data centre growth strengthens or weakens the system is additionality: does a data centre's power purchase agreement finance new generation capacity, or does it merely commit existing capacity away from the spot market?</p>
+<table>
+  <thead><tr><th>PPA type</th><th>System effect</th><th>Spot market effect</th><th>Adequacy effect</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Additionality PPA</strong> — contract finances new generation (wind, solar, nuclear)</td>
+      <td style="color:var(--green);font-weight:600">Increases total capacity</td>
+      <td>Neutral — new capacity enters market</td>
+      <td style="color:var(--green)">Positive — system grows with load</td>
+    </tr>
+    <tr>
+      <td><strong>Non-additionality PPA</strong> — contract commits existing generation away from spot</td>
+      <td>No new capacity created</td>
+      <td class="gap-high">Reduces available market volume → residualisation</td>
+      <td class="gap-high">Negative — Shift III materialises</td>
+    </tr>
+  </tbody>
+</table>
+<p>According to CPC Finland CEO Erik Trast (April 2026), most data centre operators currently seek fixed-price contracts with <em>existing</em> production — not new. This is the mechanism WP-015 §4 describes as market residualisation: when pre-committed capacity grows, the spot market operates only on the residual volume and loses its ability to signal and allocate scarcity.</p>
+
+<h2>2 · Actor Map — Current Positions</h2>
+<div class="actor-grid">
+  <div class="actor-card">
+    <div class="actor-card-title">PM Orpo (Government)</div>
+    <div class="actor-card-pos">"Data centres are investments Finland should promote. Not once has another investment been blocked because of them."</div>
+    <div class="actor-card-aci">Decision horizon mismatch — describes past, not 2027–2030 risk window. No additionality position.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Risto Siilasmaa (Investor)</div>
+    <div class="actor-card-pos">"Data centres consume so much energy that more economically useful investments may not materialise because green electricity runs short."</div>
+    <div class="actor-card-aci">Shift I validation — implicit additionality concern from allocation perspective.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Erik Trast (CPC Finland)</div>
+    <div class="actor-card-pos">"The electricity system will hit a wall within a couple of years. Data centres should always be required to sign contracts guaranteeing new production."</div>
+    <div class="actor-card-aci">Direct additionality requirement. Shift III diagnosis. Timeline: "2 years" = 2027–2028 = WP-015 risk window.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Risto Kuusi / Asta Sihvonen-Punkka (Fingrid)</div>
+    <div class="actor-card-pos">"This scale of demand growth is not a problem for the transmission grid." / "Individual data centre projects do not directly affect electricity prices."</div>
+    <div class="actor-card-aci">Operationally correct for transmission engineering. Does not address adequacy, additionality, or 72h+ endurance.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Anni Mikkonen (Suomen Uusiutuvat)</div>
+    <div class="actor-card-pos">"If data centres sign long-term contracts with new production, that production can be built."</div>
+    <div class="actor-card-aci">Implicit additionality requirement — describes the solution without making it binding policy.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Peter Lund (Aalto University)</div>
+    <div class="actor-card-pos">"System flexibility will be crucial. There is a danger of moving forward without thinking things through."</div>
+    <div class="actor-card-aci">Flexibility = WEM §12 target. "Without thinking through" = absence of irruptibility and priority inversion framework.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">DIESL (Dec 2025)</div>
+    <div class="actor-card-pos">"Evidence suggests most data centre operators do not significantly adapt electricity consumption based on price."</div>
+    <div class="actor-card-aci">Empirical confirmation of inelastic load — Shift I operationalised. Low short-run price elasticity measured directly.</div>
+  </div>
+  <div class="actor-card">
+    <div class="actor-card-title">Jairi Palonen / Maine comparison (Apr 2026)</div>
+    <div class="actor-card-pos">"Maine froze large data centre construction until 2027 because capacity was insufficient and costs threatened to fall on households."</div>
+    <div class="actor-card-aci">Priority Inversion Risk made explicit: inelastic commercial load vs. vulnerable household load. 300,000 energy-poor households in Finland.</div>
+  </div>
+</div>
+
+<h2>3 · Timeline</h2>
+<table>
+  <thead><tr><th>Date</th><th>Event</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td class="td-date">2014</td><td>Finland reduces data centre electricity tax to near zero (facilities &gt;5 MW). Effective demand subsidy with no additionality condition.</td><td style="font-size:.75rem;color:var(--light)">Finnish Government</td></tr>
+    <tr><td class="td-date">2022</td><td>Tax threshold lowered to 0.5 MW — broader eligibility, still no additionality requirement.</td><td style="font-size:.75rem;color:var(--light)">Finnish Government</td></tr>
+    <tr><td class="td-date">2023</td><td>Orpo government commissions Veli-Matti Mattila to review data centre policy. Mandate: economic benefits, not system adequacy.</td><td style="font-size:.75rem;color:var(--light)">TEM</td></tr>
+    <tr><td class="td-date">2024</td><td>Mattila report published. Conclusion: Finland should attract data centres. No additionality requirement recommended. System adequacy not in scope.</td><td style="font-size:.75rem;color:var(--light)">TEM / Mattila 2024</td></tr>
+    <tr><td class="td-date">2024</td><td>Data centre capacity: 285 MW operational. 3.4 GW in planning pipeline. Investment pipeline: €12 billion committed.</td><td style="font-size:.75rem;color:var(--light)">EK / Energiateollisuus</td></tr>
+    <tr><td class="td-date">2025-Q1</td><td>Government proposes data centre flexibility mechanism — 800 MW target by 2030. Voluntary, market-based. Not a binding obligation.</td><td style="font-size:.75rem;color:var(--light)">TEM 2025</td></tr>
+    <tr><td class="td-date">2025</td><td>Finland raises data centre electricity tax to standard rate (2.24 snt/kWh). Government freezes increase after Google signals investment uncertainty.</td><td style="font-size:.75rem;color:var(--light)">Finnish Government 2025</td></tr>
+    <tr><td class="td-date">Dec 2025</td><td>DIESL publishes empirical study: data centres (except crypto) have near-zero short-run price elasticity. Confirms inelastic load assumption.</td><td style="font-size:.75rem;color:var(--light)">DIESL 2025</td></tr>
+    <tr><td class="td-date">Apr 2026</td><td>Siilasmaa: green electricity shortage risk if data centre growth continues unchecked. Orpo: no investment has been blocked yet.</td><td style="font-size:.75rem;color:var(--light)">HS 16–17.4.2026</td></tr>
+    <tr><td class="td-date">17.4.2026</td><td>Trast (CPC Finland): system will hit a wall within two years. Requires additionality PPA as condition for grid connection. First explicit public additionality demand from industry actor.</td><td style="font-size:.75rem;color:var(--light)">HS 17.4.2026</td></tr>
+    <tr><td class="td-date">17.4.2026</td><td>10 GW wind+solar milestone passed. Nominally sufficient for typical demand — not for cold, calm winter peaks.</td><td style="font-size:.75rem;color:var(--light)">Suomen Uusiutuvat 2026</td></tr>
+  </tbody>
+</table>
+
+<h2>4 · The Priority Inversion Risk</h2>
+<p>A concept absent from current Finnish policy discussion: Priority Inversion occurs when economically optimised but inelastic commercial load displaces socially critical load during scarcity. In a stress event, data centres continue operating at full load while households, hospitals, and small industry face rationing — not because of explicit priority rules, but because data centres have pre-committed capacity through PPAs and cannot be interrupted.</p>
+<table>
+  <thead><tr><th>Load type</th><th>Flexibility</th><th>PPA coverage</th><th>Stress event behaviour</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Data centre</strong></td><td>Near-zero (DIESL 2025)</td><td>Typically high — pre-committed</td><td class="gap-high">Continues at full load</td></tr>
+    <tr><td><strong>Industrial consumer</strong></td><td>Moderate — some interruptibility</td><td>Partial</td><td class="gap-med">Partial reduction possible</td></tr>
+    <tr><td><strong>Household / small business</strong></td><td>High in theory — low in practice</td><td>None — spot-exposed</td><td class="gap-high">Faces price spikes, rationing</td></tr>
+    <tr><td><strong>Critical infrastructure</strong></td><td>None — must operate</td><td>None — state obligation</td><td style="color:var(--green)">Protected by statute</td></tr>
+  </tbody>
+</table>
+<p>Finland currently has 300,000 energy-poor households. Grid upgrade costs from data centre connections are socialised across all electricity users. The Maine precedent (construction freeze until 2027) reflects a political system that recognised this dynamic before the stress event — not after.</p>
+
+<h2>5 · What Finland Currently Requires — and Does Not Require</h2>
+<table>
+  <thead><tr><th>Requirement</th><th>Status</th><th>Gap</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Additionality PPA</strong> — connection requires contract financing new generation</td>
+      <td class="gap-high">Not required</td>
+      <td class="gap-high">Non-additionality PPAs accelerate market residualisation</td>
+    </tr>
+    <tr>
+      <td><strong>Flexibility obligation</strong> — binding demand response or irruptibility</td>
+      <td class="gap-med">Voluntary (800 MW proposal)</td>
+      <td class="gap-med">Voluntary mechanism does not guarantee response during stress</td>
+    </tr>
+    <tr>
+      <td><strong>Energy reserve contribution</strong> — MWh-dimensioned buffer, not just MW</td>
+      <td class="gap-high">Not in scope</td>
+      <td class="gap-high">72h+ adequacy gap unaddressed</td>
+    </tr>
+    <tr>
+      <td><strong>Priority inversion framework</strong> — explicit load shedding order</td>
+      <td class="gap-high">Not defined</td>
+      <td class="gap-high">Stress event allocation left to market price signals — which fail during Shift III</td>
+    </tr>
+    <tr>
+      <td><strong>Grid upgrade cost allocation</strong> — data centres fund their transmission impacts</td>
+      <td class="gap-med">Partial — connection fees apply, but system-wide reinforcement socialised</td>
+      <td class="gap-med">Cost transfer to all users continues</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6 · WEM Snapshot — 17.4.2026</h2>
+<div class="wem-box">
+  <strong>EPP (W168):</strong> 0.253 · Tight &nbsp;·&nbsp;
+  <strong>FS(p):</strong> 42.6% (hydro_RF 0.568) &nbsp;·&nbsp;
+  <strong>SP (W168):</strong> 27.4% · Tight<br>
+  <strong>DC scenario +3000 MW:</strong> EPP → 0.509 · Elevated · SP → 100%<br><br>
+  §10 scenario analysis: adding 3,000 MW data centre load (2030 scenario) to current system parameters pushes EPP from 0.253 to 0.509 — crossing the Elevated threshold. Stress persistence reaches 100%. This is the quantified endurance cost of Shift I without compensating capacity or flexibility obligations.
+</div>
+
+<h2>7 · Status</h2>
+<p><strong>Active.</strong> This log will be updated upon: binding additionality requirements introduced, flexibility obligation legislation, grid connection policy changes, significant data centre connection approvals, or Fingrid/TEM statements on demand-side obligations.</p>
+<p>Key trigger events to monitor: TEM's 800 MW flexibility mechanism legislation, Fingrid's updated grid connection criteria, EU Cloud and AI Development Act requirements, any Maine-style moratorium discussion in Finnish political debate.</p>
+
+<div class="note">
+  ACI Decision Track · DT-004 · Open Log · Version 1.0 · 17 April 2026<br>
+  Basis: <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> · <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a> · <a href="/tools/ACI-INSTRUMENT-v2.html">Winter Endurance Monitor v2.6</a><br>
+  Sources: HS 16–17.4.2026 (Siilasmaa, Orpo, Trast) · DIESL 2025 · TEM/Mattila 2024 · Energiateollisuus · EK<br>
+  This document records publicly verifiable decision events. It does not advocate specific policies or predict outcomes.<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+</body>
+</html>
