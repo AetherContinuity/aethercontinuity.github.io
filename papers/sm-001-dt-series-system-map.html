@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SM-001 · DT-Series System Map · ACI</title>
+<style>
+  :root{--ink:#1a1a1a;--mid:#444;--light:#888;--rule:#ddd;--bg:#fafaf8;--accent:#8b2500;--green:#2a6e3f;--amber:#8b6000;--blue:#1a4a8b;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem;font-size:.9rem;line-height:1.7;}
+  nav{border-bottom:1px solid var(--rule);padding:.75rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--mid);margin-bottom:3rem;}
+  nav a{color:inherit;text-decoration:none;}nav a:hover{color:var(--ink);}
+  .nav-left{font-weight:600;color:var(--ink);}
+  .nav-right{display:flex;gap:1.5rem;}
+  .doc-header{border-bottom:2px solid var(--ink);padding-bottom:1.5rem;margin-bottom:2rem;}
+  .doc-series{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--light);margin-bottom:.5rem;}
+  .doc-title{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;}
+  .doc-sub{font-size:.9rem;color:var(--mid);margin-bottom:1rem;}
+  .doc-meta{font-size:.75rem;color:var(--light);line-height:2;}
+  h2{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+  h3{font-size:.88rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--ink);}
+  p{margin-bottom:.9rem;color:var(--mid);}
+  .callout{background:#fff8f5;border:1px solid #f0c0a0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout strong{color:var(--accent);}
+  .callout-blue{background:#f0f4ff;border:1px solid #b0c4e8;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;}
+  .callout-blue strong{color:var(--blue);}
+  .chain{background:#f0f0ec;padding:1.2rem 1.5rem;margin:1.2rem 0;font-family:'Helvetica Neue',monospace;font-size:.82rem;line-height:2.2;border-left:3px solid var(--ink);}
+  .chain .arrow{color:var(--light);padding:0 .5rem;}
+  .chain .label{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-left:.5rem;}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem;}
+  th{text-align:left;padding:.5rem .75rem;background:#f0f0ec;font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mid);border-bottom:2px solid var(--rule);}
+  td{padding:.5rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .tension{background:#fff8f5;border-left:3px solid var(--accent);padding:.8rem 1rem;margin:.75rem 0;font-size:.83rem;}
+  .tension-title{font-weight:700;color:var(--accent);margin-bottom:.3rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;}
+  .gap-high{color:var(--accent);font-weight:600;}
+  .gap-med{color:var(--amber);font-weight:600;}
+  .finding{background:#f9f9f7;border:1px solid var(--rule);padding:1rem 1.2rem;margin:1rem 0;font-size:.85rem;}
+  .finding-label{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:.4rem;}
+  .note{font-size:.78rem;color:var(--light);border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;line-height:1.8;}
+  a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right"><a href="/papers/">Papers</a><a href="/decisions/">Decisions</a><a href="/tools/">Tools</a><a href="/fiction/">Fiction</a><a href="/about.html">About</a></span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · Synthesis Memo · SM-001</div>
+  <div class="doc-title">DT-Series System Map: Elasticity Collapse as Compound Failure</div>
+  <div class="doc-sub">Cross-linking DT-001 through DT-004 as a unified three-layer elasticity model</div>
+  <div class="doc-meta">
+    Version 1.0 · 19 April 2026 · Open Working Draft<br>
+    Basis: <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> · <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> · <a href="/decisions/dt-003-hydrological-monitoring-nordic.html">DT-003</a> · <a href="/decisions/dt-004-data-centres-grid-connection.html">DT-004</a>
+  </div>
+</div>
+
+<p>The four active DT logs document four discrete decision tracks. Read separately, each describes a specific gap: a missing capacity mechanism, a departing generation buffer, a hydrological monitoring deficit, a missing additionality requirement. This memo reads them together — as a single compound failure mode. The argument is that Finland and the Nordic system are losing all three independent elasticity reservoirs simultaneously, through mechanisms that are structurally independent but functionally convergent.</p>
+
+<div class="callout">
+<strong>Central finding:</strong> DT-001 through DT-004 do not describe four problems. They describe one: system-wide elasticity collapse driven by the independent degradation of all three redundancy classes — physical, external, and market. This is WP-015's elasticity collapse hypothesis rendered in institutional and empirical terms.
+</div>
+
+<h2>1 · Architecture: The Four Layers</h2>
+
+<p>The DT logs map onto WP-015's three structural shifts plus one amplifying mechanism:</p>
+
+<table>
+  <thead><tr><th>DT log</th><th>Layer</th><th>WP-015 shift</th><th>Mechanism</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><a href="/decisions/dt-004-data-centres-grid-connection.html"><strong>DT-004</strong></a></td>
+      <td>Demand (Input)</td>
+      <td>Shift I — demand rigidification</td>
+      <td>Data centre 24/7 load with near-zero price elasticity. Growing baseline rigidity. 3.4 GW pipeline without binding flexibility obligation.</td>
+    </tr>
+    <tr>
+      <td><a href="/decisions/dt-002-chp-phase-out-finland.html"><strong>DT-002</strong></a></td>
+      <td>Domestic supply buffer</td>
+      <td>Shift II — buffer erosion</td>
+      <td>CHP decommissioning removes the only thermally-correlated dispatchable buffer. ~500 MWe retired 2024–2025, coal ban 2029, no replacement.</td>
+    </tr>
+    <tr>
+      <td><a href="/decisions/dt-003-hydrological-monitoring-nordic.html"><strong>DT-003</strong></a></td>
+      <td>External buffer</td>
+      <td>Shift II extension</td>
+      <td>Norwegian reservoir system — the Nordic region's multi-week energy battery. Drought correlation with Finland increasing. No coordinated stress protocol.</td>
+    </tr>
+    <tr>
+      <td><a href="/decisions/dt-001-capacity-mechanism-finland.html"><strong>DT-001</strong></a></td>
+      <td>Market allocation</td>
+      <td>Shift III — market residualisation</td>
+      <td>No capacity mechanism. PPAs pre-commit capacity away from spot. Market operates on residual volume and loses ability to signal scarcity when it matters most.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The cascade logic follows directly:</p>
+
+<div class="chain">
+  [DT-004] Demand rigidity ↑ <span class="label">→ less flexibility available to absorb supply variance</span><br>
+  [DT-002] Domestic buffer ↓ <span class="label">→ less thermally-correlated dispatchable capacity</span><br>
+  [DT-003] External buffer correlation ↑ <span class="label">→ Nordic hydro unavailable precisely when Finland needs it</span><br>
+  [DT-001] Market allocation depth ↓ <span class="label">→ price signal fails to allocate during stress</span>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Integrated function</div>
+  System elasticity = f(demand flexibility × supply buffer independence × market depth)<br><br>
+  All three terms are simultaneously declining. This is not a stress event with a recovery path — it is a structural reconfiguration of the system's response capacity. WP-015 calls this the precondition for elasticity collapse: not that stress increases, but that <em>dY/dX → discontinuous response regime shift</em>.
+</div>
+
+<h2>2 · Common Ground: What All Four Logs Agree On</h2>
+
+<p>Despite tracking different decision domains, all four DT logs converge on a single structural claim: the problem is not a capacity shortage — it is a coordination and temporal failure. The system has or could acquire sufficient capacity in aggregate, but the mechanisms that would deploy that capacity during a multi-day winter stress event are simultaneously degrading.</p>
+
+<table>
+  <thead><tr><th>DT log</th><th>Specific gap</th><th>Common thread</th></tr></thead>
+  <tbody>
+    <tr><td>DT-001</td><td>No capacity mechanism → no instrument for multi-day adequacy</td><td rowspan="4" style="vertical-align:middle;color:var(--mid);font-style:italic;">The system cannot convert stress into an adequate response in time — not because capacity is absent in aggregate, but because the mechanisms that would deploy it have been removed, pre-committed, or never built.</td></tr>
+    <tr><td>DT-002</td><td>CHP removal → no thermally-correlated domestic buffer</td></tr>
+    <tr><td>DT-003</td><td>No Nordic hydro stress protocol → external buffer unmanaged</td></tr>
+    <tr><td>DT-004</td><td>No additionality requirement → rigid load grows without compensation</td></tr>
+  </tbody>
+</table>
+
+<h2>3 · Tensions and Internal Contradictions</h2>
+
+<p>The four logs are internally consistent but reveal three structural tensions when read in combination.</p>
+
+<div class="tension">
+  <div class="tension-title">Tension 1 — Primary failure point</div>
+  DT-001 frames the primary problem as market failure (residualisation). DT-002 frames it as physical dispatchable removal. DT-003 frames it as external buffer collapse. Each log implicitly prioritises its own layer.<br><br>
+  <strong>Resolution:</strong> These are not competing diagnoses — they are the same failure at different system layers. Market failure is the symptom. Physical buffer removal is the proximate cause. Hydrological correlation is the external boundary condition that makes the proximate cause systemic. WP-015's multi-shift framework captures all three simultaneously.
+</div>
+
+<div class="tension">
+  <div class="tension-title">Tension 2 — SE1 as regime switch variable</div>
+  The three DT logs that reference SE1 assign it a different role:<br><br>
+  <table style="margin:.5rem 0;">
+    <thead><tr><th>DT log</th><th>SE1 role</th></tr></thead>
+    <tbody>
+      <tr><td>DT-003</td><td>External buffer — Nordic hydro reserve that Finland can import from</td></tr>
+      <tr><td>DT-002</td><td>Replacement production — substitute for decommissioned CHP via Aurora Line</td></tr>
+      <tr><td>DT-004</td><td>Competitor — industrialisation (Hybrit, Stegra, data centres) absorbs SE1 capacity</td></tr>
+    </tbody>
+  </table>
+  <strong>Resolution:</strong> This is not an error. It reveals that SE1 is no longer a stable node in the system — it is a regime switch variable. Under normal conditions, SE1 functions as a buffer and supplier. Under stress conditions (cold, calm, high Nordic industrial load), SE1 switches to competitor. The transition point is unobserved and unmonitored. This is the core insight that DT-005 must formalize.
+</div>
+
+<div class="tension">
+  <div class="tension-title">Tension 3 — Two independent mechanisms produce the same outcome</div>
+  DT-001 describes flexibility loss through PPA-driven market residualisation. DT-004 describes flexibility loss through technological inertia (data centre load). These are causally independent — one is a market structure problem, the other is a demand-side technology problem. Yet both reduce the system's elasticity in exactly the same way.<br><br>
+  <strong>Significance:</strong> Two independent mechanisms converging on the same failure mode is the signature of WP-015's elasticity collapse. It is not a single-point failure that could be fixed with one intervention. Both mechanisms must be addressed simultaneously — which neither the capacity mechanism proposal (DT-001) nor the flexibility mechanism proposal (DT-004) currently does.
+</div>
+
+<h2>4 · The Open Link: DT-003 ↔ DT-001</h2>
+
+<p>The one causal link that remains unproven is the connection between DT-003 (hydrological buffer collapse) and DT-001 (market residualisation). They currently appear as parallel stressors rather than a feedback loop.</p>
+
+<p>The potential feedback mechanism would run: reservoir depletion → reduced Norwegian export capacity → reduced Nordic spot market depth → accelerated PPA formation as actors seek to secure supply → further spot market residualisation → DT-001 conditions worsen. If this loop is real, WP-015 shifts from a structural risk model to an endogenous instability model. This is the empirical question that separates "structural fragility" from "self-reinforcing collapse."</p>
+
+<div class="callout-blue">
+<strong>Research priority:</strong> Testing the DT-003 ↔ DT-001 causal link is the highest-value next step for WP-015's empirical foundation. Historical data from 2021–2022 (Norwegian reservoir depletion episode) and PPA formation rates in that period could provide a first test. If PPA formation accelerated during the 2022 hydro stress event, the feedback loop is at least plausible.
+</div>
+
+<h2>5 · Failure Mode Matrix</h2>
+
+<p>Under what conditions does elasticity collapse materialise vs. remain latent?</p>
+
+<table>
+  <thead><tr><th>Condition</th><th>Collapse avoided</th><th>Collapse materialises</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>DT-004 load growth</td>
+      <td>Data centres sign additionality PPAs → system capacity grows with load</td>
+      <td class="gap-high">Non-additionality PPAs → residual market shrinks</td>
+    </tr>
+    <tr>
+      <td>DT-002 CHP exit</td>
+      <td>Replacement dispatchable capacity built before 2029 coal ban</td>
+      <td class="gap-high">No replacement → thermally-correlated buffer gone by 2029</td>
+    </tr>
+    <tr>
+      <td>DT-003 hydro stress</td>
+      <td>Nordic joint protocol activated → coordinated reservoir management</td>
+      <td class="gap-high">No protocol → SE1 switches to competitor role silently</td>
+    </tr>
+    <tr>
+      <td>DT-001 market depth</td>
+      <td>Capacity mechanism in place before 2027 → market has floor</td>
+      <td class="gap-high">Mechanism delayed to 2031+ → three winters without instrument</td>
+    </tr>
+    <tr>
+      <td>All four simultaneously</td>
+      <td>Any two of four conditions avoided → partial elasticity retained</td>
+      <td class="gap-high">All four conditions materialise simultaneously → WP-015 jump-regime</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6 · One Sentence</h2>
+
+<div class="finding">
+  <div class="finding-label">System-level synthesis</div>
+  Finland and the Nordic electricity system are simultaneously losing all three independent elasticity reservoirs — physical (DT-002), external (DT-003), and market (DT-001) — while adding rigid inelastic load (DT-004), and no single policy instrument currently addresses more than one of these channels.
+</div>
+
+<div class="note">
+  ACI · Synthesis Memo · SM-001 · Version 1.0 · 19 April 2026 · Open Working Draft<br>
+  Basis: WP-015 (elasticity collapse) · DT-001 · DT-002 · DT-003 · DT-004<br>
+  This memo synthesises published ACI Decision Track logs. It does not independently advocate policy outcomes.<br>
+  External critique received April 2026 contributed to the tension analysis in §3 and the failure mode matrix in §5.<br>
+  Aether Continuity Institute · aethercontinuity.org
+</div>
+</body>
+</html>
