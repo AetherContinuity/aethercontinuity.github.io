@@ -52,7 +52,7 @@
   <div class="doc-title">DT-Series System Map: Elasticity Collapse as Compound Failure</div>
   <div class="doc-sub">Cross-linking DT-001 through DT-004 as a unified three-layer elasticity model</div>
   <div class="doc-meta">
-    Version 1.0 · 19 April 2026 · Open Working Draft<br>
+    Version 1.1 · 19 April 2026 · Open Working Draft<br>
     Basis: <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> · <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> · <a href="/decisions/dt-003-hydrological-monitoring-nordic.html">DT-003</a> · <a href="/decisions/dt-004-data-centres-grid-connection.html">DT-004</a>
   </div>
 </div>
@@ -208,11 +208,116 @@
   Finland and the Nordic electricity system are simultaneously losing all three independent elasticity reservoirs — physical (DT-002), external (DT-003), and market (DT-001) — while adding rigid inelastic load (DT-004), and no single policy instrument currently addresses more than one of these channels.
 </div>
 
+<h2>Appendix A · Minimal State-Space Model</h2>
+
+<p>External critique (April 2026) identified a structural weakness in §§1–6: the "simultaneous degradation" assumption is asserted through narrative symmetry rather than demonstrated through a formal model. SM-001 as written is coherent as a stress narrative but underspecified as a causal model. This appendix attempts to collapse the four-layer architecture into a minimal state-space representation that is falsifiable and forces each elasticity term to be declared explicitly.</p>
+
+<h3>A.1 · Five State Variables</h3>
+
+<p>The system is described by five measurable state variables:</p>
+
+<table>
+  <thead><tr><th>Variable</th><th>Description</th><th>Measurement proxy</th><th>Historical counterexample</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>E<sub>d</sub></strong></td>
+      <td>Demand elasticity — price sensitivity of total load, including data centre baseline</td>
+      <td>DIESL 2025 short-run price elasticity estimates; DR activation volumes</td>
+      <td>2022-Q3: industrial demand response reduced Finnish peak load ~400 MW during price spike</td>
+    </tr>
+    <tr>
+      <td><strong>E<sub>s</sub></strong></td>
+      <td>Domestic supply elasticity — dispatchable capacity activatable within 0–4h</td>
+      <td>CHP MW available; hydro regulation capacity; BESS (DS 398/399); WEM FS layer</td>
+      <td>Winter 2023: OL3 commercial operation offset ~1600 MWe of dispatchable gap; CHP deficit masked</td>
+    </tr>
+    <tr>
+      <td><strong>E<sub>x</sub></strong></td>
+      <td>External import elasticity — SE1 capacity realisable when Finland needs maximum import</td>
+      <td>TRR (WEM §12 DS 60/87); hydro_RF; SE1–FI price spread; Fenno-Skan + Aurora Line utilisation</td>
+      <td>Winter 2021: sustained high SE1 import (800–1200 MW) during extended cold period without SE1 stress</td>
+    </tr>
+    <tr>
+      <td><strong>M</strong></td>
+      <td>Market depth — spot market's share of total dispatchable capacity (non-pre-committed)</td>
+      <td>PPA penetration rate; forward vs. spot volume ratio; residual spot capacity at stress hours</td>
+      <td>No clean counterexample identified — this is the weakest empirical layer in the model</td>
+    </tr>
+    <tr>
+      <td><strong>T</strong></td>
+      <td>Institutional response time — time from observed stress signal to activated policy response</td>
+      <td>DT-001 timeline (2023 working group → 2031 proposal); Toolbox 2023 → no adoption 2026</td>
+      <td>2022 European energy crisis: several EU member states activated emergency measures within weeks — but Finland did not introduce new instruments</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>A.2 · Collapse Condition</h3>
+
+<p>The system enters a collapse regime when the composite elasticity function falls below a threshold θ:</p>
+
+<div class="chain">
+  C(t) = [E<sub>d</sub>(t) · E<sub>s</sub>(t) · E<sub>x</sub>(t) · M(t)] / T(t)<br><br>
+  Collapse condition: C(t) &lt; θ for duration &gt; τ<br><br>
+  where θ is the minimum elasticity required to absorb a 72–168h multi-day stress event,<br>
+  and τ is the minimum sustained stress duration that exhausts available reserves.
+</div>
+
+<p>This formulation makes the collapse condition explicit: it is not a single variable failing but the product of all four elasticity terms falling simultaneously below the threshold. It also makes clear that a single term remaining high can prevent collapse — for example, if E<sub>x</sub> remains elevated (Aurora Line + high SE1 availability), the product C(t) stays above θ even if E<sub>d</sub> and M are low.</p>
+
+<h3>A.3 · What Would Falsify the Elasticity Collapse Hypothesis</h3>
+
+<p>The critique correctly identifies that SM-001 as written risks becoming self-sealing: every tightening event increases confidence, and every non-event is attributed to luck or latent fragility. The following observations would reduce collapse probability or falsify the coupling assumptions:</p>
+
+<table>
+  <thead><tr><th>Observation</th><th>What it would falsify</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Data centre demand response &gt;500 MW sustained over 72h during a price spike event (2026–2028)</td>
+      <td>E<sub>d</sub> assumption: would show demand elasticity is higher than DIESL 2025 estimates</td>
+    </tr>
+    <tr>
+      <td>SE1 import &gt;1200 MW sustained during a simultaneous Nordic cold-calm-dry event (not just single-day)</td>
+      <td>E<sub>x</sub> assumption: would show external buffer is decoupled from correlated Nordic stress</td>
+    </tr>
+    <tr>
+      <td>OL3 + new wind capacity keeps FS(p) &gt;55% through winter 2026–2027 despite NVE hydro_RF &lt;0.60</td>
+      <td>E<sub>s</sub> assumption: would show domestic buffer is more resilient than CHP exit implies</td>
+    </tr>
+    <tr>
+      <td>Finnish government activates binding demand-side instrument within 6 months of a stress event signal</td>
+      <td>T assumption: would show institutional response time is lower than DT-001 timeline implies</td>
+    </tr>
+    <tr>
+      <td>A winter 2027–2030 stress event occurs without price spike above 100 €/MWh despite all four DT conditions being met</td>
+      <td>Composite: would disconfirm the elasticity collapse model as a whole</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>A.4 · What the Model Does Not Address</h3>
+
+<p>This minimal model omits three classes of adaptive feedback that real power systems exhibit and that SM-001 underweights:</p>
+
+<p><strong>Layered substitution:</strong> Price spikes trigger fuel switching, emergency imports, and last-resort dispatch rules. These are real mechanisms with demonstrated historical activation. The model treats institutional latency as near-infinite inside the 2027–2030 window; this may overstate fragility if political systems respond faster than DT-001's capacity mechanism timeline suggests.</p>
+
+<p><strong>Single-component idiosyncratic failures:</strong> The fiction section's "broken furnace" functions as a stochastic exogenous shock that rescues the system once. This exposes a genuine ambiguity: if outcomes depend sensitively on idiosyncratic component failures, the system is in a high-variance reliability space, not a clean regime-transition space. These are different claims with different implications for policy.</p>
+
+<p><strong>The M variable is the weakest layer:</strong> No historical counterexample exists for market residualisation leading to allocation failure in the Nordic system. The PPA penetration data is incomplete, and the causal chain from PPA growth to spot market depth loss is plausible but not empirically demonstrated at Nordic scale. This is the element that most requires empirical grounding before SM-001 can be upgraded from stress narrative to decision-grade model.</p>
+
+<h3>A.5 · Current State Assessment</h3>
+
+<div class="callout">
+<strong>Honest assessment:</strong> SM-001 with this appendix is a coherent and internally consistent stress narrative with a formally stated but empirically underspecified collapse condition. It is more rigorous than the DT logs individually but less rigorous than a decision-grade model requires. The key gap is not adding more layers — it is forcing each existing layer to declare its counterexample and its falsification condition. That work is partially done in A.3 above. The M variable remains the primary empirical liability.
+</div>
+
+<p>The appropriate next step is not to extend the model but to test it: the 2021–2022 Norwegian reservoir depletion episode and concurrent PPA formation rates represent the best available natural experiment for the DT-003 ↔ DT-001 causal link that remains the model's most consequential unproven assumption.</p>
+
 <div class="note">
-  ACI · Synthesis Memo · SM-001 · Version 1.0 · 19 April 2026 · Open Working Draft<br>
+  ACI · Synthesis Memo · SM-001 · Version 1.1 · 19 April 2026 · Open Working Draft<br>
   Basis: WP-015 (elasticity collapse) · DT-001 · DT-002 · DT-003 · DT-004<br>
   This memo synthesises published ACI Decision Track logs. It does not independently advocate policy outcomes.<br>
-  External critique received April 2026 contributed to the tension analysis in §3 and the failure mode matrix in §5.<br>
+  External critique (April 2026) contributed to §3, §5, and Appendix A. Appendix A responds directly to critique of the falsifiability and coupling assumptions of the main text.<br>
   Aether Continuity Institute · aethercontinuity.org
 </div>
 </body>
