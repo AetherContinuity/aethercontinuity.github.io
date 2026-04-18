@@ -52,7 +52,7 @@
   <div class="doc-title">DT-Series System Map: Elasticity Collapse as Compound Failure</div>
   <div class="doc-sub">Cross-linking DT-001 through DT-004 as a unified three-layer elasticity model</div>
   <div class="doc-meta">
-    Version 1.1 · 19 April 2026 · Open Working Draft<br>
+    Version 1.2 · 19 April 2026 · Open Working Draft<br>
     Basis: <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> · <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> · <a href="/decisions/dt-003-hydrological-monitoring-nordic.html">DT-003</a> · <a href="/decisions/dt-004-data-centres-grid-connection.html">DT-004</a>
   </div>
 </div>
@@ -252,72 +252,110 @@
   </tbody>
 </table>
 
-<h3>A.2 · Collapse Condition</h3>
+<h3>A.2 · Collapse Condition — Revised Specification</h3>
 
-<p>The system enters a collapse regime when the composite elasticity function falls below a threshold θ:</p>
+<p>Version 1.1 used a multiplicative form C(t) = [E<sub>d</sub> · E<sub>s</sub> · E<sub>x</sub> · M] / T. Second-round critique identified two structural errors in this specification:</p>
+
+<p><strong>Error 1 — T is endogenous, not exogenous.</strong> Institutional response time is not a fixed parameter. It is a function of stress level: severe, visible crises accelerate political response (2022 European energy emergency produced binding policy within weeks in several countries). Treating T as constant overestimates collapse probability in acute-crisis scenarios and underestimates it in slow-onset scenarios where no single event triggers a political response threshold.</p>
+
+<p><strong>Error 2 — multiplicative form assumes independence.</strong> The product E<sub>d</sub> · E<sub>s</sub> · E<sub>x</sub> · M implies all four terms are statistically independent. They are not. E<sub>s</sub> and E<sub>x</sub> are partially substitutable (domestic hydro and SE1 import serve similar buffering functions). More critically, the SM-001 thesis is specifically about <em>correlated</em> degradation under stress — but the multiplicative form tests components separately, not their joint behaviour. A component-by-component falsification test cannot validate or invalidate a coupling claim.</p>
+
+<p>The revised specification separates the structural condition from the coupling condition:</p>
 
 <div class="chain">
-  C(t) = [E<sub>d</sub>(t) · E<sub>s</sub>(t) · E<sub>x</sub>(t) · M(t)] / T(t)<br><br>
-  Collapse condition: C(t) &lt; θ for duration &gt; τ<br><br>
-  where θ is the minimum elasticity required to absorb a 72–168h multi-day stress event,<br>
-  and τ is the minimum sustained stress duration that exhausts available reserves.
+  <strong>Structural condition</strong> (necessary but not sufficient):<br>
+  S(t) = w<sub>d</sub>·E<sub>d</sub>(t) + w<sub>s</sub>·E<sub>s</sub>(t) + w<sub>x</sub>·E<sub>x</sub>(t) + w<sub>m</sub>·M(t) &lt; θ<br><br>
+  <strong>Coupling condition</strong> (the SM-001 thesis proper):<br>
+  ρ(E<sub>s</sub>, E<sub>x</sub>) &lt; 0 during stress events — i.e., domestic and external buffers are<br>
+  anti-correlated with demand stress, not independent of it<br><br>
+  <strong>Endogenous response function</strong>:<br>
+  T(t) = T<sub>0</sub> / [1 + α · max(0, S<sub>threshold</sub> − S(t))]<br>
+  where α &gt; 0 captures crisis acceleration — T shortens as structural stress deepens<br><br>
+  <strong>Collapse condition</strong>: S(t) &lt; θ AND ρ(E<sub>s</sub>, E<sub>x</sub> | stress) &lt; ρ<sub>critical</sub> for duration &gt; τ
 </div>
 
-<p>This formulation makes the collapse condition explicit: it is not a single variable failing but the product of all four elasticity terms falling simultaneously below the threshold. It also makes clear that a single term remaining high can prevent collapse — for example, if E<sub>x</sub> remains elevated (Aurora Line + high SE1 availability), the product C(t) stays above θ even if E<sub>d</sub> and M are low.</p>
+<p>This reformulation separates two claims that v1.1 conflated: (1) that individual elasticity terms are declining, which is partially evidenced by DT-001–DT-004, and (2) that they decline <em>together</em> under stress, which is the coupling hypothesis and remains empirically untested.</p>
 
-<h3>A.3 · What Would Falsify the Elasticity Collapse Hypothesis</h3>
+<h3>A.3 · SE1 as a Formal State Variable</h3>
 
-<p>The critique correctly identifies that SM-001 as written risks becoming self-sealing: every tightening event increases confidence, and every non-event is attributed to luck or latent fragility. The following observations would reduce collapse probability or falsify the coupling assumptions:</p>
+<p>SE1 has been identified as analytically under-identified — it operates as a "role-shifting actor" in the DT logs (buffer in DT-003, import source in DT-002, competitor in DT-004) without a formal regime-switch rule. The revised model gives SE1 an explicit state function:</p>
 
 <table>
-  <thead><tr><th>Observation</th><th>What it would falsify</th></tr></thead>
+  <thead><tr><th>SE1 state</th><th>Condition</th><th>Role for Finland</th><th>Observable signal</th></tr></thead>
   <tbody>
     <tr>
-      <td>Data centre demand response &gt;500 MW sustained over 72h during a price spike event (2026–2028)</td>
-      <td>E<sub>d</sub> assumption: would show demand elasticity is higher than DIESL 2025 estimates</td>
+      <td><strong>Buffer</strong></td>
+      <td>SE1 hydro &gt; 65% median AND SE1 industrial load &lt; 8 GW AND SE1–FI price spread &gt; 0</td>
+      <td>Export available; E<sub>x</sub> near maximum</td>
+      <td>TRR &gt; 0.6; DS 60 positive (→FI)</td>
     </tr>
     <tr>
-      <td>SE1 import &gt;1200 MW sustained during a simultaneous Nordic cold-calm-dry event (not just single-day)</td>
-      <td>E<sub>x</sub> assumption: would show external buffer is decoupled from correlated Nordic stress</td>
+      <td><strong>Neutral</strong></td>
+      <td>SE1 hydro 45–65% median OR SE1 industrial load 8–12 GW</td>
+      <td>Export limited; E<sub>x</sub> moderate</td>
+      <td>TRR 0.3–0.6; price spread near zero</td>
     </tr>
     <tr>
-      <td>OL3 + new wind capacity keeps FS(p) &gt;55% through winter 2026–2027 despite NVE hydro_RF &lt;0.60</td>
-      <td>E<sub>s</sub> assumption: would show domestic buffer is more resilient than CHP exit implies</td>
-    </tr>
-    <tr>
-      <td>Finnish government activates binding demand-side instrument within 6 months of a stress event signal</td>
-      <td>T assumption: would show institutional response time is lower than DT-001 timeline implies</td>
-    </tr>
-    <tr>
-      <td>A winter 2027–2030 stress event occurs without price spike above 100 €/MWh despite all four DT conditions being met</td>
-      <td>Composite: would disconfirm the elasticity collapse model as a whole</td>
+      <td><strong>Competitor</strong></td>
+      <td>SE1 hydro &lt; 45% median OR SE1 industrial load &gt; 12 GW (Hybrit + Stegra + DC baseline)</td>
+      <td>SE1 net importer; E<sub>x</sub> near zero or negative</td>
+      <td>TRR &lt; 0.3; DS 60 near zero or reversed; SE1 price &gt; FI price</td>
     </tr>
   </tbody>
 </table>
 
-<h3>A.4 · What the Model Does Not Address</h3>
+<p>The SE1 state is thus a function of three observable variables: NVE hydro level, SE1 industrial draw, and price spread. All three are available in real time through the WEM §12 transmission layer (DS 60, DS 87, DS 30) and the NVE proxy (hydro_RF). The regime transition is now observable, not inferred.</p>
 
-<p>This minimal model omits three classes of adaptive feedback that real power systems exhibit and that SM-001 underweights:</p>
+<h3>A.4 · Coupling Hypothesis — What Needs to Be Tested</h3>
 
-<p><strong>Layered substitution:</strong> Price spikes trigger fuel switching, emergency imports, and last-resort dispatch rules. These are real mechanisms with demonstrated historical activation. The model treats institutional latency as near-infinite inside the 2027–2030 window; this may overstate fragility if political systems respond faster than DT-001's capacity mechanism timeline suggests.</p>
+<p>The revised formulation makes explicit that SM-001's central claim is the coupling condition: that E<sub>s</sub> and E<sub>x</sub> degrade in a correlated way under stress, precisely when Finland needs them most. This is a different claim from "each variable is declining on trend," and it requires a different test.</p>
 
-<p><strong>Single-component idiosyncratic failures:</strong> The fiction section's "broken furnace" functions as a stochastic exogenous shock that rescues the system once. This exposes a genuine ambiguity: if outcomes depend sensitively on idiosyncratic component failures, the system is in a high-variance reliability space, not a clean regime-transition space. These are different claims with different implications for policy.</p>
+<p><strong>The correct falsification test is not:</strong> "Did E<sub>x</sub> hold up during a stress event?" (component test)</p>
+<p><strong>The correct falsification test is:</strong> "When E<sub>d</sub> was high (cold winter demand), did E<sub>s</sub> and E<sub>x</sub> simultaneously fall?" (joint behaviour test)</p>
 
-<p><strong>The M variable is the weakest layer:</strong> No historical counterexample exists for market residualisation leading to allocation failure in the Nordic system. The PPA penetration data is incomplete, and the causal chain from PPA growth to spot market depth loss is plausible but not empirically demonstrated at Nordic scale. This is the element that most requires empirical grounding before SM-001 can be upgraded from stress narrative to decision-grade model.</p>
+<table>
+  <thead><tr><th>Test</th><th>Data required</th><th>Available source</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>ρ(E<sub>s</sub>, E<sub>x</sub> | high demand) — do domestic and external buffers co-degrade during cold-calm events?</td>
+      <td>Hourly CHP output + SE1 import during Finnish demand peaks, 2019–2026</td>
+      <td>Fingrid DS 124, 87, 191, 60; NVE weekly</td>
+      <td class="gap-med">Computable from existing data — not yet done</td>
+    </tr>
+    <tr>
+      <td>PPA formation rate vs. NVE reservoir level, 2020–2026</td>
+      <td>Nordic PPA contract announcements (public) vs. NVE weekly filling</td>
+      <td>NVE proxy; press databases</td>
+      <td class="gap-high">Not yet compiled — this tests DT-003 ↔ DT-001 causal link</td>
+    </tr>
+    <tr>
+      <td>T(stress) function: did Finnish policy response time shorten during 2022 stress event?</td>
+      <td>Timeline of Finnish energy policy decisions 2022–2023 vs. EPP/NVE stress signals</td>
+      <td>DT-001 timeline; ACI WEM backtest</td>
+      <td class="gap-high">Not yet tested — 2022 Finland did not activate new instruments (preliminary)</td>
+    </tr>
+  </tbody>
+</table>
 
-<h3>A.5 · Current State Assessment</h3>
+<h3>A.5 · What the Model Still Does Not Address</h3>
+
+<p><strong>Adaptive substitution:</strong> Real power systems exhibit layered substitution — price spikes, fuel switching, demand response scaling, emergency imports, last-resort dispatch. The model treats institutional latency as long inside the 2027–2030 window. The endogenous T(t) formulation partially corrects this, but the substitution dynamics between E<sub>s</sub> and E<sub>x</sub> are still modelled as independent rather than as partial substitutes.</p>
+
+<p><strong>High-variance reliability vs. clean regime transition:</strong> If outcomes depend on idiosyncratic single-component failures (Stegra furnace breakdown, OL3 outage, Aurora Line maintenance window), the system is in a high-variance reliability space rather than a deterministic regime-transition space. These are different claims. The Monte Carlo structure of WP-014's OGAS2 framework is better suited to high-variance reliability analysis than SM-001's structural model.</p>
+
+<p><strong>M remains the weakest empirical layer:</strong> No historical counterexample exists for market residualisation producing allocation failure at Nordic scale. The DT-003 ↔ DT-001 causal link is the model's most consequential unproven assumption and the highest-priority empirical test.</p>
+
+<h3>A.6 · Current State Assessment — v1.2</h3>
 
 <div class="callout">
-<strong>Honest assessment:</strong> SM-001 with this appendix is a coherent and internally consistent stress narrative with a formally stated but empirically underspecified collapse condition. It is more rigorous than the DT logs individually but less rigorous than a decision-grade model requires. The key gap is not adding more layers — it is forcing each existing layer to declare its counterexample and its falsification condition. That work is partially done in A.3 above. The M variable remains the primary empirical liability.
+<strong>Honest assessment:</strong> SM-001 v1.2 has corrected the two structural specification errors in v1.1 (endogenous T, independence assumption) and given SE1 an observable state function. The model is now a falsifiable stress-integration framework rather than a narrative. The coupling hypothesis — that E<sub>s</sub> and E<sub>x</sub> co-degrade under stress — remains empirically untested but is now formally stated and testable with existing Fingrid data. The M variable remains the primary empirical liability. The appropriate next step is the correlation test in A.4, row 1, using Fingrid DS 124 + DS 60 hourly data for 2019–2026 cold-peak periods.
 </div>
 
-<p>The appropriate next step is not to extend the model but to test it: the 2021–2022 Norwegian reservoir depletion episode and concurrent PPA formation rates represent the best available natural experiment for the DT-003 ↔ DT-001 causal link that remains the model's most consequential unproven assumption.</p>
-
 <div class="note">
-  ACI · Synthesis Memo · SM-001 · Version 1.1 · 19 April 2026 · Open Working Draft<br>
+  ACI · Synthesis Memo · SM-001 · Version 1.2 · 19 April 2026 · Open Working Draft<br>
   Basis: WP-015 (elasticity collapse) · DT-001 · DT-002 · DT-003 · DT-004<br>
   This memo synthesises published ACI Decision Track logs. It does not independently advocate policy outcomes.<br>
-  External critique (April 2026) contributed to §3, §5, and Appendix A. Appendix A responds directly to critique of the falsifiability and coupling assumptions of the main text.<br>
+  External critique (April 2026) contributed to §3, §5, and Appendix A. Appendix A (v1.2) corrects two structural specification errors (endogenous T, independence assumption), formalises SE1 as an observable state variable, and separates component tests from the coupling hypothesis.<br>
   Aether Continuity Institute · aethercontinuity.org
 </div>
 </body>
