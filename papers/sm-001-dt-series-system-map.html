@@ -52,7 +52,7 @@
   <div class="doc-title">DT-Series System Map: Elasticity Collapse as Compound Failure</div>
   <div class="doc-sub">Cross-linking DT-001 through DT-004 as a unified three-layer elasticity model</div>
   <div class="doc-meta">
-    Version 1.3 · 19 April 2026 · Open Working Draft<br>
+    Version 1.4 · 19 April 2026 · Open Working Draft<br>
     Basis: <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> · <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> · <a href="/decisions/dt-003-hydrological-monitoring-nordic.html">DT-003</a> · <a href="/decisions/dt-004-data-centres-grid-connection.html">DT-004</a>
   </div>
 </div>
@@ -207,6 +207,93 @@
   <div class="finding-label">System-level synthesis</div>
   Finland and the Nordic electricity system are simultaneously losing all three independent elasticity reservoirs — physical (DT-002), external (DT-003), and market (DT-001) — while adding rigid inelastic load (DT-004), and no single policy instrument currently addresses more than one of these channels.
 </div>
+
+<h2>7 · State Redefinition: The Pre-Allocated System</h2>
+
+<p>Sections 1–6 and Appendix A were built on a definition of elasticity inherited from the 2021–2025 system: elasticity as dynamic response to stress. The empirical test in A.4 partially falsified the coupling hypothesis under that definition. But the critique this revision responds to identifies a more fundamental problem: <strong>the 2021–2025 reference period describes a different type of system than the one Finland is entering.</strong></p>
+
+<p>The classical Nordic balance model assumed: slowly growing load, CHP as structural presence, Norwegian hydro as passive buffer, spot market as dominant allocation mechanism, PPAs as marginal phenomenon, SE1–FI flows as symmetric. All of these assumptions are in structural transition simultaneously. The consequence is not that SM-001's empirical tests were wrong — they measured what they were designed to measure. The consequence is that the question was wrong.</p>
+
+<h3>7.1 · The Old Question vs. The New Question</h3>
+
+<table>
+  <thead><tr><th></th><th>2021–2025 system</th><th>Emerging system</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Allocation mechanism</strong></td>
+      <td>Spot market responds to stress in real time — price signal activates reserve capacity</td>
+      <td>PPA layer pre-allocates capacity before stress — spot operates on residual volume only</td>
+    </tr>
+    <tr>
+      <td><strong>Load structure</strong></td>
+      <td>Weather-correlated demand — peaks in cold weather, lower in summer</td>
+      <td>Rigid 24/7 baseload (data centres, hydrogen, electrified heat) + weather peaks on top</td>
+    </tr>
+    <tr>
+      <td><strong>CHP function</strong></td>
+      <td>Thermally-correlated dispatchable buffer — output peaks when demand peaks</td>
+      <td>Exiting — its loss is not a capacity deficit but a loss of built-in response timing</td>
+    </tr>
+    <tr>
+      <td><strong>Hydro role</strong></td>
+      <td>Passive external buffer — available on request via price signal</td>
+      <td>Less predictable — drought correlation increasing, SE1 industrial draw competing</td>
+    </tr>
+    <tr>
+      <td><strong>Crisis signal</strong></td>
+      <td>Appears first in production shortfall — visible in EPP, SP, import-gap</td>
+      <td>Appears first in <em>access asymmetry</em> — some actors have contracted supply, others face residual spot price</td>
+    </tr>
+    <tr>
+      <td><strong>Elasticity definition</strong></td>
+      <td>Capacity that can be activated in response to stress</td>
+      <td><strong>Capacity that is not yet pre-committed at the moment of stress</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>7.2 · Freely Allocatable Capacity (FAC) — The Correct State Variable</h3>
+
+<p>In the pre-allocated system, the relevant state variable is not installed capacity or even dispatchable capacity — it is <strong>Freely Allocatable Capacity (FAC)</strong>: the share of total capacity that is not already committed via long-term contracts at any given moment of stress.</p>
+
+<div class="chain">
+  FAC(t) = Total dispatchable capacity(t)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; − PPA-committed capacity(t)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; − must-run baseload(t)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; − scheduled outages(t)<br><br>
+  Revised elasticity function:<br>
+  E<sub>s</sub>*(t) = FAC_domestic(t) / peak_demand(t)<br>
+  E<sub>x</sub>*(t) = FAC_SE1→FI(t) / peak_demand(t)<br><br>
+  FAC declines faster than installed capacity as PPA penetration grows.<br>
+  WEM measures installed capacity. FAC is not currently measured by any public instrument.
+</div>
+
+<p>This is the M variable problem made concrete: M (market depth) is not a separate variable — it is the ratio FAC / total_capacity. As FAC shrinks, the spot market operates on a smaller fraction of the system. The price it discovers is the price of scarcity in the residual, not the price of the system. This is WP-015 §4's market residualisation rendered as a measurable quantity — if FAC were observable.</p>
+
+<h3>7.3 · Why Crisis Appears as Access Asymmetry, Not Production Shortfall</h3>
+
+<p>In the pre-allocated system, a stress event does not necessarily appear as an EPP spike or a Fingrid shortage status alarm. It appears first as price divergence between contracted and spot supply. Rauramo (Fortum, winter 2025–2026) confirmed the mechanism: annual production sold at under 4 snt/kWh in fixed contracts while spot price approached 20+ snt/kWh during cold peaks. The physical electrons were produced. They were not available to spot buyers at any price that reflected the stress — because they were already committed.</p>
+
+<p>This has three implications for SM-001's monitoring framework:</p>
+
+<p><strong>EPP underestimates structural stress</strong> in the pre-allocated system. EPP measures the gap between consumption and domestic production at the system level. It does not measure the gap between freely-allocatable production and consumption. When PPA penetration is high, EPP can read Normal while residential and industrial spot buyers face Elevated or BP-like prices.</p>
+
+<p><strong>The DT-004 Priority Inversion Risk is not a worst-case scenario</strong> — it is the baseline operating mode of the pre-allocated system under stress. Data centres have contracted supply. Households buy from the residual. The inversion is not a failure — it is the intended outcome of the contracting structure.</p>
+
+<p><strong>WEM §12's market depth indicator (M) is the most important instrument</strong> in the pre-allocated system — and it is the one that does not yet exist. FAC is not published by Fingrid, NordPool, or any public Nordic data source. The absence of this data is itself diagnostic: the system is transitioning away from a market structure that made FAC irrelevant (when everything was spot-priced, FAC = total capacity) toward one where FAC is the critical variable and no one is measuring it.</p>
+
+<h3>7.4 · Revised SM-001 Thesis</h3>
+
+<div class="callout">
+<strong>Revised central claim (v1.4):</strong> Finland's electricity system is transitioning from a reactive-elasticity model (stress activates reserve capacity via price signal) to a pre-allocation model (capacity is committed before stress, spot operates on residual). In the pre-allocation model, the correct risk metric is Freely Allocatable Capacity (FAC), not installed or dispatchable capacity. FAC is declining as PPA penetration grows, CHP exits, and SE1 industrial draw increases — but FAC is not currently monitored by any public instrument. The WEM can detect the <em>consequences</em> of low FAC (high EPP, high SP, import stress) but not FAC itself. This is both an analytical gap and a policy gap.
+</div>
+
+<h3>7.5 · What Does Not Change</h3>
+
+<p>The structural findings of §§1–6 and Appendix A remain valid with this redefinition:</p>
+<p>E<sub>s</sub> structural decline is confirmed — CHP MW are exiting and not being replaced. In FAC terms, this means fewer MW are available for free allocation even before PPA pre-commitment is considered.</p>
+<p>E<sub>x</sub> conditional coupling is confirmed — SE1 can supply Finland under normal conditions but switches to competitor role under simultaneous Nordic industrial stress. In FAC terms, SE1's freely-allocatable export capacity to Finland is shrinking as Hybrit, Stegra, and Nordic data centres claim larger shares of SE1 production through PPAs.</p>
+<p>The SE1 regime switch function (A.3) is the correct formal structure — but its state boundaries should now be defined in FAC terms: SE1 is in Buffer state when FAC_SE1→FI is high, Competitor state when FAC_SE1→FI approaches zero because SE1 industrial PPAs have absorbed available production.</p>
 
 <h2>Appendix A · Minimal State-Space Model</h2>
 
@@ -380,10 +467,10 @@
 </div>
 
 <div class="note">
-  ACI · Synthesis Memo · SM-001 · Version 1.3 · 19 April 2026 · Open Working Draft<br>
+  ACI · Synthesis Memo · SM-001 · Version 1.4 · 19 April 2026 · Open Working Draft<br>
   Basis: WP-015 (elasticity collapse) · DT-001 · DT-002 · DT-003 · DT-004<br>
   This memo synthesises published ACI Decision Track logs. It does not independently advocate policy outcomes.<br>
-  External critique (April 2026) contributed to §3, §5, and Appendix A. Appendix A (v1.3) adds first empirical test of the coupling hypothesis using reconstructed 2020–2025 cold-peak data. Result: partial falsification — Es structural decline confirmed, Ex coupling conditional rather than permanent.<br>
+  External critique (April 2026) contributed to §3, §5, and Appendix A. v1.4 adds §7: state redefinition for the pre-allocated system. The key insight: in the emerging system, elasticity = freely allocatable capacity (FAC), not dispatchable capacity. FAC is not currently measured by any public instrument. Appendix A empirical tests remain valid with updated variable definitions.<br>
   Aether Continuity Institute · aethercontinuity.org
 </div>
 </body>
