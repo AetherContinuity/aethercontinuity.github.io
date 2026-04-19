@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SM-003 — Finland's Structural Advantage: Existing Biomass-CHP Infrastructure as SGFA Foundation · ACI</title>
+  <meta name="description" content="SM-003 bridges SM-002's FAC diagnosis to the SGFA/MESA solution architecture. Finland's 15–20 existing municipal biomass-CHP plants constitute the physical foundation for a distributed resilience response within the 2027–2032 intervention window.">
+<style>
+  :root{--ink:#1a1a1a;--mid:#444;--light:#888;--rule:#ddd;--bg:#fafaf8;--accent:#8b2500;--green:#2a6e3f;--amber:#8b6000;--blue:#1a4a8b;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem;font-size:.9rem;line-height:1.7;}
+  nav{border-bottom:1px solid var(--rule);padding:.75rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--mid);margin-bottom:3rem;}
+  nav a{color:inherit;text-decoration:none;}nav a:hover{color:var(--ink);}
+  .nav-left{font-weight:600;color:var(--ink);}
+  .nav-right{display:flex;gap:1.5rem;}
+  .doc-header{border-bottom:2px solid var(--ink);padding-bottom:1.5rem;margin-bottom:2rem;}
+  .doc-series{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--light);margin-bottom:.5rem;}
+  .doc-title{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;}
+  .doc-sub{font-size:.9rem;color:var(--mid);margin-bottom:1rem;}
+  .doc-meta{font-size:.75rem;color:var(--light);line-height:2;}
+  h2{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+  h3{font-size:.88rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--ink);}
+  p{margin-bottom:.9rem;color:var(--mid);}
+  strong{color:var(--ink);}
+  .callout{background:#fff8f5;border:1px solid #f0c0a0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout strong{color:var(--accent);}
+  .callout-green{background:#f0fff4;border:1px solid #a0d0b0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout-green strong{color:var(--green);}
+  .callout-blue{background:#f0f4ff;border:1px solid #b0c4e8;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;}
+  .callout-blue strong{color:var(--blue);}
+  .chain{background:#f0f0ec;padding:1.2rem 1.5rem;margin:1.2rem 0;font-family:'Helvetica Neue',monospace;font-size:.82rem;line-height:2.2;border-left:3px solid var(--ink);}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem;}
+  th{text-align:left;padding:.5rem .75rem;background:#f0f0ec;font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mid);border-bottom:2px solid var(--rule);}
+  td{padding:.5rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .gap-high{color:var(--accent);font-weight:600;}
+  .gap-med{color:var(--amber);font-weight:600;}
+  .gap-ok{color:var(--green);font-weight:600;}
+  .xref-block{margin-top:3rem;border-top:1px solid var(--rule);padding-top:1.5rem;}
+  .xref-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem;margin-top:.75rem;font-size:.8rem;}
+  .xref-id{font-weight:700;color:var(--ink);min-width:4rem;display:inline-block;}
+  .xref-desc{color:var(--mid);}
+  footer{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-size:.75rem;color:var(--light);text-align:center;}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right"><a href="/papers/">Papers</a><a href="/decisions/">Decisions</a><a href="/tools/">Tools</a><a href="/fiction/">Fiction</a><a href="/about.html">About</a></span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Aether Continuity Institute · ACI · Synthesis Memo</div>
+  <div class="doc-title">SM-003 — Finland's Structural Advantage:<br>Existing Biomass-CHP Infrastructure as SGFA Foundation</div>
+  <div class="doc-sub">How the SGFA/MESA architecture responds to SM-002's FAC diagnosis within the 2027–2032 intervention window</div>
+  <div class="doc-meta">
+    Version 1.0 · April 2026 · Domain D-1 · D-2 · D-4 · Open Working Draft<br>
+    Cross-references: SM-002 · WP-002 · WP-005 · WP-012 · SP-002 · TN-001 · DT-002 · DA-001<br>
+    Status: Open Working Draft · Subject to Revision
+  </div>
+</div>
+
+<h2>1 · From Diagnosis to Architecture</h2>
+
+<p>SM-002 (DT-Series System Map, v1.4) identifies Freely Allocatable Capacity (FAC) as the correct risk metric for Finland's electricity system under pre-allocation conditions. The central finding is structural: as PPA penetration grows, spot market prices discover scarcity in the residual, not in the system. Crises do not appear as production shortfalls — they appear as access asymmetry. Consumers with contracted supply continue to receive power; spot buyers face prices that reflect structural stress.</p>
+
+<p>SM-002 also confirms two component findings: E<sub>s</sub> (domestic buffer capacity) is in structural decline — CHP decommissioning is empirically supported (r=−0.89, p=0.001). E<sub>x</sub> (SE1 import buffer) is not structurally declining but is conditionally vulnerable to synchronous collapse during systemic external shocks.</p>
+
+<p>This memo asks: what architecture responds to these findings within a realistic intervention window? The answer is not a new technology — it is a conversion of what already exists.</p>
+
+<div class="callout">
+<strong>Central claim (SM-003):</strong> Finland possesses 15–20 existing municipal biomass-CHP plants in regional centres, representing 750 MW–4 GW of semi-dispatchable capacity in existing infrastructure. Converting these to SGFA nodes (adding chemical storage, CO₂ capture, and VPP interconnection) directly addresses SM-002's FAC problem, restores the E<sub>s</sub> layer that DT-002 confirms is being lost, and does so within the 2027–2032 window that nuclear and offshore wind cannot serve.
+</div>
+
+<h2>2 · The FAC Connection</h2>
+
+<p>SM-002 defines FAC as total dispatchable capacity minus PPA-committed capacity, minus must-run baseload, minus scheduled outages. FAC is the share of production that remains freely allocatable at the moment of stress — and it is not currently measured by any public instrument.</p>
+
+<p>The SGFA architecture is structurally FAC-positive in a way that commercial PtX investment is not. The distinction is ownership and incentive structure:</p>
+
+<table>
+  <thead><tr><th>Ownership type</th><th>FAC behaviour under stress</th><th>Market role</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Commercial generator with PPA</strong></td>
+      <td class="gap-high">FAC = zero. Capacity pre-committed to industrial counterparty before stress event.</td>
+      <td>Spot market residual only</td>
+    </tr>
+    <tr>
+      <td><strong>Municipal SGFA node (TN-001 architecture)</strong></td>
+      <td class="gap-ok">FAC = high. Municipal owner optimises for system stability and avoided costs, not PPA revenue. Long-term reserve contracts with Fingrid provide deterministic cash flow without pre-committing spot capacity.</td>
+      <td>Reserve market participant + local supply anchor</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The SP-002 implementation programme makes this explicit: "A municipal owner generates revenues partly from avoided costs — cash flow is more deterministic. Fingrid's reserve markets pay for capacity regardless of whether it is activated — a municipal owner can commit to long-term reserve contracts without requiring a spot market return signal." This is the institutional mechanism by which SGFA grows FAC rather than consuming it.</p>
+
+<h2>3 · The Existing Infrastructure Layer</h2>
+
+<p>The SGFA conversion argument rests on a concrete physical asset: approximately 15–20 existing municipal biomass-CHP plants in Finnish regional centres. These are not hypothetical investments — they are operating facilities with established grid connections, trained personnel, district heating networks, and regulatory relationships. Haapaniemi 2 in Kuopio is the archetypal case documented in WP-013 and SM-001, but it is one instance of a broader pattern.</p>
+
+<h3>3.1 · Asset characteristics</h3>
+
+<table>
+  <thead><tr><th>Characteristic</th><th>Status</th><th>SGFA relevance</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>District heating network</td>
+      <td class="gap-ok">Existing — 100,000+ residents per major node</td>
+      <td>Heat anchor (TN-001 Layer 1). Eliminates greenfield risk for thermal integration.</td>
+    </tr>
+    <tr>
+      <td>Grid connection</td>
+      <td class="gap-ok">Existing — transmission-connected</td>
+      <td>VPP participation (FCR/aFRR/mFRR) requires no new connection. Reserve market access from day one.</td>
+    </tr>
+    <tr>
+      <td>Biomass fuel supply chain</td>
+      <td class="gap-ok">Existing — forest industry residues, municipal waste streams</td>
+      <td>Chemical storage layer: biogas from organic waste streams enables 72h+ endurance independent of weather and import.</td>
+    </tr>
+    <tr>
+      <td>Biogenic CO₂ stream</td>
+      <td class="gap-ok">Existing — flue gas from biomass combustion is near-pure CO₂</td>
+      <td>PtX integration: CO₂ + electrolytic hydrogen → synthetic methane or methanol. OGAS2 simulator (Kuopio node): CAPEX 120–180 M€, IRR 14–20%.</td>
+    </tr>
+    <tr>
+      <td>Operating licence and regulatory relationships</td>
+      <td class="gap-ok">Existing</td>
+      <td>Conversion permit process substantially shorter than greenfield. 2–4 year build timeline achievable.</td>
+    </tr>
+    <tr>
+      <td>End-of-life status</td>
+      <td class="gap-med">Haapaniemi 2 type: approaching end-of-life 2030–2035</td>
+      <td>Conversion window is open and narrowing. Investment decision before 2028 required for 2032 operation.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>3.2 · Aggregate conversion potential</h3>
+
+<div class="chain">
+  ~15–20 municipal biomass-CHP plants in Finnish regional centres<br>
+  Individual capacity: 50–250 MW per node<br>
+  Aggregate: 750 MW – 4 GW semi-dispatchable, weather-independent capacity<br>
+  Conversion timeline: 2–4 years per node (vs. 15+ years for new nuclear)<br>
+  FAC effect: all converted capacity remains freely allocatable — not pre-committed via PPA<br>
+  Addresses: DT-002 E<sub>s</sub> structural decline · SM-002 FAC deficit · WP-001 endurance gap
+</div>
+
+<p>The aggregate effect is significant: 1–3 GW of reserve-eligible balancing capacity (SP-002 §4), available within the 2027–2032 window, built on existing infrastructure, under municipal ownership that preserves FAC.</p>
+
+<h2>4 · Sweden Comparison: Where Finland Has a Structural Advantage</h2>
+
+<p>Sweden is the natural reference case — similar climate, similar market structure, similar nuclear heritage, and Finland's primary SE1 import counterpart. The comparison reveals a structural asymmetry that SM-002's SE1 regime switch framework makes legible.</p>
+
+<table>
+  <thead><tr><th>Dimension</th><th>Sweden</th><th>Finland</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Nuclear trajectory</strong></td>
+      <td>Ringhals 1+2 closed 2019–2020. Six reactors remain, all 1980–1985 vintage, approaching 60-year limit 2040–2045. SMR target 2035 — capacity gap 2035–2045.</td>
+      <td>OL3 operational 2023. OL1/OL2 extended to 2038. Single-unit concentration risk (1600 MW per outage). No SMR timeline confirmed.</td>
+    </tr>
+    <tr>
+      <td><strong>Existing biomass-CHP infrastructure</strong></td>
+      <td class="gap-med">Significant but geographically concentrated in southern Sweden. District heating penetration high but CHP share declining under EU carbon pressure.</td>
+      <td class="gap-ok">15–20 operating municipal CHP nodes in regional centres (Kuopio, Joensuu, Jyväskylä, Seinäjoki, Oulu and others). Highly distributed. Finnish forest industry residue supply chain mature.</td>
+    </tr>
+    <tr>
+      <td><strong>SE1 industrialisation pressure</strong></td>
+      <td class="gap-high">Hybrit (Luleå), Stegra (formerly H2 Green Steel), Nordic data centre pipeline — all drawing from SE1 before Finland. Vattenfall PPA book growing rapidly. SE1 FAC declining.</td>
+      <td>Receives SE1 exports when available; faces SE1 Competitor regime when SE1 industrial draw exceeds hydro surplus (A.3 state function, SM-002).</td>
+    </tr>
+    <tr>
+      <td><strong>SGFA deployment potential</strong></td>
+      <td class="gap-med">Architecture is applicable but greenfield investment required in most locations. Longer permitting timelines. PPA market more mature — commercial pressure to pre-commit capacity.</td>
+      <td class="gap-ok">Conversion of existing assets preferred. Municipal ownership culture stronger. Forest industry CO₂ stream available. 2027–2032 window achievable.</td>
+    </tr>
+    <tr>
+      <td><strong>Intervention window</strong></td>
+      <td>New nuclear 2035+. Wind capacity growing but baseload gap widening 2025–2035.</td>
+      <td>SGFA conversion 2027–2032 — matches the critical endurance gap identified in DA-001 and WP-013.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout-green">
+<strong>Finland's structural advantage:</strong> Sweden is investing heavily in new large-scale capacity (SMR, offshore wind) with 2035+ timelines. Finland's advantage is not in what it will build — it is in what it already has: a distributed network of municipal biomass-CHP plants that can be converted to SGFA nodes within the intervention window. This is a coordination advantage, not a technology advantage. It requires no new plant sites, no new regulatory frameworks, and no new supply chains.
+</div>
+
+<h2>5 · DRD Resilience Layer: L1 / L2 / L3</h2>
+
+<p>WP-002 (Distributed Resilience Design) establishes a three-level resilience framework. SGFA nodes map directly onto this structure in a way that neither large nuclear nor offshore wind can:</p>
+
+<table>
+  <thead><tr><th>DRD level</th><th>Condition</th><th>SGFA node behaviour</th><th>Nuclear / wind behaviour</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>L1 — Normal market operation</strong></td>
+      <td>Spot market allocates normally. Price signal functional.</td>
+      <td>Node participates in FCR/aFRR/mFRR reserve markets. CHP supplies heat and electricity. PtX absorbs surplus wind.</td>
+      <td>Normal generation at market price.</td>
+    </tr>
+    <tr>
+      <td><strong>L2 — Market stress</strong></td>
+      <td>Price signal distorted. PPA layer pre-empts spot allocation. SM-002 Shift III conditions.</td>
+      <td>Node continues operating on biogas reserve. Kunnallinen omistus means no PPA pre-commitment — FAC remains available. Municipal customers supplied at avoided-cost price regardless of spot.</td>
+      <td class="gap-high">Nuclear: output unchanged but revenue accrues to contracted counterparty. Wind: intermittent, cannot guarantee availability.</td>
+    </tr>
+    <tr>
+      <td><strong>L3 — Grid stress / partial islanding</strong></td>
+      <td>Transmission disruption. Import unavailable. WP-002 islanding scenario.</td>
+      <td>Node operates in islanded mode on biogas reserve + local heat supply. 72h+ endurance from chemical storage (WP-001 Black Period threshold). District heating network provides thermal continuity.</td>
+      <td class="gap-high">Nuclear: requires grid connection to operate. Wind: grid-dependent. Neither provides islanding capability without additional investment.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The islanding capability is the critical L3 differentiator. A 150–250 MW SGFA node serving a Finnish regional centre can maintain essential services — hospital heat, emergency shelter, water treatment — for 72+ hours without grid connection, using chemical energy stored in the biogas reservoir. This is the DRD property WP-002 identifies as the most critical for national resilience under adversarial or compound stress scenarios, and the one that no market-optimised energy investment is currently providing.</p>
+
+<h2>6 · ETS / Fit for 55 Compatibility</h2>
+
+<p>The SGFA conversion is not merely compatible with EU climate regulation — it is architected to exploit it. Three regulatory instruments create direct economic value for converted nodes:</p>
+
+<h3>6.1 · BECCS and negative emissions</h3>
+
+<p>Biomass combustion combined with CO₂ capture and storage (BECCS) produces negative emissions under EU accounting. The biogenic CO₂ stream from existing CHP flue gas is near-pure and requires no separation from fossil CO₂ — it is the optimal BECCS starting point. The EU Carbon Removal Certification Framework (CRCF), entering force 2026–2027, creates a revenue stream for verified carbon removals. A converted node capturing 100,000–300,000 tonnes CO₂/year at EU ETS prices of €60–100/tonne generates €6–30M annual revenue from this stream alone.</p>
+
+<h3>6.2 · RED III sector integration</h3>
+
+<p>The Renewable Energy Directive III mandates sectorintegrering — coupling of heat, electricity, and transport fuel sectors. The SGFA architecture is RED III's reference implementation at municipal scale: CHP core (electricity + heat), PtX layer (surplus electricity → hydrogen → synthetic fuel), CO₂ capture (biogenic carbon for fuel synthesis). A converted node simultaneously satisfies the heating sector (district heat), the electricity sector (VPP balancing), and the transport sector (RFNBO synthetic fuel).</p>
+
+<h3>6.3 · RFNBO eligibility</h3>
+
+<p>Renewable Fuel of Non-Biological Origin (RFNBO) classification requires electrolysis powered by additional renewable electricity (additionality criterion). An SGFA node using surplus wind electricity to power electrolysis meets this criterion — the PtX output qualifies for EU shipping and aviation mandates with premium pricing. SP-002 §3 documents the financial model: RFNBO eligibility converts the PtX layer from a cost to a revenue source, improving node IRR from 8–12% (stress case) to 14–20% (base case).</p>
+
+<div class="callout-blue">
+<strong>Regulatory alignment summary:</strong> The SGFA conversion is simultaneously: a BECCS investment (negative emissions revenue under CRCF), a RED III sector integration implementation (heat + electricity + fuel), an RFNBO production facility (transport fuel premium), and a Fingrid reserve market participant (FCR/aFRR/mFRR revenue). These revenue streams are complementary and each is individually sufficient to justify the investment in stress-test scenarios. Together they produce the 14–20% IRR documented in SP-002.
+</div>
+
+<h2>7 · The 2027–2032 Window</h2>
+
+<p>DA-001 identifies Finland's pre-shortage phase as 2026–2032. WP-013 establishes that the intervention window is open and narrowing — industrial commitments are being made, but infrastructure is not yet locked. SM-002's FAC analysis adds precision: the window is defined by the rate at which PPA pre-commitment absorbs available capacity. Once the PPA layer absorbs 60–70% of dispatchable generation, the spot market can no longer perform its balancing function.</p>
+
+<table>
+  <thead><tr><th>Technology</th><th>Decision-to-operation timeline</th><th>2027 operational?</th><th>2030 operational?</th><th>2032 operational?</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>New nuclear (SMR)</td>
+      <td>15–20 years (licence + construction)</td>
+      <td class="gap-high">No</td>
+      <td class="gap-high">No</td>
+      <td class="gap-high">No — earliest 2035</td>
+    </tr>
+    <tr>
+      <td>LDR-50 (Steady Energy)</td>
+      <td>STUK assessment: design not yet construction-ready. Best case 2032.</td>
+      <td class="gap-high">No</td>
+      <td class="gap-high">No</td>
+      <td class="gap-med">Possible — conditional on 2026 investment decision</td>
+    </tr>
+    <tr>
+      <td>Offshore wind (large-scale)</td>
+      <td>8–12 years (permitting + construction)</td>
+      <td class="gap-high">No</td>
+      <td class="gap-med">Partial</td>
+      <td class="gap-med">Partial — does not address endurance gap</td>
+    </tr>
+    <tr>
+      <td><strong>SGFA conversion (existing CHP)</strong></td>
+      <td><strong>2–4 years (conversion of existing asset)</strong></td>
+      <td class="gap-ok"><strong>Yes — if investment decision 2025</strong></td>
+      <td class="gap-ok"><strong>Yes — multiple nodes</strong></td>
+      <td class="gap-ok"><strong>Yes — full network at scale</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The timeline asymmetry is decisive. SGFA conversion is not merely cheaper or more distributed than new nuclear — it is the only option that fits within the 2027–2032 window that DA-001 identifies as critical. Every year of delay narrows the window further as existing CHP plants approach end-of-life without replacement and PPA penetration grows.</p>
+
+<h2>8 · Supply Security and Grid Stress</h2>
+
+<p>The SGFA network addresses three supply security dimensions that centralised generation cannot:</p>
+
+<p><strong>Transmission independence.</strong> A node serving its local district heating network and emergency load operates independently of long-distance transmission. Finland's 5.2 billion euro transmission investment programme (2025–2035) is driven partly by the need to balance a system whose dispatchable capacity is concentrated in fewer, larger plants. Distributed SGFA nodes reduce this requirement — each converted node is one fewer balancing problem for the transmission system.</p>
+
+<p><strong>Fuel supply diversity.</strong> Forest industry residues, municipal organic waste, and agricultural biogas are domestic fuel sources with no geopolitical exposure. The Loviisa nuclear fuel supplier transition — from TVEL to Westinghouse — illustrates the vulnerability of centralised supply chains to geopolitical disruption. A distributed biogas network has no single point of supply failure.</p>
+
+<p><strong>Demand-side anchor.</strong> District heating is the largest controllable thermal load in Finnish cities. A SGFA node operating the district heat network can provide demand response at scale — not by curtailing households, but by adjusting the heat-electricity balance of the CHP unit. This is the flexible load that DT-004 identifies as absent in the data centre investment wave: SGFA provides controllable load, data centres provide rigid load. They are structural complements, not competitors.</p>
+
+<h2>9 · What SM-003 Does Not Claim</h2>
+
+<p>This memo makes a structural argument, not a project proposal. Three limitations are explicit:</p>
+
+<p><strong>Biomass is not unlimited.</strong> The EU RED III sustainability criteria constrain large-scale biomass use. The SGFA model is not a biomass-maximisation programme — it uses existing forest industry residue streams and municipal organic waste that would otherwise be under-utilised. The scale ceiling is approximately 3–4 GW nationally before competing with forest industry raw material demand. The 15–20 node network described here is well within that ceiling.</p>
+
+<p><strong>FAC is not yet measured.</strong> SM-002's central finding — that FAC is the correct metric — is confirmed but FAC itself remains unmeasured in public data. SM-003's claim that SGFA conversion grows FAC rests on the ownership and incentive argument (§2), not on observed data. Fingrid's reserve market data provides a partial proxy; direct FAC measurement requires PPA registry data that does not currently exist.</p>
+
+<p><strong>Coordination is the binding constraint.</strong> The 15–20 nodes exist as individual municipal assets, not as a coordinated network. SP-002's SGFA Holding Oy consortium structure is the required institutional innovation — not the technology. The reason this capacity has not been converted already is not technical feasibility but coordination deficit: no institution owns the complete picture, as SM-001 documents for the compound stress configuration more broadly.</p>
+
+<h2>10 · Revised SM-001/SM-002 Thesis Integration</h2>
+
+<div class="callout">
+<strong>Integrated three-memo argument:</strong><br><br>
+<strong>SM-001</strong> (Finland 2030) identifies five simultaneous structural pressures. The energy system pressure is the first and most time-sensitive: a compound stress condition in which endurance capacity is declining while rigid inelastic load is growing.<br><br>
+<strong>SM-002</strong> (DT-Series System Map) formalises the mechanism: E<sub>s</sub> structural decline is confirmed; FAC is the correct risk metric; crisis appears as access asymmetry, not production shortfall; the 2021–2025 reactive-elasticity model is being replaced by a pre-allocation model that requires different instruments.<br><br>
+<strong>SM-003</strong> (this memo) identifies the institutional response: Finland's existing municipal biomass-CHP network is the physical foundation for SGFA conversion — an architecture that grows FAC (municipal ownership), restores E<sub>s</sub> (dispatchable CHP), provides L3 resilience (islanding capability), complies with ETS/Fit for 55 (BECCS, RED III, RFNBO), and operates within the 2027–2032 intervention window that all alternative technologies miss.<br><br>
+The three memos together constitute a compound stress diagnosis (SM-001), a system failure model (SM-002), and a structurally grounded response architecture (SM-003).
+</div>
+
+<div class="xref-block">
+  <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--light);">Cross-references</div>
+  <div class="xref-grid">
+    <div><span class="xref-id">SM-001</span><span class="xref-desc">Finland 2030 — compound stress diagnosis, five structural pressures</span></div>
+    <div><span class="xref-id">SM-002</span><span class="xref-desc">DT-Series System Map — FAC concept, pre-allocation model, E<sub>s</sub> empirical decline</span></div>
+    <div><span class="xref-id">SP-002</span><span class="xref-desc">SGFA 4.0 implementation programme — 7 Tier A nodes, IRR model, financing structure</span></div>
+    <div><span class="xref-id">TN-001</span><span class="xref-desc">Duration-Capable Local Energy Node — four structural properties, architecture</span></div>
+    <div><span class="xref-id">WP-002</span><span class="xref-desc">Distributed Resilience Design — L1/L2/L3 framework, islanding</span></div>
+    <div><span class="xref-id">WP-005</span><span class="xref-desc">Compound Stress and Continuity Risk — diagnostic starting point</span></div>
+    <div><span class="xref-id">WP-012</span><span class="xref-desc">MESA Transition Pathway — four scenarios 2026–2035</span></div>
+    <div><span class="xref-id">WP-013</span><span class="xref-desc">Two Scenarios 2030 — Haapaniemi 2, institutional delay</span></div>
+    <div><span class="xref-id">DT-002</span><span class="xref-desc">CHP Phase-Out — E<sub>s</sub> structural decline, replacement gap</span></div>
+    <div><span class="xref-id">DA-001</span><span class="xref-desc">Finland Pre-Shortage Phase 2026–2032 — intervention window</span></div>
+    <div><span class="xref-id">DT-001</span><span class="xref-desc">Capacity Mechanism — FAC and reserve market instruments</span></div>
+    <div><span class="xref-id">DT-004</span><span class="xref-desc">Data Centre Grid Connection — rigid inelastic load, Priority Inversion Risk</span></div>
+  </div>
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Synthesis Memo SM-003 · April 2026 · v1.0<br>
+  Domain D-1 · D-2 · D-4 · Open Working Draft · Subject to revision
+</footer>
+
+</body>
+</html>
