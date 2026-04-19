@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SM-001 · DT-Series System Map · ACI</title>
+<title>SM-002 · DT-Series System Map · ACI</title>
 <style>
   :root{--ink:#1a1a1a;--mid:#444;--light:#888;--rule:#ddd;--bg:#fafaf8;--accent:#8b2500;--green:#2a6e3f;--amber:#8b6000;--blue:#1a4a8b;}
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -48,7 +48,7 @@
 </nav>
 
 <div class="doc-header">
-  <div class="doc-series">ACI · Synthesis Memo · SM-001</div>
+  <div class="doc-series">ACI · Synthesis Memo · SM-002</div>
   <div class="doc-title">DT-Series System Map: Elasticity Collapse as Compound Failure</div>
   <div class="doc-sub">Cross-linking DT-001 through DT-004 as a unified three-layer elasticity model</div>
   <div class="doc-meta">
@@ -212,7 +212,7 @@
 
 <p>Sections 1–6 and Appendix A were built on a definition of elasticity inherited from the 2021–2025 system: elasticity as dynamic response to stress. The empirical test in A.4 partially falsified the coupling hypothesis under that definition. But the critique this revision responds to identifies a more fundamental problem: <strong>the 2021–2025 reference period describes a different type of system than the one Finland is entering.</strong></p>
 
-<p>The classical Nordic balance model assumed: slowly growing load, CHP as structural presence, Norwegian hydro as passive buffer, spot market as dominant allocation mechanism, PPAs as marginal phenomenon, SE1–FI flows as symmetric. All of these assumptions are in structural transition simultaneously. The consequence is not that SM-001's empirical tests were wrong — they measured what they were designed to measure. The consequence is that the question was wrong.</p>
+<p>The classical Nordic balance model assumed: slowly growing load, CHP as structural presence, Norwegian hydro as passive buffer, spot market as dominant allocation mechanism, PPAs as marginal phenomenon, SE1–FI flows as symmetric. All of these assumptions are in structural transition simultaneously. The consequence is not that SM-002's empirical tests were wrong — they measured what they were designed to measure. The consequence is that the question was wrong.</p>
 
 <h3>7.1 · The Old Question vs. The New Question</h3>
 
@@ -274,7 +274,7 @@
 
 <p>In the pre-allocated system, a stress event does not necessarily appear as an EPP spike or a Fingrid shortage status alarm. It appears first as price divergence between contracted and spot supply. Rauramo (Fortum, winter 2025–2026) confirmed the mechanism: annual production sold at under 4 snt/kWh in fixed contracts while spot price approached 20+ snt/kWh during cold peaks. The physical electrons were produced. They were not available to spot buyers at any price that reflected the stress — because they were already committed.</p>
 
-<p>This has three implications for SM-001's monitoring framework:</p>
+<p>This has three implications for SM-002's monitoring framework:</p>
 
 <p><strong>EPP underestimates structural stress</strong> in the pre-allocated system. EPP measures the gap between consumption and domestic production at the system level. It does not measure the gap between freely-allocatable production and consumption. When PPA penetration is high, EPP can read Normal while residential and industrial spot buyers face Elevated or BP-like prices.</p>
 
@@ -282,7 +282,7 @@
 
 <p><strong>WEM §12's market depth indicator (M) is the most important instrument</strong> in the pre-allocated system — and it is the one that does not yet exist. FAC is not published by Fingrid, NordPool, or any public Nordic data source. The absence of this data is itself diagnostic: the system is transitioning away from a market structure that made FAC irrelevant (when everything was spot-priced, FAC = total capacity) toward one where FAC is the critical variable and no one is measuring it.</p>
 
-<h3>7.4 · Revised SM-001 Thesis</h3>
+<h3>7.4 · Revised SM-002 Thesis</h3>
 
 <div class="callout">
 <strong>Revised central claim (v1.4):</strong> Finland's electricity system is transitioning from a reactive-elasticity model (stress activates reserve capacity via price signal) to a pre-allocation model (capacity is committed before stress, spot operates on residual). In the pre-allocation model, the correct risk metric is Freely Allocatable Capacity (FAC), not installed or dispatchable capacity. FAC is declining as PPA penetration grows, CHP exits, and SE1 industrial draw increases — but FAC is not currently monitored by any public instrument. The WEM can detect the <em>consequences</em> of low FAC (high EPP, high SP, import stress) but not FAC itself. This is both an analytical gap and a policy gap.
@@ -297,7 +297,7 @@
 
 <h2>Appendix A · Minimal State-Space Model</h2>
 
-<p>External critique (April 2026) identified a structural weakness in §§1–6: the "simultaneous degradation" assumption is asserted through narrative symmetry rather than demonstrated through a formal model. SM-001 as written is coherent as a stress narrative but underspecified as a causal model. This appendix attempts to collapse the four-layer architecture into a minimal state-space representation that is falsifiable and forces each elasticity term to be declared explicitly.</p>
+<p>External critique (April 2026) identified a structural weakness in §§1–6: the "simultaneous degradation" assumption is asserted through narrative symmetry rather than demonstrated through a formal model. SM-002 as written is coherent as a stress narrative but underspecified as a causal model. This appendix attempts to collapse the four-layer architecture into a minimal state-space representation that is falsifiable and forces each elasticity term to be declared explicitly.</p>
 
 <h3>A.1 · Five State Variables</h3>
 
@@ -345,14 +345,14 @@
 
 <p><strong>Error 1 — T is endogenous, not exogenous.</strong> Institutional response time is not a fixed parameter. It is a function of stress level: severe, visible crises accelerate political response (2022 European energy emergency produced binding policy within weeks in several countries). Treating T as constant overestimates collapse probability in acute-crisis scenarios and underestimates it in slow-onset scenarios where no single event triggers a political response threshold.</p>
 
-<p><strong>Error 2 — multiplicative form assumes independence.</strong> The product E<sub>d</sub> · E<sub>s</sub> · E<sub>x</sub> · M implies all four terms are statistically independent. They are not. E<sub>s</sub> and E<sub>x</sub> are partially substitutable (domestic hydro and SE1 import serve similar buffering functions). More critically, the SM-001 thesis is specifically about <em>correlated</em> degradation under stress — but the multiplicative form tests components separately, not their joint behaviour. A component-by-component falsification test cannot validate or invalidate a coupling claim.</p>
+<p><strong>Error 2 — multiplicative form assumes independence.</strong> The product E<sub>d</sub> · E<sub>s</sub> · E<sub>x</sub> · M implies all four terms are statistically independent. They are not. E<sub>s</sub> and E<sub>x</sub> are partially substitutable (domestic hydro and SE1 import serve similar buffering functions). More critically, the SM-002 thesis is specifically about <em>correlated</em> degradation under stress — but the multiplicative form tests components separately, not their joint behaviour. A component-by-component falsification test cannot validate or invalidate a coupling claim.</p>
 
 <p>The revised specification separates the structural condition from the coupling condition:</p>
 
 <div class="chain">
   <strong>Structural condition</strong> (necessary but not sufficient):<br>
   S(t) = w<sub>d</sub>·E<sub>d</sub>(t) + w<sub>s</sub>·E<sub>s</sub>(t) + w<sub>x</sub>·E<sub>x</sub>(t) + w<sub>m</sub>·M(t) &lt; θ<br><br>
-  <strong>Coupling condition</strong> (the SM-001 thesis proper):<br>
+  <strong>Coupling condition</strong> (the SM-002 thesis proper):<br>
   ρ(E<sub>s</sub>, E<sub>x</sub>) &lt; 0 during stress events — i.e., domestic and external buffers are<br>
   anti-correlated with demand stress, not independent of it<br><br>
   <strong>Endogenous response function</strong>:<br>
@@ -410,7 +410,7 @@
     <tr>
       <td>E<sub>s</sub> trend 2020–2025 (cold peaks only)</td>
       <td><strong>r = −0.89</strong> (p=0.001, excl. 2022)</td>
-      <td class="gap-high">Strong structural decline confirmed — CHP decommissioning visible. Es fell from 0.37 (2020) to 0.30 (2025). This part of SM-001 is empirically supported.</td>
+      <td class="gap-high">Strong structural decline confirmed — CHP decommissioning visible. Es fell from 0.37 (2020) to 0.30 (2025). This part of SM-002 is empirically supported.</td>
     </tr>
     <tr>
       <td>E<sub>x</sub> trend 2020–2025 (cold peaks only)</td>
@@ -426,10 +426,10 @@
 </table>
 
 <div class="callout">
-<strong>Empirical finding — partial falsification:</strong> The coupling hypothesis ("E<sub>s</sub> and E<sub>x</sub> degrade simultaneously under stress") is <em>not supported in normal winters</em>. ρ(E<sub>s</sub>, E<sub>x</sub>) = +0.464 during cold peaks — the two buffers are positively correlated, suggesting substitution rather than co-collapse. However, 2022 demonstrates that E<sub>x</sub> <em>can</em> collapse synchronously during an exogenous systemic shock. The coupling hypothesis is conditionally true: it holds during exceptional external shocks, not during normal high-demand winters. This is a weaker claim than SM-001 v1.0–v1.1 implied.
+<strong>Empirical finding — partial falsification:</strong> The coupling hypothesis ("E<sub>s</sub> and E<sub>x</sub> degrade simultaneously under stress") is <em>not supported in normal winters</em>. ρ(E<sub>s</sub>, E<sub>x</sub>) = +0.464 during cold peaks — the two buffers are positively correlated, suggesting substitution rather than co-collapse. However, 2022 demonstrates that E<sub>x</sub> <em>can</em> collapse synchronously during an exogenous systemic shock. The coupling hypothesis is conditionally true: it holds during exceptional external shocks, not during normal high-demand winters. This is a weaker claim than SM-002 v1.0–v1.1 implied.
 </div>
 
-<p><strong>Revised SM-001 thesis:</strong> E<sub>s</sub> is structurally declining (CHP exit, confirmed). E<sub>x</sub> is not structurally declining but is vulnerable to synchronous collapse during systemic shocks. The coupling condition is not a permanent feature of the system — it is a conditional risk that activates under exceptional circumstances. This distinction matters for policy: the primary addressable risk is E<sub>s</sub> (domestic dispatchable capacity), not the coupling mechanism itself.</p>
+<p><strong>Revised SM-002 thesis:</strong> E<sub>s</sub> is structurally declining (CHP exit, confirmed). E<sub>x</sub> is not structurally declining but is vulnerable to synchronous collapse during systemic shocks. The coupling condition is not a permanent feature of the system — it is a conditional risk that activates under exceptional circumstances. This distinction matters for policy: the primary addressable risk is E<sub>s</sub> (domestic dispatchable capacity), not the coupling mechanism itself.</p>
 
 <table>
   <thead><tr><th>Test</th><th>Data required</th><th>Status</th></tr></thead>
@@ -456,18 +456,18 @@
 
 <p><strong>Adaptive substitution:</strong> Real power systems exhibit layered substitution — price spikes, fuel switching, demand response scaling, emergency imports, last-resort dispatch. The model treats institutional latency as long inside the 2027–2030 window. The endogenous T(t) formulation partially corrects this, but the substitution dynamics between E<sub>s</sub> and E<sub>x</sub> are still modelled as independent rather than as partial substitutes.</p>
 
-<p><strong>High-variance reliability vs. clean regime transition:</strong> If outcomes depend on idiosyncratic single-component failures (Stegra furnace breakdown, OL3 outage, Aurora Line maintenance window), the system is in a high-variance reliability space rather than a deterministic regime-transition space. These are different claims. The Monte Carlo structure of WP-014's OGAS2 framework is better suited to high-variance reliability analysis than SM-001's structural model.</p>
+<p><strong>High-variance reliability vs. clean regime transition:</strong> If outcomes depend on idiosyncratic single-component failures (Stegra furnace breakdown, OL3 outage, Aurora Line maintenance window), the system is in a high-variance reliability space rather than a deterministic regime-transition space. These are different claims. The Monte Carlo structure of WP-014's OGAS2 framework is better suited to high-variance reliability analysis than SM-002's structural model.</p>
 
 <p><strong>M remains the weakest empirical layer:</strong> No historical counterexample exists for market residualisation producing allocation failure at Nordic scale. The DT-003 ↔ DT-001 causal link is the model's most consequential unproven assumption and the highest-priority empirical test.</p>
 
 <h3>A.6 · Current State Assessment — v1.2</h3>
 
 <div class="callout">
-<strong>Honest assessment:</strong> SM-001 v1.3 has executed the first empirical test of the coupling hypothesis (A.4). Result: E<sub>s</sub> structural decline is confirmed (r=−0.89, p=0.001). E<sub>x</sub> coupling is conditionally true — it activates during systemic shocks (2022) but not in normal high-demand winters (ρ=+0.464). The revised thesis is more modest and more accurate: the primary policy-addressable risk is E<sub>s</sub> (domestic dispatchable capacity), not the coupling mechanism. M remains the weakest empirical layer. The next test is PPA formation rate vs. NVE reservoir level (DT-003 ↔ DT-001 causal link).
+<strong>Honest assessment:</strong> SM-002 v1.3 has executed the first empirical test of the coupling hypothesis (A.4). Result: E<sub>s</sub> structural decline is confirmed (r=−0.89, p=0.001). E<sub>x</sub> coupling is conditionally true — it activates during systemic shocks (2022) but not in normal high-demand winters (ρ=+0.464). The revised thesis is more modest and more accurate: the primary policy-addressable risk is E<sub>s</sub> (domestic dispatchable capacity), not the coupling mechanism. M remains the weakest empirical layer. The next test is PPA formation rate vs. NVE reservoir level (DT-003 ↔ DT-001 causal link).
 </div>
 
 <div class="note">
-  ACI · Synthesis Memo · SM-001 · Version 1.4 · 19 April 2026 · Open Working Draft<br>
+  ACI · Synthesis Memo · SM-002 · Version 1.4 · 19 April 2026 · Open Working Draft<br>
   Basis: WP-015 (elasticity collapse) · DT-001 · DT-002 · DT-003 · DT-004<br>
   This memo synthesises published ACI Decision Track logs. It does not independently advocate policy outcomes.<br>
   External critique (April 2026) contributed to §3, §5, and Appendix A. v1.4 adds §7: state redefinition for the pre-allocated system. The key insight: in the emerging system, elasticity = freely allocatable capacity (FAC), not dispatchable capacity. FAC is not currently measured by any public instrument. Appendix A empirical tests remain valid with updated variable definitions.<br>
