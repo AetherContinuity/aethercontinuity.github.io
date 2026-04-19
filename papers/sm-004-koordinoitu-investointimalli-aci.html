@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SM-004 — Koordinoitu investointimalli ja ACI:n analyyttinen kehikko · ACI</title>
+  <meta name="description" content="SM-004 rakentaa sillan virallisen investointivalmistelun ja ACI:n analyyttisen kehikon välille. Neljän lukon malli ja DT-sarja diagnosoivat saman rakenteellisen ongelman eri kielillä. SM-004 osoittaa vastaavuudet, täydentävyydet ja yhteisen aukkokohdan — koordinaatiovaje on molempien ydin.">
+<style>
+  :root{--ink:#1a1a1a;--mid:#444;--light:#888;--rule:#ddd;--bg:#fafaf8;--accent:#8b2500;--green:#2a6e3f;--amber:#8b6000;--blue:#1a4a8b;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem;font-size:.9rem;line-height:1.7;}
+  nav{border-bottom:1px solid var(--rule);padding:.75rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--mid);margin-bottom:3rem;}
+  nav a{color:inherit;text-decoration:none;}nav a:hover{color:var(--ink);}
+  .nav-left{font-weight:600;color:var(--ink);}
+  .nav-right{display:flex;gap:1.5rem;}
+  .doc-header{border-bottom:2px solid var(--ink);padding-bottom:1.5rem;margin-bottom:2rem;}
+  .doc-series{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--light);margin-bottom:.5rem;}
+  .doc-title{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;}
+  .doc-sub{font-size:.9rem;color:var(--mid);margin-bottom:1rem;}
+  .doc-meta{font-size:.75rem;color:var(--light);line-height:2;}
+  h2{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--light);margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+  h3{font-size:.88rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--ink);}
+  p{margin-bottom:.9rem;color:var(--mid);}
+  strong{color:var(--ink);}
+  .callout{background:#fff8f5;border:1px solid #f0c0a0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout strong{color:var(--accent);}
+  .callout-green{background:#f0fff4;border:1px solid #a0d0b0;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout-green strong{color:var(--green);}
+  .callout-blue{background:#f0f4ff;border:1px solid #b0c4e8;padding:1rem 1.2rem;margin:1.5rem 0;font-size:.85rem;color:var(--ink);}
+  .callout-blue strong{color:var(--blue);}
+  .chain{background:#f0f0ec;padding:1.2rem 1.5rem;margin:1.2rem 0;font-family:'Helvetica Neue',monospace;font-size:.82rem;line-height:2.2;border-left:3px solid var(--ink);}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem;}
+  th{text-align:left;padding:.5rem .75rem;background:#f0f0ec;font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mid);border-bottom:2px solid var(--rule);}
+  td{padding:.5rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .gap-high{color:var(--accent);font-weight:600;}
+  .gap-med{color:var(--amber);font-weight:600;}
+  .gap-ok{color:var(--green);font-weight:600;}
+  .actor-card{border:1px solid var(--rule);border-left:4px solid var(--ink);padding:1rem 1.2rem;margin:1rem 0;}
+  .actor-name{font-weight:700;font-size:.9rem;color:var(--ink);margin-bottom:.3rem;}
+  .actor-want{font-size:.82rem;color:var(--mid);margin-bottom:.4rem;}
+  .actor-sgfa{font-size:.82rem;color:var(--green);font-weight:600;}
+  .xref-block{margin-top:3rem;border-top:1px solid var(--rule);padding-top:1.5rem;}
+  .xref-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem;margin-top:.75rem;font-size:.8rem;}
+  .xref-id{font-weight:700;color:var(--ink);min-width:4rem;display:inline-block;}
+  .xref-desc{color:var(--mid);}
+  footer{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-size:.75rem;color:var(--light);text-align:center;}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right"><a href="/papers/">Papers</a><a href="/decisions/">Decisions</a><a href="/tools/">Tools</a><a href="/fiction/">Fiction</a><a href="/about.html">About</a></span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Aether Continuity Institute · ACI · Synthesis Memo</div>
+  <div class="doc-title">SM-004 — Koordinoitu investointimalli<br>ja ACI:n analyyttinen kehikko</div>
+  <div class="doc-sub">Kaksi kieltä, yksi diagnoosi — vastaavuudet, täydentävyydet ja yhteinen toimijasynergia</div>
+  <div class="doc-meta">
+    Version 1.0 · April 2026 · Domain D-1 · D-3 · D-4 · Open Working Draft<br>
+    Cross-references: SM-001 · SM-002 · SM-003 · SP-002 · SP-007 · DT-001 · DT-002 · DT-004<br>
+    Konteksti: Tämä memo on laadittu sen jälkeen kun ACI:n tuotannolle esitettiin rinnakkainen virkamiesvalmistelumuistio (18.2.2026), joka diagnosoi saman rakenteellisen ongelman eri kielellä ja eri kontekstissa. SM-004 rakentaa analyyttisen sillan näiden kahden kehikon välille.
+  </div>
+</div>
+
+<h2>1 · Kaksi kieltä, yksi diagnoosi</h2>
+
+<p>Helmikuussa 2026 valmisteltiin koordinoitua investointimallia käsittelevä muistio, joka hahmotteli neljän lukon rakenteen Suomen energia- ja teollisuuspolitiikalle. Muistio oli kirjoitettu virkamieskielellä, tarkoitettu sisäiseen valmisteluun, ja se päätyi eduskunnan energiapolitiikkaa seuraavalle kansanedustajalle. ACI:n DT-sarja ja SM-sarja olivat syntyneet samoihin aikoihin — eri lähtökohdasta, eri kielellä, eri yleisölle.</p>
+
+<p>Kahden kehikon rinnakkainen lukeminen tuottaa kiinnostavan havainnon: ne diagnosoivat saman rakenteellisen ongelman. Koordinaatioepäonnistuminen, aikahorisonttien epäsymmetria, jalostusarvon katoaminen ja järjestelmän haavoittuvuus toistuvat molemmissa — mutta eri termistöllä ja eri konkretian tasolla.</p>
+
+<p>Tämä ei ole sattuma. Se on merkki siitä, että ongelma on riittävän suuri ja riittävän näkyvä näkyäkseen sekä analyyttisessä tarkastelussa että poliittisessa valmistelussa. Kahden itsenäisen analyysin konvergenssi vahvistaa molempia.</p>
+
+<div class="callout">
+<strong>SM-004:n tarkoitus:</strong> Ei uusi analyysi — silta. Tämä memo osoittaa missä neljän lukon malli ja ACI:n DT/SM-sarja vastaavat toisiaan, missä ne täydentävät toisiaan, ja missä molemmat törmäävät samaan aukkoon. Lisäksi se kartoittaa toimijat joiden intressit luontevasti konvergoivat SGFA-arkkitehtuurin ympärille.
+</div>
+
+<h2>2 · Neljän lukon vastaavuudet DT-sarjaan</h2>
+
+<p>Muistion neljä lukkoa ja ACI:n neljä DT-dokumenttia muodostavat lähes täydellisen peilikuvan. Diagnostinen sisältö on identtinen — instrumentaatio eroaa.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Muistion lukko</th>
+      <th>ACI:n DT-dokumentti</th>
+      <th>Yhteinen diagnoosi</th>
+      <th>Ero: mitä toinen lisää</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Lukko 1</strong><br>Jalostusarvo/MWh -arviointimalli</td>
+      <td><strong>DT-004</strong><br>Datakeskusten additionaalisuus ja Priority Inversion Risk</td>
+      <td>Energiaintensiiviset investoinnit tarvitsevat laadullisen kynnyksen. Ilman sitä jäykät kuormat syrjäyttävät joustavat — ja jalostusarvo valuu ulos.</td>
+      <td>Muistio: konkreettinen pisteytys (EUR/MWh, osaaminen, kotimaiset arvoketjut). DT-004: mekanismi jolla kynnyksen puuttuminen johtaa Priority Inversion Riskiin kotitalouksille.</td>
+    </tr>
+    <tr>
+      <td><strong>Lukko 2</strong><br>Kansallinen laskenta- ja datakerros</td>
+      <td><em>Ei suoraa DT-vastinetta</em></td>
+      <td>Sähkö raaka-aineena vs. data tuotteena. Arvoketjun yläpää pitää ankkuroida kotimaahan.</td>
+      <td>Muistio tuo uuden ulottuvuuden jonka ACI ei ole käsitellyt: laskentatehon ja datan jalostusarvo sähkönkulutuksen rinnalla. Tämä on ACI:n luonteva laajennussuunta.</td>
+    </tr>
+    <tr>
+      <td><strong>Lukko 3</strong><br>Energiajärjestelmän stabilointikerros</td>
+      <td><strong>DT-001 + DT-002</strong><br>Kapasiteettimekanismi + CHP-alasajo</td>
+      <td>Hajautettu säätökapasiteetti, CHP:n integrointi tasehallintaan, kysyntäjousto — järjestelmää pitää vakauttaa ennen kriisiä eikä sen jälkeen.</td>
+      <td>Muistio: käytännön instrumentit (PPA-rakenteet, varastokannustimet, tasapainotusvelvoitteet). DT-sarja: mekanismi jolla niiden puuttuminen johtaa endurance-aukkoon ja FAC:n katoamiseen.</td>
+    </tr>
+    <tr>
+      <td><strong>Lukko 4</strong><br>Parlamentaarinen investointiputki 15 v</td>
+      <td><strong>DT-001</strong><br>Päätöksenteon horisonttikuilu</td>
+      <td>Investoinnit vaativat ennustettavuutta yli vaalikausien. Riski-ikkuna 2027–2030 ja päätösikkuna 2031+ ovat rakenteellisesti epäsynkroniset.</td>
+      <td>Muistio: konkreettinen instrumentti (kolmen vuoden välein päivitettävä kapasiteettikartta, eduskuntaraportointi). DT-001: analyysi siitä miksi tämä instrumentti on kriittinen juuri nyt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout-blue">
+<strong>Yhteinen aukkopaikka:</strong> Molemmat kehikot törmäävät samaan rakenteelliseen ongelmaan — koordinaatiovajeeseen. Muistio nimeää sen: "investointipäätökset tehdään hajautetusti eri ministeriöissä, alueilla, verkkoyhtiöissä ja yrityksissä." SM-001 nimeää saman: "koordinaatiovaje — ei resurssivaje, ei tietovaje." Ratkaisun institutionaalinen muoto eroaa kehikoissa — mutta diagnoosi on identtinen.
+</div>
+
+<h2>3 · Mitä ACI lisää muistiolle</h2>
+
+<p>Muistio on toimenpide-ehdotus. Se kuvaa <em>mitä pitää tehdä</em>. ACI on rakenteellinen analyysi. Se kuvaa <em>miksi nykyjärjestelmä tuottaa väärän lopputuloksen</em>. Yhdessä ne muodostavat päätöksentekokehikon joka on sekä diagnostisesti tarkka että operatiivisesti käyttökelpoinen.</p>
+
+<h3>3.1 · FAC tekee "jalostusarvo/MWh" -kriteeristön tarkemmaksi</h3>
+
+<p>Muiston Lukko 1 ehdottaa jalostusarvo/MWh-pisteytyistä. ACI:n FAC-käsite (SM-002 §7) lisää yhden ulottuvuuden joka puuttuu muistion kriteeristöstä: <strong>ei pelkästään paljonko energiaa kulutetaan ja paljonko jalostusarvoa syntyy — vaan myös sitoutuuko kapasiteetti pois vapaasti allokoitavista reserveistä.</strong></p>
+
+<p>Datakeskus joka kuluttaa 200 MW ja tuottaa merkittävää jalostusarvoa voi silti olla FAC-negatiivinen: se sitoo kapasiteettia PPA:lla ennen stressitapahtumia. Jalostusarvo/MWh-kriteeristöön pitäisi lisätä neljäs ulottuvuus: <em>vaikutus vapaasti allokoitavaan kapasiteettiin</em>. Tämä on SM-002:n ja SP-007:n keskeinen lisä muistion analyysiin.</p>
+
+<h3>3.2 · Priority Inversion Risk konkretisoi "energia-siirtomaamallin"</h3>
+
+<p>Muistion riskiskenaario A kuvaa energiasiirtomaamallin: Suomi rakentaa infrastruktuurin, jalostusarvo valuu muualle. ACI:n Priority Inversion Risk (DT-004 §4) on sama ilmiö mikrotasolla: kotitaloudet ja pienet toimijat siirtyvät residuaali-spotiin kun industriaalit saavat PPA-kapasiteettia. Malli osoittaa missä siirtomaa-efekti ensin näkyy — ei BKT-tilastoissa vaan sähkölaskussa.</p>
+
+<h3>3.3 · Endurance-aukko täydentää "hintakriisi"-skenaariota</h3>
+
+<p>Muistion riskiskenaario B kuvaa sähkön hintakriisin ja poliittisen paniikin. ACI:n endurance-analyysi (WP-001, WEM §01) täydentää tätä: hintakriisi on näkyvä oire, endurance-aukko on rakenteellinen syy. Kun järjestelmä ei kestä 72–168 tunnin yhtäjaksoista stressijaksoa, hintapiikit eivät ole poikkeuksia — ne ovat järjestelmän normaali reaktio tilanteeseen johon se ei ole suunniteltu. Stabilointikerros (Lukko 3) ratkaisee oireen; SGFA-arkkitehtuuri ratkaisee syyn.</p>
+
+<h2>4 · Mitä muistio lisää ACI:lle</h2>
+
+<h3>4.1 · Laskentakerros — uusi analyyttinen suunta</h3>
+
+<p>Muistion Lukko 2 tuo ulottuvuuden jota ACI ei ole käsitellyt: kansallinen laskenta- ja datainfrastruktuuri arvoketjun yläpäänä. "Sähkö on syöte, älykkyys on tuote" on tarkka muotoilu. ACI:n kehikko on toistaiseksi energia-järjestelmäkeskeinen. Laskentakerros laajentaisi sen kysymään: <em>mihin kapasiteettiin tekoäly- ja datalaskennan arvoketju pitäisi ankkuroida?</em> Tämä on potentiaalinen DA-008 tai erillinen tutkimuskysymys.</p>
+
+<h3>4.2 · EDP-realismi — julkisen talouden rajoite on eksplisiittinen</h3>
+
+<p>Muistio on kirjoitettu EDP-rajoitteet huomioiden. ACI:n analyysissa julkisen talouden rajoite on implisiittinen (SM-001 §04). Muistio tekee sen eksplisiittiseksi: "malli sopii EDP-rajoitteiseen julkiseen talouteen, koska se perustuu ohjaukseen, ehtoihin ja ennustettavuuteen — ei massiiviseen lisävelkaantumiseen." Tämä on tärkeä täydennys SGFA:n rahoitusmalliin: SP-002:n IRR-analyysi on jo markkinaehtoinen, mutta yhteys EDP-kehykseen pitäisi tehdä eksplisiittiseksi EU-rahoitushakemuksissa.</p>
+
+<h3>4.3 · 15 vuoden kapasiteettikartta — WEM:n luonteva laajennussuunta</h3>
+
+<p>Muistion Lukko 4 ehdottaa kolmen vuoden välein päivitettävää, eduskunnalle raportoitavaa kapasiteettikarttaa. WEM mittaa nykytilaa reaaliajassa. Näiden väliin jää suunnitteluhorisontti: ei reaaliaikainen eikä poliittinen pitkän aikavälin tavoite — vaan operatiivinen 3–5 vuoden ennustettavuusikkuna. WEM:n luonteva laajennussuunta on OGAS2-simulaattorin kytkeminen tähän: mitä SGFA-konversioiden eri tahdilla tarkoittaa WEM-indikaattoreille 2027–2032?</p>
+
+<h2>5 · Toimijasynergia: Missä intressit konvergoivat</h2>
+
+<p>SGFA-arkkitehtuurin vahvuus on siinä, että se ei vaadi uusia toimijoita — se luo uuden yhteistyörakenteen olemassa olevien intressien välille. Alla on kartta siitä missä synergia on luontevin.</p>
+
+<div class="actor-card">
+  <div class="actor-name">Kuntien energiayhtiöt</div>
+  <div class="actor-want">Mitä he jo haluavat: infrastruktuurin elinkaaren jatkaminen, uudet tulovirrat olemassa olevalle kapasiteetille, huoltovarmuusroolin vahvistaminen.</div>
+  <div class="actor-sgfa">SGFA tuottaa: reservimarkkinatulot (FCR/aFRR/mFRR), CO₂-krediitit BECCS:stä, PtX-tulovirta sivuvirroista, kunnallisen omistuksen säilyttäminen. Investointiriskin jakaminen SGFA Holding Oy -konsortiorakenteessa (SP-002 §4).</div>
+</div>
+
+<div class="actor-card">
+  <div class="actor-name">Metsä- ja bioteollisuus (UPM, Stora Enso ja vastaavat)</div>
+  <div class="actor-want">Mitä he jo haluavat: nettonolla-strategian toteuttaminen, BECCS-kapasiteetti hiilensidontaan, uudet tuoteportfoliot biopohjaisten virtojen päälle, sähköomavaraisen tuotannon vahvistaminen.</div>
+  <div class="actor-sgfa">SGFA tuottaa: BECCS-integraatio olemassa oleviin CHP-laitoksiin, biogenisen CO₂:n arvo CRCF-kehyksessä, PtX luo uuden tuoteryhmän (RFNBO-metanoli, -vety) sivuvirroista, Fingridin reservimarkkinat tuovat kapasiteetille uuden arvoväylän. Synergia, ei kilpailu: metsäteollisuuden kapasiteetti täydentää kunnallisten solmujen verkkoa.</div>
+</div>
+
+<div class="actor-card">
+  <div class="actor-name">Aluepoliittiset toimijat — maakuntatasolla</div>
+  <div class="actor-want">Mitä he jo haluavat: alueellinen omavaraisuus, investointien pysyminen maakunnassa, huoltovarmuuden vahvistaminen, infrastruktuurin elinkaaren jatkaminen.</div>
+  <div class="actor-sgfa">SGFA tuottaa: maakuntakeskusten energiaomavaraisuus kasvaa, L3-islanding-kyky tarjoaa toimintavarmuuden häiriötilanteissa, investoinnit pysyvät alueella kunnallisen omistuksen kautta. Haapaniemi 2 -tyyppinen solmu on alueen strateginen resurssi — ei pelkkä kaukolämpölaitos.</div>
+</div>
+
+<div class="actor-card">
+  <div class="actor-name">Fingrid</div>
+  <div class="actor-want">Mitä he jo haluavat: hajautettu säätökapasiteetti tasehallintaan, siirtoverkon investointipaineen keventäminen, endurance-kapasiteetin kasvattaminen.</div>
+  <div class="actor-sgfa">SGFA tuottaa: 1–3 GW reserve-kelpoista hajautettua kapasiteettia (SP-002 §4), jokainen solmu vähentää pitkän matkan siirtotarvetta, biokaasureservi tukee 72h+ endurance-vaatimusta (WP-001). Fingridin 5,2 miljardin investointiohjelma 2025–2035 on osin ratkaisu ongelmaan jonka SGFA-verkko ennaltaehkäisee.</div>
+</div>
+
+<div class="actor-card">
+  <div class="actor-name">HVK (Huoltovarmuuskeskus)</div>
+  <div class="actor-want">Mitä he jo haluavat: L2/L3-toimintakyky kriisitilanteissa, energiaomavaraisuuden vahvistaminen alueellisesti, valmiussopimuspohjan laajentaminen.</div>
+  <div class="actor-sgfa">SGFA tuottaa: valmiussopimuksen kautta SGFA-solmu saa L2/L3-operaattorin institutionaalisen aseman (SP-007 §3). HVK:n olemassa olevat instrumentit (valmiussopimus, strateginen varallisuusdesignointi) ovat riittäviä — ei tarvita uutta lainsäädäntöä. SGFA-verkko on HVK:n hajautetun resilienssin konkreettinen toteutus.</div>
+</div>
+
+<div class="actor-card">
+  <div class="actor-name">EU-rahoitusinstrumentit</div>
+  <div class="actor-want">Mitä ne on suunniteltu tukemaan: RED III sektori-integraatio, BECCS negatiiviset päästöt (CRCF), RFNBO-kapasiteetti (ReFuelEU, FuelEU Maritime), energiaturvallisuusinvestoinnit (REPowerEU).</div>
+  <div class="actor-sgfa">SGFA tuottaa kaikki neljä samanaikaisesti: CHP-ydin (sektori-integraatio), CO₂-talteenotto (CRCF), PtX-kerros (RFNBO), kunnallinen resilienssirakenne (energiaturvallisuus). EU Innovation Fund -hakemus voidaan rakentaa kaikkien neljän instrumentin ympärille — ei yhtä, vaan paketti. Tämä on SP-002 §5:n EU-rahoitusstrategian ydin.</div>
+</div>
+
+<div class="callout-green">
+<strong>Synergialogiikka:</strong> SGFA ei pyydä toimijoita luopumaan omista tavoitteistaan. Se tarjoaa arkkitehtuurin jossa jokainen saavuttaa omansa samalla kun kokonaisjärjestelmä vahvistuu. Kuntayhtiö saa uudet tulovirrat. Metsäteollisuus saa BECCS-kapasiteetin. Fingrid saa hajautetun tasehallintaverkon. HVK saa L2/L3-toimintakyvyn. EU saa RED III -toteutuksen. Muistio saa Lukko 3:n instrumentit. Mikään näistä ei vaadi toisen toimijan häviämistä.
+</div>
+
+<h2>6 · Yhteinen aukkopaikka — koordinaatiovaje</h2>
+
+<p>Molempien kehikoiden syvin havainto on sama: ongelma ei ole resurssivaje, tietovaje tai teknologiavaje. Ongelma on koordinaatiovaje. Kukin toimija näkee oman sektorinsa. Kukaan ei omista kokonaiskuvaa.</p>
+
+<p>Muistio nimeää tämän: "koordinaatioepäonnistuminen — investointipäätökset tehdään hajautetusti." SM-001 nimeää saman: "koordinaatiovaje, ei resurssivaje — tieto on olemassa, analyyttinen kapasiteetti on olemassa, institutionaalinen rakenne joka integroisi ne yli sektorirajojen ei ole."</p>
+
+<p>Koordinaatiovajeen ratkaiseminen ei vaadi uutta byrokratiaa — se vaatii yhteistä kieli- ja kehysrakennetta jonka ympärille eri toimijat voivat kokoontua. Tämä on ACI:n pitkän aikavälin rooli: ei viranomainen eikä lobbaaja, vaan analyyttinen referenssikehys joka tekee eri toimijoiden diagnoosit vertailukelpoisiksi.</p>
+
+<div class="callout">
+<strong>SM-004:n johtopäätös:</strong> Koordinoitu investointimalli (muistio) ja ACI:n SGFA/DT/SM-kehikko eivät kilpaile — ne puhuvat samalle ongelmalle eri kielellä eri yleisöille. Yhdistettynä ne muodostavat poikkeuksellisen vahvan perustan: virkamieskielinen toimenpide-ehdotus jolla on analyyttinen tuki, ja analyyttinen kehikko jolla on konkreettinen politiikkavastine. Kaikkein tärkein yhteinen instrumentti on 15 vuoden kapasiteettikartta (Lukko 4) yhdistettynä SGFA-verkon 2025–2032 toteutuspolkuun (SP-007 §7) — tämä yhdistelmä on se mitä kumpikaan kehikko ei yksin tarjoa.
+</div>
+
+<div class="xref-block">
+  <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--light);">Cross-references</div>
+  <div class="xref-grid">
+    <div><span class="xref-id">SM-001</span><span class="xref-desc">Finland 2030 — koordinaatiovaje viidentenä rakenteellisena paineena</span></div>
+    <div><span class="xref-id">SM-002</span><span class="xref-desc">DT-Series System Map — FAC, Priority Inversion, pre-allokoitu järjestelmä</span></div>
+    <div><span class="xref-id">SM-003</span><span class="xref-desc">Finland's Structural Advantage — SGFA/MESA olemassa olevan infran pohjalta</span></div>
+    <div><span class="xref-id">SP-002</span><span class="xref-desc">SGFA 4.0 — toteutusohjelma, EU-rahoitusstrategia</span></div>
+    <div><span class="xref-id">SP-007</span><span class="xref-desc">SGFA Institutional Blueprint — FAC institutionaalisena ominaisuutena</span></div>
+    <div><span class="xref-id">DT-001</span><span class="xref-desc">Kapasiteettimekanismi — päätöksenteon horisonttikuilu</span></div>
+    <div><span class="xref-id">DT-002</span><span class="xref-desc">CHP-alasajo — stabilointikerroksen tarve</span></div>
+    <div><span class="xref-id">DT-004</span><span class="xref-desc">Datakeskukset — additionaalisuus ja Priority Inversion Risk</span></div>
+  </div>
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Synthesis Memo SM-004 · April 2026 · v1.0<br>
+  Domain D-1 · D-3 · D-4 · Open Working Draft · Subject to revision
+</footer>
+
+</body>
+</html>
