@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-016 — Health Data Continuity Index · ACI</title>
+<meta name="description" content="HDCI: a constructed index for measuring health data integration failure in Finnish welfare systems. ACI Working Paper 016.">
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --border: #ddd;
+    --accent: #2a2a2a;
+    --bg: #fff;
+    --tag-bg: #f4f4f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+  }
+  nav {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+  nav a { color: var(--muted); text-decoration: none; margin-right: 1.2rem; }
+  nav a:hover { color: var(--text); }
+  .meta-block {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+    line-height: 2;
+  }
+  .meta-block strong { color: var(--text); }
+  .series-tag {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  h1 {
+    font-size: 1.7rem;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+  .abstract {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2rem;
+    margin: 2rem 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .disclaimer {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0 2.5rem;
+  }
+  .section-marker {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.5rem 0 0.5rem;
+    font-style: italic;
+  }
+  p { margin-bottom: 1rem; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 1.5rem 0;
+    font-family: monospace;
+  }
+  th {
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    padding: 0.4rem 0.6rem;
+    font-weight: bold;
+  }
+  td {
+    border-bottom: 1px solid var(--border);
+    padding: 0.4rem 0.6rem;
+    vertical-align: top;
+  }
+  code {
+    font-family: monospace;
+    font-size: 0.9em;
+    background: var(--tag-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+  }
+  pre {
+    font-family: monospace;
+    font-size: 0.88rem;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    margin: 1.2rem 0;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+  blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin: 1.5rem 0;
+  }
+  .formula-box {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/research.html">Research</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="series-tag">ACI · WP-016 · Working Paper · Domain D-3 / D-4 · Open Working Draft</div>
+
+<div class="meta-block">
+  <strong>Version</strong> 1.0 · April 2026<br>
+  <strong>Domain</strong> D-3 Institutional Diagnostics · D-4 Compound Stress<br>
+  <strong>Status</strong> Open Working Draft<br>
+  <strong>Keywords</strong> health data · integration failure · HDCI · welfare system · Finland · FHDS
+</div>
+
+<h1>Health Data Continuity Index (HDCI)</h1>
+<div class="subtitle">From Cost Accounting to Integration Accounting in the Finnish Welfare System</div>
+
+<div class="abstract">
+<p>Finnish health data infrastructure is among the most comprehensive in the world. Kanta, THL registries, and Kela compensation data form one of the broadest national health data repositories in existence. Yet the same system routinely produces situations where an individual patient's complete clinical picture — multiple chronic conditions, medication regimens, diagnostic findings — does not coalesce into a coordinated care decision. This paper argues that this is not a technical failure but a structural one: an integration gap between data collection and clinical utility. The Health Data Continuity Index (HDCI) is introduced as a constructed measurement instrument for this gap. HDCI does not describe how sick a population is — it describes how well the system converts what it knows into what it does.</p>
+</div>
+
+<div class="disclaimer">
+This paper constructs a novel measurement framework. HDCI components are derived indicators, not pre-existing official metrics. Proposed data sources (THL, Kela, Sotkanet) are identified as structurally adequate but require formal access through Findata's secondary use licensing process. Quantitative weights are theoretically motivated and require empirical calibration. AetherOne™ references in §3.5 describe a conceptual architecture, not a deployed product.
+</div>
+
+<div class="section-marker">§ 01</div>
+<h2>Problem Definition: Data Abundance Without Integration</h2>
+
+<p>Health system performance is conventionally measured through cost efficiency, queue lengths, and population-level morbidity statistics. These metrics describe the system as a production process — a ratio of inputs to outputs. This framing systematically omits one critical variable: how much of the collected health data converts into coordinated, integrated care.</p>
+
+<p>Finland is internationally exceptional in health data coverage. Yet this same system routinely produces a structurally predictable failure: the patient with multiple simultaneous conditions, several medications from different prescribers, chronic findings across multiple specialties — whose complete picture no single clinician holds or is prompted to synthesise. Data exists for each component. The integration does not occur.</p>
+
+<p>This is not a data volume problem. It is not a digitisation problem. It is an <em>integration gap</em> — a structural discontinuity between what the system records and what it acts upon.</p>
+
+<blockquote>The analogy to ACI's energy analysis is precise: the Nordic power system does not lack capacity data — it lacks instruments that make capacity adequacy visible under compound stress. The Finnish health system does not lack patient data — it lacks instruments that make integration failure visible under multi-morbidity conditions.</blockquote>
+
+<p>HDCI is the instrument for the second problem.</p>
+
+<div class="section-marker">§ 02</div>
+<h2>HDCI — A Constructed Measurement Framework</h2>
+
+<p>Health Data Continuity Index is a <em>constructed index</em>: it derives new indicators from existing data sources rather than aggregating pre-existing official metrics. This is methodologically equivalent to ACI's energy instruments (EPP, FS(p), SP_cluster) — which also derive new diagnostic quantities from publicly available grid and market data.</p>
+
+<p>HDCI consists of five components:</p>
+
+<h3>DCI — Data Capture Index</h3>
+<p>Measures the coverage of recorded health data relative to expected documentation given population morbidity profile.</p>
+<div class="formula-box">
+DCI = (actual Kanta entries) / (expected Kanta entries)<br>
+Expected entries = f(Morbidity Index, age, sex)<br>
+Source: Sotkanet ind. 5642 · THL Avohilmo
+</div>
+
+<h3>IAI — Integration Achievement Index</h3>
+<p>Measures the fraction of care contacts in which multi-specialty integration is achieved for patients with multiple simultaneous conditions. This is HDCI's central component — the direct measure of coordination rather than volume.</p>
+<div class="formula-box">
+IAI = (multi-specialty entries within same care episode) / (total entries)<br>
+Source: THL Avohilmo + Terveys-Hilmo (patient-level linkage)
+</div>
+
+<h3>RVI — Response Velocity Index</h3>
+<p>Measures the interval between initial clinical finding and first responsive care action. Defined at the level of the first recorded finding (diagnosis code, laboratory result, risk flag) rather than the referral letter — capturing the full latency of institutional response.</p>
+<div class="formula-box">
+RVI = 1 − (observed latency / maximum latency threshold)<br>
+Latency = first care action − first recorded relevant finding<br>
+Source: THL Hilmo · Avohilmo (linked timestamps)
+</div>
+
+<h3>RKI — Risk Accumulation Index</h3>
+<p>Measures the prevalence of uncoordinated polypharmacy: patients with five or more medications sourced from two or more prescribers, without a shared care plan entry.</p>
+<div class="formula-box">
+RKI = (patients: ≥5 medications, ≥2 prescriber sources, no shared care plan) / (all patients: ≥5 medications)<br>
+Source: Kela prescription compensation register
+</div>
+
+<h3>PAI — Prevention Activity Index</h3>
+<p>Measures the fraction of total care contacts that are preventive in nature: screenings, risk assessments, lifestyle counselling.</p>
+<div class="formula-box">
+PAI = (preventive contacts) / (total contacts)<br>
+Preventive contacts identified via THL procedure classification codes<br>
+Source: THL Avohilmo
+</div>
+
+<h3>Composite Index</h3>
+<div class="formula-box">
+HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
+</div>
+<p>Weights reflect the primacy of integration achievement (IAI) and response velocity (RVI) as the core diagnostic dimensions. All weights are theoretically motivated and require empirical calibration against known outcome measures.</p>
+
+<div class="section-marker">§ 03</div>
+<h2>Empirical Operationalisation and Institutional Pathway</h2>
+
+<p>HDCI is not a theoretical proposal. The data required to calculate it exists. The obstacle is access structure, not data existence.</p>
+
+<h3>3.1 Data Sources and Availability</h3>
+
+<table>
+  <tr><th>Component</th><th>Data Source</th><th>Availability</th></tr>
+  <tr><td>DCI</td><td>THL Avohilmo · Sotkanet Morbidity Index</td><td>Partial — morbidity index open; Kanta entry volume requires Findata licence</td></tr>
+  <tr><td>IAI</td><td>THL Avohilmo + Terveys-Hilmo (linked)</td><td>Available — requires patient-level record linkage</td></tr>
+  <tr><td>RVI</td><td>THL Hilmo · hoitoonpääsyn seuranta</td><td>Available — referral and procedure timestamps linkable</td></tr>
+  <tr><td>RKI</td><td>Kela lääkekorvausrekisteri</td><td>Available — prescriber source included; requires Findata request</td></tr>
+  <tr><td>PAI</td><td>THL Avohilmo (procedure codes)</td><td>Available — requires preventive code classification</td></tr>
+</table>
+
+<p>The structural situation is identical to ACI's energy analysis: Fingrid's production data is open; NVE's reservoir data requires API access and proxy construction. HDCI's case is that all required data exists within Finnish health registries — but patient-level linkage requires formal secondary use licensing through Findata.</p>
+
+<h3>3.2 The National Health Index as Precedent</h3>
+
+<p>THL and Kela jointly produce the Kansallinen terveysindeksi — a composite index combining records from THL, Kela, the Pension Insurance Centre, and Statistics Finland. This demonstrates that multi-registrar health data linkage is already operationally established in Finland. HDCI does not require a new technical or legislative framework. It requires a decision to calculate a different quantity from an already-functioning linkage infrastructure.</p>
+
+<blockquote>The National Health Index measures how sick the population is. HDCI measures how well the system responds to what it knows about the sick population. Both use the same data infrastructure. Neither replaces the other.</blockquote>
+
+<h3>3.3 FHDS: Institutional Home</h3>
+
+<p>THL is prepared to assume responsibility for the Finnish Health Data Space (FHDS) data governance and licensing function. FHDS will consolidate health data infrastructure, licensing, and research facilitation — and enable more individually tailored care, cost containment, and accelerated research.</p>
+
+<p>HDCI is a natural first use case for FHDS. It does not require new legislation, new agencies, or new data collection. It requires a decision: calculate the integration index from already-available registry linkages and publish it as part of national health system monitoring.</p>
+
+<h3>3.4 Calibration Principles</h3>
+
+<p>Theoretical weights are calibrated against known outcome indicators:</p>
+<ul style="margin: 0.5rem 0 1rem 1.5rem; line-height: 2;">
+  <li>Preventable hospitalisations — high IAI and low RVI predict fewer avoidable admissions</li>
+  <li>Adverse medication events — high RKI correlates with documented polypharmacy harm incidents</li>
+  <li>Inter-welfare-area variation — morbidity-adjusted differences in care outcomes identify integration failure effects</li>
+</ul>
+
+<h3>3.5 Two-Level Architecture</h3>
+
+<p>HDCI operates at two levels with different temporal properties:</p>
+
+<p><strong>Registry-level HDCI</strong> — calculated from FHDS-linked THL and Kela registries. Suitable for population-level monitoring and inter-welfare-area comparison. Update frequency: quarterly to annual. This level is operable now with Findata licensing.</p>
+
+<p><strong>Field-level HDCI</strong> — a conceptual architecture in which HDCI components are calculated in near-real-time from continuously collected individual-level data, processed locally on a sovereign device without requiring central registry access. This is the operating model proposed in the AetherOne™ / Debian Quantum AI framework: explainable, offline-capable, auditable health intelligence at the point of care. This level describes a design target for future development, not a deployed capability.</p>
+
+<div class="section-marker">§ 04</div>
+<h2>Policy Implications: From Cost Accounting to Integration Accounting</h2>
+
+<p>HDCI's introduction is not a measurement addition — it is a framing shift. The current welfare system governance framework relies on three primary performance measures:</p>
+
+<table>
+  <tr><th>Current metric</th><th>What it measures</th><th>What it omits</th></tr>
+  <tr><td>Cost per capita</td><td>Total expenditure</td><td>Whether expenditure reflects integration or fragmentation</td></tr>
+  <tr><td>Queue length</td><td>Access latency</td><td>Whether access leads to coordinated or siloed care</td></tr>
+  <tr><td>Morbidity index</td><td>Population illness burden</td><td>How well the system responds to known illness burden</td></tr>
+</table>
+
+<p>These metrics describe the system as a production process. HDCI describes it as a coordination process. The distinction matters because a system can score well on all three current metrics while systematically failing to integrate care for its most complex patients.</p>
+
+<h3>Institutional Responsibility</h3>
+
+<table>
+  <tr><th>Actor</th><th>Role under HDCI framework</th></tr>
+  <tr><td>THL</td><td>Calculate and publish HDCI from registry linkages; maintain calibration methodology</td></tr>
+  <tr><td>Kela</td><td>Provide RKI data; target polypharmacy coordination services to high-RKI populations</td></tr>
+  <tr><td>Welfare areas</td><td>Use HDCI for internal integration diagnostics; identify lowest-IAI patient populations</td></tr>
+  <tr><td>STM</td><td>Include HDCI in welfare area performance monitoring alongside cost and queue metrics</td></tr>
+</table>
+
+<h3>The Integration Incentive Gap</h3>
+
+<p>HDCI also makes visible a structural problem in the current governance logic: welfare areas that achieve integration and thereby reduce future care episodes receive less future funding. The incentive structure penalises the outcome HDCI is designed to encourage. Integration accounting — measuring coordination rather than consumption — is a prerequisite for incentive reform.</p>
+
+<div class="section-marker">§ 05</div>
+<h2>International Comparison</h2>
+
+<p>Integration failure is not a Finnish peculiarity — it is a structural property of health systems that evolved from episodic acute-care models into complex multi-morbidity environments. What is comparatively unusual about Finland is the gap between data richness and integration measurement.</p>
+
+<table>
+  <tr><th>Country</th><th>Integration measurement</th><th>Gap</th></tr>
+  <tr><td>Sweden</td><td>Vårdanalys produces systematic integration assessments; sammanhållen vård is a monitored indicator</td><td>No composite integration index comparable to HDCI</td></tr>
+  <tr><td>Denmark</td><td>Nationale Kvalitetsprogram includes sammenhængende patientforløb and polyfarmaci indicators</td><td>Sector-specific, not whole-system composite</td></tr>
+  <tr><td>Netherlands</td><td>Bundled payment models for diabetes/COPD/heart failure create financial integration incentives</td><td>Limited to specific disease groups</td></tr>
+  <tr><td>Estonia</td><td>X-tee platform enables real-time data exchange between health actors</td><td>Infrastructure without integration measurement</td></tr>
+  <tr><td>Finland</td><td>World-class registry coverage; Kansallinen terveysindeksi established</td><td>No integration measurement instrument — HDCI fills this gap</td></tr>
+</table>
+
+<p>HDCI's IAI, RVI, and RKI components directly correspond to OECD Patient Safety and Quality care coordination indicators. A Nordic HDCI comparison — calculated from Finnish, Swedish, and Danish registry data — would constitute the first composite integration index in the Nordic health policy space.</p>
+
+<div class="section-marker">§ 06</div>
+<h2>Conclusions and Research Priorities</h2>
+
+<p>Five structural observations emerge from this analysis:</p>
+
+<p><strong>1.</strong> Data existence does not imply data use. Finland's registry infrastructure is internationally exceptional; its integration measurement is not. The gap is structural, not technical.</p>
+
+<p><strong>2.</strong> HDCI is calculable. All five components have identified data sources within existing Finnish health registries. The path from theoretical framework to empirical index requires Findata licensing, not new data collection.</p>
+
+<p><strong>3.</strong> FHDS is the institutional home. THL's readiness to assume FHDS governance creates a natural institutional location for HDCI — an index calculated from the same registry linkages FHDS will facilitate.</p>
+
+<p><strong>4.</strong> Current metrics are insufficient but not wrong. Cost, queue, and morbidity metrics are valid. They are insufficient because they do not measure the coordination dimension. HDCI complements rather than replaces existing monitoring.</p>
+
+<p><strong>5.</strong> The incentive structure requires reform. Integration accounting is necessary but not sufficient — incentive reform must follow. Measuring integration is the diagnostic precondition for correcting the governance dynamics that currently penalise it.</p>
+
+<h3>Research Priorities</h3>
+
+<table>
+  <tr><th>Priority</th><th>Description</th><th>Timeline</th></tr>
+  <tr><td>1. Pilot calculation</td><td>HDCI calculated for one welfare area from existing registry data; correlation with known outcome measures validated</td><td>6–12 months</td></tr>
+  <tr><td>2. Weight calibration</td><td>Theoretical weights (0.15 / 0.30 / 0.25 / 0.20 / 0.10) calibrated empirically against preventable hospitalisation and adverse medication event data</td><td>12–18 months</td></tr>
+  <tr><td>3. FHDS integration</td><td>HDCI calculation documented as FHDS first use case; technical specification for registry linkage published</td><td>12–24 months</td></tr>
+  <tr><td>4. Nordic comparison</td><td>HDCI calculated comparably from Finnish, Swedish, and Danish registries; first Nordic integration index produced</td><td>24–36 months</td></tr>
+  <tr><td>5. Incentive modelling</td><td>HDCI-linked welfare area funding adjustment modelled; analogous to Dutch bundled payment model applied to integration achievement</td><td>36–48 months</td></tr>
+</table>
+
+<blockquote>HDCI is not a solution. It is a diagnostic instrument. Its purpose is to make visible what the system already knows but does not currently measure: how much of its data becomes care.</blockquote>
+
+<div class="section-marker">Appendix A</div>
+<h2>HDCI Calculation Formulas and Data Sources</h2>
+
+<pre>
+DCI = (actual_kanta_entries) / (expected_kanta_entries)
+      expected = f(morbidity_index, age, sex)
+      Source: Sotkanet 5642 · THL Avohilmo · Findata licence
+
+IAI = (multi_specialty_entries_per_episode) / (total_entries)
+      Source: THL Avohilmo + Terveys-Hilmo (patient-level linkage)
+
+RVI = 1 - (latency_days / max_latency_threshold)
+      latency = first_care_action - first_recorded_finding
+      Source: THL Hilmo · Avohilmo timestamps
+
+RKI = (patients: ≥5 drugs, ≥2 prescribers, no shared care plan) /
+      (patients: ≥5 drugs)
+      Source: Kela lääkekorvausrekisteri · Kanta care plan register
+
+PAI = (preventive_contacts) / (total_contacts)
+      preventive = screenings + risk assessments + lifestyle counselling
+      Source: THL Avohilmo procedure codes
+
+HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
+</pre>
+
+<p>All weights are initial theoretical values. Empirical calibration against outcome measures is the first research priority (§6).</p>
+
+<footer>
+  ACI · Working Paper 016 · v1.0 · April 2026<br>
+  Domain D-3 · D-4 · Open Working Draft<br>
+  Aether Continuity Institute · aethercontinuity.org<br><br>
+  ACI publications are released as open working drafts. Documents are iterative and may evolve as analytical understanding develops. Authority derives from analytical transparency rather than institutional mandate.
+</footer>
+
+</body>
+</html>
