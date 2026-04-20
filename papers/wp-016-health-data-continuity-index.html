@@ -383,6 +383,51 @@ HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
 
 <blockquote>HDCI is not a solution. It is a diagnostic instrument. Its purpose is to make visible what the system already knows but does not currently measure: how much of its data becomes care.</blockquote>
 
+<div class="section-marker">§ 06</div>
+<h2>Measurement Validity and Identifiability</h2>
+
+<p>HDCI is a constructed measurement instrument. Its analytical value depends on whether its components measure what they claim to measure, and whether observed variation reflects genuine integration differences rather than artefacts of data structure or documentation practice. This section identifies the principal validity threats and specifies how they are addressed in the pilot design.</p>
+
+<h3>6.1 DCI — Expected Entry Model Specification</h3>
+
+<p>DCI requires a model of expected Kanta entry volume against which actual volume is compared. This is a latent variable that cannot be directly observed. Two risks arise: over-specification (the model predicts so well that DCI approaches 1.0 everywhere, losing discriminating power) and under-specification (the model fails to control for legitimate variation in care contact frequency, inflating apparent underperformance).</p>
+
+<p>The pilot will estimate expected entries using a negative binomial regression model — appropriate for count data with overdispersion — with age, sex, and morbidity index (Sotkanet ind. 5642) as predictors. The model is estimated on the full Pohjois-Savo cohort, producing patient-level expected values. DCI is then the ratio of observed to predicted at cohort level. A sensitivity analysis will compare negative binomial against Poisson specification and against a simpler age-sex-morbidity stratum mean.</p>
+
+<p>The key identifiability question: does low DCI reflect genuine underrecording, or does it reflect legitimate clinical decisions not to generate Kanta entries (e.g., telephone advice, informal follow-up)? The pilot will test this by comparing DCI values against independently measured care contact frequency from Avohilmo. If DCI and Avohilmo contact rate are uncorrelated, DCI is capturing something beyond care volume — likely documentation completeness.</p>
+
+<h3>6.2 IAI — Episode Window Justification</h3>
+
+<p>The 30-day episode window is a heuristic. Different conditions have different care rhythms: a post-surgical patient may require multi-specialty contact within days; a stable diabetic may have meaningful integrated episodes spanning months. A fixed 30-day window will undercount integration in chronic stable disease and overcount it in acute complex episodes.</p>
+
+<p>The pilot will implement a sensitivity analysis across three window lengths: 15, 30, and 90 days. IAI will be calculated at each window for the full cohort. If IAI rankings across welfare area sub-regions are stable across windows, the 30-day default is robust. If rankings change materially, window selection becomes a substantive methodological choice requiring disease-stratified analysis. This is not a failure of the instrument — it is a finding about the structure of care integration in the cohort.</p>
+
+<h3>6.3 RKI — Absence of Evidence vs Evidence of Absence</h3>
+
+<p>RKI identifies patients with ≥5 medications from ≥2 prescribers without a shared Kanta care plan entry. The absence of a care plan entry may reflect: (a) genuine absence of coordination — the care gap HDCI is designed to detect; (b) coordination that occurred but was not entered into Kanta (e.g., verbal agreement, informal team communication); or (c) Kanta care plan functionality not yet adopted by the relevant care setting.</p>
+
+<p>This is a documentation bias problem. The pilot addresses it in two ways. First, RKI will be reported alongside Kanta care plan adoption rates by municipality and care setting — treating low adoption as a moderating variable rather than assuming absence equals non-coordination. Second, RKI will be cross-validated against the adverse medication event outcome (H2 hypothesis): if RKI predicts adverse events independently of care plan entry rate, it captures genuine coordination failure beyond documentation variation.</p>
+
+<h3>6.4 Measurement Model vs Policy Narrative</h3>
+
+<p>WP-016 contains two distinct argumentative layers: a measurement specification (HDCI components, data sources, calculation protocol) and a policy argument (FHDS institutional home, incentive reform). These serve different audiences and carry different epistemic statuses. The measurement specification makes falsifiable claims testable against data. The policy argument makes normative claims about what institutions should do.</p>
+
+<p>DT-006 is exclusively measurement specification — it makes no policy recommendations. WP-016 §4 (Policy Implications) is explicitly normative and should be read as such. Reviewers assessing the measurement validity of HDCI are not required to accept the policy argument, and vice versa. This section (§6) establishes the measurement specification as independently evaluable.</p>
+
+<h3>6.5 Composite Weight Identifiability</h3>
+
+<p>HDCI weights (DCI 0.15, IAI 0.30, RVI 0.25, RKI 0.20, PAI 0.10) are Bayesian priors — theoretically motivated initial values subject to empirical re-estimation. They are not identified from data in the current specification. Empirical identification requires an outcome-constrained optimisation: weights are adjusted to maximise the predictive validity of the composite against the validation outcomes (preventable hospitalisations, adverse medication events).</p>
+
+<p>The pilot will report both the prior-weighted HDCI and an outcome-optimised HDCI estimated via constrained regression. If the two diverge substantially, the prior weights require revision and the theoretical motivation for the original weighting must be re-examined. If they converge, the priors are supported empirically. Either outcome is informative.</p>
+
+<h3>6.6 Documentation Bias as a Confound</h3>
+
+<p>The most fundamental validity threat to HDCI is that all five components are derived from administrative and clinical documentation systems. A welfare area with high documentation quality will score higher on HDCI not because its care is more integrated but because its recording is more complete. This is the documentation bias problem.</p>
+
+<p>Three design choices mitigate but do not eliminate this confound. First, outcome validation (H1, H2) tests whether HDCI predicts real health outcomes — if documentation bias were driving HDCI variation, it would not predict hospitalisation or adverse medication events. Second, inter-municipality variation within Pohjois-Savo (H3) controls for regional documentation culture to some degree by comparing within a shared administrative context. Third, the DCI component explicitly models expected entry volume, isolating genuine underrecording from legitimate variation in care contact frequency.</p>
+
+<p>Documentation bias cannot be fully eliminated from registry-based research. Its residual presence should be acknowledged in all HDCI publications and calibration exercises.</p>
+
 <div class="section-marker">Appendix A</div>
 <h2>HDCI Calculation Formulas and Data Sources</h2>
 
