@@ -141,6 +141,14 @@
       line-height: 1.8;
     }
     footer em { color: var(--text); }
+    .tts-bar{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 2.5rem;padding:.75rem 1rem;background:#f0f0ec;border-radius:3px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:.78rem;}
+    .tts-btn{padding:.35rem .9rem;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:.75rem;border-radius:2px;color:#1a1a1a;}
+    .tts-btn:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+    .tts-btn:disabled{opacity:.35;cursor:default;}
+    .tts-prog{flex:1;height:3px;background:#ddd;border-radius:2px;overflow:hidden;}
+    .tts-prog-inner{height:100%;background:#1a1a1a;width:0%;transition:width .4s;}
+    .tts-pct{font-size:.7rem;color:#888;min-width:3rem;text-align:right;}
+    .lang-note{font-family:'Helvetica Neue',Arial,sans-serif;font-size:.78rem;color:var(--muted);background:var(--light);border-left:3px solid var(--border);padding:.6rem 1rem;margin-bottom:2rem;}
     @media (max-width: 600px) {
       body { font-size: 17px; }
       h1 { font-size: 1.7rem; }
@@ -165,6 +173,60 @@
 Pohjois-Savo · Helsinki · 2026</p>
 <p class="basis">Perustuu ACI:n SM-007-synteesiin · Guareschi · Camilleri<br>
 ACI — aethercontinuity.org</p>
+
+<div class="lang-note">
+  Suomeksi · <a href="https://aethercontinuity.org/fiction/la-conoscenza-silenziosa.html">Italiano</a>
+</div>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="ttsPlay" onclick="ttsToggle()">&#9654; Kuuntele</button>
+  <button class="tts-btn" id="ttsStop" onclick="ttsStop()" disabled>&#9632; Lopeta</button>
+  <div class="tts-prog"><div class="tts-prog-inner" id="ttsPI"></div></div>
+  <span class="tts-pct" id="ttsPct">&ndash;</span>
+</div>
+<script>
+(function(){
+  var synth=window.speechSynthesis, chunks=[], idx=0, playing=false, paused=false;
+  function collect(){
+    var r=[];
+    document.querySelectorAll('.chapter h2,.chapter p').forEach(function(el){
+      var t=el.innerText.trim(); if(t) r.push(t);
+    });
+    return r.length ? r : [document.body.innerText];
+  }
+  function upd(){
+    var pct=chunks.length?Math.round(idx/chunks.length*100):0;
+    document.getElementById('ttsPI').style.width=pct+'%';
+    document.getElementById('ttsPct').textContent=pct+'%';
+  }
+  function next(){
+    if(!playing||idx>=chunks.length){ttsStop();return;}
+    upd();
+    var u=new SpeechSynthesisUtterance(chunks[idx]);
+    u.lang='fi-FI'; u.rate=0.92;
+    u.onend=function(){idx++;next();};
+    u.onerror=function(){idx++;next();};
+    synth.speak(u);
+  }
+  window.ttsToggle=function(){
+    if(!synth){alert('Puhesynteesi ei tuettu tässä selaimessa');return;}
+    if(paused){synth.resume();paused=false;document.getElementById('ttsPlay').innerHTML='⏸ Tauko';return;}
+    if(playing){synth.pause();paused=true;document.getElementById('ttsPlay').innerHTML='&#9654; Jatka';return;}
+    chunks=collect(); idx=0; playing=true; paused=false;
+    document.getElementById('ttsPlay').innerHTML='⏸ Tauko';
+    document.getElementById('ttsStop').disabled=false;
+    next();
+  };
+  window.ttsStop=function(){
+    synth.cancel(); playing=false; paused=false; idx=0; chunks=[];
+    document.getElementById('ttsPlay').innerHTML='&#9654; Kuuntele';
+    document.getElementById('ttsStop').disabled=true;
+    document.getElementById('ttsPI').style.width='0%';
+    document.getElementById('ttsPct').textContent='–';
+  };
+  window.addEventListener('beforeunload',function(){synth.cancel();});
+})();
+</script>
 
 
 <!-- LUKU 1 -->
@@ -895,9 +957,9 @@ ACI — aethercontinuity.org</p>
 
   <p>Lehtinen tuli jonkin ajan kuluttua. Hän ei etsinyt ketään, mutta istuutui saman pöydän ääreen, koska muut olivat täynnä.</p>
 
-  <p>"Haitat?" hän kysyi.</p>
+  <p>"Ei kai haittoo jos tähän istuu?" hän kysyi.</p>
 
-  <p>"Et haittaa."</p>
+  <p>"Ei haittaa."</p>
 
   <p>Lehtinen otti kupin automaatista ja istui. He istuivat hetken ilman että puhuivat. Se ei ollut kiusallista. Se oli vain sellaista.</p>
 
@@ -1023,12 +1085,134 @@ ACI — aethercontinuity.org</p>
 </div>
 
 
+<!-- LUKU 15 -->
+<div class="chapter">
+  <div class="chapter-label">Luku 15</div>
+  <h2>Jossa Koistinen käy lääkärillä ja havaitsee julisteen</h2>
+
+  <p>Koistinen oli käynyt terveyskeskuksessa useammin kuin piti. Vaivoja oli monia, ja ne olivat sellaisia, joita on vaikea selittää lyhyesti. Kahden vuoden aikana lääkäri oli vaihtunut yhdeksän kertaa. Joka kerta Koistinen oli aloittanut alusta.</p>
+
+  <p>Tällä kertaa ovessa luki nimi, jota hän ei ollut nähnyt ennen. Tohtori jostain kaukaa, Koistinen päätti, katsottuaan nimilaattaa. Suomi huusi työvoimaa, ja joku oli kuullut.</p>
+
+  <p>Hän istui ja yritti selittää. Se oli totuttuun tapaan töksähtelevää. Koistinen ei ollut puhelias lääkärin vastaanotolla. Kerran hän oli yrittänyt luetella vaivansa järjestyksessä ja kadonnut kesken kolmanteen.</p>
+
+  <p>Tohtori katsoi näyttöä. Ei pitkään, mutta riittävästi.</p>
+
+  <p>"Teillä on ollut tämä jo syksystä", tohtori sanoi. Ei kysymyksenä.</p>
+
+  <p>"Niin on."</p>
+
+  <p>"Ja tämä toinen alkoi ennen sitä."</p>
+
+  <p>"Juu."</p>
+
+  <p>"Ja lääkitys ei ole muuttunut sitten…" Tohtori katsoi näyttöä uudelleen. "Kolmen vuoden takaa."</p>
+
+  <p>Koistinen ei sanonut mitään. Se oli totta. Kukaan ei ollut koskaan sanonut sitä ääneen näin suoraan.</p>
+
+  <p>Tohtori kirjoitti jotain. Ei paljon, mutta tarkasti. Sanoi mitä muuttaisi ja miksi. Käytti sanoja, jotka Koistinen ymmärsi. Kysyi yhden kysymyksen lisää, joka oli oikea kysymys.</p>
+
+  <p>Koistinen poistui lääkintäpisteeltä. Käytävällä hän pysähtyi.</p>
+
+  <p>Seinällä oli juliste.</p>
+
+  <p>Hän luki sen kahdesti. <em>Debian Quantum AI. People First. Explainable AI. Open Source. From Sauna to Superposition.</em></p>
+
+  <p>Hän katsoi julistetta hetken. Sitten jatkoi kävelyä.</p>
+
+  <hr style="border:none; border-top:1px solid var(--border); margin: 2rem 0;">
+
+  <p>Autolla kotiin päin ajellessaan hän mietti, mitä oli tapahtunut. Ei mitään erityistä. Lääkäri oli lukenut tiedot etukäteen. Tiennyt, mihin kiinnittää huomio. Kysynyt oikean asian.</p>
+
+  <p>Ei ollut tarvinnut aloittaa alusta.</p>
+
+  <p>Koistinen ajoi hitaammin kuin yleensä, ei siksi että olisi pitänyt, vaan siksi että ajatus tuntui liukkaalta. Kuin yrittäisi pitää kiinni jostain, mikä ei ollut tottunut tulemaan pidettäväksi.</p>
+
+  <p>Järvi näkyi tien varrelta. Vatanen istui laiturilla.</p>
+
+  <p>Koistinen pysäköi auton. Käveli laiturille. Istui vierekkäin pitkään sanomatta mitään.</p>
+
+  <p>"Miten meni?" Vatanen kysyi lopulta.</p>
+
+  <p>"Hyvin."</p>
+
+  <p>Vatanen nyökkäsi. Hän ei kysynyt lisää. Se riitti.</p>
+
+  <p>"Siellä oli juliste seinällä", Koistinen sanoi hetken päästä.</p>
+
+  <p>"Millainen?"</p>
+
+  <p>"Sellainen jossa luki <em>From Sauna to Superposition</em>."</p>
+
+  <p>Vatanen katsoi järvelle. Hän hymyili vähän. "Niin. Kai se tulee sieltä päin."</p>
+
+  <p>"Mistä päin?"</p>
+
+  <p>"Sieltä missä asiat muuttuvat ennen kuin kukaan on päättänyt."</p>
+
+  <p>Koistinen mietti tätä. Ei löytänyt syytä olla eri mieltä.</p>
+</div>
+
+
+<!-- LUKU 16 -->
+<div class="chapter">
+  <div class="chapter-label">Luku 16</div>
+  <h2>Jossa OL3 menee huoltoon ja tuuli lakkaa, ja valtiojohto pitää juhlavan tiedotustilaisuuden</h2>
+
+  <p>Olkiluoto 3:n vuosihuolto alkoi suunnitellusti. Se oli tiedossa ollut kauan. Mitä ei ollut tiedossa oli, että samana viikkona tuuli laantuisi Suomessa lähes kokonaan. Ei täysin, mutta riittävästi.</p>
+
+  <p>Pahaksi onneksi valtion urheilullinen päähenkilö oli juuri kiiruhtanut hoitamaan pienehkön kotimaansa asioita. Sinne ja takaisin, ehkä muutama päivä. Mutta tilanne vaati paluuta.</p>
+
+  <p>Ylimääräinen uutislähetys lähti eetteriin kello 19:00. Taustamusiikki oli vakava, leikkaustahti hidas. Kuva siirtyi studion lavalle.</p>
+
+  <p>Koko juhlava seurue astui estradille tyylikkäästi mustiin pukeutuneina ja haudan vakavin ilmein. Päämies aloitti.</p>
+
+  <p>"Kansalaiset. Medborgare. Vakavan kansainvälisiä suhteita uhkaavan seikan vuoksi ei ole oikea aika lähteä saunaa lämmittämään."</p>
+
+  <p>Hän kiitti ja antoi puheenvuoron seuraavalle, joka toisti viestin eri sanoilla mutta yhtä vakavin ilmein. Kolmas painotti kansainvälistä ulottuvuutta. Neljäs muistutti, että tilanne oli vakava mutta hallittu. Viides korosti yhteistä vastuuta. Kuudes kiitti kaikkia osallistumisesta.</p>
+
+  <p>Erikoislähetys päättyi. Uutistoimittajat pääsivät harjoittamaan omia toistojaan.</p>
+
+  <hr style="border:none; border-top:1px solid var(--border); margin: 2rem 0;">
+
+  <p>Koistinen soitti Vataselle. "Katsoitko sen?"</p>
+
+  <p>"Katsoin."</p>
+
+  <p>"Mitä se tarkoitti?"</p>
+
+  <p>"Tarkoitti, että EPP on noussut. Ja he eivät tienneet muuta tapaa sanoa se."</p>
+
+  <p>Koistinen mietti hetken. "Mutta saunakielto?"</p>
+
+  <p>"Se on se helpoin osa. Vaikea osa olisi sanoa miksi. Miksi ei ole kapasiteettimekanismia. Miksi CHP ajettiin alas. Miksi SE1 on nyt kilpailija eikä reservi."</p>
+
+  <p>"Ne ovat vaikeita asioita selittää."</p>
+
+  <p>"Niin ovat. Saunakielto on yksinkertaista. Jokaisella on sauna. Kukaan ei omista energiajärjestelmää."</p>
+
+  <p>Hiljaisuus.</p>
+
+  <p>"Meillä on tarpeeksi bensaa aggregaattiin?" Koistinen kysyi.</p>
+
+  <p>"On."</p>
+
+  <p>"Hyvä."</p>
+
+  <p>He lopettivat puhelun. Ulkona tuuli ei vielä yltynyt, mutta järven pinta liikkui sen verran, että jää ei ollut enää aivan tyyni.</p>
+
+  <p>Vatanen katsoi WEM-monitoria. EP arvo oli noussut. Ei kriittisesti. Mutta suunta oli selvä.</p>
+
+  <p>Hän kirjasi arvon ylös. Ei siksi, että kukaan välttämättä lukisi. Vaan siksi, että joskus lukeminen on teko itsessään.</p>
+</div>
+
+
 <!-- EPILOGI -->
 <div class="chapter">
   <div class="epilogue-label">Epilogi</div>
   <h2>Jossa ACI:n tutkija sulkee tietokoneen ja lähtee kotiin</h2>
 
-  <p>Helsingissä, Sörnäisissä, ACI:n toimistossa, nainen sulki tietokoneen. SM-007 oli julkaistu. Hiljainen tieto oli kirjoitettu. Vatanen ja Koistinen olivat eläneet taas yhden tarinan.</p>
+  <p>Helsingissä, Sörnäisissä, ACI:n toimistossa, nainen sulki tietokoneen. SM-007 oli julkaistu. Hiljainen tieto oli kirjoitettu. Vatanen ja Koistinen saivat taas yhden uuden mietiskeltävän.</p>
 
   <p>Hän katsoi ikkunasta ulos. Sörnäisten satamaan satoi lunta. Jossain Pohjois-Savossa Vatanen ja Koistinen odottivat talvea. Jossain THL:ssä Leena ja Matti valmistelivat ehdotusta. Jossain Fingridissä käyttöpäällikkö muisti talven 2030. Jossain HVK:ssa valmiuspäällikkö kirjoitti muistiota.</p>
 
