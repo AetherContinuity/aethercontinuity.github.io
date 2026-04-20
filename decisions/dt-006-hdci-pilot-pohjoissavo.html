@@ -48,14 +48,14 @@
   <div class="doc-title">HDCI Pilot · Pohjois-Savo</div>
   <div class="doc-sub">Empirical validation of the Health Data Continuity Index — preparatory phase</div>
   <div class="doc-meta">
-    Version 0.5 · 20 April 2026 &nbsp;·&nbsp;
+    Version 0.6 · 20 April 2026 &nbsp;·&nbsp;
     <span class="status-badge status-prep">Preparatory</span>
     &nbsp;· Basis: <a href="/papers/wp-016-health-data-continuity-index.html">WP-016</a><br>
     Tracking window: 2026–2027 · Updated upon licensing milestones
   </div>
 </div>
 
-<div class="version-note">v0.5 — Preparatory document. Pre-Findata licensing. No registry data has been accessed. Document serves as internal planning instrument and basis for Findata licence application and stakeholder engagement. Will be updated to v0.7 upon licence submission, v0.9 upon data access, v1.0 upon preliminary results.</div>
+<div class="version-note">v0.6 — Preparatory document. Pre-Findata licensing. No registry data has been accessed. Document serves as internal planning instrument and basis for Findata licence application and stakeholder engagement. Will be updated to v0.7 upon licence submission, v0.9 upon data access, v1.0 upon preliminary results.</div>
 
 <div class="callout">
 <strong>Core rationale:</strong> WP-016 establishes HDCI as a framework for measuring health data integration failure. Its primary vulnerability is that weights are theoretical and the calculation remains unvalidated against outcome data. DT-006 is the empirical response: one welfare area, existing registry data, Findata licensing pathway. The objective is not to fix the system — it is to direct scarce public health resources toward the integration gaps where they produce the most measurable effect.
@@ -171,7 +171,7 @@ Preventive: screenings, risk assessments, lifestyle counselling (THL SPAT codes)
 
 <h3>HDCI composite</h3>
 <div class="formula-box">
-HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI<br>
+HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adjusted + 0.05·PAI<br>
 Weights: theoretical (WP-016 §2). Empirical calibration is a separate research priority.
 </div>
 
@@ -203,27 +203,51 @@ Weights: theoretical (WP-016 §2). Empirical calibration is a separate research 
   </tbody>
 </table>
 
-<h2>6 · Measurement Validity and Identifiability</h2>
+<h2>6 · Measurement Validity and Identifiability — v0.6</h2>
 
-<p>The following validity threats are identified in advance of data access. Addressing them is a prerequisite for a credible Findata application and for the pilot results to be publishable.</p>
+<p>The following validity threats are identified in advance of data access. Each is addressed in the pilot design. This section is a prerequisite for a credible Findata application.</p>
 
-<h3>DCI — Expected entry model</h3>
-<p>Expected Kanta entry volume is a latent variable requiring an explicit statistical model. The pilot will use negative binomial regression (age, sex, morbidity index as predictors) with sensitivity analysis against Poisson and stratum-mean alternatives. DCI will be cross-validated against Avohilmo contact frequency to test whether low DCI reflects documentation gap or legitimate clinical variation.</p>
+<h3>DCI — Endogeneity and exogenous instrument</h3>
+<p>DCI has a structural endogeneity problem: morbidity drives care contacts, which drive Kanta entries — the same causal structure produces both predictor and outcome. Without correction, DCI risks measuring documentation intensity rather than data capture quality. The pilot adds Avohilmo contact rate as an exogenous instrument:</p>
+<div class="formula-box">expected_entries = f(morbidity_index, age, sex, Avohilmo_contact_rate)</div>
+<p>This separates documentation completeness (Kanta entries per contact) from care frequency (contacts per patient). Negative binomial regression; sensitivity vs Poisson and stratum-mean.</p>
 
-<h3>IAI — Episode window</h3>
-<p>The 30-day episode window is a heuristic. Sensitivity analysis will compare 15, 30, and 90-day windows. If sub-region IAI rankings are stable across windows, the 30-day default is robust. If rankings change materially, disease-stratified analysis is required. This is a methodological finding, not a failure.</p>
+<h3>IAI — Structural proxy, not clinical truth-metric</h3>
+<p>IAI is a structural proxy for integration, not a clinically invariant measure. The 30-day episode window is a heuristic that treats all care episodes identically — false in clinical reality across diabetes, orthopaedics, and psychiatry. IAI measures whether the system produces multi-specialty contact within a defined window: a system-level observation, not a patient-level truth claim. Sensitivity analysis: 15, 30, 90-day windows. Unstable rankings require disease-stratified analysis.</p>
 
-<h3>RKI — Absence of evidence</h3>
-<p>Absence of a Kanta care plan entry may reflect genuine coordination failure, undocumented coordination, or low Kanta adoption in the care setting. RKI will be reported alongside care plan adoption rates by municipality. Cross-validation against adverse medication event outcomes (H2) will test whether RKI captures genuine coordination failure beyond documentation variation.</p>
+<h3>RVI — Institutional throughput, not clinical appropriateness</h3>
+<p>RVI measures institutional response velocity — how quickly the system converts a recorded finding into a recorded action. It does not measure clinical appropriateness. "First finding" is not neutral: it depends on testing frequency and coding practices. RVI is a system-level throughput indicator; this scope must be stated explicitly in all publications.</p>
 
-<h3>Composite weights</h3>
-<p>Weights (DCI 0.15, IAI 0.30, RVI 0.25, RKI 0.20, PAI 0.10) are Bayesian priors subject to empirical re-estimation via outcome-constrained optimisation. The pilot will report both prior-weighted and outcome-optimised HDCI. Substantial divergence requires weight revision and re-examination of theoretical motivation.</p>
+<h3>RKI — Adjusted for Kanta adoption rate (v0.6 revision)</h3>
+<p>RKI is the strongest HDCI component. v0.6 introduces an explicit adjusted measure:</p>
+<div class="formula-box">RKI_raw = N_risk / N_poly<br>RKI_adjusted = RKI_raw / Kanta_care_plan_adoption_rate</div>
+<p>RKI_adjusted isolates coordination failure from documentation infrastructure variation. Composite HDCI uses RKI_adjusted. Both values reported. Cross-validated against H2 (adverse medication events).</p>
 
-<h3>Documentation bias</h3>
-<p>All five components are derived from administrative documentation systems. Higher documentation quality produces higher HDCI independently of actual integration. Three mitigations: outcome validation tests real health effects; within-Pohjois-Savo comparison controls for regional documentation culture; DCI explicitly models expected entry volume. Residual documentation bias must be acknowledged in all publications.</p>
+<h3>Weight revision — v0.6</h3>
+<div class="formula-box">HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adjusted + 0.05·PAI</div>
+<p>RKI: 0.20 → 0.25 (strongest component, direct outcome validation). PAI: 0.10 → 0.05 (input-effort indicator only; does not measure prevention effectiveness). All weights remain Bayesian priors subject to outcome-constrained re-estimation.</p>
+
+<h3>HDCI as composite proxy index</h3>
+<p>HDCI does not model "integration" as a unitary latent variable. Integration is multidimensional — information flow, responsibility coordination, and clinical decision consistency are distinct constructs. HDCI is a composite proxy index: a diagnostic signal about where integration-relevant observables are weakest, not a measurement of an underlying integration quantity.</p>
+
+<h3>Causal structure — DAG</h3>
+<pre>
+EXOGENOUS
+  Morbidity · Age/Sex · Avohilmo contact rate · Kanta adoption rate
+
+  Morbidity + Age/Sex → Care Contacts ← Avohilmo rate (instrument)
+  Care Contacts → Kanta entries (DCI) · Multi-spec episodes (IAI)
+                → First finding → First action (RVI)
+  Prescriber multiplicity + Kanta adoption → RKI_raw → RKI_adjusted
+  Preventive contacts / total → PAI
+
+  HDCI composite → H1 Preventable hospitalisations
+  RKI_adjusted  → H2 Adverse medication events
+  HDCI components → H3 Inter-municipality variation
+</pre>
 
 <div class="callout">
-<strong>Findata application note:</strong> The above specification anticipates the methodological questions Findata will raise at application stage. Each component requires a variable-level data request with necessity justification under GDPR data minimisation. A full Findata application will require: pseudonymisation protocol, column-level variable list per registry, necessity test per variable, and data protection impact assessment. This pilot document is a research design specification, not a submission-ready application.
+<strong>Findata note:</strong> Each variable is justified by direct correspondence to an HDCI component or validation hypothesis. No exploratory variables requested. Data minimisation: cohort restricted to multi-morbid patients, single welfare area, 24-month observation window. Full application requires: pseudonymisation protocol, column-level variable list per registry, necessity test per variable, DPIA.
 </div>
 
 <h2>7 · Milestones and Status</h2>
@@ -245,7 +269,7 @@ Weights: theoretical (WP-016 §2). Empirical calibration is a separate research 
 <table>
   <thead><tr><th>Version</th><th>Trigger</th></tr></thead>
   <tbody>
-    <tr><td>v0.5 (current)</td><td>Preparatory. Pre-licensing.</td></tr>
+    <tr><td>v0.6 (current)</td><td>Preparatory. Pre-licensing.</td></tr>
     <tr><td>v0.7</td><td>Licence application submitted. Research plan finalised.</td></tr>
     <tr><td>v0.9</td><td>Licence granted. Data access established.</td></tr>
     <tr><td>v1.0</td><td>Preliminary results. HDCI calculated for Pohjois-Savo cohort.</td></tr>
@@ -253,7 +277,7 @@ Weights: theoretical (WP-016 §2). Empirical calibration is a separate research 
 </table>
 
 <div class="note">
-  ACI · Decision Track · DT-006 · Version 0.5 · 20 April 2026 · Preparatory<br>
+  ACI · Decision Track · DT-006 · Version 0.6 · 20 April 2026 · Preparatory<br>
   Basis: <a href="/papers/wp-016-health-data-continuity-index.html">WP-016</a> · Status: Pre-licensing · Next update: upon Findata pre-application consultation<br>
   This document is an internal planning instrument. It does not imply current access to registry data.<br>
   Aether Continuity Institute · aethercontinuity.org

@@ -388,45 +388,112 @@ HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
 
 <p>HDCI is a constructed measurement instrument. Its analytical value depends on whether its components measure what they claim to measure, and whether observed variation reflects genuine integration differences rather than artefacts of data structure or documentation practice. This section identifies the principal validity threats and specifies how they are addressed in the pilot design.</p>
 
-<h3>6.1 DCI — Expected Entry Model Specification</h3>
+<h3>6.1 DCI — Expected Entry Model Specification and Endogeneity</h3>
 
-<p>DCI requires a model of expected Kanta entry volume against which actual volume is compared. This is a latent variable that cannot be directly observed. Two risks arise: over-specification (the model predicts so well that DCI approaches 1.0 everywhere, losing discriminating power) and under-specification (the model fails to control for legitimate variation in care contact frequency, inflating apparent underperformance).</p>
+<p>DCI has an endogeneity problem that must be stated explicitly: morbidity drives care contacts, which drive Kanta entries, which constitute the DCI numerator. The same causal structure produces both the predictor and the outcome. Without an exogenous instrument, DCI risks becoming a residual measure of documentation intensity rather than a measure of data capture quality.</p>
 
-<p>The pilot will estimate expected entries using a negative binomial regression model — appropriate for count data with overdispersion — with age, sex, and morbidity index (Sotkanet ind. 5642) as predictors. The model is estimated on the full Pohjois-Savo cohort, producing patient-level expected values. DCI is then the ratio of observed to predicted at cohort level. A sensitivity analysis will compare negative binomial against Poisson specification and against a simpler age-sex-morbidity stratum mean.</p>
+<p>The pilot addresses this by adding Avohilmo contact rate as an exogenous instrument in the expected entry model:</p>
 
-<p>The key identifiability question: does low DCI reflect genuine underrecording, or does it reflect legitimate clinical decisions not to generate Kanta entries (e.g., telephone advice, informal follow-up)? The pilot will test this by comparing DCI values against independently measured care contact frequency from Avohilmo. If DCI and Avohilmo contact rate are uncorrelated, DCI is capturing something beyond care volume — likely documentation completeness.</p>
+<pre>expected_entries_i = f(morbidity_index, age, sex, Avohilmo_contact_rate_i)</pre>
 
-<h3>6.2 IAI — Episode Window Justification</h3>
+<p>Avohilmo contact rate is independently measured and separates care contact frequency (how often the patient enters the system) from Kanta entry rate (how often those contacts produce structured records). A patient with high contact rate but low Kanta entry rate has a genuine documentation gap — not a care frequency artefact. A patient with low contact rate and proportionally low Kanta entries does not. This distinction is what DCI is intended to capture.</p>
 
-<p>The 30-day episode window is a heuristic. Different conditions have different care rhythms: a post-surgical patient may require multi-specialty contact within days; a stable diabetic may have meaningful integrated episodes spanning months. A fixed 30-day window will undercount integration in chronic stable disease and overcount it in acute complex episodes.</p>
+<p>Model specification: negative binomial regression (appropriate for count data with overdispersion). Sensitivity analysis: Poisson specification and stratum-mean alternative. If rankings across specifications are unstable, DCI requires further instrument development before use as a composite component.</p>
 
-<p>The pilot will implement a sensitivity analysis across three window lengths: 15, 30, and 90 days. IAI will be calculated at each window for the full cohort. If IAI rankings across welfare area sub-regions are stable across windows, the 30-day default is robust. If rankings change materially, window selection becomes a substantive methodological choice requiring disease-stratified analysis. This is not a failure of the instrument — it is a finding about the structure of care integration in the cohort.</p>
+<h3>6.2 IAI — Structural Proxy, Not Clinical Truth-Metric</h3>
 
-<h3>6.3 RKI — Absence of Evidence vs Evidence of Absence</h3>
+<p>IAI is a structural proxy for integration, not a clinically invariant measure. The 30-day episode window treats all care episodes as having the same temporal integration structure. This is false in clinical reality: a post-surgical patient may require multi-specialty contact within days; a stable diabetic may have meaningful integrated episodes spanning months; a psychiatric patient's integration needs operate on a different timescale entirely. A single window cannot be neutral across these clinical contexts.</p>
 
-<p>RKI identifies patients with ≥5 medications from ≥2 prescribers without a shared Kanta care plan entry. The absence of a care plan entry may reflect: (a) genuine absence of coordination — the care gap HDCI is designed to detect; (b) coordination that occurred but was not entered into Kanta (e.g., verbal agreement, informal team communication); or (c) Kanta care plan functionality not yet adopted by the relevant care setting.</p>
+<p>IAI should therefore be interpreted as a system-level diagnostic, not as a patient-level truth claim about whether care was integrated. What it measures is whether the system produces multi-specialty contact within a defined time window — a structural observation about system organisation, not about care quality.</p>
 
-<p>This is a documentation bias problem. The pilot addresses it in two ways. First, RKI will be reported alongside Kanta care plan adoption rates by municipality and care setting — treating low adoption as a moderating variable rather than assuming absence equals non-coordination. Second, RKI will be cross-validated against the adverse medication event outcome (H2 hypothesis): if RKI predicts adverse events independently of care plan entry rate, it captures genuine coordination failure beyond documentation variation.</p>
+<p>Sensitivity analysis: 15, 30, and 90-day windows. If sub-region IAI rankings are stable across windows, the 30-day default is robust as a structural indicator. If rankings change materially, disease-stratified analysis is required and IAI reverts to a domain-specific measure rather than a composite component. This is a methodological finding, not a failure of the instrument.</p>
 
-<h3>6.4 Measurement Model vs Policy Narrative</h3>
+<h3>6.3 RKI — Adjusted for Kanta Adoption Rate</h3>
 
-<p>WP-016 contains two distinct argumentative layers: a measurement specification (HDCI components, data sources, calculation protocol) and a policy argument (FHDS institutional home, incentive reform). These serve different audiences and carry different epistemic statuses. The measurement specification makes falsifiable claims testable against data. The policy argument makes normative claims about what institutions should do.</p>
+<p>RKI is the strongest HDCI component — prescriber multiplicity combined with absence of a shared care plan is the most direct structural proxy for coordination failure available in Finnish registry data. However, its validity depends on Kanta care plan adoption rates, which vary by municipality and care setting and are not under patient or clinician control.</p>
 
-<p>DT-006 is exclusively measurement specification — it makes no policy recommendations. WP-016 §4 (Policy Implications) is explicitly normative and should be read as such. Reviewers assessing the measurement validity of HDCI are not required to accept the policy argument, and vice versa. This section (§6) establishes the measurement specification as independently evaluable.</p>
+<p>The pilot will report two RKI values:</p>
 
-<h3>6.5 Composite Weight Identifiability</h3>
+<pre>RKI_raw = N_risk / N_poly
+RKI_adjusted = RKI_raw / Kanta_care_plan_adoption_rate</pre>
 
-<p>HDCI weights (DCI 0.15, IAI 0.30, RVI 0.25, RKI 0.20, PAI 0.10) are Bayesian priors — theoretically motivated initial values subject to empirical re-estimation. They are not identified from data in the current specification. Empirical identification requires an outcome-constrained optimisation: weights are adjusted to maximise the predictive validity of the composite against the validation outcomes (preventable hospitalisations, adverse medication events).</p>
+<p>RKI_adjusted isolates genuine coordination failure from documentation infrastructure variation. A high RKI_adjusted in a care setting with high Kanta adoption is a stronger signal of coordination failure than a high RKI_raw in a setting with low adoption. Both are reported; composite HDCI uses RKI_adjusted.</p>
 
-<p>The pilot will report both the prior-weighted HDCI and an outcome-optimised HDCI estimated via constrained regression. If the two diverge substantially, the prior weights require revision and the theoretical motivation for the original weighting must be re-examined. If they converge, the priors are supported empirically. Either outcome is informative.</p>
+<p>Cross-validation against adverse medication event outcomes (H2) will test whether RKI_adjusted captures genuine coordination failure: if RKI_adjusted predicts adverse events independently of adoption rate, the adjustment is valid. If residual adoption-rate effects persist after adjustment, further modelling is required.</p>
 
-<h3>6.6 Documentation Bias as a Confound</h3>
+<h3>6.4 RVI — Institutional Throughput, Not Clinical Appropriateness</h3>
 
-<p>The most fundamental validity threat to HDCI is that all five components are derived from administrative and clinical documentation systems. A welfare area with high documentation quality will score higher on HDCI not because its care is more integrated but because its recording is more complete. This is the documentation bias problem.</p>
+<p>RVI measures the latency between the system's first recorded awareness of a clinical finding and its first recorded response. It is a measure of institutional throughput — how quickly the system converts observation into action — not of clinical appropriateness. A low RVI (fast response) may reflect efficient care, aggressive diagnostic coding, or high system sensitivity to marginal findings. These are not equivalent.</p>
 
-<p>Three design choices mitigate but do not eliminate this confound. First, outcome validation (H1, H2) tests whether HDCI predicts real health outcomes — if documentation bias were driving HDCI variation, it would not predict hospitalisation or adverse medication events. Second, inter-municipality variation within Pohjois-Savo (H3) controls for regional documentation culture to some degree by comparing within a shared administrative context. Third, the DCI component explicitly models expected entry volume, isolating genuine underrecording from legitimate variation in care contact frequency.</p>
+<p>The "first finding" is not a neutral observation: it depends on the testing frequency, coding practices, and diagnostic sensitivity of the care setting. A care setting that orders more tests will produce earlier "first findings" and therefore mechanically higher RVI values, independently of actual response quality. RVI should be interpreted as a system-level indicator of response velocity, not as a patient-level measure of care quality.</p>
 
-<p>Documentation bias cannot be fully eliminated from registry-based research. Its residual presence should be acknowledged in all HDCI publications and calibration exercises.</p>
+<h3>6.5 HDCI as Composite Proxy Index — Not a Latent Variable Model</h3>
+
+<p>HDCI does not assume that "integration" is a unitary latent variable. Integration in healthcare is multidimensional: information flow, care responsibility coordination, and clinical decision consistency are distinct constructs that do not necessarily co-vary. HDCI aggregates observable proxies for these dimensions into a single diagnostic score. It is a composite proxy index, not a structural equation model for integration as a latent entity.</p>
+
+<p>This distinction matters for interpretation: HDCI scores are diagnostic signals about where integration-relevant observables are weakest, not measurements of an underlying integration quantity. The instrument is analogous to a credit score or an air quality index — practically useful as a signal, but not a direct measurement of the phenomenon it proxies.</p>
+
+<h3>6.6 Composite Weights — Version 0.6 Revision</h3>
+
+<p>Based on the identifiability analysis above, weights are revised as follows:</p>
+
+<pre>HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI + 0.05·PAI</pre>
+
+<p>Changes from v0.5: RKI weight increased 0.20 → 0.25 (strongest component, direct outcome validation pathway). PAI weight reduced 0.10 → 0.05 (input-effort indicator only; does not measure prevention effectiveness). PAI is retained as a process indicator but its composite contribution is minimised to reflect its limited outcome validity.</p>
+
+<p>All weights remain Bayesian priors subject to outcome-constrained re-estimation. The pilot will report both prior-weighted HDCI (v0.6 weights) and outcome-optimised HDCI. Divergence between the two is a finding requiring examination, not a failure.</p>
+
+<h3>6.7 Documentation Bias as a Confound</h3>
+
+<p>All five components are derived from administrative documentation systems. A welfare area with higher documentation quality will score higher on HDCI independently of care integration quality. Three mitigations are built into the pilot design: outcome validation tests real health effects; within-Pohjois-Savo comparison controls for regional documentation culture; DCI uses Avohilmo contact rate as an exogenous instrument to separate documentation completeness from care frequency. Residual documentation bias cannot be eliminated — it must be acknowledged in all publications.</p>
+
+<h3>6.8 Causal Structure — DAG</h3>
+
+<p>The following directed acyclic graph makes explicit the causal relationships between inputs, components, and outcomes. It identifies the endogeneity risks and the exogenous instruments used to address them.</p>
+
+<pre>
+EXOGENOUS INPUTS
+─────────────────────────────────────────────────────
+Morbidity (Sotkanet)        Age / Sex
+       │                         │
+       └──────────┬──────────────┘
+                  ▼
+         Care Contacts ◄── Avohilmo Contact Rate
+         (endogenous)       (exogenous instrument)
+                  │
+       ┌──────────┼──────────────┐
+       ▼          ▼              ▼
+  Kanta        Multi-spec    First finding
+  entries      episodes      → First action
+  (DCI)        (IAI)         (RVI)
+       │                         │
+       └──────────┬──────────────┘
+                  │
+       ┌──────────┤
+       ▼          ▼
+  Prescriber   Kanta care
+  multiplicity plan entries
+       └────────► RKI_raw
+                  │
+  Kanta adoption ─┤
+  rate (control)  ▼
+                  RKI_adjusted ◄── strongest component
+
+PREVENTIVE
+contacts / total ─► PAI (input-effort only)
+
+COMPOSITE
+─────────────────────────────────────────────────────
+HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adj + 0.05·PAI
+
+VALIDATION OUTCOMES
+─────────────────────────────────────────────────────
+H1: Preventable hospitalisations ◄── HDCI composite
+H2: Adverse medication events   ◄── RKI_adjusted (primary)
+H3: Inter-municipality variation ◄── HDCI components
+</pre>
+
+<p>The DAG makes visible the two main endogeneity risks: (1) DCI shares causal ancestors with care contact rate — addressed by the Avohilmo instrument; (2) RKI shares causal ancestors with Kanta adoption rate — addressed by the adjusted/raw decomposition. RVI's endogeneity (diagnostic system sensitivity affecting "first finding") is acknowledged but not fully resolved in v0.6 — it is a constraint on RVI interpretation, not a reason to exclude it.</p>
 
 <div class="section-marker">Appendix A</div>
 <h2>HDCI Calculation Formulas and Data Sources</h2>
@@ -450,14 +517,21 @@ RKI = (patients: ≥5 drugs, ≥2 prescribers, no shared care plan) /
 PAI = (preventive_contacts) / (total_contacts)
       preventive = screenings + risk assessments + lifestyle counselling
       Source: THL Avohilmo procedure codes
+      Weight: 0.05 (input-effort indicator only)
 
-HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
+RKI_raw = (patients: ≥5 drugs, ≥2 prescribers, no shared care plan) /
+          (patients: ≥5 drugs)
+RKI_adjusted = RKI_raw / Kanta_care_plan_adoption_rate
+      Use RKI_adjusted in composite
+
+HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adjusted + 0.05·PAI
+       v0.6 weights — Bayesian priors subject to outcome-constrained re-estimation
 </pre>
 
-<p>All weights are initial theoretical values. Empirical calibration against outcome measures is the first research priority (§6).</p>
+<p>Weight revision from v0.5: RKI 0.20 → 0.25 (strongest component, direct outcome validation). PAI 0.10 → 0.05 (input-effort indicator only). DCI formula extended with Avohilmo contact rate as exogenous instrument. See §6 for full identifiability analysis.</p>
 
 <footer>
-  ACI · Working Paper 016 · v1.0 · April 2026<br>
+  ACI · Working Paper 016 · v0.6 · April 2026<br>
   Domain D-3 · D-4 · Open Working Draft<br>
   Aether Continuity Institute · aethercontinuity.org<br><br>
   ACI publications are released as open working drafts. Documents are iterative and may evolve as analytical understanding develops. Authority derives from analytical transparency rather than institutional mandate.
