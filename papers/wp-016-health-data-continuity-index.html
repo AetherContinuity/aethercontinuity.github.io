@@ -246,11 +246,16 @@ Preventive contacts identified via THL procedure classification codes<br>
 Source: THL Avohilmo
 </div>
 
-<h3>Composite Index</h3>
+<h3>HDCI v1 — Core Index</h3>
 <div class="formula-box">
-HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.20·RKI + 0.10·PAI
+HDCI_v1 = 0.40·RKI_adjusted + 0.35·IAI + 0.25·RVI
 </div>
-<p>Weights reflect the primacy of integration achievement (IAI) and response velocity (RVI) as the core diagnostic dimensions. All weights are theoretically motivated and require empirical calibration against known outcome measures.</p>
+<p>Three-component core index. RKI_adjusted, IAI, and RVI are the three components with direct outcome validation pathways and the lowest endogeneity risk. DCI and PAI are retained as diagnostic side-indicators but excluded from the composite (see §6).</p>
+
+<h3>DCI and PAI — Side Indicators</h3>
+<p>DCI (Data Capture Index) has a structural endogeneity problem — it shares causal ancestors with the care contact rate it uses as a predictor. It is reported separately as a documentation completeness indicator, not included in HDCI_v1. PAI (Prevention Activity Index) is an input-effort indicator that measures care system activity, not integration effectiveness. It is reported as dashboard metadata.</p>
+
+<p>All HDCI_v1 weights are Bayesian priors subject to outcome-constrained empirical re-estimation. The pilot (DT-006) will report both prior-weighted and outcome-optimised HDCI_v1.</p>
 
 <div class="section-marker">§ 03</div>
 <h2>Empirical Operationalisation and Institutional Pathway</h2>
@@ -524,14 +529,17 @@ RKI_raw = (patients: ≥5 drugs, ≥2 prescribers, no shared care plan) /
 RKI_adjusted = RKI_raw / Kanta_care_plan_adoption_rate
       Use RKI_adjusted in composite
 
-HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adjusted + 0.05·PAI
-       v0.6 weights — Bayesian priors subject to outcome-constrained re-estimation
+HDCI_v1 = 0.40·RKI_adjusted + 0.35·IAI + 0.25·RVI
+       v0.7 three-component core — Bayesian priors subject to outcome-constrained re-estimation
+
+DCI = actual_Kanta_entries / expected_Kanta_entries  [side indicator, not in composite]
+PAI = preventive_contacts / total_contacts            [dashboard metadata, not in composite]
 </pre>
 
-<p>Weight revision from v0.5: RKI 0.20 → 0.25 (strongest component, direct outcome validation). PAI 0.10 → 0.05 (input-effort indicator only). DCI formula extended with Avohilmo contact rate as exogenous instrument. See §6 for full identifiability analysis.</p>
+<p>v0.7 revision: DCI and PAI removed from composite due to endogeneity (DCI) and input-effort-only status (PAI). HDCI_v1 is the three-component integration stress index. DCI and PAI reported separately. See §6 for full identifiability analysis.</p>
 
 <footer>
-  ACI · Working Paper 016 · v0.6 · April 2026<br>
+  ACI · Working Paper 016 · v0.7 · April 2026<br>
   Domain D-3 · D-4 · Open Working Draft<br>
   Aether Continuity Institute · aethercontinuity.org<br><br>
   ACI publications are released as open working drafts. Documents are iterative and may evolve as analytical understanding develops. Authority derives from analytical transparency rather than institutional mandate.

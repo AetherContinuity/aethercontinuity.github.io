@@ -48,14 +48,14 @@
   <div class="doc-title">HDCI Pilot · Pohjois-Savo</div>
   <div class="doc-sub">Empirical validation of the Health Data Continuity Index — preparatory phase</div>
   <div class="doc-meta">
-    Version 0.6 · 20 April 2026 &nbsp;·&nbsp;
+    Version 0.7 · 20 April 2026 &nbsp;·&nbsp;
     <span class="status-badge status-prep">Preparatory</span>
     &nbsp;· Basis: <a href="/papers/wp-016-health-data-continuity-index.html">WP-016</a><br>
     Tracking window: 2026–2027 · Updated upon licensing milestones
   </div>
 </div>
 
-<div class="version-note">v0.6 — Preparatory document. Pre-Findata licensing. No registry data has been accessed. Document serves as internal planning instrument and basis for Findata licence application and stakeholder engagement. Will be updated to v0.7 upon licence submission, v0.9 upon data access, v1.0 upon preliminary results.</div>
+<div class="version-note">v0.7 — HDCI v1 three-component core (RKI+IAI+RVI). DCI and PAI removed from composite. H4 topological hypothesis added. §8 system behaviour framing added. Pre-Findata licensing. document. Pre-Findata licensing. No registry data has been accessed. Document serves as internal planning instrument and basis for Findata licence application and stakeholder engagement. Will be updated to v0.7 upon licence submission, v0.9 upon data access, v1.0 upon preliminary results.</div>
 
 <div class="callout">
 <strong>Core rationale:</strong> WP-016 establishes HDCI as a framework for measuring health data integration failure. Its primary vulnerability is that weights are theoretical and the calculation remains unvalidated against outcome data. DT-006 is the empirical response: one welfare area, existing registry data, Findata licensing pathway. The objective is not to fix the system — it is to direct scarce public health resources toward the integration gaps where they produce the most measurable effect.
@@ -169,10 +169,25 @@ PAI = Σ(preventive_contacts) / Σ(total_contacts)<br>
 Preventive: screenings, risk assessments, lifestyle counselling (THL SPAT codes)
 </div>
 
-<h3>HDCI composite</h3>
+<h3>HDCI v1 — Core Index (v0.7)</h3>
 <div class="formula-box">
-HDCI = 0.15·DCI + 0.30·IAI + 0.25·RVI + 0.25·RKI_adjusted + 0.05·PAI<br>
-Weights: theoretical (WP-016 §2). Empirical calibration is a separate research priority.
+HDCI_v1 = 0.40·RKI_adjusted + 0.35·IAI + 0.25·RVI<br><br>
+Three-component core. DCI and PAI removed from composite (see §6 for rationale).<br>
+RKI_adjusted = RKI_raw / Kanta_care_plan_adoption_rate<br>
+Weights: Bayesian priors subject to outcome-constrained re-estimation.
+</div>
+
+<h3>DCI — Diagnostic side-indicator (not in composite)</h3>
+<div class="formula-box">
+DCI = actual_Kanta_entries / expected_Kanta_entries<br>
+expected = f(morbidity_index, age, sex, Avohilmo_contact_rate)<br>
+Reported separately as documentation completeness indicator. Excluded from HDCI_v1 due to endogeneity.
+</div>
+
+<h3>PAI — Dashboard metadata (not in composite)</h3>
+<div class="formula-box">
+PAI = Σ(preventive_contacts) / Σ(total_contacts)<br>
+Input-effort indicator only. Reported as system activity metadata. Not a performance signal.
 </div>
 
 <h2>5 · Validation Hypotheses</h2>
@@ -180,13 +195,16 @@ Weights: theoretical (WP-016 §2). Empirical calibration is a separate research 
 <table>
   <thead><tr><th>Hypothesis</th><th>Outcome measure</th><th>Source</th></tr></thead>
   <tbody>
-    <tr><td>H1: Higher HDCI predicts lower preventable hospitalisation rate</td><td>Ambulatory care sensitive conditions / 1,000 patient-years (THL definition)</td><td>THL Terveys-Hilmo</td></tr>
-    <tr><td>H2: Higher RKI predicts higher adverse medication event rate</td><td>Adverse medication events / 1,000 patient-years (ICD-10 Y40–Y59, T36–T50)</td><td>THL Terveys-Hilmo</td></tr>
-    <tr><td>H3: HDCI varies across municipalities within Pohjois-Savo</td><td>Municipality-level HDCI vs. morbidity index</td><td>Calculated HDCI</td></tr>
+    <tr><td>H1: Higher HDCI_v1 predicts lower preventable hospitalisation rate</td><td>Ambulatory care sensitive conditions / 1,000 patient-years (THL definition)</td><td>THL Terveys-Hilmo</td></tr>
+    <tr><td>H2: Higher RKI_adjusted predicts higher adverse medication event rate</td><td>Adverse medication events / 1,000 patient-years (ICD-10 Y40–Y59, T36–T50)</td><td>THL Terveys-Hilmo</td></tr>
+    <tr><td>H3: HDCI_v1 varies across municipalities within Pohjois-Savo</td><td>Municipality-level HDCI vs. morbidity index</td><td>Calculated HDCI</td></tr>
+    <tr><td><strong>H4 (Topological): RKI–IAI–RVI form stable clusters in state space; the high-RKI/high-IAI/low-RVI cluster predicts elevated harm outcomes not captured by conventional metrics</strong></td><td>Cluster membership (k-means / latent class analysis) vs H1 and H2 outcomes AND vs conventional metrics (cost per patient, queue length, morbidity index). H4 predicts: cluster 3 elevated on H1/H2 but not distinguishable from cluster 2 on conventional metrics.</td><td>THL Terveys-Hilmo · Kela · Calculated HDCI</td></tr>
   </tbody>
 </table>
 
-<p>Statistical method: multilevel regression with patient-level HDCI components as predictors; outcome measures as dependent variables; controlling for age, sex, morbidity index.</p>
+<p>H4 is the primary research contribution of this pilot. If supported, it demonstrates that HDCI reveals a high-risk patient state that conventional metrics systematically miss. If unsupported, it constrains the interpretation of HDCI to a measurement instrument without topological properties — which remains valid and useful.</p>
+
+<p>Statistical methods: H1–H3: multilevel regression, patient-level predictors, outcome measures as dependent variables, controlling for age, sex, morbidity index. H4: k-means clustering (k=3) and latent class analysis in RKI–IAI–RVI space; cluster outcome comparison via ANOVA and logistic regression.</p>
 
 <h2>6 · Analogy: WEM → HIM</h2>
 
@@ -250,6 +268,63 @@ EXOGENOUS
 <strong>Findata note:</strong> Each variable is justified by direct correspondence to an HDCI component or validation hypothesis. No exploratory variables requested. Data minimisation: cohort restricted to multi-morbid patients, single welfare area, 24-month observation window. Full application requires: pseudonymisation protocol, column-level variable list per registry, necessity test per variable, DPIA.
 </div>
 
+<h2>8 · From Topology to System Behaviour</h2>
+
+<p>HDCI does not prescribe interventions. It reveals where the system's own coordination logic produces elevated risk without corresponding visibility in current metrics. This section describes what the RKI–IAI–RVI space shows about system behaviour — not what should be done about it.</p>
+
+<h3>8.1 Core principle: HDCI is a friction map, not a control system</h3>
+
+<p>The three-dimensional RKI–IAI–RVI space identifies:</p>
+<ul style="margin:0.5rem 0 1rem 1.5rem;line-height:2;">
+  <li><strong>Where information does not become action</strong> — RVI: response latency</li>
+  <li><strong>Where action does not coalesce into responsibility</strong> — IAI: fragmentation</li>
+  <li><strong>Where responsibility diffusion produces risk before it is visible</strong> — RKI: silent ownership collapse</li>
+</ul>
+
+<p>HDCI does not tell the system what to do. It tells the system where its own coordination logic is producing the highest unobserved friction.</p>
+
+<h3>8.2 Intervention framing: transitions, not patient classification</h3>
+
+<table>
+  <thead><tr><th>Incorrect framing</th><th>Correct framing</th></tr></thead>
+  <tbody>
+    <tr><td>"Group 3 is the target"</td><td>Transitions between groups are the signal</td></tr>
+    <tr><td>"Fix Group 3"</td><td>Prevent drift into Group 3</td></tr>
+    <tr><td>Patient classification</td><td>System dynamics observation</td></tr>
+  </tbody>
+</table>
+
+<p>The diagnostic value of HDCI lies not in labelling patients but in identifying the transition zones where patients move from coordinated care into high-risk invisibility. Any interventions, if undertaken, address the drift mechanism — not individual patients.</p>
+
+<h3>8.3 Three observable system behaviours</h3>
+
+<p><strong>1. RKI → IAI coupling — responsibility diffusion before fragmentation.</strong> When RKI rises without IAI decrease, medication responsibility diffuses across prescribers before the care pathway fragments into multiple uncoordinated specialties. The system accumulates polypharmacy risk silently. Minimal feedback: a Kela + Kanta medication consolidation view — not a new workflow, only increased visibility of prescriber multiplicity.</p>
+
+<p><strong>2. IAI → RVI coupling — coordination without decision.</strong> When IAI is high but RVI remains low, the system makes contact across multiple specialties, records findings, but does not convert findings into timely action. The system sees everything but does not react. Minimal feedback: organisational-level latency reporting — an escalation log, not automated decision support.</p>
+
+<p><strong>3. RKI × RVI risk zone — silent high-risk drift.</strong> When RKI is high and RVI is low simultaneously, responsibility is maximally diffused and response velocity is minimal. No current metric (cost, queue, morbidity) flags this state. Minimal feedback: a review flag — not a clinical decision, only a signal that the coordination profile warrants attention.</p>
+
+<h3>8.4 Why this framing is necessary</h3>
+
+<p>If HDCI is presented as "Group 3 requires intervention," it becomes a clinical decision model — which it is not — and loses standing as a measurement framework. Presented as "HDCI reveals structural friction zones that current metrics cannot see," it remains a diagnostic instrument. This distinction determines whether DT-006 remains a research design or becomes an unimplementable policy proposal.</p>
+
+<h3>8.5 Institutional hyväksyttävyys — viisi periaatetta</h3>
+
+<table>
+  <thead><tr><th>Periaate</th><th>Toteutus</th></tr></thead>
+  <tbody>
+    <tr><td>Ei yksilötason julkista raportointia</td><td>Klusterit raportoidaan väestötasolla — kunnittain, alueittain. Yksittäistä potilasta ei luokitella julkisesti.</td></tr>
+    <tr><td>Ei "huono / hyvä" -arvottamista</td><td>Ryhmät kuvataan rakenteellisina tiloina: lineaarinen, hallittu kompleksisuus, hidas sirpaloituminen.</td></tr>
+    <tr><td>Ei suoria toimenpidesuosituksia</td><td>HDCI kertoo mitä näkyy, ei mitä pitäisi tehdä. Toimenpiteet ovat hyvinvointialueen ja THL:n päätöksiä.</td></tr>
+    <tr><td>Avoin metodologia</td><td>Kaikki laskentakaavat, klusterointimenetelmät ja validointitulokset julkaistaan. Läpinäkyvyys on hyväksyttävyyden tae.</td></tr>
+    <tr><td>Vertaisarvioitu julkaisu ennen operatiivista käyttöä</td><td>Metodologia ja ensimmäiset tulokset julkaistaan vertaisarvioidussa kanavassa ennen kuin HDCI:tä tarjotaan käytettäväksi ohjaustyökaluna.</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+<strong>Ydinviesti instituutioille:</strong> HDCI ei kerro teille mitä teidän pitää tehdä. Se kertoo teille missä kohtaa teidän järjestelmänne lakkaa toimimasta koordinoituna kokonaisuutena ja alkaa tuottaa rinnakkaisia, koordinoimattomia prosesseja — ilman että se näkyy nykyisissä mittareissa. Päätös siitä, mitä havainnolla tehdään, on teidän.
+</div>
+
 <h2>7 · Milestones and Status</h2>
 
 <table>
@@ -269,7 +344,7 @@ EXOGENOUS
 <table>
   <thead><tr><th>Version</th><th>Trigger</th></tr></thead>
   <tbody>
-    <tr><td>v0.6 (current)</td><td>Preparatory. Pre-licensing.</td></tr>
+    <tr><td>v0.7 (current)</td><td>Preparatory. Pre-licensing.</td></tr>
     <tr><td>v0.7</td><td>Licence application submitted. Research plan finalised.</td></tr>
     <tr><td>v0.9</td><td>Licence granted. Data access established.</td></tr>
     <tr><td>v1.0</td><td>Preliminary results. HDCI calculated for Pohjois-Savo cohort.</td></tr>
@@ -277,7 +352,7 @@ EXOGENOUS
 </table>
 
 <div class="note">
-  ACI · Decision Track · DT-006 · Version 0.6 · 20 April 2026 · Preparatory<br>
+  ACI · Decision Track · DT-006 · Version 0.7 · 20 April 2026 · Preparatory<br>
   Basis: <a href="/papers/wp-016-health-data-continuity-index.html">WP-016</a> · Status: Pre-licensing · Next update: upon Findata pre-application consultation<br>
   This document is an internal planning instrument. It does not imply current access to registry data.<br>
   Aether Continuity Institute · aethercontinuity.org
