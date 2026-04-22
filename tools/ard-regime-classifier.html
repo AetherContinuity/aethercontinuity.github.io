@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A/R/D Regime Classifier · ACI</title>
+<title>A/R/D Regime Classifier v2 · ACI</title>
 <style>
 :root {
   --bg: #0d1117;
@@ -329,8 +329,8 @@ input[type=range] {
 
   <div class="header">
     <div class="header-kicker">Aether Continuity Institute · Diagnostic Instrument</div>
-    <h1>A/R/D Regime Classifier</h1>
-    <div class="header-sub">Accumulation · Correction · Detection Delay — live regime identification</div>
+    <h1>A/R/D Regime Classifier <span style="font-size:.7rem;color:var(--muted);letter-spacing:.08em;">v2</span></h1>
+    <div class="header-sub">A/R ratio · R = min(Rᵗ,Rᵖ) · D_eff = max(D1,D2,D3) · live regime identification</div>
     <div class="header-links">
       <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a>
       <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a>
@@ -406,28 +406,35 @@ input[type=range] {
       </div>
 
       <div class="shadow-r">
-        <div class="shadow-r-label">Shadow R — Technical Capacity</div>
-        <div class="shadow-r-desc">What R would be if decision were taken today. Distinguishes political inertia from technical incapacity.</div>
+        <div class="shadow-r-label">R = min(Rᵗ, Rᵖ) — Technical × Political</div>
+        <div class="shadow-r-desc">R is determined by the binding constraint. Technical feasibility alone does not produce correction if political executability is zero — and vice versa.</div>
         <div class="sr-row">
           <div class="sr-item">
-            <div class="sr-item-label">Technical capacity</div>
+            <div class="sr-item-label">Rᵗ — technical feasibility</div>
             <div class="sr-item-val" id="sr-tech">High</div>
           </div>
           <div class="sr-item">
-            <div class="sr-item-label">Political inertia</div>
-            <div class="sr-item-val" id="sr-pol">High</div>
+            <div class="sr-item-label">Rᵖ — political executability</div>
+            <div class="sr-item-val" id="sr-pol">≈0</div>
           </div>
           <div class="sr-item">
-            <div class="sr-item-label">Diagnosis</div>
-            <div class="sr-item-val" id="sr-diag" style="color:var(--warn)">Inertia</div>
+            <div class="sr-item-label">R_eff = min(Rᵗ,Rᵖ)</div>
+            <div class="sr-item-val" id="sr-diag" style="color:var(--warn)">—</div>
           </div>
         </div>
         <div style="margin-top:.75rem;">
           <div class="param-head">
-            <span class="param-name">Shadow R (0=none, 10=full)</span>
-            <span class="param-val" id="sr-val">8</span>
+            <span class="param-name">Rᵗ — technical capacity (0–10)</span>
+            <span class="param-val" id="rt-val">8</span>
           </div>
           <input type="range" id="shadow-r" min="0" max="10" step="1" value="8" oninput="update()">
+        </div>
+        <div style="margin-top:.6rem;">
+          <div class="param-head">
+            <span class="param-name">Rᵖ — political executability (0–10)</span>
+            <span class="param-val" id="rp-val">1</span>
+          </div>
+          <input type="range" id="r-pol" min="0" max="10" step="1" value="1" oninput="update()">
         </div>
       </div>
     </div>
@@ -476,8 +483,9 @@ input[type=range] {
       </div>
 
       <div style="margin-top:.75rem;font-size:10px;color:var(--muted);">
-        Total D = D1 + D2 + D3<br>
-        Finnish energy: D1≈0 (ENTSO-E), D2 est. 12–36mo, D3 est. 24–60mo
+        D_eff = max(D1, D2, D3) — bottleneck determines total delay<br>
+        Finnish energy: D1≈0 (ENTSO-E), D2 est. 12–36mo, D3 est. 24–60mo<br>
+        D3 is the binding constraint → D_eff ≈ D3
       </div>
     </div>
 
@@ -551,128 +559,134 @@ const REGIMES = {
   stable: {
     cls: 'stable',
     name: 'STABLE',
-    cond: 'R ≥ A · D stable or declining',
-    desc: 'Correction mechanisms keep pace with accumulation. Monitoring infrastructure functioning. No compound feedback. Standard governance processes are sufficient — the system self-corrects within its design parameters.'
+    cond: 'A/R ≤ 1 · D_eff < D*',
+    desc: 'Correction keeps pace with accumulation. Monitoring functioning. No compound feedback. Standard governance is sufficient — the system self-corrects within design parameters.'
   },
   degradation: {
     cls: 'degradation',
     name: 'DEGRADATION',
-    cond: 'A > R · D variable · politically recognised',
-    desc: 'Accumulation outpaces correction, but the gap is politically recognised. Correction is insufficient or delayed — not invisible. The system knows it is behind. The question is speed of response, not recognition. Correctable if R is increased within the intervention window.'
+    cond: 'A/R > 1 · D_eff < D* · politically recognised',
+    desc: 'Accumulation outpaces correction, but the gap is politically recognised and D_eff is within the intervention window. Correction is insufficient or slow — not invisible. The binding question is speed of R increase, not recognition. Correctable if R is raised before window closes.'
   },
   latent: {
     cls: 'latent',
     name: 'LATENT DEGRADATION',
-    cond: 'A > R · D high · politically invisible',
-    desc: 'Accumulation outpaces correction but the gap is not yet politically recognised. System appears stable. This is the most dangerous regime: the correction window is closing without visible signal. Threshold crossing has preceded political recognition. D-reduction is the priority intervention — not policy design, which cannot proceed without recognition.'
+    cond: 'A/R > 1 · D_eff ≥ D* · politically invisible',
+    desc: 'Accumulation outpaces correction and D_eff has exceeded the intervention window — political recognition will arrive after the physical peak. System appears stable. This is the most dangerous regime: threshold crossing has preceded political recognition. D-reduction is the priority, not policy design.'
   },
   spiral: {
     cls: 'spiral',
     name: 'SPIRAL',
-    cond: 'A >> R · D growing (endogenous) · R declining',
-    desc: 'Signal degradation loop active. Monitoring infrastructure weakens as the system weakens. D grows endogenously. Political recognition arrives later as the gap grows larger. Standard policy interventions are insufficient — not because they are wrong, but because institutional capacity to implement them has degraded alongside the problem it was meant to address. Structural intervention required.'
+    cond: 'A/R >> 1 · D_eff ≥ D* · dR/dt < 0 · D endogenous',
+    desc: 'Signal degradation loop active. D is endogenous: as the system weakens, monitoring infrastructure weakens, D grows further. R is declining. Political recognition arrives later as the gap grows larger. Standard interventions are insufficient — not analytically wrong, but institutionally unavailable. Structural intervention required.'
   }
 };
 
+// A: composite stress acceleration score (0–18)
 function getA() {
-  const accel = parseInt(document.getElementById('a-accel').value);
-  const conv  = parseInt(document.getElementById('a-conv').value);
-  const buf   = parseInt(document.getElementById('a-buf').value);
-  return (accel + conv + buf); // composite score
+  const accel = parseInt(document.getElementById('a-accel').value); // -5 to +10
+  const conv  = parseInt(document.getElementById('a-conv').value);  // 0–4
+  const buf   = parseInt(document.getElementById('a-buf').value);   // 0–4
+  // Normalise to 0–18 range
+  return Math.max(0, accel + 5) + conv + buf; // shift accel so 0 = neutral
 }
 
-function getR() {
-  const vel  = parseInt(document.getElementById('r-vel').value);
-  const thru = parseInt(document.getElementById('r-thru').value);
-  return vel + thru;
+// R_eff = min(Rt, Rp) — binding constraint
+function getReff() {
+  const vel  = parseInt(document.getElementById('r-vel').value);   // 0–10
+  const thru = parseInt(document.getElementById('r-thru').value);  // 0–4
+  const rt   = parseInt(document.getElementById('shadow-r').value); // 0–10
+  const rp   = parseInt(document.getElementById('r-pol').value);    // 0–10
+  // Realised R from execution sliders
+  const rRealised = vel + thru * 1.5;
+  // Effective R = min of technical and political binding constraint
+  return Math.min(rt, rp, rRealised);
 }
 
-function getD() {
+// D_eff = max(D1, D2, D3) — bottleneck
+function getDeff() {
+  const d1 = 0; // ENTSO-E ≈ 0
   const d2 = parseInt(document.getElementById('d2-slider').value);
   const d3 = parseInt(document.getElementById('d3-slider').value);
-  return d2 + d3; // D1 ≈ 0
+  return Math.max(d1, d2, d3);
 }
 
 function getEndo() { return parseInt(document.getElementById('d-endo').value); }
-function getShadowR() { return parseInt(document.getElementById('shadow-r').value); }
 function getWindow() { return parseInt(document.getElementById('window').value); }
 
-function classifyRegime(A, R, D, endo, window_mo) {
-  const totalD = D;
-  const Anorm = A;
-  const Rnorm = R;
+function classifyRegime(A, Reff, Deff, endo, Dstar) {
+  const ratio = Reff > 0 ? A / Reff : Infinity;
 
-  // Spiral: A high, R low, D high and endogenous, D > window
-  if (Anorm > 10 && Rnorm < 3 && endo >= 3 && totalD > window_mo) {
-    return 'spiral';
-  }
-  // Latent: A > R, D high relative to window, low political recognition
-  if (Anorm > 8 && Rnorm < 4 && totalD > window_mo) {
-    return 'latent';
-  }
-  // Degradation: A > R but D manageable or politically recognised
-  if (Anorm > Rnorm + 2) {
-    return 'degradation';
-  }
+  // Spiral: ratio >> 1, D_eff >= D*, endo high, R declining
+  if (ratio > 3.5 && Deff >= Dstar && endo >= 3) return 'spiral';
+
+  // Latent: ratio > 1, D_eff >= D* (recognition arrives too late)
+  if (ratio > 1.2 && Deff >= Dstar) return 'latent';
+
+  // Degradation: ratio > 1, but D_eff < D* (still within window)
+  if (ratio > 1.2) return 'degradation';
+
   // Stable
   return 'stable';
 }
 
 function update() {
-  const A = getA();
-  const R = getR();
-  const D = getD();
+  const A    = getA();
+  const Reff = getReff();
+  const Deff = getDeff();
   const endo = getEndo();
-  const sr = getShadowR();
-  const win = getWindow();
+  const win  = getWindow();
 
-  // Update display values
+  // Ratio display
+  const ratio = Reff > 0 ? (A / Reff).toFixed(2) : '∞';
+
+  // --- Update display values ---
   const aAccel = parseInt(document.getElementById('a-accel').value);
   document.getElementById('a-accel-val').textContent = (aAccel >= 0 ? '+' : '') + aAccel;
   document.getElementById('a-conv-val').textContent  = LABELS_CONV[document.getElementById('a-conv').value];
   document.getElementById('a-buf-val').textContent   = LABELS_BUF[document.getElementById('a-buf').value];
   document.getElementById('r-vel-val').textContent   = document.getElementById('r-vel').value == 0 ? '≈0' : document.getElementById('r-vel').value;
   document.getElementById('r-thru-val').textContent  = LABELS_THRU[document.getElementById('r-thru').value];
-  document.getElementById('sr-val').textContent      = sr;
   document.getElementById('d2-slider-val').textContent = document.getElementById('d2-slider').value + ' mo';
   document.getElementById('d3-slider-val').textContent = document.getElementById('d3-slider').value + ' mo';
   document.getElementById('d-endo-val').textContent  = LABELS_ENDO[endo];
   document.getElementById('window-val').textContent  = win + ' mo';
 
-  // D sub-values
+  // Rt / Rp / Reff display
+  const rt = parseInt(document.getElementById('shadow-r').value);
+  const rp = parseInt(document.getElementById('r-pol').value);
+  document.getElementById('rt-val').textContent = rt;
+  document.getElementById('rp-val').textContent = rp;
+  const rLabel = rt <= rp ? 'Rᵗ binding' : 'Rᵖ binding';
+  const rDiag  = Math.min(rt, rp);
+  document.getElementById('sr-tech').textContent = rt >= 7 ? 'High' : rt >= 4 ? 'Med' : 'Low';
+  document.getElementById('sr-pol').textContent  = rp <= 2 ? '≈0' : rp >= 7 ? 'High' : 'Med';
+  document.getElementById('sr-diag').textContent = rDiag <= 2
+    ? (rt <= rp ? 'Capacity deficit' : 'Political inertia')
+    : 'Correctable';
+  document.getElementById('sr-diag').style.color = rDiag <= 2
+    ? (rt <= rp ? 'var(--danger)' : 'var(--warn)')
+    : 'var(--ok)';
+
+  // D sub-values (bottleneck highlighted)
   const d2v = parseInt(document.getElementById('d2-slider').value);
   const d3v = parseInt(document.getElementById('d3-slider').value);
-  document.getElementById('d2-val').textContent = d2v + ' mo';
+  const bottleneck = Math.max(d2v, d3v);
+  document.getElementById('d2-val').textContent = d2v + ' mo' + (d2v === bottleneck && d2v > 0 ? ' ⊗' : '');
   document.getElementById('d2-val').style.color = d2v > 24 ? 'var(--danger)' : d2v > 12 ? 'var(--warn)' : 'var(--ok)';
-  document.getElementById('d3-val').textContent = d3v + ' mo';
+  document.getElementById('d3-val').textContent = d3v + ' mo' + (d3v === bottleneck ? ' ⊗' : '');
   document.getElementById('d3-val').style.color = d3v > 48 ? 'var(--danger)' : d3v > 24 ? 'var(--warn)' : 'var(--ok)';
 
   // Indicator bars
-  const aBarPct = Math.min(100, Math.max(0, (A / 18) * 100));
+  const aBarPct = Math.min(100, Math.max(0, (A / 19) * 100));
   document.getElementById('a-accel-bar').style.width = aBarPct + '%';
-  const rBarPct = Math.min(100, Math.max(0, (R / 14) * 100));
+  const rBarPct = Math.min(100, Math.max(0, (Reff / 12) * 100));
   document.getElementById('r-vel-bar').style.width = rBarPct + '%';
 
-  // Shadow R diagnosis
-  const techHigh = sr >= 6;
-  const polHigh  = R < 3;
-  document.getElementById('sr-tech').textContent = sr >= 7 ? 'High' : sr >= 4 ? 'Medium' : 'Low';
-  document.getElementById('sr-pol').textContent  = polHigh ? 'High' : 'Low';
-  if (techHigh && polHigh) {
-    document.getElementById('sr-diag').textContent = 'Political inertia';
-    document.getElementById('sr-diag').style.color = 'var(--warn)';
-  } else if (!techHigh) {
-    document.getElementById('sr-diag').textContent = 'Capacity deficit';
-    document.getElementById('sr-diag').style.color = 'var(--danger)';
-  } else {
-    document.getElementById('sr-diag').textContent = 'Correctable';
-    document.getElementById('sr-diag').style.color = 'var(--ok)';
-  }
-
-  // Coupling matrix
+  // Coupling matrix — now ratio-aware
   const cAD = endo >= 3 ? 'HIGH' : endo >= 2 ? 'MED' : 'LOW';
-  const cAR = (A > 12 && R < 3) ? 'HIGH' : (A > 8) ? 'MED' : 'LOW';
-  const cDR = (D > win && R < 3) ? 'HIGH' : 'LOW';
+  const cAR = ratio > 3 ? 'HIGH' : ratio > 1.5 ? 'MED' : 'LOW';
+  const cDR = (Deff >= win && Reff < 3) ? 'HIGH' : Deff >= win * 0.7 ? 'MED' : 'LOW';
   const cColor = v => v === 'HIGH' ? 'var(--spiral)' : v === 'MED' ? 'var(--warn)' : 'var(--ok)';
   document.getElementById('c-ad').textContent = cAD;
   document.getElementById('c-ad').style.color = cColor(cAD);
@@ -681,17 +695,16 @@ function update() {
   document.getElementById('c-dr').textContent = cDR;
   document.getElementById('c-dr').style.color = cColor(cDR);
 
-  // Window status
-  const totalD = d2v + d3v;
+  // Window vs D_eff — show ratio and bottleneck
   const winEl = document.getElementById('window-status');
-  if (totalD > win) {
-    winEl.innerHTML = `<span style="color:var(--danger)">⚑ Total D (${totalD} mo) exceeds intervention window (${win} mo).<br>Political recognition arrives after physical peak under current parameters.</span>`;
+  if (Deff >= win) {
+    winEl.innerHTML = `<span style="color:var(--danger)">⚑ D_eff (${Deff} mo) ≥ D* (${win} mo) · A/R = ${ratio}<br>Threshold crossing precedes political recognition.</span>`;
   } else {
-    winEl.innerHTML = `<span style="color:var(--ok)">✓ Total D (${totalD} mo) within intervention window (${win} mo).</span>`;
+    winEl.innerHTML = `<span style="color:var(--ok)">✓ D_eff (${Deff} mo) &lt; D* (${win} mo) · A/R = ${ratio}<br>Recognition within window if D_eff remains stable.</span>`;
   }
 
-  // Classify
-  const regime = classifyRegime(A, R, D, endo, win);
+  // Classify with new logic
+  const regime = classifyRegime(A, Reff, Deff, endo, win);
   const r = REGIMES[regime];
 
   const panel = document.getElementById('regime-panel');
@@ -705,7 +718,7 @@ function update() {
   document.getElementById('regime-desc').textContent = r.desc;
 
   const spiralWarn = document.getElementById('spiral-warn');
-  spiralWarn.className = 'spiral-warn' + (regime === 'spiral' || (endo >= 3 && A > 10) ? ' visible' : '');
+  spiralWarn.className = 'spiral-warn' + (regime === 'spiral' || (endo >= 3 && ratio > 2.5) ? ' visible' : '');
 
   // Mark custom
   if (!document.querySelector('.preset-btn.active[data-loading]')) {
@@ -721,27 +734,33 @@ function loadPreset(name) {
 
   const presets = {
     fi_energy: {
+      // A: stress accelerating, SE1 compression, CHP decline, DC load
       'a-accel': 4, 'a-conv': 3, 'a-buf': 3,
-      'r-vel': 0, 'r-thru': 0, 'shadow-r': 8,
+      // R: realised ≈ 0; Rt high (SGFA feasible), Rp ≈ 0 (no decisions)
+      'r-vel': 0, 'r-thru': 0, 'shadow-r': 8, 'r-pol': 1,
+      // D: D1≈0 (ENTSO-E), D2=24mo, D3=42mo → D_eff=max=42
       'd2-slider': 24, 'd3-slider': 42, 'd-endo': 2,
+      // Window: SM-006 convergence 36 months from April 2026
       'window': 36
     },
     stable: {
       'a-accel': -1, 'a-conv': 1, 'a-buf': 1,
-      'r-vel': 7, 'r-thru': 3, 'shadow-r': 8,
+      'r-vel': 7, 'r-thru': 3, 'shadow-r': 8, 'r-pol': 8,
       'd2-slider': 6, 'd3-slider': 12, 'd-endo': 0,
       'window': 60
     },
     vtv: {
-      // VTV 2016-2021: slow accumulation, correction required external trigger, D high
+      // VTV 2016–2021: slow mandate erosion, correction needed external trigger
+      // Rt medium (parliament can act), Rp ≈ 0 (no agenda until media exposure)
       'a-accel': 2, 'a-conv': 1, 'a-buf': 2,
-      'r-vel': 0, 'r-thru': 0, 'shadow-r': 5,
-      'd2-slider': 36, 'd3-slider': 24, 'd-endo': 1,
+      'r-vel': 0, 'r-thru': 0, 'shadow-r': 6, 'r-pol': 1,
+      // D3 ≈ 24mo (parliament to act once triggered), D2 = 48mo (4yr to reach agenda)
+      'd2-slider': 48, 'd3-slider': 24, 'd-endo': 1,
       'window': 60
     },
     custom: {
       'a-accel': 2, 'a-conv': 2, 'a-buf': 2,
-      'r-vel': 3, 'r-thru': 2, 'shadow-r': 6,
+      'r-vel': 3, 'r-thru': 2, 'shadow-r': 6, 'r-pol': 5,
       'd2-slider': 18, 'd3-slider': 30, 'd-endo': 1,
       'window': 48
     }
@@ -749,7 +768,8 @@ function loadPreset(name) {
 
   const p = presets[name];
   Object.entries(p).forEach(([id, val]) => {
-    document.getElementById(id).value = val;
+    const el = document.getElementById(id);
+    if (el) el.value = val;
   });
 
   update();
