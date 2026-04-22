@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-008 — Coupling Collapse Function (C*) | ACI</title>
+<meta name="description" content="Extension to the A/R/D measurement architecture: the coupling function C* models the condition under which correction capacity loses systemic effectiveness — independent of R magnitude.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#2a4a6e;--panel:#eeeae2;--panel2:#e6e1d6;
+  --ok:#2d7a4f;--warn:#8b5e00;--danger:#8b2020;--spiral:#5a1a7a;
+  --serif:Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;
+     line-height:1.78;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+
+nav{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.4rem;}
+
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+            letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;
+          font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+.aci-meta a{color:var(--accent);text-decoration:none;}
+h1{font-size:1.65rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+         letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;line-height:1.3;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;}
+p{margin-bottom:14px;}
+
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;
+          background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+                letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);
+         padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;
+               letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);
+         border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2.1;}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+   color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);
+   background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+
+.finding{border:1px solid var(--line);background:var(--panel2);
+         padding:14px 18px;margin:28px 0;font-size:.88rem;line-height:1.8;}
+.finding h3{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+            letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:normal;}
+
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;
+          font-family:var(--mono);font-size:.66rem;color:var(--muted);line-height:2;}
+.preceded a{color:var(--accent);text-decoration:none;}
+
+blockquote{border-left:2px solid var(--line);padding-left:1.25rem;
+           margin:1.25rem 0;color:var(--muted);font-style:italic;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="aci-header">
+  <div class="aci-kicker">Aether Continuity Institute · Technical Note</div>
+  <h1>TN-008 — Coupling Collapse Function (C*)</h1>
+  <p class="subtitle">Extension to the A/R/D measurement architecture: the condition under which correction capacity loses systemic effectiveness independent of R magnitude</p>
+  <div class="aci-meta">
+    <div><strong>Version</strong> 0.1</div>
+    <div><strong>Date</strong> April 2026</div>
+    <div><strong>Extends</strong> <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a> v1.0</div>
+    <div><strong>Basis</strong> <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> v0.3</div>
+    <div><strong>Domain</strong> D-1 · D-3 · D-4</div>
+    <div><strong>Status</strong> Working Draft</div>
+  </div>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Purpose</div>
+  TN-007 models correction capacity as R = min(Rᵗ, Rᵖ) — the minimum of technical feasibility and political executability. This is necessary but not sufficient. TN-007 implicitly assumes that if R > 0, correction reaches the system and produces effect proportional to R. This note identifies the condition under which this assumption fails: the coupling collapse threshold C*, the point at which R loses systemic effectiveness independently of its magnitude. The result modifies TN-007's regime classification by introducing a fourth observable: C, the correction-to-system coupling coefficient.
+</div>
+
+<!-- § 01 -->
+<span class="sec-num">§ 01</span>
+<h2>The Implicit Assumption TN-007 Makes</h2>
+
+<p>TN-007's A/R/D framework measures three quantities: the rate at which stress accumulates (A), the rate at which institutional correction is applied (R), and the delay between threshold crossing and political recognition (D). The regime classification — Stable, Degradation, Latent, Spiral — is derived from the relationship between these three.</p>
+
+<p>Embedded in this framework is an assumption that is never made explicit: that R, when applied, reaches the system. That correction capacity translates into correction effect. That the institutional action produces a proportional physical response.</p>
+
+<p>This assumption holds in the Stable and early Degradation regimes. It begins to fail — and TN-007 has no instrument for this failure — in the Latent and Spiral regimes. The failure is not that R becomes zero. It is that R becomes decoupled from the system it is meant to correct.</p>
+
+<blockquote>
+  Systems do not generally collapse because R is too small. They collapse because R ceases to couple with A.
+</blockquote>
+
+<p>The distinction matters operationally. A system with R = 3 and full coupling is more correctable than a system with R = 7 and coupling collapse. TN-007 cannot distinguish these two states. TN-008 introduces the instrument that does.</p>
+
+<!-- § 02 -->
+<span class="sec-num">§ 02</span>
+<h2>The Azipod–Rudder Analogy as Structural Insight</h2>
+
+<p>A rudder generates steering force by redirecting water flow. Its effectiveness depends on flow velocity — at low speed, the rudder loses hydrodynamic authority. This is not a failure of the rudder's physical integrity. It is a failure of coupling: the control surface is present, but the medium it acts on no longer transmits force.</p>
+
+<p>An azipod integrates propulsion and steering in a single rotating unit. It maintains steering authority at low speed because the control mechanism does not depend on external flow. The coupling between control input and system response is internal rather than environmentally mediated.</p>
+
+<p>TN-007's R = min(Rᵗ, Rᵖ) models the rudder's structural integrity — whether it is intact and appropriately sized. It does not model hydrodynamic authority — whether the medium still transmits control force. A technically intact, politically executable correction mechanism (R high) can still produce no system-level effect if the coupling between institutional action and physical system response has degraded.</p>
+
+<p>Three mechanisms produce this degradation in governance systems:</p>
+
+<p><strong>Absorptive saturation.</strong> When A is very high, the system's immediate crisis management absorbs institutional bandwidth that would otherwise be available for structural correction. Correction exists but is consumed before it reaches the structural level.</p>
+
+<p><strong>Self-referential correction.</strong> Institutions in high-stress states increasingly direct correction resources toward maintaining their own function rather than the system they govern. R is applied, but to R — not to A.</p>
+
+<p><strong>Implementation lag inversion.</strong> When A grows faster than any correction can be implemented, even correctly designed corrections arrive into a system state for which they were not designed. The correction was accurate at decision time; it is mismatched at implementation time. The coupling between the correction's design and the system's state has collapsed temporally.</p>
+
+<!-- § 03 -->
+<span class="sec-num">§ 03</span>
+<h2>Definition: Coupling Function C</h2>
+
+<p>The coupling function C measures the fraction of applied correction R that produces effective change in the system's stress state.</p>
+
+<div class="formula">
+C = systemic effectiveness of correction (0 ≤ C ≤ 1)<br><br>
+C = 1: full coupling — R applied produces effect proportional to R<br>
+C = 0: full decoupling — R applied produces no system-level effect<br>
+0 &lt; C &lt; 1: partial coupling — R applied produces attenuated effect<br><br>
+Effective correction rate: R_eff = R × C<br>
+TN-007's A/R ratio should be read as: A / (R × C)
+</div>
+
+<p>C is not a fixed property of the institutional system. It is a function of A — it degrades as accumulation stress increases. This is the critical dynamic: C(A) is a declining function, and the decline accelerates as A approaches the coupling collapse threshold C*.</p>
+
+<div class="formula">
+C* = coupling collapse threshold<br><br>
+Defined as: C(A) ≤ ε, where ε = minimum operationally effective coupling<br><br>
+Below C*: R × C &gt; ε → correction reaches system<br>
+At C*:    R × C = ε → correction is marginally effective<br>
+Above C*: R × C &lt; ε → R is technically present but operationally zero
+</div>
+
+<!-- § 04 -->
+<span class="sec-num">§ 04</span>
+<h2>Four States: Extended Regime Classification</h2>
+
+<p>TN-007's four regimes (Stable, Degradation, Latent, Spiral) are defined by A/R ratio and D relative to D*. TN-008 extends this classification with C as the fourth dimension.</p>
+
+<table>
+  <tr>
+    <th>Regime</th>
+    <th>A/R</th>
+    <th>D vs D*</th>
+    <th>C</th>
+    <th>Operational meaning</th>
+  </tr>
+  <tr>
+    <td><strong>Stable</strong></td>
+    <td>≤ 1</td>
+    <td>D &lt; D*</td>
+    <td>C ≈ 1</td>
+    <td>Correction fully effective. Standard governance sufficient.</td>
+  </tr>
+  <tr>
+    <td><strong>Degradation</strong></td>
+    <td>&gt; 1</td>
+    <td>D &lt; D*</td>
+    <td>C &gt; C*</td>
+    <td>Correction applies but is insufficient. R must increase. Coupling intact.</td>
+  </tr>
+  <tr>
+    <td><strong>Latent</strong></td>
+    <td>&gt; 1</td>
+    <td>D ≥ D*</td>
+    <td>C declining toward C*</td>
+    <td>Correction still reaches system but recognition window has closed. D-reduction priority.</td>
+  </tr>
+  <tr>
+    <td><strong>Coupling collapse</strong></td>
+    <td>&gt;&gt; 1</td>
+    <td>D ≥ D*</td>
+    <td>C ≤ C* · dC/dt &lt; 0</td>
+    <td>R is technically present but operationally zero. The system no longer transmits correction force. Structural intervention required — not more R.</td>
+  </tr>
+</table>
+
+<p>The Coupling Collapse state replaces TN-007's Spiral regime designation and is more precise: Spiral describes the feedback dynamics (D endogenous, R declining). Coupling Collapse describes the underlying mechanism — the failure of correction transmission. A system can be in Coupling Collapse without the full endogenous D spiral; it can enter Coupling Collapse through absorptive saturation even before D becomes endogenous.</p>
+
+<!-- § 05 -->
+<span class="sec-num">§ 05</span>
+<h2>Why C Cannot Be Directly Measured</h2>
+
+<p>C is not directly observable. It must be inferred from the relationship between applied correction and observed system response. This is epistemically uncomfortable but analytically tractable.</p>
+
+<p>The proxy measurement is the <em>correction efficacy gap</em>: the difference between predicted system response to an applied R and the observed response. If R is applied at a known rate and the system's stress trajectory does not respond as the correction's design implies, the gap is evidence of C &lt; 1.</p>
+
+<p>In the Finnish energy context, the most direct C proxy is the relationship between investment decisions and capacity outcomes. Between 2015 and 2026, Finnish energy policy produced numerous formal decisions — efficiency programmes, renewable targets, capacity commitments — whose projected system effects substantially exceeded their realised effects. The gap between projected and realised capacity change is a direct measurement of C in the energy governance system over that period.</p>
+
+<p>This does not mean the decisions were wrong. It means the coupling between institutional decision and physical system response was partial. C was less than 1 — and declining.</p>
+
+<!-- § 06 -->
+<span class="sec-num">§ 06</span>
+<h2>The Modified A/R/D/C Framework</h2>
+
+<p>TN-007's core formula was: classify regimes by A/R ratio and D relative to D*. TN-008 modifies this to incorporate C:</p>
+
+<div class="formula">
+TN-007: Regime = f(A/R, D, D*)<br><br>
+TN-008: Regime = f(A/(R×C), D, D*, dC/dt)<br><br>
+where dC/dt &lt; 0 indicates coupling degradation in progress
+</div>
+
+<p>The operational implication is significant. A system with A/R = 2.0 and C = 0.8 has an effective ratio of A/(R×C) = 2.5. A system with A/R = 1.5 and C = 0.3 has an effective ratio of 5.0. TN-007 would classify the first system as more stressed; TN-008 correctly identifies the second as more critical — because its correction capacity, though apparently higher relative to A, is largely decoupled from the system.</p>
+
+<p>Three observable indicators provide C proxies without requiring direct measurement:</p>
+
+<p><strong>Policy-to-outcome gap (ΔP):</strong> ratio of designed correction effect to realised correction effect across a set of implemented policies. ΔP &gt; 1 indicates C &lt; 1; growing ΔP indicates dC/dt &lt; 0.</p>
+
+<p><strong>Implementation absorption ratio (IAR):</strong> fraction of correction resources consumed by implementation process management rather than system-level change. IAR &gt; 0.3 is a warning indicator of absorptive saturation.</p>
+
+<p><strong>Lag inversion index (LII):</strong> frequency with which corrections arrive into system states for which they were not designed, measured as the fraction of implemented corrections whose design assumptions no longer hold at implementation time. LII &gt; 0.5 indicates structural implementation lag inversion.</p>
+
+<!-- § 07 -->
+<span class="sec-num">§ 07</span>
+<h2>Finnish Energy Sector: C Pilot Assessment</h2>
+
+<p>TN-007's Finnish energy pilot found R ≈ 0 across primary correction mechanisms. TN-008 adds the observation that even if R were increased, C would determine how much of that R reached the physical system.</p>
+
+<p>Three Finnish energy sector C indicators:</p>
+
+<p><strong>Policy-to-outcome gap:</strong> Finnish energy efficiency commitments under successive EU frameworks have consistently produced realised outcomes below projected targets. The gap has widened over successive implementation cycles — consistent with dC/dt &lt; 0. This is not attributable to technical failure (Rᵗ has remained high throughout) but to the progressive decoupling of policy instruments from physical system response.</p>
+
+<p><strong>Implementation absorption:</strong> The institutional bandwidth required to manage the regulatory complexity of simultaneous EU energy framework compliance, national security of supply obligations, and municipal energy sector transitions has grown faster than the institutional resources allocated to it. An increasing fraction of available correction capacity is consumed by the management of correction processes rather than their physical outputs.</p>
+
+<p><strong>Lag inversion:</strong> The most time-sensitive correction mechanism identified in DT-001 (capacity mechanism) has a decision-to-operation timeline of 5–10 years. The convergence window identified in SM-006 closes 2027–2030. Any capacity mechanism decision taken today would arrive into a system state substantially different from the one that motivated the decision. The correction's design will be mismatched to its implementation context — structural lag inversion.</p>
+
+<div class="callout">
+  <div class="callout-label">Finnish Energy C Assessment · April 2026</div>
+  <p>C is declining. The three proxy indicators — growing policy-to-outcome gap, rising implementation absorption, and structural lag inversion — are all present and moving in the same direction. C has not reached C* (coupling collapse) because no major correction mechanism has yet been applied at scale. But the trajectory of C indicators suggests that if DT-001 or DT-002 were initiated today, their effective correction rate R×C would be materially lower than their nominal R.</p>
+  <p style="margin-top:8px;">The diagnostic implication: the urgency of initiating correction is compounded by declining C. Every year of delay reduces not only the available intervention window (D* shrinking) but also the effectiveness of any correction that is eventually applied (C declining). The two effects compound.</p>
+</div>
+
+<!-- § 08 -->
+<span class="sec-num">§ 08</span>
+<h2>Implication for CN-004</h2>
+
+<p>CN-004's structural property finding — that democratic systems cannot possess a single global optimisation function — gains a second implication from TN-008.</p>
+
+<p>Even if a common objective function were somehow established, its translation into correction would pass through C. If C has degraded, the common objective would produce attenuated effect regardless of its analytical quality. The navigation problem (CN-004) and the coupling problem (TN-008) are independent failure modes — either is sufficient to prevent effective correction, and both can be simultaneously present.</p>
+
+<p>This produces a refined version of CN-004's threshold condition. It is not sufficient for A/R &gt; 1 to trigger the degradation regime. The operationally relevant threshold is:</p>
+
+<div class="formula">
+A / (R × C) &gt; 1<br><br>
+AND<br><br>
+D_eff ≥ D*
+</div>
+
+<p>A system can have A/R &lt; 1 and still be in effective degradation if C is sufficiently low. A system with apparently adequate R can be in coupling collapse if C has degraded while R remained nominally positive. Neither TN-007 nor the A/R/D Posture Monitor currently reflects this.</p>
+
+<!-- § 09 -->
+<span class="sec-num">§ 09</span>
+<h2>What TN-008 Does Not Claim</h2>
+
+<p>Three limitations are explicit.</p>
+
+<p>First, C cannot be directly measured with available data. The three proxy indicators (ΔP, IAR, LII) require systematic data collection over multiple policy cycles — data that does not currently exist in publicly accessible form for Finnish energy governance. The TN-008 framework specifies what to measure, not values that have been measured.</p>
+
+<p>Second, coupling collapse is not irreversible. C can be restored through institutional restructuring, mandate clarification, and the reduction of implementation complexity. The azipod architecture — correction mechanisms designed to maintain coupling at high A — is one structural approach. CN-003's pool method is another. Neither is currently present in Finnish energy governance.</p>
+
+<p>Third, TN-008 does not specify C*. The collapse threshold is domain-specific and requires calibration against historical cases where correction failure has been observed. The VTV case documented in CN-004 §06 provides one calibration point — a governance domain where the correction mechanism (parliamentary oversight) maintained coupling until external forcing (media exposure) provided the equivalent of azipod authority at low institutional speed.</p>
+
+<div class="finding">
+  <h3>TN-008 — Core Extension</h3>
+  <p>TN-007's A/R/D framework implicitly assumes that applied correction reaches the system. The coupling function C quantifies the fraction of R that produces effective system-level change. C declines as A increases through three mechanisms: absorptive saturation, self-referential correction, and implementation lag inversion. The coupling collapse threshold C* defines the point at which R is technically present but operationally zero. The modified regime condition is A/(R×C) &gt; 1 rather than A/R &gt; 1. Finnish energy sector proxy indicators — growing policy-to-outcome gap, rising implementation absorption, structural lag inversion — suggest C is declining. Every year of delayed correction reduces both the available window (D* shrinking) and the effectiveness of eventual correction (C declining). The two effects compound.</p>
+</div>
+
+<div class="preceded">
+  Extends: <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a> — A/R/D Measurement Architecture<br>
+  Theoretical basis: <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> — Distributed Optimisation Without a Common Function<br>
+  Empirical basis: <a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">SM-006</a> — The 2028 Convergence Window<br>
+  Related: <a href="https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html">CN-003</a> (azipod architecture analogue) · <a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="https://aethercontinuity.org/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> · <a href="https://aethercontinuity.org/supplements/ACI_DA-001_v1_1.html">DA-001</a><br><br>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Technical Note TN-008 · April 2026 · v0.1 · Open Working Draft<br>
+  Domain D-1 · D-3 · D-4
+</div>
+
+</body>
+</html>
