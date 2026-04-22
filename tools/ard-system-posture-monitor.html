@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A/R/D System Posture Monitor · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0d0b;
+  --paper: #f5f0e8;
+  --paper-2: #ede7d8;
+  --paper-3: #e4dccb;
+  --rule: #c8bfad;
+  --muted: #7a7468;
+  --accent: #2a4a6e;
+  --serif: 'EB Garamond', Georgia, serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+
+  /* Regime colours */
+  --c-stable:   #2d6b3a;
+  --c-degrade:  #7a6010;
+  --c-latent:   #8b3a10;
+  --c-spiral:   #8b1010;
+  --bg-stable:  #eef6f0;
+  --bg-degrade: #faf6e8;
+  --bg-latent:  #faf0e8;
+  --bg-spiral:  #faf0f0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  line-height: 1.7;
+  transition: background .5s;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999; opacity: .6;
+}
+
+/* ── Header ── */
+.dih {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 2rem 1.1rem;
+  max-width: 980px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: baseline; flex-wrap: wrap; gap: 1rem;
+}
+.dih-inst { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.dih-ser  { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; margin-top: .15rem; }
+.dih-ser span { color: var(--accent); }
+.dih-meta { font-family: var(--mono); font-size: .56rem; letter-spacing: .1em; color: var(--muted); text-align: right; line-height: 1.9; }
+.dih-meta a { color: var(--accent); text-decoration: none; }
+
+/* ── Page ── */
+.page { max-width: 980px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+/* ── Posture hero ── */
+.posture-blk {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+@media(max-width:600px){ .posture-blk { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+.ratio-display { display: flex; flex-direction: column; gap: .5rem; }
+.ratio-val {
+  font-family: var(--mono);
+  font-size: 5.5rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  transition: color .5s;
+}
+.ratio-label { font-family: var(--mono); font-size: .6rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+.regime-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  border: 1px solid var(--rule);
+  padding: .25rem .9rem;
+  margin-top: .4rem;
+  transition: border-color .5s;
+  width: fit-content;
+}
+.regime-badge-dot { width: 6px; height: 6px; border-radius: 50%; transition: background .5s; }
+.regime-badge-txt { font-family: var(--mono); font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; transition: color .5s; }
+.ratio-sub { font-family: var(--mono); font-size: .55rem; color: var(--muted); letter-spacing: .08em; margin-top: .4rem; }
+
+/* Posture grid */
+.posture-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem 2rem; }
+@media(max-width:500px){ .posture-grid { grid-template-columns: 1fr 1fr; } }
+.pg-item {}
+.pg-lbl { font-family: var(--mono); font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .15rem; }
+.pg-val { font-family: var(--mono); font-size: .92rem; font-weight: 500; }
+.pg-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; margin-top: .15rem; }
+
+/* ── Presets ── */
+.preset-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.preset-btn {
+  font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; border: 1px solid var(--rule);
+  color: var(--muted); padding: .3rem .85rem;
+  cursor: pointer; transition: all .15s; border-radius: 2px;
+}
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+.preset-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(42,74,110,.06); }
+
+/* ── Controls ── */
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem 2.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+@media(max-width:640px){ .controls-grid { grid-template-columns: 1fr; } }
+
+.ctrl-group {}
+.ctrl-head {
+  font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1rem;
+  padding-bottom: .35rem; border-bottom: 1px solid var(--rule);
+}
+.ctrl-row { margin-bottom: .85rem; }
+.ctrl-label-row {
+  display: flex; justify-content: space-between;
+  align-items: baseline; margin-bottom: .3rem;
+}
+.ctrl-name { font-family: var(--mono); font-size: .67rem; color: var(--muted); }
+.ctrl-val  { font-family: var(--mono); font-size: .72rem; font-weight: 500; color: var(--ink); }
+input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+
+/* ── Regime description ── */
+.regime-desc-blk {
+  padding: 1.25rem 1.5rem;
+  border-left: 3px solid var(--rule);
+  margin-bottom: 2rem;
+  transition: border-color .5s, background .5s;
+  font-size: .95rem;
+  line-height: 1.75;
+}
+.regime-desc-title { font-family: var(--mono); font-size: .58rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+
+/* ── D bottleneck bar ── */
+.d-chain {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: .75rem; margin-bottom: 2rem;
+}
+.d-cell {
+  border: 1px solid var(--rule); padding: .75rem 1rem;
+  background: var(--paper-2); position: relative;
+}
+.d-cell-name { font-family: var(--mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.d-cell-val  { font-family: var(--mono); font-size: 1.4rem; font-weight: 500; line-height: 1.2; margin-top: .25rem; transition: color .3s; }
+.d-cell-unit { font-family: var(--mono); font-size: .6rem; color: var(--muted); }
+.d-bottleneck-tag {
+  position: absolute; top: .4rem; right: .5rem;
+  font-family: var(--mono); font-size: .52rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--c-latent); opacity: 0;
+  transition: opacity .3s;
+}
+.d-bottleneck-tag.show { opacity: 1; }
+
+/* ── R split display ── */
+.r-split {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: .75rem; margin-bottom: 2rem;
+  padding-bottom: 2rem; border-bottom: 1px solid var(--rule);
+}
+.r-cell { border: 1px solid var(--rule); padding: .75rem 1rem; background: var(--paper-2); }
+.r-cell-name { font-family: var(--mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.r-cell-val  { font-family: var(--mono); font-size: 1.4rem; font-weight: 500; line-height: 1.2; margin-top: .25rem; transition: color .3s; }
+.r-cell-sub  { font-family: var(--mono); font-size: .58rem; color: var(--muted); margin-top: .15rem; }
+
+/* ── Coupling bar ── */
+.coupling-row {
+  display: flex; gap: 1.5rem; align-items: center;
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.c-item { display: flex; align-items: center; gap: .5rem; }
+.c-arrow { font-family: var(--mono); font-size: .68rem; color: var(--muted); }
+.c-strength {
+  font-family: var(--mono); font-size: .68rem; font-weight: 500;
+  padding: .15rem .5rem; border: 1px solid currentColor;
+  border-radius: 2px; transition: color .3s;
+}
+.c-high { color: var(--c-spiral); }
+.c-med  { color: var(--c-degrade); }
+.c-low  { color: var(--c-stable); }
+
+/* ── Footer ── */
+.foot { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1rem; font-family: var(--mono); font-size: .58rem; color: var(--muted); line-height: 2; }
+.foot a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div>
+    <div class="dih-inst">Aether Continuity Institute · Diagnostic Instrument</div>
+    <div class="dih-ser">A/R/D <span>System Posture Monitor</span></div>
+  </div>
+  <div class="dih-meta">
+    <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> ·
+    <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a> ·
+    <a href="https://aethercontinuity.org/">ACI</a><br>
+    Accumulation · Correction · Detection Delay<br>
+    R = min(Rᵗ, Rᵖ) · D_eff = max(D₁,D₂,D₃)
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Presets -->
+  <div class="preset-row">
+    <button class="preset-btn active" onclick="loadPreset('fi_energy', this)">🇫🇮 Finland Energy 2026</button>
+    <button class="preset-btn" onclick="loadPreset('stable', this)">Stable reference</button>
+    <button class="preset-btn" onclick="loadPreset('vtv', this)">VTV 2016–2021</button>
+    <button class="preset-btn" onclick="loadPreset('custom', this)">Custom</button>
+  </div>
+
+  <!-- Hero posture -->
+  <div class="posture-blk">
+    <div class="ratio-display">
+      <div class="ratio-label">A/R ratio</div>
+      <div class="ratio-val" id="ratio-big">—</div>
+      <div class="regime-badge" id="regime-badge">
+        <div class="regime-badge-dot" id="badge-dot"></div>
+        <div class="regime-badge-txt" id="badge-txt">—</div>
+      </div>
+      <div class="ratio-sub" id="ratio-sub">—</div>
+    </div>
+    <div class="posture-grid">
+      <div class="pg-item">
+        <div class="pg-lbl">A — stress acceleration</div>
+        <div class="pg-val" id="pg-a">—</div>
+        <div class="pg-desc" id="pg-a-desc">—</div>
+      </div>
+      <div class="pg-item">
+        <div class="pg-lbl">R_eff = min(Rᵗ, Rᵖ)</div>
+        <div class="pg-val" id="pg-r">—</div>
+        <div class="pg-desc" id="pg-r-desc">—</div>
+      </div>
+      <div class="pg-item">
+        <div class="pg-lbl">D_eff = max(D₁,D₂,D₃)</div>
+        <div class="pg-val" id="pg-d">—</div>
+        <div class="pg-desc" id="pg-d-desc">—</div>
+      </div>
+      <div class="pg-item">
+        <div class="pg-lbl">D* intervention window</div>
+        <div class="pg-val" id="pg-win">—</div>
+        <div class="pg-desc" id="pg-win-desc">—</div>
+      </div>
+      <div class="pg-item">
+        <div class="pg-lbl">Binding R constraint</div>
+        <div class="pg-val" id="pg-bind">—</div>
+        <div class="pg-desc" id="pg-bind-desc">—</div>
+      </div>
+      <div class="pg-item">
+        <div class="pg-lbl">D endogeneity</div>
+        <div class="pg-val" id="pg-endo">—</div>
+        <div class="pg-desc" id="pg-endo-desc">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R split -->
+  <div class="r-split">
+    <div class="r-cell">
+      <div class="r-cell-name">Rᵗ — technical feasibility</div>
+      <div class="r-cell-val" id="rt-display">—</div>
+      <div class="r-cell-sub">Can it be done?</div>
+    </div>
+    <div class="r-cell">
+      <div class="r-cell-name">Rᵖ — political executability</div>
+      <div class="r-cell-val" id="rp-display">—</div>
+      <div class="r-cell-sub">Will it be done?</div>
+    </div>
+    <div class="r-cell">
+      <div class="r-cell-name">R_eff = min(Rᵗ, Rᵖ)</div>
+      <div class="r-cell-val" id="reff-display">—</div>
+      <div class="r-cell-sub" id="reff-binding">—</div>
+    </div>
+  </div>
+
+  <!-- D chain -->
+  <div class="d-chain">
+    <div class="d-cell" id="d1-cell">
+      <div class="d-cell-name">D₁ · physical → report</div>
+      <div class="d-cell-val" id="d1-display">~0</div>
+      <div class="d-cell-unit">months</div>
+      <div class="d-bottleneck-tag" id="d1-tag">bottleneck</div>
+    </div>
+    <div class="d-cell" id="d2-cell">
+      <div class="d-cell-name">D₂ · report → agenda</div>
+      <div class="d-cell-val" id="d2-display">—</div>
+      <div class="d-cell-unit">months</div>
+      <div class="d-bottleneck-tag" id="d2-tag">bottleneck</div>
+    </div>
+    <div class="d-cell" id="d3-cell">
+      <div class="d-cell-name">D₃ · agenda → action</div>
+      <div class="d-cell-val" id="d3-display">—</div>
+      <div class="d-cell-unit">months</div>
+      <div class="d-bottleneck-tag" id="d3-tag">bottleneck</div>
+    </div>
+  </div>
+
+  <!-- Coupling -->
+  <div class="coupling-row">
+    <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:.5rem;">Coupling C</div>
+    <div class="c-item">
+      <span class="c-arrow">A → D</span>
+      <span class="c-strength" id="c-ad">—</span>
+    </div>
+    <div class="c-item">
+      <span class="c-arrow">A → R</span>
+      <span class="c-strength" id="c-ar">—</span>
+    </div>
+    <div class="c-item">
+      <span class="c-arrow">D → R</span>
+      <span class="c-strength" id="c-dr">—</span>
+    </div>
+  </div>
+
+  <!-- Regime description -->
+  <div class="regime-desc-blk" id="regime-desc-blk">
+    <div class="regime-desc-title" id="regime-desc-title">—</div>
+    <div id="regime-desc-text">—</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-grid">
+
+    <div class="ctrl-group">
+      <div class="ctrl-head">A — Accumulation</div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Stress acceleration</span>
+          <span class="ctrl-val" id="cv-accel">+4</span>
+        </div>
+        <input type="range" id="a-accel" min="-5" max="10" step="1" value="4" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Convergence pressure</span>
+          <span class="ctrl-val" id="cv-conv">High</span>
+        </div>
+        <input type="range" id="a-conv" min="0" max="4" step="1" value="3" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Buffer depletion</span>
+          <span class="ctrl-val" id="cv-buf">Fast</span>
+        </div>
+        <input type="range" id="a-buf" min="0" max="4" step="1" value="3" oninput="update()">
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <div class="ctrl-head">R — Correction</div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Rᵗ — technical feasibility</span>
+          <span class="ctrl-val" id="cv-rt">8</span>
+        </div>
+        <input type="range" id="r-tech" min="0" max="10" step="1" value="8" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Rᵖ — political executability</span>
+          <span class="ctrl-val" id="cv-rp">1</span>
+        </div>
+        <input type="range" id="r-pol" min="0" max="10" step="1" value="1" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">Realised throughput</span>
+          <span class="ctrl-val" id="cv-thru">Low</span>
+        </div>
+        <input type="range" id="r-thru" min="0" max="4" step="1" value="0" oninput="update()">
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <div class="ctrl-head">D — Detection Delay</div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">D₂ — report → agenda (mo)</span>
+          <span class="ctrl-val" id="cv-d2">24</span>
+        </div>
+        <input type="range" id="d2-in" min="0" max="60" step="3" value="24" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">D₃ — agenda → action (mo)</span>
+          <span class="ctrl-val" id="cv-d3">42</span>
+        </div>
+        <input type="range" id="d3-in" min="6" max="84" step="6" value="42" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">D* intervention window (mo)</span>
+          <span class="ctrl-val" id="cv-win">36</span>
+        </div>
+        <input type="range" id="d-win" min="6" max="96" step="6" value="36" oninput="update()">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row">
+          <span class="ctrl-name">D endogeneity</span>
+          <span class="ctrl-val" id="cv-endo">Medium</span>
+        </div>
+        <input type="range" id="d-endo" min="0" max="4" step="1" value="2" oninput="update()">
+      </div>
+    </div>
+
+  </div><!-- /controls-grid -->
+
+  <div class="foot">
+    A/R/D System Posture Monitor · Companion to
+    <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> and
+    <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a><br>
+    Aether Continuity Institute ·
+    <a href="https://aethercontinuity.org/">aethercontinuity.org</a> · 2026<br>
+    Parameters are qualitative regime indicators. See TN-007 §01 for design principle.
+  </div>
+
+</div><!-- /page -->
+
+<script>
+const LABS_CONV  = ['None','Low','Moderate','High','Critical'];
+const LABS_BUF   = ['None','Slow','Moderate','Fast','Rapid'];
+const LABS_THRU  = ['None','Low','Moderate','High','Full'];
+const LABS_ENDO  = ['None','Low','Medium','High','Endogenous'];
+
+const REGIME = {
+  stable: {
+    color: '#2d6b3a', bg: '#eef6f0',
+    name: 'STABLE',
+    cond: 'A/R ≤ 1 · D_eff < D*',
+    desc: 'Correction keeps pace with accumulation. Monitoring functioning. The system self-corrects within its design parameters. Standard governance is sufficient.'
+  },
+  degradation: {
+    color: '#7a6010', bg: '#faf6e8',
+    name: 'DEGRADATION',
+    cond: 'A/R > 1 · D_eff < D*',
+    desc: 'Accumulation outpaces correction, but D_eff is within the intervention window — political recognition is available before the physical peak. The binding question is speed of R increase, not recognition. Correctable if R is raised before D_eff reaches D*.'
+  },
+  latent: {
+    color: '#8b3a10', bg: '#faf0e8',
+    name: 'LATENT DEGRADATION',
+    cond: 'A/R > 1 · D_eff ≥ D* · D endogenous',
+    desc: 'Accumulation outpaces correction and D_eff has exceeded the intervention window. Political recognition will arrive after the physical peak. The system appears stable. Threshold crossing has preceded recognition. D-reduction is the priority — not policy design, which cannot proceed without recognition.'
+  },
+  spiral: {
+    color: '#8b1010', bg: '#faf0f0',
+    name: 'SPIRAL',
+    cond: 'A/R >> 1 · D_eff ≥ D* · dR/dt < 0 · D endogenous',
+    desc: 'Signal degradation loop active. D is endogenous: as the system weakens, monitoring infrastructure weakens and D grows further. R is declining. Standard interventions are insufficient — not analytically wrong, but institutionally unavailable. Structural intervention required. The collapse is not sudden — the recognition is.'
+  }
+};
+
+function getA() {
+  const acc = parseInt(document.getElementById('a-accel').value);
+  const con = parseInt(document.getElementById('a-conv').value);
+  const buf = parseInt(document.getElementById('a-buf').value);
+  return Math.max(0, acc + 5) + con + buf; // 0–19
+}
+
+function getReff() {
+  const rt   = parseInt(document.getElementById('r-tech').value);
+  const rp   = parseInt(document.getElementById('r-pol').value);
+  const thru = parseInt(document.getElementById('r-thru').value);
+  const rRaw = thru * 1.5;
+  return { rt, rp, reff: Math.min(rt, rp, Math.max(rRaw, 0.1)) };
+}
+
+function getDeff() {
+  const d1 = 0;
+  const d2 = parseInt(document.getElementById('d2-in').value);
+  const d3 = parseInt(document.getElementById('d3-in').value);
+  return { d1, d2, d3, deff: Math.max(d1, d2, d3) };
+}
+
+function classify(A, reff, deff, endo, win) {
+  const ratio = reff > 0 ? A / reff : 99;
+  if (ratio > 3.5 && deff >= win && endo >= 3) return 'spiral';
+  if (ratio > 1.2 && deff >= win)              return 'latent';
+  if (ratio > 1.2)                             return 'degradation';
+  return 'stable';
+}
+
+function cColor(v) { return v === 'HIGH' ? 'c-high' : v === 'MED' ? 'c-med' : 'c-low'; }
+
+function update() {
+  const A     = getA();
+  const { rt, rp, reff } = getReff();
+  const { d1, d2, d3, deff } = getDeff();
+  const endo  = parseInt(document.getElementById('d-endo').value);
+  const win   = parseInt(document.getElementById('d-win').value);
+
+  const ratio = reff > 0 ? A / reff : 99;
+  const ratioStr = reff > 0 ? ratio.toFixed(2) : '∞';
+  const regime = classify(A, reff, deff, endo, win);
+  const R = REGIME[regime];
+
+  // ── Body bg transition
+  document.body.style.background = R.bg;
+
+  // ── Hero ratio
+  document.getElementById('ratio-big').textContent = ratioStr;
+  document.getElementById('ratio-big').style.color = R.color;
+  document.getElementById('badge-dot').style.background = R.color;
+  document.getElementById('badge-txt').textContent = R.name;
+  document.getElementById('badge-txt').style.color = R.color;
+  document.getElementById('regime-badge').style.borderColor = R.color;
+  document.getElementById('ratio-sub').textContent = 'R_eff ' + reff.toFixed(1) + '  ·  D_eff ' + deff + ' mo  ·  D* ' + win + ' mo';
+
+  // ── Posture grid
+  const aLabel = A < 5 ? 'Stable' : A < 10 ? 'Elevated' : A < 15 ? 'High' : 'Critical';
+  document.getElementById('pg-a').textContent = aLabel;
+  document.getElementById('pg-a').style.color = A < 5 ? '#2d6b3a' : A < 10 ? '#7a6010' : '#8b1010';
+  document.getElementById('pg-a-desc').textContent = 'Score ' + A + '/19 — composite stress acceleration';
+
+  const rLabel = reff < 1 ? '≈ Zero' : reff < 3 ? 'Minimal' : reff < 6 ? 'Partial' : 'Sufficient';
+  document.getElementById('pg-r').textContent = rLabel;
+  document.getElementById('pg-r').style.color = reff < 1 ? '#8b1010' : reff < 3 ? '#8b3a10' : '#7a6010';
+  document.getElementById('pg-r-desc').textContent = 'R_eff = min(' + rt + ', ' + rp + ') = ' + reff.toFixed(1);
+
+  document.getElementById('pg-d').textContent = deff + ' mo';
+  document.getElementById('pg-d').style.color = deff >= win ? '#8b1010' : deff >= win * 0.7 ? '#8b3a10' : '#2d6b3a';
+  document.getElementById('pg-d-desc').textContent = 'Bottleneck = max(D₁, D₂, D₃)';
+
+  document.getElementById('pg-win').textContent = win + ' mo';
+  const slack = win - deff;
+  document.getElementById('pg-win-desc').textContent = slack > 0
+    ? 'Slack: ' + slack + ' mo within window'
+    : 'Exceeded by ' + Math.abs(slack) + ' mo';
+  document.getElementById('pg-win-desc').style.color = slack > 0 ? '#2d6b3a' : '#8b1010';
+
+  const bindingR = rt <= rp ? 'Rᵗ (technical)' : 'Rᵖ (political)';
+  const bindColor = rt <= rp ? '#8b1010' : '#8b3a10';
+  document.getElementById('pg-bind').textContent = bindingR;
+  document.getElementById('pg-bind').style.color = bindColor;
+  document.getElementById('pg-bind-desc').textContent = rt <= rp ? 'Capacity deficit' : 'Political inertia';
+
+  document.getElementById('pg-endo').textContent = LABS_ENDO[endo];
+  document.getElementById('pg-endo').style.color = endo >= 3 ? '#8b1010' : endo >= 2 ? '#8b3a10' : '#7a7468';
+  document.getElementById('pg-endo-desc').textContent = endo >= 3 ? 'D growing as system weakens' : endo >= 2 ? 'Partial coupling' : 'D exogenous';
+
+  // ── R cells
+  const rScale = v => v >= 8 ? '#2d6b3a' : v >= 5 ? '#7a6010' : v >= 2 ? '#8b3a10' : '#8b1010';
+  document.getElementById('rt-display').textContent = rt + '/10';
+  document.getElementById('rt-display').style.color = rScale(rt);
+  document.getElementById('rp-display').textContent = rp + '/10';
+  document.getElementById('rp-display').style.color = rScale(rp);
+  document.getElementById('reff-display').textContent = reff.toFixed(1);
+  document.getElementById('reff-display').style.color = rScale(reff);
+  document.getElementById('reff-binding').textContent = rt <= rp ? '← Rᵗ is binding' : '← Rᵖ is binding';
+
+  // ── D chain cells
+  const dVals = [d1, d2, d3];
+  const maxD = Math.max(...dVals);
+  const dCells = ['d1','d2','d3'];
+  const dDisplays = [d1, d2, d3];
+  dCells.forEach((id, i) => {
+    const v = dDisplays[i];
+    document.getElementById(id + '-display').textContent = i === 0 ? '~0' : v;
+    const isBn = v === maxD && v > 0;
+    document.getElementById(id + '-tag').className = 'd-bottleneck-tag' + (isBn ? ' show' : '');
+    document.getElementById(id + '-display').style.color = isBn ? '#8b3a10' : '#7a7468';
+  });
+
+  // ── Coupling
+  const cAD = endo >= 3 ? 'HIGH' : endo >= 2 ? 'MED' : 'LOW';
+  const cAR = ratio > 3 ? 'HIGH' : ratio > 1.5 ? 'MED' : 'LOW';
+  const cDR = (deff >= win && reff < 3) ? 'HIGH' : deff >= win * 0.7 ? 'MED' : 'LOW';
+  ['c-ad','c-ar','c-dr'].forEach((id, i) => {
+    const val = [cAD, cAR, cDR][i];
+    const el = document.getElementById(id);
+    el.textContent = val;
+    el.className = 'c-strength ' + cColor(val);
+  });
+
+  // ── Regime desc
+  document.getElementById('regime-desc-blk').style.borderLeftColor = R.color;
+  document.getElementById('regime-desc-blk').style.background = R.bg;
+  document.getElementById('regime-desc-title').textContent = R.cond;
+  document.getElementById('regime-desc-text').textContent = R.desc;
+
+  // ── Control labels
+  const aAccel = parseInt(document.getElementById('a-accel').value);
+  document.getElementById('cv-accel').textContent = (aAccel >= 0 ? '+' : '') + aAccel;
+  document.getElementById('cv-conv').textContent  = LABS_CONV[document.getElementById('a-conv').value];
+  document.getElementById('cv-buf').textContent   = LABS_BUF[document.getElementById('a-buf').value];
+  document.getElementById('cv-rt').textContent    = rt;
+  document.getElementById('cv-rp').textContent    = rp;
+  document.getElementById('cv-thru').textContent  = LABS_THRU[document.getElementById('r-thru').value];
+  document.getElementById('cv-d2').textContent    = d2 + ' mo';
+  document.getElementById('cv-d3').textContent    = d3 + ' mo';
+  document.getElementById('cv-win').textContent   = win + ' mo';
+  document.getElementById('cv-endo').textContent  = LABS_ENDO[endo];
+}
+
+const PRESETS = {
+  fi_energy: {
+    'a-accel': 4, 'a-conv': 3, 'a-buf': 3,
+    'r-tech': 8, 'r-pol': 1, 'r-thru': 0,
+    'd2-in': 24, 'd3-in': 42, 'd-win': 36, 'd-endo': 2
+  },
+  stable: {
+    'a-accel': -2, 'a-conv': 1, 'a-buf': 1,
+    'r-tech': 9, 'r-pol': 8, 'r-thru': 3,
+    'd2-in': 6, 'd3-in': 12, 'd-win': 60, 'd-endo': 0
+  },
+  vtv: {
+    'a-accel': 2, 'a-conv': 1, 'a-buf': 2,
+    'r-tech': 6, 'r-pol': 1, 'r-thru': 0,
+    'd2-in': 48, 'd3-in': 24, 'd-win': 60, 'd-endo': 1
+  },
+  custom: {
+    'a-accel': 2, 'a-conv': 2, 'a-buf': 2,
+    'r-tech': 6, 'r-pol': 5, 'r-thru': 2,
+    'd2-in': 18, 'd3-in': 30, 'd-win': 48, 'd-endo': 1
+  }
+};
+
+function loadPreset(name, btn) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  Object.entries(PRESETS[name]).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+  update();
+}
+
+update();
+</script>
+</body>
+</html>
