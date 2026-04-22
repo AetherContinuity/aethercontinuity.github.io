@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-007 — A/R/D Measurement Architecture | ACI</title>
+<meta name="description" content="Instrumentation framework for CN-004's three-variable model: accumulation rate (A), correction rate (R), and detection delay (D). Includes Finnish energy sector pilot calibration.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#2a4a6e;--panel:#eeeae2;--panel2:#e6e1d6;
+  --warn:#8b5e00;--danger:#8b2020;--ok:#2d7a4f;
+  --serif:Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;
+     line-height:1.78;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+            letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;
+          font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+.domain-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.dtag{font-family:var(--mono);font-size:.6rem;border:1px solid var(--line);
+      padding:2px 8px;border-radius:2px;color:var(--muted);}
+h1{font-size:1.65rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.cite{font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-top:10px;line-height:1.6;}
+.cite a{color:var(--accent);text-decoration:none;}
+
+nav{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.4rem;}
+
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+         letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;line-height:1.3;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;color:var(--ink);}
+p{margin-bottom:14px;}
+
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;
+          background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+                letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);
+         padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;
+               letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);
+         border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2.1;}
+
+.layer-block{border:1px solid var(--line);margin:18px 0;background:var(--bg);}
+.layer-header{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+              letter-spacing:.1em;padding:8px 14px;background:var(--ink);color:var(--bg);}
+.layer-body{padding:14px 16px;font-size:.87rem;line-height:1.8;}
+.layer-body ul{padding-left:1.2rem;margin-top:6px;}
+.layer-body li{margin-bottom:4px;}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+   color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);
+   background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+
+.regime-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0;}
+@media(max-width:560px){.regime-grid{grid-template-columns:1fr;}}
+.regime-card{border:1px solid var(--line);padding:12px 14px;border-radius:2px;}
+.regime-card.stable{border-left:4px solid var(--ok);}
+.regime-card.degrade{border-left:4px solid var(--warn);}
+.regime-card.latent{border-left:4px solid var(--warn);opacity:.8;}
+.regime-card.spiral{border-left:4px solid var(--danger);}
+.regime-name{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+             letter-spacing:.08em;margin-bottom:6px;}
+.regime-name.ok{color:var(--ok);}
+.regime-name.warn{color:var(--warn);}
+.regime-name.danger{color:var(--danger);}
+.regime-cond{font-family:var(--mono);font-size:.75rem;color:var(--ink);margin-bottom:4px;}
+.regime-desc{font-size:.78rem;color:var(--muted);line-height:1.6;}
+
+.pilot-table td:first-child{font-family:var(--mono);font-size:.75rem;font-weight:600;}
+.pilot-table td:nth-child(2){font-family:var(--mono);font-size:.73rem;color:var(--danger);}
+.pilot-table td:nth-child(3){font-size:.78rem;color:var(--muted);}
+
+.finding{border:1px solid var(--line);background:var(--panel2);
+         padding:14px 18px;margin:28px 0;font-size:.88rem;line-height:1.8;}
+.finding h3{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+            letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:normal;}
+
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;
+          font-family:var(--mono);font-size:.66rem;color:var(--muted);line-height:2;}
+.preceded a{color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="aci-header">
+  <div class="aci-kicker">Aether Continuity Institute · Technical Note</div>
+  <h1>TN-007 — A/R/D Measurement Architecture</h1>
+  <p class="subtitle">Instrumentation framework for the distributed optimisation diagnostic: accumulation, correction, and detection delay as observable regime indicators</p>
+  <div class="aci-meta">
+    <div><strong>Version</strong> 1.0</div>
+    <div><strong>Date</strong> April 2026</div>
+    <div><strong>Basis</strong> CN-004 v0.3</div>
+    <div><strong>Status</strong> Working Draft</div>
+    <div><strong>Pilot case</strong> Finnish energy sector</div>
+    <div><strong>Domain</strong> D-1 · D-3 · D-4</div>
+  </div>
+  <div class="domain-tags">
+    <span class="dtag">D-1 Duration Adequacy</span>
+    <span class="dtag">D-3 Decision Capacity</span>
+    <span class="dtag">D-4 Compound Stress</span>
+  </div>
+  <p class="cite">
+    Cross-references: <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> (theoretical basis) ·
+    <a href="https://aethercontinuity.org/papers/wp-003-itt.html">WP-003</a> (ITT) ·
+    <a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">SM-006</a> (empirical data) ·
+    <a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · 
+    <a href="https://aethercontinuity.org/decisions/dt-002-chp-phase-out-finland.html">DT-002</a>
+  </p>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Purpose</div>
+  CN-004 v0.3 establishes three variables — A (accumulation rate), R (correction rate), D (detection delay) — as the operational parameters of a diagnostic framework for systemic degradation in democratic governance. These variables are not directly observable. This note specifies how to make them observable through proxy measurement, defines the three-layer architecture required, and provides a pilot calibration for the Finnish energy sector using available data. The goal is not precise measurement but regime identification: distinguishing stable, degradation, latent degradation, and spiral states with sufficient reliability to support actionable diagnosis.
+</div>
+
+<!-- § 01 -->
+<span class="sec-num">§ 01</span>
+<h2>Design Principle: Good Enough Observability</h2>
+
+<p>A measurement architecture for A, R and D will fail if it attempts perfect measurement. The variables describe system-level dynamics that emerge from thousands of institutional interactions, budget decisions, and information flows. No single instrument captures them directly.</p>
+
+<p>The correct design principle is <em>good enough observability</em>: a set of proxies that reliably distinguish regime states, even if they cannot precisely quantify each variable. This implies three prioritisation rules:</p>
+
+<p><strong>Trends over absolutes.</strong> Whether A is growing, stable, or declining is more diagnostic than its precise value. A reserve margin falling at 200 MW per year is a cleaner signal than a reserve margin of −3,300 MW at one point in time.</p>
+
+<p><strong>Ratios over units.</strong> The ratio A/R — whether accumulation outpaces correction — is the operationally relevant quantity. The units of A and R (MW, €/year, months) are secondary to their relative rates.</p>
+
+<p><strong>Delays over levels.</strong> For D, the time elapsed between physical threshold crossing and political recognition is the diagnostic quantity — not the absolute level of any stress indicator.</p>
+
+<!-- § 02 -->
+<span class="sec-num">§ 02</span>
+<h2>Three-Layer Architecture</h2>
+
+<p>CN-004's three variables map to three distinct observational layers, each requiring different data sources and measurement approaches.</p>
+
+<div class="layer-block">
+  <div class="layer-header">Layer I — Physical State Layer (A proxies)</div>
+  <div class="layer-body">
+    <p><em>What the system is doing regardless of institutional awareness.</em></p>
+    <ul>
+      <li>Infrastructure capacity metrics: reserve margins, maintenance backlog, debt-to-GDP trajectory</li>
+      <li>Resource consumption rates: drawdown of buffers (hydro storage, fiscal reserves, institutional staff)</li>
+      <li>Dependency ratios: import dependency, demographic support ratio, external financing share</li>
+      <li>Gap metrics: difference between required and available capacity in domain-specific units</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>Key property:</strong> Layer I data exists whether or not institutions have processed it. ENTSO-E publishes it; parliaments may not have read it.</p>
+  </div>
+</div>
+
+<div class="layer-block">
+  <div class="layer-header">Layer II — Institutional Response Layer (R proxies)</div>
+  <div class="layer-body">
+    <p><em>What the system is actually doing in response — not what it intends to do.</em></p>
+    <ul>
+      <li>Decision-to-implementation elapsed time: from formal decision to operational change</li>
+      <li>Institutional throughput: decisions initiated vs. decisions implemented per period</li>
+      <li>Budget execution rate: allocated funds vs. disbursed funds in correction-relevant programmes</li>
+      <li>Regulatory lead time: from policy initiation to market-effective rule</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>Key property:</strong> R measures <em>realised</em> correction, not announced intention. A capacity mechanism decision is not R. A capacity mechanism producing contracted capacity is R.</p>
+  </div>
+</div>
+
+<div class="layer-block">
+  <div class="layer-header">Layer III — Signal Layer (D proxies)</div>
+  <div class="layer-body">
+    <p><em>The time between physical reality and political action — decomposed into three sub-delays.</em></p>
+    <ul>
+      <li><strong>D1 — Phenomenon to reporting:</strong> time between physical threshold crossing and its appearance in any institutional report, audit, or monitoring output</li>
+      <li><strong>D2 — Reporting to agenda:</strong> time between institutional reporting and the issue reaching decision-making agenda (parliamentary question, ministerial briefing, cabinet discussion)</li>
+      <li><strong>D3 — Agenda to action:</strong> time between political recognition and the initiation of a correction mechanism (budget allocation, legislative process, regulatory change)</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>Total D = D1 + D2 + D3</strong></p>
+    <p><strong>Key property:</strong> D is endogenous in the spiral regime. As A &gt; R persists, the institutions that measure D1, transmit D2, and initiate D3 are themselves subject to resource constraints — making D grow as the system it monitors deteriorates.</p>
+  </div>
+</div>
+
+<!-- § 03 -->
+<span class="sec-num">§ 03</span>
+<h2>Regime Identification Matrix</h2>
+
+<p>With proxies for A, R, and D established, regime identification proceeds by cross-referencing their relative states. The matrix below defines the four regimes from CN-004 v0.3 in observable terms.</p>
+
+<div class="regime-grid">
+  <div class="regime-card stable">
+    <div class="regime-name ok">Stable</div>
+    <div class="regime-cond">R ≥ A · D stable or declining</div>
+    <div class="regime-desc">Correction mechanisms keep pace with accumulation. Monitoring infrastructure functioning. No compound feedback present.</div>
+  </div>
+  <div class="regime-card degrade">
+    <div class="regime-name warn">Degradation</div>
+    <div class="regime-cond">A &gt; R · D variable</div>
+    <div class="regime-desc">Accumulation outpaces correction. Problem is politically recognised but correction is insufficient or delayed. Correctable if R is increased.</div>
+  </div>
+  <div class="regime-card latent">
+    <div class="regime-name warn">Latent Degradation</div>
+    <div class="regime-cond">A &gt; R · D high · politically invisible</div>
+    <div class="regime-desc">Accumulation outpaces correction but the gap is not politically recognised. System appears stable. This is the most dangerous regime: correction window is closing without visible signal.</div>
+  </div>
+  <div class="regime-card spiral">
+    <div class="regime-name danger">Spiral</div>
+    <div class="regime-cond">A &gt;&gt; R · D growing · R declining</div>
+    <div class="regime-desc">Signal degradation loop active. Monitoring infrastructure weakens as system weakens. Threshold crossing precedes political recognition by a growing margin. Standard interventions insufficient.</div>
+  </div>
+</div>
+
+<p>Regime identification does not require precise values of A, R, and D. It requires directional assessment of their trends and their ratio. The most operationally significant distinction is between Degradation and Latent Degradation: in the former, political recognition exists and the question is correction speed; in the latter, political recognition has not yet occurred and D-reduction is the priority intervention.</p>
+
+<!-- § 04 -->
+<span class="sec-num">§ 04</span>
+<h2>Pilot Calibration: Finnish Energy Sector</h2>
+
+<p>The Finnish energy sector provides the most data-rich domain for a pilot calibration, because ENTSO-E's Transparency Platform publishes Layer I data at hourly resolution. SM-006's empirical validation (April 2026) provides the baseline. DT-001 and DT-002 provide the R measurement reference points.</p>
+
+<h3>Layer I — A proxies (Finnish energy, 2026)</h3>
+
+<table class="pilot-table">
+  <tr>
+    <th>Proxy</th>
+    <th>Current value</th>
+    <th>Trend</th>
+  </tr>
+  <tr>
+    <td>Adequacy margin</td>
+    <td>−3,300 MW</td>
+    <td>Worsening: Stegra/HYBRIT absorb SE1 surplus 2027–2030, adding 3–4 GW competitive demand</td>
+  </tr>
+  <tr>
+    <td>SE1 import dependency</td>
+    <td>+4,771 GWh net 2026; peak hour 3,298 MW</td>
+    <td>Structurally growing; SE1 buffer shrinking</td>
+  </tr>
+  <tr>
+    <td>Hydro reservoir drawdown</td>
+    <td>−1,500,000 MWh Jan–Apr 2026</td>
+    <td>Primary buffer consumed seasonally; recovery weather-dependent</td>
+  </tr>
+  <tr>
+    <td>Russian interconnection</td>
+    <td>0 GWh (permanent)</td>
+    <td>Structural step-change; not recoverable</td>
+  </tr>
+  <tr>
+    <td>CHP dispatchable capacity</td>
+    <td>~750 MW–4 GW at risk by 2032</td>
+    <td>Declining: phase-out without committed replacement (DT-002)</td>
+  </tr>
+  <tr>
+    <td>Inelastic load growth (DC)</td>
+    <td>+2–3 GW pipeline 2025–2030</td>
+    <td>Growing: rigid demand added without demand-response obligation</td>
+  </tr>
+</table>
+
+<p><strong>A assessment:</strong> Multiple proxies confirm A &gt; 0 with positive gradient. The convergence window (SM-006 §03) identifies 2028 as the point at which four simultaneous A-components peak simultaneously. A is not a single variable in this domain — it is a vector of accumulating stresses whose compound effect exceeds any single indicator.</p>
+
+<h3>Layer II — R proxies (Finnish energy, 2026)</h3>
+
+<table class="pilot-table">
+  <tr>
+    <th>Correction mechanism</th>
+    <th>Current status</th>
+    <th>R assessment</th>
+  </tr>
+  <tr>
+    <td>Capacity mechanism (DT-001)</td>
+    <td>No decision initiated as of April 2026</td>
+    <td>R = 0 for this component. Decision-to-operation timeline 5–10 years. If initiated today: operational 2031–2036.</td>
+  </tr>
+  <tr>
+    <td>CHP conversion programme (DT-002)</td>
+    <td>No programme initiated as of April 2026</td>
+    <td>R = 0 for this component. Conversion timeline 2–4 years per node. If initiated today: first nodes operational 2028–2030.</td>
+  </tr>
+  <tr>
+    <td>SE1 grid reinforcement</td>
+    <td>Swedish national plans; not Finland-specific</td>
+    <td>R partial and externally determined. Finnish system cannot initiate this correction unilaterally.</td>
+  </tr>
+  <tr>
+    <td>Demand response (DC obligations)</td>
+    <td>No regulatory framework for grid-conditional connection</td>
+    <td>R = 0. DT-004 identifies this gap. Decision-to-implementation 2–3 years minimum.</td>
+  </tr>
+</table>
+
+<p><strong>R assessment:</strong> Across the primary correction mechanisms, R ≈ 0 in 2026. Not because the corrections are unknown or technically unavailable — SM-003, SP-002, and DT-001 through DT-004 document them in detail — but because the institutional decisions to initiate them have not been taken. This is the precise condition CN-004 §08 identifies as diagnostically ambiguous: it is consistent with a system that is slow but correctable, and also with a system whose correction capacity is itself subject to A &gt; R dynamics through fiscal constraint and political cycle misalignment.</p>
+
+<h3>Layer III — D proxies (Finnish energy, 2026)</h3>
+
+<table class="pilot-table">
+  <tr>
+    <th>Sub-delay</th>
+    <th>Estimated magnitude</th>
+    <th>Evidence basis</th>
+  </tr>
+  <tr>
+    <td>D1: Phenomenon → reporting</td>
+    <td>~0 months</td>
+    <td>ENTSO-E publishes hourly data in near-real-time. Physical state is continuously reported. D1 is minimal in the energy domain — this is ENTSO-E's function as a D-reduction mechanism.</td>
+  </tr>
+  <tr>
+    <td>D2: Reporting → agenda</td>
+    <td>12–36 months (estimated)</td>
+    <td>SM-006 documents the −3,300 MW gap from 2026 operational data. No parliamentary agenda item or ministerial communication has referenced this specific figure as of April 2026. The data exists; political agenda uptake has not occurred.</td>
+  </tr>
+  <tr>
+    <td>D3: Agenda → action</td>
+    <td>24–60 months (structural)</td>
+    <td>Finnish legislative and regulatory cycle. A recognised problem entering the parliamentary agenda in 2026 would produce a regulatory instrument no earlier than 2028–2031, given coalition dynamics, EU notification requirements, and procurement processes.</td>
+  </tr>
+  <tr>
+    <td>Total D (estimated)</td>
+    <td>36–96 months</td>
+    <td>Lower bound: D2 + D3 minimum. Upper bound: D2 extended by political cycle misalignment. Convergence window closes 2027–2030. D upper bound exceeds window.</td>
+  </tr>
+</table>
+
+<p><strong>D assessment:</strong> The critical finding is in the final row. D's upper bound (96 months / 8 years) exceeds the intervention window identified in SM-006 (2027–2030 / 12–48 months from April 2026). This means that under the worst-case D scenario, political recognition and actionable correction arrive after the physical stress peak — the definitional condition of the spiral regime's signal degradation loop.</p>
+
+<!-- § 05 -->
+<span class="sec-num">§ 05</span>
+<h2>Regime Assessment: Finnish Energy Sector</h2>
+
+<div class="callout">
+  <div class="callout-label">Pilot Assessment — Finnish Energy · April 2026</div>
+  <p><strong>A:</strong> Confirmed positive and growing. Multiple independent proxies converge. Convergence peak: 2028.</p>
+  <p><strong>R:</strong> Approximately zero across primary correction mechanisms. No capacity mechanism, no CHP conversion programme, no DC demand-response framework initiated.</p>
+  <p><strong>D:</strong> D1 minimal (ENTSO-E). D2 estimated 12–36 months. D3 structural 24–60 months. Total D upper bound exceeds intervention window.</p>
+  <p style="margin-top:10px;"><strong>Regime:</strong> The Finnish energy sector in April 2026 exhibits the defining characteristics of <strong>Latent Degradation</strong> transitioning toward <strong>Spiral</strong>. The physical state (A &gt; R) is confirmed. Political recognition has not occurred at the level required to initiate correction. D upper bound exceeds the available intervention window. The endogeneity condition for spiral entry — monitoring infrastructure weakening as system weakens — is not yet confirmed but cannot be excluded given fiscal constraint on regulatory capacity.</p>
+</div>
+
+<!-- § 06 -->
+<span class="sec-num">§ 06</span>
+<h2>ACI's Role as D-Reduction Infrastructure</h2>
+
+<p>The pilot calibration clarifies the functional role of ACI's publication programme in structural terms. ACI does not produce policy. It does not implement corrections. Its diagnostic function maps directly onto the D-reduction problem.</p>
+
+<p>D1 is already minimal in Finnish energy — ENTSO-E provides near-real-time physical state data. The binding delays are D2 and D3. ACI's work operates at the D1→D2 boundary: translating available physical data into analytically structured, institutionally legible form that reduces the time between data existence and agenda recognition.</p>
+
+<p>SM-006's publication of the −3,300 MW / 3,298 MW equivalence is a D2-reduction attempt: it packages Layer I data in a form that political and institutional actors can reference without specialist interpretation. WEM's live dashboard reduces D1 further. DT-001 through DT-004 reduce D3 by pre-structuring the correction decisions with implementation specifications.</p>
+
+<p>This does not guarantee D-reduction success. Political agenda formation depends on factors outside ACI's diagnostic scope — electoral timing, coalition dynamics, competing priorities, and the availability of a political actor willing to bear the first-mover cost described in CN-003. But it identifies the structural function of independent diagnostic publication in a system where D is the binding constraint on timely correction.</p>
+
+<!-- § 07 -->
+<span class="sec-num">§ 07</span>
+<h2>Measurement Limitations and Next Steps</h2>
+
+<p>Three limitations of the pilot calibration require explicit statement.</p>
+
+<p>First, D2 and D3 estimates are qualitative. They are derived from observed institutional behaviour patterns — the VTV correction lag (five years, documented in CN-004 §06), the general Finnish regulatory cycle, and the absence of agenda-level references to ENTSO-E adequacy data — but they are not measured from a systematic database of policy response times. A rigorous D measurement programme would require systematic tracking of the data → agenda → action sequence across multiple policy domains over multiple years.</p>
+
+<p>Second, the R ≈ 0 assessment assumes that announced studies, parliamentary questions, and ministerial statements do not constitute R. This is the definitional distinction from CN-004: R is realised correction, not announced intention. If any of the DT-series mechanisms is formally initiated before the convergence window closes, R becomes nonzero and the regime assessment changes.</p>
+
+<p>Third, the A vector assessment conflates several independent accumulation processes. The convergence window analysis (SM-006 §03) addresses this by identifying 2028 as the compound peak — but individual A components have different trajectories. CHP phase-out is a slow-moving A component; SE1 surplus compression from Stegra/HYBRIT is a faster one. A full A measurement would decompose the vector into its components with independent trend estimates.</p>
+
+<div class="finding">
+  <h3>TN-007 — Core Specification</h3>
+  <p>The A/R/D measurement architecture operates across three observational layers: the physical state layer (A proxies), the institutional response layer (R proxies), and the signal layer (D proxies decomposed into D1, D2, D3). Regime identification requires directional assessment of A/R ratio and D trajectory — not precise quantification. The Finnish energy sector pilot calibration finds: A confirmed positive with 2028 convergence peak; R approximately zero across primary correction mechanisms; D upper bound exceeding intervention window. Assessed regime: Latent Degradation transitioning toward Spiral. The endogeneity condition for spiral entry — D growing as system weakens — cannot be excluded. Independent diagnostic publication functions as D-reduction infrastructure at the D1→D2 boundary.</p>
+</div>
+
+<div class="preceded">
+  Cross-references:<br>
+  <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> — Distributed Optimisation Without a Common Function (theoretical basis) ·
+  <a href="https://aethercontinuity.org/papers/wp-003-itt.html">WP-003</a> — Institutional Termination Time ·
+  <a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">SM-006</a> — The 2028 Convergence Window ·
+  <a href="https://aethercontinuity.org/papers/sm-007-convergence-finding.html">SM-007</a> — The Convergence Finding ·
+  <a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> ·
+  <a href="https://aethercontinuity.org/decisions/dt-002-chp-phase-out-finland.html">DT-002</a> ·
+  <a href="https://aethercontinuity.org/decisions/dt-004-data-centres-grid-connection.html">DT-004</a> ·
+  <a href="https://aethercontinuity.org/supplements/ACI_DA-001_v1_1.html">DA-001</a><br><br>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Technical Note TN-007 · April 2026 · v1.0<br>
+  Domain D-1 · D-3 · D-4 · Open Working Draft
+</div>
+
+</body>
+</html>
