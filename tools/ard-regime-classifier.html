@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A/R/D Regime Classifier · ACI</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2333;
+  --border: #30363d;
+  --ink: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --danger: #f85149;
+  --spiral: #bc8cff;
+  --mono: 'Courier New', Courier, monospace;
+  --serif: Georgia, 'Times New Roman', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* Header */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+}
+.header-kicker {
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+.header h1 {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: normal;
+  color: var(--ink);
+  letter-spacing: .02em;
+}
+.header-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: .3rem;
+}
+.header-links {
+  margin-top: .75rem;
+  font-size: 11px;
+}
+.header-links a { color: var(--accent); text-decoration: none; margin-right: 1.2rem; }
+
+/* Layout */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media(max-width:640px){ .grid { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem;
+}
+.panel-label {
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.panel-label .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-a { background: var(--danger); }
+.dot-r { background: var(--ok); }
+.dot-d { background: var(--warn); }
+.dot-c { background: var(--spiral); }
+
+/* Sliders */
+.param-row {
+  margin-bottom: 1rem;
+}
+.param-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: .35rem;
+}
+.param-name {
+  font-size: 11px;
+  color: var(--muted);
+}
+.param-val {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--ink);
+  min-width: 3rem;
+  text-align: right;
+}
+input[type=range] {
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--accent);
+  height: 4px;
+}
+
+/* Shadow R toggle */
+.shadow-r {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: .75rem 1rem;
+  margin-top: 1rem;
+}
+.shadow-r-label {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--spiral);
+  margin-bottom: .5rem;
+}
+.shadow-r-desc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: .5rem;
+  font-family: var(--serif);
+  font-style: italic;
+}
+.sr-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  gap: .5rem;
+}
+.sr-item {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: .5rem .65rem;
+}
+.sr-item-label { color: var(--muted); font-size: 10px; }
+.sr-item-val { color: var(--ink); font-size: 12px; font-weight: bold; margin-top: .2rem; }
+
+/* D decomposition */
+.d-decomp {
+  margin-top: .75rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .4rem;
+}
+.d-sub {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: .5rem .65rem;
+  text-align: center;
+}
+.d-sub-name { font-size: 10px; color: var(--muted); }
+.d-sub-val { font-size: 13px; font-weight: bold; margin-top: .2rem; }
+
+/* Regime display */
+.regime-panel {
+  grid-column: 1 / -1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.regime-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  transition: background .4s;
+}
+.regime-panel.stable::before { background: var(--ok); }
+.regime-panel.degradation::before { background: var(--warn); }
+.regime-panel.latent::before { background: var(--warn); }
+.regime-panel.spiral::before { background: var(--spiral); }
+
+.regime-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+.regime-name-big {
+  font-size: 1.6rem;
+  font-weight: bold;
+  letter-spacing: .05em;
+  transition: color .4s;
+}
+.regime-name-big.stable { color: var(--ok); }
+.regime-name-big.degradation { color: var(--warn); }
+.regime-name-big.latent { color: var(--warn); }
+.regime-name-big.spiral { color: var(--spiral); }
+
+.regime-conditions {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.regime-desc {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  padding-top: .85rem;
+  margin-top: .85rem;
+}
+
+/* Coupling matrix */
+.coupling-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  margin-top: .75rem;
+}
+.c-cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: .6rem;
+  text-align: center;
+}
+.c-cell-name { font-size: 9px; color: var(--muted); letter-spacing: .08em; }
+.c-cell-val {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: .25rem;
+  transition: color .3s;
+}
+
+/* Finnish preset */
+.preset-bar {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.preset-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: .35rem .8rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+.preset-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,.08); }
+
+/* Indicator bar */
+.ind-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: .4rem;
+}
+.ind-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .3s, background .3s;
+}
+
+/* Spiral warning */
+.spiral-warn {
+  display: none;
+  background: rgba(188,140,255,.08);
+  border: 1px solid rgba(188,140,255,.3);
+  border-radius: 3px;
+  padding: .65rem .9rem;
+  margin-top: .85rem;
+  font-size: 11px;
+  color: var(--spiral);
+  line-height: 1.7;
+}
+.spiral-warn.visible { display: block; }
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 2rem;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 2;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="header">
+    <div class="header-kicker">Aether Continuity Institute · Diagnostic Instrument</div>
+    <h1>A/R/D Regime Classifier</h1>
+    <div class="header-sub">Accumulation · Correction · Detection Delay — live regime identification</div>
+    <div class="header-links">
+      <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a>
+      <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a>
+      <a href="https://aethercontinuity.org/">ACI</a>
+    </div>
+  </div>
+
+  <!-- Presets -->
+  <div class="preset-bar">
+    <button class="preset-btn active" onclick="loadPreset('fi_energy')">🇫🇮 Finland Energy 2026</button>
+    <button class="preset-btn" onclick="loadPreset('stable')">Stable reference</button>
+    <button class="preset-btn" onclick="loadPreset('vtv')">VTV 2016–2021</button>
+    <button class="preset-btn" onclick="loadPreset('custom')">Custom</button>
+  </div>
+
+  <div class="grid">
+
+    <!-- A panel -->
+    <div class="panel">
+      <div class="panel-label"><span class="dot dot-a"></span> A — Accumulation Rate</div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">Stress acceleration (d/dt)</span>
+          <span class="param-val" id="a-accel-val">+4</span>
+        </div>
+        <input type="range" id="a-accel" min="-5" max="10" step="1" value="4" oninput="update()">
+        <div class="ind-bar"><div class="ind-fill" id="a-accel-bar" style="width:60%;background:var(--danger)"></div></div>
+      </div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">Convergence pressure (compound)</span>
+          <span class="param-val" id="a-conv-val">High</span>
+        </div>
+        <input type="range" id="a-conv" min="0" max="4" step="1" value="3" oninput="update()">
+      </div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">Buffer depletion rate</span>
+          <span class="param-val" id="a-buf-val">Fast</span>
+        </div>
+        <input type="range" id="a-buf" min="0" max="4" step="1" value="3" oninput="update()">
+      </div>
+
+      <div style="margin-top:1rem;font-size:10px;color:var(--muted);line-height:1.7;">
+        A = stress acceleration, not level.<br>
+        Positive = accumulation outpacing recovery.<br>
+        Finnish energy: reserve margin −3,300 MW + SE1 compression.
+      </div>
+    </div>
+
+    <!-- R panel -->
+    <div class="panel">
+      <div class="panel-label"><span class="dot dot-r"></span> R — Correction Rate</div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">Realised correction velocity</span>
+          <span class="param-val" id="r-vel-val">≈0</span>
+        </div>
+        <input type="range" id="r-vel" min="0" max="10" step="1" value="0" oninput="update()">
+        <div class="ind-bar"><div class="ind-fill" id="r-vel-bar" style="width:0%;background:var(--ok)"></div></div>
+      </div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">Decision throughput (implemented/decided)</span>
+          <span class="param-val" id="r-thru-val">Low</span>
+        </div>
+        <input type="range" id="r-thru" min="0" max="4" step="1" value="0" oninput="update()">
+      </div>
+
+      <div class="shadow-r">
+        <div class="shadow-r-label">Shadow R — Technical Capacity</div>
+        <div class="shadow-r-desc">What R would be if decision were taken today. Distinguishes political inertia from technical incapacity.</div>
+        <div class="sr-row">
+          <div class="sr-item">
+            <div class="sr-item-label">Technical capacity</div>
+            <div class="sr-item-val" id="sr-tech">High</div>
+          </div>
+          <div class="sr-item">
+            <div class="sr-item-label">Political inertia</div>
+            <div class="sr-item-val" id="sr-pol">High</div>
+          </div>
+          <div class="sr-item">
+            <div class="sr-item-label">Diagnosis</div>
+            <div class="sr-item-val" id="sr-diag" style="color:var(--warn)">Inertia</div>
+          </div>
+        </div>
+        <div style="margin-top:.75rem;">
+          <div class="param-head">
+            <span class="param-name">Shadow R (0=none, 10=full)</span>
+            <span class="param-val" id="sr-val">8</span>
+          </div>
+          <input type="range" id="shadow-r" min="0" max="10" step="1" value="8" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- D panel -->
+    <div class="panel">
+      <div class="panel-label"><span class="dot dot-d"></span> D — Detection Delay</div>
+
+      <div class="d-decomp">
+        <div class="d-sub">
+          <div class="d-sub-name">D1: physical→report</div>
+          <div class="d-sub-val" id="d1-val" style="color:var(--ok)">~0 mo</div>
+        </div>
+        <div class="d-sub">
+          <div class="d-sub-name">D2: report→agenda</div>
+          <div class="d-sub-val" id="d2-val" style="color:var(--warn)">24 mo</div>
+        </div>
+        <div class="d-sub">
+          <div class="d-sub-name">D3: agenda→action</div>
+          <div class="d-sub-val" id="d3-val" style="color:var(--danger)">42 mo</div>
+        </div>
+      </div>
+
+      <div class="param-row" style="margin-top:1rem;">
+        <div class="param-head">
+          <span class="param-name">D2 — reporting to agenda (months)</span>
+          <span class="param-val" id="d2-slider-val">24</span>
+        </div>
+        <input type="range" id="d2-slider" min="0" max="60" step="3" value="24" oninput="update()">
+      </div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">D3 — agenda to action (months)</span>
+          <span class="param-val" id="d3-slider-val">42</span>
+        </div>
+        <input type="range" id="d3-slider" min="6" max="84" step="6" value="42" oninput="update()">
+      </div>
+
+      <div class="param-row">
+        <div class="param-head">
+          <span class="param-name">D endogeneity (D growing as system weakens)</span>
+          <span class="param-val" id="d-endo-val">Medium</span>
+        </div>
+        <input type="range" id="d-endo" min="0" max="4" step="1" value="2" oninput="update()">
+      </div>
+
+      <div style="margin-top:.75rem;font-size:10px;color:var(--muted);">
+        Total D = D1 + D2 + D3<br>
+        Finnish energy: D1≈0 (ENTSO-E), D2 est. 12–36mo, D3 est. 24–60mo
+      </div>
+    </div>
+
+    <!-- Coupling panel -->
+    <div class="panel">
+      <div class="panel-label"><span class="dot dot-c"></span> C — Coupling Strength</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:.75rem;font-family:var(--serif);font-style:italic;">
+        How strongly A, R, D interact. High coupling = phase transitions are rapid and hard to reverse.
+      </div>
+
+      <div class="coupling-grid" id="coupling-grid">
+        <div class="c-cell">
+          <div class="c-cell-name">A→D</div>
+          <div class="c-cell-val" id="c-ad">—</div>
+        </div>
+        <div class="c-cell">
+          <div class="c-cell-name">A→R</div>
+          <div class="c-cell-val" id="c-ar">—</div>
+        </div>
+        <div class="c-cell">
+          <div class="c-cell-name">D→R</div>
+          <div class="c-cell-val" id="c-dr">—</div>
+        </div>
+      </div>
+
+      <div class="param-row" style="margin-top:1rem;">
+        <div class="param-head">
+          <span class="param-name">Intervention window remaining (months)</span>
+          <span class="param-val" id="window-val">36</span>
+        </div>
+        <input type="range" id="window" min="0" max="96" step="6" value="36" oninput="update()">
+      </div>
+
+      <div style="margin-top:.75rem;font-size:11px;" id="window-status">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- Regime output — full width -->
+    <div class="regime-panel" id="regime-panel">
+      <div class="regime-row">
+        <div class="regime-name-big" id="regime-name">—</div>
+        <div class="regime-conditions" id="regime-cond">—</div>
+      </div>
+      <div class="regime-desc" id="regime-desc">—</div>
+      <div class="spiral-warn" id="spiral-warn">
+        ⚠ Signal degradation loop active: D is endogenous. As the system weakens, monitoring infrastructure weakens.
+        D grows. Political recognition arrives later. The collapse is not sudden — the recognition is.
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <div class="footer">
+    A/R/D Regime Classifier · Companion to
+    <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> and
+    <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a><br>
+    Aether Continuity Institute · <a href="https://aethercontinuity.org/">aethercontinuity.org</a> · 2026<br>
+    Parameters are qualitative regime indicators, not precise measurements. See TN-007 §01 for design principle.
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+const LABELS_CONV = ['None','Low','Moderate','High','Critical'];
+const LABELS_BUF  = ['None','Slow','Moderate','Fast','Rapid'];
+const LABELS_THRU = ['None','Low','Moderate','High','Full'];
+const LABELS_ENDO = ['None','Low','Medium','High','Endogenous'];
+
+const REGIMES = {
+  stable: {
+    cls: 'stable',
+    name: 'STABLE',
+    cond: 'R ≥ A · D stable or declining',
+    desc: 'Correction mechanisms keep pace with accumulation. Monitoring infrastructure functioning. No compound feedback. Standard governance processes are sufficient — the system self-corrects within its design parameters.'
+  },
+  degradation: {
+    cls: 'degradation',
+    name: 'DEGRADATION',
+    cond: 'A > R · D variable · politically recognised',
+    desc: 'Accumulation outpaces correction, but the gap is politically recognised. Correction is insufficient or delayed — not invisible. The system knows it is behind. The question is speed of response, not recognition. Correctable if R is increased within the intervention window.'
+  },
+  latent: {
+    cls: 'latent',
+    name: 'LATENT DEGRADATION',
+    cond: 'A > R · D high · politically invisible',
+    desc: 'Accumulation outpaces correction but the gap is not yet politically recognised. System appears stable. This is the most dangerous regime: the correction window is closing without visible signal. Threshold crossing has preceded political recognition. D-reduction is the priority intervention — not policy design, which cannot proceed without recognition.'
+  },
+  spiral: {
+    cls: 'spiral',
+    name: 'SPIRAL',
+    cond: 'A >> R · D growing (endogenous) · R declining',
+    desc: 'Signal degradation loop active. Monitoring infrastructure weakens as the system weakens. D grows endogenously. Political recognition arrives later as the gap grows larger. Standard policy interventions are insufficient — not because they are wrong, but because institutional capacity to implement them has degraded alongside the problem it was meant to address. Structural intervention required.'
+  }
+};
+
+function getA() {
+  const accel = parseInt(document.getElementById('a-accel').value);
+  const conv  = parseInt(document.getElementById('a-conv').value);
+  const buf   = parseInt(document.getElementById('a-buf').value);
+  return (accel + conv + buf); // composite score
+}
+
+function getR() {
+  const vel  = parseInt(document.getElementById('r-vel').value);
+  const thru = parseInt(document.getElementById('r-thru').value);
+  return vel + thru;
+}
+
+function getD() {
+  const d2 = parseInt(document.getElementById('d2-slider').value);
+  const d3 = parseInt(document.getElementById('d3-slider').value);
+  return d2 + d3; // D1 ≈ 0
+}
+
+function getEndo() { return parseInt(document.getElementById('d-endo').value); }
+function getShadowR() { return parseInt(document.getElementById('shadow-r').value); }
+function getWindow() { return parseInt(document.getElementById('window').value); }
+
+function classifyRegime(A, R, D, endo, window_mo) {
+  const totalD = D;
+  const Anorm = A;
+  const Rnorm = R;
+
+  // Spiral: A high, R low, D high and endogenous, D > window
+  if (Anorm > 10 && Rnorm < 3 && endo >= 3 && totalD > window_mo) {
+    return 'spiral';
+  }
+  // Latent: A > R, D high relative to window, low political recognition
+  if (Anorm > 8 && Rnorm < 4 && totalD > window_mo) {
+    return 'latent';
+  }
+  // Degradation: A > R but D manageable or politically recognised
+  if (Anorm > Rnorm + 2) {
+    return 'degradation';
+  }
+  // Stable
+  return 'stable';
+}
+
+function update() {
+  const A = getA();
+  const R = getR();
+  const D = getD();
+  const endo = getEndo();
+  const sr = getShadowR();
+  const win = getWindow();
+
+  // Update display values
+  const aAccel = parseInt(document.getElementById('a-accel').value);
+  document.getElementById('a-accel-val').textContent = (aAccel >= 0 ? '+' : '') + aAccel;
+  document.getElementById('a-conv-val').textContent  = LABELS_CONV[document.getElementById('a-conv').value];
+  document.getElementById('a-buf-val').textContent   = LABELS_BUF[document.getElementById('a-buf').value];
+  document.getElementById('r-vel-val').textContent   = document.getElementById('r-vel').value == 0 ? '≈0' : document.getElementById('r-vel').value;
+  document.getElementById('r-thru-val').textContent  = LABELS_THRU[document.getElementById('r-thru').value];
+  document.getElementById('sr-val').textContent      = sr;
+  document.getElementById('d2-slider-val').textContent = document.getElementById('d2-slider').value + ' mo';
+  document.getElementById('d3-slider-val').textContent = document.getElementById('d3-slider').value + ' mo';
+  document.getElementById('d-endo-val').textContent  = LABELS_ENDO[endo];
+  document.getElementById('window-val').textContent  = win + ' mo';
+
+  // D sub-values
+  const d2v = parseInt(document.getElementById('d2-slider').value);
+  const d3v = parseInt(document.getElementById('d3-slider').value);
+  document.getElementById('d2-val').textContent = d2v + ' mo';
+  document.getElementById('d2-val').style.color = d2v > 24 ? 'var(--danger)' : d2v > 12 ? 'var(--warn)' : 'var(--ok)';
+  document.getElementById('d3-val').textContent = d3v + ' mo';
+  document.getElementById('d3-val').style.color = d3v > 48 ? 'var(--danger)' : d3v > 24 ? 'var(--warn)' : 'var(--ok)';
+
+  // Indicator bars
+  const aBarPct = Math.min(100, Math.max(0, (A / 18) * 100));
+  document.getElementById('a-accel-bar').style.width = aBarPct + '%';
+  const rBarPct = Math.min(100, Math.max(0, (R / 14) * 100));
+  document.getElementById('r-vel-bar').style.width = rBarPct + '%';
+
+  // Shadow R diagnosis
+  const techHigh = sr >= 6;
+  const polHigh  = R < 3;
+  document.getElementById('sr-tech').textContent = sr >= 7 ? 'High' : sr >= 4 ? 'Medium' : 'Low';
+  document.getElementById('sr-pol').textContent  = polHigh ? 'High' : 'Low';
+  if (techHigh && polHigh) {
+    document.getElementById('sr-diag').textContent = 'Political inertia';
+    document.getElementById('sr-diag').style.color = 'var(--warn)';
+  } else if (!techHigh) {
+    document.getElementById('sr-diag').textContent = 'Capacity deficit';
+    document.getElementById('sr-diag').style.color = 'var(--danger)';
+  } else {
+    document.getElementById('sr-diag').textContent = 'Correctable';
+    document.getElementById('sr-diag').style.color = 'var(--ok)';
+  }
+
+  // Coupling matrix
+  const cAD = endo >= 3 ? 'HIGH' : endo >= 2 ? 'MED' : 'LOW';
+  const cAR = (A > 12 && R < 3) ? 'HIGH' : (A > 8) ? 'MED' : 'LOW';
+  const cDR = (D > win && R < 3) ? 'HIGH' : 'LOW';
+  const cColor = v => v === 'HIGH' ? 'var(--spiral)' : v === 'MED' ? 'var(--warn)' : 'var(--ok)';
+  document.getElementById('c-ad').textContent = cAD;
+  document.getElementById('c-ad').style.color = cColor(cAD);
+  document.getElementById('c-ar').textContent = cAR;
+  document.getElementById('c-ar').style.color = cColor(cAR);
+  document.getElementById('c-dr').textContent = cDR;
+  document.getElementById('c-dr').style.color = cColor(cDR);
+
+  // Window status
+  const totalD = d2v + d3v;
+  const winEl = document.getElementById('window-status');
+  if (totalD > win) {
+    winEl.innerHTML = `<span style="color:var(--danger)">⚑ Total D (${totalD} mo) exceeds intervention window (${win} mo).<br>Political recognition arrives after physical peak under current parameters.</span>`;
+  } else {
+    winEl.innerHTML = `<span style="color:var(--ok)">✓ Total D (${totalD} mo) within intervention window (${win} mo).</span>`;
+  }
+
+  // Classify
+  const regime = classifyRegime(A, R, D, endo, win);
+  const r = REGIMES[regime];
+
+  const panel = document.getElementById('regime-panel');
+  panel.className = 'regime-panel ' + r.cls;
+
+  const nameEl = document.getElementById('regime-name');
+  nameEl.textContent = r.name;
+  nameEl.className = 'regime-name-big ' + r.cls;
+
+  document.getElementById('regime-cond').textContent = r.cond;
+  document.getElementById('regime-desc').textContent = r.desc;
+
+  const spiralWarn = document.getElementById('spiral-warn');
+  spiralWarn.className = 'spiral-warn' + (regime === 'spiral' || (endo >= 3 && A > 10) ? ' visible' : '');
+
+  // Mark custom
+  if (!document.querySelector('.preset-btn.active[data-loading]')) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('[onclick="loadPreset(\'custom\')"]').classList.add('active');
+  }
+}
+
+function loadPreset(name) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  event.target.setAttribute('data-loading', '1');
+
+  const presets = {
+    fi_energy: {
+      'a-accel': 4, 'a-conv': 3, 'a-buf': 3,
+      'r-vel': 0, 'r-thru': 0, 'shadow-r': 8,
+      'd2-slider': 24, 'd3-slider': 42, 'd-endo': 2,
+      'window': 36
+    },
+    stable: {
+      'a-accel': -1, 'a-conv': 1, 'a-buf': 1,
+      'r-vel': 7, 'r-thru': 3, 'shadow-r': 8,
+      'd2-slider': 6, 'd3-slider': 12, 'd-endo': 0,
+      'window': 60
+    },
+    vtv: {
+      // VTV 2016-2021: slow accumulation, correction required external trigger, D high
+      'a-accel': 2, 'a-conv': 1, 'a-buf': 2,
+      'r-vel': 0, 'r-thru': 0, 'shadow-r': 5,
+      'd2-slider': 36, 'd3-slider': 24, 'd-endo': 1,
+      'window': 60
+    },
+    custom: {
+      'a-accel': 2, 'a-conv': 2, 'a-buf': 2,
+      'r-vel': 3, 'r-thru': 2, 'shadow-r': 6,
+      'd2-slider': 18, 'd3-slider': 30, 'd-endo': 1,
+      'window': 48
+    }
+  };
+
+  const p = presets[name];
+  Object.entries(p).forEach(([id, val]) => {
+    document.getElementById(id).value = val;
+  });
+
+  update();
+  setTimeout(() => event.target.removeAttribute('data-loading'), 100);
+}
+
+// Init
+update();
+</script>
+</body>
+</html>
