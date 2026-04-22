@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN-004 — Distributed Optimisation Without a Common Function · ACI</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f8f6f1;
+    --rule: #c8c0b0;
+    --accent: #2a4a6e;
+    --accent-light: #e8eef5;
+    --mono: 'Courier New', Courier, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.78;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  nav {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+  }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1.5rem; }
+  nav a:hover { text-decoration: underline; }
+
+  .masthead {
+    border-top: 3px solid var(--ink);
+    padding-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .series-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.5rem;
+  }
+
+  .doc-id {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.65rem;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: #666;
+    line-height: 1.9;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 0;
+    margin-bottom: 2.5rem;
+  }
+  .meta strong { color: var(--ink); }
+  .meta a { color: var(--accent); text-decoration: none; }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.25rem;
+    margin-top: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .thesis-box {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .thesis-box strong {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .formula {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    background: #f0ede6;
+    border: 1px solid var(--rule);
+    padding: 0.75rem 1.25rem;
+    margin: 1.25rem 0;
+    line-height: 2;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 1.5rem 0;
+    font-family: var(--mono);
+  }
+  th {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: left;
+    padding: 0.45rem 0.75rem;
+    font-weight: normal;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+
+  blockquote {
+    border-left: 2px solid var(--rule);
+    padding-left: 1.25rem;
+    margin: 1.25rem 0;
+    color: #555;
+    font-style: italic;
+  }
+
+  .finding-box {
+    border: 1px solid var(--rule);
+    background: #f5f3ee;
+    padding: 1rem 1.25rem;
+    margin: 2rem 0;
+    font-size: 0.92rem;
+  }
+
+  .finding-box h3 {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.6rem;
+    font-weight: normal;
+  }
+
+  .xref-block {
+    background: #f0ede6;
+    border: 1px solid var(--rule);
+    padding: 1rem 1.25rem;
+    margin-top: 3rem;
+    font-size: 0.875rem;
+  }
+  .xref-block h3 {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.75rem;
+    font-weight: normal;
+  }
+  .xref-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+    align-items: baseline;
+  }
+  .xref-id {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    min-width: 5rem;
+    color: #888;
+  }
+  .xref-block a { color: var(--accent); text-decoration: none; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888;
+    line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/fiction/">Fiction</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="masthead">
+  <div class="series-line">Aether Continuity Institute · Concept Note</div>
+  <div class="doc-id">ACI Concept Note No. 004 · Domain D-3 · D-4</div>
+  <h1>Distributed Optimisation Without a Common Function:<br>Structural Property or Correctable Fault?</h1>
+  <p class="subtitle">On the conditions under which democratic systems produce systemic degradation — and when they do not</p>
+</div>
+
+<div class="meta">
+  <strong>Version</strong> 0.1 &nbsp;·&nbsp; <strong>Date</strong> April 2026 &nbsp;·&nbsp; <strong>Domain</strong> D-3 · D-4<br>
+  <strong>Cross-references</strong> <a href="https://aethercontinuity.org/papers/wp-003-itt.html">WP-003</a> (ITT) · <a href="https://aethercontinuity.org/papers/wp-005-compound-stress-finland.html">WP-005</a> · <a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">SM-006</a> · <a href="https://aethercontinuity.org/papers/sm-007-convergence-finding.html">SM-007</a> · <a href="https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html">CN-003</a> · <a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">DT-001</a> · <a href="https://aethercontinuity.org/decisions/dt-002-chp-phase-out-finland.html">DT-002</a><br>
+  <strong>Status</strong> Open Working Draft · Subject to Revision
+</div>
+
+<!-- § 01 -->
+<span class="section-num">§ 01</span>
+<h2>The Question This Note Addresses</h2>
+
+<p>SM-007 identifies a structural condition that repeats across all ACI diagnostic domains: no actor owns the whole. Energy governance, institutional decision capacity, computing continuity, situational awareness — in each domain, the same finding emerges. The system has the required resources, knowledge, and formal authority. What it lacks is a common objective function that would allow these to be jointly optimised.</p>
+
+<p>This note asks a harder question than SM-007 poses. SM-007 documents the condition. CN-004 asks whether it is a <em>correctable coordination fault</em> or a <em>structural property</em> of democratic governance — and whether the distinction matters for what ACI's diagnostic work implies.</p>
+
+<p>The answer has direct consequences for how the DT-series decision tracks are interpreted. If the condition is a correctable fault, the DT-series documents viable intervention points. If it is a structural property, the DT-series documents the conditions under which degradation accelerates — and the intervention question becomes different in kind.</p>
+
+<!-- § 02 -->
+<span class="section-num">§ 02</span>
+<h2>Two Interpretations of the Same Observation</h2>
+
+<p>The observation that "no actor owns the whole" supports two analytically distinct interpretations.</p>
+
+<p><strong>Interpretation I — Coordination fault.</strong> Actors share a common underlying interest (system continuity, collective welfare, long-run stability) but fail to act on it because information is asymmetric, incentives are misaligned, or coordination structures are absent. The implication: correct the information asymmetry, realign the incentives, build the coordination structure. CN-003's pool method is an example of this class of solution — it does not change actors' interests, it changes the structure that prevents them from acting on interests they already share.</p>
+
+<p><strong>Interpretation II — Structural property.</strong> Actors do not share a common underlying interest in any operationally meaningful sense. They face permanently conflicting time horizons, value hierarchies, and accountability structures. A democratic system cannot impose a single objective function without ceasing to be democratic — pluralism is the condition of legitimacy, not an obstacle to it. The implication: the absence of common optimisation is not a defect. It is the system's design. Degradation is not a failure mode to be corrected. It is an emergent property of the design under specific conditions.</p>
+
+<p>CN-003 implicitly adopted Interpretation I. This note argues that both are partially correct, and that the critical analytical question is not which interpretation is right but under what conditions each applies.</p>
+
+<!-- § 03 -->
+<span class="section-num">§ 03</span>
+<h2>Three Theses</h2>
+
+<div class="thesis-box">
+  <strong>Thesis A</strong>
+  A democratic system cannot possess a single global optimisation function without breaking the pluralism that constitutes its legitimacy. This is not a failure of design. It is the design.
+</div>
+
+<div class="thesis-box">
+  <strong>Thesis B</strong>
+  The absence of a common function produces a permanent network of local optimisations operating across different time horizons, value hierarchies, and accountability structures. This network is not chaotic — it is structured by institutions, markets, legal frameworks, and electoral cycles. But it does not converge on a system-level optimum. It converges on a series of local equilibria that are collectively sub-optimal at the system level.
+</div>
+
+<div class="thesis-box">
+  <strong>Thesis C — The Critical Thesis</strong>
+  Systemic degradation begins not when local optimisation is present (it is always present) but when the accumulation rate of structural stress exceeds the system's correction rate. This is a threshold condition, not a continuous variable.
+</div>
+
+<p>Theses A and B describe a permanent condition. Thesis C identifies when that permanent condition becomes a crisis. The distinction matters because it implies that democratic systems are not inherently degrading — they are degrading under specific parameter conditions that can, in principle, be measured.</p>
+
+<!-- § 04 -->
+<span class="section-num">§ 04</span>
+<h2>The Operational Parameter: A &gt; R</h2>
+
+<p>WP-003 introduces Institutional Termination Time (ITT) as the point at which institutional response latency exceeds the remaining system adjustment horizon. CN-004 extends this concept to the political level by introducing a two-variable framework.</p>
+
+<div class="formula">
+Let A = accumulation rate of structural stress (per unit time)<br>
+Let R = correction rate of institutional response (per unit time)<br><br>
+<strong>Stable regime:</strong>     R ≥ A<br>
+<strong>Degradation regime:</strong>  A &gt; R<br>
+<strong>Spiral regime:</strong>       A &gt;&gt; R, with A increasing as R decreases (feedback)
+</div>
+
+<p>The degradation regime is not a failure of democracy. It is democracy operating under parameter conditions where the design's structural properties — distributed authority, short electoral cycles, pluralist accountability — systematically produce slower correction rates than the problems it faces accumulate.</p>
+
+<p>The spiral regime is qualitatively different: it is the condition in which degradation reduces correction capacity, which accelerates degradation. This is the regime that ACI's compound stress diagnostics identify as the target of concern — not A &gt; R in isolation, but the feedback loop in which A &gt; R produces institutional fatigue, resource depletion, and legitimacy erosion that further reduce R.</p>
+
+<p>Three observations follow from this framework that are not obvious from the coordination-fault interpretation:</p>
+
+<p>First, a system can appear stable for extended periods while operating in the A &gt; R regime, because the consequences of stress accumulation are distributed and delayed. The system is failing silently before it fails visibly.</p>
+
+<p>Second, the transition from stable to degradation regime is not produced by a single shock. It is produced by the crossing of a threshold — the point at which A exceeds R — which may occur gradually and without a discrete triggering event.</p>
+
+<p>Third, recovery from the spiral regime requires not merely policy correction but institutional capacity restoration — which is itself subject to the A &gt; R dynamic. This is the condition in which standard policy interventions fail not because they are wrong but because the institutional capacity to implement them has itself been degraded.</p>
+
+<!-- § 05 -->
+<span class="section-num">§ 05</span>
+<h2>Empirical Calibration: Four Finnish Cases</h2>
+
+<p>The A &gt; R framework is operationally meaningful only if A and R can be estimated, even approximately, in specific cases. Four Finnish cases provide this calibration.</p>
+
+<table>
+  <tr>
+    <th>Domain</th>
+    <th>Accumulation (A)</th>
+    <th>Correction (R)</th>
+    <th>Regime</th>
+  </tr>
+  <tr>
+    <td>Energy adequacy</td>
+    <td>−3 300 MW gap growing; SE1 buffer shrinking 2027–2030 as Stegra/HYBRIT absorb 3–4 GW</td>
+    <td>Capacity mechanism decision: 5–10 year implementation. CHP conversion: 2–4 years per node if initiated now</td>
+    <td><strong>A &gt; R confirmed.</strong> SM-006 empirical validation. Gap is present; correction has not been initiated</td>
+  </tr>
+  <tr>
+    <td>Infrastructure debt</td>
+    <td>~€50 billion accumulated; growing faster than maintenance budgets allow</td>
+    <td>Fiscal consolidation 8–11 billion required simultaneously; investment budgets compressed</td>
+    <td><strong>A &gt; R probable.</strong> Constraint collision: correction budget and accumulation competing for same fiscal space</td>
+  </tr>
+  <tr>
+    <td>Institutional oversight (VTV)</td>
+    <td>Mandate erosion: audit volume reduced, tone softened during Yli-Viikari tenure 2016–2021</td>
+    <td>Parliamentary intervention April 2021 — five years after initiation of misuse</td>
+    <td><strong>A &gt; R confirmed, then corrected.</strong> Correction required an external forcing event (media exposure). Self-correction did not occur</td>
+  </tr>
+  <tr>
+    <td>Demographic/welfare ratio</td>
+    <td>Dependency ratio deteriorating continuously; healthcare and pension obligations growing</td>
+    <td>Structural reforms require multi-decade implementation; electoral cycles 4 years</td>
+    <td><strong>A &gt; R structural.</strong> Time horizon mismatch is constitutive, not incidental</td>
+  </tr>
+</table>
+
+<p>The VTV case is analytically the most instructive because it did not remain in the A &gt; R regime indefinitely. It was corrected — but the correction required a forcing event external to the institutional system itself. The oversight body that should have self-corrected could not, because the mandate blindspot (discussed in §06) prevented internal correction. Parliamentary intervention became necessary — and the five-year lag between initiation and correction is a direct measurement of R in that domain.</p>
+
+<!-- § 06 -->
+<span class="section-num">§ 06</span>
+<h2>The Mandate Blindspot: A Structural Feature of Oversight Design</h2>
+
+<p>The VTV case introduces a concept that the coordination-fault interpretation cannot adequately explain: the <em>mandate blindspot</em>.</p>
+
+<p>VTV's institutional mandate is to audit the use of public funds. Its legitimacy derives from independence from the entities it audits. This independence is a design feature — an oversight body that is institutionally subordinate to its subjects cannot perform its function. But the same independence that enables oversight externally creates a gap internally: VTV's own conduct is not subject to VTV's oversight. The auditor of the state is not audited by the state's audit mechanism.</p>
+
+<p>This is not a design error. It is an inherent property of any hierarchical oversight architecture. Every oversight body has a domain it cannot observe from within. The question is not whether mandate blindspots exist — they always do — but whether the system is designed to compensate for them through external oversight, rotation of mandate, or other mechanisms.</p>
+
+<p>In the Finnish case, VTV's external oversight rested formally with the Parliamentary Chancellor's Office and substantively with the eduskunta's kansliatoimikunta. The oikeusasiamies issued a formal notice in December 2020 — four years after the misuse initiated. The eduskunta acted in April 2021. The total lag: five years.</p>
+
+<p>During those five years, the internal correction mechanism was structurally unavailable. The external correction mechanism required the accumulation of evidence sufficient to trigger parliamentary attention — a threshold that was crossed only after media exposure. The system corrected, but only after the mandate blindspot had been filled by journalism rather than by institutional design.</p>
+
+<blockquote>
+  The mandate blindspot is not an anomaly in the Finnish governance structure. It is a recurring feature of hierarchical oversight architectures. Every institution that oversees others has domains it cannot observe from within. This is the structural condition that makes external oversight, investigative journalism, and whistle-blower protections system-critical rather than supplementary.
+</blockquote>
+
+<!-- § 07 -->
+<span class="section-num">§ 07</span>
+<h2>When Local Optimisation Does Not Produce Degradation</h2>
+
+<p>Thesis A establishes that distributed optimisation without a common function is a permanent condition of democratic governance. This does not imply that degradation is permanent or inevitable. The Finnish cases above include one partial correction (VTV) alongside three domains where A &gt; R persists. This requires explanation.</p>
+
+<p>Distributed optimisation produces stable outcomes — or at least does not produce spiral degradation — under three conditions that can be specified independently of any common objective function.</p>
+
+<p><strong>Condition 1: Time horizon alignment.</strong> When the consequences of local optimisation decisions fall within the same electoral or accountability cycle as the decisions themselves, actors face the costs of their choices before those costs are distributed to others. Short-horizon problems (municipal budgeting, annual procurement) tend to self-correct more readily than long-horizon problems (energy infrastructure, demographic transition) because the feedback loop closes within the decision-maker's tenure.</p>
+
+<p><strong>Condition 2: Consequence visibility.</strong> When the downstream consequences of accumulating stress are observable before they become irreversible, political systems can mobilise correction. Energy price spikes are visible; infrastructure debt is not. The VTV correction was triggered by media visibility of conduct that was institutionally invisible. Consequence visibility is a precondition for democratic correction — not because voters or politicians are more rational with visible information, but because visible consequences create political costs for inaction that invisible consequences do not.</p>
+
+<p><strong>Condition 3: Correction capacity intact.</strong> The spiral regime (A &gt;&gt; R with feedback) requires that A &gt; R persists long enough to degrade the institutions responsible for correction. When correction institutions remain functional — as they did in the VTV case — correction is available even if delayed. When correction institutions themselves are subject to mandate blindspots, resource constraints, or legitimacy erosion, the corrective capacity degrades alongside the problem it should address.</p>
+
+<p>Finnish energy governance currently satisfies none of these three conditions cleanly. The consequences fall outside the electoral cycle (2027–2032 window versus 4-year terms). The consequences are partially invisible (adequacy margins are specialist knowledge, not public experience). And the correction institutions — Energiavirasto, TEM, Fingrid's regulatory relationship — have not initiated the mechanisms (DT-001 capacity mechanism, DT-002 CHP conversion programme) that the diagnostic record indicates are required.</p>
+
+<!-- § 08 -->
+<span class="section-num">§ 08</span>
+<h2>What This Implies for ACI's Diagnostic Position</h2>
+
+<p>CN-004's framework has one implication that requires explicit statement, because it modifies the interpretation of the DT-series documents and of SM-006's empirical validation.</p>
+
+<p>The DT-series (DT-001 through DT-006) documents decision tracks — specific institutional decisions that, if taken, would shift the energy system's parameter conditions. DT-001 (capacity mechanism) and DT-002 (CHP phase-out management) are the most time-sensitive. SM-006 confirms empirically that the system is already operating at its adequacy boundary.</p>
+
+<p>CN-004's framework implies that the question is no longer whether the decisions are analytically justified — SM-006 settles this. The question is whether the A &gt; R dynamic has already degraded the correction institutions to the point where the decisions, even if taken, cannot be implemented within the intervention window.</p>
+
+<p>This is a different diagnostic question from the one the DT-series was designed to answer. It is the question of whether the system is in the degradation regime or the spiral regime — whether correction is delayed or whether correction capacity itself is impaired.</p>
+
+<p>ACI does not currently have sufficient evidence to distinguish between these two regimes in Finnish energy governance. The evidence available — the absence of DT-001 and DT-002 initiation despite the SM-006 diagnostic — is consistent with both. It is consistent with a system that is slow but correctable; it is also consistent with a system whose correction institutions are themselves subject to the A &gt; R dynamic through fiscal constraint, political cycle misalignment, and mandate blindspots in energy regulatory design.</p>
+
+<p>The diagnostic priority for the next iteration of DA-001 is to distinguish between these two regimes by tracking not only whether decisions are taken but whether the institutional capacity to implement them — regulatory staff, financing mechanisms, procurement processes — is being maintained or degraded.</p>
+
+<!-- § 09 -->
+<span class="section-num">§ 09</span>
+<h2>What CN-004 Does Not Claim</h2>
+
+<p>Three limitations are explicit.</p>
+
+<p>First, this note does not claim that democratic systems are structurally inferior to centralised alternatives. The structural property identified in Thesis A — the impossibility of a single global optimisation function — is also the property that prevents large-scale authoritarian errors. Distributed optimisation under A ≤ R produces resilient, self-correcting systems. The diagnostic concern is specific to conditions where A &gt; R persists across multiple domains simultaneously — the compound stress condition that ACI's founding documents identify as the primary risk configuration for small states in the 2026–2032 period.</p>
+
+<p>Second, CN-004 does not propose a remedy. Identifying the threshold condition (A &gt; R) and the structural features that produce it (time horizon misalignment, consequence invisibility, correction capacity degradation) is a diagnostic contribution, not a policy recommendation. CN-003's pool method addresses the coordination-fault interpretation. CN-004 establishes the structural-property interpretation. Both are required for a complete diagnostic picture. Neither is a prescription.</p>
+
+<p>Third, the A &gt; R framework, while operationally meaningful, is not yet precisely measured in any of the four Finnish cases above. The calibration in §05 is qualitative. A rigorous quantitative version would require systematic measurement of accumulation rates (in domain-specific units) and correction rates (in implementation time and institutional capacity units) — a programme of empirical work beyond this note's scope.</p>
+
+<div class="finding-box">
+  <h3>CN-004 — Core Diagnostic Finding</h3>
+  <p>Democratic governance cannot possess a single global optimisation function without breaking the pluralism that constitutes its legitimacy. This is a structural property, not a correctable fault. However, this property does not imply inevitable degradation. Systemic degradation occurs when accumulation rate (A) exceeds correction rate (R) and persists long enough to degrade the correction institutions themselves. The diagnostic question for ACI's applied work is not whether local optimisation is present — it always is — but whether A &gt; R has crossed from the degradation regime into the spiral regime, where correction capacity is itself subject to the same dynamic it is meant to address. In Finnish energy governance, this distinction is not yet empirically resolved. Resolving it is the diagnostic priority of the next DA-001 iteration.</p>
+</div>
+
+<div class="xref-block">
+  <h3>Cross-references</h3>
+  <div class="xref-row"><span class="xref-id">WP-003</span><a href="https://aethercontinuity.org/papers/wp-003-itt.html">Institutional Termination Time — foundational ITT concept</a></div>
+  <div class="xref-row"><span class="xref-id">WP-005</span><a href="https://aethercontinuity.org/papers/wp-005-compound-stress-finland.html">Compound Stress and System Continuity — Finland 2025–2035</a></div>
+  <div class="xref-row"><span class="xref-id">SM-006</span><a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">The 2028 Convergence Window — empirical validation</a></div>
+  <div class="xref-row"><span class="xref-id">SM-007</span><a href="https://aethercontinuity.org/papers/sm-007-convergence-finding.html">The Convergence Finding — no common function across domains</a></div>
+  <div class="xref-row"><span class="xref-id">CN-003</span><a href="https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html">The Pool Method — coordination-fault interpretation and structural solution</a></div>
+  <div class="xref-row"><span class="xref-id">DT-001</span><a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">Capacity Mechanism — Finland</a></div>
+  <div class="xref-row"><span class="xref-id">DT-002</span><a href="https://aethercontinuity.org/decisions/dt-002-chp-phase-out-finland.html">CHP Phase-out — Finland</a></div>
+  <div class="xref-row"><span class="xref-id">DA-001</span><a href="https://aethercontinuity.org/supplements/ACI_DA-001_v1_1.html">Finland Pre-Shortage Phase 2026–2032</a></div>
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Concept Note CN-004 · April 2026 · v0.1<br>
+  Domain D-3 · D-4 · Open Working Draft · Subject to Revision<br><br>
+  Version History<br>
+  v0.1 · Apr 2026 · Initial draft
+</footer>
+
+</body>
+</html>
