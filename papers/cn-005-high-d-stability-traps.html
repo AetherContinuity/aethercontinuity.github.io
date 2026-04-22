@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN-005 — High-D Stability Traps · ACI</title>
+<style>
+:root {
+  --ink: #1a1a1a;
+  --paper: #f8f6f1;
+  --rule: #c8c0b0;
+  --accent: #2a4a6e;
+  --accent-light: #e8eef5;
+  --warn: #8b2020;
+  --warn-light: #f5e8e8;
+  --mono: 'Courier New', Courier, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  line-height: 1.78;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+nav {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+  margin-bottom: 3rem;
+}
+nav a { color: var(--accent); text-decoration: none; margin-right: 1.5rem; }
+nav a:hover { text-decoration: underline; }
+
+.masthead {
+  border-top: 3px solid var(--ink);
+  padding-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.series-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+.doc-id { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); margin-bottom: 0.75rem; }
+h1 { font-size: 1.65rem; font-weight: normal; line-height: 1.3; margin-bottom: 0.4rem; }
+.subtitle { font-style: italic; color: #555; font-size: 1rem; margin-bottom: 1.5rem; }
+
+.meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: #666;
+  line-height: 1.9;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.75rem 0;
+  margin-bottom: 2.5rem;
+}
+.meta strong { color: var(--ink); }
+.meta a { color: var(--accent); text-decoration: none; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 0.25rem;
+  margin-top: 2.5rem;
+}
+h2 {
+  font-size: 1.05rem;
+  font-weight: bold;
+  margin-bottom: 0.8rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.5rem;
+}
+h3 { font-size: 0.95rem; font-weight: bold; margin: 1.5rem 0 0.6rem; }
+p { margin-bottom: 1rem; }
+
+.case-block {
+  border: 1px solid var(--rule);
+  margin: 2rem 0;
+}
+.case-header {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+}
+.case-body { padding: 1.25rem; }
+.case-meta {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 1rem;
+  line-height: 1.9;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.75rem;
+}
+
+.ard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+@media(max-width:560px){ .ard-grid { grid-template-columns: repeat(2,1fr); } }
+.ard-cell {
+  border: 1px solid var(--rule);
+  padding: 0.5rem 0.65rem;
+  background: var(--paper);
+}
+.ard-label { font-size: 0.65rem; color: #aaa; letter-spacing: 0.06em; text-transform: uppercase; }
+.ard-val { font-size: 0.85rem; font-weight: bold; margin-top: 0.2rem; }
+.ard-high { color: #8b2020; }
+.ard-med  { color: #8b5e00; }
+.ard-low  { color: #2d7a4f; }
+
+.thesis-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+.thesis-box strong {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.warning-box {
+  background: var(--warn-light);
+  border-left: 3px solid var(--warn);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 1.5rem 0;
+  font-family: var(--mono);
+}
+th {
+  background: var(--ink);
+  color: var(--paper);
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  font-weight: normal;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+
+blockquote {
+  border-left: 2px solid var(--rule);
+  padding-left: 1.25rem;
+  margin: 1.25rem 0;
+  color: #555;
+  font-style: italic;
+}
+
+.finding-box {
+  border: 1px solid var(--rule);
+  background: #f0ede6;
+  padding: 1rem 1.25rem;
+  margin: 2rem 0;
+  font-size: 0.92rem;
+}
+.finding-box h3 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.6rem;
+  font-weight: normal;
+}
+
+.xref-block {
+  background: #f0ede6;
+  border: 1px solid var(--rule);
+  padding: 1rem 1.25rem;
+  margin-top: 3rem;
+  font-size: 0.875rem;
+}
+.xref-block h3 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.75rem;
+  font-weight: normal;
+}
+.xref-row { display: flex; gap: 1rem; margin-bottom: 0.35rem; align-items: baseline; }
+.xref-id { font-family: var(--mono); font-size: 0.78rem; min-width: 5rem; color: #888; }
+.xref-block a { color: var(--accent); text-decoration: none; }
+
+footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #888;
+  line-height: 2;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="masthead">
+  <div class="series-line">Aether Continuity Institute · Concept Note</div>
+  <div class="doc-id">ACI Concept Note No. 005 · Domain D-3 · D-4</div>
+  <h1>CN-005 — High-D Stability Traps:<br>Historical Analogues for Systems That Failed Without Warning</h1>
+  <p class="subtitle">Four cases where prolonged apparent stability preceded structural collapse — and what they reveal about detection delay as an institutional property rather than an informational one</p>
+</div>
+
+<div class="meta">
+  <strong>Version</strong> 0.1 &nbsp;·&nbsp; <strong>Date</strong> April 2026 &nbsp;·&nbsp; <strong>Domain</strong> D-3 · D-4<br>
+  <strong>Cross-references</strong>
+  <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> (A/R/D framework) ·
+  <a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">TN-007</a> ·
+  <a href="https://aethercontinuity.org/supplements/tn-008-coupling-collapse-function.html">TN-008</a> ·
+  <a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">SM-006</a> ·
+  <a href="https://aethercontinuity.org/papers/sm-007-convergence-finding.html">SM-007</a><br>
+  <strong>Status</strong> Open Working Draft · Subject to Revision
+</div>
+
+<!-- § 01 -->
+<span class="section-num">§ 01</span>
+<h2>The Question This Note Addresses</h2>
+
+<p>CN-004 establishes detection delay D as the interval between threshold crossing (A &gt; R) and political recognition. TN-008 identifies D as partially endogenous — institutional load (IL) generated by the correction process itself can suppress recognition. Together, these produce a structural prediction: systems can appear stable for extended periods while operating in A &gt; R conditions, if D is sufficiently high and institutionally maintained.</p>
+
+<p>This prediction is not novel. Historical cases of prolonged apparent stability preceding structural collapse are well documented. What is novel is reading them through the A/R/D/C framework — not to explain them retrospectively, but to identify the D-suppression mechanism in each case and ask whether that mechanism is structurally present in contemporary Finland.</p>
+
+<p>Four cases are examined: Portugal under Salazar/Caetano (1932–1974), the Soviet Union in its terminal phase (1975–1991), Japan's Lost Decade initiation (1990–2003), and contemporary Finland (2022–2028). Each illustrates a distinct D-suppression mechanism. The Finnish case is the only one where the window for correction remains open — which is precisely why the historical comparison is analytically useful rather than merely illustrative.</p>
+
+<!-- § 02 -->
+<span class="section-num">§ 02</span>
+<h2>The D-Suppression Taxonomy</h2>
+
+<p>Before examining cases, it is necessary to distinguish four mechanisms by which D can be institutionally maintained at high levels independently of whether the underlying stress accumulation is observable in principle.</p>
+
+<div class="thesis-box">
+  <strong>D-Suppression Mechanism I — Authoritarian information control</strong>
+  Physical suppression of data production, distribution, or interpretation. D is high because the signal is actively prevented from forming. The Soviet case is the archetype. This mechanism is the most brittle: when suppression fails, recognition is catastrophic and rapid.
+</div>
+
+<div class="thesis-box">
+  <strong>D-Suppression Mechanism II — Fiscal accounting convention</strong>
+  Stress accumulation is real but categorised in ways that prevent it from appearing in the budgetary and regulatory frameworks that trigger political action. Portuguese colonial war costs were spread across multiple budget lines. Finnish energy system stress does not appear as a budget cost until it appears as a market price. Recognition requires a translation step that institutions are not designed to perform.
+</div>
+
+<div class="thesis-box">
+  <strong>D-Suppression Mechanism III — Institutional consensus norm</strong>
+  In cultures where institutional consensus is a precondition for legitimate action, actors who possess recognition capacity — who know that A &gt; R — do not transmit that recognition publicly because doing so would violate the consensus norm. D is maintained by social rather than coercive mechanisms. The Japanese and Finnish cases share this structure.
+</div>
+
+<div class="thesis-box">
+  <strong>D-Suppression Mechanism IV — IL-driven capacity displacement</strong>
+  The institutional capacity that would process signals and translate them into political recognition is consumed by the management of the stress itself. Crisis management absorbs signal-processing bandwidth. This is TN-008's IL mechanism applied to D specifically: correction effort suppresses recognition of the need for correction. The Finnish shock portfolio (2022–2024) is the most acute recent example.
+</div>
+
+<!-- § 03 -->
+<span class="section-num">§ 03</span>
+<h2>Case I — Portugal 1932–1974</h2>
+
+<div class="case-block">
+  <div class="case-header">Portugal · Estado Novo · 1932–1974 · D-Suppression: I + II</div>
+  <div class="case-body">
+    <div class="case-meta">
+      Duration of high-D stability: ~16 years (1958–1974) · Forcing event: Carnation Revolution, 25 April 1974<br>
+      Primary A source: Colonial wars (Angola 1961, Guinea 1963, Mozambique 1964) · Fiscal austerity as C-suppressor
+    </div>
+
+    <div class="ard-grid">
+      <div class="ard-cell"><div class="ard-label">A trajectory</div><div class="ard-val ard-high">↑↑ Accelerating</div></div>
+      <div class="ard-cell"><div class="ard-label">R (nominal)</div><div class="ard-val ard-med">Present</div></div>
+      <div class="ard-cell"><div class="ard-label">D mechanism</div><div class="ard-val ard-high">Auth. + Fiscal</div></div>
+      <div class="ard-cell"><div class="ard-label">C at collapse</div><div class="ard-val ard-high">≈ 0</div></div>
+    </div>
+
+    <p>By 1968 — when Salazar suffered a stroke and Caetano assumed the premiership — Portuguese colonial wars consumed over 40% of the national budget. This is the clearest historical case of IL-as-C-suppressor: the entire correction capacity of the Portuguese state was absorbed by the management of the stress generating mechanism. R existed (Caetano did attempt limited liberalisation — the <em>Primavera Marcelista</em>), but C had collapsed. Reform attempts produced no systemic effect.</p>
+
+    <p>The D-suppression operated on two levels. Mechanism I: the Estado Novo's censorship apparatus (PIDE/DGS) prevented public recognition of the war's human and fiscal cost. Mechanism II: the budget presentation spread colonial military expenditure across categories that individually appeared manageable, preventing the aggregate from triggering institutional alarm.</p>
+
+    <p>The Carnation Revolution was a forcing event with a specific structural feature: it was initiated not by the civilian population but by the armed forces — the institution most directly subject to the stress accumulation. The MFA (Movimento das Forças Armadas) experienced A directly, bypassing the D-suppression mechanisms. This is the historical analogue of a situation where the monitoring infrastructure that remains functional (the military's direct experience of combat losses) produces recognition that the institutional system had suppressed.</p>
+
+    <blockquote>
+      The system did not collapse because A suddenly exceeded R. A had exceeded R for at least a decade. It collapsed because the institution closest to the physical reality of A bypassed the D-suppression mechanism.
+    </blockquote>
+
+    <p><strong>Lesson for CN-005:</strong> High-D stability is most durable when D-suppression is multi-layered (authoritarian + fiscal). It is most fragile when a sub-institution retains direct A exposure that bypasses the suppression architecture. In Finland, ENTSO-E and Fingrid's technical staff are that sub-institution — they have direct A exposure that the political system's D-suppression has not yet processed.</p>
+  </div>
+</div>
+
+<!-- § 04 -->
+<span class="section-num">§ 04</span>
+<h2>Case II — Soviet Union 1975–1991</h2>
+
+<div class="case-block">
+  <div class="case-header">Soviet Union · Late Brezhnev → Gorbachev · 1975–1991 · D-Suppression: I + IV</div>
+  <div class="case-body">
+    <div class="case-meta">
+      Duration of high-D stability: ~15 years (1975–1989) · Forcing event: dissolution December 1991<br>
+      Primary A sources: Economic stagnation, Afghanistan (1979–1989), technological gap vs. West · IL: military-industrial complex
+    </div>
+
+    <div class="ard-grid">
+      <div class="ard-cell"><div class="ard-label">A trajectory</div><div class="ard-val ard-high">↑ Structural</div></div>
+      <div class="ard-cell"><div class="ard-label">R (Gorbachev)</div><div class="ard-val ard-med">High nominal</div></div>
+      <div class="ard-cell"><div class="ard-label">D mechanism</div><div class="ard-val ard-high">Auth. + IL</div></div>
+      <div class="ard-cell"><div class="ard-label">C at collapse</div><div class="ard-val ard-high">≈ 0</div></div>
+    </div>
+
+    <p>The Soviet case is the purest illustration of coupling collapse (TN-008 C → 0) in a high-R environment. Gorbachev's <em>glasnost</em> and <em>perestroika</em> represent the largest R applied to any political system in the 20th century within a single political term. The result was dissolution rather than reform. C had collapsed below C* before R was applied at scale.</p>
+
+    <p>The IL mechanism was structural: the military-industrial complex absorbed between 15–25% of Soviet GDP (estimates vary due to deliberate statistical obfuscation). Every ruble of R directed at civilian modernisation competed against an IL-generating apparatus that had been optimised over decades. Self-referential correction was total — the system's correction processes were consumed by maintaining the system's correction processes.</p>
+
+    <p>The D-suppression operated through Mechanism I (information control) combined with Mechanism IV (IL absorption). The KGB's internal reports — now partially declassified — show that Soviet leadership received accurate A-level signals as early as 1977–1979. Recognition existed at the top; it did not produce political action because IL had consumed the institutional capacity to translate recognition into correction. D2 (report → agenda) was near zero; D3 (agenda → action) was functionally infinite.</p>
+
+    <p><strong>Lesson for CN-005:</strong> Recognition without correction capacity is not recognition in the operationally relevant sense. The Soviet system knew it was failing before it failed. The binding constraint was C, not D. This distinguishes the Soviet case from Portugal: Portugal had high D (suppressed recognition); the Soviet terminal phase had low D but zero C. Both produce the same observable — apparent stability — through different mechanisms.</p>
+  </div>
+</div>
+
+<!-- § 05 -->
+<span class="section-num">§ 05</span>
+<h2>Case III — Japan 1990–2003</h2>
+
+<div class="case-block">
+  <div class="case-header">Japan · Lost Decade · 1990–2003 · D-Suppression: III + II</div>
+  <div class="case-body">
+    <div class="case-meta">
+      Duration of high-D stability: ~13 years (1990–2003) · Forcing event: TARP-equivalent bank recapitalisation 2003<br>
+      Primary A sources: Asset bubble deflation, zombie bank system, demographic ageing · IL: regulatory forbearance
+    </div>
+
+    <div class="ard-grid">
+      <div class="ard-cell"><div class="ard-label">A trajectory</div><div class="ard-val ard-med">↑ Slow chronic</div></div>
+      <div class="ard-cell"><div class="ard-label">R attempts</div><div class="ard-val ard-med">Repeated, failed</div></div>
+      <div class="ard-cell"><div class="ard-label">D mechanism</div><div class="ard-val ard-high">Consensus + Fiscal</div></div>
+      <div class="ard-cell"><div class="ard-label">C at nadir</div><div class="ard-val ard-med">Low, not zero</div></div>
+    </div>
+
+    <p>Japan's Lost Decade is the closest structural analogue to contemporary Finland's situation — not because the content is similar (asset bubble vs. energy system) but because the D-suppression mechanism is the same: Mechanism III, institutional consensus norm combined with Mechanism II, accounting convention.</p>
+
+    <p>Japanese banks held non-performing loans that they classified as performing under Ministry of Finance guidance. The accounting convention prevented the loans from triggering regulatory action thresholds — a direct parallel to Finnish energy adequacy margins that do not appear as budget costs until they appear as market prices. The stress was real, observable to those with direct exposure, and institutionally suppressed through categorisation rather than information control.</p>
+
+    <p>The consensus mechanism operated through the <em>main bank system</em> and the <em>amakudari</em> (descent from heaven) network of regulatory relationships. Actors who recognised the stress — and there were many — did not transmit recognition publicly because doing so would violate the relational networks on which their institutional position depended. This is not corruption in the ordinary sense. It is the structural consequence of a system where institutional legitimacy derives from consensus maintenance rather than truth-telling.</p>
+
+    <p>The critical difference from Portugal and the Soviet case: Japan's C never reached zero. Multiple R applications produced attenuated effects — Keynesian stimulus packages that added to public debt without restoring growth. C was low but not collapsed. This is why Japan recovered, eventually, without a forcing event of the Portuguese or Soviet magnitude. The correction was slow, expensive, and arrived 13 years late — but it arrived.</p>
+
+    <p><strong>Lesson for CN-005:</strong> Consensus-norm D-suppression (Mechanism III) is more reversible than authoritarian suppression (Mechanism I) because it does not require a forcing event to break. It requires an actor willing to bear the first-mover cost of public recognition — the equivalent of CN-003's pool method initiation. In Japan, this actor was Heizo Takenaka as Financial Services Minister (2002–2003), who imposed mark-to-market accounting on the banks. He did not need a revolution. He needed institutional protection to bear the first-mover cost.</p>
+  </div>
+</div>
+
+<!-- § 06 -->
+<span class="section-num">§ 06</span>
+<h2>Case IV — Finland 2022–2028</h2>
+
+<div class="case-block">
+  <div class="case-header">Finland · Compound Stress · 2022–2028 · D-Suppression: III + II + IV</div>
+  <div class="case-body">
+    <div class="case-meta">
+      Duration of high-D phase: ongoing (began ~2022) · Forcing event: not yet occurred<br>
+      Primary A sources: Russian disconnection, energy adequacy gap, SE1 compression, DC inelastic load, CHP phase-out<br>
+      IL sources: Shock portfolio crisis management, EU regulatory compliance, velkajarru fiscal framework
+    </div>
+
+    <div class="ard-grid">
+      <div class="ard-cell"><div class="ard-label">A trajectory</div><div class="ard-val ard-high">↑↑ 2028 peak</div></div>
+      <div class="ard-cell"><div class="ard-label">R (realised)</div><div class="ard-val ard-high">≈ 0</div></div>
+      <div class="ard-cell"><div class="ard-label">D mechanism</div><div class="ard-val ard-high">III + II + IV</div></div>
+      <div class="ard-cell"><div class="ard-label">C trajectory</div><div class="ard-val ard-med">↓ Declining</div></div>
+    </div>
+
+    <p>Finland 2022–2028 is distinguished from the three historical cases by two features: the correction window remains open, and the D-suppression is triple-layered — consensus norm (III), fiscal accounting convention (II), and IL-driven capacity displacement (IV) operating simultaneously.</p>
+
+    <p><strong>Mechanism III — Consensus norm:</strong> Finnish institutional culture produces high D2 (report → agenda) through the same mechanism as Japan. Fingrid's technical staff, ENTSO-E analysts, and ACI's diagnostic publications all possess recognition-level access to A. The binding constraint is not information availability but the cost of transmitting recognition in a system where agenda formation requires consensus rather than individual initiative. The −3,300 MW adequacy gap documented in SM-006 exists in public data; it has not produced institutional agenda action.</p>
+
+    <p><strong>Mechanism II — Fiscal accounting convention:</strong> The velkajarru framework creates a budgetary accounting structure in which energy system stress does not appear until it produces market prices or supply interruptions. The capacity mechanism investment that would address DT-001 appears as a budget cost; the consequences of not making that investment do not appear as a budget cost. They appear as a market price absorbed by households — the Vatanen kansalainen who pays the bill without knowing why.</p>
+
+    <p><strong>Mechanism IV — IL-driven capacity displacement:</strong> The 2022–2024 shock portfolio (Fortum ~€10bn writedown, Nokian Renkaat production loss, structural Russian market disconnection, energy import restructuring) generated a crisis management IL that consumed the institutional bandwidth that would otherwise process D1→D2 signal translation. Every ministry, every major corporation, every regulatory body spent 2022–2023 managing shock consequences. The capacity to process the energy adequacy signal and translate it to agenda was displaced by the capacity to manage the immediate financial and operational crisis.</p>
+
+    <p>The fiscal consolidation programme (velkajarru, 8–11 billion) compounds the IL mechanism: it reduces the institutional capacity that would restore C by cutting the budget lines — regulatory staff, innovation funding, public investment capacity — that maintain coupling between institutional decision and physical system response. The Salazar mechanism is present: austerity directed at maintaining fiscal balance reduces the C that would make correction effective.</p>
+
+    <p><strong>What distinguishes Finland from the historical cases:</strong> Portugal, the Soviet Union, and Japan all experienced their high-D stability period without the analytical tools to identify the D-suppression mechanism in real time. ACI's publication programme exists precisely to reduce D1→D2 delay — to translate physical signal into institutionally legible form before the forcing event makes translation unnecessary because the event itself produces recognition. The window is open. The historical cases confirm it closes.</p>
+  </div>
+</div>
+
+<!-- § 07 -->
+<span class="section-num">§ 07</span>
+<h2>The Comparative Structure</h2>
+
+<table>
+  <tr>
+    <th>Case</th>
+    <th>D-suppression</th>
+    <th>IL source</th>
+    <th>C at crisis</th>
+    <th>Forcing event</th>
+    <th>Recovery</th>
+  </tr>
+  <tr>
+    <td>Portugal 1974</td>
+    <td>Auth. + Fiscal (I+II)</td>
+    <td>Colonial wars</td>
+    <td>≈ 0</td>
+    <td>Military coup</td>
+    <td>Structural — new system</td>
+  </tr>
+  <tr>
+    <td>Soviet 1991</td>
+    <td>Auth. + IL (I+IV)</td>
+    <td>Military-industrial</td>
+    <td>≈ 0</td>
+    <td>Internal dissolution</td>
+    <td>Fragmentation — no recovery</td>
+  </tr>
+  <tr>
+    <td>Japan 2003</td>
+    <td>Consensus + Fiscal (III+II)</td>
+    <td>Regulatory forbearance</td>
+    <td>Low, not zero</td>
+    <td>Takenaka reform</td>
+    <td>Slow, 13-year lag</td>
+  </tr>
+  <tr>
+    <td>Finland 2028</td>
+    <td>Consensus + Fiscal + IL (III+II+IV)</td>
+    <td>Shock portfolio + velkajarru</td>
+    <td>Declining</td>
+    <td>Not yet</td>
+    <td>Window open — narrowing</td>
+  </tr>
+</table>
+
+<p>The comparative structure reveals one consistent finding: the severity of the eventual forcing event is inversely related to C at the moment of recognition. Portugal and the Soviet Union, where C had reached near-zero, required structural events — revolution, dissolution — to clear the condition. Japan, where C remained above zero, required a policy intervention rather than a structural event. The lower C falls before recognition arrives, the more severe the forcing event required to produce recovery.</p>
+
+<p>Finland's C trajectory — declining across three proxy indicators — points directly at this relationship. Every year of high-D stability that passes without correction is not merely a year of lost time. It is a year in which C falls, making the eventual forcing event more severe and the recovery more structurally demanding.</p>
+
+<!-- § 08 -->
+<span class="section-num">§ 08</span>
+<h2>The Takenaka Mechanism: Why Japan Is the Relevant Analogue</h2>
+
+<p>Of the four cases, Japan 2003 is the operationally relevant model for Finland — not because the content is similar but because it is the only case that demonstrates institutional correction without a forcing event of the Portuguese or Soviet magnitude.</p>
+
+<p>Takenaka's bank recapitalisation worked because it combined three elements that CN-003's pool method identifies as structurally necessary: shared information architecture (mark-to-market accounting made the non-performing loans visible simultaneously to all actors), distributed accountability (the Financial Services Agency rather than individual banks bore the recognition cost), and explicit mandate from above (Prime Minister Koizumi's direct political protection of Takenaka against the Liberal Democratic Party's banking faction).</p>
+
+<p>The pool method is not a Japanese invention that happened to work in 2003. It is a structural solution to the consensus-norm D-suppression problem. It changes the payoff structure: individual actors no longer bear the first-mover cost of public recognition because the institutional architecture distributes that cost across a protected group with shared information and top-level mandate.</p>
+
+<p>In Finland, the equivalent would be: a cross-ministry working group with prime ministerial mandate that uses ENTSO-E's published data as the shared information baseline, holds distributed accountability across multiple ministries, and is explicitly protected from the political cost of transmitting inconvenient recognition. This is not a new institutional structure. It is CN-003's pool method applied to Finnish energy governance — and it is the mechanism most likely to produce a Japan-2003 outcome rather than a Portugal-1974 or Soviet-1991 outcome.</p>
+
+<!-- § 09 -->
+<span class="section-num">§ 09</span>
+<h2>What CN-005 Does Not Claim</h2>
+
+<p>Three limitations are explicit.</p>
+
+<p>First, the historical analogies are structural, not predictive. Portugal collapsed in 1974; Finland will not necessarily experience a comparable event. The analogy operates at the level of mechanism (D-suppression type, IL source, C trajectory) not at the level of outcome. Different mechanisms can produce different outcomes even from similar structural positions — as Japan demonstrates.</p>
+
+<p>Second, the Finnish case is distinguished from all three historical cases by the availability of analytical tools that can reduce D in real time. ENTSO-E's Transparency Platform, ACI's publication programme, and the A/R/D/C framework itself are D-reduction mechanisms that were not available to Portuguese economists in 1970, Soviet planners in 1980, or Japanese regulators in 1995. This does not guarantee correction — it makes correction available without requiring a forcing event.</p>
+
+<p>Third, the velkajarru comparison to Salazarist austerity is structural, not political. Fiscal consolidation is not inherently a D-suppression mechanism — it becomes one when it targets the institutional capacity that maintains C. The diagnostic question is not whether consolidation occurs but which budget lines it reduces: if consolidation preserves regulatory staff, public investment capacity, and EU programme absorption infrastructure, C is maintained. If it reduces them, C declines regardless of the fiscal motive.</p>
+
+<div class="finding-box">
+  <h3>CN-005 — Core Finding</h3>
+  <p>High-D stability traps share a common structure: stress accumulation (A) exceeds correction capacity (R) for extended periods because detection delay (D) is institutionally maintained above the recognition threshold. Four D-suppression mechanisms are identified: authoritarian information control, fiscal accounting convention, consensus norm, and IL-driven capacity displacement. Historical cases (Portugal 1974, Soviet 1991, Japan 2003) demonstrate that the severity of the eventual forcing event is inversely related to C at the moment of recognition — the lower C falls before recognition arrives, the more severe the structural disruption required for recovery. Finland 2022–2028 operates under triple-layered D-suppression (III+II+IV) with a declining C trajectory. The Takenaka mechanism — pool method applied to consensus-norm suppression — demonstrates that institutional correction without a forcing event is possible but requires shared information architecture, distributed accountability, and explicit mandate from above. The window is open. The historical cases confirm it closes.</p>
+</div>
+
+<div class="xref-block">
+  <h3>Cross-references</h3>
+  <div class="xref-row"><span class="xref-id">CN-003</span><a href="https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html">The Pool Method — Takenaka mechanism structural basis</a></div>
+  <div class="xref-row"><span class="xref-id">CN-004</span><a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">Distributed Optimisation — A/R/D theoretical framework</a></div>
+  <div class="xref-row"><span class="xref-id">TN-007</span><a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">A/R/D Measurement Architecture</a></div>
+  <div class="xref-row"><span class="xref-id">TN-008</span><a href="https://aethercontinuity.org/supplements/tn-008-coupling-collapse-function.html">Coupling Collapse Function C*</a></div>
+  <div class="xref-row"><span class="xref-id">SM-006</span><a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">The 2028 Convergence Window — empirical baseline</a></div>
+  <div class="xref-row"><span class="xref-id">SM-007</span><a href="https://aethercontinuity.org/papers/sm-007-convergence-finding.html">The Convergence Finding</a></div>
+  <div class="xref-row"><span class="xref-id">DA-001</span><a href="https://aethercontinuity.org/supplements/ACI_DA-001_v1_1.html">Finland Pre-Shortage Phase 2026–2032</a></div>
+  <div class="xref-row"><span class="xref-id">DT-001</span><a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">Capacity Mechanism — Finland</a></div>
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Concept Note CN-005 · April 2026 · v0.1<br>
+  Domain D-3 · D-4 · Open Working Draft · Subject to Revision
+</footer>
+
+</body>
+</html>
