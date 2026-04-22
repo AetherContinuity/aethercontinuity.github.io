@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN-006 — Exit Topologies of High-D Systems · ACI</title>
+<style>
+:root {
+  --ink: #1a1a1a;
+  --paper: #f8f6f1;
+  --rule: #c8c0b0;
+  --accent: #2a4a6e;
+  --accent-light: #e8eef5;
+  --mono: 'Courier New', Courier, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px; line-height: 1.78;
+  max-width: 780px; margin: 0 auto; padding: 3rem 2rem 6rem;
+}
+nav { font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+  color: var(--accent); border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem; margin-bottom: 3rem; }
+nav a { color: var(--accent); text-decoration: none; margin-right: 1.5rem; }
+.masthead { border-top: 3px solid var(--ink); padding-top: 1.5rem; margin-bottom: .5rem; }
+.series-line { font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; color: #888; margin-bottom: .5rem; }
+.doc-id { font-family: var(--mono); font-size: .85rem; color: var(--accent); margin-bottom: .75rem; }
+h1 { font-size: 1.65rem; font-weight: normal; line-height: 1.3; margin-bottom: .4rem; }
+.subtitle { font-style: italic; color: #555; font-size: 1rem; margin-bottom: 1.5rem; }
+.meta { font-family: var(--mono); font-size: 11.5px; color: #666; line-height: 1.9;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: .75rem 0; margin-bottom: 2.5rem; }
+.meta strong { color: var(--ink); }
+.meta a { color: var(--accent); text-decoration: none; }
+.sec-num { font-family: var(--mono); font-size: 11px; color: #aaa;
+  letter-spacing: .06em; display: block; margin-bottom: .25rem; margin-top: 2.5rem; }
+h2 { font-size: 1.05rem; font-weight: bold; margin-bottom: .8rem;
+  border-top: 1px solid var(--rule); padding-top: .5rem; }
+h3 { font-size: .95rem; font-weight: bold; margin: 1.5rem 0 .6rem; }
+p { margin-bottom: 1rem; }
+blockquote { border-left: 2px solid var(--rule); padding-left: 1.25rem;
+  margin: 1.25rem 0; color: #555; font-style: italic; }
+
+.thesis-box { background: var(--accent-light); border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: .95rem; }
+.thesis-box strong { font-family: var(--mono); font-size: .78rem; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--accent); display: block; margin-bottom: .4rem; }
+
+.topology-block { border: 1px solid var(--rule); margin: 2rem 0; }
+.topology-header { background: var(--ink); color: var(--paper); font-family: var(--mono);
+  font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: .6rem 1rem; display: flex; justify-content: space-between; }
+.topology-tag { opacity: .65; }
+.topology-body { padding: 1.25rem; }
+.topology-meta { font-family: var(--mono); font-size: .73rem; color: #888;
+  margin-bottom: 1rem; line-height: 1.9; border-bottom: 1px solid var(--rule);
+  padding-bottom: .75rem; }
+
+.profile-grid { display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: .4rem; margin: 1rem 0; font-family: var(--mono); font-size: .73rem; }
+@media(max-width:560px){ .profile-grid { grid-template-columns: repeat(3,1fr); } }
+.profile-cell { border: 1px solid var(--rule); padding: .45rem .6rem; background: var(--paper); }
+.profile-label { font-size: .58rem; color: #aaa; letter-spacing: .06em; text-transform: uppercase; }
+.profile-val { font-size: .8rem; font-weight: bold; margin-top: .15rem; }
+.high { color: #8b2020; } .med { color: #8b5e00; } .low { color: #2d7a4f; }
+
+table { width: 100%; border-collapse: collapse; font-size: .82rem;
+  margin: 1.5rem 0; font-family: var(--mono); }
+th { background: var(--ink); color: var(--paper); text-align: left;
+  padding: .45rem .75rem; font-weight: normal; font-size: .75rem; letter-spacing: .04em; }
+td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+tr:nth-child(even) td { background: rgba(0,0,0,.025); }
+
+.formula { font-family: var(--mono); font-size: .82rem; background: #f0ede6;
+  border: 1px solid var(--rule); padding: 12px 16px; margin: 16px 0; line-height: 2.1; }
+
+.finding-box { border: 1px solid var(--rule); background: #f0ede6;
+  padding: 1rem 1.25rem; margin: 2rem 0; font-size: .92rem; }
+.finding-box h3 { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em;
+  text-transform: uppercase; color: #888; margin-bottom: .6rem; font-weight: normal; }
+
+.xref-block { background: #f0ede6; border: 1px solid var(--rule);
+  padding: 1rem 1.25rem; margin-top: 3rem; font-size: .875rem; }
+.xref-block h3 { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em;
+  text-transform: uppercase; color: #888; margin-bottom: .75rem; font-weight: normal; }
+.xref-row { display: flex; gap: 1rem; margin-bottom: .35rem; align-items: baseline; }
+.xref-id { font-family: var(--mono); font-size: .78rem; min-width: 5rem; color: #888; }
+.xref-block a { color: var(--accent); text-decoration: none; }
+
+footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 11px; color: #888; line-height: 2; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/about.html">About</a>
+</nav>
+
+<div class="masthead">
+  <div class="series-line">Aether Continuity Institute · Concept Note</div>
+  <div class="doc-id">ACI Concept Note No. 006 · Domain D-3 · D-4</div>
+  <h1>CN-006 — Exit Topologies of High-D Systems</h1>
+  <p class="subtitle">How systems resolve prolonged apparent stability: four structural exit types and the conditions that determine which one occurs</p>
+</div>
+
+<div class="meta">
+  <strong>Version</strong> 0.1 &nbsp;·&nbsp; <strong>Date</strong> April 2026 &nbsp;·&nbsp; <strong>Domain</strong> D-3 · D-4<br>
+  <strong>Builds on</strong>
+  <a href="https://aethercontinuity.org/papers/cn-005-high-d-stability-traps.html">CN-005</a> ·
+  <a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">CN-004</a> ·
+  <a href="https://aethercontinuity.org/supplements/tn-008-coupling-collapse-function.html">TN-008</a><br>
+  <strong>Status</strong> Open Working Draft · Subject to Revision
+</div>
+
+<!-- §01 -->
+<span class="sec-num">§ 01</span>
+<h2>The Question CN-005 Left Open</h2>
+
+<p>CN-005 established that D-suppression mechanisms determine the duration and character of apparent stability in systems where A &gt; R. Its comparative table showed that C at the moment of recognition correlates with the severity of the forcing event. But the table conflated two distinct variables: C (how much correction capacity remains) and exit architecture (what institutional structure is available to translate recognition into recovery).</p>
+
+<p>These are orthogonal. A system with low C can exit through a controlled internal mechanism if the exit architecture is intact. A system with moderate C can exit catastrophically if the exit architecture is absent or captured. The severity and character of the resolution — what CN-006 calls the exit topology — depends on both, not on C alone.</p>
+
+<div class="thesis-box">
+  <strong>CN-006 Central Claim</strong>
+  D-suppression does not predict collapse. It predicts the topology of resolution — the structural form through which the system eventually exits the high-D stability trap. Exit topology is determined by two independent variables: C at the moment of recognition, and the integrity of the exit architecture available to the system at that moment.
+</div>
+
+<p>This reframes the analytical purpose of the A/R/D/C framework. It is not primarily a collapse predictor. It is a resolution topology predictor: given a system's current A, R, D, C, and IL profile, what form of exit is structurally available — and what interventions shift the system toward a preferable topology?</p>
+
+<!-- §02 -->
+<span class="sec-num">§ 02</span>
+<h2>D as Filter, Not Delay: A Structural Correction</h2>
+
+<p>TN-007's original formulation treated D as a temporal quantity — the number of months between threshold crossing and political recognition. This is operationally useful but conceptually incomplete. CN-005's four D-suppression mechanisms reveal that D is better understood as an institutional filter operating at three distinct points in the signal chain:</p>
+
+<div class="formula">
+D₁ (interpretation filter): signal exists physically but is miscategorised<br>
+&nbsp;&nbsp;→ Mechanism II (fiscal accounting convention) operates here<br><br>
+D₂ (transmission filter): signal is correctly interpreted but not escalated<br>
+&nbsp;&nbsp;→ Mechanism III (consensus norm) operates here<br><br>
+D₃ (action filter): signal reaches agenda but is not converted to commitment<br>
+&nbsp;&nbsp;→ Mechanisms I (authoritarian) and IV (IL displacement) operate here
+</div>
+
+<p>This decomposition matters for exit topology analysis because different filter types require different interventions to reduce D. A system with high D due to Mechanism II (accounting convention) can be shifted by reclassifying one budget category — a technical intervention. A system with high D due to Mechanism III (consensus norm) requires a structural intervention that changes the payoff of public recognition. A system with high D due to Mechanism I requires the collapse of the suppression architecture itself.</p>
+
+<p>Finland's triple D-suppression (II + III + IV) means that no single intervention reduces D to operational levels. Each mechanism requires a distinct response — and IL (Mechanism IV) compounds the others by consuming the institutional bandwidth that would execute the other responses.</p>
+
+<!-- §03 -->
+<span class="sec-num">§ 03</span>
+<h2>The Two-Axis Model: C × Exit Architecture</h2>
+
+<p>Exit topology is determined by two independent variables. The first is C at recognition — the coupling coefficient at the moment political recognition occurs. The second is exit architecture — the institutional structures available to convert recognition into recovery.</p>
+
+<div class="formula">
+Exit topology = f(C_recognition, Exit_architecture)<br><br>
+C_recognition: coupling strength when D is finally crossed (0 → 1)<br>
+Exit_architecture: structural availability of resolution mechanisms<br>
+&nbsp;&nbsp;— External (outside the system)<br>
+&nbsp;&nbsp;— Internal collapse (uncontrolled dissolution)<br>
+&nbsp;&nbsp;— Internal distributed (gradual institutional repair)<br>
+&nbsp;&nbsp;— Embedded hybrid (supranational or market-mediated)
+</div>
+
+<p>These two variables are orthogonal: C is a property of the system's internal coupling state; exit architecture is a property of the institutional environment within which the system operates. A system with very low C can still exit through distributed correction if the exit architecture is intact and resourced. A system with moderate C can exit catastrophically if the only available exit architecture is external reset.</p>
+
+<!-- §04 -->
+<span class="sec-num">§ 04</span>
+<h2>Topology I — External Reset</h2>
+
+<div class="topology-block">
+  <div class="topology-header">
+    <span>Topology I · External Reset</span>
+    <span class="topology-tag">Portugal 1974 · Archetype</span>
+  </div>
+  <div class="topology-body">
+    <div class="topology-meta">
+      Condition: C ≈ 0 at recognition · Exit architecture: external only (internal fully captured)<br>
+      Resolution: structural discontinuity — new institutional system replaces existing one
+    </div>
+    <div class="profile-grid">
+      <div class="profile-cell"><div class="profile-label">C at recognition</div><div class="profile-val high">≈ 0</div></div>
+      <div class="profile-cell"><div class="profile-label">D-suppression</div><div class="profile-val high">I + II</div></div>
+      <div class="profile-cell"><div class="profile-label">IL at collapse</div><div class="profile-val high">Critical</div></div>
+      <div class="profile-cell"><div class="profile-label">Exit trigger</div><div class="profile-val high">External force</div></div>
+      <div class="profile-cell"><div class="profile-label">Recovery cost</div><div class="profile-val high">Structural</div></div>
+    </div>
+
+    <p>External Reset occurs when C has degraded to near-zero and the internal institutional architecture has been fully captured by the IL-generating process. The existing correction mechanisms cannot be activated because they are themselves the source of D-suppression. Resolution requires a force external to the captured system — military, popular uprising, foreign intervention, or market crisis of sufficient magnitude to bypass the internal D-suppression architecture entirely.</p>
+
+    <p>Portugal 1974 is the archetype: the Carnation Revolution was initiated by the Movimento das Forças Armadas — the institution with direct A exposure that had not been captured by the Estado Novo's D-suppression architecture. The armed forces were the one institutional actor whose direct experience of stress (colonial war casualties, resource exhaustion) bypassed Mechanisms I and II simultaneously. When they acted, C was already ≈ 0: the civilian correction architecture had been consumed by IL. The revolution did not initiate a reform of the existing system. It replaced it.</p>
+
+    <p><strong>Recovery cost:</strong> External Reset is the most expensive exit topology because it requires institutional reconstruction from a low-C starting point. The new system must be built while the old system's IL legacy persists — and the institutional capacity to build the new system is precisely what the old system's IL had consumed. Portugal's transition to stable democracy took approximately fifteen years and required sustained external support (EC accession 1986) to succeed.</p>
+
+    <p><strong>Conditions for avoidance:</strong> External Reset becomes inevitable only when both C ≈ 0 AND no internal institutional actor retains direct A exposure outside the D-suppression architecture. If any internal actor with both recognition capacity and institutional protection exists, the topology can shift toward Topology III (Internal Distributed) without external triggering.</p>
+  </div>
+</div>
+
+<!-- §05 -->
+<span class="sec-num">§ 05</span>
+<h2>Topology II — Internal Collapse</h2>
+
+<div class="topology-block">
+  <div class="topology-header">
+    <span>Topology II · Internal Collapse</span>
+    <span class="topology-tag">Soviet Union 1991 · Archetype</span>
+  </div>
+  <div class="topology-body">
+    <div class="topology-meta">
+      Condition: C ≈ 0 at recognition · Exit architecture: internal attempted, structurally unavailable<br>
+      Resolution: dissolution — system fragments rather than reforms
+    </div>
+    <div class="profile-grid">
+      <div class="profile-cell"><div class="profile-label">C at recognition</div><div class="profile-val high">≈ 0</div></div>
+      <div class="profile-cell"><div class="profile-label">D-suppression</div><div class="profile-val high">I + IV</div></div>
+      <div class="profile-cell"><div class="profile-label">IL at collapse</div><div class="profile-val high">Total</div></div>
+      <div class="profile-cell"><div class="profile-label">Exit trigger</div><div class="profile-val high">Internal attempt</div></div>
+      <div class="profile-cell"><div class="profile-label">Recovery cost</div><div class="profile-val high">Fragmentation</div></div>
+    </div>
+
+    <p>Internal Collapse differs from External Reset in one critical respect: the resolution is triggered internally — by an actor within the system who recognises the stress and attempts correction — but C has degraded below the threshold at which internal correction can produce system-level change. The correction attempt does not reform the system. It reveals the system's inability to absorb correction, which triggers dissolution.</p>
+
+    <p>Gorbachev's glasnost and perestroika are the archetype. Recognition was high — the Soviet leadership possessed detailed information about economic stagnation, technological gap, and military overextension. D was low at the top (D3 was not the binding constraint). C was ≈ 0: the correction mechanisms available to Gorbachev — price liberalisation, enterprise autonomy, political opening — arrived into a system whose coupling infrastructure had been consumed by decades of IL from the military-industrial complex. The corrections did not produce systemic reform. They produced systemic disintegration.</p>
+
+    <p>The distinguishing feature of Internal Collapse is that the correction attempt is the proximate cause of dissolution. The system did not collapse despite Gorbachev's reforms. It collapsed through them — because the application of R to a C≈0 system reveals the decoupling rather than restoring coupling. This is TN-008's coupling collapse theorem in its most acute historical form.</p>
+
+    <p><strong>Recovery cost:</strong> Internal Collapse produces fragmentation rather than replacement. Unlike External Reset, there is no clear successor system — multiple sub-systems emerge from the dissolution, each inheriting a portion of the original IL without the institutional infrastructure to manage it. Russia's post-Soviet trajectory reflects this structure: IL from the Soviet military-industrial complex persisted as the oligarchic-security apparatus, suppressing the coupling between institutional reform and economic system response for decades.</p>
+
+    <p><strong>Conditions for avoidance:</strong> Internal Collapse is the worst exit topology because it is triggered by the correct action — applying R — in conditions where C is too low for R to produce its intended effect. The only way to avoid it is to restore C before applying R at scale. This requires D-reduction and C-restoration as preconditions for correction, not simultaneous actions. In systems approaching Internal Collapse risk, the sequencing matters as much as the magnitude of R.</p>
+  </div>
+</div>
+
+<!-- §06 -->
+<span class="sec-num">§ 06</span>
+<h2>Topology III — Internal Distributed Correction</h2>
+
+<div class="topology-block">
+  <div class="topology-header">
+    <span>Topology III · Internal Distributed Correction</span>
+    <span class="topology-tag">Japan 2003 · Archetype</span>
+  </div>
+  <div class="topology-body">
+    <div class="topology-meta">
+      Condition: C low but above C* · Exit architecture: internal pool mechanism available<br>
+      Resolution: gradual institutional repair — slow, expensive, preserves system continuity
+    </div>
+    <div class="profile-grid">
+      <div class="profile-cell"><div class="profile-label">C at recognition</div><div class="profile-val med">Low, not zero</div></div>
+      <div class="profile-cell"><div class="profile-label">D-suppression</div><div class="profile-val med">III + II</div></div>
+      <div class="profile-cell"><div class="profile-label">IL at correction</div><div class="profile-val med">High</div></div>
+      <div class="profile-cell"><div class="profile-label">Exit trigger</div><div class="profile-val med">Protected actor</div></div>
+      <div class="profile-cell"><div class="profile-label">Recovery cost</div><div class="profile-val med">13-year lag</div></div>
+    </div>
+
+    <p>Internal Distributed Correction is the only exit topology that preserves system continuity without requiring an external forcing event or accepting internal collapse. It requires two conditions to hold simultaneously: C must remain above C* (correction must still be capable of reaching the system), and an institutional actor must exist with sufficient protection to bear the first-mover cost of public recognition.</p>
+
+    <p>Takenaka's 2002–2003 bank recapitalisation is the archetype. C was low — the financial system had been in high-D stability for thirteen years, sustained by Mechanism III (consensus norm) and Mechanism II (accounting convention). But C had not reached zero: the banks' assets, though non-performing, retained residual value. The system could absorb correction if correction arrived with sufficient speed and mandate.</p>
+
+    <p>The structural requirement was CN-003's pool method: shared information architecture (mark-to-market accounting made the non-performing loans simultaneously visible), distributed accountability (the Financial Services Agency rather than individual banks bore the recognition cost), and explicit mandate from above (Prime Minister Koizumi's direct protection of Takenaka against the LDP banking faction). Without all three elements, the consensus norm (Mechanism III) would have suppressed Takenaka's initiative before it reached implementation.</p>
+
+    <p>The cost of Topology III is temporal: thirteen years of accumulated A that was not corrected, producing a recovery that extended through the 1990s and was not complete until the mid-2000s. System continuity was preserved, but the price was paid in lost institutional capacity, demographic ageing without structural adjustment, and the persistent IL of zombie bank management consuming correction resources throughout the high-D period.</p>
+
+    <p><strong>Conditions for availability:</strong> Topology III becomes unavailable when C reaches C* — when coupling collapses below the minimum operational threshold. The transition from Topology III availability to unavailability is therefore the most critical threshold in the entire A/R/D/C framework: it is the point at which the difference between Japan 2003 and Soviet 1991 is determined. Monitoring C trajectory (TN-008's dC/dt) is not merely diagnostic — it identifies when the preferable topology is still accessible.</p>
+  </div>
+</div>
+
+<!-- §07 -->
+<span class="sec-num">§ 07</span>
+<h2>Topology IV — Embedded Hybrid Correction</h2>
+
+<div class="topology-block">
+  <div class="topology-header">
+    <span>Topology IV · Embedded Hybrid Correction</span>
+    <span class="topology-tag">Finland 2026–2032 · Structural Position</span>
+  </div>
+  <div class="topology-body">
+    <div class="topology-meta">
+      Condition: C declining, D* closing · Exit architecture: EU/market embedded, partially available<br>
+      Resolution: supranational and market mechanisms provide exit architecture not available internally
+    </div>
+    <div class="profile-grid">
+      <div class="profile-cell"><div class="profile-label">C trajectory</div><div class="profile-val med">↓ Declining</div></div>
+      <div class="profile-cell"><div class="profile-label">D-suppression</div><div class="profile-val high">II + III + IV</div></div>
+      <div class="profile-cell"><div class="profile-label">IL accumulation</div><div class="profile-val high">Growing</div></div>
+      <div class="profile-cell"><div class="profile-label">Exit architecture</div><div class="profile-val med">EU embedded</div></div>
+      <div class="profile-cell"><div class="profile-label">Window</div><div class="profile-val high">2027–2030</div></div>
+    </div>
+
+    <p>Embedded Hybrid Correction is a topology not present in CN-005's historical cases — it is structurally available only to systems deeply embedded in supranational institutional frameworks. Finland's membership in the EU, participation in ENTSO-E's pan-European grid governance, and exposure to Nordic electricity market price signals creates a set of external correction mechanisms that operate independently of Finland's internal D-suppression architecture.</p>
+
+    <p>Three embedded correction channels are structurally available:</p>
+
+    <p><strong>EU regulatory compulsion.</strong> The Energy Performance of Buildings Directive, RED III sector integration requirements, and the Fit for 55 framework create mandatory correction obligations that bypass Mechanism III (consensus norm) entirely. Compliance is not optional; the D2 filter (consensus required for escalation) does not apply to regulatory obligations imposed from above. EU regulation functions as an external Takenaka mandate — it provides the institutional protection that Finnish actors cannot provide for themselves within the consensus architecture.</p>
+
+    <p><strong>Market price signal.</strong> Nordic electricity market prices transmit A directly to end consumers — the Vatanen kansalainen — without passing through the D-suppression architecture. When market prices spike, recognition occurs at the household level independently of whether the institutional system has processed the signal. Market-forced recognition bypasses D2 and D3 simultaneously. The risk is that market-forced recognition arrives without correction architecture in place — producing recognition without R, which is the Soviet topology applied to a democratic context.</p>
+
+    <p><strong>ENTSO-E monitoring infrastructure.</strong> The Transparency Platform provides Layer I data (physical state) at hourly resolution independently of Finnish institutional processing. This is a structural D1-reduction mechanism embedded in the European grid governance architecture. It is the reason ACI's SM-006 empirical validation was possible: the data existed in public form before any Finnish institution had processed it into political agenda.</p>
+
+    <p>The fourth topology is structurally more favourable than the three historical archetypes in one respect: external correction channels operate independently of internal C. Even if Finland's internal C reaches C*, EU regulatory compulsion continues to generate correction obligations. The question is not whether correction will eventually arrive — regulatory frameworks make this structurally certain. The question is whether Finland's institutional capacity to implement those corrections (its R × C product) will be sufficient when the corrections arrive, or whether it will have degraded to the point where implementation failure becomes the forcing event.</p>
+
+    <p><strong>The specific risk of Topology IV:</strong> Embedded correction channels reduce the probability of Topology I (External Reset) because they provide external mandate without requiring revolutionary forcing events. But they do not eliminate the risk of Topology II (Internal Collapse) under a specific condition: if EU regulatory corrections arrive into a Finnish system whose C has degraded below C*, the corrections will reveal the decoupling rather than restoring coupling. Implementation failure of EU-mandated corrections — publicly visible, institutionally attributed — is the Finnish equivalent of Gorbachev's reforms triggering dissolution rather than reform.</p>
+  </div>
+</div>
+
+<!-- §08 -->
+<span class="sec-num">§ 08</span>
+<h2>The Topology Matrix</h2>
+
+<table>
+  <tr>
+    <th>Topology</th>
+    <th>C at recognition</th>
+    <th>Exit architecture</th>
+    <th>D-suppression type</th>
+    <th>Recovery form</th>
+    <th>System continuity</th>
+  </tr>
+  <tr>
+    <td><strong>I — External Reset</strong></td>
+    <td>≈ 0</td>
+    <td>External only</td>
+    <td>I + II</td>
+    <td>Replacement</td>
+    <td>Broken</td>
+  </tr>
+  <tr>
+    <td><strong>II — Internal Collapse</strong></td>
+    <td>≈ 0</td>
+    <td>Internal attempted</td>
+    <td>I + IV</td>
+    <td>Fragmentation</td>
+    <td>Lost</td>
+  </tr>
+  <tr>
+    <td><strong>III — Distributed Correction</strong></td>
+    <td>Low, &gt; C*</td>
+    <td>Internal pool</td>
+    <td>III + II</td>
+    <td>Gradual repair</td>
+    <td>Preserved, costly</td>
+  </tr>
+  <tr>
+    <td><strong>IV — Embedded Hybrid</strong></td>
+    <td>Declining</td>
+    <td>Supranational embedded</td>
+    <td>II + III + IV</td>
+    <td>Regulatory-forced</td>
+    <td>Preserved if C &gt; C*</td>
+  </tr>
+</table>
+
+<p>The matrix reveals the critical boundary condition for Finland: the difference between Topology III (gradual repair, system continuity preserved) and Topology II risk (implementation collapse) is determined by whether C remains above C* when EU regulatory corrections arrive at scale. TN-008's dC/dt / dA/dt phase transition criterion is therefore not merely a measurement exercise — it determines which topology is structurally available.</p>
+
+<!-- §09 -->
+<span class="sec-num">§ 09</span>
+<h2>Intervention Implications: Which Topology Do We Choose?</h2>
+
+<p>The exit topology framework converts the A/R/D/C diagnostics into an intervention priority structure. The question is no longer only "what is the current regime?" but "which topology is structurally available, and what interventions shift the system toward the preferable one?"</p>
+
+<p>For Finland 2026, three interventions are topology-determining:</p>
+
+<p><strong>C-restoration before R-application (TN-008 sequencing).</strong> Topology III requires C &gt; C* when R arrives. The risk of Topology II is triggered by applying large R to a low-C system. This implies that C-restoration — reducing IL, clarifying institutional mandates, simplifying coordination requirements — is a precondition for effective correction, not a parallel action. Initiating DT-001 (capacity mechanism) into a high-IL environment without first reducing coordination overhead may produce the implementation failure that triggers regulatory-forced recognition.</p>
+
+<p><strong>D-reduction at the binding filter (CN-005 mechanism targeting).</strong> Finland's triple D-suppression requires targeted intervention at the binding filter. Mechanism IV (IL displacement) is most directly addressed by reducing the number of simultaneous correction initiatives — not by adding new ones. The current DT-series (DT-001 through DT-006) generates cumulative IL that exceeds the institutional bandwidth available for each individual mechanism. Sequencing correction initiatives to reduce IL per period is topology-determining: it determines whether D reduces before C reaches C*.</p>
+
+<p><strong>Pool method initiation (CN-003 + CN-006 synthesis).</strong> Topology III requires a protected institutional actor willing to bear the first-mover cost of public recognition. The Takenaka parallel is direct: a cross-ministry working group with prime ministerial mandate, ENTSO-E data as shared information baseline, and distributed accountability across multiple ministries. This is the institutional structure that converts the embedded correction channels (Topology IV) into the distributed correction architecture (Topology III) — providing the internal mechanism that EU regulatory compulsion cannot.</p>
+
+<!-- §10 -->
+<span class="sec-num">§ 10</span>
+<h2>What CN-006 Does Not Claim</h2>
+
+<p>Three limitations are explicit.</p>
+
+<p>First, the topology classification is structural, not deterministic. Systems do not mechanically follow topological predictions. The framework identifies which exits are structurally available and which conditions shift availability — it does not predict which exit will occur. Human agency, contingent events, and political factors outside the framework's scope can produce outcomes inconsistent with the structural prediction.</p>
+
+<p>Second, the four topologies do not exhaust the space of possible exits. They are derived from the four historical cases examined in CN-005 — three resolved cases and one ongoing case. Other exit forms may exist in cases not examined here. The taxonomy is empirically grounded in available cases, not derived from first principles.</p>
+
+<p>Third, Topology IV (Embedded Hybrid) is structurally novel — it has no resolved historical precedent in this framework. Portugal, the Soviet Union, and Japan all operated without equivalent supranational embeddedness at the time of their high-D stability resolution. Whether EU embeddedness functions as the topology-improving mechanism this note proposes, or whether it introduces new failure modes not captured in the historical cases, cannot be determined from the current evidence base alone.</p>
+
+<div class="finding-box">
+  <h3>CN-006 — Core Finding</h3>
+  <p>Exit topology of high-D systems is determined by two independent variables: C at the moment of recognition, and the integrity of exit architecture available at that moment. Four topologies are identified: External Reset (C≈0, external architecture only — Portugal 1974), Internal Collapse (C≈0, internal attempted — Soviet 1991), Internal Distributed Correction (C&gt;C*, internal pool — Japan 2003), and Embedded Hybrid Correction (C declining, supranational embedded — Finland 2026–2032). D is a filter operating at three points in the signal chain, not a temporal delay — and different D-suppression mechanisms require distinct interventions. The critical boundary for Finland is whether C remains above C* when EU regulatory corrections arrive at scale. The difference between Topology III (gradual repair) and Topology II risk (implementation collapse revealing decoupling) is determined by dC/dt relative to the correction arrival timeline. C-restoration before R-application, D-reduction at the binding filter (IL), and pool method initiation are the three topology-determining interventions available within the 2027–2030 window.</p>
+</div>
+
+<div class="xref-block">
+  <h3>Cross-references</h3>
+  <div class="xref-row"><span class="xref-id">CN-005</span><a href="https://aethercontinuity.org/papers/cn-005-high-d-stability-traps.html">High-D Stability Traps — historical case basis</a></div>
+  <div class="xref-row"><span class="xref-id">CN-004</span><a href="https://aethercontinuity.org/papers/cn-004-distributed-optimisation.html">Distributed Optimisation — A/R/D theoretical framework</a></div>
+  <div class="xref-row"><span class="xref-id">CN-003</span><a href="https://aethercontinuity.org/papers/cn-003-pool-method-coordination-failure.html">The Pool Method — Topology III structural requirement</a></div>
+  <div class="xref-row"><span class="xref-id">TN-007</span><a href="https://aethercontinuity.org/supplements/tn-007-ard-measurement-architecture.html">A/R/D Measurement Architecture</a></div>
+  <div class="xref-row"><span class="xref-id">TN-008</span><a href="https://aethercontinuity.org/supplements/tn-008-coupling-collapse-function.html">Coupling Collapse Function C* — dC/dt sequencing</a></div>
+  <div class="xref-row"><span class="xref-id">SM-006</span><a href="https://aethercontinuity.org/papers/sm-006-convergence-window.html">The 2028 Convergence Window</a></div>
+  <div class="xref-row"><span class="xref-id">DT-001</span><a href="https://aethercontinuity.org/decisions/dt-001-capacity-mechanism-finland.html">Capacity Mechanism — Finland</a></div>
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org<br>
+  Concept Note CN-006 · April 2026 · v0.1<br>
+  Domain D-3 · D-4 · Open Working Draft · Subject to Revision
+</footer>
+
+</body>
+</html>
