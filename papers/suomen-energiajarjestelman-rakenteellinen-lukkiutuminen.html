@@ -123,7 +123,7 @@ footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule
 </div>
 
 <div class="meta">
-  <strong>Versio</strong> 1.6 &nbsp;·&nbsp; <strong>Päiväys</strong> Huhtikuu 2026<br>
+  <strong>Versio</strong> 1.7 &nbsp;·&nbsp; <strong>Päiväys</strong> Huhtikuu 2026<br>
   <strong>Kohderyhmä</strong> Päättäjät · Virkamiehet · Toimittajat · Sijoittajat<br>
   <strong>Datalähteet</strong> Fingrid (tilinpäätöstiedote 2024, Sähköllä kasvua -toimenpideohjelma helmikuu 2026) · ENTSO-E · TEM · DIESL · Hallituksen puoliväliriihi huhtikuu 2025 · JTS · Julkiset raportit<br>
   <strong>ACI-viitteet</strong>
@@ -375,19 +375,31 @@ footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule
 </table>
 
 <span class="sec-num">§ 6.2</span>
-<h2>MESA/SGFA — mitä se on ja mitä se ei ole</h2>
+<h2>Modernisoitu yhteistuotantosolmu — mitä se tarkoittaa käytännössä</h2>
 
-<p>MESA/SGFA on arkkitehtuuri, jota yksikään olemassa oleva suomalainen CHP-laitos ei tällä hetkellä täytä. Kuopion Energian ja Helenin nykyiset ratkaisut ovat perinteisiä lämpö- ja sähköntuotannon yksiköitä. SGFA-solmu vaatii neljä rakenteellista ominaisuutta (TN-001):</p>
+<p>MESA (Municipal Energy Security Architecture) ja SGFA (System Grid-Forming Anchor) ovat ACI:n käyttämiä lyhenteitä arkkitehtuurille, jonka ydinajatus on yksinkertainen: olemassa olevat kunnalliset CHP-laitokset — yhteistuotantolaitokset jotka tuottavat sekä sähköä että kaukolämpöä — modernisoidaan siten, että ne kykenevät toimimaan myös järjestelmäpulatilanteissa ja tuottamaan useampia tulovirtoja. Kyse ei ole uuden infrastruktuurin rakentamisesta tyhjästä vaan olemassa olevien laitosten ja verkkojen kehittämisestä.</p>
+
+<p>TN-001:n mukaan täysimittainen solmu vaatii neljä lisäominaisuutta nykyisen CHP-toiminnan päälle:</p>
 
 <table>
-  <tr><th>Ominaisuus</th><th>Täyttyykö nykyisissä CHP-laitoksissa?</th></tr>
-  <tr><td>Duration-capable (72+ h)</td><td>Ei.</td></tr>
-  <tr><td>Multi-layer revenue</td><td>Osittain.</td></tr>
-  <tr><td>Grid-forming capable</td><td>Ei.</td></tr>
-  <tr><td>Municipally anchored (FAC-positiivinen)</td><td>Osittain.</td></tr>
+  <tr><th>Ominaisuus</th><th>Mitä se tarkoittaa</th><th>Täyttyykö nykyisissä CHP-laitoksissa?</th></tr>
+  <tr><td>Kestävyys 72h+</td><td>Laitos toimii omilla varastoillaan vähintään kolme vuorokautta ilman ulkoisia toimituksia — biokaasureservi tai vastaava</td><td>Ei.</td></tr>
+  <tr><td>Monitulovirta</td><td>Sähkö + lämpö + reservimarkkinat + mahdollisesti hiilidioksidikrediitit</td><td>Osittain.</td></tr>
+  <tr><td>Verkkomuodostuskyky</td><td>Laitos kykenee stabiloimaan paikallisen sähköverkon taajuuden häiriötilanteessa ilman kantaverkon tukea</td><td>Ei.</td></tr>
+  <tr><td>Kunnallinen omistus (FAC-positiivinen)</td><td>Omistaja optimoi järjestelmävakautta eikä pelkästään markkinatuottoa</td><td>Osittain.</td></tr>
 </table>
 
-<p>Kuopio ja Helsinki <em>voisivat</em> isännöidä SGFA-solmua — mutta se vaatii merkittävän modernisoinnin ja ennen kaikkea institutionaalisen valinnan. Stockholm Exergin Värtaverket-hanke on referenssitapaus: sama arkkitehtuuri, kunnallinen omistus, EU:n Innovation Fund -rahoitus, operatiivinen 2028.</p>
+<p>Kuopio ja Helsinki voisivat isännöidä tällaista solmua, mutta se vaatii investointipäätöksen modernisoinnista — sitä ei ole tehty.</p>
+
+<h3>Referenssitapaus: Stockholm Exergi Värtaverket, Tukholma</h3>
+
+<p>Värtaverket on Tukholman kaupungin omistaman Stockholm Exergin biomassaan perustuva yhteistuotantolaitos. Se tuottaa lämpöä yli 800 000 tukholmalaiselle kiinteistölle. Laitokseen rakennetaan parhaillaan BECCS-yksikkö (Bioenergy Carbon Capture and Storage) — järjestelmä joka kaappaa biomassan polton savukaasuista hiilidioksidin ja varastoi sen pysyvästi Norjan merenpohjaan yhteistyössä Northern Lights -hankkeen kanssa. Yksikkö kaappaa 800 000 tonnia CO₂ vuodessa, mikä vastaa Tukholman tieliikenteen koko vuoden päästöjä. Rahoitusmalli: EU Innovation Fund 180 M€, EIB-laina 260 M€, Ruotsin valtion tuki yli 20 mrd kruunua 15 vuodelle, hiilidioksidikrediittien myynti (Microsoft suurin ostaja). Laitos on operatiivinen 2028.</p>
+
+<h3>Suomalainen vertailukohta: Vantaan Energia</h3>
+
+<p>Vantaan Energia on Suomen pisimmällä olevassa hiilidioksidin talteenottohankkeessa. Yhtiön jätevoimala tuottaa kaukolämpöä ja sähköä sekajätteestä. Suunnitteilla oleva CCS-laitos ottaisi talteen noin 660 000 tonnia CO₂ vuodessa jätevoimalan savukaasuista, nesteytyisi sen ja kuljettaisi laivoilla pysyvään geologiseen varastoon. Investointipäätöksen aikataulu on vuosi 2027, käyttöönotto 2030. YVA-menettely valmistui maaliskuussa 2026. Lisäksi Vantaan Energia rakentaa parhaillaan Varanto-nimistä maanalaista lämmön kausivarastoa (90 GWh, 200 MW purkuteho) joka mahdollistaa sähkökattiloilla tuotetun lämmön varastoimisen edullisen sähkön hetkiltä talvipakkasille — sama joustavuuslogiikka kuin SGFA-solmussa.</p>
+
+<p>Kumpikaan hanke — Värtaverket eikä Vantaan Energia — ei täytä kaikkia SGFA-solmun neljää ominaisuutta. Ne ovat kuitenkin lähin olemassa oleva referenssi sille suuntaan, johon CHP-laitoskanta voisi kehittyä institutionaalisen päätöksen myötä.</p>
 
 <span class="sec-num">§ 6.3–6.4</span>
 <h2>Parlamentaarinen lukitus ja koordinoitu EU-rahoitushaku</h2>
@@ -454,7 +466,7 @@ footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule
 
 <footer>
   Aether Continuity Institute · aethercontinuity.org<br>
-  Suomen sähköjärjestelmä 2026–2032 · Versio 1.6 · Huhtikuu 2026<br>
+  Suomen sähköjärjestelmä 2026–2032 · Versio 1.7 · Huhtikuu 2026<br>
   Kattava raportti · Suomeksi · Avoin käyttö
 </footer>
 
