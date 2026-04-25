@@ -2545,7 +2545,8 @@ async function renderS12(rawData) {
       document.getElementById('s12TRRlabel').textContent = 'DS 60 ei vastaa';
     }
 
-    // P1 sisäinen siirto (DS 30)
+    // P1 sisäinen siirto (DS 30) — 10s viive rate-limiting jälkeen
+    await new Promise(r => setTimeout(r, 10000));
     try {
       const now = new Date();
       const end = new Date(now - 2*3.6e6);
@@ -2573,7 +2574,7 @@ async function renderS12(rawData) {
       document.getElementById('s12P1label').textContent = 'DS 30 ei vastaa';
     }
 
-    // Shortage Status DS 336, Taajuus DS 177, mFRR DS 369
+    // Shortage Status DS 336, Taajuus DS 177, mFRR DS 369 — 10s viive per DS
     for (const [ds, elId, labelId, transform, thresholds, labels, classes] of [
       [336, 's12SS', 's12SSlabel', v=>Math.round(v||0), [0,1,2], ['Normal','Watch','Warning','Emergency'], ['s12-normal','s12-tight','s12-elevated','s12-critical']],
       [177, 's12Freq', 's12Freqlabel', v=>v, null, null, null],
@@ -2583,6 +2584,7 @@ async function renderS12(rawData) {
         const now = new Date();
         const end = new Date(now - 60000);
         const start = new Date(now - 3.6e6);
+        await new Promise(r => setTimeout(r, 10000));
         const r = await fetch(txBase + '?ds=' + ds +
           '&start=' + encodeURIComponent(start.toISOString()) +
           '&end=' + encodeURIComponent(end.toISOString()) + '&size=5');
