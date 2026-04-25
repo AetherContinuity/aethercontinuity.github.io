@@ -294,7 +294,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 <div class="dih">
   <div class="dih-l">
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
-    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; v2.6</div>
+    <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; <span id="versionBadge">v2.7</span></div>
   </div>
   <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192/74 · 87 · 191 · 181 · 105</div>
 </div>
@@ -882,7 +882,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 </div><!-- /page -->
 
 <footer>
-  <div>Aether Continuity Institute<br>Winter Endurance Monitor<br>v2.6 · <span id="footerDate">2026</span></div>
+  <div>Aether Continuity Institute<br>Winter Endurance Monitor<br><span id="versionBadge2">v2.7</span> · <span id="buildStamp">build —</span></div>
   <div>Basis: WP-001 · DA-003 · WP-008<br>Source: Fingrid Open Data<br>Proxy: Fingrid Open Data API</div>
   <div>aethercontinuity.org<br>Open diagnostic instrument<br>Not an operational alert system</div>
 </footer>
@@ -2497,6 +2497,20 @@ window.addEventListener('resize', () => {
 });
 // Auto-refresh every 30 min
 setInterval(init, 30 * 60 * 1000);
+
+// ── Version & build stamp ─────────────────────────────────────────────────────
+const WEM_VERSION = '2.7';
+const WEM_BUILD   = '2026-04-25';  // päivitä aina kun teet muutoksia
+const WEM_CHANGES = [
+  '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 245), progress bar, datalog, NTC 900→1500 MW',
+  '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
+];
+document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
+  if (el) el.textContent = 'v' + WEM_VERSION;
+  if (el) el.title = WEM_CHANGES.join('\n');
+});
+const bs = document.getElementById('buildStamp');
+if (bs) bs.textContent = 'build ' + WEM_BUILD;
 
 // ── §12 Transmission & Endurance Layer ──────────────────────────────────────
 const TX_PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
