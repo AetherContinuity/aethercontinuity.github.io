@@ -812,7 +812,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="s12-card">
         <div class="s12-card-title">mFRR-suunta &mdash; DS 369</div>
         <div class="s12-value" id="s12mFRR">—</div>
-        <div class="s12-sub">−1=alas · 0=neutr · +1=ylös</div>
+        <div class="s12-sub">Taajuuspohjalta arvioitu · Hz-poikkeama</div>
         <div class="s12-status s12-normal" id="s12mFRRlabel">ladataan…</div>
       </div>
       <!-- Kumulatiivinen energiatasapaino -->
@@ -826,7 +826,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="s12-card">
         <div class="s12-card-title">Tuulivoima — 72h ennuste</div>
         <div class="s12-value" id="s12WindFcst">—</div>
-        <div class="s12-sub">MW · DS 245 · ka / min 72h</div>
+        <div class="s12-sub">MW · DS 246/245 · ka / min 72h</div>
         <div class="s12-status s12-normal" id="s12WindFcstLabel">ladataan…</div>
       </div>
       <!-- Tuulikato-riski -->
@@ -2503,7 +2503,7 @@ setInterval(init, 30 * 60 * 1000);
 const WEM_VERSION = '2.7';
 const WEM_BUILD   = '2026-04-25';  // päivitä aina kun teet muutoksia
 const WEM_CHANGES = [
-  '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 245), progress bar, datalog, NTC 900→1500 MW',
+  '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
 ];
 document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
@@ -2706,7 +2706,17 @@ async function renderS12(rawData) {
               document.getElementById(labelId).textContent = labels[idx];
               document.getElementById(labelId).className = 's12-status ' + classes[idx];
             } else if (ds === 177) {
-              document.getElementById(elId).textContent = (row.value||0).toFixed(3) + ' Hz';
+              const freqVal = row.value||0;
+              document.getElementById(elId).textContent = freqVal.toFixed(3) + ' Hz';
+              // mFRR arvio taajuuspoikkeamasta
+              const freqDev = freqVal - 50.0;
+              const mfrrEl = document.getElementById('s12mFRR');
+              const mfrrLbl = document.getElementById('s12mFRRlabel');
+              if (mfrrEl) {
+                if (freqDev < -0.05) { mfrrEl.textContent = '↑ ylös'; mfrrLbl.textContent = 'Taajuus matala → säätö ylös'; mfrrLbl.className = 's12-status s12-elevated'; }
+                else if (freqDev > 0.05) { mfrrEl.textContent = '↓ alas'; mfrrLbl.textContent = 'Taajuus korkea → säätö alas'; mfrrLbl.className = 's12-status s12-tight'; }
+                else { mfrrEl.textContent = '○ neutr'; mfrrLbl.textContent = 'Taajuus vakaa (±' + Math.abs(freqDev).toFixed(3) + ' Hz)'; mfrrLbl.className = 's12-status s12-normal'; }
+              }
               const dev = Math.abs((row.value||50) - 50.0);
               const st = s12Status(dev, [0.1,0.2,0.5],
                 ['Stable','Watch','Warning','Critical'],
@@ -2758,7 +2768,7 @@ function drawS12Chart(data) {
   ctx.beginPath(); ctx.moveTo(0,ntcY); ctx.lineTo(W,ntcY); ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle = '#e07000'; ctx.font = '9px sans-serif';
-  ctx.fillText('NTC ~900', 4, ntcY-3);
+  ctx.fillText('NTC ~1500', 4, ntcY-3);
 
   // Siirtokäyrä
   ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5;
