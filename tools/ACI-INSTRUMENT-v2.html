@@ -2501,7 +2501,7 @@ setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
 const WEM_VERSION = '2.7';
-const WEM_BUILD   = '2026-04-25';  // päivitä aina kun teet muutoksia
+const WEM_BUILD   = '2026-04-25b'; // päivitä aina kun teet muutoksia
 const WEM_CHANGES = [
   '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
@@ -2514,7 +2514,7 @@ const bs = document.getElementById('buildStamp');
 if (bs) bs.textContent = 'build ' + WEM_BUILD;
 
 // ── §12 Transmission & Endurance Layer ──────────────────────────────────────
-const TX_PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
+const TX_PROXY = 'https://aci-transmission-proxy.ruotsalainen-marko.workers.dev';
 
 function s12Status(val, thresholds, labels, classes) {
   for (let i = 0; i < thresholds.length; i++) {
@@ -2612,14 +2612,14 @@ async function renderS12(rawData) {
     }
 
     // Reaaliaikaiset DS:t transmission-proxystä — try/catch per mittari
-    const txBase = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
+    const txBase = 'https://aci-transmission-proxy.ruotsalainen-marko.workers.dev';
 
     // SE1→FI siirto (DS 60, 15min)
     try {
       const now = new Date();
       const end = new Date(now - 2*3.6e6);
       const start = new Date(now - 28*3.6e6);
-      const r = await fetch(txBase + '?ds=60&start=' + encodeURIComponent(start.toISOString()) +
+      const r = await fetch(txBase + '/?ds=60&start=' + encodeURIComponent(start.toISOString()) +
         '&end=' + encodeURIComponent(end.toISOString()) + '&size=120');
       if (r.ok) {
         const j = await r.json();
@@ -2655,7 +2655,7 @@ async function renderS12(rawData) {
       const now = new Date();
       const end = new Date(now - 2*3.6e6);
       const start = new Date(now - 26*3.6e6);
-      const r = await fetch(txBase + '?ds=30&start=' + encodeURIComponent(start.toISOString()) +
+      const r = await fetch(txBase + '/?ds=30&start=' + encodeURIComponent(start.toISOString()) +
         '&end=' + encodeURIComponent(end.toISOString()) + '&size=100');
       if (r.ok) {
         const j = await r.json();
@@ -2690,7 +2690,7 @@ async function renderS12(rawData) {
         const end = new Date(now - 60000);
         const start = new Date(now - 3.6e6);
         await new Promise(r => setTimeout(r, 10000));
-        const r = await fetch(txBase + '?ds=' + ds +
+        const r = await fetch(txBase + '/?ds=' + ds +
           '&start=' + encodeURIComponent(start.toISOString()) +
           '&end=' + encodeURIComponent(end.toISOString()) + '&size=5');
         if (r.ok) {
