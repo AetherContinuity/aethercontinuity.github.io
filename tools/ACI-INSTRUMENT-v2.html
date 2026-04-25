@@ -1823,7 +1823,8 @@ async function init() {
   const now = new Date();
   const dateStr = now.toLocaleDateString('fi-FI', { month: 'long', year: 'numeric' });
   document.getElementById('hdrDate').textContent = dateStr;
-  document.getElementById('footerDate').textContent = now.getFullYear();
+  const fdEl = document.getElementById('footerDate');
+  if (fdEl) fdEl.textContent = now.getFullYear();
 
   let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
   const errors = [], layerErrors = [];
