@@ -764,7 +764,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §12 Transmission & Endurance Layer -->
   <div class="section" id="s12">
     <div class="shdr"><span class="snum">&sect; 12</span><span class="stit">Siirtoyhteydet &amp; Energiakestävyys — Transmission &amp; Endurance Layer</span></div>
-    <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60, DS 87, DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — Fingrid Open Data API.</p>
+    <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60, DS 87, DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — Fingrid Open Data API. Latautuu 15s päähaun jälkeen.</p>
 
     <div class="s12-grid">
       <!-- TRR -->
@@ -1884,8 +1884,8 @@ async function init() {
     fetchHydroRF().then(() => {
       renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
     });
-    // §12 Transmission & Endurance Layer
-    renderS12(rawData);
+    // §12 Transmission & Endurance Layer — viive rate-limiting välttämiseksi
+    setTimeout(() => renderS12(rawData), 15000);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
 
   btn.disabled = false;
@@ -2541,7 +2541,8 @@ async function renderS12(rawData) {
       }
     } catch(e) {
       document.getElementById('s12TRR').textContent = 'N/A';
-      document.getElementById('s12TRRlabel').textContent = 'Fingrid proxy — ladataan…';
+      document.getElementById('s12TRRlabel').className = 's12-status s12-tight';
+      document.getElementById('s12TRRlabel').textContent = 'DS 60 ei vastaa';
     }
 
     // P1 sisäinen siirto (DS 30)
@@ -2568,7 +2569,8 @@ async function renderS12(rawData) {
       }
     } catch(e) {
       document.getElementById('s12P1').textContent = 'N/A';
-      document.getElementById('s12P1label').textContent = 'Fingrid proxy — ladataan…';
+      document.getElementById('s12P1label').className = 's12-status s12-tight';
+      document.getElementById('s12P1label').textContent = 'DS 30 ei vastaa';
     }
 
     // Shortage Status DS 336, Taajuus DS 177, mFRR DS 369
