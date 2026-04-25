@@ -2524,7 +2524,7 @@ async function renderS12(rawData) {
         const j = await r.json();
         const vals = (j.data||[]).map(d => d.value).filter(v => v != null);
         const se1Avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
-        const ntcApprox = 900;
+        const ntcApprox = 1500; // Aurora-linja avattu marraskuu 2025 — SE1→FI max NTC 1500 MW
         if (se1Avg != null) {
           const trrVal = Math.abs(se1Avg) / ntcApprox;
           document.getElementById('s12TRR').textContent = (trrVal*100).toFixed(0) + '%';
