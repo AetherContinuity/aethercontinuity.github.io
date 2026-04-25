@@ -223,6 +223,19 @@ input.dc-range::-webkit-slider-thumb:hover{background:var(--accent);}
 
 
 /* ── §12 Transmission & Endurance ── */
+/* ── §12 Progress bar ── */
+.s12-progress-wrap{margin:.5rem 0 1rem;background:var(--line);border-radius:2px;height:4px;overflow:hidden;display:none;}
+.s12-progress-bar{height:100%;background:var(--accent);transition:width .4s ease;width:0%;}
+.s12-progress-label{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:.3rem;display:none;}
+/* ── Data log ── */
+.s12-log-wrap{margin-top:1rem;border-top:1px solid var(--line);padding-top:.75rem;}
+.s12-log-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.s12-log-table{width:100%;font-family:var(--mono);font-size:.65rem;border-collapse:collapse;}
+.s12-log-table th{color:var(--muted);text-align:left;padding:.2rem .4rem;border-bottom:1px solid var(--line);}
+.s12-log-table td{padding:.2rem .4rem;color:var(--ink);border-bottom:1px solid rgba(255,255,255,.04);}
+.s12-log-clear{font-family:var(--mono);font-size:.58rem;color:var(--muted);background:none;border:1px solid var(--line);padding:.2rem .6rem;cursor:pointer;float:right;}
+.s12-log-clear:hover{color:var(--ink);}
+
 .s12-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1rem 0;}
 .s12-card{background:#fff;border:1px solid var(--rule);padding:.9rem 1rem;}
 .s12-card-title{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
@@ -761,6 +774,11 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="shdr"><span class="snum">&sect; 12</span><span class="stit">Siirtoyhteydet &amp; Energiakestävyys — Transmission &amp; Endurance Layer</span></div>
     <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60, DS 87, DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — Fingrid Open Data API. Latautuu 15s päähaun jälkeen.</p>
 
+    <div class="s12-progress-label" id="s12ProgressLabel">§12 latautuu — odota…</div>
+    <div class="s12-progress-wrap" id="s12ProgressWrap">
+      <div class="s12-progress-bar" id="s12ProgressBar"></div>
+    </div>
+
     <div class="s12-grid">
       <!-- TRR -->
       <div class="s12-card">
@@ -818,6 +836,16 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <strong>Energia-alijäämä:</strong> Σ max(0, kulutus−tuotanto) 72h:ssa &nbsp;·&nbsp;
       Yhteys: <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a>
     </div>
+    <div class="s12-log-wrap" id="s12LogWrap">
+      <div class="s12-log-title">Datalog — viimeiset 10 hakua
+        <button class="s12-log-clear" onclick="s12ClearLog()">Tyhjennä</button>
+      </div>
+      <table class="s12-log-table">
+        <thead><tr><th>Aika</th><th>TRR</th><th>SE1 MW</th><th>Shortage</th><th>Taajuus Hz</th><th>CEB MWh</th></tr></thead>
+        <tbody id="s12LogBody"><tr><td colspan="6" style="color:var(--muted)">Ei vielä dataa — odota ensimmäistä hakua</td></tr></tbody>
+      </table>
+    </div>
+
   </div>
 
   <!-- References -->
@@ -2485,8 +2513,54 @@ function avg(arr) {
   return arr.reduce((a,b) => a + b, 0) / arr.length;
 }
 
+// ── Data log helpers ────────────────────────────────────────────────────────
+const S12_LOG_KEY = 'wem_s12_log';
+function s12LoadLog() {
+  try { return JSON.parse(localStorage.getItem(S12_LOG_KEY) || '[]'); } catch(e) { return []; }
+}
+function s12SaveLog(entry) {
+  const log = s12LoadLog();
+  log.unshift(entry);
+  if (log.length > 10) log.length = 10;
+  try { localStorage.setItem(S12_LOG_KEY, JSON.stringify(log)); } catch(e) {}
+  s12RenderLog(log);
+}
+function s12RenderLog(log) {
+  const tbody = document.getElementById('s12LogBody');
+  if (!tbody) return;
+  if (!log.length) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Ei dataa</td></tr>'; return; }
+  tbody.innerHTML = log.map(r => `<tr>
+    <td>${r.t}</td>
+    <td>${r.trr != null ? r.trr+'%' : '—'}</td>
+    <td>${r.se1 != null ? r.se1+' MW' : '—'}</td>
+    <td>${r.shortage != null ? r.shortage : '—'}</td>
+    <td>${r.freq != null ? r.freq+' Hz' : '—'}</td>
+    <td>${r.ceb != null ? r.ceb.toLocaleString('fi')+' MWh' : '—'}</td>
+  </tr>`).join('');
+}
+function s12ClearLog() {
+  try { localStorage.removeItem(S12_LOG_KEY); } catch(e) {}
+  s12RenderLog([]);
+}
+function s12SetProgress(step, total, label) {
+  const bar = document.getElementById('s12ProgressBar');
+  const lbl = document.getElementById('s12ProgressLabel');
+  const wrap = document.getElementById('s12ProgressWrap');
+  if (!bar) return;
+  const pct = Math.round(step / total * 100);
+  bar.style.width = pct + '%';
+  if (lbl) { lbl.textContent = label || ('§12 ladataan… ' + step + '/' + total); lbl.style.display = 'block'; }
+  if (wrap) wrap.style.display = 'block';
+  if (step >= total) {
+    setTimeout(() => { if(wrap) wrap.style.display='none'; if(lbl) lbl.style.display='none'; }, 1500);
+  }
+}
+
 async function renderS12(rawData) {
-  // §12: käytetään rawData:ta (vanha proxy) + transmission-proxy niille jotka toimii
+  s12SetProgress(0, 5, '§12 käynnistyy — odota 15s…');
+  s12RenderLog(s12LoadLog()); // näytä aiemmat lokit heti
+  // §12: käytetään rawData:ta + Fingrid proxy
+  const logEntry = { t: new Date().toLocaleString('fi'), trr:null, se1:null, shortage:null, freq:null, ceb:null };
   try {
     // Energia-alijäämä 72h — laskennallinen rawData:sta (ei vaadi uutta proxyä)
     if (rawData && rawData.length >= 72) {
@@ -2496,6 +2570,7 @@ async function renderS12(rawData) {
         const gap = (d.consumption || 0) - (d.production || 0);
         if (gap > 0) cumDeficit += gap;
       });
+      logEntry.ceb = Math.round(cumDeficit);
       document.getElementById('s12CEB').textContent = Math.round(cumDeficit).toLocaleString('fi') + ' MWh';
       const st = s12Status(cumDeficit, [5000, 15000, 30000],
         ['Normal','Tight','Elevated','Critical'],
@@ -2521,6 +2596,8 @@ async function renderS12(rawData) {
         const se1Avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
         const ntcApprox = 1500; // Aurora-linja avattu marraskuu 2025 — SE1→FI max NTC 1500 MW
         if (se1Avg != null) {
+          logEntry.se1 = Math.abs(se1Avg).toFixed(0);
+          logEntry.trr = (Math.abs(se1Avg) / ntcApprox * 100).toFixed(0);
           const trrVal = Math.abs(se1Avg) / ntcApprox;
           document.getElementById('s12TRR').textContent = (trrVal*100).toFixed(0) + '%';
           const st = s12Status(trrVal, [0.5,0.75,0.90],
@@ -2530,6 +2607,7 @@ async function renderS12(rawData) {
           lbl.textContent = st.label + ' (' + Math.abs(se1Avg).toFixed(0) + '/' + ntcApprox + ' MW)';
           lbl.className = 's12-status ' + st.cls;
           drawS12Chart((j.data||[]).slice(0,96).reverse());
+          s12SetProgress(1, 5, '§12 — SE1 siirto ladattu (1/5)');
           document.getElementById('s12ChartNote').textContent =
             'n=' + vals.length + ' · ka ' + se1Avg.toFixed(0) + ' MW · NTC ~' + ntcApprox + ' MW';
         }
@@ -2560,6 +2638,7 @@ async function renderS12(rawData) {
             ['s12-normal','s12-tight','s12-elevated','s12-critical']);
           const lbl = document.getElementById('s12P1label');
           lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW)';
+          s12SetProgress(2, 5, '§12 — P1 siirto ladattu (2/5)');
           lbl.className = 's12-status ' + st.cls;
         }
       }
@@ -2588,6 +2667,8 @@ async function renderS12(rawData) {
           const row = (j.data||[])[0];
           if (row) {
             const val = transform(row.value);
+            if (ds === 336) { logEntry.shortage = Math.round(row.value||0); s12SetProgress(3,5,'§12 — Shortage status ladattu (3/5)'); }
+            if (ds === 177) { logEntry.freq = (row.value||0).toFixed(3); s12SetProgress(4,5,'§12 — Taajuus ladattu (4/5)'); }
             if (ds === 336) {
               document.getElementById(elId).textContent = val;
               const idx = Math.min(Math.max(val, 0), 3);
