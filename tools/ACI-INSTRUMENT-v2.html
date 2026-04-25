@@ -1295,7 +1295,7 @@ function renderPosture(m, spot) {
   const now = new Date();
   document.getElementById('pgTs').textContent = now.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
   document.getElementById('pgPts').textContent = rawData.length + ' / 168';
-  document.getElementById('pgSpot').textContent = spot != null ? spot.toFixed(1) + ' €/MWh' : '—';
+  // pgSpot removed — spot price not relevant for structural 72h analysis
 
   if (w24) {
     document.getElementById('pgC').textContent = fmt.mw(w24.avgC);
