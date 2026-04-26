@@ -417,3 +417,40 @@ ACI kehitti aiemmin (WP-008/WP-009-kontekstissa) käsitteen **Transnational Allo
 3. **Riskin hinnoittelumallit** — luottoluokittajat (S&P, Fitch, Scope, Moody's) käyttävät samoja viiden pilarin malleja globaalisti. Ne levittävät saman blindspotin kaikkiin OECD-maihin samanaikaisesti.
 
 **Johtopäätös:** Suomen energiakapasiteettivaje ei ole vain kansallinen ongelma — se on korreloitunut ilmiö jonka kaikki kolme synkronointimekanismia vahvistavat samanaikaisesti. Tämä tekee WP-017:n teoreettisesta kontribuutiosta yleistettävän: bondispread on riittämätön indikaattori kaikkialla missä nämä kolme mekanismia ovat aktiivisia.
+
+---
+
+## WP-018 — Integration Quality Score (IQS)
+**Status:** Concept | **Luotu:** 2026-04-26
+
+### Motivaatio
+WP-017 tunnistaa aukon: bondispreadit mittaavat investointimäärää mutta eivät integraatiolaatua. Capacity installed ≠ capacity integrated. IQS on konstruoitu indeksi joka mittaa sitä mitä bondimarkkinat eivät näe — kuinka hyvin investoinnit on kytketty osaksi laajempaa järjestelmää.
+
+### Rakenne
+IQS = f(fyysinen kapasiteetti, systeeminen kytkentä, politiikka-ankkuri, vientipotentiaali)
+
+| Dimensio | Mittari | Esimerkki |
+|----------|---------|-----------|
+| Fyysinen kapasiteetti | MW asennettu | 7 000 MW tuulivoima |
+| Systeeminen kytkentä | Onko integraatiokerros | PtX-tiekartta, jousto-ohjelma |
+| Politiikka-ankkuri | Onko lainsäädäntö tai strategia | Kapasiteettimekanismi, tiekartta |
+| Vientipotentiaali | Onko kaupallistamispolku | Ørsted-malli vs. ei mitään |
+
+### Tapaukset
+- **Tanska tuulivoima:** Korkea IQS — Ørsted (valtio 51%), politiikka-ankkuri 1979→2026, vientistrategia
+- **Suomi tuulivoima:** Matala IQS — 7 000 MW, ei PtX-tiekarttaa, ei teollisuuskytkentää
+- **Suomi datakeskukset:** Matala IQS — 500 MW operatiivinen, 3–5 GW putkessa, ei jousto-integraatiota
+- **Tanska biolääketiede:** Korkea IQS — Life Science Strategy 2030, yliopisto-teollisuus-valtio-kytkentä
+
+### Kytkennät ACI-kaanoniin
+- WP-017 §3.5–3.6: capacity without utilisation + typologia — IQS operationalisoi tämän
+- WP-016 HDCI: terveysjärjestelmän IQS — integraatiolaatu vs. kapasiteettimäärä (analoginen rakenne)
+- WP-001 / WEM: fyysinen kapasiteetti on jo mitattu — IQS lisäisi systeemisen integraatiokerroksen
+- SM-005 SGFA: SGFA-solmut ovat korkean IQS:n interventio — kytkevät kapasiteetin systeemiin
+- DT-001: kapasiteetin ja käytön välinen kuilu — IQS formalisoi tämän
+
+### Teoreettinen kontribuutio
+IQS täyttää sen aukon jonka WP-017 tunnistaa: luottoluokitusmallien viiden pilarin rakenne mittaa investointimäärää (BKT, fiskaalitase) mutta ei integraatiolaatua. IQS olisi ensimmäinen indeksi joka tekee capacity-integration -gapista mitattavan suureen — analoginen HDCI:lle terveydenhuollossa ja EPP:lle energiajärjestelmälle.
+
+### Seuraava askel
+Pilotti: kolmen tapauksen IQS-laskenta (FI tuuli, FI datakeskukset, DK Ørsted). Tarvitaan kriteeristö integraatiokerroksen olemassaololle ja laadun arviointimatriisi.
