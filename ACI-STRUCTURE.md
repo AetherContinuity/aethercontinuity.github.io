@@ -387,3 +387,21 @@ Tämä on **Salazar-mekanismi** käänteisesti: luottoluokittajien palkitsema fi
 Ero on suunnan käänteisyys: 2008 yksityinen velka siirtyi julkiseksi. Suomessa riski on päinvastainen — julkinen sektori ei investoi kapasiteettiin jonka puuttuminen realisoituu yksityisenä kustannuksena teollisuudelle ja kotitalouksille.
 
 Yhteinen rakenne molemmissa: **malli palkitsi käyttäytymistä joka lyhyellä aikavälillä näytti vakaalta mutta rakensi pitkän aikavälin haavoittuvuutta.** Tämä on luottoluokitusmallien systemaattinen, ei satunnainen, heikkous.
+
+**EKP:n mekanismi — institutionaalinen sokeus kapasiteetti-investoinneille**
+
+EKP:n mandaatti on hintavakaus — ei investointikapasiteetti, ei kestävyysvaje eikä energiainfrastruktuuri. EKP:n ohjauskorko ohjaa rahapolitiikkaa koko euroalueella samalla asteella riippumatta siitä onko yksittäinen maa investoinut kapasiteettiin vai ei. Suomi, joka on jättänyt kapasiteetti-investoinnit tekemättä, saa saman koron kuin Ranska joka on rakentanut kapasiteettimekanismin.
+
+EKP:n euroalueen yhteinen korkopäätös ei voi eriyttää maiden välisiä rakenteellisia eroja — se on sen mandaatin ulkopuolella. Tämä luo **institutionaalisen pehmusteen** joka piilottaa kansallisen päätöskyvyn puutteen: kun EKP pitää korot matalina, Suomen puutteelliset investointipäätökset eivät näy korossa.
+
+**OECD:n korreloitu blindspot — RQM-001**
+
+ACI kehitti aiemmin (WP-008/WP-009-kontekstissa) käsitteen **Transnational Allocation Template**: sama allokaatioharha esiintyy synkronoidusti OECD-maissa kolmen mekanismin kautta:
+
+1. **Rahoitusarkkitehtuuri** — eläkerahastot, infrastruktuurirahastot ja pääomamarkkinat toimivat globaalisti samalla logiikalla. Ne suosivat lyhyen aikavälin tuottoa ja mitattavaa kassavirtaa — pitkäjänteinen kapasiteetti-investointi ei mahdu malliin.
+
+2. **Institutionaaliset standardit** — OECD:n fiskaalisäännöt, EU:n vakaus- ja kasvusopimus, EDP-menettely — kaikki optimoivat lyhyen aikavälin budjettitasapainoa. Ne ovat rakenteellisesti sokeita Category II -investoinneille.
+
+3. **Riskin hinnoittelumallit** — luottoluokittajat (S&P, Fitch, Scope, Moody's) käyttävät samoja viiden pilarin malleja globaalisti. Ne levittävät saman blindspotin kaikkiin OECD-maihin samanaikaisesti.
+
+**Johtopäätös:** Suomen energiakapasiteettivaje ei ole vain kansallinen ongelma — se on korreloitunut ilmiö jonka kaikki kolme synkronointimekanismia vahvistavat samanaikaisesti. Tämä tekee WP-017:n teoreettisesta kontribuutiosta yleistettävän: bondispread on riittämätön indikaattori kaikkialla missä nämä kolme mekanismia ovat aktiivisia.
