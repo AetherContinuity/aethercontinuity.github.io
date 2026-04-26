@@ -500,6 +500,96 @@ H3: Inter-municipality variation ◄── HDCI components
 
 <p>The DAG makes visible the two main endogeneity risks: (1) DCI shares causal ancestors with care contact rate — addressed by the Avohilmo instrument; (2) RKI shares causal ancestors with Kanta adoption rate — addressed by the adjusted/raw decomposition. RVI's endogeneity (diagnostic system sensitivity affecting "first finding") is acknowledged but not fully resolved in v0.6 — it is a constraint on RVI interpretation, not a reason to exclude it.</p>
 
+<div class="section-marker">§ 07</div>
+<h2>Incentive Coupling Mechanism — From Diagnostic to Decision Instrument</h2>
+
+<p>HDCI is a diagnostic instrument. Without an incentive coupling mechanism, it remains a measurement without consequence — a score that describes integration failure but does not correct it. This section specifies the minimum viable incentive coupling model and identifies the structural conditions under which it avoids perverse outcomes.</p>
+
+<h3>7.1 The Integration Incentive Gap</h3>
+
+<p>The current welfare area governance structure contains a structural perverse incentive: a welfare area that achieves integration — reducing future care episodes through coordinated prevention and polypharmacy management — receives less future funding because it generates fewer billable contacts. The incentive structure penalises the outcome HDCI is designed to encourage. This is not an oversight — it is a structural property of consumption-based funding models applied to coordination-intensive care.</p>
+
+<p>HDCI makes this gap visible and measurable. The next step is coupling HDCI measurement to funding adjustment in a way that corrects the perverse incentive without creating new ones.</p>
+
+<h3>7.2 Funding Adjustment Model</h3>
+
+<p>The proposed coupling mechanism follows a morbidity-adjusted improvement logic:</p>
+
+<div class="formula-box">
+Funding_adjustment = α · ΔHDCI · morbidity_baseline<br><br>
+where:<br>
+ΔHDCI = HDCI(t) − HDCI(t−1) — year-on-year integration improvement<br>
+morbidity_baseline = morbidity-adjusted expected care demand (Sotkanet)<br>
+α = policy parameter controlling bonus magnitude<br><br>
+Bonus condition: ΔHDCI > 0 AND cost_per_capita ≤ (1 + δ) · morbidity_adjusted_baseline<br>
+Penalty guard: no bonus if RKI_adjusted worsens (coordination failure persists)<br>
+Risk selection guard: no bonus if high-morbidity patient share decreases
+</div>
+
+<p>The cost ceiling condition (cost_per_capita ≤ morbidity_adjusted_baseline + δ) prevents a welfare area from gaming the bonus by reducing care volume without reducing coordination failure. The risk selection guard prevents patient selection — a welfare area cannot improve its HDCI by reducing exposure to complex multi-morbid patients. Both guards are verifiable from existing registry data.</p>
+
+<h3>7.3 Comparison: Dutch Bundled Payment Experience</h3>
+
+<p>The Netherlands introduced bundled payments for diabetes, COPD, and vascular risk management in 2010. The model improved coordination within disease categories but produced two structural limitations: (1) costs increased 13–52% per disease group over seven years, as savings in secondary care were not recaptured; (2) the model failed for multimorbid patients who crossed disease-bundle boundaries. The Dutch are now evolving toward person-centred bundled payments with shared savings — the direction HDCI's architecture starts from.</p>
+
+<p>The HDCI incentive model avoids the Dutch limitations by design: it is whole-system (not disease-specific), it uses morbidity-adjusted baselines (not raw contact counts), and it includes a cost ceiling that prevents unbounded spending alongside integration improvement. The Dutch experience is the empirical precedent; HDCI's model is the methodological response.</p>
+
+<h3>7.4 IAI Conditioning — Integration Opportunity Set</h3>
+
+<p>A referee finding requires an explicit methodological addition to IAI. Not all patients require multi-specialty integration — a welfare area with a higher proportion of multi-morbid patients will mechanically show higher IAI values even if its integration capability is unchanged. IAI must be conditioned on the integration opportunity set to be a valid inter-area comparator.</p>
+
+<div class="formula-box">
+IAI_conditioned = IAI | (patients with ≥2 active conditions)<br><br>
+Active condition: diagnosis code active within 12-month observation window<br>
+Source: THL Avohilmo + Terveys-Hilmo (linked ICD-10 codes)<br><br>
+IAI_conditioned is the primary comparator for inter-welfare-area analysis.<br>
+IAI_raw is retained as a system-level indicator of absolute integration volume.
+</div>
+
+<p>This conditioning makes IAI invariant to morbidity composition differences across welfare areas. A welfare area with 40% multi-morbid patients and 60% of those receiving integrated care scores identically to one with 20% multi-morbid patients and 60% integration rate — which is the correct result.</p>
+
+<h3>7.5 RVI Anchor Finding Specification</h3>
+
+<p>A second referee finding: RVI is partially confounded by diagnostic aggressiveness. A care setting that tests more intensively will produce earlier "first findings" and mechanically higher RVI values independently of response quality. The correction is to anchor RVI on a set of hard clinical findings where the finding threshold is physiologically defined rather than set by clinician discretion.</p>
+
+<p>Anchor finding set (v0.7 specification):</p>
+
+<table>
+  <tr><th>Finding type</th><th>Threshold</th><th>Clinical rationale</th></tr>
+  <tr><td>HbA1c</td><td>&gt; 53 mmol/mol (7.0%)</td><td>Unambiguous diabetes threshold — no discretion in classification</td></tr>
+  <tr><td>eGFR</td><td>&lt; 60 mL/min/1.73m²</td><td>CKD stage 3 threshold — standardised internationally</td></tr>
+  <tr><td>Troponin</td><td>&gt; 99th percentile URL</td><td>ACS protocol trigger — no discretion</td></tr>
+  <tr><td>Systolic BP</td><td>&gt; 180 mmHg (confirmed)</td><td>Hypertensive urgency threshold</td></tr>
+  <tr><td>INR</td><td>&gt; 4.0</td><td>Anticoagulation protocol trigger</td></tr>
+</table>
+
+<div class="formula-box">
+RVI_anchored = 1 − (latency_anchor / max_latency_threshold)<br><br>
+latency_anchor = first_care_action − first_anchor_finding_recorded<br>
+Anchor findings: HbA1c &gt;53, eGFR &lt;60, troponin &gt;URL99, sBP &gt;180, INR &gt;4.0<br><br>
+RVI_anchored is invariant to diagnostic aggressiveness across care settings.<br>
+RVI_raw retained for system-level response velocity reporting.
+</div>
+
+<p>RVI_anchored is the Nordic comparison instrument. RVI_raw is the within-welfare-area operational indicator. The distinction allows Nordic comparison (which requires cross-system invariance) while preserving operational utility for internal monitoring.</p>
+
+<h3>7.6 Revised Component Summary</h3>
+
+<table>
+  <tr><th>Component</th><th>v0.7 specification</th><th>Role</th><th>Nordic comparison</th></tr>
+  <tr><td>IAI_conditioned</td><td>IAI | ≥2 active conditions</td><td>Primary integration measure</td><td>✓ invariant to morbidity mix</td></tr>
+  <tr><td>RKI_adjusted</td><td>RKI_raw / Kanta adoption rate</td><td>Coordination failure anchor</td><td>✓ standalone publishable indicator</td></tr>
+  <tr><td>RVI_anchored</td><td>Latency from hard clinical findings only</td><td>Response velocity</td><td>✓ invariant to diagnostic aggressiveness</td></tr>
+  <tr><td>DCI</td><td>Side indicator — not in composite</td><td>Documentation completeness</td><td>— endogeneity risk</td></tr>
+  <tr><td>PAI</td><td>Dashboard metadata — 0.05 weight</td><td>Prevention activity volume</td><td>— input-effort only</td></tr>
+</table>
+
+<p>HDCI_v1 = 0.40 · RKI_adjusted + 0.35 · IAI_conditioned + 0.25 · RVI_anchored</p>
+
+<div class="disclaimer">
+<strong>Referee acknowledgement.</strong> This section incorporates three referee findings: (1) RVI confounded by diagnostic aggressiveness — addressed by anchor finding specification; (2) IAI requires conditioning on integration opportunity set — addressed by IAI_conditioned; (3) incentive mechanism missing — addressed by §07.2 funding adjustment model. All three corrections are methodological refinements; they do not alter the paper's core argument or index structure.
+</div>
+
 <div class="section-marker">Appendix A</div>
 <h2>HDCI Calculation Formulas and Data Sources</h2>
 
