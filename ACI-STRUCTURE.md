@@ -245,8 +245,9 @@ v1.3 · March 2026 · WP-013 added to inventory
 
 ---
 
-## WP-016 — Parliamentary Decision Latency and Market Signal Correlation
+## WP-017 — Parliamentary Decision Latency and Market Signal Correlation
 **Status:** Concept | **Luotu:** 2026-04-26
+**Huomio:** WP-016 on julkaistu (Health Data Continuity Index). Tämä on erillinen paperi — numeroitu WP-017.
 
 ### Hypoteesi
 Rahoitusmarkkinat hinnoittelevat D-suppression — päätöksentekokyvyn puutteen — ennen kuin poliittinen järjestelmä tunnistaa ongelman. Suomen 10v valtionlainan korko, CDS-spread ja OMXH-indeksi toimivat ennakoivina indikaattoreina parlamentaarisen toimeenpanoviiveen suhteen.
@@ -272,6 +273,7 @@ Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näk
 
 ### Kytkennät
 - WP-015 §9 regiimitunnistus → laajennettu parlamentaariseen dataan
+- WP-016 HDCI → terveysjärjestelmän D-suppressio, sama rakenne eri sektorilla
 - OGAS2 R_PUBLIC Buffer → markkinapohjainen kalibrointi
 - §3.6 legitimiteettivaje → mitattuna euroissa prosessitosiasioiden sijaan
 - Eduskunnan avoin API (löydetty 2026-04-25)

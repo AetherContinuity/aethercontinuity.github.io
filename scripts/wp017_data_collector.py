@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-WP-016 — Parliamentary Decision Latency & Market Signal Correlation
+WP-017 — Parliamentary Decision Latency & Market Signal Correlation
 Pilot: VNS 8/2025 vp energia- ja ilmastostrategiaselonteko
 
 Hakee:
@@ -13,7 +13,7 @@ Vaatimukset:
 
 Käyttö:
   python3 wp016_data_collector.py
-  python3 wp016_data_collector.py --plot   # tallentaa kuvan wp016_chart.png
+  python3 wp016_data_collector.py --plot   # tallentaa kuvan wp017_chart.png
 """
 
 import requests
@@ -99,7 +99,7 @@ def manual_yield_data():
 def analyze(df_yield):
     """Laskee markkinareaktion suhteessa parlamentaarisiin tapahtumiin."""
     print("\n" + "="*65)
-    print("  WP-016 PILOTTI — VNS 8/2025 vp × Suomen 10v korko")
+    print("  WP-017 PILOTTI — VNS 8/2025 vp × Suomen 10v korko")
     print("="*65)
 
     print("\n[1] PARLAMENTAARISET TAPAHTUMAT JA MARKKINATASO\n")
@@ -148,7 +148,7 @@ def analyze(df_yield):
     print("\n[3] HUOMIO METODOLOGIASTA\n")
     print("  Suomi on AAA-maa euroalueella — 10v korko heijastaa")
     print("  euroalueen korkotasoa, ei vain Suomen-spesifiä riskiä.")
-    print("  WP-016:n jatkoanalyysi: FI-DE spread (Suomi vs Saksa)")
+    print("  WP-017:n jatkoanalyysi: FI-DE spread (Suomi vs Saksa)")
     print("  eristää maakohtaisen riskin euroalueen yhteisestä.")
     print("  Tarvitaan myös OMXH25-indeksi ja CDS-data täyteen analyysiin.")
     print("\n" + "="*65 + "\n")
@@ -184,7 +184,7 @@ def main():
                 ax.text(d, ax.get_ylim()[1] * 0.98, ev["phase"],
                         color=c, fontsize=7, ha="center", va="top")
 
-            ax.set_title("WP-016 Pilotti: VNS 8/2025 vp × Suomen 10v valtionlainakorko",
+            ax.set_title("WP-017 Pilotti: VNS 8/2025 vp × Suomen 10v valtionlainakorko",
                         fontsize=11)
             ax.set_ylabel("Korko (%)")
             ax.set_xlabel("Päivämäärä")
@@ -195,8 +195,8 @@ def main():
             ax.legend(handles=patches, fontsize=8, loc="lower left")
 
             plt.tight_layout()
-            plt.savefig("wp016_chart.png", dpi=150)
-            print("Kuva tallennettu: wp016_chart.png")
+            plt.savefig("wp017_chart.png", dpi=150)
+            print("Kuva tallennettu: wp017_chart.png")
         except ImportError:
             print("matplotlib ei asennettu — pip install matplotlib")
 
