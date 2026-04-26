@@ -1,6 +1,6 @@
 # ACI — Eduskunta- ja dataseuranta 2026
 
-Päivitetty: 25.4.2026
+Päivitetty: 26.4.2026
 
 ---
 
@@ -46,7 +46,38 @@ Päivitetty: 25.4.2026
 
 ---
 
+## WP-017 — Parliamentary Decision Latency
+
+| Kohde | Aihe | Status |
+|-------|------|--------|
+| Referee-kierros 1 | Pre-print v0.2 lähetetään | Odottaa lähettämistä |
+
+**Paperi:** https://aethercontinuity.org/papers/wp-017-parliamentary-decision-latency.html
+**Data:** scripts/wp017_spread_data.json (FI-DE) · scripts/wp017_fise_data.json (FI-SE)
+**Proxy:** https://github.com/AetherContinuity/aci-ecb-proxy (Eurostat irt_lt_mcby_m)
+
+**Avoimet referee-kysymykset:**
+1. Rahapolitiikkakontrollin metodologia — riittääkö FI-DE?
+2. Seuraava instrumentti — OMXH25, CDS vai muu?
+3. Salazar-mekanismi — testattava väite vai rakenteellinen hypoteesi?
+4. Maiden välinen validointi — tarvitaanko?
+
+---
+
+## Luottoluokitustilanne
+
+| Toimija | Luokitus | Näkymät | Viimeisin muutos |
+|---------|----------|---------|-----------------|
+| Fitch | AA | Vakaa | Laski AA+→AA heinäkuu 2025 |
+| Scope | AA+ | Negatiivinen | Elokuu 2025 |
+| S&P | AA+ | Negatiivinen | **24.4.2026** — kehysriihen jälkeen, <24h reaktioaika |
+| Moody's | Aa1 | Vakaa | Ei muutosta |
+
+S&P seuraava arvio: **lokakuu 2026**
+
+---
+
 ## Raportti
 
-Versio: 4.1 | Päivitetty: 25.4.2026
+Versio: 4.1 | Päivitetty: 26.4.2026
 URL: https://aethercontinuity.org/papers/suomen-energiajarjestelman-rakenteellinen-lukkiutuminen.html
