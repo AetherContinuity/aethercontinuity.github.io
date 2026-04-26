@@ -48,19 +48,46 @@ Päivitetty: 26.4.2026
 
 ## WP-017 — Parliamentary Decision Latency
 
-| Kohde | Aihe | Status |
-|-------|------|--------|
-| Referee-kierros 1 | Pre-print v0.2 lähetetään | Odottaa lähettämistä |
-
+**Versio:** v0.7 | **Päivitetty:** 26.4.2026
 **Paperi:** https://aethercontinuity.org/papers/wp-017-parliamentary-decision-latency.html
-**Data:** scripts/wp017_spread_data.json (FI-DE) · scripts/wp017_fise_data.json (FI-SE)
-**Proxy:** https://github.com/AetherContinuity/aci-ecb-proxy (Eurostat irt_lt_mcby_m)
 
-**Avoimet referee-kysymykset:**
-1. Rahapolitiikkakontrollin metodologia — riittääkö FI-DE?
-2. Seuraava instrumentti — OMXH25, CDS vai muu?
-3. Salazar-mekanismi — testattava väite vai rakenteellinen hypoteesi?
-4. Maiden välinen validointi — tarvitaanko?
+### Referee-kierrokset
+
+| Kierros | Referee | Päätös | Status |
+|---------|---------|--------|--------|
+| 1 | Referee A | Ehdollisesti hyväksy — major revisions | Korjattu v0.3 |
+| 2 | Referee B | Near-publishable — identifikaatio + väitteen mittakaava | Korjattu v0.4 |
+
+### Versiohistoria
+
+| Versio | Muutos |
+|--------|--------|
+| v0.1 | Pre-print julkaistu |
+| v0.2 | Salazar-mekanismi kalibroitu, core thesis lisätty |
+| v0.3 | Referee A: spread-hajonta, S&P-aika, falsifiointikriteerit, 2Y-10Y |
+| v0.4 | Referee B: overclaim poistettu, FI-DE identifikaatiorajoite, placebo-testi |
+| v0.5 | Novo Nordisk confound FI-DK analyysiin |
+| v0.6 | §4.5: tuulivoima — capacity installed vs capacity integrated |
+| v0.7 | §4.6: kolmen maan investointiputki-typologia (DK/ES-PL/FI) |
+
+### Data
+
+| Tiedosto | Sisältö |
+|----------|---------|
+| scripts/wp017_spread_data.json | FI-DE 39 kk (2023–2026) |
+| scripts/wp017_fise_data.json | FI-SE 39 kk (2023–2026) |
+| scripts/wp017_all_spreads_2020_2026.json | FI-DE + FI-SE + FI-DK 75 kk (2020–2026) |
+| scripts/wp017_data_collector.py | Pilottiskripti + parlamentaaritapahtumat |
+
+**Proxy:** https://github.com/AetherContinuity/aci-ecb-proxy v2.3
+**Endpointit:** FI10Y · DE10Y · SE10Y · DK10Y · FI-DE · FI-SE · FI-DK · ALL
+
+### Avoimet kysymykset (seuraava referee-kierros)
+
+1. Monetary policy control — tarvitaanko inflaatio-odotusten kontrolli (5y5y swap)?
+2. Seuraava instrumentti — 2Y-10Y term spread (Eurostat, ilmainen) vai CDS?
+3. Salazar-mekanismi — Referee A ehdotti sisällönanalyysiä rating-lausunnoista
+4. Typologia §4.6 — vaatiiko vertaisarviointi lisää maiden dataa?
 
 ---
 
