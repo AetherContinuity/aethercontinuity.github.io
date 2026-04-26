@@ -242,3 +242,39 @@ v1.0 · March 2026 · Initial governance definition
 v1.1 · March 2026 · Added core axiom (§9), publication inventory table (§10), homepage §-structure invariants, RQM definition, fixed duplicate DA entry
 v1.2 · March 2026 · CN-002 added to inventory
 v1.3 · March 2026 · WP-013 added to inventory
+
+---
+
+## WP-016 — Parliamentary Decision Latency and Market Signal Correlation
+**Status:** Concept | **Luotu:** 2026-04-26
+
+### Hypoteesi
+Rahoitusmarkkinat hinnoittelevat D-suppression — päätöksentekokyvyn puutteen — ennen kuin poliittinen järjestelmä tunnistaa ongelman. Suomen 10v valtionlainan korko, CDS-spread ja OMXH-indeksi toimivat ennakoivina indikaattoreina parlamentaarisen toimeenpanoviiveen suhteen.
+
+### Tutkimuskysymys
+Korreloivatko markkinasignaalit (10v korko, CDS, OMXH) D-suppression vaiheiden (D1/D2/D3) kanssa — ja kuinka pitkä ennakoiva ikkuna markkinoilla on suhteessa parlamentaariseen päätökseen tai päättämättä jättämiseen?
+
+### Datasyötteet
+- **Eduskunnan avoin API** — äänestykset, asiakirjat, lausunnot, käsittelyvaiheet
+- **ECB YC-sarja** — FI 10v valtionlainakorko (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y)
+- **CDS-spread** — Suomi 5v sovereign CDS
+- **OMXH** — Helsingin pörssi-indeksi
+- **Aikajänne:** kvartaaleittain 2018–2026
+
+### Metodologia
+1. Parlamentaarisista asiakirjoista koodataan kriittiset energia- ja huoltovarmuuspäätökset D1/D2/D3-vaiheisiin
+2. Markkinareaktio mitataan 30/90/180 päivän ikkunoissa suhteessa päätöshetkeen
+3. Korrelaatioanalyysi: ennakoivatko markkinat D-suppressiota vai seuraavat päätöksiä?
+4. Vertailu OGAS2 SHI-trajektoriin: ovatko markkinat ja malli yhteneväisiä?
+
+### Teoreettinen merkitys
+Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näkyväksi numeroin. Jos markkinat näkevät puutteen 6 kuukautta ennen päättäjiä, se osoittaa että "emme tienneet" -argumentti ei pidä.
+
+### Kytkennät
+- WP-015 §9 regiimitunnistus → laajennettu parlamentaariseen dataan
+- OGAS2 R_PUBLIC Buffer → markkinapohjainen kalibrointi
+- §3.6 legitimiteettivaje → mitattuna euroissa prosessitosiasioiden sijaan
+- Eduskunnan avoin API (löydetty 2026-04-25)
+
+### Seuraava askel
+Pilotti: VNS 8/2025 vp energia- ja ilmastostrategiaselonteko — koodataan D-vaiheet ja verrataan Suomen 10v koron kehitykseen 2025-12 → 2026-04.
