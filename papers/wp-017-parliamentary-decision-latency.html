@@ -74,7 +74,7 @@
 <div class="doc-header">
   <div class="doc-series">ACI · Working Paper · WP-017</div>
   <div class="doc-meta-grid">
-    <span><strong>Version</strong>2.7</span>
+    <span><strong>Version</strong>2.8</span>
     <span><strong>Published</strong>2026-04-26</span>
     <span><strong>Domain</strong>D-2 · D-3</span>
     <span><strong>Status</strong>Open Working Draft</span>
@@ -565,12 +565,106 @@
 </div><!-- /paper -->
 
 <footer>
-  Aether Continuity Institute · WP-017 · Version 2.7 · 2026-04-26<br>
+  Aether Continuity Institute · WP-017 · Version 2.8 · 2026-04-26<br>
   Domain D-2 Institutional Diagnostics · D-3 Policy Latency<br>
   Open Working Draft · Basis: WP-008 · WP-015 · WP-016 · RQM-001 · DT-001 · DT-002 · DT-004<br>
   Data: Eurostat irt_lt_mcby_m · Proxy: github.com/AetherContinuity/aci-ecb-proxy<br>
   aethercontinuity.org · Not investment advice
 </footer>
+
+
+<div class="section" id="appendix-a">
+  <span class="section-marker">Appendix A</span>
+  <h2>Finland Sovereign Stress Model 2026–2032</h2>
+
+  <p>This appendix formalises the fiscal trajectory underlying the §4.5 critical threshold analysis as a simulatable quantitative model anchored to official Valtiokonttori data. The model replaces narrative scenario description with a dynamic debt accumulation equation and Monte Carlo uncertainty quantification.</p>
+
+  <h3>A.1 Model structure</h3>
+
+  <p>Debt accumulation:</p>
+  <p style="font-family:monospace; padding: 0.5rem 1.5rem; background:#f5f5f5; margin:0.75rem 0">
+    D<sub>t+1</sub> = D<sub>t</sub> + PD<sub>t</sub> + i<sub>eff,t</sub> · D<sub>t</sub><br>
+    GDP<sub>t+1</sub> = GDP<sub>t</sub> · (1 + g<sub>t</sub>)
+  </p>
+
+  <p>Interest cost uses VK-SENSITIVITY portfolio repricing mechanics: averageFixing = 5.43 years → 18.4% of the portfolio reprices annually. Effective interest rate evolves as:</p>
+  <p style="font-family:monospace; padding: 0.5rem 1.5rem; background:#f5f5f5; margin:0.75rem 0">
+    i<sub>eff,t+1</sub> = (1 − 0.184) · i<sub>eff,t</sub> + 0.184 · i<sub>market,t</sub>
+  </p>
+
+  <p>This prevents the common error of applying market rates to the full legacy debt stock immediately. Validation: model produces €3.56 billion 2026 interest cost against TAE 2026 budget of €3.25 billion (~10% difference attributable to model using slightly higher marginal rate assumption).</p>
+
+  <h3>A.2 Official anchors</h3>
+
+  <table>
+    <thead><tr><th>Parameter</th><th>Value</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>D₀ (central gov debt end-2025)</td><td>€187.7 billion</td><td>VK-DEBT-GDP (Valtiokonttori, updated 2026-03-24)</td></tr>
+      <tr><td>GDP₀ (implied)</td><td>€281.4 billion</td><td>D₀ / 66.7% ratio</td></tr>
+      <tr><td>i_eff_2025 (effective rate)</td><td>1.61%</td><td>VK-INTEREST €3.013B / D₀ €187.7B</td></tr>
+      <tr><td>averageFixing</td><td>5.43 years</td><td>VK-SENSITIVITY March 2026 (Valtiokonttori)</td></tr>
+      <tr><td>Annual repricing share</td><td>18.4%</td><td>1 / averageFixing</td></tr>
+      <tr><td>Interest budget 2026</td><td>€3.246 billion</td><td>TAE 2026 (Ministry of Finance)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A.3 Scenario results</h3>
+
+  <table>
+    <thead>
+      <tr><th>Year</th><th colspan="3">Optimistinen (g=3.5%, i→2.5%, PD=1.5%)</th><th colspan="3">Baseline stress (g=2.5%, i→3.8%, PD=2.5%)</th><th colspan="3">Kriisi R2→R3 (g=1.5%, i→5.5%, PD=3.5%)</th></tr>
+      <tr><th></th><th>Velka</th><th>BKT</th><th>V/BKT</th><th>Velka</th><th>BKT</th><th>V/BKT</th><th>Velka</th><th>BKT</th><th>V/BKT</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2025</td><td>187.7</td><td>281.4</td><td>66.7%</td><td>187.7</td><td>281.4</td><td>66.7%</td><td>187.7</td><td>281.4</td><td>66.7%</td></tr>
+      <tr><td>2026</td><td>195.3</td><td>291.3</td><td>67.1%</td><td>198.3</td><td>288.4</td><td>68.7%</td><td>201.3</td><td>285.6</td><td>70.5%</td></tr>
+      <tr><td>2027</td><td>203.6</td><td>301.5</td><td>67.5%</td><td>209.8</td><td>295.7</td><td>71.0%</td><td>216.3</td><td>289.9</td><td>74.6%</td></tr>
+      <tr><td>2028</td><td>212.3</td><td>312.0</td><td>68.0%</td><td>222.3</td><td>303.0</td><td>73.4%</td><td>232.9</td><td>294.3</td><td>79.1%</td></tr>
+      <tr><td>2029</td><td>221.5</td><td>322.9</td><td>68.6%</td><td>235.8</td><td>310.6</td><td>75.9%</td><td>251.2</td><td>298.7</td><td>84.1%</td></tr>
+      <tr><td>2030</td><td>231.3</td><td>334.2</td><td>69.2%</td><td>250.4</td><td>318.4</td><td>78.6%</td><td>271.2</td><td>303.2</td><td>89.5%</td></tr>
+      <tr><td>2031</td><td>241.5</td><td>345.9</td><td>69.8%</td><td>266.0</td><td>326.3</td><td>81.5%</td><td>292.9</td><td>307.7</td><td>95.2%</td></tr>
+      <tr><td>2032</td><td>252.3</td><td>358.0</td><td>70.5%</td><td>282.6</td><td>334.5</td><td>84.5%</td><td>316.0</td><td>312.3</td><td>101.2%</td></tr>
+    </tbody>
+  </table>
+
+  <p>All values in billion EUR. Interest costs rise from €3.0 billion (2025) to €5.6B / €8.5B / €12.4B (2032) across scenarios, driven by the portfolio repricing from the 1.61% legacy effective rate toward market rates.</p>
+
+  <h3>A.4 Stability analysis — Domar condition</h3>
+
+  <p>Debt stabilises when the primary deficit is covered by the growth-rate differential: PD ≤ (g − i_eff) · D. Since g &lt; i_eff in baseline and crisis scenarios throughout 2026–2032, debt grows endogenously without any external shock.</p>
+
+  <table>
+    <thead><tr><th>Scenario</th><th>g (nominal)</th><th>i_eff 2032</th><th>g − i</th><th>Debt/GDP 2032</th><th>Stable?</th></tr></thead>
+    <tbody>
+      <tr><td>Optimistinen</td><td>3.5%</td><td>2.31%</td><td>+1.2%</td><td>70.5%</td><td>✓ stabilises 2031</td></tr>
+      <tr><td>Baseline stress</td><td>2.5%</td><td>3.19%</td><td>−0.7%</td><td>84.5%</td><td>✗ grows endogenously</td></tr>
+      <tr><td>Kriisi R2→R3</td><td>1.5%</td><td>4.24%</td><td>−2.7%</td><td>101.2%</td><td>✗ grows endogenously</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A.5 Monte Carlo uncertainty quantification</h3>
+
+  <p>5,000 simulations around the baseline stress scenario with Gaussian shocks: growth ±1.0 pp, market interest rate ±80 bps per step. Results for debt/GDP ratio at 2032:</p>
+
+  <table>
+    <thead><tr><th>Percentile</th><th>Debt/GDP 2032</th><th>Interpretation</th></tr></thead>
+    <tbody>
+      <tr><td>P10</td><td>81.7%</td><td>Optimistic realisation of baseline</td></tr>
+      <tr><td>P50 (median)</td><td>84.9%</td><td>Most likely outcome — approaches 1990s crisis level (64.8%)</td></tr>
+      <tr><td>P90</td><td>88.1%</td><td>Stress tail — historically unprecedented in peacetime Finland</td></tr>
+      <tr><td>P(ratio &gt; 90%)</td><td>3%</td><td>Tail risk, not base case</td></tr>
+      <tr><td>P(ratio &gt; 100%)</td><td>&lt;1%</td><td>Extreme scenario only under compounded shocks</td></tr>
+    </tbody>
+  </table>
+
+  <div class="finding">
+    <div class="finding-label">Appendix A — Core finding</div>
+    <p>The model is not a crisis prediction. It is a structural drift diagnosis. In the median Monte Carlo path Finland's central government debt reaches approximately 85% of GDP by 2032 — approaching the 1990s banking crisis peak (64.8% in 1996 under a very different fiscal structure). This occurs without an external shock, driven entirely by the arithmetic of g &lt; i_eff combined with persistent primary deficits. The key finding is the stability condition: stabilisation requires either a primary surplus, nominal growth above 4%, or a sustained collapse in interest rates. None of these is the baseline expectation for 2026–2032.</p>
+    <p>Historical context from VK-DEBT-GDP: Finland maintained debt below 40% of GDP for most of 1950–2008. Current trajectories represent a structural departure from this norm — not a cyclical deviation from it.</p>
+  </div>
+
+  <p><em>Model code and full simulation results available at: <a href="https://github.com/AetherContinuity/aethercontinuity.github.io/blob/main/scripts/wp019_finland_stress_model.py">github.com/AetherContinuity/aethercontinuity.github.io</a></em></p>
+</div>
 
 </body>
 </html>
