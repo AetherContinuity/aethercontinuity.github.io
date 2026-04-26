@@ -2500,8 +2500,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.7.1';
-const WEM_BUILD   = '2026-04-25c'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.7.2';
+const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
 const WEM_CHANGES = [
   '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
@@ -2737,6 +2737,56 @@ async function renderS12(rawData) {
         document.getElementById(labelId).textContent = 'Fingrid proxy — ladataan…';
       }
     }
+
+    // DS 245 — tuulivoimaennuste 72h
+    await new Promise(r => setTimeout(r, 10000));
+    try {
+      const now72 = new Date();
+      const end72 = new Date(now72.getTime() + 72*3.6e6);
+      const wUrl = txBase + '/?ds=245&start=' + encodeURIComponent(now72.toISOString()) +
+        '&end=' + encodeURIComponent(end72.toISOString()) + '&size=300';
+      const wr = await fetch(wUrl);
+      if (wr.ok) {
+        const wj = await wr.json();
+        const vals = (wj.data||[]).map(d => d.value).filter(v => v != null);
+        if (vals.length) {
+          const avg72 = vals.reduce((a,b)=>a+b,0)/vals.length;
+          const min72 = Math.min(...vals);
+          const lowH  = vals.filter(v => v < 500).length;
+          const wfEl  = document.getElementById('s12WindFcst');
+          const wlEl  = document.getElementById('s12WindFcstLabel');
+          const wrEl  = document.getElementById('s12WindRisk');
+          const wrlEl = document.getElementById('s12WindRiskLabel');
+          if (wfEl) wfEl.textContent = avg72.toFixed(0) + ' / ' + min72.toFixed(0) + ' MW';
+          if (wlEl) {
+            const wst = s12Status(avg72,[2000,4000,6000],
+              ['Matala','Kohtalainen','Hyvä','Erinomainen'],
+              ['s12-critical','s12-elevated','s12-tight','s12-normal']);
+            wlEl.textContent = wst.label + ' · n=' + vals.length;
+            wlEl.className = 's12-status ' + wst.cls;
+          }
+          if (wrEl) wrEl.textContent = lowH + ' h';
+          if (wrlEl) {
+            const rst = s12Status(lowH,[6,18,36],
+              ['Matala','Kohtalainen','Korkea','Kriittinen'],
+              ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+            wrlEl.textContent = rst.label + ' tuulikato-riski';
+            wrlEl.className = 's12-status ' + rst.cls;
+          }
+          logEntry.windAvg = avg72.toFixed(0);
+          logEntry.windMin = min72.toFixed(0);
+          logEntry.windLowH = lowH;
+        }
+      }
+    } catch(e) {
+      const wfEl = document.getElementById('s12WindFcst');
+      if (wfEl) wfEl.textContent = 'N/A';
+      const wlEl = document.getElementById('s12WindFcstLabel');
+      if (wlEl) wlEl.textContent = 'DS 245 ei vastaa';
+    }
+
+    s12SetProgress(6, 6, '§12 — valmis');
+    s12SaveLog(logEntry);
 
   } catch(e) {
     console.warn('§12 render error:', e.message);
