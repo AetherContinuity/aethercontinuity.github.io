@@ -308,3 +308,37 @@ Bondispread dominoituu rahapolitiikkadivergenssin toimesta. D-suppression
 signaalin eristäminen vaatii eksplisiittisen rahapolitiikkakontrollimuuttujan.
 Seuraava askel: CDS-spread tai osakemarkkinavolatiliteetti (OMXH25) ovat
 potentiaalisesti puhtaampia instrumentteja kotimaiselle päätöskyvyn mittaamiselle.
+### Luottoluokittajien menetelmät ja kytkös WP-017:een
+
+**Luottoluokitustilanne 2025-2026:**
+| Toimija | Luokitus | Näkymät | Muutos |
+|---------|----------|---------|--------|
+| Fitch   | AA       | Vakaa   | Laski AA+→AA heinäkuu 2025 (negat. näkymät elokuu 2024) |
+| Scope   | AA+      | Negatiivinen | Negat. näkymät elokuu 2025 |
+| S&P     | AA+      | Negatiivinen | Negat. näkymät huhtikuu 2026 (seuraava arvio lokakuu 2026) |
+| Moody's | Aa1      | Vakaa   | Ainoa jolla ei negatiivisia näkymiä |
+
+**Viiden pilarin malli (S&P, Fitch, Scope — yhteinen rakenne):**
+1. **Institutionaalinen** — hallinnon laatu, poliittinen vakaus, World Bank -indikaattorit
+2. **Taloudellinen** — kasvu, rakenne, BKT per capita, demografia
+3. **Ulkoinen** — vaihtotase, ulkomainen velka, reservit, energiariippuvuus
+4. **Fiskaalinen** — velka/BKT, alijäämä, koronmaksukyky
+5. **Rahapolitiikka** — valuuttajärjestelmä, inflaatio, keskuspankin itsenäisyys
+
+Jokainen arvioidaan asteikolla 1–6. Yhdistelmä tuottaa rating-suosituksen jota voidaan säätää laadullisilla tekijöillä.
+
+**Euroaluejäsenyyden metodologinen vaikutus:**
+Kun valtio on valuuttaunionin jäsen, paikallisvaluutan luokitus = ulkomaan valuutan luokitus — itsenäinen rahapolitiikka puuttuu. Tämä heikentää pilaria 5 suhteessa Ruotsiin jolla on oma Riksbank. Sama rakenne selittää FI-SE spreadissa havaitun rahapolitiikkadivergenssin 2024.
+
+**Energian rooli mallissa:**
+Energia ei ole erillinen pilari — se vaikuttaa kaikkiin viiteen epäsuorasti:
+- Pilari 2 (taloudellinen): kapasiteettivaje → teollisuuden kilpailukyvyn heikkeneminen
+- Pilari 3 (ulkoinen): tuontiriippuvuuden kasvu → vaihtotasevaikutus
+- Pilari 4 (fiskaalinen): energiakustannusten kasvu julkisille palveluille, investointitarve
+
+Suomen nykyinen ongelma on ensisijaisesti **pilari 4** — velka/BKT kasvaa, alijäämä pysyy korkeana 2026–2029. Energia on välillinen tekijä, ei suora triggeröijä.
+
+**S&P:n huhtikuun 2026 arvion sanamuoto:** "policymakers must advance adjustment measures and revive economic activity — while adapting to the impact that the crisis in the Middle East is having on energy prices." Energiahinnat mainitaan mutta eivät ole pääperuste.
+
+**WP-017:n johtopäätös luottoluokitusdatasta:**
+Luottoluokituslasku (Fitch 2025) ja negatiiviset näkymät (Scope 2025, S&P 2026) ovat ensimmäinen konkreettinen merkki siitä että bondispread voi alkaa heijastaa Suomen maakohtaista riskiä. Aikajänne: negatiiviset näkymät → lasku tyypillisesti 6–18 kuukautta. Jos S&P laskee lokakuussa 2026, se osuu täsmälleen konvergenssi-ikkunan alkuun — mutta kausaliteetti on fiskaali- eikä energiapäätösvetoinen.
