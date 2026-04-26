@@ -208,7 +208,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="chart-w"><svg class="cht" id="chH"></svg></div>
       <div class="hn">
         <div class="hni"><div class="hnt">2022-Q4 &mdash; SHI 22.2 &mdash; External Shock</div><div class="hnb"><strong>V-shape trajectory.</strong> NordPool FI peak &gt;500 €/MWh. Invasion shock. Coupling active: S_ENERGY 76 + R_PUBLIC 56. Recovery: +16 pts within one quarter. Government compensation packages absorbed the shock; fiscal buffers consumed but not exhausted.</div></div>
-        <div class="hni"><div class="hnt">2026-Q1 &mdash; SHI 32.1 &mdash; Structural Collapse</div><div class="hnb"><strong>L-shape trajectory. No natural recovery path.</strong> F-35 operating costs 500–700 M€/yr. Ageing sote. Debt service. Coupling active: S_ENERGY 61 + R_PUBLIC 58. Drop of −22 pts from 2025-Q1: larger than the 2022 invasion shock (−13 pts). Difference: 2022 was external; 2026 is endogenous and structural.</div></div>
+        <div class="hni"><div class="hnt">2026-Q1 &mdash; SHI 32.1 &mdash; Structural Collapse</div><div class="hnb"><strong>L-shape trajectory. No natural recovery path.</strong> Kriittisen puolustuslogistiikan käyttökustannukset 500–700 M€/v. Ageing sote. Debt service. Coupling active: S_ENERGY 61 + R_PUBLIC 58. Drop of −22 pts from 2025-Q1: larger than the 2022 invasion shock (−13 pts). Difference: 2022 was external; 2026 is endogenous and structural.</div></div>
       </div>
       <div class="cite">Backtest sources: NordPool FI historical spot prices · Finnish State Budget (VM) · Statistics Finland · ACI diagnostic corpus DA-001–DA-007, WP-001–WP-013 · Coupling activates correctly at 2022-Q4 and 2026-Q1 (model validated). Source: <a href="https://aethercontinuity.org">aethercontinuity.org</a></div>
     </div>
@@ -227,7 +227,7 @@ const DRIFT={S_ENERGY:.4,R_PUBLIC:.35,E_REAL:.20,X_EXTERNAL:.15};
 const LD={S_ENERGY:-.3,R_PUBLIC:-.4,E_REAL:-.15,X_EXTERNAL:-.10};
 const LI={
   S_ENERGY:{name:'Energy System Stress',src:'<strong>Live:</strong> Fingrid DS 105 (spot €/MWh) · DS 192 (production) · DS 198 (surplus) · DS 181 (wind). Proxy: aci-fingrid-proxy.ruotsalainen-marko.workers.dev',w:'35%'},
-  R_PUBLIC:{name:'Public Finance Pressure',src:'<strong>Live:</strong> ECB Finnish 10Y government bond yield (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y) · F-35 operating costs 500–700 M€/yr · Ageing-driven expenditure (VM)',w:'30%'},
+  R_PUBLIC:{name:'Public Finance Pressure',src:'<strong>Live:</strong> ECB Finnish 10Y government bond yield (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y) · Kriittisen puolustuslogistiikan käyttökustannukset · Ikärakenteen menopaine (VM)',w:'30%'},
   E_REAL:{name:'Real Economy Stress',src:'<strong>Live:</strong> Fingrid DS 105 7-day spot price history — volatility + level index. Supplemented by: household energy cost exposure, payment default indices (Statistics Finland)',w:'20%'},
   X_EXTERNAL:{name:'External Environment',src:'<strong>Live:</strong> ECB EUR/USD exchange rate (EXR/D.USD.EUR.SP00.A) · Geopolitical event baseline · Baltic interconnection status · Nordic energy market coupling',w:'15%'}
 };
@@ -268,7 +268,14 @@ const AC=[
   {id:'LDR50',title:'LDR-50 Kuopio — käyttöönotto 2032',meta:{lead:48,cost:'HIGH',profile:'DELAYED'},patch:[{k:'S_ENERGY',sv:-14,lv:12},{k:'E_REAL',sv:-8}]},
   {id:'FISCAL',title:'Energiatukimekanismi kotitalouksille',meta:{lead:6,cost:'MEDIUM',profile:'IMMEDIATE'},patch:[{k:'E_REAL',sv:-7,lv:8},{k:'R_PUBLIC',sv:3}]},
 ];
-const COSTS={K1:2,K2:15,K3:5,SGFA_K:150,SGFA_7:1190,LDR50:100,FISCAL:50};
+  {id:'INT007',title:'Jatkuvuuskytkentä: puolustuslogistiikka + MESA-varavoima',meta:{lead:18,cost:'HIGH',profile:'RAMP'},
+    patch:[{k:'S_ENERGY',sv:-8,lv:5},{k:'R_PUBLIC',sv:-3,lv:3}],
+    src:'Puolustuslogistiikan varavoimavaatimukset ohjataan rahoittamaan paikallinen MESA-varavoimala. Kaksikäyttöinvestointi: puolustus + siviili. CAPEX 150 M€ jaettuna.'},
+  {id:'INT008',title:'D₃ Fast-Track — nopeutettu toimeenpanoprotokolla',meta:{lead:6,cost:'LOW',profile:'IMMEDIATE'},
+    patch:[{k:'R_PUBLIC',sv:-2,lv:4},{k:'X_EXTERNAL',lv:2}],
+    src:'Rajattu nopean toimeenpanon kanava kriittisille jatkuvuusinvestoinneille. Päätös → toimeenpano max 12 kk. Max 3–5 hanketta samanaikaisesti. Kustannus: 5 M€.'},
+];
+const COSTS={K1:2,K2:15,K3:5,SGFA_K:150,SGFA_7:1190,LDR50:100,FISCAL:50,INT007:150,INT008:5};
 
 let st={l:{...PR['2026'].l},lk:{...PR['2026'].lk}};
 let sel=new Set();
@@ -632,6 +639,10 @@ function shock(type){
 function conflictAdj(acts,l,lk){
   if(acts.find(a=>a.id==='FISCAL')&&acts.find(a=>a.id==='SGFA_7')){
     l.R_PUBLIC=Math.min(100,+(l.R_PUBLIC+2).toFixed(1)); // financing overlap
+  }
+  if(acts.find(a=>a.id==='INT007')&&acts.find(a=>a.id==='INT008')){
+    synergies.push('INT-007 × INT-008: Jatkuvuuskytkentä + nopeutettu toimeenpano → Compound Stress −1.0 pp lisäbonuksena');
+    adj.S_ENERGY=(adj.S_ENERGY||0)-2; adj.R_PUBLIC=(adj.R_PUBLIC||0)+2;
   }
   if(acts.find(a=>a.id==='SGFA_7')&&acts.find(a=>a.id==='LDR50')){
     // Both require capital markets simultaneously — modest crowding
