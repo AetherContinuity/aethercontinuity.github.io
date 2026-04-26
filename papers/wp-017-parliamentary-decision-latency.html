@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-017 — Parliamentary Decision Latency and Market Signal Correlation · ACI</title>
+<meta name="description" content="Bond spreads are necessary but insufficient indicators of long-term state sustainability. ACI Working Paper 017.">
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --border: #ddd;
+    --accent: #2a2a2a;
+    --bg: #fff;
+    --tag-bg: #f4f4f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+  }
+  nav {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+  nav a { color: var(--muted); text-decoration: none; margin-right: 1.2rem; }
+  nav a:hover { color: var(--text); }
+  .meta-block {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+    line-height: 2;
+  }
+  .meta-block strong { color: var(--text); }
+  .series-tag {
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--tag-bg);
+    padding: .3rem .7rem;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    letter-spacing: .04em;
+  }
+  .preprint-tag {
+    font-family: monospace;
+    font-size: 12px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: .3rem .7rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    letter-spacing: .04em;
+  }
+  h1 {
+    font-size: 1.9rem;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: .75rem;
+  }
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+  h2 {
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin: 2.5rem 0 .75rem;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.75rem 0 .5rem;
+  }
+  p { margin-bottom: 1.2rem; }
+  .abstract {
+    background: var(--tag-bg);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 16px;
+  }
+  .disclaimer {
+    background: #fff8f0;
+    border-left: 3px solid #e08030;
+    padding: 1rem 1.5rem;
+    font-size: 15px;
+    color: var(--muted);
+    margin: 1.5rem 0;
+  }
+  .finding {
+    background: #f0f4ff;
+    border-left: 3px solid #4060c0;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .section-marker {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    margin-bottom: .25rem;
+    margin-top: 3rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin: 1.5rem 0;
+  }
+  th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: .5rem .75rem;
+    font-weight: bold;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: .5rem .75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .ref {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: .5rem;
+  }
+  footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org">ACI</a>
+  <a href="https://aethercontinuity.org/research.html">Research</a>
+  <a href="https://aethercontinuity.org/papers/wp-016-health-data-continuity-index.html">WP-016</a>
+</nav>
+
+<div class="preprint-tag">⚠ PRE-PRINT — Referee review pending</div><br>
+<div class="series-tag">ACI · WP-017 · Working Paper · Domain D-2 / D-3 · Open Working Draft</div>
+
+<div class="meta-block">
+  <strong>Title:</strong> Parliamentary Decision Latency and Market Signal Correlation<br>
+  <strong>Subtitle:</strong> Bond Spreads as Necessary but Insufficient Indicators of State Sustainability<br>
+  <strong>Author:</strong> Marko Ruotsalainen · Aether Continuity Institute<br>
+  <strong>Status:</strong> Pre-print · Referee review pending<br>
+  <strong>Published:</strong> 2026-04-26<br>
+  <strong>Version:</strong> 0.1 (pre-print)<br>
+  <strong>Domain:</strong> D-2 Institutional Diagnostics · D-3 Policy Latency<br>
+  <strong>Related:</strong> WP-016 (HDCI) · WP-015 (Regime Classification) · OGAS2 Simulator
+</div>
+
+<h1>Parliamentary Decision Latency and Market Signal Correlation</h1>
+<div class="subtitle">Bond Spreads as Necessary but Insufficient Indicators of State Sustainability</div>
+
+<div class="abstract">
+<strong>Abstract.</strong> This paper examines whether financial market signals — specifically sovereign bond yield spreads — can detect parliamentary decision latency (D-suppression) before it manifests in fiscal indicators. Using Finland as a case study and the energy strategy review VNS 8/2025 vp as a parliamentary event anchor, we collect FI-DE and FI-SE bond spread data (Eurostat, 2023–2026) and code D-phase transitions. The pilot analysis reveals a null finding: FI-DE spread narrows monotonically from 0.60 pp (2023) to 0.40 pp (2025–2026), and FI-SE spread is dominated by Riksbank/ECB monetary policy divergence. We argue this null finding is theoretically significant: bond spreads are structurally incapable of detecting capacity investment deficits because credit rating models are backward-looking and optimise short-term fiscal consolidation. This is not a Finland-specific observation — it is an OECD-level correlated blindspot produced by three synchronisation mechanisms: financial architecture, institutional standards, and risk pricing models. The paper concludes with a reframed hypothesis: the relevant question is not whether markets anticipate D-suppression, but which instrument detects it first and with what lag.
+</div>
+
+<div class="disclaimer">
+<strong>Pre-print notice.</strong> This paper is published in pre-print form to invite referee comments. The empirical pilot uses manually coded parliamentary event dates and Eurostat monthly yield data. The hypothesis has been revised once following null findings. Referee input is sought on: (1) monetary policy control methodology, (2) instrument selection for next phase, (3) 2008 analogy validity.
+</div>
+
+<div class="section-marker">§ 01</div>
+<h2>Research Question and Motivation</h2>
+
+<p>The Aether Continuity Institute has documented a structural phenomenon in Finnish institutional decision-making: D-suppression, in which identified risks pass through a three-stage filter (D1: signal → report; D2: report → agenda; D3: agenda → decision) with significant delays at each transition. The energy capacity gap documented in the Finnish energy system structural report (ACI, 2026) provides a concrete case: the risk has been identified, reported, and placed on parliamentary agenda, but no legislative action has followed.</p>
+
+<p>The research question of WP-017 is: <em>Do financial markets price D-suppression — the failure of identified risks to become binding decisions — before it manifests in fiscal indicators?</em></p>
+
+<p>This is motivated by a governance accountability argument. If markets detect decision-making capacity gaps with a measurable lead time, this creates a transparent, politically neutral signal that institutional actors cannot plausibly deny. The phrase "we did not know" becomes empirically testable.</p>
+
+<div class="section-marker">§ 02</div>
+<h2>Theoretical Framework: D-Suppression and Market Pricing</h2>
+
+<h3>2.1 The D-suppression model</h3>
+
+<p>D-suppression describes a three-stage institutional filter through which policy signals are systematically attenuated. D1 converts external signals into reports (low attenuation); D2 converts reports into agenda items (moderate attenuation); D3 converts agenda items into binding decisions (high attenuation). The current Finnish energy strategy review (VNS 8/2025 vp) has cleared D1 and D2 but as of April 2026 has not produced a capacity mechanism decision — a classic D3 blockage.</p>
+
+<h3>2.2 Revised hypothesis</h3>
+
+<p>The original hypothesis — that markets anticipate D-suppression — has been revised following the pilot data. The revised hypothesis is: <em>sovereign bond spreads delay D-suppression pricing, reacting to institutional decision-making gaps typically with a 2–5 year lag and only after the problem has manifested.</em> The research question is reframed: which instrument detects D-suppression earliest, and what is the lead time?</p>
+
+<div class="section-marker">§ 03</div>
+<h2>Pilot Data: FI-DE and FI-SE Spreads</h2>
+
+<h3>3.1 Data source and methodology</h3>
+
+<p>Yield data: Eurostat dataset <em>irt_lt_mcby_m</em> (EMU convergence criterion series, 10-year maturity, monthly). Countries: Finland (FI), Germany (DE), Sweden (SE). Period: January 2023 – March 2026 (39 observations). D-phase events coded manually from parliamentary records (VNS 8/2025 vp käsittelytiedot, eduskunta.fi).</p>
+
+<h3>3.2 Parliamentary event coding</h3>
+
+<table>
+  <tr><th>Date</th><th>Phase</th><th>Event</th></tr>
+  <tr><td>2025-10</td><td>D1</td><td>Fingrid/ENTSO-E capacity risk signals</td></tr>
+  <tr><td>2025-11</td><td>D1</td><td>Mattila report published (TEM)</td></tr>
+  <tr><td>2025-12</td><td>D2</td><td>VNS 8/2025 vp submitted to parliament</td></tr>
+  <tr><td>2026-02</td><td>D2</td><td>Referral debate — sent to Economic Committee</td></tr>
+  <tr><td>2026-03</td><td>D2</td><td>Committee hearings underway</td></tr>
+  <tr><td>2026-04</td><td>D3 pending</td><td>Committee report expected (~29.4.2026)</td></tr>
+</table>
+
+<h3>3.3 FI-DE spread results</h3>
+
+<p>The FI-DE spread narrows monotonically over the observation period: from 0.60 pp average in 2023 to 0.53 pp in 2024 and 0.40 pp in 2025. During the D1-D2 transition (October–December 2025) the spread narrows from 0.40 to 0.35 pp — the opposite direction from what the original hypothesis predicted. In early 2026 a minor widening occurs (+0.065 pp at D2/committee phase) but is within normal variation.</p>
+
+<div class="finding">
+<strong>Finding 3.1:</strong> FI-DE spread does not detect D-suppression. AAA-Finland is priced near Germany regardless of energy policy decision latency. The spread narrows as Finland's fiscal profile converges toward Germany within the eurozone common monetary framework.
+</div>
+
+<h3>3.4 FI-SE spread results and monetary policy confound</h3>
+
+<p>FI-SE spread shows substantially higher volatility: it widens dramatically in summer 2024 (0.43 → 0.88 pp) as the Riksbank cut rates aggressively while Finland followed the ECB. This monetary policy divergence dominates any D-suppression signal. The spread narrows during the D1-D2 phase (2025-Q4: 0.685 → 0.345 pp) but this coincides with Swedish rate normalisation, not Finnish parliamentary action.</p>
+
+<div class="finding">
+<strong>Finding 3.2:</strong> FI-SE spread is contaminated by monetary policy divergence (ECB vs. Riksbank). Finland's eurozone membership — ceding monetary policy to the ECB — makes FI-SE an impure instrument. FI-DE is methodologically cleaner but also shows no D-suppression signal.
+</div>
+
+<div class="section-marker">§ 04</div>
+<h2>Why Bond Spreads Cannot Detect Capacity Investment Deficits</h2>
+
+<h3>4.1 The backward-looking structure of rating models</h3>
+
+<p>Sovereign credit rating agencies (S&P, Fitch, Moody's, Scope) use five-pillar models assessing institutional quality, economic structure, external position, fiscal strength, and monetary flexibility. Each pillar is scored on realised historical data. Investment pipelines — infrastructure modernisation, energy capacity mechanisms, PtX development — are invisible to the model until they produce measurable GDP or fiscal impact, which may take 5–10 years.</p>
+
+<p>S&P's April 2026 statement on Finland is instructive: the agency called for "front-loaded measures" to stabilise debt. Front-loaded means: cut now, do not promise future growth. This incentive structure is structurally opposed to long-term capacity investment.</p>
+
+<h3>4.2 The 2008 precedent</h3>
+
+<p>The 2008 financial crisis is the canonical empirical evidence of credit rating model blindness. Rating agencies assigned AAA to subprime CDOs using backward-looking correlation models that missed building capacity gaps. At the sovereign level, Iceland, Ireland, and Spain held AA or above immediately before the crisis — agencies did not detect the transfer of private debt to public balance sheets. Downgrades came rapidly after realisation, not before.</p>
+
+<p>The structural analogy to Finland is instructive but inverted: in 2008, private debt transferred to the public balance sheet. In Finland's case, the risk runs in the opposite direction — public decision-making failure transfers its costs to the private sector (industrial competitiveness, household energy costs, municipal heating capacity) on a 5–10 year horizon that exceeds rating model forward visibility.</p>
+
+<h3>4.3 The OECD correlated blindspot</h3>
+
+<p>Finland's situation is not idiosyncratic. Three synchronisation mechanisms produce the same allocation blindspot across OECD economies simultaneously:</p>
+
+<table>
+  <tr><th>Mechanism</th><th>How it operates</th><th>Effect on capacity investment</th></tr>
+  <tr><td>Financial architecture</td><td>Pension funds, infrastructure funds, capital markets operate globally with short-term yield optimisation</td><td>Long-horizon capacity investment does not fit return models</td></tr>
+  <tr><td>Institutional standards</td><td>OECD fiscal rules, EU Stability and Growth Pact, EDP procedure optimise short-term budget balance</td><td>Category II investments (future capacity) penalised vs. Category I (current expenditure reduction)</td></tr>
+  <tr><td>Risk pricing models</td><td>S&P, Fitch, Scope, Moody's use identical five-pillar frameworks globally</td><td>Same blindspot simultaneously in all OECD member states</td></tr>
+</table>
+
+<p>This is consistent with ACI's earlier RQM-001 finding (Transnational Allocation Template, WP-008/WP-009 context): allocation bias is not random across OECD economies but correlated through shared institutional architecture.</p>
+
+<h3>4.4 ECB as institutional cushion</h3>
+
+<p>The ECB's mandate is price stability — not investment capacity or structural resilience. Its single eurozone rate applies equally to Finland (which has not decided on a capacity mechanism) and France (which has legislated one). This creates an institutional cushion that hides national decision-making gaps in bond pricing. Sweden, with its independent Riksbank, has no equivalent cushion — but its monetary independence contaminates spread analysis as shown in §3.4.</p>
+
+<div class="section-marker">§ 05</div>
+<h2>Credit Rating Timeline and Finland's Current Position</h2>
+
+<table>
+  <tr><th>Agency</th><th>Rating</th><th>Outlook</th><th>Last action</th></tr>
+  <tr><td>Fitch</td><td>AA</td><td>Stable</td><td>Downgraded AA+→AA July 2025 (neg. outlook Aug 2024)</td></tr>
+  <tr><td>Scope</td><td>AA+</td><td>Negative</td><td>Negative outlook August 2025</td></tr>
+  <tr><td>S&P</td><td>AA+</td><td>Negative</td><td>Negative outlook April 2026; next review October 2026</td></tr>
+  <tr><td>Moody's</td><td>Aa1</td><td>Stable</td><td>No change — only holdout</td></tr>
+</table>
+
+<p>The typical timeline from negative outlook to downgrade is 6–18 months. If S&P follows Fitch's pattern, a downgrade decision at the October 2026 review would coincide with the opening of Finland's identified energy system convergence window (2027–2030). The causal driver would be fiscal — not energy capacity — but the interaction effect is relevant: a rating downgrade increases borrowing costs precisely when capacity investment need is highest.</p>
+
+<div class="finding">
+<strong>Finding 5.1 (Salazar mechanism):</strong> The rating agency incentive structure — rewarding front-loaded fiscal cuts — penalises the capacity investments that would address the structural risk driving the downgrade pressure. CBR (Continuity Budget Ratio) falls while the spread narrows. Apparent fiscal stability masks structural weakening.
+</div>
+
+<div class="section-marker">§ 06</div>
+<h2>Academic Context</h2>
+
+<p>The structural blindness of credit rating models to long-term sustainability investment is an academically recognised problem. The UN Department of Economic and Social Affairs (2023) states that investments in resilience and climate adaptation can materially enhance a country's future debt-carrying capacity even when they increase short-term debt, and notes that rating methodology updates have been slow and typically reactive to past crises.</p>
+
+<p>Recent empirical work (ScienceDirect, 2025) demonstrates that sovereign downgrades do not merely reduce aggregate investment — they reallocate capital from long-term to short-term projects. This is an empirical confirmation of the mechanism: rating pressure forces investment horizon shortening precisely when long-term capacity investment is most needed.</p>
+
+<p>Moody's own methodology (2022) acknowledges environmental shocks and demographic change as growth determinants but retains operational weight on fiscal strength and short-term resilience. Long-term capacity investment is not a standalone positive variable in current agency frameworks.</p>
+
+<div class="section-marker">§ 07</div>
+<h2>Conclusions and Next Steps</h2>
+
+<p>The pilot analysis produces a null finding on the original hypothesis: bond spreads do not detect D-suppression in the VNS 8/2025 vp case. This null finding is theoretically significant. It establishes that bond spreads — the most liquid and continuously priced sovereign risk indicator — are structurally incapable of signalling capacity investment deficits in OECD AAA-tier economies.</p>
+
+<p>The reframed research agenda asks: which instrument detects D-suppression earliest? Candidates for the next phase of WP-017 analysis:</p>
+
+<table>
+  <tr><th>Instrument</th><th>Hypothesis</th><th>Data availability</th></tr>
+  <tr><td>OMXH25 volatility</td><td>Equity markets may price domestic decision-making capacity faster than bond markets</td><td>Daily, publicly available</td></tr>
+  <tr><td>5-year CDS spread</td><td>CDS is more sensitive to near-term event risk than 10Y bond yield</td><td>Available via Bloomberg/Refinitiv</td></tr>
+  <tr><td>IMF Article IV language</td><td>IMF assessments may signal capacity gaps before market pricing</td><td>Annual, text analysis required</td></tr>
+  <tr><td>FI-DE spread with monetary control</td><td>Controlling for ECB rate decisions may isolate Finland-specific component</td><td>Requires regression framework</td></tr>
+</table>
+
+<div class="finding">
+<strong>Core conclusion:</strong> Bond spreads and credit ratings are necessary but insufficient indicators of long-term state sustainability. They measure the ability to service current debt — not the ability to build future capacity. D-suppression costs materialise on a horizon that exceeds current rating model forward visibility. This is not a Finnish anomaly — it is a structural property of OECD sovereign risk pricing.
+</div>
+
+<div class="disclaimer">
+<strong>Referee input requested on:</strong> (1) Is the monetary policy control methodology sufficient to isolate Finland-specific spread components? (2) Which alternative instrument is most tractable for next-phase analysis? (3) Is the 2008 structural analogy valid given the inverted risk direction? (4) Does the OECD correlated blindspot argument require additional cross-country validation?
+</div>
+
+<div class="section-marker">References</div>
+<h2>References and Data Sources</h2>
+
+<div class="ref">Eurostat (2026). <em>irt_lt_mcby_m — EMU convergence criterion bond yields, monthly.</em> ec.europa.eu/eurostat</div>
+<div class="ref">S&P Global Ratings (2025). <em>Sovereign Rating Methodology.</em> January 2025.</div>
+<div class="ref">Moody's (2022). <em>Sovereign and Supranational Rating Methodology.</em> November 2022.</div>
+<div class="ref">UN DESA (2023). <em>Credit Rating Agencies and Sovereign Debt: Challenges and Solutions.</em> financing.desa.un.org</div>
+<div class="ref">ScienceDirect (2025). <em>Sovereign credit ratings, fiscal burden and corporate investment policies: An international evidence.</em> doi:10.1016/j.ribaf.2025.xxx</div>
+<div class="ref">ACI (2026). <em>Suomen sähköjärjestelmän rakenteellinen lukkiutuminen 2026–2032.</em> aethercontinuity.org/papers/</div>
+<div class="ref">ACI (2026). <em>ACI-STRUCTURE.md — WP-017 concept documentation.</em> github.com/AetherContinuity</div>
+<div class="ref">Finnish State Treasury (2026). <em>Credit ratings.</em> treasuryfinland.fi/investor-relations/credit-ratings/</div>
+<div class="ref">Finnish Parliament (2026). <em>VNS 8/2025 vp — käsittelytiedot.</em> eduskunta.fi</div>
+
+<footer>
+  Aether Continuity Institute · WP-017 · Pre-print v0.1 · 2026-04-26<br>
+  Domain: D-2 Institutional Diagnostics · D-3 Policy Latency<br>
+  Data: Eurostat irt_lt_mcby_m · Proxy: aci-ecb-proxy (github.com/AetherContinuity/aci-ecb-proxy)<br>
+  aethercontinuity.org · Open diagnostic instrument · Not investment advice
+</footer>
+
+</body>
+</html>
