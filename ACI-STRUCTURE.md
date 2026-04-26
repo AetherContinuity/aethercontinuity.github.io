@@ -365,6 +365,18 @@ S&P ilmaisi tämän eksplisiittisesti: *"could revise outlook to stable if gover
 
 Tämä on **Salazar-mekanismi** käänteisesti: luottoluokittajien palkitsema fiskaalikonsolidaatio leikkaa juuri niistä investoinneista jotka rakentaisivat tulevaa maksukykyä. CBR laskee samalla kun spread kapeutuu — näennäinen vakaus peittelee rakenteellisen heikkenemisen.
 
+**Vastaavat havainnot kirjallisuudessa:**
+
+Kolme riippumatonta lähdettä vahvistaa WP-017:n argumentin:
+
+1. **YK:n rahoitusraportti (2023):** "Investoinnit kestävyyteen ja ilmastonmuutokseen sopeutumiseen voivat merkittävästi parantaa maan tulevaa talouskasvua ja velankantamiskykyä, vaikka ne lyhyellä aikavälillä kasvattavat julkista velkaa. Luottoluokitusmallien päivitykset ovat olleet hitaita ja tyypillisesti reaktiivisia viimeaikaisiin kriiseihin." (*Credit Rating Agencies and Sovereign Debt: Challenges and Solutions*, UN DESA 2023)
+
+2. **ScienceDirect (2025):** Sovereign-luokituslaskut eivät vain vähennä kokonaisinvestointeja — ne reallokoivat pääomaa pitkäaikaisista lyhytaikaisiin projekteihin. Tämä on Salazar-mekanismin empiirinen vahvistus: luokituslasku pakottaa lyhentämään investointihorisonttia juuri silloin kun pitkäjänteistä kapasiteetti-investointia eniten tarvittaisiin. (*Sovereign credit ratings, fiscal burden and corporate investment policies*, ScienceDirect 2025)
+
+3. **Moody's metodologia (2022):** Ympäristöshokkit ja demografia tunnistetaan kasvutekijöiksi — mutta mallin operationaalinen paino on edelleen fiskaalisessa vahvuudessa ja lyhyen aikavälin resilienssissä. Pitkäjänteinen kapasiteetti-investointi ei ole erillinen positiivinen muuttuja.
+
+Johtopäätös: WP-017:n argumentti ei ole ACI-spesifi havainto — se on akateemisesti tunnistettu rakenteellinen ongelma johon YK on kiinnittänyt huomiota mutta johon luottoluokittajat eivät ole reagoineet systemaattisesti.
+
 **WP-017:n teoreettinen kontribuutio:** Bondispread ja luottoluokitus ovat *välttämättömiä mutta riittämättömiä* indikaattoreita valtion pitkän aikavälin kestävyydelle. Ne mittaavat kykyä maksaa nykyinen velka — eivät kykyä rakentaa tulevaisuuden kapasiteettia. D-suppression kustannus realisoituu aikajänteellä joka ylittää luottoluokitusmallien horisontin.
 
 **Empiirinen todiste: vuoden 2008 finanssikriisi**
