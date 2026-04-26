@@ -366,3 +366,24 @@ S&P ilmaisi tämän eksplisiittisesti: *"could revise outlook to stable if gover
 Tämä on **Salazar-mekanismi** käänteisesti: luottoluokittajien palkitsema fiskaalikonsolidaatio leikkaa juuri niistä investoinneista jotka rakentaisivat tulevaa maksukykyä. CBR laskee samalla kun spread kapeutuu — näennäinen vakaus peittelee rakenteellisen heikkenemisen.
 
 **WP-017:n teoreettinen kontribuutio:** Bondispread ja luottoluokitus ovat *välttämättömiä mutta riittämättömiä* indikaattoreita valtion pitkän aikavälin kestävyydelle. Ne mittaavat kykyä maksaa nykyinen velka — eivät kykyä rakentaa tulevaisuuden kapasiteettia. D-suppression kustannus realisoituu aikajänteellä joka ylittää luottoluokitusmallien horisontin.
+
+**Empiirinen todiste: vuoden 2008 finanssikriisi**
+
+2008 on kaikkein tunnetuin empiirinen todiste luottoluokitusmallien rakenteellisesta sokeudesta:
+
+*Yksityinen taso (CDO/subprime):* Luottoluokittajat antoivat AAA-luokituksen subprime-CDO:ille jotka perustuivat asuntolainoihin joita ei olisi pitänyt myöntää. Malli mittasi historiallista korrelaatiota asuntomarkkinoilla — ei rakentuvaa kapasiteettivajetta kun markkinat kääntyisivät. Taaksepäin katsova malli ei havainnut eteenpäin kertyvää riskiä.
+
+*Sovereign-taso:* Islanti, Irlanti ja Espanja olivat kaikki AA tai parempia juuri ennen kriisiä. Luottoluokittajat eivät havainneet että yksityinen velka oli siirtymässä de facto julkiseksi pankkijärjestelmän kautta. Realisoituessaan lasku tuli nopeasti ja myöhässä — klassinen viivästetty reaktio.
+
+*Rakenteellinen analogia Suomeen:*
+
+| | 2008-kriisi | Suomi 2026–2030 |
+|--|--|--|
+| Näkymätön riski | Yksityinen velka → julkinen | Kapasiteettivaje → kustannus teollisuudelle |
+| Mallin sokea piste | Korrelaatio kääntyy | Investoinnin puute realisoituu |
+| Luokittajan reaktio | Lasku kriisin jälkeen | Lasku fiskaaliheikkenemisen jälkeen |
+| Suunta | Yksityinen → julkinen | Julkinen → yksityinen |
+
+Ero on suunnan käänteisyys: 2008 yksityinen velka siirtyi julkiseksi. Suomessa riski on päinvastainen — julkinen sektori ei investoi kapasiteettiin jonka puuttuminen realisoituu yksityisenä kustannuksena teollisuudelle ja kotitalouksille.
+
+Yhteinen rakenne molemmissa: **malli palkitsi käyttäytymistä joka lyhyellä aikavälillä näytti vakaalta mutta rakensi pitkän aikavälin haavoittuvuutta.** Tämä on luottoluokitusmallien systemaattinen, ei satunnainen, heikkous.
