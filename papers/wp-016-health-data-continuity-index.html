@@ -201,6 +201,8 @@ This paper constructs a novel measurement framework. HDCI components are derived
 
 <p>HDCI is the instrument for the second problem.</p>
 
+<p>This paper identifies an asymmetry that mirrors the findings of WP-017 (Parliamentary Decision Latency and Market Signal Correlation) in a different sector. The Finnish welfare system reacts rapidly to signals it can measure: cost overruns, queue lengths, and morbidity indices produce administrative and political responses. It reacts slowly — or not at all — to integration failure, because integration failure is not measured. No measurement means no sanction, and no sanction means no correction. HDCI is an instrument for breaking this loop: making integration quality visible so that it can be governed. HDCI is to health data what IQS (Integration Quality Score, WP-018) is to energy capacity — a measure of integration quality, not installed volume.</p>
+
 <div class="section-marker">§ 02</div>
 <h2>HDCI — A Constructed Measurement Framework</h2>
 
@@ -283,7 +285,7 @@ HDCI_v1 = 0.40·RKI_adjusted + 0.35·IAI + 0.25·RVI
 
 <h3>3.3 FHDS: Institutional Home</h3>
 
-<p>THL is prepared to assume responsibility for the Finnish Health Data Space (FHDS) data governance and licensing function. FHDS will consolidate health data infrastructure, licensing, and research facilitation — and enable more individually tailored care, cost containment, and accelerated research.</p>
+<p>Based on public statements and ministerial communications, THL is expected to assume a central role in the Finnish Health Data Space (FHDS) data governance and licensing function. FHDS is intended to consolidate health data infrastructure, licensing, and research facilitation — and to enable more individually tailored care, cost containment, and accelerated research. (Source: STM FHDS preparatory documents 2024–2025; final governance model subject to legislative decision.)</p>
 
 <p>HDCI is a natural first use case for FHDS. It does not require new legislation, new agencies, or new data collection. It requires a decision: calculate the integration index from already-available registry linkages and publish it as part of national health system monitoring.</p>
 
@@ -523,7 +525,11 @@ morbidity_baseline = morbidity-adjusted expected care demand (Sotkanet)<br>
 α = policy parameter controlling bonus magnitude<br><br>
 Bonus condition: ΔHDCI > 0 AND cost_per_capita ≤ (1 + δ) · morbidity_adjusted_baseline<br>
 Penalty guard: no bonus if RKI_adjusted worsens (coordination failure persists)<br>
-Risk selection guard: no bonus if high-morbidity patient share decreases
+Risk selection guard: no bonus if high-morbidity patient share decreases<br><br>
+<strong>Illustrative example:</strong> A welfare area improves HDCI from 0.52 to 0.61 (+0.09) against a morbidity-adjusted baseline cost of €2,400/capita. With α = 0.05 and δ = 0.03:<br>
+Funding_adjustment = 0.05 × 0.09 × 2,400 = €10.80/capita (≈ 0.45% of baseline)<br>
+Condition check: actual cost ≤ €2,472/capita AND RKI_adjusted has not worsened.<br>
+This is a modest bonus — sufficient to signal integration achievement without creating perverse volume incentives.
 </div>
 
 <p>The cost ceiling condition (cost_per_capita ≤ morbidity_adjusted_baseline + δ) prevents a welfare area from gaming the bonus by reducing care volume without reducing coordination failure. The risk selection guard prevents patient selection — a welfare area cannot improve its HDCI by reducing exposure to complex multi-morbid patients. Both guards are verifiable from existing registry data.</p>
