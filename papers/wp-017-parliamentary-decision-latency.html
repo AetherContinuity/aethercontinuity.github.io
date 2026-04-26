@@ -74,7 +74,7 @@
 <div class="doc-header">
   <div class="doc-series">ACI · Working Paper · WP-017</div>
   <div class="doc-meta-grid">
-    <span><strong>Version</strong>1.6</span>
+    <span><strong>Version</strong>1.7</span>
     <span><strong>Published</strong>2026-04-26</span>
     <span><strong>Domain</strong>D-2 · D-3</span>
     <span><strong>Status</strong>Open Working Draft</span>
@@ -270,13 +270,31 @@
 
   <p><strong>Parameter 3 — EDP correction requirement and available headroom.</strong> Finland's general government deficit was 3.4% of GDP in 2025 (€9.6 billion), exceeding the SGP 3% threshold. The EU national escape clause has been activated for Finland for 2025–2028. The SGP correction requirement is approximately 0.5% GDP per year — €1.44 billion annually. Historical R2-condition precedents (Greece, Portugal, Spain 2011–2015) produced 2–4 years of additional time but with increasing conditionality and structural reform requirements.</p>
 
-  <p><strong>Critical threshold result.</strong> Under an R2 scenario of TTF +20 €/MWh persistently and spread +20 bps simultaneously — consistent with the Hormuz R2 conditions of Q1 2026 — the combined fiscal impact is €634–1,468 M€/year. Against the EDP correction budget of €1,440 M€/year, R2 friction consumes 44–102% of the available fiscal headroom. The critical threshold is TTF approximately 50–60 €/MWh sustained for more than two quarters: at this level, the EDP correction path breaks down computationally within 3–5 quarters.</p>
+  <p><strong>Stress scenario result — model-calibrated, not observed.</strong> Under a stylised R2 scenario of TTF +20 €/MWh persistently and spread +20 bps simultaneously, the combined estimated fiscal impact is €634–1,468 M€/year. Against the EDP correction requirement of approximately €1,440 M€/year, R2 friction would consume 44–102% of available headroom. This range is wide and reflects genuine uncertainty in the underlying coefficients — it is a stress envelope, not a point estimate.</p>
+
+  <div class="scope-note">
+    <strong>Epistemic status of P1–P3:</strong> The three parameters are <em>model-calibrated coefficients</em>, not directly observed causal measurements. P1 (TTF elasticity) is a structural average derived from industry mix and cost share assumptions — the 30–50 M€ range reflects a specific industrial structure that may shift with substitution. P2 (spread sensitivity) is a convolution over the debt maturity profile — the immediate vs. long-run distinction is real but the path depends on refinancing strategy. P3 (50–60 €/MWh threshold) is an <em>institutional stress point</em>, not a physical threshold — it is the level at which fiscal feedback dynamics change qualitatively, but the exact value is endogenous to EDP flexibility, ECB intervention probability, and political response function simultaneously. The three parameters are not in the same identifiability class: P1 and P2 are estimable from observed aggregates; P3 is a latent regime boundary inferred from structural reasoning. The system is a feedback loop (TTF ↔ inflation ↔ ECB ↔ spread ↔ energy), not a linear input-output model. This analysis identifies the mechanism and its approximate order of magnitude — it does not constitute a calibrated econometric model.
+  </div>
 
   <div class="finding">
-    <div class="finding-label">Finding 4.3 — Critical threshold</div>
-    <p>TTF at ~50–60 €/MWh sustained for two or more quarters is Finland's EDP-breaking threshold under the R2 regime. This is not a catastrophic event — it is a chronic condition that each quarter appears manageable in isolation. The cumulative fiscal erosion crosses the EDP correction budget within one to two fiscal years. This is the precise mechanism by which R2 persistence is more dangerous than a discrete R3 shock: no single quarter triggers a political response, but the trajectory is deterministic.</p>
-    <p>Note: Finnish industrial natural gas price was approximately 50.1 €/MWh in August 2025 — already at the lower bound of the critical threshold, before the Hormuz R2 escalation of Q1 2026.</p>
+    <div class="finding-label">Finding 4.3 — Stress envelope, not deterministic threshold</div>
+    <p>TTF at ~50–60 €/MWh sustained for two or more quarters increases the probability of EDP correction path failure — it does not mechanically determine it. The threshold is conditional on fiscal space remaining below a critical level and spread sensitivity remaining above a critical level simultaneously. What is deterministic is the direction: R2 persistence erodes fiscal headroom quarter by quarter without producing a discrete political reaction point. The trajectory is not stochastic in direction, only in speed.</p>
+    <p>Observation: Finnish industrial natural gas was approximately 50.1 €/MWh in August 2025 — at the lower bound of the stress envelope, before the Hormuz R2 escalation of Q1 2026. This is a descriptive data point, not a causal claim.</p>
   </div>
+
+  <h3>4.6 Identifiability structure — what is observable, latent, and inferred</h3>
+  <p>WP-017 v1.6 contains three analytically distinct layers that should not be conflated:</p>
+
+  <table>
+    <thead><tr><th>Layer</th><th>Type</th><th>Examples</th><th>Identifiability</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A — Observed data</strong></td><td>Direct measurement</td><td>Eurostat bond spreads, S&P rating action timestamp, TTF price, Finnish gas price 50.1 €/MWh</td><td>High — directly measurable</td></tr>
+      <tr><td><strong>B — Model-calibrated coefficients</strong></td><td>Structural estimates from macro aggregates</td><td>P1 TTF elasticity (−30 to −50 M€/€/MWh), P2 spread sensitivity (26–248 M€/10bps)</td><td>Medium — estimable from observed aggregates, sensitive to structural assumptions</td></tr>
+      <tr><td><strong>C — Latent regime boundaries</strong></td><td>Inferred from structural reasoning</td><td>P3 critical threshold (50–60 €/MWh), R0/R1/R2/R3 regime boundaries, D-suppression detection threshold</td><td>Low — not directly observable; inferred from institutional behavior and fiscal constraint interaction</td></tr>
+    </tbody>
+  </table>
+
+  <p>The Salazar mechanism hypothesis becomes a measurable claim only at Layer A — the asymmetric reaction speed is directly observable. At Layer B, the fiscal transmission is estimable but uncertain. At Layer C, the regime threshold is a latent structural variable requiring a different identification strategy: either natural experiments (historical R2 episodes in comparable small states) or formal DSA (Debt Sustainability Analysis) under the EU Commission's DSGE framework. Conflating layers A, B, and C would overstate what WP-017 has established empirically.</p>
 
   <div class="scope-note">
     <strong>Status of Salazar mechanism:</strong> This is a structural hypothesis, not yet an empirical finding. The mechanism is theoretically coherent and consistent with the academic literature (§05). Empirical validation requires cross-country regression of rating outcomes against investment composition. Falsification criterion A (feasible): content analysis of 10–20 rating actions tests whether investment pipeline absence is cited as an independent negative factor — not merely as part of general fiscal deterioration. Criterion B (demanding): panel regression finds negative correlation between Category II investment levels and rating outcomes after controlling for deficit and debt/GDP.
@@ -359,7 +377,7 @@
 </div><!-- /paper -->
 
 <footer>
-  Aether Continuity Institute · WP-017 · Version 1.6 · 2026-04-26<br>
+  Aether Continuity Institute · WP-017 · Version 1.7 · 2026-04-26<br>
   Domain D-2 Institutional Diagnostics · D-3 Policy Latency<br>
   Open Working Draft · Basis: WP-008 · WP-015 · WP-016 · RQM-001 · DT-001 · DT-002 · DT-004<br>
   Data: Eurostat irt_lt_mcby_m · Proxy: github.com/AetherContinuity/aci-ecb-proxy<br>
