@@ -342,3 +342,27 @@ Suomen nykyinen ongelma on ensisijaisesti **pilari 4** — velka/BKT kasvaa, ali
 
 **WP-017:n johtopäätös luottoluokitusdatasta:**
 Luottoluokituslasku (Fitch 2025) ja negatiiviset näkymät (Scope 2025, S&P 2026) ovat ensimmäinen konkreettinen merkki siitä että bondispread voi alkaa heijastaa Suomen maakohtaista riskiä. Aikajänne: negatiiviset näkymät → lasku tyypillisesti 6–18 kuukautta. Jos S&P laskee lokakuussa 2026, se osuu täsmälleen konvergenssi-ikkunan alkuun — mutta kausaliteetti on fiskaali- eikä energiapäätösvetoinen.
+
+**Luottoluokitusmallien rakenteellinen heikkous — teoreettinen kontribuutio:**
+
+Viiden pilarin malli on **taaksepäin katsova**:
+- Fiskaalipilari mittaa *toteutunutta* velka/BKT-suhdetta ja alijäämää
+- Taloudellinen pilari mittaa *toteutunutta* kasvua
+- Institutionaalinen pilari käyttää World Bankin indikaattoreita joissa on ~1 vuoden viive
+
+Investointiputket — MESA-modernisointi, PtX-infrastruktuuri, datakeskusten jousto — eivät näy mallissa ennen kuin tuottavat mitattavaa vaikutusta BKT:hen tai fiskaaliasemaan. Viive voi olla 5–10 vuotta.
+
+S&P ilmaisi tämän eksplisiittisesti: *"could revise outlook to stable if government implements further front-loaded measures."* Front-loaded tarkoittaa: leikkaa nyt, älä lupaa tulevaa kasvua.
+
+**Perustavanlaatuinen ristiriita ACI:n analyysin kanssa:**
+
+| | Luottoluokittajat | ACI-analyysi |
+|--|--|--|
+| Optimoivat | Lyhyen aikavälin fiskaalikonsolidaatio | Pitkän aikavälin jatkuvuuskapasiteetti |
+| Mittaavat | Toteutunut velka/BKT, alijäämä | Tuleva kapasiteettivaje, CTT, CRI |
+| Reaktio investointeihin | Näkyvät vasta realisoituessa (5–10v) | Tunnistetaan päätöshetkellä |
+| Suosittelevat | Leikkaa Category II -investoinneista | Suojaa Category II — se on kestävyysperusta |
+
+Tämä on **Salazar-mekanismi** käänteisesti: luottoluokittajien palkitsema fiskaalikonsolidaatio leikkaa juuri niistä investoinneista jotka rakentaisivat tulevaa maksukykyä. CBR laskee samalla kun spread kapeutuu — näennäinen vakaus peittelee rakenteellisen heikkenemisen.
+
+**WP-017:n teoreettinen kontribuutio:** Bondispread ja luottoluokitus ovat *välttämättömiä mutta riittämättömiä* indikaattoreita valtion pitkän aikavälin kestävyydelle. Ne mittaavat kykyä maksaa nykyinen velka — eivät kykyä rakentaa tulevaisuuden kapasiteettia. D-suppression kustannus realisoituu aikajänteellä joka ylittää luottoluokitusmallien horisontin.
