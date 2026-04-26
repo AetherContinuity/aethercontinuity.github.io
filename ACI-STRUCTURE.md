@@ -249,18 +249,24 @@ v1.3 · March 2026 · WP-013 added to inventory
 **Status:** Concept | **Luotu:** 2026-04-26
 **Huomio:** WP-016 on julkaistu (Health Data Continuity Index). Tämä on erillinen paperi — numeroitu WP-017.
 
-### Hypoteesi
-Rahoitusmarkkinat hinnoittelevat D-suppression — päätöksentekokyvyn puutteen — ennen kuin poliittinen järjestelmä tunnistaa ongelman. Suomen 10v valtionlainan korko, CDS-spread ja OMXH-indeksi toimivat ennakoivina indikaattoreina parlamentaarisen toimeenpanoviiveen suhteen.
+### Hypoteesi (tarkennettu 2026-04-26)
+Lainamarkkinat **viivästävät** D-suppression hinnoittelun — ne reagoivat institutionaalisen päätöksentekokyvyn heikkenemiseen tyypillisesti 2–5 vuoden viiveellä ja vasta kun ongelma on realisoitunut, ei ennakoivasti. Tämä on empiiristen havaintojen tukema rakenne (vrt. Acemoglu et al. sovereign spread -tutkimus).
+
+WP-017 ei tutki ennakoivatko markkinat D-suppressiota, vaan: **missä instrumentissa signaali näkyy ensin ja millä viiveellä** — bondispread, CDS, osakemarkkinavolatiliteetti vai jokin muu.
+
+Markkinat määrittelevät maan kyvyn investoida — mutta eivät lähtökohtaisesti arvioi onko tehty päätös sisällöllisesti oikea.
 
 ### Tutkimuskysymys
 Korreloivatko markkinasignaalit (10v korko, CDS, OMXH) D-suppression vaiheiden (D1/D2/D3) kanssa — ja kuinka pitkä ennakoiva ikkuna markkinoilla on suhteessa parlamentaariseen päätökseen tai päättämättä jättämiseen?
 
 ### Datasyötteet
 - **Eduskunnan avoin API** — äänestykset, asiakirjat, lausunnot, käsittelyvaiheet
-- **ECB YC-sarja** — FI 10v valtionlainakorko (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y)
-- **CDS-spread** — Suomi 5v sovereign CDS
-- **OMXH** — Helsingin pörssi-indeksi
-- **Aikajänne:** kvartaaleittain 2018–2026
+- **Eurostat irt_lt_mcby_m** — FI, DE, SE 10v valtionlainakorot kuukausittain (proxy: aci-ecb-proxy)
+- **Spreadit:** FI-DE (fiskaalikapasiteetti) + FI-SE (rakenteellinen vertailu)
+  - Ruotsi on parempi referenssimaa kuin Saksa: pohjoinen energiajärjestelmä, SE1-kytkennät, CHP-historia
+- **CDS-spread** — Suomi 5v sovereign CDS (tuleva)
+- **OMXH25** — Helsingin pörssi-indeksi volatiliteetti (tuleva)
+- **Aikajänne:** kuukausittain 2023–2026
 
 ### Metodologia
 1. Parlamentaarisista asiakirjoista koodataan kriittiset energia- ja huoltovarmuuspäätökset D1/D2/D3-vaiheisiin
@@ -278,5 +284,8 @@ Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näk
 - §3.6 legitimiteettivaje → mitattuna euroissa prosessitosiasioiden sijaan
 - Eduskunnan avoin API (löydetty 2026-04-25)
 
-### Seuraava askel
-Pilotti: VNS 8/2025 vp energia- ja ilmastostrategiaselonteko — koodataan D-vaiheet ja verrataan Suomen 10v koron kehitykseen 2025-12 → 2026-04.
+### Pilottitulokset (2026-04-26)
+FI-DE spread data haettu (Eurostat, 39 kk 2023-01 → 2026-03).
+**Löydös:** Spread kapenee trendimäisesti 0.60 pp → 0.40 pp — D-suppressio ei näy FI-DE spreadissa.
+**Tulkinta:** AAA-Suomi hinnoitellaan lähes Saksan tasoisena riippumatta energiapäätösten viipeestä.
+**Seuraava askel:** Lisätään SE (Ruotsi) vertailumaa — rakenne lähempänä Suomea. FI-SE spread voi olla herkempi energiajärjestelmän rakenteellisille eroille.
