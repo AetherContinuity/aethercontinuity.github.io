@@ -74,7 +74,7 @@
 <div class="doc-header">
   <div class="doc-series">ACI · Working Paper · WP-017</div>
   <div class="doc-meta-grid">
-    <span><strong>Version</strong>1.9</span>
+    <span><strong>Version</strong>2.0</span>
     <span><strong>Published</strong>2026-04-26</span>
     <span><strong>Domain</strong>D-2 · D-3</span>
     <span><strong>Status</strong>Open Working Draft</span>
@@ -376,7 +376,25 @@
   <div class="finding">
     <div class="finding-label">Finding 4.4 — R2 detection result: weak signal in Q1 2026</div>
     <p>FI-DE spread data shows weak R2-consistent signals in Q1 2026 — marginally above Portugal-calibrated thresholds in three consecutive months. The signal is weak in absolute terms (RDI 0.017–0.025 vs. Portugal peak RDI which would be an order of magnitude higher) and is consistent with noise rather than genuine R2 onset. However, three consecutive months of above-threshold S2 acceleration is a pattern worth monitoring. The finding is consistent with the paper's null finding in §02: no strong D-suppression signal exists in bond spreads. The Q1 2026 micro-signal may reflect Hormuz R2 friction beginning to transmit — but at levels indistinguishable from normal variation without additional confirmatory data (CDS, term spread).</p>
-    <p>The R2 detection function is the first step toward making the Layer C regime boundary empirically operational. Next implementation: 2Y-10Y term spread slope as a second confirmatory signal, and 5Y CDS acceleration as a third. If all three produce concurrent above-threshold readings, the R2 detection confidence increases substantially.</p>
+    <p>The R2 detection function is the first step toward making the Layer C regime boundary empirically operational. The 2Y-10Y term spread slope is implemented as a second confirmatory signal — see Finding 4.5 below.</p>
+  </div>
+
+  <h3>4.8.2 Second confirmatory signal — term spread slope</h3>
+
+  <p>The 2Y-10Y term spread is constructed as a proxy: Finnish 10Y yield (Eurostat irt_lt_mcby_m) minus the ECB deposit rate + 0.15 pp credit spread approximation for Finnish 2Y. This is an approximation — Finnish 2Y yield is not directly available in free public sources. The methodological limitation is acknowledged; the proxy captures the structural direction of the yield curve even if the level is imprecise.</p>
+
+  <p><strong>Term spread history 2023–2026:</strong> The curve inverted deeply during the ECB hiking cycle (−0.17 → −1.47 pp, 2023–2024). It normalised rapidly during 2025 (+0.05 → +1.27 pp) as ECB cut rates while the Finnish 10Y yield remained elevated — reflecting growth expectation recovery, not stress. In Q1 2026 the curve flattens sharply: −0.086 pp/month in January, −0.175 in February, −0.197 in March — the steepest monthly flattening in the full 39-month series.</p>
+
+  <p><strong>Combined detection threshold (FI-scaled):</strong> Term spread slope below −0.050 pp/month signals yield curve flattening consistent with R2 stress onset (calibrated from Portugal's curve behaviour during R2, scaled to FI spread baseline).</p>
+
+  <div class="finding">
+    <div class="finding-label">Finding 4.5 — First dual-signal detection: Q1 2026</div>
+    <p>When both the FI-DE spread S2 (acceleration) and the term spread slope simultaneously exceed their Portugal-calibrated thresholds, the RDI produces a DUAL signal. This occurs for the first time in the series in Q1 2026 — three consecutive months (January, February, March), coinciding with the Hormuz R2 escalation.</p>
+    <p>January 2026: S2 = +0.023, TS slope = −0.086 pp/month → DUAL.<br>
+    February 2026: S2 = +0.027, TS slope = −0.175 pp/month → DUAL.<br>
+    March 2026: S2 = +0.036, TS slope = −0.197 pp/month → DUAL (strongest).</p>
+    <p>Interpretation: the DUAL signal is weak in absolute terms — both signals are marginally above threshold, not dramatically so. Three consecutive months of concurrent above-threshold readings is the first pattern in the series consistent with early R2 onset. This is not a crisis signal. It is the first detectable change in the bond market's structural behaviour coinciding with the geopolitical R2 escalation. The null finding of §02 (no D-suppression signal) remains valid; this is a different question — whether Hormuz R2 friction is beginning to transmit through bond market dynamics. The answer as of Q1 2026 appears to be: weakly yes.</p>
+    <p><strong>Methodological caveat:</strong> the term spread proxy uses an approximated 2Y yield. The signal requires confirmation from directly observed FI 2Y data (State Treasury or Bloomberg) and 5Y CDS before causal claims can be made.</p>
   </div>
 </div>
 
@@ -456,7 +474,7 @@
 </div><!-- /paper -->
 
 <footer>
-  Aether Continuity Institute · WP-017 · Version 1.9 · 2026-04-26<br>
+  Aether Continuity Institute · WP-017 · Version 2.0 · 2026-04-26<br>
   Domain D-2 Institutional Diagnostics · D-3 Policy Latency<br>
   Open Working Draft · Basis: WP-008 · WP-015 · WP-016 · RQM-001 · DT-001 · DT-002 · DT-004<br>
   Data: Eurostat irt_lt_mcby_m · Proxy: github.com/AetherContinuity/aci-ecb-proxy<br>
