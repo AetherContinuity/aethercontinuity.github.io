@@ -285,7 +285,26 @@ Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näk
 - Eduskunnan avoin API (löydetty 2026-04-25)
 
 ### Pilottitulokset (2026-04-26)
-FI-DE spread data haettu (Eurostat, 39 kk 2023-01 → 2026-03).
-**Löydös:** Spread kapenee trendimäisesti 0.60 pp → 0.40 pp — D-suppressio ei näy FI-DE spreadissa.
-**Tulkinta:** AAA-Suomi hinnoitellaan lähes Saksan tasoisena riippumatta energiapäätösten viipeestä.
-**Seuraava askel:** Lisätään SE (Ruotsi) vertailumaa — rakenne lähempänä Suomea. FI-SE spread voi olla herkempi energiajärjestelmän rakenteellisille eroille.
+
+**FI-DE spread** (39 kk 2023-01 → 2026-03):
+Kapenee trendimäisesti 0.60 pp → 0.40 pp. D-suppressio ei näy.
+AAA-Suomi hinnoitellaan lähes Saksan tasoisena riippumatta energiapäätösten viipeestä.
+
+**FI-SE spread** (39 kk 2023-01 → 2026-03):
+Ei kapene — päinvastoin levenee 0.43 → 0.88 pp kesällä 2024.
+Selitys: Riksbank leikkasi ohjauskorkoa aggressiivisesti 2024 (SE 10Y: 3.02% → 1.93%).
+Tämä on rahapolitiikkadivergenssi, ei energiapäätösero.
+
+**Valuuttarakenteen metodologinen vaikutus:**
+Suomi on eurojäsen — FI 10Y seuraa EKP:n ohjauskorkoa. Maakohtainen riski näkyy
+ainoastaan spreadin muutoksena suhteessa muihin euroalueen maihin.
+Ruotsilla on oma valuutta — SE 10Y heijastaa Riksbankin päätöksiä suoraan ja
+itsenäisesti. Tämä tekee FI-SE spreadista epäpuhtaan mittarin D-suppression kannalta:
+valuuttadivergenssi dominoi energiapäätösdivergenssiin nähden.
+FI-DE on metodologisesti puhtaampi vertailu koska rahapolitiikka on yhteinen.
+
+**Metodologinen päälopputulos:**
+Bondispread dominoituu rahapolitiikkadivergenssin toimesta. D-suppression
+signaalin eristäminen vaatii eksplisiittisen rahapolitiikkakontrollimuuttujan.
+Seuraava askel: CDS-spread tai osakemarkkinavolatiliteetti (OMXH25) ovat
+potentiaalisesti puhtaampia instrumentteja kotimaiselle päätöskyvyn mittaamiselle.
