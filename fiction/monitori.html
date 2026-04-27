@@ -87,9 +87,34 @@ const PROXY = 'https://aci-ecb-proxy.ruotsalainen-marko.workers.dev';
 
 async function checkTaVM() {
   try {
-    const r = await fetch(`${PROXY}/?series=EDK-VNS82025`);
-    if (!r.ok) throw new Error('API ei vastaa');
-    const d = await r.json();
+    const q = encodeURIComponent(JSON.stringify({
+      category: 'valtiopaivaasia',
+      maxResults: 1,
+      startFromIndex: 0,
+      expression: { and: [{ property: 'eduskuntatunnus', match: 'VNS 8/2025' }] }
+    }));
+    const r = await fetch(`https://api.eduskunta.fi/api/v1/search?q=${q}`);
+    if (!r.ok) throw new Error('Eduskunnan API ei vastaa');
+    const json = await r.json();
+    const asia = json.results?.[0]?.valtiopaivaasia;
+    if (!asia) throw new Error('VNS 8/2025 ei löydy');
+
+    // Etsi TaVM keskeiset asiakirjat
+    const asiakirjat = asia.keskeisetAsiakirjat?.fi || [];
+    const tavm = asiakirjat.find(a => a.asiakirjatyyppikoodi === 'TaVM');
+    const lausunnot = asiakirjat.filter(a => a.asiakirjatyyppikoodi?.endsWith('VL'));
+    const viimeisin = asia.viimeisinKasittelyvaihe?.fi || 'Käsittelyssä';
+
+    const d = {
+      tavm_julkaistu: !!tavm,
+      tavm,
+      viimeisinKasittelyvaihe: viimeisin,
+      lausunnot: lausunnot.map(l => ({
+        valiokunta: l.valiokuntanimi,
+        edktunnus: l.edktunnus,
+        laadintapvm: l.laadintapvm
+      }))
+    };
 
     const dot = document.querySelector('.dot');
     const text = document.getElementById('tavm-text');
