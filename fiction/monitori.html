@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vatasen monitori — Hiljainen tieto</title>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --bg: #fff;
+      --accent: #2a2a6a;
+      --muted: #666;
+      --border: #ddd;
+      --light: #f8f8f8;
+      --mono: 'Courier New', monospace;
+      --green: #1a6a2a;
+      --amber: #8a5a00;
+      --red: #6a1a1a;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      font-family: Arial, sans-serif;
+      font-size: 0.85rem;
+    }
+
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 680px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .intro {
+      background: var(--light);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .intro p { margin: 0.4rem 0; }
+
+    .monitor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .monitor-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+    }
+
+    .panel-label {
+      font-family: Arial, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .panel-value {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      color: var(--text);
+      margin: 0.5rem 0;
+    }
+
+    .panel-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .status-ok { color: var(--green); }
+    .status-wait { color: var(--amber); }
+    .status-alert { color: var(--red); }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      background: var(--muted);
+    }
+
+    .status-dot.ok { background: var(--green); }
+    .status-dot.wait { background: var(--amber); }
+    .status-dot.alert { background: var(--red); }
+
+    .tavm-detail {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .tavm-detail a {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+
+    .lausunnot {
+      margin-top: 1.5rem;
+    }
+
+    .lausunnot-title {
+      font-family: Arial, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .lausunto-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .lausunto-row:last-child { border-bottom: none; }
+
+    .lausunto-name { color: var(--text); }
+    .lausunto-pvm { 
+      font-family: var(--mono); 
+      font-size: 0.78rem;
+      color: var(--muted); 
+    }
+
+    .refresh-row {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 1rem;
+    }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 0.3rem 0.8rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: var(--mono);
+      margin-left: 0.5rem;
+    }
+
+    .refresh-btn:hover { background: var(--light); }
+
+    .fiction-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-style: italic;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .loading { color: var(--muted); font-style: italic; font-size: 0.9rem; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      font-family: Arial, sans-serif;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/fiction/hiljainen-tieto.html">← Hiljainen tieto</a>
+  &nbsp;·&nbsp;
+  <a href="/">Aether Continuity Institute</a>
+</nav>
+
+<div class="container">
+
+  <h1>Vatasen monitori</h1>
+  <div class="subtitle">Sähköjärjestelmä ja parlamentaarinen prosessi — reaaliajassa</div>
+
+  <div class="intro">
+    <p>Hiljainen tieto -kirjassa Vatanen seuraa kahta mittaria: sähköverkon tilaa ja eduskunnan käsittelyprosessia.</p>
+    <p>Tämä sivu näyttää samat tiedot — reaaliaikaisina. Data haetaan Fingridin ja eduskunnan avoimilta rajapinnoilta.</p>
+  </div>
+
+  <div class="monitor-grid">
+
+    <!-- EPP Panel -->
+    <div class="panel" id="epp-panel">
+      <div class="panel-label">Sähköjärjestelmä</div>
+      <div class="panel-title">EPP — Ennakoitu poikkeuspoisto</div>
+      <div class="panel-value" id="epp-value"><span class="loading">haetaan...</span></div>
+      <div class="panel-desc" id="epp-desc">
+        EPP kuvaa sähköverkon kapasiteetin riittävyyttä. Arvo nolla tarkoittaa normaalia tilannetta. Positiivinen arvo tarkoittaa ettei kapasiteetti riitä kaikkeen suunniteltuun kulutukseen.
+      </div>
+    </div>
+
+    <!-- TaVM Panel -->
+    <div class="panel" id="tavm-panel">
+      <div class="panel-label">Parlamentaarinen prosessi</div>
+      <div class="panel-title">TaVM — Talousvaliokunnan mietintö</div>
+      <div class="panel-value" id="tavm-value"><span class="loading">haetaan...</span></div>
+      <div class="panel-desc" id="tavm-desc">
+        Talousvaliokunta käsittelee kansallista energia- ja ilmastostrategiaa (VNS 8/2025). Mietintö on se asiakirja jossa valiokunta ottaa kantaa — mukaan lukien kapasiteettimekanismiin ja energiaturvallisuuteen.
+      </div>
+      <div class="tavm-detail" id="tavm-detail"></div>
+    </div>
+
+  </div>
+
+  <!-- Lausunnot -->
+  <div class="lausunnot" id="lausunnot-section" style="display:none">
+    <div class="lausunnot-title">Valiokuntien lausunnot — annettu talousvaliokunnalle</div>
+    <div id="lausunnot-list"></div>
+  </div>
+
+  <div class="refresh-row">
+    <span id="fetched-time"></span>
+    <button class="refresh-btn" onclick="loadAll()">↻ Päivitä</button>
+  </div>
+
+  <div class="fiction-note">
+    "WEM-monitorin EPP-arvo ei ollut muuttunut minnekään. Mutta jossain Helsingissä joku oli kirjoittanut lausuntoon oikean asian."
+    <br>— Hiljainen tieto, Luku 22
+  </div>
+
+</div>
+
+<footer>
+  Data: Fingrid Open Data API · Parliament of Finland Open Data API · Aether Continuity Institute<br>
+  Päivittyy sivun latautuessa. Lähdekoodi: <a href="https://github.com/AetherContinuity/aci-ecb-proxy" style="color:var(--accent)">aci-ecb-proxy</a>
+</footer>
+
+<script>
+const PROXY = 'https://aci-ecb-proxy.ruotsalainen-marko.workers.dev';
+const FINGRID_API = 'https://data.fingrid.fi/api/datasets/242/data?startTime=2024-01-01T00:00:00Z&endTime=2099-01-01T00:00:00Z&format=json&oneRowPerTimePeriod=false&page=1&pageSize=1&locale=fi&sortBy=startTime&sortOrder=desc';
+
+const VALIOKUNTA_NIMET = {
+  'YmVL': 'Ympäristövaliokunta',
+  'MmVL': 'Maa- ja metsätalousvaliokunta',
+  'LiVL': 'Liikenne- ja viestintävaliokunta',
+  'PuVL': 'Puolustusvaliokunta',
+  'TaVL': 'Talousvaliokunta',
+  'StVL': 'Sosiaali- ja terveysvaliokunta',
+  'VaVL': 'Valtiovarainvaliokunta',
+  'TyVL': 'Työelämä- ja tasa-arvovaliokunta',
+};
+
+function formatPvm(pvm) {
+  if (!pvm) return '';
+  return pvm.substring(0, 10);
+}
+
+function valiokuntaNimi(koodi) {
+  if (!koodi) return koodi;
+  const prefix = koodi.replace(/\d.*$/, '');
+  return VALIOKUNTA_NIMET[prefix] || koodi;
+}
+
+async function loadEPP() {
+  try {
+    // EPP dataset 242 from Fingrid via CORS proxy
+    const r = await fetch(`${PROXY}/?series=FINGRID-EPP`);
+    if (!r.ok) throw new Error('EPP ei saatavilla');
+    const d = await r.json();
+    
+    const val = d?.data?.[0]?.value ?? d?.value ?? null;
+    
+    if (val === null) throw new Error('Ei dataa');
+    
+    const epp = parseFloat(val);
+    let statusClass = 'status-ok';
+    let dotClass = 'ok';
+    let label = 'Normaali';
+    
+    if (epp > 0) {
+      statusClass = 'status-alert';
+      dotClass = 'alert';
+      label = 'Kapasiteettivaje';
+    }
+
+    document.getElementById('epp-value').innerHTML = 
+      `<span class="status-dot ${dotClass}"></span><span class="${statusClass}">${epp === 0 ? '0 MW' : epp + ' MW'}</span>`;
+    document.getElementById('epp-desc').innerHTML = 
+      `<strong>${label}.</strong> EPP kuvaa sähköverkon kapasiteetin riittävyyttä. Arvo nolla tarkoittaa normaalia tilannetta — kapasiteetti riittää. Positiivinen arvo tarkoittaa suunniteltua vajausta.`;
+
+  } catch(e) {
+    document.getElementById('epp-value').innerHTML = '<span class="status-wait">— MW</span>';
+    document.getElementById('epp-desc').textContent = 'EPP-data ei saatavilla juuri nyt. ' + e.message;
+  }
+}
+
+async function loadTaVM() {
+  try {
+    const r = await fetch(`${PROXY}/?series=EDK-VNS82025`);
+    if (!r.ok) throw new Error('Eduskunnan API ei vastaa');
+    const d = await r.json();
+
+    if (d.tavm_julkaistu) {
+      document.getElementById('tavm-value').innerHTML = 
+        '<span class="status-dot ok"></span><span class="status-ok">JULKAISTU</span>';
+      
+      document.getElementById('tavm-detail').innerHTML = `
+        <strong>Mietintö on julkaistu.</strong><br>
+        Päivämäärä: ${formatPvm(d.tavm?.laadintapvm)}<br>
+        ${d.tavm?.htmlSaatavilla ? `<a href="https://www2.eduskunta.fi/FI/vaski/Mietinto/Sivut/${d.tavm.edktunnus}.aspx" target="_blank">Avaa mietintö →</a>` : ''}
+      `;
+    } else {
+      document.getElementById('tavm-value').innerHTML = 
+        '<span class="status-dot wait"></span><span class="status-wait">Odottaa</span>';
+      
+      const vaihe = d.viimeisinKasittelyvaihe || 'Käsittelyssä';
+      document.getElementById('tavm-detail').innerHTML = 
+        `<strong>Mietintö ei vielä julkaistu.</strong><br>
+        Viimeisin vaihe: ${vaihe}<br>
+        <span style="color:var(--muted);font-size:0.8rem">Odotetaan toukokuussa 2026.</span>`;
+    }
+
+    // Lausunnot
+    if (d.lausunnot && d.lausunnot.length > 0) {
+      const section = document.getElementById('lausunnot-section');
+      section.style.display = 'block';
+      
+      const list = document.getElementById('lausunnot-list');
+      list.innerHTML = d.lausunnot.map(l => `
+        <div class="lausunto-row">
+          <span class="lausunto-name">${valiokuntaNimi(l.valiokunta) || l.valiokunta}</span>
+          <span class="lausunto-pvm">${formatPvm(l.laadintapvm)}</span>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('fetched-time').textContent = 
+      'Haettu: ' + new Date(d.fetched).toLocaleString('fi-FI');
+
+  } catch(e) {
+    document.getElementById('tavm-value').innerHTML = '<span class="status-wait">—</span>';
+    document.getElementById('tavm-desc').textContent += ' (Tietojen haku epäonnistui: ' + e.message + ')';
+  }
+}
+
+async function loadAll() {
+  document.getElementById('epp-value').innerHTML = '<span class="loading">haetaan...</span>';
+  document.getElementById('tavm-value').innerHTML = '<span class="loading">haetaan...</span>';
+  await Promise.all([loadEPP(), loadTaVM()]);
+}
+
+loadAll();
+</script>
+
+</body>
+</html>
