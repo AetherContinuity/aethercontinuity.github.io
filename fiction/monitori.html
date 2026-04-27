@@ -283,7 +283,7 @@
 
 <script>
 const PROXY = 'https://aci-ecb-proxy.ruotsalainen-marko.workers.dev';
-const FINGRID_API = 'https://data.fingrid.fi/api/datasets/242/data?startTime=2024-01-01T00:00:00Z&endTime=2099-01-01T00:00:00Z&format=json&oneRowPerTimePeriod=false&page=1&pageSize=1&locale=fi&sortBy=startTime&sortOrder=desc';
+const FINGRID_PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
 
 const VALIOKUNTA_NIMET = {
   'YmVL': 'Ympäristövaliokunta',
@@ -309,33 +309,49 @@ function valiokuntaNimi(koodi) {
 
 async function loadEPP() {
   try {
-    // EPP dataset 242 from Fingrid via CORS proxy
-    const r = await fetch(`${PROXY}/?series=FINGRID-EPP`);
-    if (!r.ok) throw new Error('EPP ei saatavilla');
-    const d = await r.json();
-    
-    const val = d?.data?.[0]?.value ?? d?.value ?? null;
-    
-    if (val === null) throw new Error('Ei dataa');
-    
-    const epp = parseFloat(val);
+    // Kulutus DS 124, tuotanto DS 192 — sama kuin WEM-monitori
+    const now = new Date();
+    const end = now.toISOString();
+    const start = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+
+    const [rC, rP] = await Promise.all([
+      fetch(`${FINGRID_PROXY}?datasets=124&start=${start}&end=${end}&size=24`),
+      fetch(`${FINGRID_PROXY}?datasets=192&start=${start}&end=${end}&size=24`)
+    ]);
+
+    if (!rC.ok || !rP.ok) throw new Error('Fingrid-proxy ei vastaa');
+
+    const dC = await rC.json();
+    const dP = await rP.json();
+
+    const cons = dC?.data ?? dC ?? [];
+    const prod = dP?.data ?? dP ?? [];
+
+    // Laske W24-keskiarvot
+    const avgC = cons.length > 0 ? cons.reduce((s, r) => s + (r.value || 0), 0) / cons.length : null;
+    const avgP = prod.length > 0 ? prod.reduce((s, r) => s + (r.value || 0), 0) / prod.length : null;
+
+    if (avgC === null || avgP === null) throw new Error('Ei dataa');
+
+    const gap = avgC - avgP;
+    const sp = cons.filter((r, i) => prod[i] && r.value > prod[i].value * 1.05).length / Math.max(cons.length, 1);
+
+    // Yksinkertainen EPP: import-gap suhteessa kulutukseen
+    const epp = Math.max(0, Math.min(1, sp * 0.5 + (gap > 0 ? gap / avgC : 0) * 0.5));
+
     let statusClass = 'status-ok';
     let dotClass = 'ok';
     let label = 'Normaali';
-    
-    if (epp > 0) {
-      statusClass = 'status-alert';
-      dotClass = 'alert';
-      label = 'Kapasiteettivaje';
-    }
+    if (epp > 0.5) { statusClass = 'status-alert'; dotClass = 'alert'; label = 'Kohotettu'; }
+    else if (epp > 0.25) { statusClass = 'status-wait'; dotClass = 'wait'; label = 'Tiukka'; }
 
     document.getElementById('epp-value').innerHTML = 
-      `<span class="status-dot ${dotClass}"></span><span class="${statusClass}">${epp === 0 ? '0 MW' : epp + ' MW'}</span>`;
+      `<span class="status-dot ${dotClass}"></span><span class="${statusClass}">${epp.toFixed(2)}</span>`;
     document.getElementById('epp-desc').innerHTML = 
-      `<strong>${label}.</strong> EPP kuvaa sähköverkon kapasiteetin riittävyyttä. Arvo nolla tarkoittaa normaalia tilannetta — kapasiteetti riittää. Positiivinen arvo tarkoittaa suunniteltua vajausta.`;
+      `<strong>${label}.</strong> EPP [0–1] kuvaa sähköjärjestelmän kuormitusta. Kulutus W24: ${Math.round(avgC)} MW · Tuotanto W24: ${Math.round(avgP)} MW · Import-gap: ${Math.round(gap)} MW.<br><br>Arvo alle 0.25 = normaali. Yli 0.5 = kohotettu paine.`;
 
   } catch(e) {
-    document.getElementById('epp-value').innerHTML = '<span class="status-wait">— MW</span>';
+    document.getElementById('epp-value').innerHTML = '<span class="status-wait">—</span>';
     document.getElementById('epp-desc').textContent = 'EPP-data ei saatavilla juuri nyt. ' + e.message;
   }
 }
