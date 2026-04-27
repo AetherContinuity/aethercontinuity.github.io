@@ -74,7 +74,7 @@
 <div class="doc-header">
   <div class="doc-series">ACI · Working Paper · WP-017</div>
   <div class="doc-meta-grid">
-    <span><strong>Version</strong>2.8</span>
+    <span><strong>Version</strong>2.9</span>
     <span><strong>Published</strong>2026-04-26</span>
     <span><strong>Domain</strong>D-2 · D-3</span>
     <span><strong>Status</strong>Open Working Draft</span>
@@ -565,7 +565,7 @@
 </div><!-- /paper -->
 
 <footer>
-  Aether Continuity Institute · WP-017 · Version 2.8 · 2026-04-26<br>
+  Aether Continuity Institute · WP-017 · Version 2.9 · 2026-04-26<br>
   Domain D-2 Institutional Diagnostics · D-3 Policy Latency<br>
   Open Working Draft · Basis: WP-008 · WP-015 · WP-016 · RQM-001 · DT-001 · DT-002 · DT-004<br>
   Data: Eurostat irt_lt_mcby_m · Proxy: github.com/AetherContinuity/aci-ecb-proxy<br>
@@ -661,6 +661,29 @@
     <div class="finding-label">Appendix A — Core finding</div>
     <p>The model is not a crisis prediction. It is a structural drift diagnosis. In the median Monte Carlo path Finland's central government debt reaches approximately 85% of GDP by 2032 — approaching the 1990s banking crisis peak (64.8% in 1996 under a very different fiscal structure). This occurs without an external shock, driven entirely by the arithmetic of g &lt; i_eff combined with persistent primary deficits. The key finding is the stability condition: stabilisation requires either a primary surplus, nominal growth above 4%, or a sustained collapse in interest rates. None of these is the baseline expectation for 2026–2032.</p>
     <p>Historical context from VK-DEBT-GDP: Finland maintained debt below 40% of GDP for most of 1950–2008. Current trajectories represent a structural departure from this norm — not a cyclical deviation from it.</p>
+  </div>
+
+  <h3>A.6 Industrial displacement sensitivity — the laissez-faire case</h3>
+
+  <p>A policy regime without a capacity mechanism creates a structural incentive that the baseline model does not capture: capital-intensive, price-insensitive actors (hyperscale data centres) occupy grid capacity ahead of traditional industry. If industrial operators such as energy-intensive manufacturing respond by withdrawing investment from Finland, the fiscal impact is a double shock — growth falls (industrial productivity leaves) and the primary deficit rises (tax base erodes) simultaneously. Both variables move in the wrong direction at once.</p>
+
+  <p>Four scenarios are modelled with varying degrees of industrial displacement:</p>
+
+  <table>
+    <thead><tr><th>Scenario</th><th>g (nominal)</th><th>Primary deficit</th><th>D/GDP 2028</th><th>D/GDP 2030</th><th>D/GDP 2032</th><th>Δ vs baseline 2032</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline stress</td><td>2.5%</td><td>2.5% GDP</td><td>73.4%</td><td>78.7%</td><td>84.5%</td><td>reference</td></tr>
+      <tr><td>DC dominant, teollisuus jää</td><td>2.0%</td><td>2.8% GDP</td><td>75.3%</td><td>82.0%</td><td>89.3%</td><td>+4.8 pp</td></tr>
+      <tr><td>Outokumpu-tyyppinen pako</td><td>1.5%</td><td>3.2% GDP</td><td>77.8%</td><td>86.5%</td><td>96.2%</td><td>+11.7 pp</td></tr>
+      <tr><td>Teollisuuskollapsi + R2</td><td>0.8%</td><td>3.8% GDP</td><td>81.6%</td><td>93.9%</td><td>108.0%</td><td>+23.5 pp</td></tr>
+    </tbody>
+  </table>
+
+  <p>The Outokumpu-type scenario represents a structural adjustment where one or more large industrial operators redirect capital investment to jurisdictions with capacity guarantees. The −1.0 pp growth impact and +0.7 pp deficit impact reflect: loss of high-value industrial production from GDP, reduced corporate tax revenues, and partial offset from data centre fiscal contribution. The spread impact (+10 bps) reflects the rating sensitivity documented in §4.5 P2.</p>
+
+  <div class="finding">
+    <div class="finding-label">§A.6 Industrial displacement finding</div>
+    <p>A laissez-faire capacity regime in which data centres obtain preferential grid access without additionality obligations produces a nonlinear fiscal outcome: the 2032 debt/GDP ratio reaches 96% under the Outokumpu-type scenario — 11.7 percentage points above the baseline stress path and approaching the 1990s banking crisis level. The mechanism is a double shock: growth falls as industrial capital leaves, and the deficit rises as the tax base contracts. Neither movement would occur under a capacity mechanism that required demand-side actors to finance the system adequacy they consume. The policy cost of the laissez-faire regime is therefore not only the adequacy gap itself but the fiscal trajectory it imposes on general government accounts over a 6–7 year horizon.</p>
   </div>
 
   <p><em>Model code and full simulation results available at: <a href="https://github.com/AetherContinuity/aethercontinuity.github.io/blob/main/scripts/wp019_finland_stress_model.py">github.com/AetherContinuity/aethercontinuity.github.io</a></em></p>
