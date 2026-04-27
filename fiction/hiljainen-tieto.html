@@ -1717,12 +1717,48 @@ ACI — aethercontinuity.org</p>
 
   <p>WEM-monitorin EPP-arvo ei ollut muuttunut minnekään. Mutta jossain Helsingissä joku oli kirjoittanut lausuntoon oikean asian. Ja se oli enemmän kuin ei mitään.</p>
 
-  <div style="margin-top:2rem; padding:1.25rem; border:1px solid #ddd; background:#f8f8f8; font-family:Arial,sans-serif; font-size:0.88rem;">
-    <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:#666; margin-bottom:0.5rem;">Lukijalle</div>
-    <div style="color:#2a2a6a; font-weight:bold; margin-bottom:0.5rem;">Vatasen monitori — reaaliajassa</div>
-    <div style="color:#444; margin-bottom:0.75rem;">Tämä kirja perustuu todelliseen dataan. EPP-arvo jonka Vatanen katsoo, ja talousvaliokunnan mietinnön status — molemmat ovat oikeita lukuja, juuri tällä hetkellä.</div>
-    <a href="/fiction/monitori.html" style="color:#2a2a6a; font-weight:bold;">→ Avaa Vatasen monitori</a>
+  <div id="vatanen-monitori" style="margin-top:2rem; padding:1.25rem; border:1px solid #ddd; background:#f8f8f8; font-family:Arial,sans-serif; font-size:0.88rem;">
+    <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:#666; margin-bottom:0.5rem;">Reaaliaikainen data</div>
+    <div style="color:#2a2a6a; font-weight:bold; margin-bottom:0.75rem;">Talousvaliokunnan mietintö — VNS 8/2025</div>
+    <div id="tavm-status-box" style="margin-bottom:0.75rem; color:#444;">Tarkistetaan...</div>
+    <div style="color:#666; font-size:0.82rem; margin-bottom:0.75rem;">Tämä kirja perustuu todelliseen dataan. Sähköjärjestelmän tila ja parlamentaarinen prosessi — reaaliajassa.</div>
+    <a href="/tools/ACI-INSTRUMENT-v2.html" style="color:#2a2a6a; font-size:0.85rem;">→ Avaa WEM-monitori</a>
   </div>
+
+  <script>
+  (function() {
+    var q = encodeURIComponent(JSON.stringify({
+      category: 'valtiopaivaasia', maxResults: 1, startFromIndex: 0,
+      expression: { and: [{ property: 'eduskuntatunnus', match: 'VNS 8/2025' }] }
+    }));
+    fetch('https://api.eduskunta.fi/api/v1/search?q=' + q)
+      .then(function(r) { return r.json(); })
+      .then(function(json) {
+        var asia = json.results && json.results[0] && json.results[0].valtiopaivaasia;
+        if (!asia) throw new Error('ei dataa');
+        var asiakirjat = (asia.keskeisetAsiakirjat && asia.keskeisetAsiakirjat.fi) || [];
+        var tavm = asiakirjat.find(function(a) { return a.asiakirjatyyppikoodi === 'TaVM'; });
+        var vaihe = (asia.viimeisinKasittelyvaihe && asia.viimeisinKasittelyvaihe.fi) || 'Käsittelyssä';
+        var box = document.getElementById('tavm-status-box');
+        if (tavm) {
+          box.innerHTML = '<span style="color:#1a6a2a; font-weight:bold;">✓ Mietintö julkaistu ' + (tavm.laadintapvm || '').substring(0,10) + '</span><br>' +
+            '<a href="https://www2.eduskunta.fi/FI/vaski/Mietinto/Sivut/' + tavm.edktunnus + '.aspx" ' +
+            'style="color:#2a2a6a;" target="_blank">→ Avaa talousvaliokunnan mietintö</a>';
+        } else {
+          box.innerHTML = '<span style="color:#8a5a00;">⏳ Mietintö ei vielä julkaistu</span><br>' +
+            '<span style="color:#666; font-size:0.82rem;">Viimeisin vaihe: ' + vaihe + '</span><br>' +
+            '<a href="https://www2.eduskunta.fi/FI/vaski/KasittelytiedotValtiopaivaasia/Sivut/VNS_8+2025.aspx" ' +
+            'style="color:#2a2a6a; font-size:0.82rem;" target="_blank">→ Seuraa käsittelyä eduskunta.fi:ssä</a>';
+        }
+      })
+      .catch(function() {
+        document.getElementById('tavm-status-box').innerHTML =
+          '<span style="color:#666;">⏳ Mietintö ei vielä julkaistu</span><br>' +
+          '<a href="https://www2.eduskunta.fi/FI/vaski/KasittelytiedotValtiopaivaasia/Sivut/VNS_8+2025.aspx" ' +
+          'style="color:#2a2a6a; font-size:0.82rem;" target="_blank">→ Seuraa käsittelyä eduskunta.fi:ssä</a>';
+      });
+  })();
+  </script>
 </div>
 
 <!-- LUKU 23 -->
