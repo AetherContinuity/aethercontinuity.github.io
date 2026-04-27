@@ -134,7 +134,10 @@ async function checkTaVM() {
       info.innerHTML = `Viimeisin käsittelyvaihe: ${d.viimeisinKasittelyvaihe || 'Käsittelyssä'}`;
     }
   } catch(e) {
-    document.getElementById('tavm-text').textContent = 'Tila ei saatavilla juuri nyt';
+    document.getElementById('tavm-text').textContent = 'Automaattinen haku ei onnistu — tarkista alla';
+    document.getElementById('tavm-text').style.color = 'var(--muted)';
+    document.getElementById('tavm-info').innerHTML = 
+      '<a href="https://www2.eduskunta.fi/FI/vaski/KasittelytiedotValtiopaivaasia/Sivut/VNS_8+2025.aspx" target="_blank" style="color:var(--accent)">→ Tarkista VNS 8/2025 käsittelytiedot eduskunta.fi:stä</a>';
   }
 }
 
