@@ -6,213 +6,28 @@
   <title>Vatasen monitori — Hiljainen tieto</title>
   <style>
     :root {
-      --text: #1a1a1a;
-      --bg: #fff;
-      --accent: #2a2a6a;
-      --muted: #666;
-      --border: #ddd;
-      --light: #f8f8f8;
-      --mono: 'Courier New', monospace;
-      --green: #1a6a2a;
-      --amber: #8a5a00;
-      --red: #6a1a1a;
+      --text: #1a1a1a; --bg: #fff; --accent: #2a2a6a;
+      --muted: #666; --border: #ddd; --light: #f8f8f8;
     }
-
-    body {
-      font-family: Georgia, 'Times New Roman', serif;
-      color: var(--text);
-      background: var(--bg);
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
-    }
-
-    nav {
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 2rem;
-      font-family: Arial, sans-serif;
-      font-size: 0.85rem;
-    }
-
+    body { font-family: Georgia, 'Times New Roman', serif; color: var(--text); background: var(--bg); margin: 0; padding: 0; line-height: 1.7; }
+    nav { border-bottom: 1px solid var(--border); padding: 0.75rem 2rem; font-family: Arial, sans-serif; font-size: 0.85rem; }
     nav a { color: var(--accent); text-decoration: none; }
     nav a:hover { text-decoration: underline; }
-
-    .container {
-      max-width: 680px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-    }
-
-    h1 {
-      font-size: 1.6rem;
-      color: var(--accent);
-      margin-bottom: 0.25rem;
-    }
-
-    .subtitle {
-      font-style: italic;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
-
-    .intro {
-      background: var(--light);
-      border-left: 3px solid var(--accent);
-      padding: 1rem 1.25rem;
-      margin-bottom: 2.5rem;
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-
-    .intro p { margin: 0.4rem 0; }
-
-    .monitor-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 600px) {
-      .monitor-grid { grid-template-columns: 1fr; }
-    }
-
-    .panel {
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-    }
-
-    .panel-label {
-      font-family: Arial, sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .panel-title {
-      font-size: 1rem;
-      font-weight: bold;
-      color: var(--accent);
-      margin-bottom: 0.25rem;
-    }
-
-    .panel-value {
-      font-family: var(--mono);
-      font-size: 1.8rem;
-      color: var(--text);
-      margin: 0.5rem 0;
-    }
-
-    .panel-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .status-ok { color: var(--green); }
-    .status-wait { color: var(--amber); }
-    .status-alert { color: var(--red); }
-
-    .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 6px;
-      background: var(--muted);
-    }
-
-    .status-dot.ok { background: var(--green); }
-    .status-dot.wait { background: var(--amber); }
-    .status-dot.alert { background: var(--red); }
-
-    .tavm-detail {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-
-    .tavm-detail a {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-    }
-
-    .lausunnot {
-      margin-top: 1.5rem;
-    }
-
-    .lausunnot-title {
-      font-family: Arial, sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .lausunto-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-
-    .lausunto-row:last-child { border-bottom: none; }
-
-    .lausunto-name { color: var(--text); }
-    .lausunto-pvm { 
-      font-family: var(--mono); 
-      font-size: 0.78rem;
-      color: var(--muted); 
-    }
-
-    .refresh-row {
-      text-align: right;
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-family: var(--mono);
-      margin-top: 1rem;
-    }
-
-    .refresh-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--accent);
-      padding: 0.3rem 0.8rem;
-      font-size: 0.78rem;
-      cursor: pointer;
-      font-family: var(--mono);
-      margin-left: 0.5rem;
-    }
-
-    .refresh-btn:hover { background: var(--light); }
-
-    .fiction-note {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-style: italic;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .loading { color: var(--muted); font-style: italic; font-size: 0.9rem; }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem 2rem;
-      font-family: Arial, sans-serif;
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 4rem;
-    }
+    .container { max-width: 640px; margin: 3rem auto; padding: 0 2rem; }
+    h1 { font-size: 1.6rem; color: var(--accent); margin-bottom: 0.25rem; }
+    .subtitle { font-style: italic; color: var(--muted); margin-bottom: 2.5rem; font-size: 0.95rem; }
+    .intro { border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.95rem; color: var(--muted); background: var(--light); }
+    .panel { border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .panel-label { font-family: Arial, sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .panel-title { font-size: 1.05rem; font-weight: bold; color: var(--accent); margin-bottom: 0.75rem; }
+    .panel-desc { font-size: 0.88rem; color: #444; margin-bottom: 1rem; line-height: 1.6; }
+    .btn { display: inline-block; background: var(--accent); color: #fff; padding: 0.6rem 1.25rem; font-family: Arial, sans-serif; font-size: 0.88rem; text-decoration: none; }
+    .btn:hover { background: #1a1a4a; }
+    .tavm-status { margin-bottom: 1rem; font-family: Arial, sans-serif; font-size: 0.88rem; }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: #8a5a00; }
+    .fiction-note { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-style: italic; color: var(--muted); font-size: 0.88rem; }
+    footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; font-family: Arial, sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 4rem; }
+    #tavm-info { font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--muted); margin-top: 0.5rem; }
   </style>
 </head>
 <body>
@@ -226,47 +41,33 @@
 <div class="container">
 
   <h1>Vatasen monitori</h1>
-  <div class="subtitle">Sähköjärjestelmä ja parlamentaarinen prosessi — reaaliajassa</div>
+  <div class="subtitle">Kaksi datapistettä. Reaaliajassa.</div>
 
   <div class="intro">
-    <p>Hiljainen tieto -kirjassa Vatanen seuraa kahta mittaria: sähköverkon tilaa ja eduskunnan käsittelyprosessia.</p>
-    <p>Tämä sivu näyttää samat tiedot — reaaliaikaisina. Data haetaan Fingridin ja eduskunnan avoimilta rajapinnoilta.</p>
+    Hiljainen tieto -kirjassa Vatanen seuraa kahta asiaa: sähköjärjestelmän tilaa ja eduskunnan käsittelyprosessia. Tämä sivu näyttää samat tiedot — oikeana datana, juuri nyt.
   </div>
 
-  <div class="monitor-grid">
-
-    <!-- EPP Panel -->
-    <div class="panel" id="epp-panel">
-      <div class="panel-label">Sähköjärjestelmä</div>
-      <div class="panel-title">EPP — Ennakoitu poikkeuspoisto</div>
-      <div class="panel-value" id="epp-value"><span class="loading">haetaan...</span></div>
-      <div class="panel-desc" id="epp-desc">
-        EPP kuvaa sähköverkon kapasiteetin riittävyyttä. Arvo nolla tarkoittaa normaalia tilannetta. Positiivinen arvo tarkoittaa ettei kapasiteetti riitä kaikkeen suunniteltuun kulutukseen.
-      </div>
+  <!-- Sähköjärjestelmä -->
+  <div class="panel">
+    <div class="panel-label">Sähköjärjestelmä</div>
+    <div class="panel-title">Winter Endurance Monitor — WEM</div>
+    <div class="panel-desc">
+      WEM-monitori seuraa Suomen sähköjärjestelmän kestävyyttä reaaliajassa. Se mittaa kulutuksen ja kotimaisen tuotannon suhdetta, tuontiriippuvuutta ja kapasiteetin riittävyyttä pitkillä kylmillä tuulettomilla kausilla — juuri siitä kirjoitetaan VNS 8/2025 lausunnoissa.
     </div>
+    <a href="/tools/ACI-INSTRUMENT-v2.html" class="btn">→ Avaa WEM-monitori</a>
+  </div>
 
-    <!-- TaVM Panel -->
-    <div class="panel" id="tavm-panel">
-      <div class="panel-label">Parlamentaarinen prosessi</div>
-      <div class="panel-title">TaVM — Talousvaliokunnan mietintö</div>
-      <div class="panel-value" id="tavm-value"><span class="loading">haetaan...</span></div>
-      <div class="panel-desc" id="tavm-desc">
-        Talousvaliokunta käsittelee kansallista energia- ja ilmastostrategiaa (VNS 8/2025). Mietintö on se asiakirja jossa valiokunta ottaa kantaa — mukaan lukien kapasiteettimekanismiin ja energiaturvallisuuteen.
-      </div>
-      <div class="tavm-detail" id="tavm-detail"></div>
+  <!-- Parlamentaarinen prosessi -->
+  <div class="panel">
+    <div class="panel-label">Parlamentaarinen prosessi</div>
+    <div class="panel-title">TaVM — Talousvaliokunnan mietintö</div>
+    <div class="panel-desc">
+      Talousvaliokunta käsittelee kansallista energia- ja ilmastostrategiaa (VNS 8/2025). Mietintö on se asiakirja jossa eduskunta ottaa kantaa — mukaan lukien kapasiteettimekanismiin, bioenergian säätövoimarooliin ja energiaturvallisuuteen.
     </div>
-
-  </div>
-
-  <!-- Lausunnot -->
-  <div class="lausunnot" id="lausunnot-section" style="display:none">
-    <div class="lausunnot-title">Valiokuntien lausunnot — annettu talousvaliokunnalle</div>
-    <div id="lausunnot-list"></div>
-  </div>
-
-  <div class="refresh-row">
-    <span id="fetched-time"></span>
-    <button class="refresh-btn" onclick="loadAll()">↻ Päivitä</button>
+    <div class="tavm-status">
+      <span class="dot"></span><span id="tavm-text">Tarkistetaan...</span>
+    </div>
+    <div id="tavm-info"></div>
   </div>
 
   <div class="fiction-note">
@@ -277,141 +78,42 @@
 </div>
 
 <footer>
-  Data: Fingrid Open Data API · Parliament of Finland Open Data API · Aether Continuity Institute<br>
-  Päivittyy sivun latautuessa. Lähdekoodi: <a href="https://github.com/AetherContinuity/aci-ecb-proxy" style="color:var(--accent)">aci-ecb-proxy</a>
+  Data: Fingrid Open Data API · Parliament of Finland Open Data API<br>
+  Aether Continuity Institute · <a href="https://aethercontinuity.org" style="color:var(--accent)">aethercontinuity.org</a>
 </footer>
 
 <script>
 const PROXY = 'https://aci-ecb-proxy.ruotsalainen-marko.workers.dev';
-const FINGRID_PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
 
-const VALIOKUNTA_NIMET = {
-  'YmVL': 'Ympäristövaliokunta',
-  'MmVL': 'Maa- ja metsätalousvaliokunta',
-  'LiVL': 'Liikenne- ja viestintävaliokunta',
-  'PuVL': 'Puolustusvaliokunta',
-  'TaVL': 'Talousvaliokunta',
-  'StVL': 'Sosiaali- ja terveysvaliokunta',
-  'VaVL': 'Valtiovarainvaliokunta',
-  'TyVL': 'Työelämä- ja tasa-arvovaliokunta',
-};
-
-function formatPvm(pvm) {
-  if (!pvm) return '';
-  return pvm.substring(0, 10);
-}
-
-function valiokuntaNimi(koodi) {
-  if (!koodi) return koodi;
-  const prefix = koodi.replace(/\d.*$/, '');
-  return VALIOKUNTA_NIMET[prefix] || koodi;
-}
-
-async function loadEPP() {
-  try {
-    // Kulutus DS 124, tuotanto DS 192 — sama kuin WEM-monitori
-    const now = new Date();
-    const end = now.toISOString();
-    const start = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-
-    const [rC, rP] = await Promise.all([
-      fetch(`${FINGRID_PROXY}?datasets=124&start=${start}&end=${end}&size=24`),
-      fetch(`${FINGRID_PROXY}?datasets=192&start=${start}&end=${end}&size=24`)
-    ]);
-
-    if (!rC.ok || !rP.ok) throw new Error('Fingrid-proxy ei vastaa');
-
-    const dC = await rC.json();
-    const dP = await rP.json();
-
-    const cons = dC?.data ?? dC ?? [];
-    const prod = dP?.data ?? dP ?? [];
-
-    // Laske W24-keskiarvot
-    const avgC = cons.length > 0 ? cons.reduce((s, r) => s + (r.value || 0), 0) / cons.length : null;
-    const avgP = prod.length > 0 ? prod.reduce((s, r) => s + (r.value || 0), 0) / prod.length : null;
-
-    if (avgC === null || avgP === null) throw new Error('Ei dataa');
-
-    const gap = avgC - avgP;
-    const sp = cons.filter((r, i) => prod[i] && r.value > prod[i].value * 1.05).length / Math.max(cons.length, 1);
-
-    // Yksinkertainen EPP: import-gap suhteessa kulutukseen
-    const epp = Math.max(0, Math.min(1, sp * 0.5 + (gap > 0 ? gap / avgC : 0) * 0.5));
-
-    let statusClass = 'status-ok';
-    let dotClass = 'ok';
-    let label = 'Normaali';
-    if (epp > 0.5) { statusClass = 'status-alert'; dotClass = 'alert'; label = 'Kohotettu'; }
-    else if (epp > 0.25) { statusClass = 'status-wait'; dotClass = 'wait'; label = 'Tiukka'; }
-
-    document.getElementById('epp-value').innerHTML = 
-      `<span class="status-dot ${dotClass}"></span><span class="${statusClass}">${epp.toFixed(2)}</span>`;
-    document.getElementById('epp-desc').innerHTML = 
-      `<strong>${label}.</strong> EPP [0–1] kuvaa sähköjärjestelmän kuormitusta. Kulutus W24: ${Math.round(avgC)} MW · Tuotanto W24: ${Math.round(avgP)} MW · Import-gap: ${Math.round(gap)} MW.<br><br>Arvo alle 0.25 = normaali. Yli 0.5 = kohotettu paine.`;
-
-  } catch(e) {
-    document.getElementById('epp-value').innerHTML = '<span class="status-wait">—</span>';
-    document.getElementById('epp-desc').textContent = 'EPP-data ei saatavilla juuri nyt. ' + e.message;
-  }
-}
-
-async function loadTaVM() {
+async function checkTaVM() {
   try {
     const r = await fetch(`${PROXY}/?series=EDK-VNS82025`);
-    if (!r.ok) throw new Error('Eduskunnan API ei vastaa');
+    if (!r.ok) throw new Error('API ei vastaa');
     const d = await r.json();
 
+    const dot = document.querySelector('.dot');
+    const text = document.getElementById('tavm-text');
+    const info = document.getElementById('tavm-info');
+
     if (d.tavm_julkaistu) {
-      document.getElementById('tavm-value').innerHTML = 
-        '<span class="status-dot ok"></span><span class="status-ok">JULKAISTU</span>';
-      
-      document.getElementById('tavm-detail').innerHTML = `
-        <strong>Mietintö on julkaistu.</strong><br>
-        Päivämäärä: ${formatPvm(d.tavm?.laadintapvm)}<br>
-        ${d.tavm?.htmlSaatavilla ? `<a href="https://www2.eduskunta.fi/FI/vaski/Mietinto/Sivut/${d.tavm.edktunnus}.aspx" target="_blank">Avaa mietintö →</a>` : ''}
-      `;
+      dot.style.background = '#1a6a2a';
+      text.textContent = 'Mietintö on julkaistu';
+      text.style.color = '#1a6a2a';
+      info.innerHTML = `Julkaistu: ${(d.tavm?.laadintapvm||'').substring(0,10)}<br>
+        <a href="https://www2.eduskunta.fi/FI/vaski/Mietinto/Sivut/${d.tavm?.edktunnus}.aspx" 
+           style="color:var(--accent)">→ Avaa mietintö eduskunta.fi:ssä</a>`;
     } else {
-      document.getElementById('tavm-value').innerHTML = 
-        '<span class="status-dot wait"></span><span class="status-wait">Odottaa</span>';
-      
-      const vaihe = d.viimeisinKasittelyvaihe || 'Käsittelyssä';
-      document.getElementById('tavm-detail').innerHTML = 
-        `<strong>Mietintö ei vielä julkaistu.</strong><br>
-        Viimeisin vaihe: ${vaihe}<br>
-        <span style="color:var(--muted);font-size:0.8rem">Odotetaan toukokuussa 2026.</span>`;
+      dot.style.background = '#8a5a00';
+      text.textContent = 'Mietintö ei vielä julkaistu — odotetaan toukokuuta 2026';
+      text.style.color = '#8a5a00';
+      info.innerHTML = `Viimeisin käsittelyvaihe: ${d.viimeisinKasittelyvaihe || 'Käsittelyssä'}`;
     }
-
-    // Lausunnot
-    if (d.lausunnot && d.lausunnot.length > 0) {
-      const section = document.getElementById('lausunnot-section');
-      section.style.display = 'block';
-      
-      const list = document.getElementById('lausunnot-list');
-      list.innerHTML = d.lausunnot.map(l => `
-        <div class="lausunto-row">
-          <span class="lausunto-name">${valiokuntaNimi(l.valiokunta) || l.valiokunta}</span>
-          <span class="lausunto-pvm">${formatPvm(l.laadintapvm)}</span>
-        </div>
-      `).join('');
-    }
-
-    document.getElementById('fetched-time').textContent = 
-      'Haettu: ' + new Date(d.fetched).toLocaleString('fi-FI');
-
   } catch(e) {
-    document.getElementById('tavm-value').innerHTML = '<span class="status-wait">—</span>';
-    document.getElementById('tavm-desc').textContent += ' (Tietojen haku epäonnistui: ' + e.message + ')';
+    document.getElementById('tavm-text').textContent = 'Tila ei saatavilla juuri nyt';
   }
 }
 
-async function loadAll() {
-  document.getElementById('epp-value').innerHTML = '<span class="loading">haetaan...</span>';
-  document.getElementById('tavm-value').innerHTML = '<span class="loading">haetaan...</span>';
-  await Promise.all([loadEPP(), loadTaVM()]);
-}
-
-loadAll();
+checkTaVM();
 </script>
 
 </body>
