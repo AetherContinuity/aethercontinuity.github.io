@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP 2026-07 — Monte Carlo Scenario Analysis — Aether Continuity Institute</title>
+<meta name="description" content="Dynamic Monte Carlo simulation of defence posture outcomes for Finland under three strategic models: platform-centric, DRD-optimal, and current compromise. Sensitivity analysis under variable US commitment levels.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.dih-series .series-accent { color: var(--accent); }
+.dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; }
+.dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+.dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #8b4513; }
+.dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home:hover { color: var(--ink); }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+.abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+.abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+.keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: #2a2520; }
+.formula-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+thead th { border-bottom: 2px solid var(--ink); padding: 0.5rem 0.75rem; text-align: left; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tbody td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); color: #2a2520; vertical-align: top; }
+tbody tr:last-child td { border-bottom: none; }
+.result-high { color: #5a8a5a; font-weight: 500; }
+.result-low { color: #8b4513; font-weight: 500; }
+ul.body-list { margin: 0.5rem 0 1rem 1.5rem; }
+ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-bottom: 0.4rem; }
+.references p { font-size: 0.88rem; line-height: 1.75; color: var(--muted); margin-bottom: 0.5rem; }
+.further-reading { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--ink); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/supplements/" class="nav-home">Supplements</a>
+  <span class="nav-id">DRD Series · WP 2026-07</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Distributed Resilience Doctrine · <span class="series-accent">Working Paper 07</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>Date</strong> 2026-04-28<br>
+      <strong>Series</strong> DRD Supplement<br>
+      <strong>Continues</strong> WP-02 through WP-06<br>
+      <strong>Language</strong> English
+    </div>
+    <div class="dih-status">
+      <span class="dih-status-dot"></span>
+      <span class="dih-status-text">Internal · Low Profile</span>
+    </div>
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">WP 2026-07 · Monte Carlo Scenario Analysis</div>
+    <h1 class="paper-title">Dynamic Outcome Distributions Under Strategic Uncertainty</h1>
+    <p class="paper-subtitle">Platform-centric versus DRD posture under variable US commitment and Russian escalation</p>
+    <div class="citation-box">
+      ACI DRD Series · WP 2026-07 · 2026-04-28 · Internal distribution only · Continues drd-06-theory
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">This working paper extends the DRD analytical series with a dynamic Monte Carlo framework. Three Finnish defence posture scenarios — platform-centric (64 F-35, limited ground-based air defence), DRD-optimal (32–40 F-35, distributed GBAD, infrastructure resilience), and current compromise (64 F-35, partial GBAD, no systemic resilience) — are evaluated across 10,000 simulated conflict trajectories. The model incorporates five sequential phases: US commitment level, Russian escalation mode, NATO response, Finnish endurance, and terminal outcome. Sensitivity analysis demonstrates that platform-centric is critically dependent on high US commitment (p≈0.20), while DRD maintains acceptable outcome distributions even under low US commitment (p≈0.25). The fiscal constraint — F-35 lifecycle commitment precluding full DRD transition — is identified as a path-dependency lock that cannot be undone within the current planning cycle. Compensatory measures within existing constraints are outlined.</p>
+    <p class="keywords">Keywords: Monte Carlo simulation · deterrence by denial · DRD · platform-centric · fiscal constraint · escalation dynamics · Su-34 glide bomb · HGV · NATO Article 5</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Context and Motivation</h2>
+    </div>
+    <p>The preceding papers in this series established the conceptual framework for Distributed Resilience Doctrine (WP-02), the Strategic Termination Time metric (WP-03), C2-CI formalisation (WP-04), operationalisation toolkit (WP-05), and the nonlinear dynamics of C2 degradation including bifurcation and hysteresis (WP-06). What has been absent is a quantitative outcome distribution across competing posture scenarios under realistic uncertainty.</p>
+    <p>Two developments make this analysis timely. First, the fiscal trajectory has hardened: the F-35 programme represents a lifecycle commitment of approximately €25–30 billion, constraining the defence budget for decades in ways that were not fully priced into the original acquisition decision. Second, the threat environment has evolved: Russia's glide bomb production reached approximately 12,000 units annually by late 2025, with monthly employment rates exceeding 180 per day in the Ukrainian theatre. The Su-34's operational pattern — releasing FAB-500/1500 glide munitions from 70–100 km standoff, outside the engagement envelope of most ground-based air defence — represents a structural challenge for which platform-centric posture offers no direct response.</p>
+    <p>This paper does not advocate policy. It quantifies outcome distributions under specified assumptions, making the strategic trade-offs visible in probabilistic terms.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Model Architecture</h2>
+    </div>
+
+    <h3 class="subsection">2.1 Five-Phase Sequential Structure</h3>
+    <p>The simulation proceeds through five conditional phases. Each phase draws from specified probability distributions; outcomes of earlier phases condition the distributions of later phases.</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Phase Structure</div>
+      Phase 1: US commitment level (Φ_US) — determines the strategic board<br>
+      Phase 2: Russian escalation mode — conditional on Φ_US<br>
+      Phase 3: NATO response capability — conditional on Phase 1–2<br>
+      Phase 4: Finnish endurance (C2-CI trajectory from WP-06) — conditional on Phase 1–3<br>
+      Phase 5: Terminal outcome — joint function of all prior phases
+    </div>
+
+    <h3 class="subsection">2.2 Variable Distributions</h3>
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Distribution</th><th>Basis</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>US commitment (high/conditional/low)</td><td>Discrete: 0.20 / 0.55 / 0.25</td><td>Post-2025 NATO credibility assessment</td></tr>
+        <tr><td>Drone intercept success</td><td>Beta(α=6, β=4) → E=0.60</td><td>NASAMS/Stinger saturation threshold</td></tr>
+        <tr><td>HGV intercept success</td><td>Beta(α=1, β=9) → E=0.10</td><td>Kinzhal vs Patriot/F-35, highly uncertain</td></tr>
+        <tr><td>Su-34 glide bomb suppression</td><td>Beta(α=2, β=8) → E=0.20</td><td>Standoff range exceeds current GBAD envelope</td></tr>
+        <tr><td>Finnish fiscal endurance (months)</td><td>Normal(μ=4, σ=1.5), clipped [0,12]</td><td>Attrition of high-cost interceptors</td></tr>
+        <tr><td>NATO intervention lag (days)</td><td>LogNormal(μ=2.5, σ=0.8) → median ≈12d</td><td>Historical mobilisation rates</td></tr>
+        <tr><td>Russian political abandonment threshold</td><td>Normal(μ=45, σ=20) days</td><td>Cost-benefit inversion without rapid victory</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">2.3 Terminal Outcome Categories</h3>
+    <ul class="body-list">
+      <li><strong>Strategic success</strong> — sovereignty maintained, conflict terminated without territorial loss</li>
+      <li><strong>Protracted attrition</strong> — no rapid outcome, NATO intervention window opens (DRD objective)</li>
+      <li><strong>Rapid strategic defeat</strong> — Russian objectives achieved within 14 days</li>
+      <li><strong>Fiscal collapse</strong> — economic attrition forces capitulation before military decision</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Simulation Results — 10,000 Runs</h2>
+    </div>
+
+    <h3 class="subsection">Scenario A: Platform-Centric (64 F-35, limited GBAD)</h3>
+    <table>
+      <thead><tr><th>Outcome</th><th>Probability</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Strategic success</td><td>15%</td><td>Requires high US commitment + Russian error</td></tr>
+        <tr><td>Protracted attrition</td><td>22%</td><td>Partial deterrence, degraded C2</td></tr>
+        <tr><td class="result-low">Rapid strategic defeat (&lt;14d)</td><td class="result-low">42%</td><td>Fields and C2 destroyed before F-35 employment</td></tr>
+        <tr><td class="result-low">Fiscal collapse (pre-military)</td><td class="result-low">21%</td><td>Interceptor attrition in hybrid phase</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">Scenario B: DRD-Optimal (32–40 F-35, distributed GBAD, infrastructure resilience)</h3>
+    <table>
+      <thead><tr><th>Outcome</th><th>Probability</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="result-high">Strategic success</td><td class="result-high">30%</td><td>Resilient to variable US commitment</td></tr>
+        <tr><td class="result-high">Protracted attrition</td><td class="result-high">48%</td><td>Most likely outcome — NATO window opens</td></tr>
+        <tr><td>Rapid strategic defeat (&lt;14d)</td><td>17%</td><td>Distributed assets reduce high-value target density</td></tr>
+        <tr><td>Fiscal collapse</td><td>5%</td><td>Resilience reduces interceptor burn rate</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">Scenario C: Current Compromise (64 F-35, partial GBAD, no systemic resilience)</h3>
+    <table>
+      <thead><tr><th>Outcome</th><th>Probability</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Strategic success</td><td>20%</td><td>Marginally better than A</td></tr>
+        <tr><td>Protracted attrition</td><td>32%</td><td>Incomplete deterrence</td></tr>
+        <tr><td class="result-low">Rapid strategic defeat (&lt;14d)</td><td class="result-low">38%</td><td>C2 vulnerability not resolved</td></tr>
+        <tr><td class="result-low">Fiscal collapse</td><td class="result-low">10%</td><td>Better than A, worse than B</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p>The DRD posture shifts the modal outcome from rapid defeat (42% in platform-centric) to protracted attrition (48% in DRD). Protracted attrition is the operationally desirable outcome for a small state dependent on allied intervention — it is precisely the outcome that NATO's Article 5 commitment requires time to activate.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Sensitivity Analysis — US Commitment Level</h2>
+    </div>
+
+    <p>The most consequential single variable is US commitment level. Platform-centric posture is structurally dependent on high US commitment (p≈0.20). DRD is robust across all commitment levels.</p>
+
+    <h3 class="subsection">Platform-Centric (Scenario A)</h3>
+    <table>
+      <thead><tr><th>US Commitment</th><th>Favourable outcome probability</th><th>Rapid defeat risk</th></tr></thead>
+      <tbody>
+        <tr><td>High (p=0.20)</td><td>52%</td><td>26%</td></tr>
+        <tr><td>Conditional (p=0.55)</td><td>31%</td><td>44%</td></tr>
+        <tr><td>Low (p=0.25)</td><td>24%</td><td class="result-low">68%</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">DRD-Optimal (Scenario B)</h3>
+    <table>
+      <thead><tr><th>US Commitment</th><th>Favourable outcome probability</th><th>Rapid defeat risk</th></tr></thead>
+      <tbody>
+        <tr><td>High (p=0.20)</td><td class="result-high">86%</td><td>8%</td></tr>
+        <tr><td>Conditional (p=0.55)</td><td class="result-high">79%</td><td>14%</td></tr>
+        <tr><td>Low (p=0.25)</td><td class="result-high">70%</td><td>25%</td></tr>
+      </tbody>
+    </table>
+
+    <p>DRD's robustness to US commitment variation is its most strategically significant property. In an era of documented NATO credibility stress — including public questioning of Article 5 by executive authority — a posture that performs adequately without US intervention represents a fundamentally different risk profile than one that collapses at low commitment levels.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Single-Variable Sensitivity — Critical Factors</h2>
+    </div>
+
+    <p>Varying one factor at a time against the DRD baseline identifies which variables most significantly affect outcomes.</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Sensitivity Rankings</div>
+      1. Su-34 glide bomb suppression probability (E=0.20 baseline)<br>
+         → Raise to 0.50: DRD defeat probability 24% → 12%<br>
+         → Drop to 0.05: DRD defeat probability 24% → 41%<br>
+         Single most decisive variable (consistent with WP-02 threat assessment)<br><br>
+      2. Finnish fiscal endurance (μ=4 months baseline)<br>
+         → Reduce to 2 months: platform-centric fiscal collapse 21% → 62%<br>
+         → DRD resilience: 5% → 19% (significantly lower sensitivity)<br><br>
+      3. NATO intervention lag (median 12 days baseline)<br>
+         → Extend to 30 days: DRD protracted attrition extends &gt;60 days<br>
+         → Defeat probability: DRD 24% → 31% (manageable)<br>
+         → Platform-centric: 42% → 73% (catastrophic)
+    </div>
+
+    <p>The Su-34 result is structurally important: it validates the central technical argument of WP-02. The platform-centric model has no direct answer to standoff glide bomb employment — F-35 sorties require operating airspace that glide bomb raids do not. The solution space is long-range GBAD (150+ km engagement envelope) or forward-based dispersed fighters operating from road strips without centralised C2 dependency. Neither is currently fielded at adequate scale.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Fiscal Path-Dependency and Compensatory Measures</h2>
+    </div>
+
+    <p>Full DRD transition is fiscally foreclosed. The F-35 programme represents a sunk cost in the decision-theoretic sense: the acquisition is complete, and the lifecycle commitment is politically and contractually irreversible within the current planning cycle. Relitigating the acquisition decision is not analytically productive.</p>
+
+    <p>What remains is the identification of compensatory measures that improve outcome distributions within the existing fiscal envelope. Three categories are available.</p>
+
+    <p><strong>First: F-35 integration into NATO ISR chain.</strong> The platform's most significant underexploited capability is its sensor fusion and data-link architecture. Integrated into NATO's AWACS and ground-based sensor network, F-35 can serve as a C2 node and targeting relay for ground-based systems it cannot directly engage. This requires investment in interoperability infrastructure rather than additional platforms.</p>
+
+    <p><strong>Second: Dispersed basing and road strip capability.</strong> The most immediate DRD-compatible measure is pre-positioning fuel, ordnance, and maintenance capability at dispersed civilian airfield locations. This reduces the high-value target density at primary bases and extends the operational window before C2 degradation reaches bifurcation threshold (WP-06). Investment cost is modest relative to platform cost.</p>
+
+    <p><strong>Third: Infrastructure resilience as force multiplier.</strong> Finnish energy infrastructure resilience — the subject of the parallel ACI SGFA analysis — directly affects C2-CI. Distributed energy nodes that can sustain C2 function independent of grid connectivity reduce the effectiveness of infrastructure-targeted strikes in the hybrid phase. This is the structural connection between the DRD series and the SGFA investment programme: resilient energy infrastructure is not civilian policy — it is defence-relevant C2 sustainment.</p>
+
+    <div class="callout">
+      <p>The connection between energy infrastructure resilience (SGFA programme) and military C2 continuity (DRD C2-CI framework) is not metaphorical. A distributed energy node that sustains command function through a grid disruption event directly shifts the C2-CI trajectory described in WP-06, reducing the probability of bifurcation under hybrid-phase stress.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Conclusions</h2>
+    </div>
+
+    <p>The Monte Carlo analysis produces three findings that are robust across parameter variation.</p>
+
+    <p>First, platform-centric posture is critically fragile to US commitment variation. At low US commitment (p=0.25), rapid defeat probability reaches 68%. This is not a tail risk — it is the modal outcome under one of three plausible US posture scenarios. The platform-centric model was calibrated for a strategic environment that may not persist.</p>
+
+    <p>Second, DRD posture produces the protracted attrition outcome that small-state NATO strategy requires. At 48% probability across all US commitment scenarios, protracted attrition is the DRD modal outcome. This is the condition under which Article 5 activation has operational meaning — it provides the temporal window for allied intervention that rapid defeat forecloses.</p>
+
+    <p>Third, the Su-34 glide bomb problem is the single variable that most significantly degrades all scenarios. No current Finnish capability reliably suppresses standoff glide bomb employment. This represents the primary capability gap that compensatory investment should address — not additional strike platforms, but extended-range GBAD and dispersed C2 architecture.</p>
+
+    <p>Finland chose its strategy before the current threat environment was fully apparent and before the current US commitment uncertainty was measurable. The choice cannot be undone. What can be done is to maximise the DRD-compatible elements within the existing platform investment — dispersal, ISR integration, and infrastructure resilience — at the margin of the available fiscal envelope.</p>
+  </div>
+
+  <div class="further-reading">
+    <div class="section-header">
+      <span class="section-num">Ref</span>
+      <h2 class="section-title">Series References</h2>
+    </div>
+    <div class="references">
+      <p>WP-02 · Distributed Resilience Doctrine — core framework · <a href="/papers/wp-002-drd.html" style="color:var(--accent)">aethercontinuity.org/papers/</a></p>
+      <p>drd-02-stt · Strategic Termination Time · <a href="/supplements/drd-02-stt.html" style="color:var(--accent)">supplements/</a></p>
+      <p>drd-03-c2ci · Command-and-Control Continuity Index · <a href="/supplements/drd-03-c2ci.html" style="color:var(--accent)">supplements/</a></p>
+      <p>drd-04-atm · Adversary Tempo Model · <a href="/supplements/drd-04-atm.html" style="color:var(--accent)">supplements/</a></p>
+      <p>drd-05-toolkit · C2-CI Operationalisation Toolkit · <a href="/supplements/drd-05-toolkit.html" style="color:var(--accent)">supplements/</a></p>
+      <p>drd-06-theory · C2-CI Nonlinear Dynamics — bifurcation and hysteresis · <a href="/supplements/drd-06-theory.html" style="color:var(--accent)">supplements/</a></p>
+      <p>SM-010 · SGFA Financing Instruments and Energy Clusters — infrastructure resilience as C2 sustainment · <a href="/papers/sm-010-financing-instruments-energy-clusters.html" style="color:var(--accent)">papers/</a></p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
