@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP 2026-06 — C2-CI Nonlinear Dynamics — Aether Continuity Institute</title>
+<meta name="description" content="Theory note establishing the mathematical basis for bifurcation in C2-CI degradation. Derives the critical adversary tempo threshold AT_c, analyses saddle-node bifurcation, and demonstrates hysteresis asymmetry. DRD Series Paper VI.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.dih-series .series-accent { color: var(--accent); }
+.dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; }
+.dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+.dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+.dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home:hover { color: var(--ink); }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.paper-subtitle { font-size: 1.1rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; }
+.abstract-block { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3.5rem; }
+.abstract-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-text { font-size: 0.95rem; line-height: 1.8; color: #3a3530; font-style: italic; }
+.keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 1rem; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.formula-block { margin: 2rem 0; padding: 1.75rem 2rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: #2a2520; }
+.formula-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+ul.body-list { margin: 0.5rem 0 1rem 1.5rem; }
+ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-bottom: 0.4rem; }
+.references p { font-size: 0.88rem; line-height: 1.75; color: var(--muted); margin-bottom: 0.5rem; }
+.further-reading { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--ink); }
+.fr-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.fr-item { display: grid; grid-template-columns: auto 1fr auto; gap: 1.25rem; align-items: baseline; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+.fr-item:last-child { border-bottom: none; }
+.fr-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.fr-title { font-size: 0.95rem; color: var(--ink); }
+.fr-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); text-decoration: none; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/supplements/" class="nav-home">Supplements</a>
+  <span class="nav-id">DRD Series · WP 2026-06</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Distributed Resilience Doctrine · <span class="series-accent">Paper VI of VII</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>Date</strong> February 2026<br>
+      <strong>Number</strong> WP 2026-06<br>
+      <strong>Domain</strong> D-3<br>
+      <strong>Type</strong> Theory Note
+    </div>
+    <div class="dih-status">
+      <span class="dih-status-dot"></span>
+      <span class="dih-status-text">Published · Active</span>
+    </div>
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">WP 2026-06 · Theory Note · Distributed Resilience Doctrine Series</div>
+    <h1 class="paper-title">Nonlinear Dynamics and Phase Transitions in C2-CI Structure</h1>
+    <p class="paper-subtitle">Why command-and-control continuity does not degrade linearly — a mathematical derivation</p>
+    <div class="citation-box">
+      ACI Defence Studies Working Paper Series · No. 2026-06 · February 2026 · Theory Note — sixth paper in the DRD series
+    </div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p class="abstract-text">This theory note establishes a mathematically rigorous foundation for a claim that has appeared in earlier papers as intuition: C2-CI does not degrade linearly as stress increases, but undergoes bifurcation — a phase transition — in which the system moves abruptly from a functional to a non-functional state. The paper derives a differential-equation-based state evolution model, defines the critical threshold condition AT_c = √(R/(1+α)), analyses the bifurcation as saddle-node type, and demonstrates that recovery requires substantially more resources than reaching the collapse threshold. The result has a direct design implication: preventive construction is asymmetrically more effective than reactive restoration.</p>
+    <p class="keywords">Keywords: bifurcation theory · nonlinear dynamics · phase transition · C2-CI · distributed resilience · hysteresis · critical threshold</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Introduction and Motivation</h2>
+    </div>
+    <p>The preceding papers in this series constructed the C2-CI concept, identified its component hierarchy, addressed organisational resilience, and operationalised C2-CI measurement. Throughout these papers a recurring assumption has appeared: system degradation is not a linear process. This claim has been treated as narrative assertion rather than mathematical demonstration.</p>
+    <p>This theory note corrects that gap. The objective is threefold: to derive a dynamic state model in which C2-CI is the solution of a differential equation; to demonstrate that the model exhibits bifurcation when adversary tempo exceeds a critical value; and to analyse hysteresis — recovery from collapse requires more resources than preventing collapse.</p>
+    <div class="callout">
+      <p>Claim 1: C2 collapse can occur abruptly and unpredictably even from moderate stress, once it reaches a critical level. Claim 2: Preventive construction is asymmetrically more effective than reactive restoration.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Mathematical Framework</h2>
+    </div>
+
+    <h3 class="subsection">State Variables</h3>
+    <div class="formula-block">
+      <div class="formula-label">State Variables</div>
+      Φ(t) ∈ [0, 1] — normalised C2-CI state at time t<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;(Φ = 1 = full operational capability, Φ = 0 = complete collapse)<br>
+      AT(t) ≥ 0 — adversary operational tempo at time t<br>
+      R(t) ≥ 0 — system resilience capacity at time t
+    </div>
+
+    <h3 class="subsection">Fundamental Dynamic Model</h3>
+    <div class="formula-block">
+      <div class="formula-label">Differential Equation</div>
+      dΦ/dt = f(Φ, AT, R) = R · G(Φ) − D(Φ, AT)<br><br>
+      G(Φ) = Φ(1 − Φ) — logistic growth function (recovery capacity)<br>
+      D(Φ, AT) = AT² · Φ · (1 + α(1 − Φ)) — degradation function<br><br>
+      Full state model:<br>
+      dΦ/dt = R · Φ(1 − Φ) − AT² · Φ · (1 + α(1 − Φ))
+    </div>
+
+    <p>The parameter α captures the degree of coupling between system components. High α indicates that local failures propagate as chain reactions — consistent with centralised C2 architectures. Low α indicates modular independence — the design target of distributed architectures.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Equilibria and Bifurcation Analysis</h2>
+    </div>
+
+    <h3 class="subsection">Critical Threshold</h3>
+    <div class="formula-block">
+      <div class="formula-label">Central Result</div>
+      <strong>AT_c = √(R / (1 + α))</strong><br><br>
+      When AT &lt; AT_c: the system has a functional equilibrium Φ* &gt; 0<br>
+      When AT &gt; AT_c: the only equilibrium is Φ* = 0 (collapse)<br><br>
+      Non-trivial equilibrium: Φ* = 1 − AT² / (R − α · AT²)
+    </div>
+
+    <h3 class="subsection">Bifurcation Type: Saddle-Node</h3>
+    <p>The change in the number of equilibria at AT_c is a saddle-node bifurcation: the functional equilibrium and the unstable intermediate level collide and disappear simultaneously. The disappearance is abrupt — the system does not slide gradually toward zero. Instead, the functional equilibrium simply ceases to exist and the system jumps to the collapse point.</p>
+    <p>Near the threshold the system may appear stable even when it is already in the critical region. This phenomenon is known as <em>critical slowing down</em>: recovery time from perturbations increases significantly before the actual bifurcation — a measurable early warning signal.</p>
+
+    <div class="callout">
+      <p>The practical implication is severe: a C2 system under escalating adversary tempo will look functional right up to the moment it collapses. There is no gradual warning in system output — only in recovery time, which requires active monitoring to detect.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Hysteresis and Recovery Asymmetry</h2>
+    </div>
+
+    <h3 class="subsection">Mechanism</h3>
+    <p>When the system has collapsed (AT &gt; AT_c), simply reducing tempo back below AT_c is insufficient to restore functional equilibrium. The reason is that in the collapsed state (Φ ≈ 0) the growth function G(Φ) ≈ 0 — the system cannot self-recover.</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Recovery Cost Asymmetry</div>
+      ΔAT_collapse = tempo increase required to trigger collapse from baseline AT_0<br>
+      ΔR_recovery = additional resilience required to recover at the same tempo level<br><br>
+      <strong>The resilience increase required for recovery is always greater than<br>
+      the resilience decrease that led to collapse.</strong><br><br>
+      Intuition: recovery requires not only restoring the same resilience but also<br>
+      externally driving system state above the unstable intermediate level.
+    </div>
+
+    <p>This asymmetry is the mathematical basis for the DRD design principle that preventive investment dominates reactive restoration. A unit of resilience invested before collapse prevents collapse at lower cost than a unit invested after collapse restores function. The ratio is not marginal — it is structural and unbounded as the system approaches the collapsed attractor.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Stability Regions and Design Criteria</h2>
+    </div>
+
+    <h3 class="subsection">Three Dynamic Regimes</h3>
+    <div class="formula-block">
+      <div class="formula-label">Regimes</div>
+      Regime I — Stable operation (AT ≪ AT_c):<br>
+      &nbsp;&nbsp;Φ* high and stable. Perturbations decay naturally.<br><br>
+      Regime II — Vulnerable zone (AT ≈ AT_c):<br>
+      &nbsp;&nbsp;Φ* low but functional. Recovery slow. Critical slowing down present.<br><br>
+      Regime III — Collapse (AT &gt; AT_c):<br>
+      &nbsp;&nbsp;No functional equilibrium. Recovery requires massive external intervention.
+    </div>
+
+    <h3 class="subsection">Three Design Criteria</h3>
+    <div class="formula-block">
+      <div class="formula-label">Operational Design Criteria</div>
+      Criterion 1 — Threshold margin maintenance:<br>
+      &nbsp;&nbsp;AT_max ≤ β · AT_c = β · √(R / (1 + α))<br>
+      &nbsp;&nbsp;where β = safety margin (e.g. 0.75)<br><br>
+      Criterion 2 — Nonlinearity minimisation:<br>
+      &nbsp;&nbsp;Modular architecture reduces α, because local failure<br>
+      &nbsp;&nbsp;no longer propagates as chain reaction.<br><br>
+      Criterion 3 — Recovery capacity sizing:<br>
+      &nbsp;&nbsp;Reserve capacity must be sized for the recovery scenario,<br>
+      &nbsp;&nbsp;not only for normal operations.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Doctrinal Implications</h2>
+    </div>
+
+    <h3 class="subsection">Bifurcation Index as Operational Metric</h3>
+    <div class="formula-block">
+      <div class="formula-label">Bifurcation Index</div>
+      BI = AT / AT_c = AT · √((1 + α) / R)<br><br>
+      As BI → 1, the system approaches the critical threshold.<br>
+      When BI &gt; 1, the system is in the collapse region.<br><br>
+      BI is a simple, computable indicator that connects<br>
+      WP 2026-05's measurement toolkit to the bifurcation analysis.
+    </div>
+
+    <h3 class="subsection">Distributed Architecture Raises the Critical Threshold</h3>
+    <p>Distributed C2-CI architecture affects the threshold formula AT_c = √(R/(1+α)) through two simultaneous mechanisms: it raises effective resilience R, because capacity is distributed across multiple nodes (failure of a single node does not eliminate total capacity); and it reduces α, because modular structure prevents chain-reaction propagation. The combined effect is significant: a distributed system can sustain substantially higher adversary tempo before bifurcation.</p>
+
+    <p>This is the mathematical grounding for DRD's central design preference. Centralised architectures have high α and are vulnerable to cascade failure. Distributed architectures have low α and raise AT_c. The formula quantifies the advantage rather than asserting it.</p>
+
+    <div class="callout">
+      <p>The mathematical structure is now formalised. Raising the threshold and reducing the hysteresis effect are strategic priorities, not merely design options. The Bifurcation Index provides a single computable indicator for tracking proximity to collapse across operational timescales.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Connection to WP 2026-07 Monte Carlo Analysis</h2>
+    </div>
+
+    <p>WP 2026-07 extends this framework with empirical probability distributions across three defence posture scenarios. The connection to the formal model is direct.</p>
+
+    <p>The Su-34 glide bomb suppression probability (Beta(α=2, β=8), E=0.20) represents the adversary tempo variable AT in scenario-specific terms. At low suppression probability, AT rises rapidly toward AT_c — and in the platform-centric scenario, where resilience R is concentrated in high-value targets and α is high (centralised C2 dependency), AT_c itself is low. The 42% rapid defeat probability in scenario A reflects a system operating in Regime III before the first week of conflict ends.</p>
+
+    <p>The DRD posture addresses both parameters simultaneously: it raises R through distributed capacity and reduces α through modular architecture. The result — AT_c increases materially — maps directly onto the 17% rapid defeat probability in scenario B versus 42% in scenario A. The Monte Carlo number is the empirical expression of the threshold formula.</p>
+
+    <p>The fiscal endurance variable (Normal(μ=4, σ=1.5) months) maps onto the hysteresis asymmetry: once C2 has been degraded past bifurcation, restoration costs exceed prevention costs by a structural margin. Platform-centric's 21% fiscal collapse probability reflects a system that cannot recover once its high-value interceptor stocks are attrited below the operational threshold — a direct instance of the G(Φ) ≈ 0 condition in the collapsed state.</p>
+  </div>
+
+  <div class="further-reading">
+    <div class="section-header">
+      <span class="section-num">Series</span>
+      <h2 class="section-title">DRD Working Paper Series</h2>
+    </div>
+    <div class="fr-list">
+      <div class="fr-item">
+        <span class="fr-num">WP-02</span>
+        <span class="fr-title">Distributed Resilience Doctrine: A Strategic Framework for Small-State Defence</span>
+        <a href="/papers/wp-002-drd.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-02</span>
+        <span class="fr-title">Strategic Termination Time as an Analytical Framework for Small-State Deterrence</span>
+        <a href="/supplements/drd-02-stt.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-03</span>
+        <span class="fr-title">Command-and-Control Continuity Index: Operationalizing Cognitive Resilience</span>
+        <a href="/supplements/drd-03-c2ci.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-04</span>
+        <span class="fr-title">Distributed Resilience as a Dynamic Denial System: The Adversary Tempo Model</span>
+        <a href="/supplements/drd-04-atm.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-05</span>
+        <span class="fr-title">C2-CI Operationalization Toolkit: Measuring and Developing Command Continuity</span>
+        <a href="/supplements/drd-05-toolkit.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-07</span>
+        <span class="fr-title">Dynamic Outcome Distributions Under Strategic Uncertainty — Monte Carlo Analysis</span>
+        <a href="/supplements/drd-07-monte-carlo.html" class="fr-link">Read →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
