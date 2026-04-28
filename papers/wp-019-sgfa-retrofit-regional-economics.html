@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-019 — SGFA Retrofit Pathways and Regional Economic Multipliers · ACI</title>
+<meta name="description" content="Retrofit economics of SGFA nodes on existing CHP infrastructure. Five Finnish development pathways. Regional economic multiplier analysis. Security of supply option value. ACI Working Paper 019.">
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  .finding p { font-size: .92rem; margin-bottom: .5rem; }
+  .finding p:last-child { margin-bottom: 0; }
+  .scope-note { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; color: var(--mid); border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1.25rem 0; line-height: 1.55; }
+  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: .88rem; }
+  thead th { border-bottom: 2px solid var(--ink); padding: .5rem .75rem; text-align: left; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mid); }
+  tbody td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: .4rem 0; border-bottom: 1px solid var(--rule); font-size: .85rem; line-height: 1.5; }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-id { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .08em; color: var(--light); margin-right: .6rem; }
+  footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; max-width: 760px; margin: 0 auto; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; color: var(--light); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right">
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+    <a href="/tools/">Tools</a>
+    <a href="/decisions/">Decisions</a>
+    <a href="/about.html">About</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · Working Paper · WP-019</div>
+  <div class="doc-meta-grid">
+    <span><strong>Version</strong>0.1 Draft</span>
+    <span><strong>Date</strong>2026-04-28</span>
+    <span><strong>Domain</strong>D-2 · D-3</span>
+    <span><strong>Status</strong>Internal Draft — Not Published</span>
+    <span><strong>Basis</strong>SP-002 · SM-003 · TN-001 · WP-017 · SM-006</span>
+    <span><strong>New elements</strong>Retrofit · Ecosystem · Regional economics</span>
+  </div>
+  <h1 class="doc-title">SGFA Retrofit Pathways and Regional Economic Multipliers</h1>
+  <p class="doc-subtitle">From greenfield architecture to existing infrastructure — five Finnish development pathways, security of supply option value, and the case for ecosystem-based deployment</p>
+  <div class="doc-abstract">
+    <p>Existing ACI documentation (SP-002, SM-003, TN-001) established the SGFA node architecture and a greenfield investment model (€120–180M per node, IRR 15–19%). This paper extends the analysis in four directions. First, it documents a retrofit pathway — building SGFA functionality on existing CHP and district heating infrastructure — which reduces capital requirements by an estimated 30–40%. Second, it maps five active Finnish development pathways (Tampere, Oulu, Varkaus, Harjavalta, Vantaa) against the SGFA architecture and identifies their current integration completeness. Third, it introduces an ecosystem model — coordinated multi-actor networks rather than single-company nodes — as a structurally more resilient deployment form. Fourth, it quantifies the security of supply option value that market pricing systematically omits, using TTF price data and the 2026 Hormuz disruption as an empirical reference. The paper acknowledges significant methodological limitations: CAPEX figures are scenario parameters, not commissioned engineering estimates. The analysis is diagnostic, not prescriptive.</p>
+  </div>
+</div>
+
+<div class="paper">
+
+<div class="section">
+  <span class="section-marker">§ 01</span>
+  <h2>Point of Departure</h2>
+
+  <p>SP-002 presented the SGFA 4.0 programme as seven Tier A municipal nodes, each built on the MESA architecture (CHP core + partial PtX), with a financing structure combining EU Innovation Fund, municipal equity, and pension fund capital, and a projected IRR of 15–19% at WACC 5%. The programme was designed for replication to Tier B municipalities at smaller scale.</p>
+
+  <p>Three empirical observations since that analysis suggest the need for extension rather than revision. First, several Finnish municipalities have made investments that partially instantiate the SGFA architecture — without coordinating under that framework or nomenclature. Tampere's Lielahti electric boiler plant with district heating storage and e-methane offtake agreement (Ren-Gas, Tarastenjärvi) represents the most complete instantiation to date. Second, the Varkaus case demonstrates that an ecosystem model — multiple actors coordinating around an industrial anchor — can mobilise integration quality that single-operator models cannot. Third, the 2026 Hormuz disruption has provided empirical data on the security of supply option value that the original analysis modelled as a scenario parameter: TTF reached €53/MWh in March 2026 and remains at €44–45/MWh in late April, against a pre-disruption forecast of €29–30/MWh.</p>
+
+  <div class="finding">
+    <div class="finding-label">Point of Departure</div>
+    <p>WP-019 does not revise the SGFA architecture. It asks: what is the economics of building that architecture on existing infrastructure rather than greenfield, and what is the aggregate regional economic case that market pricing does not capture?</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 02</span>
+  <h2>Data Foundation</h2>
+
+  <h3>2.1 Import energy — reference price</h3>
+
+  <p>TTF natural gas serves as the primary import energy reference price. Three price points are relevant to the analysis. The pre-Hormuz baseline forecast (Goldman Sachs, ABN AMRO, January 2026) was €29–30/MWh, consistent with the long-run average adjusted for post-Russian supply restructuring. The current price (27 April 2026) is €44–45/MWh, elevated by the Hormuz disruption which has halted approximately one-fifth of global LNG supply since late February 2026. The March 2026 monthly average was €53/MWh, peaking at €61.85/MWh. A stress scenario price of €60–80/MWh is empirically grounded rather than hypothetical.</p>
+
+  <p>Domestic peat retains policy relevance as a security of supply instrument despite its contested environmental status. The April 2026 budget framework committed €8M/year in production support and €10M for HVK strategic stockpiling. The domestic origin argument that supports peat support applies with equal structural logic to domestic biogas and e-methane — this is the policy implication WP-019 draws, not a defence of peat as a long-term solution.</p>
+
+  <h3>2.2 Fingrid reserve market — revenue potential</h3>
+
+  <p>FCR-D reserve products provide a documented revenue stream for SGFA nodes. The 2026 annual market prices are: FCR-D up €3.50/MW,h and FCR-D down €6.00/MW,h. At 100% availability, FCR-D up yields approximately €30,600/MW/year in capacity compensation, before activation revenues. A 50 MW SGFA node could generate approximately €1.5M/year from FCR-D up capacity alone. The annual market procured 237 MW of FCR-D up and 163 MW FCR-D down in 2026, with FCR-N moved entirely to the hourly market — indicating that hourly market participation is increasingly the primary channel for smaller reserve providers.</p>
+
+  <h3>2.3 Regional economic multiplier — existing research</h3>
+
+  <p>Vaasan Energiainstituutti and Ruralia-instituutti have calculated that energy self-sufficient Pietarsaari would add €14M/year to the regional economy, and Kaustinen €11M/year. These figures are the closest available empirical anchors for the regional multiplier component of this analysis. Their limitations are material: they are seutukunta-level calculations, not energy-sector-specific multipliers, and they reflect conditions at the time of calculation. They are used here as order-of-magnitude indicators only, not as basis for precise estimation.</p>
+
+  <h3>2.4 Fuel base — boundary condition</h3>
+
+  <p>The analysis excludes primary timber. SGFA nodes are assumed to operate on side streams: bark, sawdust, and residues from sawmills and pulp mills; black liquor and soda boiler surplus from pulp facilities; harvesting residues (with the caveat that intensive harvesting residue collection raises legitimate soil nutrient concerns); and municipal waste streams where biogeenic fraction is dominant. LNG is considered as a bridge fuel and comparison reference, not as a primary fuel source. The domestic LNG infrastructure at Hamina and Tornio provides context for import dependency, not for SGFA fuel supply.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 03</span>
+  <h2>Five Finnish Development Pathways</h2>
+
+  <p>Five active Finnish development cases can be mapped against the SGFA architecture. None was designed as an SGFA node. Each arrived at partial SGFA functionality through independent decisions by local actors. The convergence is diagnostic evidence that the architecture is not hypothetical — it is being approached from multiple directions simultaneously.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th>Model type</th>
+        <th>Current status</th>
+        <th>SGFA completeness</th>
+        <th>Key gap</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tampere / Lielahti</strong></td>
+        <td>Municipal operator with industrial PtX partner (Ren-Gas)</td>
+        <td>Electric boiler (145 MW) + storage operational Nov 2025. E-methane construction starting 2025 at Tarastenjärvi (Tammervoima CO₂ → Ren-Gas → e-methane + waste heat to network).</td>
+        <td>~70%</td>
+        <td>Reserve market integration not yet formalised. No PPA cap architecture.</td>
+      </tr>
+      <tr>
+        <td><strong>Oulu / Laanila</strong></td>
+        <td>Municipal + industrial PtX partner (P2X Solutions)</td>
+        <td>Biovoimalaitos 70 MW electric + 175 MW heat operational since 2020. Electric boilers 100 MW total (Laanila 40 MW + Toppila 60 MW). 100 MW electrolyser + CO₂ capture planned — investment decision expected autumn 2025, not yet confirmed.</td>
+        <td>~40%</td>
+        <td>PtX investment decision pending. Integration of electrolyser with bio-CHP reserve function not designed.</td>
+      </tr>
+      <tr>
+        <td><strong>Varkaus</strong></td>
+        <td>Industrial anchor (Stora Enso) + ecosystem (Itä-Suomen Energiaklusteri, founded November 2025)</td>
+        <td>Stora Enso bark boiler supplies ~7.3% of Varkauden Aluelämpö district heat. Soda boiler surplus integrated. Cluster includes ANDRITZ, Sumitomo SHI FW, Savon Voima, SP Stainless. Thermal storage research under JTF funding (Stora Enso, Savon Voima, Kuopion Energia, Varkauden Aluelämpö).</td>
+        <td>~25%</td>
+        <td>PtX absent. Reserve market participation absent. Ecosystem structure is the differentiator — not yet operationalised as SGFA.</td>
+      </tr>
+      <tr>
+        <td><strong>Harjavalta</strong></td>
+        <td>Independent PtX operator (P2X Solutions)</td>
+        <td>20 MW green hydrogen plant operational since February 2025. ISCC RFNBO certified — first in Finland. Methanation planned as subsequent phase. Supplies hydrogen refuelling (Jyväskylä) and aviation synthetic kerosene pilot.</td>
+        <td>Proof of concept</td>
+        <td>Not connected to district heating. No bio-CHP integration. Demonstrates PtX economics at commercial scale — reference for Oulu investment case.</td>
+      </tr>
+      <tr>
+        <td><strong>Vantaa</strong></td>
+        <td>Municipal waste-to-energy operator</td>
+        <td>Waste incineration plant (Jätevoimala) produces heat and electricity. Vantaa Carbon Capture project launched 2025: 700,000 t CO₂/year capture capacity planned, investment decision 2027 conditional on EU and national support. Electric boiler (60 MW) + 700 MWh thermal storage operational late 2025.</td>
+        <td>~30%</td>
+        <td>Regulatory barrier: EU legislation does not currently classify biogenic CO₂ from waste incineration as eligible for CCS support. Vantaa is seeking rule change. If resolved, the CCS chain becomes a full CCU feedstock for PtX.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="finding">
+    <div class="finding-label">Convergence Finding</div>
+    <p>All five pathways reached partial SGFA functionality independently and without coordination. The convergence pattern supports the hypothesis that the architecture responds to real structural conditions — not that it was imposed on them. The diagnostic question is why none has reached full integration, and what institutional or financial barrier prevents completion.</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 04</span>
+  <h2>The Ecosystem Model</h2>
+
+  <p>SP-002 assumed a single municipal operator per node. The Varkaus case demonstrates a structurally different form: an industrial anchor (Stora Enso) surrounded by technology suppliers (ANDRITZ, Sumitomo SHI FW), energy network operators (Varkauden Aluelämpö, Savon Voima), and a formal cluster organisation (Itä-Suomen Energiaklusteri ry, founded November 2025). Each actor contributes one capability; none bears the full node investment.</p>
+
+  <p>The ecosystem model distributes three types of risk that make single-operator SGFA nodes difficult to finance. Technology risk is distributed across specialist suppliers rather than concentrated in the municipal operator. Market risk is distributed through multiple revenue streams owned by different entities. Political risk is distributed across a coalition of stakeholders rather than concentrated in a single city council decision.</p>
+
+  <p>This model has demonstrated validity in adjacent sectors. The Turun telakka ecosystem (Meyer Turku as anchor, hundreds of subcontractors) shows that complex industrial capability can be built and sustained through distributed actor networks. Finnish technology cluster experience from the Nokia era demonstrates the self-reinforcing growth dynamics of anchor-plus-ecosystem structures. In energy specifically, the Stockholm Exergi BECCS project — cited in SP-002 as the Nordic reference validation — required a similarly distributed financing structure: EU Innovation Fund, EIB, Swedish Energy Agency reverse auction, and voluntary carbon market offtake from Microsoft, Alphabet, and Meta simultaneously.</p>
+
+  <p>The policy implication is that SGFA deployment support should be designed for ecosystems, not single operators. EU Innovation Fund applications structured around a consortium (SGFA Holding Oy model from SP-002) map more naturally to ecosystem deployment than to seven separate municipal applications.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 05</span>
+  <h2>Retrofit CAPEX — Revised Estimate</h2>
+
+  <p>The SP-002 greenfield estimate of €120–180M per node assumed full new construction. Retrofit deployment on existing CHP infrastructure avoids the most capital-intensive components: district heating network (replacement cost in the hundreds of millions), steam and electrical interconnects, operating organisation, and permitting (modification permit versus new construction permit).</p>
+
+  <h3>Reference data points from announced Finnish investments</h3>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Location</th><th>CAPEX</th><th>Capacity</th><th>Unit cost</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Electric boiler</td><td>Kuopion Energia, Haapaniemi</td><td>€5.4M</td><td>45 MW</td><td>~€120k/MW</td></tr>
+      <tr><td>Electric boiler + storage</td><td>Tampereen Energia, Lielahti</td><td>€15–20M</td><td>100 MW + 2×10,000 m³</td><td>~€150–200k/MW</td></tr>
+      <tr><td>Electric boiler</td><td>Oulun Energia, Toppila</td><td>€9M</td><td>60 MW</td><td>~€150k/MW</td></tr>
+      <tr><td>Electric boiler + 700 MWh storage</td><td>Vantaan Energia, Martinlaakso</td><td>Not disclosed</td><td>60 MW</td><td>—</td></tr>
+      <tr><td>Electrolyser (PtX)</td><td>P2X Solutions, Harjavalta</td><td>Not public</td><td>20 MW</td><td>—</td></tr>
+      <tr><td>Electrolyser + CO₂ + storage</td><td>Oulun Energia + P2X, Laanila (planned)</td><td>"Hundreds of millions"</td><td>100 MW</td><td>~€2–4M/MW est.</td></tr>
+    </tbody>
+  </table>
+
+  <p>The electric boiler component of an SGFA retrofit is the best-documented and most mature: €120–200k/MW based on announced Finnish investments. The PtX component carries the largest uncertainty — Harjavalta's 20 MW plant has no public CAPEX, and the Oulu 100 MW electrolyser is described only as "hundreds of millions," consistent with industry estimates of €1–4M/MW for electrolysers at this scale in 2025–2026.</p>
+
+  <h3>Composite retrofit estimate</h3>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Capacity</th><th>Estimated CAPEX</th><th>Basis</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Electric boiler + thermal storage</td><td>50–100 MW</td><td>€10–20M</td><td>Finnish reference data above</td></tr>
+      <tr><td>PtX integration (electrolyser)</td><td>20–50 MW</td><td>€40–100M</td><td>Industry range, no Finnish reference</td></tr>
+      <tr><td>Methanation + CO₂ capture</td><td>—</td><td>€15–40M</td><td>Ren-Gas/Tammervoima analogy</td></tr>
+      <tr><td><strong>Total retrofit node</strong></td><td>—</td><td><strong>€65–160M</strong></td><td>Composite estimate</td></tr>
+      <tr><td>Greenfield node (SP-002)</td><td>—</td><td>€120–180M</td><td>SP-002 scenario parameter</td></tr>
+    </tbody>
+  </table>
+
+  <div class="scope-note">
+    <strong>Methodological limitation.</strong> These CAPEX figures are scenario parameters derived from public announcements, not commissioned engineering estimates. The retrofit discount relative to greenfield — approximately 10–30% at median estimates — reflects avoided infrastructure costs, but the actual saving depends heavily on the condition of existing equipment, permitting requirements, and grid connection costs for reserve market participation. A site-specific engineering estimate is required before investment decisions can be made.
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 06</span>
+  <h2>IRR Sensitivity — Retrofit Model</h2>
+
+  <p>The retrofit IRR analysis extends SP-002's three revenue stream model (avoided costs, market revenues, option value) with an updated import energy price reference and a more explicit treatment of the security of supply component.</p>
+
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>TTF reference (€/MWh)</th><th>Retrofit CAPEX</th><th>Estimated IRR</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Current market (Hormuz)</td><td>45</td><td>€70M (low)</td><td>~20–25%</td><td>Optimistic CAPEX, elevated import price</td></tr>
+      <tr><td>Baseline (pre-Hormuz forecast)</td><td>30</td><td>€100M (mid)</td><td>~12–16%</td><td>Long-run TTF, mid CAPEX</td></tr>
+      <tr><td>Low price scenario</td><td>20</td><td>€140M (high)</td><td>~8–10%</td><td>Goldman 2027–2028 storage congestion forecast</td></tr>
+      <tr><td>Stress scenario</td><td>60–80</td><td>€100M (mid)</td><td>~25–35%</td><td>Extended Hormuz-type disruption</td></tr>
+    </tbody>
+  </table>
+
+  <p>The baseline IRR of 12–16% is above WACC 5% at all reasonable capital cost assumptions. The low-price scenario at 8–10% remains above the long-run government bond rate, though below commercial return thresholds that would attract private capital without a capacity mechanism or reserve market guarantee. This is consistent with SP-002's finding that municipal ownership is structurally advantaged — a municipality can accept lower returns than private capital if avoided costs and regional economic benefits are internalised.</p>
+
+  <div class="finding">
+    <div class="finding-label">IRR Finding</div>
+    <p>At baseline TTF (€30/MWh) and mid-range retrofit CAPEX (€100M), the SGFA retrofit IRR is estimated at 12–16% — above WACC 5% but below private capital thresholds without a capacity mechanism. The reserve market income (FCR-D up: ~€30,600/MW/year) improves the deterministic cash flow component and reduces dependence on volatile spot market returns. These are sensitivity ranges, not forecasts.</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 07</span>
+  <h2>Regional Economic Impact — Calculation Framework</h2>
+
+  <p>Market pricing captures the private return to the node operator. It does not capture the regional economic multiplier — the additional economic activity generated as energy revenue circulates locally rather than leaving the region as import payment. The calculation framework proposed here is diagnostic, not a completed analysis.</p>
+
+  <h3>Components of the regional impact calculation</h3>
+
+  <p><strong>Direct impact:</strong> Energy production revenues remaining in the region — fuel procurement, labour, local taxes, and avoided import payments. The avoided import component is the clearest: if a region substitutes €X of imported gas with domestically produced biogas or e-methane, €X remains in the regional economy that would otherwise have transferred abroad.</p>
+
+  <p><strong>Employment multiplier:</strong> Construction phase employment during node installation, followed by ongoing operations and maintenance. Bio-CHP and PtX operations are more labour-intensive per MW than wind or solar. The ecosystem model adds supply chain employment across multiple firms.</p>
+
+  <p><strong>Regional multiplier:</strong> Pietarsaari and Kaustinen research (Ruralia-instituutti) suggests a multiplier of approximately €11–14M of regional economic benefit per fully energy-self-sufficient municipality. These are not directly transferable to SGFA node analysis — they measure full energy self-sufficiency, not partial integration — but they establish the order of magnitude. An energy-sector-specific multiplier for Finnish conditions has not been published and is identified as a research gap.</p>
+
+  <p><strong>Security of supply option value:</strong> The value of domestic energy production capacity as insurance against import price shocks. The Hormuz disruption provides an empirical anchor: TTF moved from €30/MWh to €45–53/MWh over approximately eight weeks. A region with 50% domestic energy coverage at fixed cost is insulated from approximately half of that price shock. At 1 TWh/year consumption, a €15/MWh shock avoided is worth €15M/year — comparable to the full regional multiplier estimate from the Ruralia-instituutti research.</p>
+
+  <h3>What the framework does not calculate</h3>
+
+  <p>Environmental externalities, primary timber effects (excluded from fuel base by assumption), infrastructure externalities, and emissions trading effects are outside the scope of this analysis. The framework also does not calculate distributional effects — which income groups benefit from lower or more stable energy prices — though this is noted as a relevant policy dimension given the parallel discussion of public service obligations and social equity in energy pricing.</p>
+
+  <div class="scope-note">
+    <strong>Research gap.</strong> A systematic regional economic multiplier specific to energy production in Finnish conditions does not appear to exist in published form. The Ruralia-instituutti estimates (2013–2015) are the closest available reference but are not energy-sector-specific and predate significant structural changes in Finnish energy markets. This paper identifies the commissioning of such a study as the most important near-term research priority for WP-019's completion.
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 08</span>
+  <h2>Security of Supply Option Value</h2>
+
+  <p>The security of supply option value is the premium a rational actor would pay for domestic production capacity that is insulated from import price shocks. Standard energy market analysis treats this as zero — market prices are assumed to reflect all available information including supply disruption risk. The Hormuz disruption of 2026 provides evidence that this assumption fails under geopolitical stress.</p>
+
+  <p>The market did not price the Hormuz risk in advance. TTF forward curves in January 2026 projected €29–30/MWh for 2026. The disruption began in late February 2026. By March 2026, TTF averaged €53/MWh — a 75% increase from the forward price in eight weeks. This is structurally analogous to the 2022 Russian gas cutoff, which also arrived faster than forward markets had priced.</p>
+
+  <p>An SGFA node producing domestic biogas or e-methane at a fixed cost equivalent to €35–45/MWh would have been economically neutral or marginally positive at pre-Hormuz TTF prices, and strongly positive at Hormuz-period prices. The option value — the premium for having that capacity available — was not captured in the ex-ante market price.</p>
+
+  <p>Domestic peat illustrates the same logic from the policy side. The April 2026 budget framework provided €8M/year in peat production support on security of supply grounds, not on economic grounds. The implicit subsidy represents a policy valuation of domestic energy insurance. The same logic, applied to domestic biogas and e-methane, would support SGFA node development on identical grounds — with the additional advantage that biogas and e-methane are renewable rather than fossil.</p>
+
+  <div class="finding">
+    <div class="finding-label">Option Value Finding</div>
+    <p>At baseline TTF (€30/MWh) and a domestic production cost of €35–45/MWh, the SGFA node is marginally uneconomic on market terms. At Hormuz-period TTF (€45–53/MWh), it is competitive or superior. The option value — the expected value of insurance against import price shocks of the Hormuz type — is not captured in either market price or standard IRR analysis. Its inclusion would improve the investment case materially at all scenarios.</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 09</span>
+  <h2>Financing Archetypes and SGFA Node Positioning</h2>
+
+  <p>WP-017 §3.6 identified three cross-country investment pipeline archetypes — national champion selection (Denmark), EU instrument absorption (Spain, Poland), and permissive attraction without integration (Finland). All three produce investment in bond market data but are structurally different in integration quality and long-run economic benefit.</p>
+
+  <p>Finland currently operates as Type III for energy investment: regulatory permissiveness attracts private wind capital without an integration architecture. The €2.1 billion Finnish RRF allocation — modest relative to Spain or Poland — reflects lower administrative pipeline capacity. The five SGFA pathways documented in §3 are all attempting to move toward Type I or Type II without a coordinating mechanism that would make the movement legible or supported.</p>
+
+  <p>The Tier A/B structure from SP-002 maps onto financing archetypes as follows. Tier A nodes (Tampere, Oulu, Kuopio) have the scale and administrative capacity for Type II — systematic EU instrument absorption through Innovation Fund, JTF, and REPowerEU. The SGFA Holding Oy consortium structure (SP-002 §5) is designed precisely to create the administrative capacity for multi-node EU fund applications. Tier B nodes (Varkaus scale) are more naturally Type I candidates — ecosystem leadership by an industrial anchor (Stora Enso) that provides the coordination function a national champion would in Type I.</p>
+
+  <p>The regulatory tailwind is moving in a supportive direction. The European Commission's Open Public Consultation on a new European climate resilience framework (February 2026) explicitly identifies energy security, supply chain resilience, and security of supply as dimensions of climate resilience. If the resulting framework creates a dedicated financing instrument for resilience capacity — analogous to what SP-007 proposes as an HVK designation and Fingrid strategic reserve amendment — SGFA nodes would be natural beneficiaries.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 10</span>
+  <h2>Environmental Dimension</h2>
+
+  <p>The SGFA architecture's environmental case rests on three elements. First, the fuel base is limited to industrial side streams — bark, sawdust, black liquor, and soda boiler surplus — not primary timber. Primary timber has higher value uses in sawmilling and pulp production; combustion of primary timber is economically irrational as well as environmentally suboptimal. Harvesting residues carry legitimate soil nutrient concerns that are acknowledged rather than dismissed.</p>
+
+  <p>Second, biogeenic CO₂ from Finnish industrial processes is abundant. Finland's forest and pulp industry generates large volumes of biogenic CO₂ that are currently vented. The Tammervoima-Ren-Gas arrangement (Tampere pathway) demonstrates that this CO₂ can be captured and used for e-methane synthesis, closing the carbon cycle. The availability of domestic biogenic CO₂ feedstock is a structural advantage for Finnish PtX development that is not present in most European markets.</p>
+
+  <p>Third, the Vantaa Carbon Capture project aims to capture 700,000 tonnes CO₂/year from waste incineration — creating infrastructure and a value chain that other Finnish operators could use. The current regulatory barrier (EU legislation does not classify biogenic CO₂ from waste incineration as CCS-eligible) is under review. If resolved, it would significantly improve the economics of the Vantaa pathway and create replicable infrastructure for the broader network.</p>
+
+  <p>The ecosystem model has a specific environmental advantage: it enables circular economy flows that single-operator nodes cannot. The Varkaus cluster connects Stora Enso's process waste streams, Varkauden Aluelämpö's district heating network, and potentially thermal storage research funded by JTF. These flows do not require a single owner — they require coordination, which the cluster structure provides.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 11</span>
+  <h2>Methodological Boundaries</h2>
+
+  <p>This paper operates at a lower evidential standard than ACI's diagnostic working papers. The five pathway assessments are based on public announcements and press releases, not audited financials or engineering surveys. The CAPEX estimates are composite figures derived from reported investment sizes, not independent cost engineering. The IRR sensitivity ranges are scenario constructions, not econometric estimates. The regional multiplier applies Ruralia-instituutti figures from a different sector context.</p>
+
+  <p>These limitations are acknowledged not to undermine the analysis but to specify what would be required to move from diagnostic framework to investment-grade analysis. Five research gaps are identified for completion of WP-019:</p>
+
+  <p><strong>Gap 1:</strong> Site-specific retrofit CAPEX engineering estimate for at least one reference node (Tampere or Oulu are the natural candidates given their current investment activity).</p>
+
+  <p><strong>Gap 2:</strong> Energy-sector-specific regional economic multiplier for Finnish conditions. The Ruralia-instituutti methodology could be applied to a single SGFA node as a pilot calculation.</p>
+
+  <p><strong>Gap 3:</strong> Oulu electrolyser investment decision status. The investment was expected autumn 2025 and has not been publicly confirmed. If it has not been made, the reason is relevant to understanding the barrier structure.</p>
+
+  <p><strong>Gap 4:</strong> Harjavalta P2X CAPEX data. P2X Solutions has not published investment figures for the Harjavalta plant. Discussions with P2X Solutions or their investors would provide the most relevant PtX reference point for Finnish conditions.</p>
+
+  <p><strong>Gap 5:</strong> Vantaa CCS regulatory status at EU level. The biogenic CO₂ from waste incineration classification is under active review in the EU emissions trading directive revision. Its resolution materially affects the Vantaa pathway economics.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 12</span>
+  <h2>Conclusions</h2>
+
+  <p>The SGFA architecture is being approached from five independent directions in Finland simultaneously. None of the five pathways was designed as an SGFA node. The convergence is diagnostic evidence that the architecture responds to real structural conditions rather than being imposed theoretically.</p>
+
+  <p>The retrofit pathway reduces estimated CAPEX by 10–30% relative to greenfield deployment, primarily by avoiding district heating network construction and leveraging existing permitting. The ecosystem model — demonstrated by the Varkaus Itä-Suomen Energiaklusteri — distributes risk across multiple actors and enables integration quality that single-operator models cannot achieve.</p>
+
+  <p>The security of supply option value that standard market pricing omits is empirically anchored by the 2026 Hormuz disruption. A domestic production cost of €35–45/MWh that appeared marginally uneconomic at January 2026 TTF (€29–30/MWh) was competitive at March 2026 TTF (€53/MWh). The option value of domestic capacity — insurance against import price shocks — is material and should be incorporated in investment assessments.</p>
+
+  <p>The regional economic multiplier case — the aggregate effect of energy revenue circulating locally rather than leaving as import payment — requires an energy-sector-specific calculation that does not yet exist in published form. This is identified as the most important research gap for WP-019's completion.</p>
+
+  <div class="finding">
+    <div class="finding-label">Summary Finding</div>
+    <p>Five active Finnish pathways are approaching SGFA architecture from different directions and without coordination. The retrofit economics are materially more favourable than greenfield estimates. The security of supply option value is empirically grounded. The regional economic case requires further research. The ecosystem model is structurally more resilient than single-operator deployment. None of these conclusions requires revision of the SGFA architecture — they extend its deployment logic to existing infrastructure and networked actors.</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">References</span>
+  <h2>References</h2>
+  <ul class="ref-list">
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>SP-002 — SGFA 4.0 Implementation Programme.</em> <a href="/papers/sp-002-sgfa-4-toteutusohjelma.html">aethercontinuity.org/papers/</a></li>
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>SP-007 — SGFA Institutional Blueprint.</em> <a href="/papers/sp-007-sgfa-institutional-blueprint.html">aethercontinuity.org/papers/</a></li>
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>SM-003 — SGFA and the Finland Advantage.</em> <a href="/papers/sm-003-sgfa-mesa-finland-advantage.html">aethercontinuity.org/papers/</a></li>
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>TN-001 — Duration-Capable Local Energy Node.</em> <a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">aethercontinuity.org/supplements/</a></li>
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>WP-017 — Parliamentary Decision Latency and Market Signal Correlation.</em> §3.6 Cross-country investment pipeline typology. <a href="/papers/wp-017-parliamentary-decision-latency.html">aethercontinuity.org/papers/</a></li>
+    <li><span class="ref-id">ACI</span>ACI (2026). <em>SM-006 — Convergence Window 2027–2030.</em> <a href="/papers/sm-006-convergence-window.html">aethercontinuity.org/papers/</a></li>
+    <li><span class="ref-id">Fingrid</span>Fingrid (2025). <em>Procurement of frequency containment reserves from yearly market 2026.</em> FCR-D up: €3.50/MW,h · FCR-D down: €6.00/MW,h.</li>
+    <li><span class="ref-id">Tampereen Energia</span>Tampereen Energia (2025). <em>Lielahden sähkökattilalaitos valmistunut.</em> 28.11.2025.</li>
+    <li><span class="ref-id">Oulun Energia</span>Oulun Energia (2024). <em>Ouluun suunnitteilla suuri teollisen mittakaavan vetylaitos.</em> Partnership with P2X Solutions.</li>
+    <li><span class="ref-id">Energiaklusteri</span>Itä-Suomen Energiaklusteri ry (2025). <em>Perustamiskokouksen pöytäkirja.</em> 18.11.2025. Varkaus.</li>
+    <li><span class="ref-id">P2X</span>P2X Solutions (2025). <em>Harjavalta plant operational — ISCC RFNBO certified.</em> February 2025.</li>
+    <li><span class="ref-id">Vantaan Energia</span>Vantaan Energia (2025). <em>Vantaa Carbon Capture — 700,000 t CO₂/year capture capacity planned.</em></li>
+    <li><span class="ref-id">Ruralia</span>Vaasan Energiainstituutti · Ruralia-instituutti. <em>Aluetalousvaikutukset energiaomavaraisuudesta.</em> Pietarsaari +€14M/v · Kaustinen +€11M/v.</li>
+    <li><span class="ref-id">TTF</span>TradingEconomics · Goldman Sachs · ABN AMRO (2026). TTF price data and forecasts. Baseline forecast €29–30/MWh; March 2026 average €53/MWh; 27 April 2026: €44.86/MWh.</li>
+    <li><span class="ref-id">EC</span>European Commission (2026). <em>Open Public Consultation for the new European climate resilience framework.</em> Contribution ID: db8dffbf-eb18-4207-94e9-5b06e30a9b3b. 07.02.2026.</li>
+    <li><span class="ref-id">VM</span>Valtiovarainministeriö (2026). <em>Kehysriihen päätökset huhtikuu 2026.</em> Energiaturpeen tuotantotuki €8M/v 2027 alkaen · HVK varmuusvarastointi €10M 2026.</li>
+  </ul>
+</div>
+
+</div>
+
+<footer>
+  Aether Continuity Institute · WP-019 · Version 0.1 Draft · 2026-04-28<br>
+  Internal working draft — not published. Basis: SP-002 · SM-003 · TN-001 · WP-017 · SM-006<br>
+  This document is a diagnostic framework. CAPEX figures are scenario parameters, not engineering estimates. IRR ranges are sensitivity analysis, not forecasts.<br>
+  aethercontinuity.org
+</footer>
+
+</body>
+</html>
