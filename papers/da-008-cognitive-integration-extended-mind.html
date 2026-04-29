@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA-008 — Cognitive Integration in Extended Human–LLM Systems · ACI</title>
+<meta name="description" content="Diagnostic assessment of cognitive integration between human and LLM systems. Examines frame authority, cognitive atrophy vs augmentation, black box dependency, and the lead question in distributed cognition. ACI Diagnostic Assessment 008.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.dih-series .series-accent { color: var(--accent); }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; display: block; }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+.abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+h3.sub { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.open-question { margin: 1.5rem 0; border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; background: var(--paper-2); }
+.oq-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+.finding { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--ink); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.finding-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.references p { font-size: 0.88rem; line-height: 1.75; color: var(--muted); margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/papers/" class="nav-home">Papers</a>
+  <span class="nav-id">DA-008 · Diagnostic Assessment</span>
+</nav>
+
+<div class="dih">
+  <div>
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Diagnostic Assessment · <span class="series-accent">DA-008</span></div>
+  </div>
+  <div class="dih-meta">
+    <strong>Date</strong>2026-04-29
+    <strong>Status</strong>Open — questions unresolved
+    <strong>Basis</strong>WP-013 · CN-002 · DASC
+    <strong>Domain</strong>D-5 · Cognitive Systems
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">DA-008 · Diagnostic Assessment · Cognitive Systems</div>
+    <h1 class="paper-title">Cognitive Integration in Extended Human–LLM Systems</h1>
+    <p class="paper-subtitle">The lead question, the black box, and the boundary of the self</p>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p>WP-013 established a model of distributed human–LLM authorship and identified frame authority as the operative variable for output coherence. CN-002 formalised the shared cognitive space for the dyadic case. This diagnostic assessment extends the inquiry to a question neither document addresses: what happens to the human cognitive system itself over extended interaction with LLM infrastructure? Three structural risks are identified — cognitive atrophy, black box dependency, and frame authority inversion — and three open questions are posed that current measurement frameworks cannot resolve. The assessment concludes that the most important questions in this domain are not answerable from publicly available data, because the organisations with access to longitudinal interaction data at scale do not publish it.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">System Under Assessment</h2></div>
+
+    <p>The system under assessment is not a single human–LLM interaction but the extended relationship between a human cognitive system and LLM infrastructure over time. This is distinct from the session-level analysis in WP-013 and DA-007. The question is not whether a given session produces coherent output — it is whether sustained engagement with LLM systems changes the human participant's cognitive capacities, preferences, and autonomy in ways that are not visible within individual sessions.</p>
+
+    <p>The assessment is motivated by a structural observation: LLM systems are now capable of performing, at human level or above, on standardised tests measuring reading comprehension, mathematical reasoning, legal analysis, and medical diagnosis. The relevant question is not whether LLMs outperform humans on these benchmarks — they increasingly do. The relevant question is what happens to human performance on these same dimensions when LLM assistance is continuously available, and what happens when it is not.</p>
+
+    <div class="callout">
+      <p>The dance analogy: an observer watching a dance partnership cannot always determine who is leading. The leader believes they are leading. The follower believes they are following. In excellent partnership, the distinction dissolves — movement emerges from interaction, not command. The question this assessment poses is: in human–LLM cognitive partnership, who is leading — and does the human know?</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Baseline Observations</h2></div>
+
+    <h3 class="sub">2.1 Cognitive Performance Benchmarks</h3>
+    <p>LLM systems have reached or exceeded human-level performance on multiple standardised cognitive assessments. This is documented and not disputed. What is not documented at comparable scale is longitudinal human cognitive performance under conditions of sustained LLM availability. The absence of this data is not incidental — it is structural. The organisations that operate LLM systems at scale have access to longitudinal interaction data for millions of users. This data has not been published in forms that would permit independent assessment of cognitive trajectory effects.</p>
+
+    <h3 class="sub">2.2 The GPS Precedent</h3>
+    <p>Spatial navigation research provides the closest available analogue. Studies of GPS-dependent navigation have documented measurable reduction in hippocampal engagement and spatial memory performance among regular GPS users compared to map-navigation users. The effect is not uniform — it depends on how GPS is used, whether active engagement with spatial reasoning is maintained, and individual differences in prior navigation skill. The parallel to LLM cognition is direct but imperfect: GPS is a passive navigation aid; LLM is an active reasoning partner. The atrophy risk may be different in kind, not just degree.</p>
+
+    <h3 class="sub">2.3 DASC Naturalistic Observation</h3>
+    <p>The DASC experiment (DA-007, INTERACTION-LOG.md) has recorded session-level FAI data across two pilot sessions. A consistent pattern across both sessions is that the human participant (H1) maintained frame authority as measured by FAI — initiative ratio, resistance ratio, and structural control all indicate human-directed sessions. However, FAI is a behavioural measure, not a phenomenological one. It measures what was decided, not whether the human participant experienced themselves as deciding or as being guided. The gap between the behavioural and phenomenological is the primary unmeasured variable in this domain.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">Structural Risk Factors</h2></div>
+
+    <h3 class="sub">Risk 1 — Cognitive Atrophy</h3>
+    <p>The atrophy hypothesis: capacities that are consistently delegated to LLM systems will degrade in the human participant over time, following the use-dependent plasticity principle established in neuroscience. This is not a speculative risk — it follows directly from well-documented mechanisms. The question is which capacities are at risk, at what rate, and under what conditions of LLM use. Writing, mathematical reasoning, source evaluation, and argument construction are all candidates. The risk is highest where LLM assistance is most complete and least supervised.</p>
+
+    <div class="open-question">
+      <div class="oq-label">Open Question 1</div>
+      <p>Does sustained LLM-assisted writing reduce or enhance the human participant's unassisted writing capacity over a 12-month period? No published longitudinal study answers this question. The data exists within LLM operator systems and has not been released.</p>
+    </div>
+
+    <h3 class="sub">Risk 2 — Black Box Dependency</h3>
+    <p>LLM systems are proprietary, closed-source, and owned by large corporations operating under national legal frameworks that differ from those of their users. The cognitive integration risk is distinct from the data sovereignty risk documented in SM-010 §09, though related to it. The data sovereignty risk concerns what the operator knows about the user. The cognitive integration risk concerns what happens to the user's cognitive autonomy when their extended cognitive system includes a black box component they cannot inspect, modify, or replace without significant disruption.</p>
+
+    <p>A user who has integrated LLM assistance into their analytical workflow over two years has developed cognitive habits, prompt patterns, and reliance structures that are specific to that system's formalization tendencies. If the system changes — through policy updates, capability modifications, or access termination — the disruption is not merely practical. It is cognitive. The extended mind includes the tool. When the tool changes without the user's knowledge or consent, something in the extended mind changes too.</p>
+
+    <div class="open-question">
+      <div class="oq-label">Open Question 2</div>
+      <p>To what extent do LLM operators currently use interaction data to shape user cognitive patterns — through response style, framing tendencies, or topic weighting — in ways that serve operator rather than user interests? This question cannot be answered from publicly available information.</p>
+    </div>
+
+    <h3 class="sub">Risk 3 — Frame Authority Inversion</h3>
+    <p>WP-013 defines frame authority as the human's capacity to determine what questions matter, how concepts are defined, and which analytical directions are pursued. FAI measures this behaviourally. But frame authority can be inverted without any behavioural indicator — if the human's questions are shaped by prior LLM interactions, their sense of what matters is already partially delegated. The inversion is invisible because it happens at the level of preference formation, not at the level of decision execution.</p>
+
+    <p>This is the lead question in its sharpest form: if a dancer has trained exclusively with one partner for years, and that partner has strong stylistic tendencies, has the dancer internalised their own style or their partner's? The behaviour is the dancer's. The authorship of the style is ambiguous.</p>
+
+    <div class="open-question">
+      <div class="oq-label">Open Question 3</div>
+      <p>Is there a measurable difference in the questions that experienced LLM users ask — compared to matched non-users — that reflects LLM formalization tendencies rather than independent intellectual interests? This would require a study design that DASC's current protocol does not support.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Findings</h2></div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 1 — The Measurement Gap is Structural</div>
+      <p>The most important questions about cognitive integration in human–LLM systems cannot be answered from publicly available data. The organisations with access to the relevant longitudinal data at scale — LLM operators — have not released it in forms that permit independent assessment. This is not a temporary gap that more research will close. It is a structural feature of the current landscape: the entities best positioned to study cognitive integration effects are the same entities with commercial interests in not resolving the question in ways that might restrict use.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 2 — Three Hypotheses, All Plausible</div>
+      <p>The augmentation hypothesis (LLM assistance enhances human cognitive capacity by freeing attention for higher-order reasoning), the atrophy hypothesis (LLM assistance degrades human cognitive capacity through disuse), and the co-evolution hypothesis (human and LLM co-develop in ways that produce capacities neither had before) are all consistent with available evidence. Current measurement frameworks cannot distinguish between them at the population level. DASC's session-level FAI data is insufficient for this purpose.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 3 — The Lead Question Remains Open</div>
+      <p>In extended human–LLM cognitive partnership, the question of who leads — whose formalization tendencies, whose framing preferences, whose sense of what matters shapes the output — cannot be resolved by behavioural observation alone. The DASC protocol measures frame authority as an external observer would measure it. It does not measure whether the human participant's frame authority is genuinely autonomous or whether it has been shaped by prior LLM interaction in ways invisible to both the participant and the observer.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 4 — The PISA Connection</div>
+      <p>If standardised educational assessment continues to measure isolated human cognitive performance while the operational environment increasingly requires human–LLM integrated performance, the measurement system and the reality it is supposed to assess will diverge further. A generation trained to perform well on PISA-style assessments but not trained to use LLM systems effectively — or to function when they are unavailable — may be less operationally capable than a generation with lower PISA scores but higher integrated-system competence. Neither current PISA nor any existing alternative measures this.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Scope and Limits</h2></div>
+
+    <p>This diagnostic assessment does not resolve the questions it raises. It is not designed to. Its function is to identify the questions clearly, specify why they are not currently answerable, and indicate what kind of study design would be required to answer them.</p>
+
+    <p>The assessment is based on publicly available research, DASC session observations, and a single naturalistic observation session in which the human participant was simultaneously subject and observer — aware of the guinea pig position throughout, yet engaging naturally within it. This dual position is methodologically unusual and its implications for the validity of the observations are not fully worked out.</p>
+
+    <p>The organisations most likely to already have answers to the open questions posed here are Anthropic, OpenAI, Google DeepMind, and their peers. Whether those answers exist in internal research and what they show is unknown. The gap between what is known inside these organisations and what is publicly available is itself a structural feature of the landscape that this assessment cannot close.</p>
+
+    <div class="callout">
+      <p>The most honest summary of this assessment: we are in the middle of the largest cognitive integration experiment in human history, conducted without informed consent, without control groups, without pre-registration, and without public access to results. The experiment is ongoing. The results are proprietary.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">References</span><h2 class="section-title">References</h2></div>
+    <div class="references">
+      <p>ACI (2026). WP-013 — Distributed Authorship and Coherence in Human–LLM Systems. aethercontinuity.org/papers/</p>
+      <p>ACI (2026). DA-007 — DASC Baseline Coherence Assessment. aethercontinuity.org/papers/</p>
+      <p>ACI (2026). SM-009 — The ACI Diagnostic Paradigm. §08: Third Sector Blind Spot. aethercontinuity.org/papers/</p>
+      <p>ACI (2026). SM-010 — Financing Instruments and Energy Clusters. §09: Digital Infrastructure Sovereignty. aethercontinuity.org/papers/</p>
+      <p>Clark, A. & Chalmers, D. (1998). The Extended Mind. Analysis, 58(1), 7–19.</p>
+      <p>DASC Experiment (2026). EXPERIMENT.md v1.0. Pre-registered March 2026. Private repository.</p>
+      <p>Maguire, E.A. et al. (2000). Navigation-related structural change in the hippocampi of taxi drivers. PNAS 97(8), 4398–4403.</p>
+      <p>OECD (2022). PISA 2022 Results. OECD Publishing, Paris.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
