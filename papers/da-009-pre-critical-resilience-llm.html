@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA-009 Pre · Critical Resilience and LLM Interaction · ACI</title>
+<meta name="description" content="Preliminary diagnostic note. Does sustained LLM interaction weaken the critical resilience through which individuals identify errors in authoritative-sounding sources? Research question formulation prior to empirical design.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: '← '; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.series-accent { color: var(--accent); }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; display: block; }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+.title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+.status-note { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--accent); border: 1px solid var(--accent); padding: 0.6rem 1rem; display: inline-block; margin-bottom: 2rem; }
+.abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+.abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+.abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; }
+.section { margin-bottom: 3rem; }
+.section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+.section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+.callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+.callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+.open-question { margin: 1.5rem 0; border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; background: var(--paper-2); }
+.oq-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/papers/" class="nav-home">Papers</a>
+  <span class="nav-id">DA-009 Pre · Preliminary Note</span>
+</nav>
+
+<div class="dih">
+  <div>
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Diagnostic Assessment · <span class="series-accent">DA-009 Preliminary</span></div>
+  </div>
+  <div class="dih-meta">
+    <strong>Date</strong>2026-04-29
+    <strong>Status</strong>Pre-assessment — question formulation
+    <strong>Follows</strong>DA-008 · SP-006
+    <strong>Domain</strong>D-5 · Cognitive Systems
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">DA-009 Pre · Preliminary Diagnostic Note</div>
+    <h1 class="paper-title">Critical Resilience and LLM Interaction</h1>
+    <p class="paper-subtitle">Does sustained LLM use weaken the capacity to identify errors in authoritative-sounding sources?</p>
+    <div class="status-note">Preliminary — research question formulation only · empirical design pending</div>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Note</div>
+    <p>DA-008 and SP-006 developed a broad framework for cognitive trajectory risks in LLM-mediated environments. This preliminary note narrows the question to one specific and empirically tractable component: critical resilience. Humans are not passive recipients of external frames — they have robust biological, social, and experiential resources that resist cognitive influence. The question is not whether LLM interaction can override this resilience, but whether sustained interaction with a highly fluent, authoritative-sounding system may gradually reduce the exercise of critical challenge — and whether that reduction is detectable and reversible.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">Why Resilience, Not Capacity</h2></div>
+
+    <p>The cognitive trajectory framework in SP-006 asks whether independent framing capacity Fa(t) changes over time. DA-008 introduced the epistemic identifiability constraint — whether the human can distinguish their own frames from internalised external ones. Both questions may be too large for available measurement tools.</p>
+
+    <p>A more tractable entry point is critical resilience: the capacity to detect errors, inconsistencies, and unjustified claims in sources that present themselves with high fluency and apparent authority. This is a specific, measurable competence. It has established assessment methodologies (argument evaluation tasks, source credibility tasks, claim verification tasks). And it is the competence most directly at risk from sustained interaction with systems that are fluent, confident, and often correct — but not always.</p>
+
+    <div class="callout">
+      <p>The GPS analogy, corrected: the question is not whether frequent GPS users can still navigate. Most can. The question is whether they notice when GPS takes them the wrong way. That is the resilience question — not capacity, but error-detection under conditions of fluent authoritative guidance.</p>
+    </div>
+
+    <p>LLM outputs are distinctive in this respect. Unlike Google search (which returns sources for human evaluation) or Wikipedia (which is explicitly marked as user-editable), LLM output presents as continuous, confident, first-person reasoning. The fluency is high. The confidence is unmarked — the system does not reliably signal uncertainty in the way a human expert would. And errors, when they occur, are embedded in text that reads exactly like correct text.</p>
+
+    <p>The resilience question is: does sustained interaction with this kind of source change how hard a person works to detect its errors?</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">The Mechanism</h2></div>
+
+    <p>Human critical resilience is not a fixed trait. It is a practised behaviour — the habit of questioning, the reflex of checking, the investment of cognitive effort in source evaluation. Like any practised behaviour, it can be maintained or reduced depending on the environment that exercises or fails to exercise it.</p>
+
+    <p>Prior to LLM interaction, a person reading a confident-sounding claim would apply varying degrees of critical challenge depending on source credibility, personal familiarity with the domain, and cognitive resources available. The challenge reflex was exercised — sometimes well, sometimes poorly, but exercised.</p>
+
+    <p>LLM interaction introduces a specific pressure on this reflex. When a system is correct most of the time and presents output in consistently fluent, well-structured prose, the cognitive cost of critical challenge may come to feel disproportionate to its yield. Not because the person has been persuaded to lower their guard, but because the reward signal for critical effort has weakened: most of the time, the challenge produces nothing. The reflex is not overridden — it is gradually deprioritised through low reinforcement.</p>
+
+    <p>This is a behavioural conditioning mechanism, not a cognitive capacity mechanism. It does not require the person to become less capable of critical thought. It requires only that they become less likely to deploy it — particularly toward LLM outputs specifically, and potentially, through generalisation, toward fluent authoritative-sounding sources more broadly.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">What Makes This Distinct</h2></div>
+
+    <p>Earlier information systems reduced the exercise of certain cognitive skills — calculators reduced arithmetic practice, GPS reduced spatial navigation practice. But those systems were passive: they did not engage the critical evaluation circuit because they did not produce reasoning to evaluate. They produced answers, not arguments.</p>
+
+    <p>LLM systems are different. They produce reasoning — chains of inference, evaluations of evidence, conclusions with justifications. This means they engage the critical evaluation circuit, not bypass it. The question is whether sustained interaction with a source that produces fluent, mostly-correct reasoning trains the circuit toward acceptance rather than challenge.</p>
+
+    <p>The social parallel is instructive. Extended interaction with a highly competent, rarely-wrong human expert tends to reduce the frequency with which a less-expert interlocutor challenges them. This is not pathological — it is rational given the track record. The risk is when the deference generalises beyond the domain of demonstrated competence, or when the expert is occasionally wrong in ways the interlocutor fails to detect because challenge has become habitual disuse.</p>
+
+    <p>LLM systems present this risk at scale, across domains, and without the social signals that would normally moderate deference to human experts — visible uncertainty, admission of limits, peer challenge, institutional accountability.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">Human Resilience Factors</h2></div>
+
+    <p>This note does not assume that LLM interaction inevitably reduces critical resilience. Humans have substantial resources that resist this mechanism.</p>
+
+    <p>Embodied experience provides a persistent check on abstract claims. A person with twenty years of logistics experience will notice when an LLM's logistics reasoning is wrong, regardless of how fluently the error is expressed. Life experience is not uniformly distributed across domains, but where it is deep, it provides a robust error-detection baseline that LLM fluency cannot easily override.</p>
+
+    <p>Social calibration through peer interaction provides ongoing challenge to individually-held beliefs. A person embedded in active professional or intellectual communities receives regular challenge to their reasoning from sources independent of LLM systems. This maintains the challenge reflex even if LLM interaction tends to reduce it.</p>
+
+    <p>Motivated scepticism in high-stakes domains — where the cost of being wrong is tangible — also maintains critical challenge independently of interaction habits. A surgeon, a pilot, or an engineer working on safety-critical systems has strong external reinforcement for challenge behaviour that operates independently of what LLM interactions tend to reinforce.</p>
+
+    <p>These factors suggest that the resilience reduction risk, if it exists, is not uniform. It is likely highest in domains where the individual lacks deep experiential expertise, where social calibration is limited, and where the stakes of errors are not immediately visible — precisely the conditions under which LLM use is most attractive as a cognitive supplement.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">Research Question and Design Requirements</h2></div>
+
+    <div class="open-question">
+      <div class="oq-label">Central Research Question</div>
+      <p>Does sustained LLM interaction reduce the frequency or quality of critical challenge directed at authoritative-sounding sources — and if so, does this effect generalise beyond LLM outputs to other fluent sources, and is it reversible under conditions of deliberate critical practice?</p>
+    </div>
+
+    <p>Answering this question requires a design that avoids the confounds identified in DA-008. Standard performance tasks are insufficient — they measure capacity, not the deployment of capacity. A valid design needs to measure how hard participants work to detect errors they are capable of detecting, not whether they can detect them when instructed to try.</p>
+
+    <p>The key design requirement is a naturalistic error-detection task: participants are presented with outputs (from LLM and non-LLM sources) that contain embedded errors of varying subtlety, under conditions where critical challenge is not explicitly demanded. The measure is spontaneous error-detection rate, not maximum-effort error-detection rate. This distinguishes resilience (habitual challenge deployment) from capacity (maximum achievable challenge performance).</p>
+
+    <p>Longitudinal comparison between high-LLM-interaction and low-LLM-interaction groups would require a minimum of six months to show conditioning effects, controlling for domain expertise and social calibration. Cross-domain generalisation — whether reduced challenge toward LLM outputs transfers to reduced challenge toward other fluent sources — would require a separate task battery.</p>
+
+    <p>This design is feasible with existing research resources. It does not require access to operator interaction logs. It does not require the measurement of I(t) or Fa(t) as defined in SP-006. It requires only a reliable measure of spontaneous error-detection behaviour across conditions of varying source fluency.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">Relationship to DA-008 and SP-006</h2></div>
+
+    <p>This preliminary note does not replace DA-008 or SP-006. Those documents address the broader question of cognitive trajectory under sustained LLM interaction — including framing capacity, identifiability, and the H1–H5 hypothesis space. That broader question remains open and requires longitudinal data at scale that is not currently publicly available.</p>
+
+    <p>The resilience question formulated here is a tractable subset of that broader question. It can be investigated with available methods, in a reasonable timeframe, without access to proprietary operator data. If the resilience reduction hypothesis receives empirical support, it provides partial evidence relevant to H3 and H4 in the SP-006 framework. If it does not, it provides evidence against the most immediately testable version of the cognitive trajectory concern.</p>
+
+    <p>The relationship between resilience and the SP-006/DA-008 framework is therefore: this note identifies where empirical work can begin. The broader framework identifies where it needs to go.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">References</span><h2 class="section-title">References</h2></div>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:0.5rem;">ACI (2026). DA-008 — Cognitive Integration in Extended Human–LLM Systems. aethercontinuity.org/papers/</p>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:0.5rem;">ACI (2026). SP-006 — Framing Externalization and Cognitive Trajectories. aethercontinuity.org/papers/</p>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:0.5rem;">Maguire, E.A. et al. (2000). Navigation-related structural change in the hippocampi of taxi drivers. PNAS 97(8).</p>
+    <p style="font-size:0.88rem;color:var(--muted);">Sparrow, B., Liu, J. & Wegner, D.M. (2011). Google Effects on Memory. Science, 333(6043).</p>
+  </div>
+
+</div>
+</body>
+</html>
