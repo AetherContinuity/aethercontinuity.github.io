@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DA-009 Pre · Critical Resilience and LLM Interaction · ACI</title>
+<title>DA-009 · Critical Resilience in Extended Human–LLM Systems · ACI</title>
 <meta name="description" content="Preliminary diagnostic note. Does sustained LLM interaction weaken the critical resilience through which individuals identify errors in authoritative-sounding sources? Research question formulation prior to empirical design.">
 <style>
 :root {
@@ -49,7 +49,7 @@ p:last-child { margin-bottom: 0; }
 
 <nav>
   <a href="/papers/" class="nav-home">Papers</a>
-  <span class="nav-id">DA-009 Pre · Preliminary Note</span>
+  <span class="nav-id">DA-009 · Diagnostic Assessment</span>
 </nav>
 
 <div class="dih">
@@ -68,10 +68,10 @@ p:last-child { margin-bottom: 0; }
 <div class="paper">
 
   <div class="title-block">
-    <div class="paper-label">DA-009 Pre · Preliminary Diagnostic Note</div>
-    <h1 class="paper-title">Critical Resilience and LLM Interaction</h1>
-    <p class="paper-subtitle">Does sustained LLM use weaken the capacity to identify errors in authoritative-sounding sources?</p>
-    <div class="status-note">Preliminary — research question formulation only · empirical design pending</div>
+    <div class="paper-label">DA-009 · Diagnostic Assessment</div>
+    <h1 class="paper-title">Critical Resilience in Extended Human–LLM Systems</h1>
+    <p class="paper-subtitle">The erosion of error-detection under fluent authority — and the temporal arc of critical challenge</p>
+    <div class="status-note">v1.0 · Open — empirical validation pending</div>
   </div>
 
   <div class="abstract-block">
@@ -105,6 +105,16 @@ p:last-child { margin-bottom: 0; }
     <p>LLM interaction introduces a specific pressure on this reflex. When a system is correct most of the time and presents output in consistently fluent, well-structured prose, the cognitive cost of critical challenge may come to feel disproportionate to its yield. Not because the person has been persuaded to lower their guard, but because the reward signal for critical effort has weakened: most of the time, the challenge produces nothing. The reflex is not overridden — it is gradually deprioritised through low reinforcement.</p>
 
     <p>This is a behavioural conditioning mechanism, not a cognitive capacity mechanism. It does not require the person to become less capable of critical thought. It requires only that they become less likely to deploy it — particularly toward LLM outputs specifically, and potentially, through generalisation, toward fluent authoritative-sounding sources more broadly.</p>
+
+    <h3 style="font-size:1rem;font-weight:500;margin:1.75rem 0 0.75rem;">2.3 Calibration Drift</h3>
+    <p>In addition to reinforcement effects, sustained interaction with highly fluent and mostly-correct systems may induce a calibration drift in error expectation. Users adapt their level of critical challenge based on perceived error frequency. When interaction history suggests a low error rate, the expected value of critical effort declines, and challenge behaviour is reduced accordingly.</p>
+    <p>However, LLM error distributions are not uniform. Errors are domain-dependent, often embedded in otherwise correct reasoning, and difficult to detect without domain-specific knowledge. This creates a structural asymmetry: the perceived reliability of the system increases faster than the user's ability to detect its residual errors. As a result, critical challenge is reduced in exactly those cases where it remains most necessary. The user does not become lazy — they optimise rationally against a wrong model of the system's failure distribution.</p>
+
+    <h3 style="font-size:1rem;font-weight:500;margin:1.75rem 0 0.75rem;">2.4 The Temporal Arc of Critical Challenge</h3>
+    <p>The framework developed so far assumes critical resilience operates at the sentence or paragraph level — spontaneous detection of errors in real time. This assumption may be too narrow. A naturalistic observation from extended LLM use identifies a distinct pattern: the user deliberately allows the system to lead through an extended sequence, watches where it goes, and evaluates the arc only after it has completed — rather than challenging individual outputs as they arrive. Critical challenge is not absent in this mode. It is deferred and repositioned: the evaluation unit is the trajectory, not the sentence.</p>
+    <p>In this pattern the user asks not "is this statement correct?" but "did this sequence of reasoning lead somewhere defensible, and do I agree with where it ended?" The challenge happens at the end of the arc, not at each step. This is a deliberate strategy, not a failure of vigilance — it allows the reasoning chain to complete before interruption, making the overall direction visible before committing to any part of it.</p>
+    <p>This matters for the resilience question in two ways. First, the extended-arc approach may be more robust against fluency effects than immediate-response evaluation: it is less sensitive to local sentence coherence and more sensitive to the ultimate destination of the reasoning. A fluent but misguided argument may be harder to deflect sentence by sentence than it is to reject in retrospect, once the conclusion is visible. Second, and more important for measurement: a study design that measures only spontaneous error-detection at the sentence level will systematically underestimate critical resilience in users who have developed this approach. They will appear not to challenge — because their challenge comes later, at the arc level, not at the output level.</p>
+    <p>A complete assessment of critical resilience must therefore account for both temporal modes: immediate challenge (sentence level, measurable within a single output) and deferred evaluation (trajectory level, measurable only across a sequence). The detection/latency/effort framework in §05 requires extension to include arc-level evaluation as a third measurement mode distinct from both immediate detection and maximum-effort capacity.</p>
   </div>
 
   <div class="section">
@@ -144,6 +154,10 @@ p:last-child { margin-bottom: 0; }
     <p>Answering this question requires a design that avoids the confounds identified in DA-008. Standard performance tasks are insufficient — they measure capacity, not the deployment of capacity. A valid design needs to measure how hard participants work to detect errors they are capable of detecting, not whether they can detect them when instructed to try.</p>
 
     <p>The key design requirement is a naturalistic error-detection task: participants are presented with outputs (from LLM and non-LLM sources) that contain embedded errors of varying subtlety, under conditions where critical challenge is not explicitly demanded. The measure is spontaneous error-detection rate, not maximum-effort error-detection rate. This distinguishes resilience (habitual challenge deployment) from capacity (maximum achievable challenge performance).</p>
+
+    <p>Three measurement levels are required, not one. Detection (did the participant identify the error?) is the primary measure but is insufficient alone. H3 and H4 are likely to manifest first in latency (how quickly was the error identified — immediate versus delayed recognition) and effort allocation (did the participant read critically or skim?), before appearing in detection rate. A design that measures only detection will miss the earliest indicators of resilience change. Measurement of all three levels is necessary to distinguish between a capacity effect (detection drops) and a deployment effect (latency increases, effort decreases, but detection capacity remains available on demand).</p>
+
+    <p>A further operationalisation requirement: the design must distinguish spontaneous non-detection from detection-without-report. A participant may notice an error but not mention it in a free-response task because the task context does not reward reporting. Post-task probes, response-time measurement, or eye-tracking can distinguish these cases. Absent this control, spontaneous error-detection rates will systematically underestimate actual awareness, and the study will conflate resilience reduction with reporting suppression.</p>
 
     <p>Longitudinal comparison between high-LLM-interaction and low-LLM-interaction groups would require a minimum of six months to show conditioning effects, controlling for domain expertise and social calibration. Cross-domain generalisation — whether reduced challenge toward LLM outputs transfers to reduced challenge toward other fluent sources — would require a separate task battery.</p>
 
