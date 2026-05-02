@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP-020 — Perämeri Logistics-Energy Ecosystem · ACI</title>
+<meta name="description" content="Closed-loop logistics and energy ecosystem for the Gulf of Bothnia region. Laanila SGFA node, RoRo connectivity, domestic fuel supply, and the coordination gap preventing integration. ACI Working Paper 020.">
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  .finding p { font-size: .92rem; margin-bottom: .5rem; }
+  .finding p:last-child { margin-bottom: 0; }
+  .scope-note { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; color: var(--mid); border: 1px solid var(--rule); padding: .9rem 1.1rem; margin: 1.25rem 0; line-height: 1.55; }
+  table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: .88rem; }
+  thead th { border-bottom: 2px solid var(--ink); padding: .5rem .75rem; text-align: left; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mid); }
+  tbody td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: .4rem 0; border-bottom: 1px solid var(--rule); font-size: .85rem; line-height: 1.5; }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-id { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .08em; color: var(--light); margin-right: .6rem; }
+  footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; max-width: 760px; margin: 0 auto; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; color: var(--light); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right">
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+    <a href="/tools/">Tools</a>
+    <a href="/decisions/">Decisions</a>
+    <a href="/about.html">About</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · Working Paper · WP-020</div>
+  <div class="doc-meta-grid">
+    <span><strong>Version</strong>0.1 Working Draft</span>
+    <span><strong>Date</strong>2026-05-01</span>
+    <span><strong>Domain</strong>D-2 · D-3 · D-4</span>
+    <span><strong>Status</strong>Working Draft</span>
+    <span><strong>Basis</strong>WP-019 · SM-009 · SM-010 · CN-007</span>
+    <span><strong>New elements</strong>Logistics · RoRo · Ownership structure · Closed loop</span>
+  </div>
+  <h1 class="doc-title">Perämeri Logistics-Energy Ecosystem</h1>
+  <p class="doc-subtitle">A closed-loop model for the Gulf of Bothnia — domestic fuel moving domestic cargo on domestic routes, and the coordination gap preventing it</p>
+  <div class="doc-abstract">
+    <p>Two independent development pathways in the Gulf of Bothnia region are structurally complementary but operationally disconnected. The first is energy: the Laanila SGFA node in Oulu (P2X Solutions, 100 MW electrolysis) produces green hydrogen and e-methane from renewable electricity and biogenic CO₂. The second is logistics: the industrial base of northern Finland and northern Sweden requires reliable, cost-effective freight connections to Central European markets. The routes currently available — primarily operated by Dutch and Italian-owned carriers — do not provide direct, scheduled service from the Gulf of Bothnia to major Central European ports. This paper documents the structural complementarity between these pathways, quantifies the emissions and economic case for integration, identifies the coordination failure that prevents it, and proposes a four-phase action model. The analysis draws on long-form operational knowledge of Nordic maritime logistics — including RoRo operations, huckepack systems, and the historical Transfennica Antwerp–Rauma/Kemi routes — as well as the ACI diagnostic framework developed in SM-009, SM-010, and WP-019.</p>
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="section">
+    <span class="section-marker">§ 01</span>
+    <h2>The Two Pathways</h2>
+
+    <h3>1.1 Energy: Laanila SGFA Node</h3>
+    <p>The Laanila industrial area in Oulu hosts one of Finland's most advanced concentrations of energy infrastructure. The existing biovoimalaitos produces 70 MW electricity and 175 MW heat. Sähkökattilat capacity of 100 MW (Laanila 40 MW + Toppila 60 MW) provides additional flexibility. P2X Solutions, in cooperation with Oulun Energia, has been preparing a 100 MW electrolysis unit with CO₂ capture since at least 2023; the YVA process was initiated in November 2024. Gasum operates a 35 GWh/year biogas plant and an LNG/LBG fuelling station at the site. Fingrid's planned 400 kV Järnväg reinforcement (Oulu–Lappeenranta) is scheduled for completion before 2035.</p>
+
+    <p>The investment decision for the electrolysis unit, expected in autumn 2025, had not been confirmed as of May 2026. The primary constraint is coordination between the electrolysis investment and the Fingrid FCR-D reserve market contract that would anchor the project's revenue model. This is a documented instance of the coordination failure pattern in WP-019 §3: technically ready, economically viable, institutionally stalled.</p>
+
+    <h3>1.2 Logistics: Gulf of Bothnia Connectivity Gap</h3>
+    <p>The industrial base of northern Finland — forest industry, metals, machinery — and the accelerating industrial development of northern Sweden (Stegra 700 MW electrolysis, HYBRIT, LKAB expansion) generate substantial and growing freight volumes requiring efficient connections to Central European markets. The current RoRo carrier landscape in Finland is almost entirely foreign-owned:</p>
+
+    <table>
+      <thead><tr><th>Operator</th><th>Route</th><th>Ownership</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Finnlines</td><td>Helsinki–Travemünde and others</td><td>Grimaldi Group (Italian)</td><td>Focused on southern Finland</td></tr>
+        <tr><td>Transfennica</td><td>Formerly Antwerp–Rauma/Kemi; now southern only</td><td>Spliethoff (Dutch)</td><td>Northern routes discontinued</td></tr>
+        <tr><td>Wallenius SOL</td><td>Northern Europe</td><td>Wallenius Lines (Swedish)</td><td>South Enabler methanol-ready (delivered June 2025)</td></tr>
+        <tr><td>Wagenborg</td><td>Kaskinen–Travemünde</td><td>Wagenborg (Dutch)</td><td>Opened June 2025</td></tr>
+      </tbody>
+    </table>
+
+    <p>The structural gap is a direct, scheduled RoRo service from the Gulf of Bothnia (Oulu, Kemi) to major Central European ports (Antwerp, Rotterdam). Freight currently routes via southern Finnish ports, adding transit time, cost, and emissions. The discontinued Transfennica Antwerp–Rauma/Kemi route — which served the Gulf of Bothnia for decades as part of a huckepack and intermodal system connecting Finnish industry to continental rail networks — represented precisely this connectivity, and its withdrawal removed a service that had genuine industrial anchoring.</p>
+
+    <div class="finding">
+      <div class="finding-label">Historical Context</div>
+      <p>The RoRo and combined transport systems that served northern Finland in earlier decades — including huckepack (rail-road piggyback), railship services, and the Transfennica Antwerp–Rauma/Kemi route — were built around industrial volume commitments that made the routes commercially viable. Their gradual withdrawal reflects the same coordination failure that ACI documents across energy and digital infrastructure: no single actor owns the systemic value of the connection, so each actor individually optimises away from maintaining it. The routes existed when there was a party willing to take the system view. They disappear when that party exits.</p>
+    </div>
+
+    <h3>1.3 The Ownership Concentration Risk</h3>
+    <p>Finland's maritime freight connections to Central Europe are predominantly operated by foreign-owned carriers: Grimaldi (Italian), Spliethoff (Dutch), Wallenius Lines (Swedish), Wagenborg (Dutch). In road and logistics services, the 2025 acquisition of DB Schenker by DSV (Danish, 14.3 billion euros) created a further concentration of critical logistics infrastructure under non-Finnish ownership. DHL — part of Deutsche Post DHL Group (German) — controls another major segment.</p>
+
+    <p>This is structurally analogous to the digital infrastructure dependency documented in SM-010 §09: critical operational infrastructure under foreign jurisdiction, with decision-making authority located outside Finland. In a crisis scenario, carriers can redeploy vessels to other routes. DSV or DHL can prioritise other markets. Finland has no domestic operators that could substitute at scale for Gulf of Bothnia–Central Europe freight. The measurement gap is precise: no institution systematically monitors the resilience of Finland's freight connectivity under stress conditions, in the same way that no institution monitors the digital infrastructure dependency documented in SM-010 §09.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 02</span>
+    <h2>The Synergy Case</h2>
+
+    <h3>2.1 Closed-Loop Model</h3>
+    <p>The structural complementarity between the Laanila energy node and a Gulf of Bothnia logistics hub is straightforward. Laanila produces hydrogen and e-methane from renewable electricity and biogenic CO₂. A logistics hub at or near Oulu port provides storage, distribution, and fuelling infrastructure. The fuel moves domestic cargo on routes that connect domestic industry to European markets. The loop closes: domestic renewable energy powers domestic freight.</p>
+
+    <p>The specific fuel pathways are:</p>
+    <p><strong>Heavy road transport:</strong> Hydrogen fuel cell or hydrogen combustion engines provide 600–1000 km range under cold conditions — addressing the primary operational constraint of battery-electric trucks in Finnish winter logistics. A 100 MW electrolyser produces approximately 40,000 kg hydrogen per day under optimistic operating assumptions, sufficient for roughly 200 heavy vehicles at 200 km daily range.</p>
+    <p><strong>Short-sea shipping:</strong> Methanol-ready RoRo vessels — such as Wallenius SOL's South Enabler, delivered June 2025 — can be fuelled with e-methane or methanol produced from the electrolysis output. The infrastructure for methane liquefaction at the hub is an incremental addition to existing LNG/LBG infrastructure at Laanila.</p>
+    <p><strong>Port and terminal equipment:</strong> Battery-electric container cranes, terminal tractors, and handling equipment are commercially available and represent the lowest-complexity electrification pathway.</p>
+
+    <h3>2.2 Emissions Quantification (Indicative)</h3>
+    <p>A 100 MW electrolyser producing 40,000 kg hydrogen per day, substituting diesel in heavy transport: 1 kg hydrogen replaces approximately 3.5 litres diesel. CO₂ saving: approximately 10 kg CO₂ per kg hydrogen (diesel at 2.7 kg CO₂/litre × 3.5 litres). Annual saving at full operation: 40,000 kg/day × 365 days × 10 kg CO₂ = approximately 146,000 tonnes CO₂ per year. This represents approximately 2.4% of Finland's total heavy transport CO₂ emissions (6.2 million tonnes per year).</p>
+
+    <div class="scope-note">These calculations are indicative. Actual emissions figures depend on electrolyser operating hours, electricity carbon intensity, specific vehicle fleet characteristics, and route profiles. EcoTransIT World standard coefficients should be applied in any investment-grade analysis.</div>
+
+    <h3>2.3 Economic Case</h3>
+    <p>The option value of domestic fuel production — the security-of-supply premium that market pricing systematically omits — is documented in WP-019 §8 at 90–120 million euros per TWh produced. The empirical reference is the March 2026 Hormuz disruption: TTF gas prices rose from 30 to 53 euros per MWh, at which point domestic biogas and e-methane production at 35–45 euros per MWh was competitive precisely when it was needed. The regional multiplier from fully energy-autonomous production — based on Ruralia Institute calculations for comparable Finnish municipalities — runs at 11–14 million euros per year per node in indirect economic circulation.</p>
+
+    <p>The logistics connectivity adds a second economic layer. The absence of direct Gulf of Bothnia–Central Europe RoRo service represents a continuous cost imposed on northern Finnish industry: longer transit times, higher per-unit costs, and increased emissions from southern routing. Quantifying this requires anchor tenant volume commitments from industrial actors — the precondition for any carrier to consider route establishment.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 03</span>
+    <h2>The Coordination Failure</h2>
+
+    <p>The complementarity between the energy and logistics pathways is visible. The investment case for each, independently, is documented. EU funding instruments — CEF (Connecting Europe Facility), Innovation Fund, REPowerEU — are available and have funded comparable projects elsewhere. Yet as of May 2026, neither pathway has reached an investment decision, and no actor has assumed coordination responsibility for the integrated system.</p>
+
+    <p>The SM-009 three-gap diagnostic applies directly.</p>
+
+    <p>The <strong>measurement gap</strong>: the combined value of energy-logistics integration — reduced transit costs, domestic fuel revenue, option value, regional multiplier, emissions reduction, security-of-supply improvement — is not calculated in any existing planning document. The energy project is evaluated on energy criteria. The logistics gap is noted but not quantified. The integration case does not exist in any official assessment, because no institution is tasked with producing it.</p>
+
+    <p>The <strong>sanction gap</strong>: the Laanila investment decision delay carries no political cost. The absence of Gulf of Bothnia–Central Europe RoRo service carries no political cost. No minister, no civil servant, no elected representative faces consequences for the continued absence of coordination. The DSV/Grimaldi/Spliethoff ownership concentration in Finnish freight logistics has not been assessed as a security-of-supply risk in any parliamentary process.</p>
+
+    <p>The <strong>correction gap</strong>: without measurement and without sanction, correction will not occur before a forcing event. The most likely forcing events are a major Baltic Sea shipping disruption (weather, conflict, infrastructure failure) or an energy price shock severe enough to make domestic fuel production immediately commercially attractive without subsidy. Both scenarios are more expensive correction mechanisms than proactive coordination.</p>
+
+    <div class="finding">
+      <div class="finding-label">Structural Observation</div>
+      <p>The energy pathway and the logistics pathway have different owners, different funding sources, different regulatory frameworks, and different institutional champions. No existing body has a mandate to evaluate their combined value or to coordinate their development timelines. This is not a failure of individual actors — P2X Solutions, Oulun Energia, Oulun satama, and the relevant carriers are all competent organisations pursuing their separate objectives rationally. The failure is that the system has no actor responsible for the systemic outcome. This is the central finding of SM-009, applied here to a specific regional case.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 04</span>
+    <h2>Four-Phase Action Model</h2>
+
+    <h3>Phase 1: Operational Assessment and Pilot Preparation (2026–2027)</h3>
+    <p>Establish contact with Wallenius SOL and Wagenborg regarding conditions for a scheduled Gulf of Bothnia–Central Europe RoRo service. The existing Kaskinen–Travemünde route (opened June 2025) provides a pilot foundation. Secure anchor tenant volume commitments from major industrial shippers (Metsä Group, Stora Enso) and logistics operators (DHL, DSV) as a precondition for carrier commitment. Run pilot freight movements to collect empirical data on transit times, costs, and emissions.</p>
+
+    <h3>Phase 2: Financing and Business Model Development (2026–2027)</h3>
+    <p>CEF (Connecting Europe Facility) is the appropriate instrument for port infrastructure, terminal development, and rail connection investment. Innovation Fund and REPowerEU apply to the Laanila electrolysis investment. A portfolio application — combining Laanila with other SGFA nodes (Tampere, Varkaus, Harjavalta, Vantaa) — is structurally stronger than a single-project application. Finnish pension funds (Ilmarinen, Varma, Keva) represent patient capital appropriate for infrastructure with stable cash flows (FCR reserve market contracts, option value). Hub ownership structure: port company, municipality, pension funds, logistics operators — a cooperative model consistent with the SGFA Holding Oy structure in SP-002.</p>
+
+    <h3>Phase 3: Pilot Implementation and Data Collection (2027–2028)</h3>
+    <p>Regular pilot freight movements on the Kaskinen–Travemünde route (2–3 sailings per week). Systematic measurement of emissions (CO₂, NOₓ, particulates) against road transport baseline. Cost accounting per unit. Schedule reliability and transit time measurement. Public reporting of results for use in EU funding negotiations and carrier discussions. Laanila electrolysis investment decision should be secured in this phase.</p>
+
+    <h3>Phase 4: Scaling and Policy Engagement (2028–2030)</h3>
+    <p>Expand pilot route to include Oulu port as volumes grow. Develop Oulu port logistics terminal: electric vehicle charging, hydrogen fuelling, methane liquefaction for marine fuel, rail connection. Market the operating ecosystem to other Gulf of Bothnia ports and adjacent industrial sectors. Policy engagement targets: TEM and LVM for CEF allocation, European Commission for energy resilience facility (SM-010 §5), parliament for security-of-supply reporting mandate covering freight logistics.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 05</span>
+    <h2>Open Questions and Verification Requirements</h2>
+
+    <p>This working paper draws on publicly available sources (Fingrid, TEM, ENTSO-E, ACI WP-019, SM-010, CN-007) and operational knowledge of Nordic maritime logistics. The following items require verification before investment-grade analysis:</p>
+
+    <p><strong>Laanila investment decision status</strong>: What is the current state of the P2X Solutions electrolysis investment decision? If delayed from the expected autumn 2025 timing, what is the specific constraint: financing, permits, technology readiness, or partner commitment?</p>
+
+    <p><strong>RoRo route capacity and flexibility</strong>: What is the current sailing frequency and capacity of the Kaskinen–Travemünde route? Can Wallenius SOL (South Enabler) or other carriers commit to additional capacity against industrial volume guarantees?</p>
+
+    <p><strong>Precise emissions coefficients</strong>: EcoTransIT World standard coefficients for the specific vessel types operating Gulf of Bothnia routes versus heavy road transport on equivalent routes. To be verified empirically in pilot phase.</p>
+
+    <p><strong>Option value calculation for Finnish context</strong>: WP-019's 90–120 M€/TWh estimate uses the March 2026 TTF spike as reference. Finnish option value also depends on SE1–FI transmission capacity utilisation and Fingrid reserve market pricing. A more precise estimate requires Fingrid data and scenario analysis.</p>
+
+    <p><strong>Regional employment and multiplier effects</strong>: Ruralia Institute figures (11–14 M€/year per energy-autonomous municipality) are indicative. A logistics hub adds employment multipliers not captured in the energy-only calculation. Requires sector-specific employment coefficients for Finnish conditions.</p>
+
+    <p><strong>EU funding absorption capacity</strong>: Finland's RRF absorption rate has been below the European average, attributable to administrative pipeline capacity. A coordinating entity (SGFA Holding Oy or equivalent) capable of preparing portfolio applications is a prerequisite for effective EU funding access.</p>
+
+    <p><strong>Security-of-supply freight risk quantification</strong>: What is the probability that Grimaldi or Spliethoff would redeploy vessels in a crisis scenario? What is the alternative cost if Gulf of Bothnia ports are without RoRo service for one week, two weeks, four weeks? This has not been assessed in any HVK document.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 06</span>
+    <h2>Findings and Recommendations</h2>
+
+    <div class="finding">
+      <div class="finding-label">Finding 1 — Technical and Economic Case Is Established</div>
+      <p>The Laanila SGFA node is technically ready (YVA initiated, existing infrastructure operational) and economically viable at current TTF price levels (IRR 12–16% baseline, 18–22% at current prices per WP-019). The logistics gap is real and its cost is carried continuously by northern Finnish industry. The integration case is not speculative.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 2 — Synergy Is Real and Calculable</div>
+      <p>Domestic renewable fuel from Laanila can power domestic freight on Gulf of Bothnia routes. The closed-loop model produces approximately 146,000 tonnes CO₂ savings per year (indicative), regional economic multipliers in the 11–14 M€/year range per node, and security-of-supply option value of 90–120 M€/TWh. These figures are indicative but order-of-magnitude robust.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 3 — Coordination Failure Is the Binding Constraint</div>
+      <p>Neither pathway has stalled for technical or financial reasons. Both have stalled because no actor owns the integrated outcome. The three-gap diagnostic (SM-009) applies: the combined value is not measured, the absence of coordination carries no political cost, and no correction mechanism exists except crisis. The constraint is institutional, not technical.</p>
+    </div>
+
+    <div class="finding">
+      <div class="finding-label">Finding 4 — Foreign Ownership of Critical Logistics Infrastructure Is Unassessed Risk</div>
+      <p>Finland's Gulf of Bothnia freight connectivity depends almost entirely on non-Finnish carriers whose operational decisions are made outside Finland. This has not been assessed as a security-of-supply risk in any HVK strategic document. It should be — using the same analytical framework applied to energy and digital infrastructure in SM-010.</p>
+    </div>
+
+    <p><strong>Recommendations for state actors (TEM, LVM, HVK):</strong> Assign coordination responsibility for the integrated Laanila–logistics hub development to a named entity with cross-ministerial mandate. Include freight logistics resilience in HVK strategic risk assessment. Allocate CEF funding to Oulu port terminal development. Establish annual parliamentary reporting on Gulf of Bothnia freight connectivity as a supply security indicator.</p>
+
+    <p><strong>Recommendations for industrial actors (Metsä Group, Stora Enso, others):</strong> Form a working group to quantify collective freight volumes and negotiate anchor tenant commitments as a precondition for carrier route establishment. The route exists if volume is guaranteed; the volume exists if actors coordinate.</p>
+
+    <p><strong>Recommendations for Oulu municipality and port:</strong> Include logistics hub terminal and hydrogen/methane fuelling infrastructure in strategic planning. Coordinate with P2X Solutions and Oulun Energia on investment timeline alignment.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">References</span>
+    <h2>Series References</h2>
+    <ul class="ref-list">
+      <li><span class="ref-id">WP-019</span>ACI (2026). SGFA Retrofit Pathways and Regional Economic Multipliers. aethercontinuity.org/papers/</li>
+      <li><span class="ref-id">SM-009</span>ACI (2026). The ACI Diagnostic Paradigm. §09: Capacity mechanism as case study. aethercontinuity.org/papers/</li>
+      <li><span class="ref-id">SM-010</span>ACI (2026). Financing Instruments and Energy Clusters. §09: Digital infrastructure sovereignty. aethercontinuity.org/papers/</li>
+      <li><span class="ref-id">CN-007</span>ACI (2026). Miksi järkevät asiat eivät etene — kolmen vajeen malli. aethercontinuity.org/papers/</li>
+      <li><span class="ref-id">SP-002</span>ACI (2026). SGFA 4.0 — Municipal Energy Stability Implementation Programme. aethercontinuity.org/papers/</li>
+      <li><span class="ref-id">Fingrid</span>Fingrid (2026). Sähköjärjestelmän toiminta talvella 2025–2026. fingrid.fi</li>
+      <li><span class="ref-id">Ruralia</span>Ruralia-instituutti / Vaasan energiainstituutti. Energiaomavaraisuuden aluetaloudelliset vaikutukset.</li>
+      <li><span class="ref-id">HVK</span>Huoltovarmuuskeskus (2026). Suomeen kohdistuva sotilaallinen voimankäyttö ja huoltovarmuus — skenaario. huoltovarmuus.fi</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  ACI Working Paper WP-020 · Working Draft v0.1 · 2026-05-01 · aethercontinuity.org<br>
+  Analysis is diagnostic. CAPEX figures and emissions calculations are scenario parameters, not commissioned estimates. Open for iteration.
+</footer>
+
+</body>
+</html>
