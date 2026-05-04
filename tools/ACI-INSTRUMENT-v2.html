@@ -1804,7 +1804,7 @@ function buildW168(liveData) {
       const h = t.getUTCHours(), dow = t.getUTCDay();
       const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
       const c = Math.max(0, base*scalC + diurnal*(dow===0||dow===6?0.85:1));
-      const nuc = 2800; // fallback kun live layer-data ei saatavilla
+      const nuc = 3300; // fallback kun live layer-data ei saatavilla (DS 188: OL+Loviisa, OL1 huolto → ~3300)
       const coldF = Math.max(0, Math.cos((month-1)/12*2*Math.PI)*0.5+0.3);
       const chp = Math.max(400, 1700*coldF + (c-base*scalC)*0.15);
       const wnd = Math.max(0, 900+(Math.random()-0.5)*400);
@@ -1881,6 +1881,15 @@ async function init() {
   await new Promise(r => setTimeout(r, 600));
   try { chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202'); }
   catch(e) { layerErrors.push('DS 202: ' + e.message); }
+
+  // Hae lämpötiladata (Open-Meteo, ei rate-limittiä)
+  let tempMap = null;
+  try {
+    tempMap = await fetchTemperature();
+  } catch(e) {
+    layerErrors.push('Lämpötila: ' + e.message);
+    tempMap = null;
+  }
 
   // MD_proxy käyttää import-gap CV:tä rawData:sta — ei tarvita DS 105 -hakua
 
@@ -1980,7 +1989,7 @@ function generateSynthetic(hours = 168) {
     const temp = Math.round((tempHki * 0.45 + tempKuo * 0.30 + tempRov * 0.25) * 10) / 10;
 
     // Tuotanto — kalibroitu niin että p ≈ c (Suomi tuo ~300 MW nettona)
-    const nuc = 2800 + (Math.random() - 0.5) * 80;
+    const nuc = 3300 + (Math.random() - 0.5) * 80; // DS 188 kaikki laitokset
     const wnd = Math.max(0, Math.sin(i / 36 * Math.PI) * 700 + 800 + (Math.random()-0.5)*350);
     // Kohdetuotanto: kulutus - tyypillinen nettoimportti (300 MW)
     const targetP = c - 300 - (Math.random() - 0.5) * 600;
