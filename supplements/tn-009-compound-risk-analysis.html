@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-009 — Compound Risk Analysis: Four Simultaneous Pressures 2026–2030 | ACI</title>
+<meta name="description" content="Systematic probabilistic analysis of four concurrent structural risks in the Finnish electricity system: OL3 outage, SE1 transmission structural shift, Nordic hydrological deficit, and CHP phase-out. Monte Carlo framework and compound scenario assessment.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#2a4a6e;--panel:#eeeae2;--panel2:#e6e1d6;
+  --ok:#2d7a4f;--warn:#8b5e00;--danger:#8b2020;
+  --serif:Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;
+     line-height:1.78;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+nav{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.4rem;}
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+            letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;
+          font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+.aci-meta a{color:var(--accent);text-decoration:none;}
+h1{font-size:1.65rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+         letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;line-height:1.3;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;}
+p{margin-bottom:14px;}
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;
+          background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+                letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);
+         padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout.warn{border-left-color:var(--warn);}
+.callout.danger{border-left-color:var(--danger);}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;
+               letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+.callout.warn .callout-label{color:var(--warn);}
+.callout.danger .callout-label{color:var(--danger);}
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);
+         border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2.1;}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+   color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);
+   background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+.finding{border:1px solid var(--line);background:var(--panel2);
+         padding:14px 18px;margin:28px 0;font-size:.88rem;line-height:1.8;}
+.finding h3{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+            letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:normal;}
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;
+          font-family:var(--mono);font-size:.66rem;color:var(--muted);line-height:2;}
+.preceded a{color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/decisions/">Decisions</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+</nav>
+
+<div class="aci-header">
+  <div class="aci-kicker">ACI · Technical Note · TN-009</div>
+  <h1>Compound Risk Analysis: Four Simultaneous Pressures 2026–2030</h1>
+  <p class="subtitle">OL3 outage · SE1 structural shift · Nordic hydrological deficit · CHP phase-out — probabilistic framework and compound scenario assessment</p>
+  <div class="aci-meta">
+    <span><strong>Version</strong> 0.1 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04</span>
+    <span><strong>Domain</strong> D-1 · D-4</span>
+    <span><strong>Basis</strong> WP-001 · WP-015 · TN-008 · WEM §10–12</span>
+    <span><strong>Instrument</strong> WEM v2.7.2 live data</span>
+    <span><strong>Status</strong> Working Draft</span>
+  </div>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>This note documents four concurrent structural risks in the Finnish electricity system and their compound interaction in the 2026–2030 window. Each risk is individually documented and monitored. None has been assessed in combination. The compound scenario — OL3 unplanned outage during a cold-still period, with SE1 transmission at saturation, Nordic hydrological deficit at historical low, and CHP capacity declining — produces an EPP shift from approximately 0.25 to 0.75–0.90 without additional load growth. With DC load growth of 1,500–3,000 MW by 2030, the same compound scenario approaches the BP-like threshold. This is not a forecast. It is a structural diagnosis: the system has no actor responsible for monitoring the compound state, and no instrument that aggregates these four risks into a single posture indicator. TN-009 proposes a probabilistic risk component (FRP) for integration into WEM EPP v4.</p>
+</div>
+
+<span class="sec-num">§ 01</span>
+<h2>The Four Risks — Individual Characterisation</h2>
+
+<h3>Risk 1: OL3 Unplanned Outage</h3>
+<p>Olkiluoto 3 contributes approximately 1,600 MW of firm capacity — the largest single generation unit in the Finnish system. Its contribution to EPP FirmShare is substantial: loss of OL3 reduces FS by approximately 20 percentage points, shifting EPP by 0.15–0.25 points independently of other conditions.</p>
+<p>Outage probability follows a Poisson process. For an EPR-class reactor in early operational years, λ ≈ 0.7 per year is a conservative estimate, giving P(outage in winter window, 120 days) ≈ 0.23. Duration distribution is heavy-tailed: 70% resolve within 24 hours, 25% within 1–5 days, 5% extend beyond 5 days. The 5% tail dominates the risk distribution. Average expected duration E[D] ≈ 43 hours.</p>
+<p>The scheduled maintenance window for OL3 in 2026 is 10 September–30 October (50 days). OL1 is in maintenance 19 April–13 June (55 days). The risk profile for winter 2026–2027 depends on whether unplanned outages coincide with the cold period.</p>
+
+<div class="callout warn">
+  <div class="callout-label">Current State — May 2026</div>
+  <p>OL1 is currently in planned maintenance (−900 MW). OL3 is operational. WEM §03 shows nuclear W24 at 2,798 MW — consistent with OL3 full output and OL2 operational. The planned OL3 autumn maintenance window (September–October 2026) creates a structural vulnerability during the early heating season, before typical winter demand peaks.</p>
+</div>
+
+<h3>Risk 2: SE1→FI Transmission Structural Shift</h3>
+<p>The SE1→FI interconnection has a nominal NTC of approximately 1,500 MW. WEM §12 records TRR at 103% as of 4 May 2026 — the connection is operating at saturation during a normal spring day. This is not a stress event; it is the new normal.</p>
+<p>The structural cause is documented in Svenska kraftnät's Grid Development Plan 2024–2033: electricity consumption in northern Sweden (SE1 bidding zone) is growing faster than generation, driven by Stegra (700 MW electrolysis), HYBRIT, LKAB expansion. Svenska kraftnät projects that the SE1→FI flow direction will shift from export to import in 2027 — meaning SE1 will move from being a supplier to being a competitor for the same interconnection capacity Finland currently relies on.</p>
+<p>Historical precedent: Svenska kraftnät significantly curtailed SE1→FI capacity in 2021, in violation of EU Regulation 2019/943 (minimum 70% of operationally secure capacity for cross-zonal trade). The Finnish Energy Authority documented this as an illegal restriction. The mechanism for recurrence exists — it does not require political intent, only physical congestion in northern Sweden's internal grid.</p>
+
+<div class="callout danger">
+  <div class="callout-label">Structural Finding</div>
+  <p>SE1→FI at 103% TRR on a normal spring day means the emergency buffer that should be available in a Finnish stress scenario is already in use for routine market flows. This is not a risk of future saturation — saturation is the present state.</p>
+</div>
+
+<h3>Risk 3: Nordic Hydrological Deficit</h3>
+<p>As of March–April 2026, the Nordic hydrological balance is at its lowest level in ten years, with a deficit of approximately −27 TWh relative to the long-term average. WEM §11 records Norjan reservoaarit at 32.4% versus a median of 58.0% (NVE Week 17 2026). The change is rapid: the hydrological balance was +17 TWh (surplus) in winter 2024–2025.</p>
+<p>Finland's domestic hydropower capacity is approximately 3,200 MW installed, producing roughly 10–14 TWh annually. Finnish reservoirs follow the Nordic pattern. WEM §03 records Finnish hydro W24 at 763 MW — consistent with spring low-flow conditions. The Finnish hydro contribution to FirmShare is real but weather-dependent: in a dry year, FS(p) — the probabilistically adjusted FirmShare accounting for hydro reservoir level — is materially lower than the nominal FS value.</p>
+<p>The critical T–W correlation applies here: cold, calm periods (which drive highest system stress) correlate with low precipitation and low snow accumulation. A dry winter that produces the hydrological deficit also tends to produce the wind drought. These are not independent risks.</p>
+
+<h3>Risk 4: CHP Phase-out</h3>
+<p>Combined heat and power (CHP) provides approximately 3,200 MW of semi-firm generation capacity with a positive temperature correlation — output is highest precisely when winter demand peaks. WEM §03 records CHP W24 at 3,200 MW and CHP/kulutus at 41.3%. WEM §10 backtest data shows CHP share declining from 36.5% (January 2022) to 25.5% (December 2024).</p>
+<p>Helen's planned transition from CHP to electric boilers (700 MW) replaces dual-output capacity (electricity + heat simultaneously) with single-output load (heat only, consuming electricity). The net effect on the electrical system is negative: the same heat demand now requires electrical input rather than generating electrical output. The ECI semi (firm + CHP / total production) masks this transition in aggregate statistics — it appears as a CHP reduction but the system effect is a simultaneous capacity loss and load increase.</p>
+
+<span class="sec-num">§ 02</span>
+<h2>Compound Scenario: All Four Simultaneous</h2>
+
+<p>Individual assessment of each risk understates the system vulnerability because the risks share structural correlations. The worst compound scenario is not the sum of individual worst cases — it is the intersection of conditions that are physically correlated.</p>
+
+<div class="formula">
+Compound scenario:
+OL3 unplanned outage (≥72h) 
+× cold period (T &lt; −15°C, P ≈ 0.08/winter)
+× wind drought (W &lt; 500 MW, P(W&lt;500|T&lt;−15) ≈ 0.25)
+× SE1 constrained (TRR ≥ 100%, structural from 2026)
+× Nordic hydro low (NVE &lt; 40%, current state)
+× CHP declining (structural trend, accelerating)
+
+P(compound) ≈ 0.23 × 0.08 × 0.25 × 1.0 × [elevated from current hydro] ≈ 0.5% / winter
+</div>
+
+<p>The 0.5% per winter figure appears small. The correct interpretation is actuarial: over a ten-year horizon, P(at least one compound event) ≈ 1 − (0.995)^10 ≈ 5%. With DC load growth adding 1,500–3,000 MW of flat load by 2030, the same compound trigger produces a materially worse outcome — the system has less margin to absorb the shock.</p>
+
+<table>
+  <thead>
+    <tr><th>Scenario</th><th>EPP Baseline</th><th>EPP Compound</th><th>Classification</th><th>LOLP</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Current state (May 2026)</td><td>0.25</td><td>—</td><td>Tight</td><td>~2%</td></tr>
+    <tr><td>OL3 outage, normal conditions</td><td>0.25</td><td>0.40–0.45</td><td>Tight→Elevated</td><td>~15%</td></tr>
+    <tr><td>OL3 + cold</td><td>0.25</td><td>0.55–0.70</td><td>Elevated</td><td>~60%</td></tr>
+    <tr><td>OL3 + cold + wind drought</td><td>0.25</td><td>0.75–0.90</td><td>BP-like</td><td>~90%</td></tr>
+    <tr><td>Same + 1,500 MW DC (2027)</td><td>0.35</td><td>0.85–0.95</td><td>BP-like</td><td>~95%</td></tr>
+    <tr><td>Same + 3,000 MW DC (2030)</td><td>0.50</td><td>0.90–1.00</td><td>BP-like</td><td>~99%</td></tr>
+  </tbody>
+</table>
+
+<p>The fat-tail structure dominates. The P90 Expected Energy Not Served (EENS) is approximately 8 GWh; the P99 is 80–150 GWh. A standard reliability planning exercise based on expected values systematically underestimates this risk by 2–3x because it does not model the T–W–hydro correlation structure.</p>
+
+<span class="sec-num">§ 03</span>
+<h2>The Measurement Gap: No Actor Owns the Compound</h2>
+
+<p>Each individual risk is monitored by a competent institution. Fingrid monitors OL3 outage probability and adjusts SE1 NTC accordingly. NVE publishes weekly reservoir statistics. Svenska kraftnät publishes capacity plans. TEM monitors CHP decommissioning timelines.</p>
+
+<p>No institution monitors the compound state. No instrument aggregates these four risk indicators into a single posture assessment. The Mattila data centre report (November 2025) assessed the electricity system from a data centre perspective and concluded that electricity will not run out. This conclusion is defensible on its own terms — it was not the wrong answer to its question. The question did not ask what happens when OL3 is offline during a cold–still–dry period with SE1 at capacity and CHP declining. That question was not in the commission.</p>
+
+<p>This is not a criticism of Mattila, Fingrid, NVE, or Svenska kraftnät. It is a structural observation: the commission architecture guarantees that the compound question is never asked, because no single actor's mandate covers the compound state. This is the measurement gap in SM-009 §09 applied to physical infrastructure risk.</p>
+
+<div class="finding">
+  <h3>Core Finding</h3>
+  <p>The Finnish electricity system faces four concurrent structural pressures in 2026–2030, each individually monitored and each individually manageable. Their compound interaction — particularly the OL3 × cold × wind drought × SE1 saturation scenario — produces a system state that has no current monitoring instrument and no owning institution. The probability of the full compound scenario is low (~0.5% per winter) but the tail risk is severe (LOLP approaching 100%, EENS P99 at 80–150 GWh). With DC load growth of 1,500–3,000 MW by 2030, the same compound trigger operates with zero margin. The diagnostic recommendation is not a specific policy action — it is first to measure the compound state. An actor must be designated to monitor it.</p>
+</div>
+
+<span class="sec-num">§ 04</span>
+<h2>Proposed WEM Extension: FRP Component</h2>
+
+<p>The compound risk can be approximated within the WEM EPP framework by adding a Failure Risk Premium (FRP) component to EPP v4:</p>
+
+<div class="formula">
+FRP = P(OL3 failure) × E[ΔEPP | failure]
+
+where:
+  P(OL3 failure, 72h+) ≈ 0.023 per winter month (λ=0.7/yr, tail-weighted)
+  E[ΔEPP | failure, cold+still] ≈ 0.40–0.65
+
+EPP* = EPP + α × FRP
+
+α = 1.0 in cold–still regime (SP_cluster ≥ 24h, T &lt; −5°C)
+α = 0.3 in normal conditions
+
+Hydro adjustment:
+  If NVE &lt; 40%: multiply FRP by 1.3
+  If NVE &lt; 30%: multiply FRP by 1.6
+  (captures FS(p) degradation under low-reservoir conditions)
+</div>
+
+<p>This extension is operationally compatible with the existing WEM §11 structure. SP_cluster and FS(p) are already computed. The NVE proxy is already integrated. FRP requires only the addition of a scalar multiplier applied to the existing EPP calculation when regime conditions are met.</p>
+
+<span class="sec-num">§ 05</span>
+<h2>Open Questions and Verification Requirements</h2>
+
+<p><strong>OL3 λ calibration:</strong> The λ = 0.7/year estimate is based on EPR-class reactor operating experience in early commercial years. TVO's actual outage history for OL3 since April 2023 commissioning should be used to calibrate this parameter. Planned maintenance windows are known (ENTSO-E REMIT); unplanned outage rate is the key uncertainty.</p>
+
+<p><strong>SE1 NTC reduction mechanism:</strong> Svenska kraftnät's Grid Development Plan projects the flow direction change by 2027. The precise mechanism — whether through reduced NTC allocation, internal congestion management, or market design — determines how quickly the transition occurs and whether it is gradual or step-change.</p>
+
+<p><strong>Finnish domestic hydro reservoir data:</strong> WEM currently proxies Finnish hydro via Norjan NVE data. A direct Finnish reservoir level data source (Kemijoki Oy, TVO, Fortum) would improve FS(p) accuracy. The correlation between Norwegian and Finnish reservoir levels is high but not perfect.</p>
+
+<p><strong>CHP retirement timeline:</strong> Helen's electric boiler transition affects Helsinki's system. Tampere, Oulu, and other cities have their own CHP timelines. The aggregate national CHP retirement schedule is not published in a single source.</p>
+
+<span class="sec-num">§ 06</span>
+<h2>Laboratory Analogy</h2>
+
+<p>In structural testing, individual component tests — static load, dynamic load, fatigue — each produce pass results. System integration testing under combined loading reveals failure modes that no individual test predicts. The standard test protocol for a composite structure does not ask "what happens when all load cases apply simultaneously during a temperature excursion?" — because that question exceeds the scope of any single component specification.</p>
+
+<p>The Finnish electricity system has passed its component tests. OL3 operates. SE1 transmits. Fingrid balances. Helen heats. Each actor within its mandate. The integration test — what happens when these systems interact under compound stress — has not been specified, and no actor has been assigned to run it.</p>
+
+<p>This is not a prediction of failure. It is a diagnosis of an untested condition. In structural engineering, the appropriate response is not to assume the structure will hold — it is to run the test.</p>
+
+<div class="preceded">
+  <strong>Series basis:</strong>
+  <a href="/papers/wp-001-duration-adequacy.html">WP-001 — Duration Adequacy</a> ·
+  <a href="/papers/wp-015-residual-market-failure.html">WP-015 — Residual Market Failure</a> ·
+  <a href="/supplements/tn-008-coupling-collapse-function.html">TN-008 — Coupling Collapse Function</a> ·
+  <a href="/papers/sm-009-diagnostic-paradigm.html">SM-009 — Diagnostic Paradigm §09</a> ·
+  <a href="/tools/">WEM v2.7.2 — Live instrument</a>
+</div>
+
+</body>
+</html>
