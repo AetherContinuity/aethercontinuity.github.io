@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-010 — Layered Economic Loss Function for Electricity Endurance Risk | ACI</title>
+<meta name="description" content="Electricity outage risk is not a price event — it is a categorical state transition. This note develops a layered economic loss function (LELF) that maps stress duration to sector-specific damage thresholds, and proposes integration with WEM EPP as a Conditional Endurance Loss (CEL) metric.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;
+  --accent:#2a4a6e;--panel:#eeeae2;--panel2:#e6e1d6;
+  --ok:#2d7a4f;--warn:#8b5e00;--danger:#8b2020;
+  --serif:Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;
+     line-height:1.78;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+nav{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.4rem;}
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+            letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;
+          font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+h1{font-size:1.65rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+         letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;}
+p{margin-bottom:14px;}
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;
+          background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+                letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);
+         padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout.warn{border-left-color:var(--warn);}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;
+               letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+.callout.warn .callout-label{color:var(--warn);}
+.formula{font-family:var(--mono);font-size:.82rem;background:var(--panel);
+         border:1px solid var(--line);padding:12px 16px;margin:16px 0;line-height:2.1;}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+   color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);
+   background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+.finding{border:1px solid var(--line);background:var(--panel2);
+         padding:14px 18px;margin:28px 0;font-size:.88rem;line-height:1.8;}
+.finding h3{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+            letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:normal;}
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;
+          font-family:var(--mono);font-size:.66rem;color:var(--muted);line-height:2;}
+.preceded a{color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+</nav>
+
+<div class="aci-header">
+  <div class="aci-kicker">ACI · Technical Note · TN-010</div>
+  <h1>Layered Economic Loss Function for Electricity Endurance Risk</h1>
+  <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
+  <div class="aci-meta">
+    <span><strong>Version</strong> 0.1 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04</span>
+    <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
+    <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
+    <span><strong>New elements</strong> LELF · CEL metric · CVaR analogy · Sector thresholds</span>
+    <span><strong>Status</strong> Working Draft</span>
+  </div>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>Standard financial risk models treat electricity price as a continuous variable subject to Value at Risk analysis. This is appropriate for commodity price exposure but fails categorically for physical outage risk. An electricity outage is not a price event — it is a state transition. Damage does not scale linearly with duration; it accumulates in discrete layers as successive process tolerances are breached. This note develops a Layered Economic Loss Function (LELF) that maps outage duration to sector-specific damage thresholds, proposes a Conditional Endurance Loss (CEL) metric as a CVaR analogue for electricity endurance, and shows how WEM's SP_cluster component can serve as a probabilistic input to CEL estimation. The framework is designed to make electricity endurance risk legible to financial sector actors whose standard tools systematically underestimate it.</p>
+</div>
+
+<span class="sec-num">§ 01</span>
+<h2>The Categorical Failure of VAR for Outage Risk</h2>
+
+<p>Value at Risk (VAR) and its successor Conditional Value at Risk (CVaR) are built on a continuity assumption: small changes in the underlying variable produce proportionally small changes in portfolio value. For electricity price exposure — the exposure a manufacturer faces when spot prices spike — this assumption holds approximately. If electricity costs rise 50%, operating margins compress by a calculable amount.</p>
+
+<p>Physical outage risk violates the continuity assumption in three distinct ways.</p>
+
+<p><strong>State transition, not price change.</strong> A grid under stress does not gradually reduce supply — it maintains nominal voltage until it cannot, then drops abruptly. The economic damage function is not smooth; it has hard thresholds at the moment supply fails. A firm with uninterruptible processes faces zero marginal cost from the first hour of high prices and catastrophic cost from the first second of lost supply. These are not on the same curve.</p>
+
+<p><strong>Duration dependence is nonlinear.</strong> Two hours without power is an operational disruption. Twenty hours is a process catastrophe for any continuous manufacturing operation. The damage does not scale proportionally — it accumulates through qualitatively different phases as successive tolerance thresholds are breached. A paper mill that shuts down cleanly at hour two faces a different cost structure than one that runs its process into an uncontrolled stop at hour six.</p>
+
+<p><strong>Timing heterogeneity is invisible to price models.</strong> A stress hour at 03:00 on a Sunday in May has approximately zero economic consequence for most commercial actors. The same stress hour at 14:00 on a Tuesday in January, during a cold spell, with industrial loads at maximum and hospital systems under peak demand, carries orders-of-magnitude higher systemic cost. Standard energy risk models assign identical weight to both.</p>
+
+<div class="callout warn">
+  <div class="callout-label">Core Observation</div>
+  <p>Electricity price can double without catastrophe. An outage of sufficient duration cannot be priced — it triggers damage in categories that have no market price: process destruction, food spoilage, heating loss, medical system failure. The financial sector's blind spot is precisely this categorical distinction. VAR models are built for the first type of event and are structurally blind to the second.</p>
+</div>
+
+<span class="sec-num">§ 02</span>
+<h2>The Layered Economic Loss Function (LELF)</h2>
+
+<p>The LELF maps outage duration to cumulative economic damage through discrete threshold layers. Each layer represents a qualitatively distinct damage category that becomes active when a duration threshold is crossed.</p>
+
+<div class="formula">
+LELF(d, t, s) = Σᵢ Lᵢ(s) · 𝟙[d ≥ θᵢ] · f(t)
+
+where:
+  d  = outage duration (hours)
+  t  = time of occurrence (hour of day, day of week, season)
+  s  = sector vector (industrial, commercial, residential, critical infrastructure)
+  Lᵢ = layer-specific loss function for sector s
+  θᵢ = duration threshold activating layer i
+  f(t) = timing multiplier [0.1 – 3.0] based on demand profile
+</div>
+
+<h3>Layer definitions</h3>
+
+<table>
+  <thead><tr><th>Layer</th><th>Threshold θ</th><th>Damage category activated</th><th>Primary sectors</th></tr></thead>
+  <tbody>
+    <tr><td>L1</td><td>0–2 h</td><td>Operational disruption. UPS systems active, most processes recover cleanly. Cost: lost production hours, restart costs.</td><td>Commercial, light industrial</td></tr>
+    <tr><td>L2</td><td>2–6 h</td><td>Process intolerance breach. Continuous processes (paper, chemical, food) cannot hold state. Controlled shutdown required. Cost: batch loss, restart damage, cleaning cycles.</td><td>Continuous manufacturing, data centres</td></tr>
+    <tr><td>L3</td><td>6–12 h</td><td>Thermal envelope breach. District heating buffer depletes in well-insulated buildings; cold chain integrity at risk. Hospitals on generator fuel consumption alert.</td><td>District heating, cold chain logistics, hospitals</td></tr>
+    <tr><td>L4</td><td>12–48 h</td><td>Critical infrastructure degradation. Generator fuel reserves depleted for smaller facilities. Water treatment disruption. Telecommunications base station battery exhaustion.</td><td>Telecoms, water, smaller hospitals, fuel retail</td></tr>
+    <tr><td>L5</td><td>&gt;48 h</td><td>Societal function impairment. Cascading failures across interdependent systems. Cost estimation transitions from sectoral to macroeconomic.</td><td>Systemic — all sectors simultaneously</td></tr>
+  </tbody>
+</table>
+
+<p>Finnish empirical reference: VTT and Energiateollisuus ry cost-of-interruption studies provide sector-specific loss rates in €/kWh unserved. These are typically reported as linear averages, which systematically understate L3–L5 costs because they are derived from short-duration survey data. The LELF framework uses these as L1–L2 baselines and applies threshold multipliers for L3–L5 based on process engineering tolerances.</p>
+
+<span class="sec-num">§ 03</span>
+<h2>Conditional Endurance Loss (CEL) — A CVaR Analogue</h2>
+
+<p>Financial risk management moved from VAR to CVaR because VAR answers the wrong question: it tells you the maximum loss at a given confidence level but says nothing about the distribution of losses beyond that threshold. CVaR — the expected loss given that the VAR threshold is exceeded — is more informative for fat-tailed distributions.</p>
+
+<p>The electricity endurance analogue follows the same logic. The relevant question is not "what is the probability of a stress hour?" (this is SP in WEM). It is: "given that a stress event occurs, what is the expected economic damage as a function of the duration distribution of that event?"</p>
+
+<div class="formula">
+CEL(w) = Σₛ wₛ · ∫ LELF(d, t̄, s) · p(d | SP_cluster, EPP) dd
+
+where:
+  w    = sector weight vector (industrial share, commercial share, etc.)
+  t̄   = expected timing given seasonal and diurnal profile
+  p(d | SP_cluster, EPP) = conditional duration distribution
+                           given current SP_cluster and EPP state
+
+Key insight: SP_cluster T₁₆₈ (longest stress episode, WEM §11) is a
+direct empirical estimator of p(d | current system state).
+</div>
+
+<p>SP_cluster already exists in WEM §11. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
+
+<div class="callout">
+  <div class="callout-label">Integration Path</div>
+  <p>CEL does not require a new data source. It requires: (1) LELF threshold calibration from existing Finnish cost-of-interruption research, (2) sector weight vector from Statistics Finland industrial structure data, (3) SP_cluster duration distribution from Fingrid historical data 2010–2025. All three are publicly available. The integration with WEM §11 is a calculation layer, not a new instrument.</p>
+</div>
+
+<span class="sec-num">§ 04</span>
+<h2>The Financial Sector Blind Spot</h2>
+
+<p>Finnish pension funds, banks, and insurance companies hold significant exposure to electricity endurance risk through their portfolios — directly via energy infrastructure investments, and indirectly via industrial and commercial lending books. This exposure is currently assessed through two instruments, both of which are structurally blind to physical outage risk.</p>
+
+<p><strong>Spot price exposure models</strong> track electricity cost as a function of market price. They correctly identify the risk that high prices compress industrial margins. They do not model the risk that supply fails entirely, because supply failure is not a price event — it is a physical event that removes the market signal before it can be observed.</p>
+
+<p><strong>Climate risk stress tests</strong> (EBA 2025, NGFS scenarios) focus on transition risk — stranded asset exposure, carbon price trajectories, green investment requirements. Physical risk in these frameworks means weather damage to assets, not grid endurance failure. A prolonged cold-still period that stresses the Finnish electricity system does not appear in standard NGFS scenarios because it is a compound infrastructure event, not a climate variable.</p>
+
+<p>The consequence: a Finnish pension fund's exposure to a 48-hour winter grid stress event is effectively zero in its risk models, because the event has no representation in any standard financial risk framework. The physical exposure is real; the modelled exposure is zero. This is the measurement gap in SM-009 applied to financial risk management.</p>
+
+<div class="finding">
+  <h3>Structural Finding</h3>
+  <p>The financial sector's exposure to electricity endurance risk is not measured because the risk does not fit the instruments available. VAR assumes continuity; outage risk is categorical. Climate stress tests address transition risk; endurance failure is a compound infrastructure event. The CEL framework proposed here is the missing instrument — not because it is sophisticated, but because it asks the right question: given current grid endurance state (EPP, SP_cluster), what is the expected economic damage if the stress persists beyond sector-specific tolerance thresholds?</p>
+</div>
+
+<span class="sec-num">§ 05</span>
+<h2>Calibration Requirements</h2>
+
+<p><strong>Duration distribution from Fingrid data 2010–2025.</strong> The historical frequency of stress episodes by duration bracket (1–4h, 4–12h, 12–48h, &gt;48h) is calculable from Fingrid open data DS 124/192 using the same SP methodology as WEM. This provides the empirical base for p(d | system state).</p>
+
+<p><strong>LELF threshold values from Finnish cost-of-interruption research.</strong> VTT Technical Research Centre and Energiateollisuus ry have published interruption cost estimates for Finnish industry. These require extension from linear averages to threshold-based functions — specifically, the L3–L5 multipliers require engineering-based estimates of process tolerance rather than survey averages which undersample long-duration events.</p>
+
+<p><strong>Sector weight vector from Statistics Finland.</strong> Industrial structure data provides the relative economic weight of continuous manufacturing, district heating, cold chain logistics, and critical infrastructure in Finnish GDP. This allows CEL to be expressed as an aggregate economic figure rather than a sector-specific engineering estimate.</p>
+
+<p><strong>Timing correction factor f(t).</strong> Diurnal and seasonal demand profiles from Fingrid DS 124 provide the empirical basis for the timing multiplier. A stress event during peak winter industrial demand carries a timing multiplier of approximately 2.5–3.0 relative to a summer night baseline.</p>
+
+<span class="sec-num">§ 06</span>
+<h2>Proposed WEM Extension: CEL Display</h2>
+
+<p>CEL can be integrated into WEM §11 as a fourth component alongside SP_cluster, FS(p), and MD_proxy. The display would show:</p>
+
+<div class="formula">
+CEL indicator:
+  Input: SP_cluster T₁₆₈ + EPP W168 + seasonal timing factor
+  Output: estimated economic damage range (€M) if current
+          stress pattern persists to threshold
+
+Example (illustrative, not calibrated):
+  SP_cluster T₁₆₈ = 3h, EPP = 0.20:  CEL ~ €5–20M (L1–L2 range)
+  SP_cluster T₁₆₈ = 12h, EPP = 0.45: CEL ~ €50–200M (L2–L3 range)
+  SP_cluster T₁₆₈ = 36h, EPP = 0.75: CEL ~ €500M–2B (L4–L5 range)
+
+Note: These are illustrative order-of-magnitude estimates.
+Calibration requires the empirical inputs described in §05.
+</div>
+
+<p>The CEL display would make the WEM instrument legible to financial actors who currently have no entry point into electricity endurance risk. An EPP value of 0.75 is technically precise but communicates nothing to a risk officer at a pension fund. "Estimated conditional economic loss: €500M–2B if current stress pattern persists to 36-hour threshold" communicates directly.</p>
+
+<span class="sec-num">§ 07</span>
+<h2>Open Questions</h2>
+
+<p><strong>Reserve capacity adjustment.</strong> The LELF as specified does not account for backup generation (hospital generators, industrial UPS systems, district heating emergency boilers). A reserve capacity discount factor R(s) should be incorporated: LELF_adjusted = LELF · (1 − R(s)). Estimating R(s) requires survey data on backup generation penetration by sector — partially available from HVK strategic reserve assessments.</p>
+
+<p><strong>Interdependency multipliers.</strong> L4–L5 damage is amplified by infrastructure interdependencies: telecommunications failure impairs emergency response, which amplifies district heating failure, which amplifies hospital stress. These cascade effects are structurally excluded from sector-by-sector LELF estimates. Modelling them requires a network dependency graph that is beyond the scope of this working draft.</p>
+
+<p><strong>Insurance market data.</strong> Finnish business interruption insurance claims from major winter stress events would provide direct empirical validation of L1–L2 estimates and partial validation of L3 estimates. This data exists within the insurance sector but is not publicly available. Finanssiala ry would be the natural counterpart for accessing aggregated claims data.</p>
+
+<p><strong>CEL vs. EENS.</strong> The power systems literature uses Expected Energy Not Served (EENS) as its standard reliability metric. CEL is economically more informative than EENS because it weights unserved energy by sector-specific damage rather than treating all MWh equally. The relationship between the two metrics requires explicit articulation — CEL should be expressed as a function of EENS with sector-specific loss-of-load cost coefficients.</p>
+
+<div class="preceded">
+  <strong>Series basis:</strong>
+  <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis</a> ·
+  <a href="/papers/wp-001-duration-adequacy.html">WP-001 — Duration Adequacy</a> ·
+  <a href="/papers/wp-015-residualization-spot-markets.html">WP-015 — Residual Market Failure</a> ·
+  <a href="/tools/ACI-INSTRUMENT-v2.html">WEM v2.7.2 — §11 SP_cluster</a>
+</div>
+
+</body>
+</html>
