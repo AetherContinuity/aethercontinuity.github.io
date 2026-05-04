@@ -296,7 +296,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
     <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; <span id="versionBadge">v2.7</span></div>
   </div>
-  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192/74 · 87 · 191 · 181 · 105</div>
+  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192/74 · 188 · 191 · 181 · 105</div>
 </div>
 
 <div class="page">
@@ -313,7 +313,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §01 Current posture -->
   <div style="margin-bottom:3rem;">
     <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">Nykyinen posture — EPP (W168)</span></div>
-    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: DS 124 (kulutus) · DS 192 (tuotanto) · DS 87 (ydin) · DS 191 (hydro) · DS 181 (tuuli).</p>
+    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: DS 124 (kulutus) · DS 192 (tuotanto) · DS 188 (ydin) · DS 191 (hydro) · DS 181 (tuuli).</p>
 
     <div class="posture-blk">
       <div class="posture-epp">
@@ -420,7 +420,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §03 Layer Composition -->
   <div class="layer-section">
     <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Tuotantorakenne — Layer Composition &amp; ECI</span></div>
-    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 87) + vesivoima (DS 191). Semi-vakaa: yhteistuotanto CHP (DS 201 kaukolämpö + DS 202 teollisuus) — negatiivinen korrelaatio lämpötilaan, eli korkeimmillaan juuri talvihuipun aikana. Variabili: tuulivoima (DS 181). ECI (firm) = (ydin+hydro)/tuotanto · ECI (semi) = (ydin+hydro+CHP)/tuotanto. Kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
+    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 188) + vesivoima (DS 191). Semi-vakaa: yhteistuotanto CHP (DS 201 kaukolämpö + DS 202 teollisuus) — negatiivinen korrelaatio lämpötilaan, eli korkeimmillaan juuri talvihuipun aikana. Variabili: tuulivoima (DS 181). ECI (firm) = (ydin+hydro)/tuotanto · ECI (semi) = (ydin+hydro+CHP)/tuotanto. Kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
 
     <!-- Stacked bar W24 -->
     <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">W24 · Tuotantorakenne (%)</div>
@@ -433,7 +433,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div class="layer-seg" id="lsOth" style="background:#c8bfad;" data-tip="Residuaali (biomassa, lauhdutus…)"></div>
       </div>
       <div class="layer-legend">
-        <div class="layer-lg"><div class="layer-swatch" style="background:#3a5fa0;"></div>Ydinvoima · DS 87 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#3a5fa0;"></div>Ydinvoima · DS 188 · vakaa</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#2d6b3a;"></div>Vesivoima · DS 191 · vakaa</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#a05c30;"></div>Yhteistuotanto CHP · DS 201+202 · semi-vakaa · talvikorrelaatio ↑</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#7a9cc0;"></div>Tuulivoima · DS 181 · variabili</div>
@@ -897,7 +897,7 @@ const DS = {
   consumption:  124,  // Sähkönkulutus Suomessa
   production:   192,  // Sähköntuotanto Suomessa (kokonais)
   production2:   74,  // Vaihtoehtoinen tuotanto-DS (fallback jos 192 epäonnistuu)
-  nuclear:       87,  // Ydinvoima
+  nuclear:      188,  // Ydinvoima — kaikki laitokset (Olkiluoto + Loviisa) · DS 188
   hydro:        191,  // Vesivoima
   wind:         181,  // Tuulivoima
   chpDH:        201,  // Kaukolämmön yhteistuotanto
@@ -1350,7 +1350,7 @@ function renderMetrics(m) {
       vals:[w24?.dp_t ?? w24?.dp_s, w72?.dp_t ?? w72?.dp_s, w168?.dp_t ?? w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
     },
     { id:'B · FS', name:'FirmShare — firm capacity coverage',
-      desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS)×0.30. Huom: vesivoima olettaa normaalin vesitilannon. Vaatii DS 87+191.',
+      desc:'(Ydinvoima+vesivoima) / kulutus. Mittaa kuinka suuri osa kulutuksesta katetaan rakenteellisesti vakaalla kapasiteetilla. EPP:ssä (1−FS)×0.30. Huom: vesivoima olettaa normaalin vesitilannon. Vaatii DS 188+191.',
       vals:[w24?.fs, w72?.fs, w168?.fs], weight:'0.30', fmt: v => v != null ? fmt.pct(v) : '—', invert: true,
     },
     { id:'C · WR', name:'WindRisk — variabiliteettiriski',
