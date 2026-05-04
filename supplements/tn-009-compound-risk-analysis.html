@@ -88,7 +88,7 @@ tr:last-child td{border-bottom:none;}
 
 <div class="abstract">
   <div class="abstract-label">Abstract</div>
-  <p>This note documents five concurrent structural risks in the Finnish electricity system and their compound interaction in the 2026–2030 window. Each risk is individually documented and monitored. None has been assessed in combination. The compound scenario — OL3 unplanned outage during a cold-still period, with SE1 transmission at saturation, Nordic hydrological deficit at historical low, and CHP capacity declining — produces an EPP shift from approximately 0.25 to 0.75–0.90 without additional load growth. With DC load growth of 1,500–3,000 MW by 2030, the same compound scenario approaches the BP-like threshold. This is not a forecast. It is a structural diagnosis: the system has no actor responsible for monitoring the compound state, and no instrument that aggregates these four risks into a single posture indicator. TN-009 proposes a probabilistic risk component (FRP) for integration into WEM EPP v4.</p>
+  <p>This note documents five concurrent structural risks in the Finnish electricity system and their compound interaction in the 2026–2030 window. Each risk is individually documented and monitored. None has been assessed in combination. The compound scenario — OL3 unplanned outage during a cold-still period, with SE1 transmission at saturation, Nordic hydrological deficit at historical low, and CHP capacity declining — produces an EPP shift from approximately 0.20 (live baseline, 4 May 2026) to 0.70–0.85 without additional load growth. With DC load growth of 1,500–3,000 MW by 2030, the same compound scenario approaches the BP-like threshold. This is not a forecast. It is a structural diagnosis: the system has no actor responsible for monitoring the compound state, and no instrument that aggregates these four risks into a single posture indicator. TN-009 proposes a probabilistic risk component (FRP) for integration into WEM EPP v4.</p>
 </div>
 
 <span class="sec-num">§ 01</span>
@@ -132,7 +132,7 @@ tr:last-child td{border-bottom:none;}
 
 <p>The Baltic Sea has experienced nine submarine cable and pipeline cuts in 14 months across three separate incidents (October 2023 NewNew Polar Bear, November 2024 Yi Peng 3, December 2024 Eagle S). The Estonia–Finland Estlink 2 cable failed on 25 December 2024, reducing cross-border capacity from 1,016 MW to 358 MW for six months at a repair cost of 50–60 million euros. A separate Estlink 2 fault in January 2024 required seven months of repair. Fenno-Skan 2 (800 MW, Finland–Sweden) experienced a substation fault in March 2026 (4-hour outage) and a construction damage incident in April 2023. Estlink 1 experienced a substation fault in September 2025.</p>
 
-<p>The critical structural observation: whether a transmission failure constitutes an endurance risk for Finland depends on the direction of power flow at the moment of failure. The Estlink 2 December 2024 failure occurred while Finland was exporting 650 MW to Estonia — the result was a slight price decrease in Finland and a significant increase in Estonia. The same cable failure during a Finnish import period would have had the opposite effect. With SE1→FI currently at TRR 103% (May 2026), a Fenno-Skan or SE1 AC line failure during a cold-still period would constitute a direct endurance event, not a price event.</p>
+<p>The critical structural observation: whether a transmission failure constitutes an endurance risk for Finland depends on the direction of power flow at the moment of failure. The Estlink 2 December 2024 failure occurred while Finland was exporting 650 MW to Estonia — the result was a slight price decrease in Finland and a significant increase in Estonia. The same cable failure during a Finnish import period would have had the opposite effect. With SE1→FI currently at TRR 103% (May 2026), a Fenno-Skan HVDC cable or Finnish 400 kV north–south transmission failure during a cold-still period would constitute a direct endurance event, not a price event.</p>
 
 <div class="callout danger">
   <div class="callout-label">Directional Risk Condition</div>
@@ -180,16 +180,18 @@ trigger mechanisms. 5b is weather-correlated with OL3/cold/wind risks.
     <tr><th>Scenario</th><th>EPP Baseline</th><th>EPP Compound</th><th>Classification</th><th>LOLP</th></tr>
   </thead>
   <tbody>
-    <tr><td>Current state (May 2026)</td><td>0.25</td><td>—</td><td>Tight</td><td>~2%</td></tr>
-    <tr><td>OL3 outage, normal conditions</td><td>0.25</td><td>0.40–0.45</td><td>Tight→Elevated</td><td>~15%</td></tr>
-    <tr><td>OL3 + cold</td><td>0.25</td><td>0.55–0.70</td><td>Elevated</td><td>~60%</td></tr>
-    <tr><td>OL3 + cold + wind drought</td><td>0.25</td><td>0.75–0.90</td><td>BP-like</td><td>~90%</td></tr>
-    <tr><td>Same + 1,500 MW DC (2027)</td><td>0.35</td><td>0.85–0.95</td><td>BP-like</td><td>~95%</td></tr>
-    <tr><td>Same + 3,000 MW DC (2030)</td><td>0.50</td><td>0.90–1.00</td><td>BP-like</td><td>~99%</td></tr>
+    <tr><td>Current state (4 May 2026, live)</td><td>0.20</td><td>—</td><td>Normal</td><td>~2%</td></tr>
+    <tr><td>OL3 outage, normal conditions</td><td>0.20</td><td>0.35–0.40</td><td>Tight</td><td>~15%</td></tr>
+    <tr><td>OL3 + cold</td><td>0.20</td><td>0.50–0.65</td><td>Elevated</td><td>~60%</td></tr>
+    <tr><td>OL3 + cold + wind drought</td><td>0.20</td><td>0.70–0.85</td><td>BP-like</td><td>~90%</td></tr>
+    <tr><td>Same + 1,500 MW DC (2027)</td><td>0.30</td><td>0.80–0.92</td><td>BP-like</td><td>~95%</td></tr>
+    <tr><td>Same + 3,000 MW DC (2030)</td><td>0.45</td><td>0.87–1.00</td><td>BP-like</td><td>~99%</td></tr>
   </tbody>
 </table>
 
-<p>The fat-tail structure dominates. The P90 Expected Energy Not Served (EENS) is approximately 8 GWh; the P99 is 80–150 GWh. A standard reliability planning exercise based on expected values systematically underestimates this risk by 2–3x because it does not model the T–W–hydro correlation structure.</p>
+<p><small>¹ <strong>LOLP</strong> (Loss of Load Probability): probability that generation capacity falls short of demand during the compound event window. The 2% baseline reflects normal winter operation where occasional spot spikes trigger demand response — not sustained outages. Under the full compound scenario (OL3 + cold + wind drought), LOLP approaches 100% within the event window duration, not annually.</small></p>
+
+  <p>The fat-tail structure dominates. The P90 Expected Energy Not Served (EENS) is approximately 8 GWh; the P99 is 80–150 GWh. A standard reliability planning exercise based on expected values systematically underestimates this risk by 2–3x because it does not model the T–W–hydro correlation structure.</p>
 
 <span class="sec-num">§ 03</span>
 <h2>The Measurement Gap: No Actor Owns the Compound</h2>
