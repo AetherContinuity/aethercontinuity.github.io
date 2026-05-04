@@ -1380,11 +1380,13 @@ function renderMetrics(m) {
 
   metrics.forEach(met => {
     const v168 = met.vals[2];
-    const cls = v168 != null ? (met.useSP ? spLabel(v168) : classify(v168)) : null;
+    // FS on käänteinen: korkea FS = hyvä (käytetään (1-v) luokitteluun)
+    const classifyVal = (v, met) => met.invert ? classify(1 - v) : classify(v);
+    const cls = v168 != null ? (met.useSP ? spLabel(v168) : classifyVal(v168, met)) : null;
 
     const renderNum = (v, idx) => {
       if (v == null) return '<td class="met-num"><span style="color:var(--muted);">—</span></td>';
-      const c = met.useSP ? spLabel(v) : classify(v);
+      const c = met.useSP ? spLabel(v) : classifyVal(v, met);
       const bar = met.isEPP
         ? `<span class="met-bar-wrap"><span class="met-bar" style="width:${(v*100).toFixed(1)}%;background:${c.color};"></span></span>`
         : '';
@@ -1394,7 +1396,7 @@ function renderMetrics(m) {
     const stressH = [w24, w72, w168];
     const nums = met.vals.map((v, i) => {
       if (v == null) return '<td class="met-num"><span style="color:var(--muted);">—</span></td>';
-      const c = met.useSP ? spLabel(v) : classify(v);
+      const c = met.useSP ? spLabel(v) : classifyVal(v, met);
       const bar = met.isEPP
         ? `<span class="met-bar-wrap"><span class="met-bar" style="width:${(v*100).toFixed(1)}%;background:${c.color};"></span></span>`
         : '';
