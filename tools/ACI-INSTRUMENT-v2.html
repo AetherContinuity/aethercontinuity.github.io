@@ -1804,7 +1804,7 @@ function buildW168(liveData) {
       const h = t.getUTCHours(), dow = t.getUTCDay();
       const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
       const c = Math.max(0, base*scalC + diurnal*(dow===0||dow===6?0.85:1));
-      const nuc = 2800;
+      const nuc = 2800; // fallback kun live layer-data ei saatavilla
       const coldF = Math.max(0, Math.cos((month-1)/12*2*Math.PI)*0.5+0.3);
       const chp = Math.max(400, 1700*coldF + (c-base*scalC)*0.15);
       const wnd = Math.max(0, 900+(Math.random()-0.5)*400);
@@ -1859,6 +1859,28 @@ async function init() {
     try { pRows = await fetchYesterday(DS.production2, 'DS 74'); errors.push('DS 192→74'); }
     catch(e2) { errors.push('DS 192+74: ' + e2.message); pRows = []; }
   }
+
+  // Hae layer-data (nuclear, hydro, wind, CHP) — rate-limit välttämiseksi viiveet
+  await new Promise(r => setTimeout(r, 600));
+  try { nucRows = await fetchYesterday(DS.nuclear, 'DS 188'); }
+  catch(e) { layerErrors.push('DS 188: ' + e.message); nucRows = null; }
+
+  await new Promise(r => setTimeout(r, 600));
+  try { hydRows = await fetchYesterday(DS.hydro, 'DS 191'); }
+  catch(e) { layerErrors.push('DS 191: ' + e.message); hydRows = null; }
+
+  await new Promise(r => setTimeout(r, 600));
+  try { wndRows = await fetchYesterday(DS.wind, 'DS 181'); }
+  catch(e) { layerErrors.push('DS 181: ' + e.message); wndRows = null; }
+
+  await new Promise(r => setTimeout(r, 600));
+  let chpDHRows = null, chpIndRows = null;
+  try { chpDHRows = await fetchYesterday(DS.chpDH, 'DS 201'); }
+  catch(e) { layerErrors.push('DS 201: ' + e.message); }
+
+  await new Promise(r => setTimeout(r, 600));
+  try { chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202'); }
+  catch(e) { layerErrors.push('DS 202: ' + e.message); }
 
   // MD_proxy käyttää import-gap CV:tä rawData:sta — ei tarvita DS 105 -hakua
 
