@@ -1947,6 +1947,50 @@ async function init() {
     }
   }
 
+  // ── Sanity check — varoittaa epärealistisista arvoista ──────────────────────
+  if (rawData.length >= 24) {
+    const last24 = rawData.slice(-24);
+    const checks = [];
+    const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+
+    const avgNuc = avg(last24.filter(d=>d.nuc!=null).map(d=>d.nuc));
+    const avgHyd = avg(last24.filter(d=>d.hyd!=null).map(d=>d.hyd));
+    const avgWnd = avg(last24.filter(d=>d.wnd!=null).map(d=>d.wnd));
+    const avgC   = avg(last24.map(d=>d.c));
+    const avgP   = avg(last24.map(d=>d.p));
+
+    // Ydinvoima: 1500–4500 MW realistinen (OL1 huollossa min ~2400, kaikki max ~4400)
+    if (avgNuc > 0 && (avgNuc < 1500 || avgNuc > 4500))
+      checks.push(`⚠ Ydinvoima ${Math.round(avgNuc)} MW epärealistinen (1500–4500 MW)`);
+
+    // Vesivoima: 300–5000 MW
+    if (avgHyd > 0 && (avgHyd < 100 || avgHyd > 5000))
+      checks.push(`⚠ Vesivoima ${Math.round(avgHyd)} MW epärealistinen`);
+
+    // Tuulivoima: 0–7000 MW (Suomen kapasiteetti kasvaa)
+    if (avgWnd > 7000)
+      checks.push(`⚠ Tuulivoima ${Math.round(avgWnd)} MW yli kapasiteetin`);
+
+    // Kulutus: 5000–15000 MW
+    if (avgC < 4000 || avgC > 15000)
+      checks.push(`⚠ Kulutus ${Math.round(avgC)} MW epärealistinen`);
+
+    // Tuotanto vs kulutus: max ±4000 MW nettoimport/eksport
+    const gap = Math.abs(avgC - avgP);
+    if (gap > 4000)
+      checks.push(`⚠ Tuotanto-kulutus gap ${Math.round(gap)} MW liian suuri`);
+
+    if (checks.length > 0) {
+      console.warn('WEM sanity check:', checks);
+      // Näytä varoitus status-barissa
+      const existing = document.getElementById('sItems').innerHTML;
+      document.getElementById('sItems').innerHTML = existing +
+        checks.map(c => `<span class="status-item warn">Sanity: <strong>${c}</strong></span>`).join('');
+    } else {
+      console.log('✅ WEM sanity check OK — kaikki parametrit realistisella alueella');
+    }
+  }
+
   // §11 EPP v4 render
   try {
     const m4 = computeAll(rawData);
