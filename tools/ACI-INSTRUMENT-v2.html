@@ -322,7 +322,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="epp-badge-dot" id="eppDot"></div>
           <span class="epp-badge-txt" id="eppTxt">—</span>
         </div>
-        <div class="epp-sub" id="eppSub">W168 · v3+T: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20</div>
+        <div class="epp-sub" id="eppSub">W168 · v3+T+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈)</div>
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -399,7 +399,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §02 Core metrics table -->
   <div class="metrics-section">
     <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Core Metrics — W24 · W72 · W168</span></div>
-    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP v3: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20. DC ja NIR esitetään infona. Luokittelu jokaiselle ikkunalle erikseen.</p>
+    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP v3+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈). P(T₁₆₈) = persistenssipreemio: +0.05 jos T₁₆₈≥6h, +0.12 jos T₁₆₈≥24h. DC ja NIR esitetään infona. Luokittelu jokaiselle ikkunalle erikseen.</p>
     <table class="met-tbl" id="metTable">
       <thead>
         <tr>
@@ -1203,12 +1203,23 @@ function calcWindow(slice) {
   // EPP laskenta — DP: lämpötilakorjattu > kausikorjattu > absoluuttinen
   const dp_used = dp_t ?? dp_s;
   let epp, eppFull;
+
+  // SP_cluster persistenssipreemio: pitkät stressijaksot korottavat EPP:tä
+  // T168 > 6h → +0.05, T168 > 24h → +0.12
+  // Perustelu: kalibronti 1/2016 ja 2/2021 osoitti SP-paino 30% ei yksin riitä
+  // nostamaan EPP:tä Elevated-tasolle pitkissä stressijaksoissa. Persistenssi
+  // on erillinen riskidimensio joka ei näy SP-osuudessa.
+  const t168 = spCluster?.t168 ?? 0;
+  const persistPremium = t168 >= 24 ? 0.12 : t168 >= 6 ? 0.05 : 0.0;
+
   if (eppMode === 'v3') {
-    epp = Math.min(1, Math.max(0, (1-fs)*0.30 + sp*0.30 + dp_used*0.20 + wr*0.20));
-    eppFull = dp_t != null ? 'v3+T' : 'v3';
+    epp = Math.min(1, Math.max(0,
+      (1-fs)*0.30 + sp*0.30 + dp_used*0.20 + wr*0.20 + persistPremium));
+    eppFull = dp_t != null ? 'v3+T+P' : 'v3+P';
   } else {
-    epp = Math.min(1, Math.max(0, (1-dc)*0.30 + sp*0.30 + dp_used*0.20 + nir*0.20));
-    eppFull = dp_t != null ? 'fallback+T' : 'fallback';
+    epp = Math.min(1, Math.max(0,
+      (1-dc)*0.30 + sp*0.30 + dp_used*0.20 + nir*0.20 + persistPremium));
+    eppFull = dp_t != null ? 'fallback+T+P' : 'fallback+P';
   }
 
   return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp,
@@ -1374,7 +1385,7 @@ function renderMetrics(m) {
       vals:[w24?.nir, w72?.nir, w168?.nir], weight:'info', fmt: v => fmt.pct(v), info: true,
     },
     { id:'E · EPP', name:'Endurance Pressure Proxy',
-      desc:'v3 (layer-data saatavilla): (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20. Fallback: (1−DC)×0.30 + SP×0.30 + DP_t×0.20 + NIR×0.20.',
+      desc:'v3+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈). P = persistenssipreemio (0/+0.05/+0.12 kun T₁₆₈ <6h/≥6h/≥24h). Fallback: sama ilman FS/WR.',
       vals:[w24?.epp, w72?.epp, w168?.epp], weight:'—', fmt: v => v.toFixed(3), isEPP: true,
     },
   ];
@@ -2590,6 +2601,7 @@ const WEM_CHANGES = [
   '2.7.2→2.7.3: DS 87 korjattu DS 188:ksi — ydinvoima sisältää nyt Loviisan (+~500 MW). Vaikutus: FS +6.5 pp, EPP −1.9 pp, ECI +6.2 pp. Historialliset arvot olivat konservatiivisia. Kvalitatiiviset johtopäätökset muuttumaton.',
   '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
   '2.7.4: NTC SE1→FI korjattu 1500→2300 MW (Aurora Line käyttöön 11/2025, lisäys +800 MW). TRR 105% → ~68% — ei saturaatio vaan korkea käyttöaste.',
+  '2.7.5: EPP v3+P — persistenssipreemio SP_cluster T₁₆₈ pohjalta. Kalibrointi 1/2016 osoitti SP 30% ei riitä Elevated-tasoon pitkissä jaksoissa. T168≥6h: +0.05, T168≥24h: +0.12.',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
 ];
 document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
