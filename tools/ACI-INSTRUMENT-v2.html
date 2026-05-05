@@ -2892,7 +2892,7 @@ async function renderS12(rawData) {
     }
 
     // P1 sisäinen siirto (DS 30) — 10s viive rate-limiting jälkeen
-    await new Promise(r => setTimeout(r, 10000));
+    await new Promise(r => setTimeout(r, 3000));
     try {
       const now = new Date();
       const end = new Date(now - 2*3.6e6);
@@ -3027,8 +3027,8 @@ async function renderS12(rawData) {
       if (wlEl) wlEl.textContent = 'DS 245 ei vastaa';
     }
 
-    // ── Rajasiirrot — kaikki yhteydet ─────────────────────────────────────────
-    await new Promise(r => setTimeout(r, 2000));
+    // ── Rajasiirrot — kaikki yhteydet (rinnakkain) ────────────────────────────
+    await new Promise(r => setTimeout(r, 1000));
     try {
       const connections = [
         { label: 'SE1  (Pohj. Ruotsi)', ds: 60,  ntc: 2300, note: 'Aurora Line' },
@@ -3041,8 +3041,8 @@ async function renderS12(rawData) {
       const now2 = new Date();
       const end2 = new Date(now2 - 1*3.6e6);
       const start2 = new Date(now2 - 3*3.6e6);
-      const rows = [];
-      for (const conn of connections) {
+      // Haetaan kaikki yhteydet rinnakkain (ei peräkkäin)
+      const rows = await Promise.all(connections.map(async conn => {
         try {
           const ru = await fetch(txBase + '/?ds=' + conn.ds +
             '&start=' + encodeURIComponent(start2.toISOString()) +
@@ -3051,15 +3051,13 @@ async function renderS12(rawData) {
             const ju = await ru.json();
             const vals = (ju.data||[]).map(d => d.value).filter(v => v != null);
             const latest = vals.length ? vals[vals.length-1] : null;
-            rows.push({ ...conn, val: latest });
-          } else {
-            rows.push({ ...conn, val: null, err: ru.status });
+            return { ...conn, val: latest };
           }
+          return { ...conn, val: null, err: ru.status };
         } catch(ex) {
-          rows.push({ ...conn, val: null, err: ex.message.slice(0,20) });
+          return { ...conn, val: null, err: ex.message.slice(0,20) };
         }
-        await new Promise(r => setTimeout(r, 800));
-      }
+      }));
       const tbody = document.getElementById('borderTableBody');
       if (tbody) {
         tbody.innerHTML = rows.map(row => {
