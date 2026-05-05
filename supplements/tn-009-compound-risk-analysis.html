@@ -210,27 +210,65 @@ trigger mechanisms. 5b is weather-correlated with OL3/cold/wind risks.
   <p>The Finnish electricity system faces four concurrent structural pressures in 2026–2030, each individually monitored and each individually manageable. Their compound interaction — particularly the OL3 × cold × wind drought × SE1 saturation scenario — produces a system state that has no current monitoring instrument and no owning institution. The probability of the full compound scenario is low (~0.5% per winter) but the tail risk is severe (LOLP approaching 100%, EENS P99 at 80–150 GWh). With DC load growth of 1,500–3,000 MW by 2030, the same compound trigger operates with zero margin. The diagnostic recommendation is not a specific policy action — it is first to measure the compound state. An actor must be designated to monitor it.</p>
 </div>
 
+<span class="sec-num">§ 03.1</span>
+<h2>Compound Alert Trigger (CAT)</h2>
+
+<p>The compound risk framework identifies when a system is structurally vulnerable. What is missing is an explicit decision trigger — a rule that converts the monitoring state into an action signal. Without this, TN-009 remains an analytical instrument rather than an operational one.</p>
+
+<p>The Compound Alert Trigger (CAT) is a binary signal derived from the existing WEM components. It fires when the compound state crosses an operationally significant threshold:</p>
+
+<div class="formula">
+CAT = 1 if any of the following conditions hold:
+
+  (A) EPP* > 0.65  AND  SP_cluster T₁₆₈ > 6h
+      [elevated endurance pressure + persistent stress episode]
+
+  (B) FRP-adjusted EPP slope > +0.15 per 24h
+      [rapid deterioration signal — system moving toward brittle regime]
+
+  (C) NVE < 35%  AND  EPP* > 0.50  AND  OL3 unplanned outage active
+      [three-factor compound: hydro deficit + elevated pressure + nuclear loss]
+
+CAT = 0 otherwise.
+
+CAT is not a crisis declaration — it is a pre-positioning signal.
+Response action: designate monitoring authority, activate contingency review.
+</div>
+
+<p>CAT condition (A) captures the normal compound: high endurance pressure sustained over multiple hours. CAT condition (B) captures the dynamic compound: a system moving rapidly toward stress regardless of current absolute level. CAT condition (C) captures the specific compound scenario of TN-009 §02 — the three-factor intersection that produces CELP approaching 90%.</p>
+
+<p>The CAT threshold values (0.65, 6h, +0.15/24h) are initial estimates requiring calibration against historical data. The structural logic is independent of specific threshold values: the trigger should fire when compound conditions are building, not after they have peaked.</p>
+
 <span class="sec-num">§ 04</span>
 <h2>Proposed WEM Extension: FRP Component</h2>
 
 <p>The compound risk can be approximated within the WEM EPP framework by adding a Failure Risk Premium (FRP) component to EPP v4:</p>
 
 <div class="formula">
-FRP = P(OL3 failure) × E[ΔEPP | failure]
+FRP = P(OL3 failure) × E[ΔEPP | failure]          (expected-value component)
+FRP₉₀ = P(OL3 tail event ≥72h) × ΔEPP_tail        (tail-risk component)
 
 where:
   P(OL3 failure, 72h+) ≈ 0.023 per winter month (λ=0.7/yr, tail-weighted)
+  P(OL3 tail event ≥72h) ≈ 0.005 per winter month (5% of failure distribution)
   E[ΔEPP | failure, cold+still] ≈ 0.40–0.65
+  ΔEPP_tail (≥72h, cold+still) ≈ 0.55–0.80
 
-EPP* = EPP + α × FRP
+EPP* = EPP + α × [ w₁·FRP + w₂·FRP₉₀ ]
 
-α = 1.0 in cold–still regime (SP_cluster ≥ 24h, T &lt; −5°C)
-α = 0.3 in normal conditions
+  w₁ = 0.4  (expected-value weight)
+  w₂ = 0.6  (tail-risk weight — reflects fat-tail nature of compound risk)
+  α  = 1.0 in cold–still regime (SP_cluster ≥ 24h, T &lt; −5°C)
+  α  = 0.3 in normal conditions
 
 Hydro adjustment:
-  If NVE &lt; 40%: multiply FRP by 1.3
-  If NVE &lt; 30%: multiply FRP by 1.6
-  (captures FS(p) degradation under low-reservoir conditions)
+  If NVE &lt; 40%: multiply FRP and FRP₉₀ by 1.3
+  If NVE &lt; 30%: multiply FRP and FRP₉₀ by 1.6
+
+Rationale for w₂ > w₁: the core argument of TN-009 is that compound risk
+is a fat-tail phenomenon. An expected-value FRP alone is inconsistent with
+this narrative. Weighting the tail component more heavily makes the risk
+premium proportional to the risk that actually matters.
 </div>
 
 <p>This extension is operationally compatible with the existing WEM §11 structure. SP_cluster and FS(p) are already computed. The NVE proxy is already integrated. FRP requires only the addition of a scalar multiplier applied to the existing EPP calculation when regime conditions are met.</p>

@@ -208,6 +208,31 @@ direct empirical estimator of p(d | current system state).
 
 <p>SP_cluster already exists in WEM §11. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
 
+<p>For operational use, CEL is most informative in two concrete forms:</p>
+
+<div class="formula">
+Operational CEL (CELₒₚ) — expected loss given current stress state:
+  CELₒₚ = LELF( E[d | SP_cluster], t̄, s ) × sector_weights
+
+  where E[d | SP_cluster] = expected duration given current cluster length
+  → answers: "what is the expected damage if stress continues at current rate?"
+
+Tail CEL (CEL₉₀) — stress-scenario loss:
+  CEL₉₀ = LELF( d₉₀, t̄, s ) × sector_weights
+
+  where d₉₀ = P90 duration from historical SP_cluster distribution
+  → answers: "what is the damage in a severe but plausible event?"
+
+Relationship to financial risk metrics:
+  CELₒₚ ≈ Expected Loss (EL)
+  CEL₉₀ ≈ Conditional Value at Risk (CVaR) at 90th percentile
+
+A pension fund or bank already has internal EL and CVaR estimates for credit
+and market risk. CELₒₚ and CEL₉₀ are the direct analogues for electricity
+endurance exposure — expressed in the same units (€M) and comparable across
+risk categories.
+</div>
+
 <div class="callout">
   <div class="callout-label">Integration Path</div>
   <p>CEL does not require a new data source. It requires: (1) LELF threshold calibration from existing Finnish cost-of-interruption research, (2) sector weight vector from Statistics Finland industrial structure data, (3) SP_cluster duration distribution from Fingrid historical data 2010–2025. All three are publicly available. The integration with WEM §11 is a calculation layer, not a new instrument.</p>
@@ -264,6 +289,31 @@ Calibration requires the empirical inputs described in §05.
 
 <span class="sec-num">§ 07</span>
 <h2>Open Questions</h2>
+
+<p><strong>Recovery dynamics.</strong> The LELF as specified models direct outage damage. A critical additional component is recovery cost — the damage incurred after power is restored but before the system returns to normal operation. Recovery costs are nonlinear and in several sectors exceed direct outage costs for events beyond L3 threshold.</p>
+
+<div class="formula">
+Total Loss = LELF(d, t, s) + L_recovery(d, s)
+
+where L_recovery(d, s) ≈ k(s) × d^β(s)
+
+Empirical β values by sector:
+  Water supply:        β ≈ 1.5  (contamination protocol — cost accelerates with duration)
+  Continuous industry: β ≈ 1.3  (process restart damage + cleaning cycles)
+  District heating:    β ≈ 1.2  (network repressurisation, sequential restart)
+  Telecommunications:  β ≈ 1.1  (relatively linear — generator deployment logistics)
+  Rail transport:      β ≈ 1.4  (safety reset cascades, inspection requirements)
+
+β > 1.0 means recovery cost grows faster than linearly with duration.
+β = 1.5 for water supply means a 20-hour outage costs not 2x a 10-hour outage
+in recovery — it costs approximately 2.8x, because contamination protocol
+scope grows with duration.
+
+This term is particularly significant because it explains why L4–L5 events
+are so much more damaging than linear extrapolation from L1–L2 data would
+suggest. Survey-based cost-of-interruption studies systematically understate
+L4–L5 costs because they capture LELF(d) but not L_recovery(d).
+</div>
 
 <p><strong>Reserve capacity adjustment.</strong> The LELF as specified does not account for backup generation (hospital generators, industrial UPS systems, district heating emergency boilers). A reserve capacity discount factor R(s) should be incorporated: LELF_adjusted(d,s) = LELF(d,s) · (1 − R(s,d))
 
