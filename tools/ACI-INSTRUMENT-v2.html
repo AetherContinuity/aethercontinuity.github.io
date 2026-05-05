@@ -940,6 +940,13 @@ async function fetchHydroRF() {
   }
 }
 
+// CHP sähköteho kuukausikeskiarvot (kaukolämpö + teollisuus yhteensä, MW)
+// Lähde: Fingrid tilastot 2022-2024 keskiarvo
+const CHP_MONTHLY_BASELINE = {
+  1:2100, 2:2000, 3:1700, 4:1400,  5:1300,  6:1000,
+  7: 900, 8:1000, 9:1300, 10:1600, 11:1900, 12:2100
+};
+
 const MONTHLY_BASELINE = {
   1:11200, 2:10800, 3:10000, 4:8800,  5:7800,  6:7200,
   7:7000,  8:7400,  9:8200, 10:9200, 11:10400, 12:11000
@@ -1185,7 +1192,12 @@ function calcWindow(slice) {
     const wSlice = slice.filter(d => d.wnd != null);
     avgWnd = wSlice.length ? wSlice.reduce((s,d)=>s+d.wnd,0)/wSlice.length : null;
     const chpSlice = slice.filter(d => d.chp != null);
-    avgChp = chpSlice.length ? chpSlice.reduce((s,d)=>s+d.chp,0)/chpSlice.length : null;
+    if (chpSlice.length >= Math.min(6, Math.max(1, n * 0.25))) {
+      avgChp = chpSlice.reduce((s,d)=>s+d.chp,0)/chpSlice.length;
+    } else {
+      // DS 201/202 ei saatavilla — käytä kuukausikeskiarvoa, EI jäännöslaskentaa
+      avgChp = CHP_MONTHLY_BASELINE[modalMonth] || 1300;
+    }
     const avgPl = lSlice.reduce((s,d)=>s+d.p,0)/lSlice.length;
     eci = avgPl > 0 ? Math.min(1, (avgNuc+avgHyd)/avgPl) : null;
     eciSemi = (avgPl>0 && avgChp!=null) ? Math.min(1,(avgNuc+avgHyd+avgChp)/avgPl) : null;
@@ -1505,7 +1517,11 @@ function renderLayerComp(m) {
   setCard('lcNuc', w24?.avgNuc);
   setCard('lcHyd', w24?.avgHyd);
   setCard('lcWnd', w24?.avgWnd);
-  setCard('lcCHP', w24?.avgChp);
+  const chpLabel = w24?.chpEstimated ? ' <span style="font-size:.6rem;color:#a05c30;opacity:.7">(arvio)</span>' : '';
+  const chpEl = document.getElementById('lcCHP');
+  if (chpEl && w24?.avgChp != null) {
+    chpEl.innerHTML = Math.round(w24.avgChp).toLocaleString('fi-FI') + chpLabel;
+  }
   // CHP winter correlation: CHP/consumption ratio W24 vs W168
   if (w24?.avgChp != null && w168?.avgChp != null && w24.avgC > 0 && w168.avgC > 0) {
     const r24 = w24.avgChp / w24.avgC;
