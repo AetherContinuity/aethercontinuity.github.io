@@ -73,11 +73,11 @@ tr:last-child td{border-bottom:none;}
   <h1>Layered Economic Loss Function for Electricity Endurance Risk</h1>
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
-    <span><strong>Version</strong> 0.1 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04</span>
+    <span><strong>Version</strong> 0.2 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.2)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
-    <span><strong>New elements</strong> LELF · CEL metric · CVaR analogy · Sector thresholds</span>
+    <span><strong>New elements</strong> LELF · CEL · CVaR analogy · Sector kernels · Subsystem profiles · Dependency overlay</span>
     <span><strong>Status</strong> Working Draft</span>
   </div>
 </div>
@@ -111,31 +111,80 @@ tr:last-child td{border-bottom:none;}
 <p>The LELF maps outage duration to cumulative economic damage through discrete threshold layers. Each layer represents a qualitatively distinct damage category that becomes active when a duration threshold is crossed.</p>
 
 <div class="formula">
-LELF(d, t, s) = Σᵢ Lᵢ(s) · 𝟙[d ≥ θᵢ] · f(t)
+LELF(d, t, s) = Σᵢ Lᵢ(s) · 𝟙[d ≥ θᵢ(s)] · f(t, s)
 
 where:
-  d  = outage duration (hours)
-  t  = time of occurrence (hour of day, day of week, season)
-  s  = sector vector (industrial, commercial, residential, critical infrastructure)
-  Lᵢ = layer-specific loss function for sector s
-  θᵢ = duration threshold activating layer i
-  f(t) = timing multiplier [0.1 – 3.0] based on demand profile
+  d     = outage duration (hours)
+  t     = time of occurrence (hour of day, day of week, season)
+  s     = sector index (industrial, commercial, residential, critical infrastructure)
+  Lᵢ(s) = layer-specific loss function for sector s
+  θᵢ(s) = sector-specific duration threshold activating layer i
+           (not a single shared value — each sector has its own tolerance profile)
+  f(t,s) = sector-specific timing multiplier [0.1 – 3.0]
+           (industry peaks weekdays 07–21; residential peaks evenings and weekends)
+
+Key correction from v0.1: θᵢ was incorrectly specified as sector-invariant.
+Threshold heterogeneity is the central feature of the LELF framework.
 </div>
 
 <h3>Layer definitions</h3>
 
+<p>The layer thresholds are sector-specific. The table below shows the kernel layer structure; §02.1 details subsystem threshold profiles for each infrastructure category.</p>
+
 <table>
-  <thead><tr><th>Layer</th><th>Threshold θ</th><th>Damage category activated</th><th>Primary sectors</th></tr></thead>
+  <thead><tr><th>Layer</th><th>Generic threshold</th><th>Damage category activated</th><th>Threshold range across sectors</th></tr></thead>
   <tbody>
-    <tr><td>L1</td><td>0–2 h</td><td>Operational disruption. UPS systems active, most processes recover cleanly. Cost: lost production hours, restart costs.</td><td>Commercial, light industrial</td></tr>
-    <tr><td>L2</td><td>2–6 h</td><td>Process intolerance breach. Continuous processes (paper, chemical, food) cannot hold state. Controlled shutdown required. Cost: batch loss, restart damage, cleaning cycles.</td><td>Continuous manufacturing, data centres</td></tr>
-    <tr><td>L3</td><td>6–12 h</td><td>Thermal envelope breach. District heating buffer depletes in well-insulated buildings; cold chain integrity at risk. Hospitals on generator fuel consumption alert.</td><td>District heating, cold chain logistics, hospitals</td></tr>
-    <tr><td>L4</td><td>12–48 h</td><td>Critical infrastructure degradation. Generator fuel reserves depleted for smaller facilities. Water treatment disruption. Telecommunications base station battery exhaustion.</td><td>Telecoms, water, smaller hospitals, fuel retail</td></tr>
+    <tr><td>L1</td><td>0–2 h</td><td>Operational disruption. UPS and buffer systems active. Most processes recover cleanly. Cost: lost production hours, restart costs.</td><td>0–15 min (rail) to 2 h (commercial)</td></tr>
+    <tr><td>L2</td><td>2–6 h</td><td>Process intolerance breach. Continuous processes cannot hold state; controlled shutdown required. Cost: batch loss, restart damage, cleaning cycles.</td><td>30 min (paper mill) to 6 h (data centre with generator)</td></tr>
+    <tr><td>L3</td><td>6–48 h</td><td>Thermal and infrastructure envelope breach. District heating buffer depletes; cold chain integrity at risk. Telecommunications base stations approach battery exhaustion. Hospitals on fuel consumption alert.</td><td>3 h (telecom statutory) to 48 h (large urban district heating with accumulator)</td></tr>
+    <tr><td>L4</td><td>12–72 h</td><td>Critical infrastructure degradation. Generator fuel reserves depleted for smaller facilities. Water system contamination risk activates. Freeze damage risk to building systems begins.</td><td>6 h (rural water pumping) to 72 h (major hospital complex)</td></tr>
     <tr><td>L5</td><td>&gt;48 h</td><td>Societal function impairment. Cascading failures across interdependent systems. Cost estimation transitions from sectoral to macroeconomic.</td><td>Systemic — all sectors simultaneously</td></tr>
   </tbody>
 </table>
 
-<p>Finnish empirical reference: VTT and Energiateollisuus ry cost-of-interruption studies provide sector-specific loss rates in €/kWh unserved. These are typically reported as linear averages, which systematically understate L3–L5 costs because they are derived from short-duration survey data. The LELF framework uses these as L1–L2 baselines and applies threshold multipliers for L3–L5 based on process engineering tolerances.</p>
+<p>Finnish empirical reference: VTT and Energiateollisuus ry cost-of-interruption studies provide sector-specific loss rates in €/kWh unserved. These are linear averages which systematically understate L3–L5 costs as they are derived from short-duration survey data. The LELF framework uses these as L1–L2 baselines and applies threshold multipliers for L3–L5 based on process engineering tolerances and the subsystem profiles in §02.1.</p>
+
+<span class="sec-num">§ 02.1</span>
+<h2>Subsystem Response Profiles</h2>
+
+<p>The following profiles specify buffer capacity, threshold dynamics, and recovery asymmetry for six critical infrastructure subsystems. These feed into the LELF layer calculation as sector-specific θᵢ(s) values and inform the dependency overlay described in §02.2.</p>
+
+<h3>District heating</h3>
+<p>District heating has one of the largest buffer capacities of any electricity-dependent system, but the buffer size varies by three orders of magnitude depending on system scale. Large urban systems (Helsinki, Vantaa) operate massive hot-water accumulator tanks — Helen's Salmisaari facility holds 10,000 m³, providing approximately 48–72 hours of heating at normal winter demand before supply temperature begins falling. Smaller municipal systems typically operate with 6–12 hours of thermal mass. Rural and building-scale systems have 2–4 hours of radiator and pipe thermal storage.</p>
+<p>Recovery asymmetry: once district heating pipe temperature drops below operational threshold, restart requires pressurisation, venting, and sequential reactivation across the distribution network — typically 4–12 hours after power is restored. L3 threshold is therefore: Helsinki/Vantaa ~48h; mid-size cities ~6–12h; rural/small systems ~2–4h.</p>
+
+<h3>Water supply</h3>
+<p>Water towers and pressure vessels provide 2–6 hours of buffer at normal consumption. The failure mode is not purely a pressure event — it is a contamination event. When network pressure drops below a threshold, external pressure can drive contaminants into the distribution network. This activates a post-restoration protocol: network flushing, water sampling, and laboratory confirmation before the network is declared safe. This protocol typically requires 12–48 hours after power restoration regardless of outage duration.</p>
+<p>Recovery asymmetry is severe: a 6-hour outage may produce 48–72 hours of post-restoration unavailability. The LELF L3 threshold for water supply is therefore not symmetric — it should be expressed as a function of both outage duration and post-restoration recovery time. Pumping stations in smaller municipalities have limited generator capacity and fuel reserves, creating L4 exposure at 6–12 hours.</p>
+
+<h3>Telecommunications (4G/5G)</h3>
+<p>Finnish regulatory requirement mandates 3-hour battery backup at base stations. This can be extended to approximately 20 hours with mobile generator units, but generator deployment requires logistics coordination and fuel. The failure profile is non-binary: voice calls and SMS function until battery exhaustion; data services degrade earlier as backhaul links lose power. The critical dependency is that telecommunications degradation impairs remote monitoring and control of other infrastructure systems — district heating, water pumping, hospital coordination — creating a cascade multiplier on other LELF layers.</p>
+<p>L2 threshold: ~3 hours (statutory battery exhaustion). L3 threshold: ~6–8 hours (data backhaul degradation, mobile generator deployment window closing). Timing multiplier f(t,s) is particularly high for telecommunications because control system dependencies are constant across diurnal cycles.</p>
+
+<h3>Data centres</h3>
+<p>Data centres operate with UPS systems providing 10–15 seconds of seamless transition to diesel generator. Well-operated facilities can sustain full load indefinitely given fuel supply. The critical vulnerability is fuel logistics: a 48-hour outage in a major weather event may exhaust diesel reserves and disrupt resupply if road access is compromised. L1 threshold is effectively zero — UPS handles the transition. L2 threshold is fuel-supply dependent, typically 48–72 hours for well-equipped facilities. Smaller or older facilities may face L2 at 12–24 hours.</p>
+
+<h3>Rail transport</h3>
+<p>Electrified rail has essentially zero buffer capacity — trains stop immediately on power loss. The recovery profile is asymmetric and slow: safety systems (switches, signals, level crossings) require sequential reset and manual inspection before resuming operations. A 2-hour outage may produce 4–6 hours of operational disruption during recovery. Rail's primary LELF contribution is indirect: it impairs emergency logistics, fuel resupply, and personnel mobility during extended events, amplifying damage in other sectors. L1 threshold: immediate (minutes). Recovery multiplier: 2–3x outage duration.</p>
+
+<h3>Traffic management and emergency access</h3>
+<p>Traffic signal UPS systems provide 15–60 minutes of buffer. After exhaustion, dark signals significantly increase accident risk and create congestion that impairs emergency vehicle access. The cascade effect: impaired emergency access slows response to all other infrastructure failures. L1 threshold: 15–60 minutes. The timing multiplier f(t,s) is highest during peak traffic hours — a 14:00 weekday outage carries 3–5x higher cascade cost than a 03:00 weekend outage for this subsystem.</p>
+
+<h3>Buildings (non-district-heating)</h3>
+<p>Buildings with electric heating (heat pumps, resistance heating) lose heating immediately. Thermal mass provides 12–48 hours of temperature retention depending on insulation quality, external temperature, and building type. Modern well-insulated buildings retain heat significantly longer than older stock. Below −15°C external temperature, poorly insulated buildings may face freeze damage to pipes and pumping equipment within 24–48 hours. Recovery asymmetry: freeze damage to pipework requires repair before heating can be restored, creating extended post-restoration downtime. L3 threshold: 24h (poorly insulated, −15°C); 48h (modern insulated, −10°C).</p>
+
+<span class="sec-num">§ 02.2</span>
+<h2>Dependency Overlay</h2>
+
+<p>The subsystem profiles in §02.1 interact through dependency relationships that amplify LELF damage beyond the sum of individual sector losses. The primary cascade chains are:</p>
+
+<p><strong>Electricity → Telecommunications → Infrastructure control.</strong> Telecommunications degradation (L2, ~3h) impairs remote monitoring and control of district heating substations, water pumping stations, hospital systems, and rail infrastructure. This accelerates the threshold crossing for all dependent systems — effectively reducing their θᵢ(s) values by 20–40% under telecommunications failure conditions.</p>
+
+<p><strong>Electricity → Rail → Emergency logistics.</strong> Rail disruption impairs fuel resupply for generators at hospitals, data centres, and telecommunications base stations. This converts fuel-dependent L2 tolerances into L3 exposures if the outage duration approaches generator fuel reserves.</p>
+
+<p><strong>Electricity → Traffic management → Emergency response.</strong> Dark traffic signals slow emergency vehicle access, increasing response time to all L3+ events across all sectors. This is a timing multiplier on cascade damage rather than a direct damage source.</p>
+
+<p>The dependency overlay does not require separate LELF curves for each cascade chain. It is incorporated as a threshold reduction factor applied to dependent subsystems when a triggering subsystem has crossed its own threshold. Full formalisation of the dependency graph is deferred to a subsequent working paper.</p>
 
 <span class="sec-num">§ 03</span>
 <h2>Conditional Endurance Loss (CEL) — A CVaR Analogue</h2>
@@ -216,7 +265,11 @@ Calibration requires the empirical inputs described in §05.
 <span class="sec-num">§ 07</span>
 <h2>Open Questions</h2>
 
-<p><strong>Reserve capacity adjustment.</strong> The LELF as specified does not account for backup generation (hospital generators, industrial UPS systems, district heating emergency boilers). A reserve capacity discount factor R(s) should be incorporated: LELF_adjusted = LELF · (1 − R(s)). Estimating R(s) requires survey data on backup generation penetration by sector — partially available from HVK strategic reserve assessments.</p>
+<p><strong>Reserve capacity adjustment.</strong> The LELF as specified does not account for backup generation (hospital generators, industrial UPS systems, district heating emergency boilers). A reserve capacity discount factor R(s) should be incorporated: LELF_adjusted(d,s) = LELF(d,s) · (1 − R(s,d))
+
+where R(s,d) = P(backup generation operational at duration d, sector s)
+This is time-dependent: a hospital generator rated for 72h has R(hospital,24h)≈0.95
+but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requires survey data on backup generation penetration by sector — partially available from HVK strategic reserve assessments.</p>
 
 <p><strong>Interdependency multipliers.</strong> L4–L5 damage is amplified by infrastructure interdependencies: telecommunications failure impairs emergency response, which amplifies district heating failure, which amplifies hospital stress. These cascade effects are structurally excluded from sector-by-sector LELF estimates. Modelling them requires a network dependency graph that is beyond the scope of this working draft.</p>
 
