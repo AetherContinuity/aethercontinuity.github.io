@@ -74,7 +74,7 @@ tr:last-child td{border-bottom:none;}
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
     <span><strong>Version</strong> 0.2 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.2b)</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.3)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
     <span><strong>New elements</strong> LELF · CEL · CVaR analogy · Sector kernels · Subsystem profiles · Dependency overlay</span>
@@ -160,7 +160,50 @@ Threshold heterogeneity is the central feature of the LELF framework.
 <h3>Wastewater management</h3>
 <p>Wastewater pumping stations are fully electricity-dependent with limited buffer capacity. Collection network storage — the volume held in pipes and lift station wet wells — typically provides 2–6 hours of buffer before overflow conditions develop, depending on inflow rates and network topology. Unlike water supply, where pressure loss is the primary failure mode, wastewater failure produces an active environmental hazard: untreated sewage discharge to waterways, streets, or basements. This makes wastewater one of the fastest-escalating LELF categories.</p>
 <p>Finnish regulatory requirement (Water Services Act) mandates controlled overflow to designated discharge points before uncontrolled overflow occurs. This requires active management — operators must be reachable and able to respond — which in turn depends on telecommunications remaining functional. The cascade: telecommunications degradation at ~3 hours impairs wastewater operator response precisely when buffer exhaustion is approaching.</p>
-<p>Recovery asymmetry is severe and environmentally extended. After power restoration, network decontamination, pump inspection, and environmental sampling are required before normal operation resumes. Depending on overflow volume and receiving water body, regulatory reporting and remediation obligations may extend the effective recovery period by days to weeks. L3 threshold: 2–4 hours (buffer exhaustion, overflow risk). L4 threshold: 6–12 hours (confirmed environmental discharge, remediation obligation activated). Smaller municipalities with limited generator capacity face L3 exposure significantly earlier than urban systems with backup power at main pumping stations.</p>
+<p>Recovery asymmetry is severe and environmentally extended. After power restoration, network decontamination, pump inspection, and environmental sampling are required before normal operation resumes. Regulatory reporting and remediation obligations may extend the effective recovery period by days to weeks. Finnish environmental law (Ympäristönsuojelulaki) triggers mandatory notification and liability assessment from confirmed overflow events.</p>
+
+<p>Biological treatment processes (activated sludge) at wastewater treatment plants do not survive extended shutdowns — microbial communities die within 12–24 hours of aeration failure, requiring 1–2 weeks of biological recovery before the plant reaches normal treatment efficiency. This creates a post-restoration discharge quality problem independent of the overflow events during the outage itself.</p>
+
+<p>Empirical recovery rule: if outage duration is d hours, total wastewater system impairment (outage + recovery) is approximately 3–5 × d hours. The LELF loss function for wastewater takes the form:</p>
+
+<div class="formula">
+LELF_wastewater(d,t) = L_env(d) + L_recovery(d) + L_contam · 𝟙[d ≥ θ_contam]
+
+where:
+  L_env(d)    = environmental damage cost (overflow volume × treatment cost)
+  L_recovery(d) ≈ k_ww × d^1.5  (superlinear — biological process restart)
+  L_contam    = fixed cost if wastewater reaches drinking water sources
+  θ_contam    ≈ 12–24h (drinking water contamination threshold)
+
+Note: L_contam activates a discrete step change in total loss —
+this is the mechanism behind the L4 threshold severity in wastewater.
+</div>
+
+<p>L3 threshold: 2–4 hours (overflow risk). L4 threshold: 6–12 hours (confirmed environmental discharge, remediation liability). Smaller municipalities with limited generator capacity face L3 exposure significantly earlier than urban systems.</p>
+
+<h3>Healthcare</h3>
+<p>Healthcare has among the most robust backup power of any sector — major hospitals operate diesel generators sized for 24–72 hours at full load, with priority fuel resupply agreements. However, the failure profile is not binary and the recovery asymmetry is significant. The sector also has the highest unit cost of failure of any LELF category: an interrupted intensive care procedure or delayed emergency response has no economic analogue.</p>
+<p>L1 threshold (0–4h): Elective procedures paused, generators running, critical care unaffected. L2 threshold (4–12h): Smaller health centres approach generator fuel limits; patient transfer decisions begin. L3 threshold (12–48h): Larger hospitals on fuel consumption alert; non-critical wards may lose power sequentially as fuel is rationed to ICU and operating theatres. L4 threshold (48h+): Only the largest facilities with dedicated fuel reserves remain fully operational; widespread patient evacuation required for mid-tier hospitals.</p>
+<p>Recovery asymmetry: elective surgery backlog, equipment recertification, staff fatigue from extended emergency protocols, and patient record system restoration typically add 6–24 hours of reduced-capacity operation after power restoration. The primary dependency is fuel logistics — healthcare endurance is ultimately bounded by diesel resupply chains, not generator capacity.</p>
+
+<h3>Fuel distribution</h3>
+<p>Fuel distribution is the hidden cascade amplifier in the LELF framework. Most petrol stations have no backup generation — pumps, payment terminals, and monitoring systems operate on UPS for 0–2 hours, then stop. This creates a supply constraint that progressively limits the effective duration of all diesel-dependent backup systems across every other LELF sector.</p>
+<p>The cascade timeline: at L1 (0–2h), fuel stations begin failing. By L2 (2–6h), approximately 95% of retail fuel stations are non-operational. Backup generators across hospitals, data centres, telecommunications base stations, and water pumping stations begin drawing down their stored diesel reserves. By L3 (6–12h), only facilities with dedicated fuel contracts and pre-positioned reserves (major hospitals, large data centres, critical telecoms nodes) retain meaningful fuel security. All other backup-dependent systems begin entering forced shutdown as their stored diesel is exhausted.</p>
+<p>This creates a structural revision to all other subsystem θ(s) values: the nominal backup duration (e.g., hospital 72h, data centre 48h) applies only if fuel resupply logistics function. Under an extended outage with simultaneous road network disruption (weather, traffic management failure), effective backup duration collapses to stored-diesel capacity only — typically 12–24 hours for most facilities. The fuel distribution subsystem is therefore not a LELF category in its own right but a time-dependent modifier R_fuel(d) applied to all backup-dependent subsystems:</p>
+<div class="formula">
+R_fuel(d) ≈ 1.0  for d &lt; 4h   (stations operational, resupply possible)
+R_fuel(d) ≈ 0.6  for 4h ≤ d &lt; 12h  (major stations only)
+R_fuel(d) ≈ 0.2  for 12h ≤ d &lt; 24h  (dedicated contracts only)
+R_fuel(d) ≈ 0.0  for d ≥ 24h   (stored reserves only, no resupply)
+
+Effective backup duration = nominal × R_fuel(d) × R(s,d)
+</div>
+
+<h3>Cold chain (food and pharmaceutical)</h3>
+<p>Retail cold chain has minimal buffer: supermarket refrigeration operates on UPS for 0–4 hours, after which perishables begin degrading. Large cold storage warehouses retain temperature for 12–24 hours through insulation. Pharmaceutical cold chain (insulin, vaccines) follows supermarket timelines for retail pharmacies but hospital pharmaceutical stores typically have 24–48 hours of managed storage. Economic loss scales steeply: L2 (4–6h) produces significant fresh produce loss; L3 (12–24h) produces near-total warehouse inventory loss with mandatory disposal under food safety law. Recovery requires regulatory inspection and restocking — typically 2–5 days of reduced availability. Finnish food retail concentration (S-group, K-group) means that central warehouse losses cascade directly to retail availability.</p>
+
+<h3>Payment systems</h3>
+<p>Bank data centres maintain backup power comparable to large data centres (48–72h). However, retail payment infrastructure — card terminals, ATMs, point-of-sale systems — has minimal backup. UPS provides 0–2 hours; thereafter, only cash transactions are possible. ATM networks typically have 4–8 hours of UPS backup but cannot be restocked without functioning logistics. At L2 (2–6h), cashless payment fails across most retail and service locations. This creates social friction that compounds all other crisis responses: fuel cannot be purchased for generators, emergency supplies cannot be bought, logistics cannot be coordinated through normal commercial channels. Payment system failure is not a direct economic loss in the LELF sense — it is a friction multiplier that degrades the efficiency of every other crisis response by 20–40%.</p>
 
 <h3>Telecommunications (4G/5G)</h3>
 <p>Finnish regulatory requirement mandates 3-hour battery backup at base stations. This can be extended to approximately 20 hours with mobile generator units, but generator deployment requires logistics coordination and fuel. The failure profile is non-binary: voice calls and SMS function until battery exhaustion; data services degrade earlier as backhaul links lose power. The critical dependency is that telecommunications degradation impairs remote monitoring and control of other infrastructure systems — district heating, water pumping, hospital coordination — creating a cascade multiplier on other LELF layers.</p>
@@ -184,6 +227,8 @@ Threshold heterogeneity is the central feature of the LELF framework.
 <p>The subsystem profiles in §02.1 interact through dependency relationships that amplify LELF damage beyond the sum of individual sector losses. The primary cascade chains are:</p>
 
 <p><strong>Electricity → Telecommunications → Infrastructure control.</strong> Telecommunications degradation (L2, ~3h) impairs remote monitoring and control of district heating substations, water pumping stations, hospital systems, and rail infrastructure. This accelerates the threshold crossing for all dependent systems — effectively reducing their θᵢ(s) values by 20–40% under telecommunications failure conditions.</p>
+
+<p><strong>Electricity → Fuel distribution → All backup systems.</strong> This is the dominant cascade in extended outages. Fuel station failure at 2–6 hours initiates progressive collapse of backup-dependent systems across all sectors. The fuel cascade converts nominal backup durations (hospital 72h, data centre 48h, telecoms 20h) into actual stored-reserve durations (12–24h for most facilities without dedicated fuel contracts). Under compound stress with simultaneous road network disruption, effective backup duration across the system collapses to approximately 12 hours regardless of nominal generator ratings. R_fuel(d) is the most important time-dependent modifier in the LELF framework — it should be applied to all backup-dependent subsystem calculations.</p>
 
 <p><strong>Electricity → Rail → Emergency logistics.</strong> Rail disruption impairs fuel resupply for generators at hospitals, data centres, and telecommunications base stations. This converts fuel-dependent L2 tolerances into L3 exposures if the outage duration approaches generator fuel reserves.</p>
 
