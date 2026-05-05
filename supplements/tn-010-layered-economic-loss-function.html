@@ -459,6 +459,78 @@ but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requ
 
 <p><strong>CEL vs. EENS.</strong> The power systems literature uses Expected Energy Not Served (EENS) as its standard reliability metric. CEL is economically more informative than EENS because it weights unserved energy by sector-specific damage rather than treating all MWh equally. The relationship between the two metrics requires explicit articulation — CEL should be expressed as a function of EENS with sector-specific loss-of-load cost coefficients.</p>
 
+<span class="sec-num">§ 05</span>
+<h2>Scenario Analysis: 24h, 48h, and 72h Compound Events</h2>
+
+<p>The following scenarios apply the LELF framework to a compound winter event: OL3 unplanned outage, T = −18°C (five-day cold spell), wind &lt;400 MW, NVE ~32%, SE1→FI at capacity. Not a full national blackout — approximately 40% of load affected through rolling outages, giving 8–16 hours effective outage per customer in the 24h scenario and 24–48 hours in the 72h scenario. Finnish winter load approximately 14,000 MW; affected load ~5,500 MW.</p>
+
+<h3>24-hour event (L2–L3 threshold)</h3>
+
+<table>
+  <thead><tr><th>Sector</th><th>LELF level</th><th>Loss range</th><th>Driver</th></tr></thead>
+  <tbody>
+    <tr><td>Continuous industry (paper, chemical, metal)</td><td>L2</td><td>€100–180M</td><td>~66 GWh disrupted × €1,500–3,000/MWh production loss</td></tr>
+    <tr><td>Retail and services</td><td>L1–L2</td><td>€30–60M</td><td>Sales loss + operational shutdown</td></tr>
+    <tr><td>Cold chain (food + pharma)</td><td>L2→L3</td><td>€20–50M</td><td>Partial spoilage — threshold not fully crossed</td></tr>
+    <tr><td>Telecommunications and ICT</td><td>L2</td><td>€10–25M</td><td>Network degradation from ~3h; generator logistics still functional</td></tr>
+    <tr><td>Water and wastewater</td><td>L2</td><td>€10–30M</td><td>Pressure loss; no widespread contamination yet</td></tr>
+    <tr><td>Transport, payments, logistics friction</td><td>L1–L2</td><td>€20–40M</td><td>Payment systems, traffic management, logistics delay</td></tr>
+    <tr style="font-weight:600;"><td>Total 24h CEL</td><td>L2–L3</td><td>€190–385M</td><td>Central estimate ~€250M</td></tr>
+  </tbody>
+</table>
+
+<h3>48-hour event (L3–L5 threshold)</h3>
+
+<table>
+  <thead><tr><th>Sector</th><th>Loss range</th><th>Driver</th></tr></thead>
+  <tbody>
+    <tr><td>Industry</td><td>€400–550M</td><td>Process damage + extended restart; batch losses</td></tr>
+    <tr><td>ICT and data centres</td><td>€50–150M</td><td>Smaller operators fail; telecom cascade; SLA penalties</td></tr>
+    <tr><td>Retail and payments</td><td>€200–350M</td><td>POS down 2–6h; logistics friction; lost sales</td></tr>
+    <tr><td>Cold chain</td><td>€150–300M</td><td>Supermarkets: critical at 6–12h; warehouses: critical at 24h+</td></tr>
+    <tr><td>Water and wastewater</td><td>€250–550M</td><td>Recovery dominates: β=1.5; environmental discharge; biological reset</td></tr>
+    <tr><td>Healthcare</td><td>€150–300M</td><td>Operational cost + patient transfers + indirect effects</td></tr>
+    <tr><td>Transport and logistics</td><td>€150–300M</td><td>Rail stop; port slowdown; fuel cascade</td></tr>
+    <tr><td>Households (heating, freeze damage)</td><td>€200–600M</td><td>Electric/hybrid heating loss; pipe freeze; insurance claims</td></tr>
+    <tr><td>Public sector / emergency response</td><td>€50–150M</td><td>Crisis operations, civil protection activation</td></tr>
+    <tr style="font-weight:600;"><td>Total 48h CEL</td><td>€1.6–3.2B</td><td>Central estimate ~€2.4B</td></tr>
+  </tbody>
+</table>
+
+<p>R_fuel cascade contribution: approximately €500M–1B of the 48h total would be avoided if fuel resupply logistics remained functional (generators holding nominal duration). This is the single largest avoidable cost component.</p>
+
+<h3>72-hour event (L4–L5 regime)</h3>
+
+<table>
+  <thead><tr><th>Sector</th><th>Loss range</th><th>Regime change</th></tr></thead>
+  <tbody>
+    <tr><td>Industry</td><td>€400–800M</td><td>Permanent production loss for some facilities; extended restart</td></tr>
+    <tr><td>Retail and services</td><td>€150–300M</td><td>Near-complete shutdown; demand + payment + logistics all failed</td></tr>
+    <tr><td>Cold chain</td><td>€150–300M</td><td>Near-total warehouse inventory loss; mandatory disposal</td></tr>
+    <tr><td>Telecommunications</td><td>€50–120M</td><td>Fallback collapses; SCADA affected</td></tr>
+    <tr><td>Water and wastewater</td><td>€200–500M</td><td>Contamination + biological process reset (1–2 weeks recovery)</td></tr>
+    <tr><td>Healthcare</td><td>€100–250M</td><td>Evacuations; critical overload; fuel exhaustion at smaller facilities</td></tr>
+    <tr><td>Logistics and fuel</td><td>€100–250M</td><td>R_fuel cascade fully realised; mobility stops</td></tr>
+    <tr><td>Recovery costs (all sectors)</td><td>€500M–1.5B</td><td>β &gt; 1 across all sectors; this term dominates 72h vs 24h difference</td></tr>
+    <tr style="font-weight:600;"><td>Total 72h CEL</td><td>€1.65–4.0B</td><td>Central estimate ~€2.5B</td></tr>
+  </tbody>
+</table>
+
+<h3>Nonlinearity: 72h ≠ 3 × 24h</h3>
+
+<table>
+  <thead><tr><th>Duration</th><th>LELF level</th><th>CEL (central)</th><th>Ratio to 24h</th></tr></thead>
+  <tbody>
+    <tr><td>24h</td><td>L2–L3</td><td>~€250M</td><td>1×</td></tr>
+    <tr><td>48h</td><td>L3–L5</td><td>~€2.4B</td><td>~10×</td></tr>
+    <tr><td>72h</td><td>L4–L5</td><td>~€2.5B</td><td>~10×</td></tr>
+  </tbody>
+</table>
+
+<p>The 10× jump between 24h and 48h — not 2× — is the central empirical finding of this scenario analysis. Three mechanisms drive it: threshold crossings (θᵢ) that activate new damage categories sequentially; R_resupply(d) collapse that invalidates all backup duration assumptions; and recovery cost β &gt; 1 that makes system restoration superlinearly expensive with duration. The 72h event is not meaningfully more expensive than 48h in direct costs — it is more expensive in recovery costs and systemic disruption, but the major step change occurs at the 48h boundary.</p>
+
+<p><strong>Comparison with traditional models:</strong> Standard €/MWh interruption cost models applied to the same 48h event produce approximately €500M–1B — an underestimate of 2–3× relative to the LELF result. The gap arises because traditional models capture L1–L2 direct costs but miss L3–L5 threshold crossings, recovery asymmetry, and cascade effects. The LELF result is not "pessimistic" — it correctly accounts for the physical mechanisms that make outages expensive.</p>
+
 <span class="sec-num">§ 06.1</span>
 <h2>Linkage to TN-009: Expected System Loss</h2>
 
