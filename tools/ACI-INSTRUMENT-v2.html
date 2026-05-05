@@ -420,7 +420,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <!-- §03 Layer Composition -->
   <div class="layer-section">
     <div class="shdr"><span class="snum">&sect; 03</span><span class="stit">Tuotantorakenne — Layer Composition &amp; ECI</span></div>
-    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Vakaat kerrokset: ydinvoima (DS 188) + vesivoima (DS 191). Semi-vakaa: yhteistuotanto CHP (DS 201 kaukolämpö + DS 202 teollisuus) — negatiivinen korrelaatio lämpötilaan, eli korkeimmillaan juuri talvihuipun aikana. Variabili: tuulivoima (DS 181). ECI (firm) = (ydin+hydro)/tuotanto · ECI (semi) = (ydin+hydro+CHP)/tuotanto. Kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
+    <p class="snote">Endurance Compatibility Index (ECI) mittaa osuuden kotimaisesta tuotannosta, joka on rakenteellisesti vakaata 168 tunnin aikaikkunassa. Rakenne vastaa Fingridin tuotantojaottelua. Vakaat kerrokset: ydinvoima (DS 188) + vesivoima (DS 191). Semi-vakaa: yhteistuotanto kaukolämpö (DS 201) + teollisuus (DS 202) — negatiivinen korrelaatio lämpötilaan. Variabili: tuulivoima (DS 181) + aurinkovoima (DS 248 ennuste). Sähkövarastot netto: DS 398−399. ECI (firm) = (ydin+hydro)/tuotanto · ECI (semi) = (ydin+hydro+CHP)/tuotanto. Kynnykset: Korkea ≥ 0.60 · Kohtalainen 0.40–0.60 · Matala &lt; 0.40.</p>
 
     <!-- Stacked bar W24 -->
     <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">W24 · Tuotantorakenne (%)</div>
@@ -1496,16 +1496,23 @@ function renderLayerComp(m) {
     const pHyd = Math.max(0, (w24.avgHyd ?? 0) / tot * 100);
     const pCHP = Math.max(0, (w24.avgChp ?? 0) / tot * 100);
     const pWnd = Math.max(0, (w24.avgWnd ?? 0) / tot * 100);
-    const pOth = Math.max(0, 100 - pNuc - pHyd - pCHP - pWnd);
+    const pSol = Math.max(0, (w24.avgSol ?? 0) / tot * 100);
+    const pBat = Math.max(0, Math.max(0, w24.avgBat ?? 0) / tot * 100);
+    const pOth = Math.max(0, 100 - pNuc - pHyd - pCHP - pWnd - pSol - pBat);
     document.getElementById('lsNuc').style.width = pNuc.toFixed(1) + '%';
     document.getElementById('lsNuc').dataset.tip = `Ydinvoima ${pNuc.toFixed(1)}% · ${Math.round(w24.avgNuc)} MW`;
     document.getElementById('lsHyd').style.width = pHyd.toFixed(1) + '%';
     document.getElementById('lsHyd').dataset.tip = `Vesivoima ${pHyd.toFixed(1)}% · ${Math.round(w24.avgHyd ?? 0)} MW`;
     document.getElementById('lsCHP').style.width = pCHP.toFixed(1) + '%';
-    document.getElementById('lsCHP').dataset.tip = `CHP ${pCHP.toFixed(1)}% · ${Math.round(w24.avgChp ?? 0)} MW`;
+    document.getElementById('lsCHP').dataset.tip = `Yhteistuotanto ${pCHP.toFixed(1)}% · ${Math.round(w24.avgChp ?? 0)} MW`;
     document.getElementById('lsWnd').style.width = pWnd.toFixed(1) + '%';
     document.getElementById('lsWnd').dataset.tip = `Tuulivoima ${pWnd.toFixed(1)}% · ${Math.round(w24.avgWnd ?? 0)} MW`;
+    document.getElementById('lsSol').style.width = pSol.toFixed(1) + '%';
+    document.getElementById('lsSol').dataset.tip = `Aurinkovoima ${pSol.toFixed(1)}% · ${Math.round(w24.avgSol ?? 0)} MW`;
+    document.getElementById('lsBat').style.width = pBat.toFixed(1) + '%';
+    document.getElementById('lsBat').dataset.tip = `Sähkövarastot ${pBat.toFixed(1)}% · ${Math.round(w24.avgBat ?? 0)} MW netto`;
     document.getElementById('lsOth').style.width = pOth.toFixed(1) + '%';
+    document.getElementById('lsOth').dataset.tip = `Muu tuotanto ${pOth.toFixed(1)}%`;
   }
 
   // ECI cards
@@ -1544,6 +1551,10 @@ function renderLayerComp(m) {
   if (chpEl && w24?.avgChp != null) {
     chpEl.innerHTML = Math.round(w24.avgChp).toLocaleString('fi-FI') + chpLabel;
   }
+  const solEl = document.getElementById('lcSol');
+  if (solEl) solEl.textContent = w24?.avgSol != null ? Math.round(w24.avgSol).toLocaleString('fi-FI') : '—';
+  const batEl = document.getElementById('lcBat');
+  if (batEl) batEl.textContent = w24?.avgBat != null ? Math.round(w24.avgBat).toLocaleString('fi-FI') : '—';
   // CHP winter correlation: CHP/consumption ratio W24 vs W168
   if (w24?.avgChp != null && w168?.avgChp != null && w24.avgC > 0 && w168.avgC > 0) {
     const r24 = w24.avgChp / w24.avgC;
