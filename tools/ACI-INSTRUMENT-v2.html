@@ -708,7 +708,10 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
   <div class="bounds-section">
     <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
-      <li><strong>Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
+      <li><strong>Aurora Line -huomio:
+Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marraskuussa 2025, puolitoista kuukautta etuajassa. Se lisäsi SE1→FI-kapasiteettia +800 MW (1 500 MW → ~2 300 MW). WEM §12 NTC päivitetty vastaavasti. Aurora Line 2 on erillinen projekti, vasta selvitysvaiheessa — selvitys valmistuu 2026.
+
+Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
       <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Paloittain lineaarinen kulutus-lämpötilamalli, katto 13 500 MW — kalibroitu 2010-luvun tyypilliseen huippukulutukseen. Fingridin historiallinen maksimi ~15 200 MW (tammikuu 2016). Malli aliarvioi äärimmäisten pakkasjaksojen kysyntää noin 11%.. Alle −5°C hidastuu 180 MW/°C (lämmitys lähestyy kyllästystä). Ei huomioi sääolosuhteiden (tuulisuus, kosteus) lisävaikutusta. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
       <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
       <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
@@ -2586,6 +2589,7 @@ const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
 const WEM_CHANGES = [
   '2.7.2→2.7.3: DS 87 korjattu DS 188:ksi — ydinvoima sisältää nyt Loviisan (+~500 MW). Vaikutus: FS +6.5 pp, EPP −1.9 pp, ECI +6.2 pp. Historialliset arvot olivat konservatiivisia. Kvalitatiiviset johtopäätökset muuttumaton.',
   '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
+  '2.7.4: NTC SE1→FI korjattu 1500→2300 MW (Aurora Line käyttöön 11/2025, lisäys +800 MW). TRR 105% → ~68% — ei saturaatio vaan korkea käyttöaste.',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
 ];
 document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
@@ -2707,7 +2711,7 @@ async function renderS12(rawData) {
         const j = await r.json();
         const vals = (j.data||[]).map(d => d.value).filter(v => v != null);
         const se1Avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
-        const ntcApprox = 1500; // Aurora-linja avattu marraskuu 2025 — SE1→FI max NTC 1500 MW
+        const ntcApprox = 2300; // Aurora Line käyttöön 11/2025: vanha ~1500 MW + Aurora +800 MW = ~2300 MW SE1→FI
         if (se1Avg != null) {
           logEntry.se1 = Math.abs(se1Avg).toFixed(0);
           logEntry.trr = (Math.abs(se1Avg) / ntcApprox * 100).toFixed(0);
