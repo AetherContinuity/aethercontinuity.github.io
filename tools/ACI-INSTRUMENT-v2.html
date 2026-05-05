@@ -1192,8 +1192,16 @@ function calcWindow(slice) {
     const wSlice = slice.filter(d => d.wnd != null);
     avgWnd = wSlice.length ? wSlice.reduce((s,d)=>s+d.wnd,0)/wSlice.length : null;
     const chpSlice = slice.filter(d => d.chp != null);
+    const CHP_MAX = 2000; // Suomen sähkö-CHP maksimi historiallisesti ~2300 MW
     if (chpSlice.length >= Math.min(6, Math.max(1, n * 0.25))) {
-      avgChp = chpSlice.reduce((s,d)=>s+d.chp,0)/chpSlice.length;
+      const rawChp = chpSlice.reduce((s,d)=>s+d.chp,0)/chpSlice.length;
+      if (rawChp > CHP_MAX) {
+        // DS 201/202 näyttää epärealistista — todennäköisesti sisältää muuta teollisuustuotantoa
+        // Käytä kuukausikeskiarvoa ja merkitse arvioksi
+        avgChp = CHP_MONTHLY_BASELINE[modalMonth] || 1300;
+      } else {
+        avgChp = rawChp;
+      }
     } else {
       // DS 201/202 ei saatavilla — käytä kuukausikeskiarvoa, EI jäännöslaskentaa
       avgChp = CHP_MONTHLY_BASELINE[modalMonth] || 1300;
@@ -1235,8 +1243,13 @@ function calcWindow(slice) {
     eppFull = dp_t != null ? 'fallback+T+P' : 'fallback+P';
   }
 
+  // chpEstimated: true jos data puuttui tai ylitti realistisen rajan
+  const _chpRaw = slice.filter(d=>d.chp!=null);
+  const _chpRawVal = _chpRaw.length ? _chpRaw.reduce((s,d)=>s+d.chp,0)/_chpRaw.length : 0;
+  const chpEstimated = _chpRaw.length < Math.min(6, Math.max(1, n*0.25)) || _chpRawVal > 2000;
+
   return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp,
-           eppMode: eppFull, stressH, n, modalMonth, baselineC,
+           eppMode: eppFull, stressH, chpEstimated, n, modalMonth, baselineC,
            avgTemp, avgTempHki, avgTempKuo, avgTempRov, tempSpread, avgCexpected,
            eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp, spCluster,
            fsNominal: (typeof fsNominal !== 'undefined') ? fsNominal : null,
