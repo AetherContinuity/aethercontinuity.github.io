@@ -2071,27 +2071,27 @@ function generateSynthetic(hours = 168) {
 // Tarkkuus: kuukausikeskiarvot ± 5–10 % · Tuntidata syntetisoitu diurnaalikaavalla
 const BT_BASELINES = {
   '2022-01': { // Tammikuu 2022 — normaali talvi, ennen energiakriisiä
-    c:11200, p:10800, nuc:2750, hyd:2200, wnd:1500, chp:3800, temp:-4,
+    c:11200, p:10800, nuc:2750, hyd:2200, wnd:1500, chp:3800, temp:-4, t168:8,
     note:'OL3 rakennusvaihe. Loviisa 1+2 + OL1+2 ≈ 2750 MW.'
   },
   '2022-08': { // Elokuu 2022 — energiakriisi käynnistyy, NordPool >200 €/MWh
-    c:8100, p:7400, nuc:2550, hyd:1600, wnd:900, chp:1100, temp:17,
+    c:8100, p:7400, nuc:2550, hyd:1600, wnd:900, chp:1100, temp:17, t168:72,
     note:'Venäjä-kaasu katkennut. OL2 seisokit. Spot 200–400 €/MWh.'
   },
   '2022-11': { // Marraskuu 2022 — kriisikärki, hintahuippu
-    c:10700, p:9600, nuc:2450, hyd:2000, wnd:1800, chp:3100, temp:-1,
+    c:10700, p:9600, nuc:2450, hyd:2000, wnd:1800, chp:3100, temp:-1, t168:12,
     note:'NordPool FI >300 €/MWh. OL2 palautuu, OL3 viivästyy. Nettoimportti suuri.'
   },
   '2023-01': { // Tammikuu 2023 — jälkikriisi, hinnat laskevat
-    c:10900, p:10500, nuc:2800, hyd:2100, wnd:1700, chp:3500, temp:-5,
+    c:10900, p:10500, nuc:2800, hyd:2100, wnd:1700, chp:3500, temp:-5, t168:8,
     note:'Spot 100–180 €/MWh. OL2 käytössä. Tasapaino parantunut.'
   },
   '2023-07': { // Heinäkuu 2023 — kesäbaseline, ylijäämä
-    c:7600, p:9000, nuc:2900, hyd:2600, wnd:1200, chp:900, temp:17,
+    c:7600, p:9000, nuc:2900, hyd:2600, wnd:1200, chp:900, temp:17, t168:2,
     note:'Tuotantoylijäämä — Suomi nettoviejänä. OL3 testikäytössä.'
   },
   '2024-01': { // Tammikuu 2024 — OL3 kaupallisessa käytössä 1.1.2024
-    c:11300, p:11900, nuc:4350, hyd:2200, wnd:2100, chp:3100, temp:-3,
+    c:11300, p:11900, nuc:4350, hyd:2200, wnd:2100, chp:3100, t168:3, temp:-3,
     note:'OL3 +1600 MW firm-kapasiteettia. ECI nousee merkittävästi.'
   },
   '2024-12': { // Joulukuu 2024 — ensimmäinen täysi OL3-talvi
@@ -2414,9 +2414,22 @@ async function runBacktest() {
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
 
+      // Kalibroitu t168-override backtestiin: jos baseline sisältää t168-estimaatin,
+      // käytetään sitä persistenssipreemion laskentaan (synteettinen data ei tuota
+      // luotettavaa klusterijakaumaa historiallisille periodeille)
+      const baseline = BT_BASELINES[p.id];
+      let eppFinal = m.epp;
+      if (baseline?.t168 != null && m.spCluster != null) {
+        const t168cal = baseline.t168;
+        const prem = t168cal >= 24 ? 0.12 : t168cal >= 6 ? 0.05 : 0.0;
+        const premSynth = m.spCluster.t168 >= 24 ? 0.12 : m.spCluster.t168 >= 6 ? 0.05 : 0.0;
+        // Korvaa synteettinen preemio kalibroitu preemiolla
+        eppFinal = Math.min(1, Math.max(0, m.epp - premSynth + prem));
+      }
+
       results.push({
         ...p,
-        epp: m.epp, eci: m.eci, sp: m.sp, dc: m.dc,
+        epp: eppFinal, eci: m.eci, sp: m.sp, dc: m.dc,
         dp: m.dp, nir: m.nir, pts: data.length,
         dataQuality, avgNuc: m.avgNuc, avgChp: m.avgChp, avgP: m.avgP,
         error: null,
