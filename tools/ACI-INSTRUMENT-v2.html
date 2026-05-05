@@ -3027,6 +3027,60 @@ async function renderS12(rawData) {
       if (wlEl) wlEl.textContent = 'DS 245 ei vastaa';
     }
 
+    // ── Rajasiirrot — kaikki yhteydet ─────────────────────────────────────────
+    await new Promise(r => setTimeout(r, 2000));
+    try {
+      const connections = [
+        { label: 'SE1  (Pohj. Ruotsi)', ds: 60,  ntc: 2300, note: 'Aurora Line' },
+        { label: 'SE3  (Keski-Ruotsi)', ds: 89,  ntc: 1200, note: '' },
+        { label: 'EE   (Estlink 1+2)',  ds: 180, ntc: 1016, note: 'Estlink 1+2' },
+        { label: 'NO   (Norja)',         ds: 187, ntc:  100, note: '' },
+        { label: 'RU   (Venäjä)',        ds: 195, ntc: null, note: '0 MW 2022→' },
+        { label: 'Netto (kaikki)',       ds: 194, ntc: null, note: '' },
+      ];
+      const now2 = new Date();
+      const end2 = new Date(now2 - 1*3.6e6);
+      const start2 = new Date(now2 - 3*3.6e6);
+      const rows = [];
+      for (const conn of connections) {
+        try {
+          const ru = await fetch(txBase + '/?ds=' + conn.ds +
+            '&start=' + encodeURIComponent(start2.toISOString()) +
+            '&end='   + encodeURIComponent(end2.toISOString()) + '&size=20');
+          if (ru.ok) {
+            const ju = await ru.json();
+            const vals = (ju.data||[]).map(d => d.value).filter(v => v != null);
+            const latest = vals.length ? vals[vals.length-1] : null;
+            rows.push({ ...conn, val: latest });
+          } else {
+            rows.push({ ...conn, val: null, err: ru.status });
+          }
+        } catch(ex) {
+          rows.push({ ...conn, val: null, err: ex.message.slice(0,20) });
+        }
+        await new Promise(r => setTimeout(r, 800));
+      }
+      const tbody = document.getElementById('borderTableBody');
+      if (tbody) {
+        tbody.innerHTML = rows.map(row => {
+          const v = row.val;
+          const valStr = v != null ? Math.round(v).toLocaleString('fi') : (row.err || '—');
+          const dir = v == null ? '—' : v > 50 ? '↑ vienti' : v < -50 ? '↓ tuonti' : '↔ tasainen';
+          const col = v == null ? '' : v > 50 ? 'color:#2d6b3a' : v < -50 ? 'color:#8b1010' : '';
+          const ntcStr = row.ntc ? ' / ' + row.ntc + ' MW' : '';
+          return `<tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:5px 8px;font-family:var(--mono);font-size:.75rem;">${row.label}</td>
+            <td style="padding:5px 8px;text-align:right;font-family:var(--mono);font-size:.75rem;${col}">${valStr}${ntcStr}</td>
+            <td style="padding:5px 8px;font-size:.75rem;${col}">${dir}</td>
+            <td style="padding:5px 8px;font-family:var(--mono);font-size:.65rem;color:var(--muted);">DS ${row.ds}${row.note ? ' · '+row.note : ''}</td>
+          </tr>`;
+        }).join('');
+      }
+    } catch(ex) {
+      const tbody = document.getElementById('borderTableBody');
+      if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);padding:.5rem;">Rajasiirtodata ei saatavilla</td></tr>';
+    }
+
     s12SetProgress(6, 6, '§12 — valmis');
     s12SaveLog(logEntry);
 
