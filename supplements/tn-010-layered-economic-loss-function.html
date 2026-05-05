@@ -74,7 +74,7 @@ tr:last-child td{border-bottom:none;}
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
     <span><strong>Version</strong> 0.2 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.2)</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.2b)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
     <span><strong>New elements</strong> LELF · CEL · CVaR analogy · Sector kernels · Subsystem profiles · Dependency overlay</span>
@@ -156,6 +156,11 @@ Threshold heterogeneity is the central feature of the LELF framework.
 <h3>Water supply</h3>
 <p>Water towers and pressure vessels provide 2–6 hours of buffer at normal consumption. The failure mode is not purely a pressure event — it is a contamination event. When network pressure drops below a threshold, external pressure can drive contaminants into the distribution network. This activates a post-restoration protocol: network flushing, water sampling, and laboratory confirmation before the network is declared safe. This protocol typically requires 12–48 hours after power restoration regardless of outage duration.</p>
 <p>Recovery asymmetry is severe: a 6-hour outage may produce 48–72 hours of post-restoration unavailability. The LELF L3 threshold for water supply is therefore not symmetric — it should be expressed as a function of both outage duration and post-restoration recovery time. Pumping stations in smaller municipalities have limited generator capacity and fuel reserves, creating L4 exposure at 6–12 hours.</p>
+
+<h3>Wastewater management</h3>
+<p>Wastewater pumping stations are fully electricity-dependent with limited buffer capacity. Collection network storage — the volume held in pipes and lift station wet wells — typically provides 2–6 hours of buffer before overflow conditions develop, depending on inflow rates and network topology. Unlike water supply, where pressure loss is the primary failure mode, wastewater failure produces an active environmental hazard: untreated sewage discharge to waterways, streets, or basements. This makes wastewater one of the fastest-escalating LELF categories.</p>
+<p>Finnish regulatory requirement (Water Services Act) mandates controlled overflow to designated discharge points before uncontrolled overflow occurs. This requires active management — operators must be reachable and able to respond — which in turn depends on telecommunications remaining functional. The cascade: telecommunications degradation at ~3 hours impairs wastewater operator response precisely when buffer exhaustion is approaching.</p>
+<p>Recovery asymmetry is severe and environmentally extended. After power restoration, network decontamination, pump inspection, and environmental sampling are required before normal operation resumes. Depending on overflow volume and receiving water body, regulatory reporting and remediation obligations may extend the effective recovery period by days to weeks. L3 threshold: 2–4 hours (buffer exhaustion, overflow risk). L4 threshold: 6–12 hours (confirmed environmental discharge, remediation obligation activated). Smaller municipalities with limited generator capacity face L3 exposure significantly earlier than urban systems with backup power at main pumping stations.</p>
 
 <h3>Telecommunications (4G/5G)</h3>
 <p>Finnish regulatory requirement mandates 3-hour battery backup at base stations. This can be extended to approximately 20 hours with mobile generator units, but generator deployment requires logistics coordination and fuel. The failure profile is non-binary: voice calls and SMS function until battery exhaustion; data services degrade earlier as backhaul links lose power. The critical dependency is that telecommunications degradation impairs remote monitoring and control of other infrastructure systems — district heating, water pumping, hospital coordination — creating a cascade multiplier on other LELF layers.</p>
