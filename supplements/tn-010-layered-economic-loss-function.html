@@ -531,6 +531,55 @@ but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requ
 
 <p><strong>Comparison with traditional models:</strong> Standard €/MWh interruption cost models applied to the same 48h event produce approximately €500M–1B — an underestimate of 2–3× relative to the LELF result. The gap arises because traditional models capture L1–L2 direct costs but miss L3–L5 threshold crossings, recovery asymmetry, and cascade effects. The LELF result is not "pessimistic" — it correctly accounts for the physical mechanisms that make outages expensive.</p>
 
+<span class="sec-num">§ 05.1</span>
+<h2>DC Load Impact and Curtailment Optimisation</h2>
+
+<p>Adding 2,000 MW of flat DC load to the compound 72h scenario raises total CEL from approximately €2.5B to €5B — a doubling driven by three mechanisms: increased load shedding across the rest of the economy; DC diesel generators competing with hospitals, water systems, and telecommunications for the same fuel pool; and accelerated threshold crossings as all subsystem endurance timelines shift left by 20–40%.</p>
+
+<h3>The generator switch problem</h3>
+<p>The intuitive response — switch DCs to backup generators, freeing grid capacity — is counterproductive under compound stress. DCs switched to generators consume approximately 450 m³/hour of diesel at 2,000 MW load. This competes directly with hospitals, water pumping stations, and telecommunications base stations for the same limited fuel supply. R_resupply(d) deteriorates faster, collapsing from 24 hours to 12–18 hours of effective system backup. The net effect: grid load is partially relieved, but the diesel crisis is accelerated. DC-to-generator switching is always worse than maintaining DC on grid under compound stress conditions.</p>
+
+<h3>Curtailment optimisation results</h3>
+<p>The optimal strategy is partial load reduction (50–80% sleep mode) executed at 10–14 hours into the event — early enough to prevent cascade progression, late enough that DC direct losses (SLA, workload migration) are bounded by time remaining. The optimisation surface is non-convex with a saddle point near t = 12h.</p>
+
+<table>
+  <thead><tr><th>Strategy</th><th>Timing</th><th>DC losses</th><th>System CEL</th><th>Total CEL</th><th>Net saving</th></tr></thead>
+  <tbody>
+    <tr><td>No action</td><td>—</td><td>€0</td><td>€5.0B</td><td>€5.0B</td><td>baseline</td></tr>
+    <tr style="background:#fff3cd;"><td>DC sleep 50%</td><td>t=12h</td><td>€1.0B</td><td>€3.7B</td><td>€4.7B</td><td><strong>+€0.3B</strong></td></tr>
+    <tr style="background:#fff3cd;"><td>DC sleep 80%</td><td>t=12h</td><td>€1.6B</td><td>€3.1B</td><td>€4.7B</td><td><strong>+€0.3B</strong></td></tr>
+    <tr style="background:#d4edda;"><td>DC offline</td><td>t=12h</td><td>€2.0B</td><td>€2.7B</td><td>€4.7B</td><td><strong>+€0.3B</strong></td></tr>
+    <tr><td>DC→generator</td><td>t=0h</td><td>€0</td><td>€5.5B</td><td>€5.5B</td><td>−€0.5B (worse)</td></tr>
+    <tr><td>DC sleep 50%</td><td>t=0h</td><td>€3.0B</td><td>€3.2B</td><td>€6.2B</td><td>−€1.2B (worse)</td></tr>
+    <tr><td>DC offline</td><td>t=24h</td><td>€1.6B</td><td>€3.3B</td><td>€4.9B</td><td>+€0.1B</td></tr>
+  </tbody>
+</table>
+
+<h3>Non-intuitive findings</h3>
+
+<p><strong>Finding 1:</strong> DC→generator switching is always worse than keeping DCs on grid under compound stress. The grid load relief does not compensate for the diesel pool competition it creates.</p>
+
+<p><strong>Finding 2:</strong> Early (t=0h) full sleep or offline is also suboptimal — DC direct losses exceed cascade savings when action is taken before threshold crossings have begun.</p>
+
+<p><strong>Finding 3:</strong> The optimal window is approximately t=10–14h — after L2 thresholds have crossed (justifying action) but before L3–L4 cascades are fully established. Net system saving is approximately €300M against no-action baseline.</p>
+
+<p><strong>Finding 4 (the policy implication):</strong> Pre-emptive action triggered by CAT=1 (before the compound event reaches t=12h) outperforms reactive action. CAT condition (C) — NVE &lt;35% AND EPP* &gt;0.50 AND OL3 unavailable — is the natural trigger for DC demand response protocols. A mandatory "CAT-1 sleep protocol" (50% load reduction within 2 hours of CAT trigger) is a coordination instrument requiring grid connection agreement terms, not a technical constraint. It is currently absent from Finnish data centre regulatory framework.</p>
+
+<div class="formula">
+DC Curtailment Policy Rule (proposed):
+  If CAT = 1:
+    DC operators reduce to 50% load within t+2h
+    DC operators do NOT switch to backup generators
+    (sleep mode: reduce workload, maintain minimal cooling)
+    
+  If CAT = 1 AND EPP* > 0.75 (BP-like):
+    DC operators reduce to 20% load within t+1h
+    Fingrid may mandate further reduction under emergency powers
+
+Expected system benefit: €200–400M per compound event avoided
+vs. no protocol: €0 (no instrument exists)
+</div>
+
 <span class="sec-num">§ 06.1</span>
 <h2>Linkage to TN-009: Expected System Loss</h2>
 
