@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TN-011 — CCU as Flexibility Sink: P2X Integration in SGFA Retrofit | ACI</title>
+<meta name="description" content="Carbon Capture and Utilisation as a structural flexibility sink in SGFA retrofit architecture. VTT CCU white paper validation, ForestCUMP reference case, hydrogen cost dominance, and CO-route via Reduciner as alternative pathway.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f7f5f0;--ink:#1a1916;--muted:#6b6860;--line:#d4cfc4;--accent:#2a4a6e;--panel:#eeeae2;--panel2:#e6e1d6;--serif:Georgia,'Times New Roman',serif;--mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.78;max-width:780px;margin:0 auto;padding:40px 28px 100px;}
+nav{font-family:var(--mono);font-size:.68rem;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.4rem;}
+.aci-header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+.aci-kicker{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px;}
+.aci-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px;}
+.aci-meta strong{color:var(--ink);}
+h1{font-size:1.65rem;font-weight:400;line-height:1.25;letter-spacing:-.02em;margin:16px 0 6px;}
+.subtitle{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:8px;}
+.sec-num{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);display:block;margin-bottom:6px;margin-top:44px;}
+h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;}
+h3{font-size:.95rem;font-weight:600;margin:22px 0 8px;}
+p{margin-bottom:14px;}
+.abstract{border-left:3px solid var(--accent);padding:13px 17px;margin:26px 0;background:var(--panel);font-size:.88rem;line-height:1.8;}
+.abstract-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:7px;}
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);padding:13px 17px;margin:20px 0;background:var(--panel);font-size:.88rem;line-height:1.75;}
+.callout-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:6px;}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem;}
+th{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:7px 11px;text-align:left;border-bottom:2px solid var(--line);background:var(--panel);}
+td{padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6;}
+tr:last-child td{border-bottom:none;}
+.finding{border:1px solid var(--line);background:var(--panel2);padding:14px 18px;margin:28px 0;font-size:.88rem;line-height:1.8;}
+.finding h3{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:normal;}
+.preceded{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;font-family:var(--mono);font-size:.66rem;color:var(--muted);line-height:2;}
+.preceded a{color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+</nav>
+<div class="aci-header">
+  <div class="aci-kicker">ACI · Technical Note · TN-011</div>
+  <h1>CCU as Flexibility Sink: P2X Integration in SGFA Retrofit Architecture</h1>
+  <p class="subtitle">VTT CCU white paper validation · ForestCUMP reference case · hydrogen cost dominance · CO-route via Reduciner</p>
+  <div class="aci-meta">
+    <span><strong>Version</strong> 1.0</span>
+    <span><strong>Date</strong> May 2026</span>
+    <span><strong>Domain</strong> D-2 · D-4</span>
+    <span><strong>Basis</strong> WP-019 · SM-010 · VTT CCU White Paper 2026</span>
+    <span><strong>Status</strong> Published</span>
+    <span><strong>Continues in</strong> TN-012 · TN-013</span>
+  </div>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>Carbon Capture and Utilisation (CCU) fits SGFA retrofit architecture as a structural flexibility sink: it consumes surplus renewable electricity and converts it into storable chemical commodities, earning grid reserve payments while doing so. VTT's CCU white paper (2026) confirms that the necessary technology is documented and piloted in Finland. The critical cost parameter — 80–90% of CCU product cost comes from hydrogen — directly validates WP-019's CAPEX analysis. The ForestCUMP reference case (100 kt/a olefins from pulp mill biogenic CO₂) demonstrates industrial-scale integration analogous to SGFA nodes. A second route, Reduciner's CO pathway (CO₂ + biogenic carbon → CO + activated carbon), offers an alternative that reduces hydrogen dependency and is economically viable without policy incentives. Both routes are described; detailed Reduciner integration follows in TN-013.</p>
+</div>
+
+<span class="sec-num">§ 01</span>
+<h2>CCU as Structural Flexibility Sink</h2>
+<p>The SGFA retrofit framework (WP-019) identifies the need for dispatchable loads that can absorb surplus renewable electricity during low-price periods and generate revenue through multiple channels simultaneously. CCU — the conversion of captured CO₂ into fuels, chemicals, or polymers using renewable electricity — meets this requirement structurally.</p>
+<p>During OGAS2 surplus phases (spot price approaching €0/MWh), CCU processes can run at full capacity, purchasing cheap electricity and storing value in chemical products. During scarcity phases, they reduce load and release grid capacity. This is the flexibility sink function: not energy storage in the conventional sense, but chemical value storage that converts system surplus into tradeable commodities.</p>
+<p>The flexibility sink is compatible with FCR-D reserve market participation. The SGFA node's primary reserve capacity is unchanged; CCU load represents additional dispatchable consumption that can be offered as reserve service independently. The two revenue streams — reserve payments and product sales — do not compete.</p>
+
+<span class="sec-num">§ 02</span>
+<h2>VTT CCU White Paper — Validation Function</h2>
+<p>VTT's 2026 CCU white paper ("Carbon Capture and Utilisation — Unlocking Value from Emissions") serves a validation function for WP-019, not a supplementary one. It does not add new technology that SGFA requires; it confirms that Finnish research institutions have mapped and developed exactly the technologies SGFA retrofit demands. This matters because WP-019 and SM-010 have consistently identified coordination failure, not technology shortage, as the binding constraint. VTT's white paper is evidence that the technical competence exists and is documented.</p>
+
+<h3>Direct compatibility</h3>
+<table>
+  <thead><tr><th>SGFA component (WP-019 §5)</th><th>VTT CCU white paper reference</th><th>Significance</th></tr></thead>
+  <tbody>
+    <tr><td>CO₂ capture from biogenic flue gas</td><td>Chapter 1, forest industry biogenic CO₂ (ForestCUMP example, p.6)</td><td>Technology ready, Finnish reference case</td></tr>
+    <tr><td>P2X integration (electrolysis + synthesis)</td><td>p.5: CO₂ + water + renewable electricity → syngas → hydrocarbons</td><td>Core process described and dimensioned</td></tr>
+    <tr><td>e-methane (Power-to-Gas)</td><td>p.10: methanation (SNG) as synthesis process</td><td>Direct match to SGFA e-methane stream</td></tr>
+    <tr><td>e-diesel / e-fuels</td><td>pp.11–12: Fischer-Tropsch, catalyst development, Mobile Synthesis Unit</td><td>Product range wider than SGFA baseline assumes</td></tr>
+    <tr><td>Ecosystem model (Step 4)</td><td>p.13: network of CO₂ supplier, hydrogen, product upgrade, offtakers, finance, permits</td><td>Identical coordination model to WP-019 §4</td></tr>
+  </tbody>
+</table>
+
+<h3>Critical cost parameter</h3>
+<p>VTT's white paper states that 80–90% of CCU product production costs come from hydrogen (p.10). This is directly consistent with WP-019 §5, where electrolysis is the largest single CAPEX item (€40–100M). It also explains why the Oulu 100 MW electrolysis decision is delayed: hydrogen price determines viability, and without long-term contract structures (Fingrid, HVK), the investment is high-risk.</p>
+
+<h3>ForestCUMP reference case</h3>
+<p>The ForestCUMP example (p.6) describes a 100 kt/a olefin plant using biogenic CO₂ from a pulp mill, integrated with an existing steam cracker. Investment cost approximately €1.2B; production cost approximately €3,200/t. This is precisely the type of industrial integration WP-019's Varkaus pathway describes. WP-019 §3's Varkaus pathway currently has 25% SGFA completeness without P2X; ForestCUMP demonstrates the technology exists and has been computationally tested.</p>
+
+<div class="callout">
+  <div class="callout-label">Policy implication</div>
+  <p>Technology is not the bottleneck. This is now publicly documented by VTT. The SGFA retrofit's central bottleneck — identified in SM-010 as the coordination gap between VTT-class technological readiness, Fingrid reserve markets, HVK strategic storage, and municipal energy company investment decisions — is institutional, not technical. VTT's Mobile Synthesis Unit (a containerised Fischer-Tropsch unit producing 100 kg hydrocarbons per test campaign) provides an existing pilot infrastructure that could support SGFA retrofit's first phase.</p>
+</div>
+
+<span class="sec-num">§ 03</span>
+<h2>Hydrogen Route vs. CO Route — Two Pathways</h2>
+<p>The standard P2X pathway proceeds through electrolysis: renewable electricity splits water to produce hydrogen, which is then combined with captured CO₂ to produce synthetic fuels or chemicals. This is the pathway VTT's white paper primarily addresses, and the one WP-019 §5 dimensioned.</p>
+<p>A second pathway, developed by Reduciner (a VTT spin-off announced May 2026), avoids hydrogen entirely. It uses a thermochemical process:</p>
+<p style="font-family:var(--mono);font-size:.85rem;background:var(--panel);padding:12px 16px;line-height:2;">CO₂ + biogenic carbon + renewable electricity → CO (carbon monoxide) + activated carbon</p>
+<p>CO is a valuable industrial intermediate — directly usable as industrial fuel, feedable into Fischer-Tropsch for e-fuels, or processable into methanol and other chemicals. Activated carbon is a sellable by-product with growing markets in water and gas purification (price approximately €1,000–2,000/t).</p>
+
+<table>
+  <thead><tr><th>Criterion</th><th>Hydrogen route (VTT/WP-019)</th><th>CO route (Reduciner)</th></tr></thead>
+  <tbody>
+    <tr><td>Feedstocks</td><td>CO₂ + water + electricity</td><td>CO₂ + biogenic carbon + electricity</td></tr>
+    <tr><td>Electricity intensity</td><td>~300 kWh/MWh (electrolysis dominates)</td><td>~50–60 kWh/MWh (thermochemical)</td></tr>
+    <tr><td>By-product</td><td>None</td><td>Activated carbon (~€1,000–2,000/t)</td></tr>
+    <tr><td>Primary applications</td><td>e-fuels, chemicals, grid storage</td><td>Heavy industry (lime, cement, steel, pulp)</td></tr>
+    <tr><td>Economic viability</td><td>Dependent on hydrogen price</td><td>Viable without policy incentives (activated carbon revenue)</td></tr>
+    <tr><td>TRL (May 2026)</td><td>7–8 (industrial pilots operating)</td><td>7 (1 MW industrial pilot planned 2026–2027)</td></tr>
+  </tbody>
+</table>
+
+<p>The CO route does not replace the hydrogen route — it complements it. In SGFA nodes with high biogenic carbon availability (pulp mills, sawmills), Reduciner provides a lower-electricity-intensity alternative that is immediately economically viable. The hydrogen route remains relevant for nodes where electrolysis capacity justifies scale. TN-013 develops the Reduciner integration in detail.</p>
+
+<span class="sec-num">§ 04</span>
+<h2>Integration Path for SGFA Retrofit</h2>
+<p>Adding CCU to an SGFA node requires four elements that WP-019 §3–5 identifies as structurally present or developable at Finnish retrofit sites:</p>
+<p><strong>CO₂ source.</strong> Biogenic CO₂ from pulp mill flue gases, waste incineration, or CHP combustion. ForestCUMP demonstrates this at Stora Enso scale. Varkaus (Stora Enso) and the Vantaa waste-to-energy plant are primary candidates.</p>
+<p><strong>Electricity connection.</strong> SGFA nodes are by definition connected to the Fingrid grid and participate in FCR-D reserve markets. This connection also enables surplus electricity absorption for CCU processes during low-price periods.</p>
+<p><strong>Synthesis infrastructure.</strong> VTT's Mobile Synthesis Unit (containerised, relocatable) enables pilot-phase testing without permanent facility investment. Industrial-scale deployment follows a FEED design process (VTT's standard Phase 3 offering).</p>
+<p><strong>Offtake agreements.</strong> CO products (e-fuels, methanol) align with ReFuelEU Aviation and FuelEU Maritime regulatory demand (EU requires 25–30 Mt/a of aviation e-fuels by 2050). This regulatory demand structure provides the contractual anchor for CCU investment decisions.</p>
+
+<div class="finding">
+  <h3>Core Finding</h3>
+  <p>The coordination gap in Finnish P2X deployment is not between technology and market — it is between VTT-documented technological readiness and the institutional instruments (HVK strategic reserve designation, Fingrid capacity mechanism, municipal energy company investment mandates) that would make deployment economically rational. WP-019's SGFA Holding Oy proposal is the correct institutional response. CCU's role in SGFA is as a flexibility sink that converts surplus renewable electricity into chemical value, with hydrogen cost (80–90% of product cost) as the primary economic parameter to manage.</p>
+</div>
+
+<div class="preceded">
+  <strong>Series:</strong>
+  <a href="/papers/wp-019-pool-method.html">WP-019 — SGFA Retrofit Pathways</a> ·
+  <a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010 — Financing Instruments</a> ·
+  <a href="/supplements/tn-012-biosynthesis-sgfa.html">TN-012 — Biosynthesis in SGFA</a> ·
+  <a href="/supplements/tn-013-reduciner-sgfa.html">TN-013 — Reduciner Integration</a>
+</div>
+</body>
+</html>
