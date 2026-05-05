@@ -226,10 +226,16 @@ CAT = 1 if any of the following conditions hold:
   (B) FRP-adjusted EPP slope > +0.15 per 24h
       [rapid deterioration signal — system moving toward brittle regime]
 
-  (C) NVE < 35%  AND  EPP* > 0.50  AND  OL3 unplanned outage active
+  (C) NVE < 35%  AND  EPP* > 0.50  AND  OL3 unavailable > 4h
+      (planned or unplanned — the endurance effect is identical)
       [three-factor compound: hydro deficit + elevated pressure + nuclear loss]
 
-CAT = 0 otherwise.
+CAT = 0 otherwise — with 24-hour hysteresis:
+  Once CAT=1, it remains 1 for a minimum of 24 hours even if triggering
+  conditions temporarily resolve. This prevents rapid oscillation between
+  states and reflects the operational reality that pre-positioning actions
+  (personnel recall, fuel resupply, standby activation) take hours to
+  execute and should not be reversed on short timescales.
 
 CAT is not a crisis declaration — it is a pre-positioning signal.
 Response action: designate monitoring authority, activate contingency review.

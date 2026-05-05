@@ -191,12 +191,20 @@ this is the mechanism behind the L4 threshold severity in wastewater.
 <p>The cascade timeline: at L1 (0–2h), fuel stations begin failing. By L2 (2–6h), approximately 95% of retail fuel stations are non-operational. Backup generators across hospitals, data centres, telecommunications base stations, and water pumping stations begin drawing down their stored diesel reserves. By L3 (6–12h), only facilities with dedicated fuel contracts and pre-positioned reserves (major hospitals, large data centres, critical telecoms nodes) retain meaningful fuel security. All other backup-dependent systems begin entering forced shutdown as their stored diesel is exhausted.</p>
 <p>This creates a structural revision to all other subsystem θ(s) values: the nominal backup duration (e.g., hospital 72h, data centre 48h) applies only if fuel resupply logistics function. Under an extended outage with simultaneous road network disruption (weather, traffic management failure), effective backup duration collapses to stored-diesel capacity only — typically 12–24 hours for most facilities. The fuel distribution subsystem is therefore not a LELF category in its own right but a time-dependent modifier R_fuel(d) applied to all backup-dependent subsystems:</p>
 <div class="formula">
-R_fuel(d) ≈ 1.0  for d &lt; 4h   (stations operational, resupply possible)
-R_fuel(d) ≈ 0.6  for 4h ≤ d &lt; 12h  (major stations only)
-R_fuel(d) ≈ 0.2  for 12h ≤ d &lt; 24h  (dedicated contracts only)
-R_fuel(d) ≈ 0.0  for d ≥ 24h   (stored reserves only, no resupply)
+R_resupply(d) — resupply availability scalar:
+  R_resupply(d) ≈ 1.0  for d &lt; 4h   (stations operational, resupply possible)
+  R_resupply(d) ≈ 0.6  for 4h ≤ d &lt; 12h  (major stations only)
+  R_resupply(d) ≈ 0.2  for 12h ≤ d &lt; 24h  (dedicated contracts only)
+  R_resupply(d) ≈ 0.0  for d ≥ 24h   (stored reserves only, no resupply)
 
-Effective backup duration = nominal × R_fuel(d) × R(s,d)
+R_fuel_effective(s,d) — effective backup duration modifier:
+  R_fuel_effective = R_resupply(d) × stored_factor(s)
+  where stored_factor(s) = ratio of stored diesel to total nominal capacity
+
+Effective backup duration = nominal(s) × R_fuel_effective(s,d) × R(s,d)
+
+Note: R_resupply is the supply-chain term; R_fuel_effective combines
+resupply availability with each facility's stored diesel buffer.
 </div>
 
 <h3>Cold chain (food and pharmaceutical)</h3>
@@ -250,7 +258,7 @@ Effective backup duration = nominal × R_fuel(d) × R(s,d)
   <thead><tr><th>Trigger</th><th>Affected subsystems</th><th>Threshold reduction</th><th>Mechanism</th></tr></thead>
   <tbody>
     <tr><td>Telecom outage &gt;3h</td><td>SCADA, hospital patient systems, payment systems, water monitoring</td><td>−20–40% of nominal θ</td><td>Remote monitoring loss → manual response only</td></tr>
-    <tr><td>Fuel distribution outage &gt;4h</td><td>All diesel-dependent backup systems</td><td>R_fuel = 0.3–0.6 × nominal duration</td><td>Resupply impossible; stored diesel only</td></tr>
+    <tr><td>Fuel distribution outage &gt;4h</td><td>All diesel-dependent backup systems</td><td>R_resupply(d) applied — see §02.1 fuel profile</td><td>Resupply impossible; stored diesel only</td></tr>
     <tr><td>Fuel + road network degradation</td><td>Mobility-dependent logistics (ambulance, fuel trucks, repair crews)</td><td>Effective backup collapses to 12–24h across system</td><td>Physical access impossible</td></tr>
     <tr><td>Wastewater overflow &gt;6h</td><td>Drinking water sources in affected catchment</td><td>Drinking water θ reduced by 50%</td><td>Contamination risk activates emergency protocol</td></tr>
     <tr><td>Payment system failure &gt;6h</td><td>All commercial crisis response</td><td>20–40% friction increase on all logistics</td><td>Fuel, supplies, repair parts cannot be purchased</td></tr>
@@ -277,7 +285,7 @@ Key insight: SP_cluster T₁₆₈ (longest stress episode, WEM §11) is a
 direct empirical estimator of p(d | current system state).
 </div>
 
-<p>SP_cluster already exists in WEM §11. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
+<p>SP_cluster already exists in WEM §11 as T₁₆₈ — the longest single stress episode in the 168-hour window. WEM v2.7.5 also incorporates a persistence premium P(T₁₆₈) directly into the EPP calculation (+0.05 for T₁₆₈ ≥ 6h, +0.12 for T₁₆₈ ≥ 24h), which provides a real-time endurance signal that feeds naturally into CEL estimation. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
 
 <p>For operational use, CEL is most informative in two concrete forms:</p>
 
