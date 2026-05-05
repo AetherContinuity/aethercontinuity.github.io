@@ -1857,10 +1857,12 @@ async function init() {
     const end   = new Date(now - 2   * 3.6e6);
     const start = new Date(now - 48  * 3.6e6);
     setStatus('loading', [[label, 'haetaan eilen…']]);
+    // 3min data: 48h = 960 points → size=2000 kattaa koko ikkunan
+    // sortOrder=asc varmistaa oikean aikasuunnan
     const url = `${PROXY}?ds=${dsId}` +
       `&start=${encodeURIComponent(start.toISOString())}` +
       `&end=${encodeURIComponent(end.toISOString())}` +
-      `&size=200`;
+      `&size=2000&sortOrder=asc`;
     const r = await fetch(url);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json();
