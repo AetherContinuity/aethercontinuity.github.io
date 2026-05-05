@@ -338,7 +338,7 @@ Financial equivalents:
   CEL_P99 ≈ Tail scenario            — catastrophe reinsurance territory
 </div>
 
-<p>SP_cluster already exists in WEM §11 as T₁₆₈ — the longest single stress episode in the 168-hour window. WEM v2.7.5 also incorporates a persistence premium P(T₁₆₈) directly into the EPP calculation (+0.05 for T₁₆₈ ≥ 6h, +0.12 for T₁₆₈ ≥ 24h), which provides a real-time endurance signal that feeds naturally into CEL estimation. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
+<p>SP_cluster already exists in WEM §11 as T₁₆₈ — the longest single stress episode in the 168-hour window. WEM v2.7.2 also incorporates a persistence premium P(T₁₆₈) directly into the EPP calculation (+0.05 for T₁₆₈ ≥ 6h, +0.12 for T₁₆₈ ≥ 24h), which provides a real-time endurance signal that feeds naturally into CEL estimation. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
 
 <p>For operational use, CEL is most informative in two concrete forms:</p>
 
@@ -527,7 +527,7 @@ but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requ
   </tbody>
 </table>
 
-<p>The 10× jump between 24h and 48h — not 2× — is the central empirical finding of this scenario analysis. Three mechanisms drive it: threshold crossings (θᵢ) that activate new damage categories sequentially; R_resupply(d) collapse that invalidates all backup duration assumptions; and recovery cost β &gt; 1 that makes system restoration superlinearly expensive with duration. The 72h event is not meaningfully more expensive than 48h in direct costs — it is more expensive in recovery costs and systemic disruption, but the major step change occurs at the 48h boundary.</p>
+<p>The marginal cost from 48h to 72h is dominated by recovery and permanent losses, not direct outage damage — which is why the two figures are nearly identical (€2.4B vs €2.5B) despite the 50% longer duration. The step change is entirely at the 24h→48h boundary, where threshold crossings, R_resupply collapse, and cascade activation combine. The 10× jump between 24h and 48h — not 2× — is the central empirical finding of this scenario analysis. Three mechanisms drive it: threshold crossings (θᵢ) that activate new damage categories sequentially; R_resupply(d) collapse that invalidates all backup duration assumptions; and recovery cost β &gt; 1 that makes system restoration superlinearly expensive with duration. The 72h event is not meaningfully more expensive than 48h in direct costs — it is more expensive in recovery costs and systemic disruption, but the major step change occurs at the 48h boundary.</p>
 
 <p><strong>Comparison with traditional models:</strong> Standard €/MWh interruption cost models applied to the same 48h event produce approximately €500M–1B — an underestimate of 2–3× relative to the LELF result. The gap arises because traditional models capture L1–L2 direct costs but miss L3–L5 threshold crossings, recovery asymmetry, and cascade effects. The LELF result is not "pessimistic" — it correctly accounts for the physical mechanisms that make outages expensive.</p>
 
