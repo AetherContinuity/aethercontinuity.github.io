@@ -426,21 +426,21 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">W24 · Tuotantorakenne (%)</div>
     <div class="layer-stack-wrap">
       <div class="layer-bar-outer" id="layerBar">
-        <div class="layer-seg" id="lsNuc" style="background:#3a5fa0;" data-tip="Ydinvoima"></div>
-        <div class="layer-seg" id="lsHyd" style="background:#2d6b3a;" data-tip="Vesivoima"></div>
-        <div class="layer-seg" id="lsCHP" style="background:#a05c30;" data-tip="Yhteistuotanto (CHP)"></div>
-        <div class="layer-seg" id="lsWnd" style="background:#7a9cc0;" data-tip="Tuulivoima"></div>
-        <div class="layer-seg" id="lsSol" style="background:#e8c230;" data-tip="Aurinkovoima"></div>
+        <div class="layer-seg" id="lsNuc" style="background:#E8C000;" data-tip="Ydinvoima"></div>
+        <div class="layer-seg" id="lsHyd" style="background:#7EC8E3;" data-tip="Vesivoima"></div>
+        <div class="layer-seg" id="lsCHP" style="background:#8B7355;" data-tip="Yhteistuotanto (CHP)"></div>
+        <div class="layer-seg" id="lsWnd" style="background:#2D8B5A;" data-tip="Tuulivoima"></div>
+        <div class="layer-seg" id="lsSol" style="background:#FFD700;" data-tip="Aurinkovoima"></div>
         <div class="layer-seg" id="lsBat" style="background:#40b0a0;" data-tip="Sähkövarastot (netto)"></div>
         <div class="layer-seg" id="lsOth" style="background:#c8bfad;" data-tip="Muu tuotanto"></div>
       </div>
       <div class="layer-legend">
-        <div class="layer-lg"><div class="layer-swatch" style="background:#3a5fa0;"></div>Ydinvoima · DS 188 · vakaa</div>
-        <div class="layer-lg"><div class="layer-swatch" style="background:#2d6b3a;"></div>Vesivoima · DS 191 · vakaa</div>
-        <div class="layer-lg"><div class="layer-swatch" style="background:#a05c30;"></div>Yhteistuotanto (kaukolämpö) · DS 201 · semi-vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#E8C000;"></div>Ydinvoima · DS 188 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#7EC8E3;"></div>Vesivoima · DS 191 · vakaa</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#8B7355;"></div>Yhteistuotanto (kaukolämpö) · DS 201 · semi-vakaa</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#c07040;"></div>Yhteistuotanto (teollisuus) · DS 202 · semi-vakaa</div>
-        <div class="layer-lg"><div class="layer-swatch" style="background:#7a9cc0;"></div>Tuulivoima · DS 181 · variabili</div>
-        <div class="layer-lg"><div class="layer-swatch" style="background:#e8c230;"></div>Aurinkovoima · DS 248 · variabili (ennuste)</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#2D8B5A;"></div>Tuulivoima · DS 181 · variabili</div>
+        <div class="layer-lg"><div class="layer-swatch" style="background:#FFD700;"></div>Aurinkovoima · DS 248 · variabili (ennuste)</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#40b0a0;"></div>Sähkövarastot netto · DS 398−399</div>
         <div class="layer-lg"><div class="layer-swatch" style="background:#c8bfad;"></div>Muu tuotanto (biomassa, lauhdutus…)</div>
       </div>
@@ -1630,41 +1630,45 @@ function drawLayerChart(data) {
   if (!lData.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#7a7468">Kerrosaineisto ei saatavilla</text>'; return; }
 
   const n = lData.length;
-  const maxV = Math.max(...lData.map(d => d.p)) * 1.05;
+  const maxV = 10000; // Kiinteä skaala — yhtenäinen Fingridin kanssa
   const xS = i => pad.l + (i / Math.max(1, n-1)) * cW;
-  const yS = v => pad.t + cH - (v / maxV) * cH;
+  const yS = v => pad.t + cH - (Math.min(v, maxV) / maxV) * cH;
 
   let h = '';
 
-  // Stacked areas: nuclear (bottom) → hydro → wind → other (top)
+  // Stacked areas — Fingrid-värikartta
   const stackedPath = (getBot, getTop) =>
     lData.map((d,i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(getTop(d)).toFixed(1)}`).join(' ') +
     [...lData].reverse().map((d,i) => ` L${xS(n-1-i).toFixed(1)},${yS(getBot(d)).toFixed(1)}`).join('') + ' Z';
 
   const nucTop  = d => d.nuc;
   const hydTop  = d => d.nuc + (d.hyd ?? 0);
-  const chpTop  = d => d.nuc + (d.hyd ?? 0) + (d.chp ?? 0);
+  const chpDHTop= d => d.nuc + (d.hyd ?? 0) + Math.min(d.chp ?? 0, 300);           // CHP kaukolämpö ~300 MW
+  const chpTop  = d => d.nuc + (d.hyd ?? 0) + (d.chp ?? 0);                         // CHP yht.
   const wndTop  = d => d.nuc + (d.hyd ?? 0) + (d.chp ?? 0) + (d.wnd ?? 0);
+  const solTop  = d => wndTop(d) + (d.sol ?? 0);
   const allTop  = d => d.p;
 
-  h += `<path d="${stackedPath(() => 0, nucTop)}" fill="#3a5fa0" opacity=".75"/>`;
-  h += `<path d="${stackedPath(nucTop, hydTop)}" fill="#2d6b3a" opacity=".75"/>`;
-  h += `<path d="${stackedPath(hydTop, chpTop)}" fill="#a05c30" opacity=".70"/>`;
-  h += `<path d="${stackedPath(chpTop, wndTop)}" fill="#7a9cc0" opacity=".65"/>`;
-  h += `<path d="${stackedPath(wndTop, allTop)}" fill="#c8bfad" opacity=".55"/>`;
+  h += `<path d="${stackedPath(() => 0,    nucTop)}"   fill="#E8C000" opacity=".85"/>`;  // Ydinvoima — kulta
+  h += `<path d="${stackedPath(nucTop,     hydTop)}"   fill="#7EC8E3" opacity=".85"/>`;  // Vesivoima — vaaleansininen
+  h += `<path d="${stackedPath(hydTop,    chpDHTop)}"  fill="#8B7355" opacity=".80"/>`;  // CHP kaukolämpö — ruskea
+  h += `<path d="${stackedPath(chpDHTop,  chpTop)}"    fill="#5C6370" opacity=".80"/>`;  // CHP teollisuus — harmaa
+  h += `<path d="${stackedPath(chpTop,    wndTop)}"    fill="#2D8B5A" opacity=".85"/>`;  // Tuulivoima — tummanvihreä
+  h += `<path d="${stackedPath(wndTop,    solTop)}"    fill="#FFD700" opacity=".85"/>`;  // Aurinkovoima — keltainen
+  h += `<path d="${stackedPath(solTop,    allTop)}"    fill="#c8bfad" opacity=".50"/>`;  // Muu tuotanto
 
   // Consumption line
   const fullData = data.filter(d => d.c != null);
   if (fullData.length > 1) {
     const xSf = i => pad.l + (i / Math.max(1, fullData.length-1)) * cW;
     const cPath = fullData.map((d,i) => `${i===0?'M':'L'}${xSf(i).toFixed(1)},${yS(d.c).toFixed(1)}`).join(' ');
-    h += `<path d="${cPath}" fill="none" stroke="#0e0d0b" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+    h += `<path d="${cPath}" fill="none" stroke="#CC2200" stroke-width="1.5" stroke-dasharray="4,2"/>`; // Kulutusviiva — Fingrid punainen
   }
 
   // Y ticks
-  [0, maxV*0.25, maxV*0.5, maxV*0.75, maxV].forEach(v => {
+  [0, 2000, 4000, 6000, 8000, 10000].forEach(v => {
     h += `<line x1="${pad.l}" y1="${yS(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yS(v).toFixed(1)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;
-    h += `<text x="${pad.l-5}" y="${(yS(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#7a7468">${(v/1000).toFixed(1)}k</text>`;
+    h += `<text x="${pad.l-5}" y="${(yS(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#7a7468">${(v/1000).toFixed(0)}k</text>`;
   });
 
   // X ticks
@@ -1710,16 +1714,14 @@ function drawMainChart(data) {
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
   if (!data.length) { svg.innerHTML = ''; return; }
 
-  const allVals = data.flatMap(d => [d.c, d.p, Math.max(0, d.gap)]);
-  const minV = Math.min(...allVals) * 0.95;
-  const maxV = Math.max(...allVals) * 1.02;
+  const minV = 0;    // Kiinteä skaala — yhtenäinen Fingridin kanssa
+  const maxV = 10000;
   const n = data.length;
   const xS = i => pad.l + (i / Math.max(1, n - 1)) * cW;
   const yS = v => pad.t + cH - ((v - minV) / (maxV - minV)) * cH;
 
   // Y ticks
-  const steps = 5;
-  const yTicks = Array.from({ length: steps + 1 }, (_, i) => minV + (maxV - minV) * i / steps);
+  const yTicks = [0, 2000, 4000, 6000, 8000, 10000]; // Kiinteä 0–10k, Fingrid-yhteensopiva
 
   // X ticks (every 12h or 24h depending on window)
   const xInterval = data.length > 100 ? 24 : 12;
@@ -1760,11 +1762,11 @@ function drawMainChart(data) {
 
   // Production
   const pPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(d.p).toFixed(1)}`).join(' ');
-  h += `<path d="${pPath}" fill="none" stroke="#2d6b3a" stroke-width="1.5" clip-path="url(#clip)"/>`;
+  h += `<path d="${pPath}" fill="none" stroke="#1A6B35" stroke-width="1.5" clip-path="url(#clip)"/>`; // Tuotanto — Fingrid vihreä
 
   // Consumption
   const cPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yS(d.c).toFixed(1)}`).join(' ');
-  h += `<path d="${cPath}" fill="none" stroke="#0e0d0b" stroke-width="1.75" clip-path="url(#clip)"/>`;
+  h += `<path d="${cPath}" fill="none" stroke="#CC2200" stroke-width="1.75" clip-path="url(#clip)"/>`; // Kulutus — Fingrid punainen
 
   // X labels
   xTicks.forEach(t => {
