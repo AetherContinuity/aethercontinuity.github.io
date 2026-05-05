@@ -73,18 +73,23 @@ tr:last-child td{border-bottom:none;}
   <h1>Layered Economic Loss Function for Electricity Endurance Risk</h1>
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
-    <span><strong>Version</strong> 0.2 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.3)</span>
+    <span><strong>Version</strong> 0.4 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.4)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
-    <span><strong>New elements</strong> LELF · CEL · CVaR · 14 subsystem profiles · R_fuel cascade · Dependency table</span>
+    <span><strong>New elements</strong> LELF · CEL band P50/P90/P99 · ESL chain · CAT→action mapping · VAR contrast · R_fuel core variable</span>
     <span><strong>Status</strong> Working Draft</span>
   </div>
 </div>
 
 <div class="abstract">
   <div class="abstract-label">Abstract</div>
-  <p>Standard financial risk models treat electricity price as a continuous variable subject to Value at Risk analysis. This is appropriate for commodity price exposure but fails categorically for physical outage risk. An electricity outage is not a price event — it is a state transition. Damage does not scale linearly with duration; it accumulates in discrete layers as successive process tolerances are breached. This note develops a Layered Economic Loss Function (LELF) that maps outage duration to sector-specific damage thresholds, proposes a Conditional Endurance Loss (CEL) metric as a CVaR analogue for electricity endurance, and shows how WEM's SP_cluster component can serve as a probabilistic input to CEL estimation. The framework is designed to make electricity endurance risk legible to financial sector actors whose standard tools systematically underestimate it.</p>
+  <div class="callout">
+  <div class="callout-label">Illustrative Full-Stack Example</div>
+  <p>OL3 unplanned outage + cold period (T &lt; −15°C) + wind drought + SE1 at capacity: compound probability P ≈ 0.5% per winter. Duration P90 ≈ 36 hours (from TN-009 tail distribution). CEL₉₀ at 36 hours: €0.5–2.0 billion (L4–L5 threshold, sector-weighted). Expected annual loss contribution: P × CEL₉₀ = 0.005 × €1.25B = €6.25M/year. This figure does not appear in any current financial risk model for Finnish electricity exposure. The remainder of this note develops the framework that produces it.</p>
+</div>
+
+<p>Standard financial risk models treat electricity price as a continuous variable subject to Value at Risk analysis. This is appropriate for commodity price exposure but fails categorically for physical outage risk. An electricity outage is not a price event — it is a state transition. Damage does not scale linearly with duration; it accumulates in discrete layers as successive process tolerances are breached. This note develops a Layered Economic Loss Function (LELF) that maps outage duration to sector-specific damage thresholds, proposes a Conditional Endurance Loss (CEL) metric as a CVaR analogue for electricity endurance, and shows how WEM's SP_cluster component can serve as a probabilistic input to CEL estimation. The framework is designed to make electricity endurance risk legible to financial sector actors whose standard tools systematically underestimate it.</p>
 </div>
 
 <span class="sec-num">§ 01</span>
@@ -97,6 +102,29 @@ tr:last-child td{border-bottom:none;}
 <p><strong>State transition, not price change.</strong> A grid under stress does not gradually reduce supply — it maintains nominal voltage until it cannot, then drops abruptly. The economic damage function is not smooth; it has hard thresholds at the moment supply fails. A firm with uninterruptible processes faces zero marginal cost from the first hour of high prices and catastrophic cost from the first second of lost supply. These are not on the same curve.</p>
 
 <p><strong>Duration dependence is nonlinear.</strong> Two hours without power is an operational disruption. Twenty hours is a process catastrophe for any continuous manufacturing operation. The damage does not scale proportionally — it accumulates through qualitatively different phases as successive tolerance thresholds are breached. A paper mill that shuts down cleanly at hour two faces a different cost structure than one that runs its process into an uncontrolled stop at hour six.</p>
+
+<div class="formula">
+Quantitative contrast (illustrative, not calibrated):
+
+VAR₉₅ for electricity price exposure (Finnish industrial firm):
+  Input: historical spot price distribution
+  Output: €2–5M at 95th percentile over one year
+  → Captures: price spikes, demand response cost
+  → Misses: physical outage, state transition, recovery cost
+
+CEL₉₀ for electricity endurance exposure (same firm):
+  Input: P90 outage duration × LELF threshold × sector weight
+  Output: €50–500M at L3–L4 threshold crossing
+  → Captures: process damage, recovery cost, dependency cascade
+  → Misses: nothing structural — this is the correct risk measure
+
+Ratio: CEL₉₀ / VAR₉₅ ≈ 10–100x
+
+This ratio is the financial sector's blind spot. The VAR number is
+not wrong — it correctly measures price risk. It simply does not
+measure the same thing as CEL. A firm optimising against VAR has
+zero protection against the risk CEL quantifies.
+</div>
 
 <p><strong>Timing heterogeneity is invisible to price models.</strong> A stress hour at 03:00 on a Sunday in May has approximately zero economic consequence for most commercial actors. The same stress hour at 14:00 on a Tuesday in January, during a cold spell, with industrial loads at maximum and hospital systems under peak demand, carries orders-of-magnitude higher systemic cost. Standard energy risk models assign identical weight to both.</p>
 
@@ -186,7 +214,11 @@ this is the mechanism behind the L4 threshold severity in wastewater.
 <p>L1 threshold (0–4h): Elective procedures paused, generators running, critical care unaffected. L2 threshold (4–12h): Smaller health centres approach generator fuel limits; patient transfer decisions begin. L3 threshold (12–48h): Larger hospitals on fuel consumption alert; non-critical wards may lose power sequentially as fuel is rationed to ICU and operating theatres. L4 threshold (48h+): Only the largest facilities with dedicated fuel reserves remain fully operational; widespread patient evacuation required for mid-tier hospitals.</p>
 <p>Recovery asymmetry: elective surgery backlog, equipment recertification, staff fatigue from extended emergency protocols, and patient record system restoration typically add 6–24 hours of reduced-capacity operation after power restoration. The primary dependency is fuel logistics — healthcare endurance is ultimately bounded by diesel resupply chains, not generator capacity.</p>
 
-<h3>Fuel distribution</h3>
+<h3>Fuel distribution — Core System Variable</h3>
+<div class="finding">
+  <h3>Core Finding</h3>
+  <p>Fuel distribution is the systemic bottleneck of the LELF framework. Generator capacity is not backup reliability — it is logistically contingent reliability. A hospital with a 72-hour generator rating operates for 12–24 hours if fuel resupply is unavailable. This single observation invalidates most standard backup duration assumptions across all LELF sectors simultaneously. R_resupply(d) is the most consequential modifier in the entire model.</p>
+</div>
 <p>Fuel distribution is the hidden cascade amplifier in the LELF framework. Most petrol stations have no backup generation — pumps, payment terminals, and monitoring systems operate on UPS for 0–2 hours, then stop. This creates a supply constraint that progressively limits the effective duration of all diesel-dependent backup systems across every other LELF sector.</p>
 <p>The cascade timeline: at L1 (0–2h), fuel stations begin failing. By L2 (2–6h), approximately 95% of retail fuel stations are non-operational. Backup generators across hospitals, data centres, telecommunications base stations, and water pumping stations begin drawing down their stored diesel reserves. By L3 (6–12h), only facilities with dedicated fuel contracts and pre-positioned reserves (major hospitals, large data centres, critical telecoms nodes) retain meaningful fuel security. All other backup-dependent systems begin entering forced shutdown as their stored diesel is exhausted.</p>
 <p>This creates a structural revision to all other subsystem θ(s) values: the nominal backup duration (e.g., hospital 72h, data centre 48h) applies only if fuel resupply logistics function. Under an extended outage with simultaneous road network disruption (weather, traffic management failure), effective backup duration collapses to stored-diesel capacity only — typically 12–24 hours for most facilities. The fuel distribution subsystem is therefore not a LELF category in its own right but a time-dependent modifier R_fuel(d) applied to all backup-dependent subsystems:</p>
@@ -283,6 +315,27 @@ where:
 
 Key insight: SP_cluster T₁₆₈ (longest stress episode, WEM §11) is a
 direct empirical estimator of p(d | current system state).
+</div>
+
+<div class="formula">
+CEL band — three-point risk characterisation:
+
+CEL_P50 = LELF( d_P50, t̄, s ) × sector_weights    [expected scenario]
+CEL_P90 = LELF( d_P90, t̄, s ) × sector_weights    [stress scenario]
+CEL_P99 = LELF( d_P99, t̄, s ) × sector_weights    [tail scenario]
+
+where d_Pxx = Pxx percentile of outage duration given compound trigger
+  (derived from TN-009 tail distribution and historical SP_cluster data)
+
+Illustrative values for compound scenario (OL3 + cold + wind):
+  d_P50 ≈  6h → CEL_P50 ≈ €20–80M    (L2 threshold)
+  d_P90 ≈ 36h → CEL_P90 ≈ €500M–2B   (L4 threshold)
+  d_P99 ≈ 72h → CEL_P99 ≈ €2–10B     (L5 threshold, societal)
+
+Financial equivalents:
+  CEL_P50 ≈ Expected Loss (EL)       — provision against
+  CEL_P90 ≈ CVaR 90%                 — stress capital
+  CEL_P99 ≈ Tail scenario            — catastrophe reinsurance territory
 </div>
 
 <p>SP_cluster already exists in WEM §11 as T₁₆₈ — the longest single stress episode in the 168-hour window. WEM v2.7.5 also incorporates a persistence premium P(T₁₆₈) directly into the EPP calculation (+0.05 for T₁₆₈ ≥ 6h, +0.12 for T₁₆₈ ≥ 24h), which provides a real-time endurance signal that feeds naturally into CEL estimation. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
@@ -405,6 +458,48 @@ but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requ
 <p><strong>Insurance market data.</strong> Finnish business interruption insurance claims from major winter stress events would provide direct empirical validation of L1–L2 estimates and partial validation of L3 estimates. This data exists within the insurance sector but is not publicly available. Finanssiala ry would be the natural counterpart for accessing aggregated claims data.</p>
 
 <p><strong>CEL vs. EENS.</strong> The power systems literature uses Expected Energy Not Served (EENS) as its standard reliability metric. CEL is economically more informative than EENS because it weights unserved energy by sector-specific damage rather than treating all MWh equally. The relationship between the two metrics requires explicit articulation — CEL should be expressed as a function of EENS with sector-specific loss-of-load cost coefficients.</p>
+
+<span class="sec-num">§ 06.1</span>
+<h2>Linkage to TN-009: Expected System Loss</h2>
+
+<p>TN-009 provides compound event probabilities. TN-010 provides conditional loss functions. The linkage is the expected system loss calculation — the figure that financial actors can directly compare against other portfolio risks:</p>
+
+<div class="formula">
+Expected System Loss (ESL) = Σᵢ P(scenario i) × CEL(scenario i)
+
+For the principal compound scenarios from TN-009:
+
+Scenario                        P/winter   CEL_P90      ESL/year
+────────────────────────────────────────────────────────────────
+OL3 alone (normal conditions)   5.3%      €20–80M      €1.1–4.2M
+OL3 + cold                      1.8%      €80–300M     €1.4–5.4M
+OL3 + cold + wind drought        0.5%     €500M–2B     €2.5–10M
+Two-unit + cold + wind           0.1%     €2–10B       €2–10M
+────────────────────────────────────────────────────────────────
+Total ESL (approximate)                               €7–30M/year
+
+This is the annual cost of electricity endurance risk in Finland
+under current structural conditions — a figure that currently
+appears in no financial risk model, insurance reserve calculation,
+or regulatory stress test.
+</div>
+
+<span class="sec-num">§ 06.2</span>
+<h2>CAT → Action Mapping</h2>
+
+<p>The Compound Alert Trigger (TN-009 §03.1) becomes operationally meaningful only when mapped to specific response actions. The following table provides a starting framework; thresholds require calibration against institutional mandates:</p>
+
+<table>
+  <thead><tr><th>CAT</th><th>CEL₉₀ range</th><th>EPP*</th><th>Response action</th><th>Responsible actor</th></tr></thead>
+  <tbody>
+    <tr><td>0</td><td>&lt; €50M</td><td>&lt; 0.50</td><td>Standard monitoring</td><td>WEM operator</td></tr>
+    <tr><td>1 (slope)</td><td>€50–200M</td><td>0.50–0.65</td><td>Readiness: fuel pre-positioning, standby personnel, contingency review</td><td>Fingrid, HVK</td></tr>
+    <tr><td>1 (level)</td><td>€200M–1B</td><td>0.65–0.75</td><td>Active: demand response activation, reserve capacity alert, public communication</td><td>Fingrid, TEM</td></tr>
+    <tr><td>1 (compound)</td><td>&gt; €1B</td><td>&gt; 0.75</td><td>Emergency: load control, cross-border coordination, civil authority activation</td><td>Fingrid, VNK, pelastustoimi</td></tr>
+  </tbody>
+</table>
+
+<p>This mapping is illustrative. The thresholds, responsible actors, and specific actions require formal mandate assignment — the measurement gap identified in SM-009 §09. The framework provides the instrument; institutional design provides the mandate.</p>
 
 <div class="preceded">
   <strong>Series basis:</strong>
