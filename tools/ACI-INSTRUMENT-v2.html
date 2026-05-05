@@ -1939,12 +1939,22 @@ async function init() {
 
   await new Promise(r => setTimeout(r, 600));
   let chpDHRows = null, chpIndRows = null;
-  try { chpDHRows = await fetchYesterday(DS.chpDH, 'DS 201'); }
-  catch(e) { layerErrors.push('DS 201: ' + e.message); }
+  try {
+    chpDHRows = await fetchYesterday(DS.chpDH, 'DS 201');
+    if (chpDHRows && chpDHRows.length) {
+      const avg201 = chpDHRows.reduce((s,r)=>s+r.value,0)/chpDHRows.length;
+      console.log(`[WEM DEBUG] DS 201 (CHP-DH): ${chpDHRows.length} rows, avg=${avg201.toFixed(0)} MW, first=${JSON.stringify(chpDHRows[0])}`);
+    }
+  } catch(e) { layerErrors.push('DS 201: ' + e.message); }
 
   await new Promise(r => setTimeout(r, 600));
-  try { chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202'); }
-  catch(e) { layerErrors.push('DS 202: ' + e.message); }
+  try {
+    chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202');
+    if (chpIndRows && chpIndRows.length) {
+      const avg202 = chpIndRows.reduce((s,r)=>s+r.value,0)/chpIndRows.length;
+      console.log(`[WEM DEBUG] DS 202 (CHP-Ind): ${chpIndRows.length} rows, avg=${avg202.toFixed(0)} MW, first=${JSON.stringify(chpIndRows[0])}`);
+    }
+  } catch(e) { layerErrors.push('DS 202: ' + e.message); }
 
   // Hae lämpötiladata (Open-Meteo, ei rate-limittiä)
   let tempMap = null;
