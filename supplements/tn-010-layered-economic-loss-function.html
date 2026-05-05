@@ -73,8 +73,8 @@ tr:last-child td{border-bottom:none;}
   <h1>Layered Economic Loss Function for Electricity Endurance Risk</h1>
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
-    <span><strong>Version</strong> 0.5 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.5)</span>
+    <span><strong>Version</strong> 0.6 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.6)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
     <span><strong>New elements</strong> LELF · CEL band P50/P90/P99 · ESL chain · CAT→action mapping · VAR contrast · R_fuel core variable</span>
@@ -466,7 +466,8 @@ Calibration requires the empirical inputs described in §05.
 <span class="sec-num">§ 07</span>
 <h2>Open Questions</h2>
 
-<p><strong>Recovery dynamics — the dominant term beyond L3.</strong> Total system loss has two components: direct outage damage (LELF) and recovery cost. Beyond the L3 threshold, recovery cost becomes the dominant term — which explains why 72 hours costs approximately the same as 48 hours in direct damage but significantly more in total loss. This is the mechanism behind the nonlinearity that standard models miss.</p>
+<h3>Recovery dynamics</h3>
+<p><strong>Dominant term beyond L3.</strong> Total system loss has two components: direct outage damage (LELF) and recovery cost. Beyond the L3 threshold, recovery cost becomes the dominant term — which explains why 72 hours costs approximately the same as 48 hours in direct damage but significantly more in total loss. This is the mechanism behind the nonlinearity that standard models miss.</p>
 
 <div class="formula">
 Total Loss(d) = LELF(d) + L_recovery(d)
@@ -481,7 +482,7 @@ This is why:
   but 48h total >> 24h total  (LELF jumps, recovery kicks in)
 </div>
 
-<p><strong>Recovery dynamics — sector-specific β values.</strong> The LELF as specified models direct outage damage. A critical additional component is recovery cost — the damage incurred after power is restored but before the system returns to normal operation. Recovery costs are nonlinear and in several sectors exceed direct outage costs for events beyond L3 threshold.</p>
+<p>Sector-specific β values for the recovery cost term: A critical additional component is recovery cost — the damage incurred after power is restored but before the system returns to normal operation. Recovery costs are nonlinear and in several sectors exceed direct outage costs for events beyond L3 threshold.</p>
 
 <div class="formula">
 Total Loss = LELF(d, t, s) + L_recovery(d, s)
@@ -689,7 +690,27 @@ winter events are). The range €7–80M/year brackets the likely true
 expected annual cost of electricity endurance risk in Finland.
 
 This figure currently appears in no financial risk model, insurance
-reserve calculation, or regulatory stress test.
+reserve calculation, or regulatory stress test.</p>
+
+<h3>Monte Carlo confidence intervals (n=100,000)</h3>
+<p>The ESL calculation uses point estimates for P(compound) and CEL. A Monte Carlo simulation with 100,000 draws — Beta-distributed P(compound) with 95% mass in [0.1–2.0%/winter], lognormal CEL (P50=€250M, P90=€2.4B), and P-CEL correlation ρ=0.6 — produces:</p>
+
+<div class="formula">
+ESL distribution (M€/year):
+  P10:    0.0 M€/year   (most years: no compound event)
+  P50:    0.8 M€/year   (median year: small)
+  P75:    4.1 M€/year
+  P90:   17.5 M€/year
+  P95:   39.8 M€/year
+  P99:  178.0 M€/year
+  Mean:  11.6 M€/year   Std: 118 M€/year
+
+90% confidence interval: €0–40M/year
+Tail: top 1% of scenarios produces ~45× the mean annual loss.
+</div>
+
+<p>P90 (€17.5M/year) approximately equals a typical €20M VAR risk budget — electricity endurance risk at the 90th percentile is already comparable in magnitude to priced electricity price risk. P99 (€178M/year) is 9× the VAR budget. Standard deviation (€118M) exceeds the mean (€12M) by 10×: the distribution is dominated by rare extreme events, not typical years. Capital provisions based on expected value (€12M) are structurally inadequate for fat-tailed risk — the correct reference for reserves and stress capital is P99 (€178M).</p>
+
 </div>
 
 <span class="sec-num">§ 06.2</span>
