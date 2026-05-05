@@ -475,6 +475,15 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div class="layer-card-val" id="lcCHP">—</div>
         <div class="layer-card-sub">MW ka · DS 201+202 · semi-vakaa</div>
       </div>
+
+      <!-- DEBUG PANEL DS 201/202 -->
+      <div id="chpDebugPanel" style="background:#fff8e8;border:1px solid #d4a030;border-radius:4px;padding:10px 14px;margin:8px 0;font-family:ui-monospace,monospace;font-size:.72rem;line-height:1.8;display:none;">
+        <div style="font-weight:600;margin-bottom:4px;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#a07020;">🔍 DS 201/202 Debug</div>
+        <div id="chpDebug201">DS 201: —</div>
+        <div id="chpDebug202">DS 202: —</div>
+        <div id="chpDebugSum" style="border-top:1px solid #d4c080;margin-top:4px;padding-top:4px;"></div>
+      </div>
+
       <div class="layer-card">
         <div class="layer-card-lbl">CHP-talvikorrelaatio</div>
         <div class="layer-card-val" id="lcCHPCorr">—</div>
@@ -1943,18 +1952,43 @@ async function init() {
     chpDHRows = await fetchYesterday(DS.chpDH, 'DS 201');
     if (chpDHRows && chpDHRows.length) {
       const avg201 = chpDHRows.reduce((s,r)=>s+r.value,0)/chpDHRows.length;
-      console.log(`[WEM DEBUG] DS 201 (CHP-DH): ${chpDHRows.length} rows, avg=${avg201.toFixed(0)} MW, first=${JSON.stringify(chpDHRows[0])}`);
+      console.log(`[WEM DEBUG] DS 201 (CHP-DH): ${chpDHRows.length} rows, avg=${avg201.toFixed(0)} MW`);
+      const el = document.getElementById('chpDebug201');
+      if (el) el.textContent = `DS 201 (kaukolämpö CHP): ${chpDHRows.length} pistettä · ka ${avg201.toFixed(0)} MW · 1. arvo: ${chpDHRows[0]?.value?.toFixed(0)} MW`;
+    } else {
+      const el = document.getElementById('chpDebug201');
+      if (el) el.textContent = 'DS 201: ei dataa / proxy epäonnistui';
     }
-  } catch(e) { layerErrors.push('DS 201: ' + e.message); }
+  } catch(e) {
+    layerErrors.push('DS 201: ' + e.message);
+    const el = document.getElementById('chpDebug201');
+    if (el) el.textContent = `DS 201: VIRHE — ${e.message}`;
+  }
 
   await new Promise(r => setTimeout(r, 600));
   try {
     chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202');
     if (chpIndRows && chpIndRows.length) {
       const avg202 = chpIndRows.reduce((s,r)=>s+r.value,0)/chpIndRows.length;
-      console.log(`[WEM DEBUG] DS 202 (CHP-Ind): ${chpIndRows.length} rows, avg=${avg202.toFixed(0)} MW, first=${JSON.stringify(chpIndRows[0])}`);
+      console.log(`[WEM DEBUG] DS 202 (CHP-Ind): ${chpIndRows.length} rows, avg=${avg202.toFixed(0)} MW`);
+      const el = document.getElementById('chpDebug202');
+      if (el) el.textContent = `DS 202 (teollisuus CHP): ${chpIndRows.length} pistettä · ka ${avg202.toFixed(0)} MW · 1. arvo: ${chpIndRows[0]?.value?.toFixed(0)} MW`;
+      // Näytä debug-paneeli
+      const panel = document.getElementById('chpDebugPanel');
+      if (panel) panel.style.display = 'block';
+    } else {
+      const el = document.getElementById('chpDebug202');
+      if (el) el.textContent = 'DS 202: ei dataa / proxy epäonnistui';
+      const panel = document.getElementById('chpDebugPanel');
+      if (panel) panel.style.display = 'block';
     }
-  } catch(e) { layerErrors.push('DS 202: ' + e.message); }
+  } catch(e) {
+    layerErrors.push('DS 202: ' + e.message);
+    const el = document.getElementById('chpDebug202');
+    if (el) el.textContent = `DS 202: VIRHE — ${e.message}`;
+    const panel = document.getElementById('chpDebugPanel');
+    if (panel) panel.style.display = 'block';
+  }
 
   // Hae lämpötiladata (Open-Meteo, ei rate-limittiä)
   let tempMap = null;
@@ -1975,6 +2009,15 @@ async function init() {
     ]);
   } else {
     const liveData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
+    // Update debug sum
+    const dbgSum = document.getElementById('chpDebugSum');
+    if (dbgSum) {
+      const n201 = chpDHRows?.length ?? 0;
+      const n202 = chpIndRows?.length ?? 0;
+      const a201 = n201 ? chpDHRows.reduce((s,r)=>s+r.value,0)/n201 : 0;
+      const a202 = n202 ? chpIndRows.reduce((s,r)=>s+r.value,0)/n202 : 0;
+      dbgSum.textContent = `Yhteensä: ${(a201+a202).toFixed(0)} MW (201: ${a201.toFixed(0)} + 202: ${a202.toFixed(0)}) · WEM näyttää: odottaa laskentaa`;
+    }
     rawData = buildW168(liveData);
     lastFetch = new Date();;
     const layerCount = rawData.filter(d => d.nuc != null).length;
