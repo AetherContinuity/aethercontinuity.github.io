@@ -1221,6 +1221,11 @@ function calcWindow(slice) {
       avgChp = CHP_MONTHLY_BASELINE[modalMonth] || 1300;
     }
     const avgPl = lSlice.reduce((s,d)=>s+d.p,0)/lSlice.length;
+    // Todellinen residuaali samalta aikaviipaleelta kuin komponentit
+    const avgOth = lSlice.reduce((s,d) => {
+      const comp = (d.nuc??0) + (d.hyd??0) + (d.chp??0) + (d.wnd??0) + (d.sol??0) + Math.max(0, d.bat??0);
+      return s + Math.max(0, d.p - comp);
+    }, 0) / lSlice.length;
     eci = avgPl > 0 ? Math.min(1, (avgNuc+avgHyd)/avgPl) : null;
     eciSemi = (avgPl>0 && avgChp!=null) ? Math.min(1,(avgNuc+avgHyd+avgChp)/avgPl) : null;
     // FS: firm capacity / kulutus — riippumaton muuttuja
@@ -1266,6 +1271,10 @@ function calcWindow(slice) {
            eppMode: eppFull, stressH, chpEstimated, n, modalMonth, baselineC,
            avgTemp, avgTempHki, avgTempKuo, avgTempRov, tempSpread, avgCexpected,
            eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp, spCluster,
+           avgSol: (typeof avgSol !== 'undefined' ? avgSol : null),
+           avgBat: (typeof avgBat !== 'undefined' ? avgBat : null),
+           avgOth: (typeof avgOth !== 'undefined' ? avgOth : null),
+           avgPl:  (typeof avgPl  !== 'undefined' ? avgPl  : null),
            fsNominal: (typeof fsNominal !== 'undefined') ? fsNominal : null,
            hydRF: (typeof hydRF !== 'undefined') ? hydRF : 1.0 };
 }
@@ -1496,14 +1505,18 @@ function renderLayerComp(m) {
 
   // Stacked bar (W24)
   if (w24 && w24.avgNuc != null) {
-    const tot = w24.avgP || 1;
-    const pNuc = Math.max(0, w24.avgNuc / tot * 100);
+    // Käytä avgPl denominaattorina: komponentit ja tuotanto samalta aikaviipaleelta
+    const tot = (w24.avgPl != null && w24.avgPl > 0) ? w24.avgPl : (w24.avgP || 1);
+    const pNuc = Math.max(0, (w24.avgNuc ?? 0) / tot * 100);
     const pHyd = Math.max(0, (w24.avgHyd ?? 0) / tot * 100);
     const pCHP = Math.max(0, (w24.avgChp ?? 0) / tot * 100);
     const pWnd = Math.max(0, (w24.avgWnd ?? 0) / tot * 100);
     const pSol = Math.max(0, (w24.avgSol ?? 0) / tot * 100);
     const pBat = Math.max(0, Math.max(0, w24.avgBat ?? 0) / tot * 100);
-    const pOth = Math.max(0, 100 - pNuc - pHyd - pCHP - pWnd - pSol - pBat);
+    // avgOth on laskettu samalta aikaviipaleelta — ei laskentavirhe
+    const pOth = w24.avgOth != null
+      ? Math.max(0, w24.avgOth / tot * 100)
+      : Math.max(0, 100 - pNuc - pHyd - pCHP - pWnd - pSol - pBat);
     const setSeg = (id, pct, tip) => {
       const el = document.getElementById(id);
       if (el) { el.style.width = pct.toFixed(1) + '%'; el.dataset.tip = tip; }
@@ -1579,8 +1592,10 @@ function renderLayerComp(m) {
     const hyd = d.avgHyd != null ? Math.round(d.avgHyd) : '—';
     const chp = d.avgChp != null ? Math.round(d.avgChp) : '—';
     const wnd = d.avgWnd != null ? Math.round(d.avgWnd) : '—';
-    const stableSum = (d.avgNuc ?? 0) + (d.avgHyd ?? 0) + (d.avgChp ?? 0);
-    const oth = d.avgNuc != null ? Math.round(Math.max(0, d.avgP - stableSum - (d.avgWnd ?? 0))) : '—';
+    // avgOth: residuaali laskettu samalta aikaviipaleelta kuin komponentit
+    const sol_v = d.avgSol != null ? Math.round(d.avgSol) : '—';
+    const bat_v = d.avgBat != null ? Math.round(d.avgBat) : '—';
+    const oth = d.avgOth != null ? Math.round(d.avgOth) : '—';
     tbody.insertAdjacentHTML('beforeend', `<tr>
       <td style="font-family:var(--mono);font-weight:500;">${lbl}</td>
       <td class="rh" style="color:${eciColor(eci)};font-weight:500;">${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</td>
@@ -1588,6 +1603,8 @@ function renderLayerComp(m) {
       <td class="rh">${hyd != '—' ? hyd.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh" style="color:#a05c30;">${chp != '—' ? chp.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${wnd != '—' ? wnd.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh" style="color:#c0a020;">${sol_v != '—' ? sol_v.toLocaleString('fi-FI') : '—'}</td>
+      <td class="rh" style="color:#309090;">${bat_v != '—' ? bat_v.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${oth != '—' ? oth.toLocaleString('fi-FI') : '—'}</td>
       <td class="rh">${Math.round(d.avgP).toLocaleString('fi-FI')}</td>
       <td class="rh" style="color:${eciColor(eci)};font-weight:500;">${eci != null ? (eci*100).toFixed(1)+'%' : '—'}</td>
@@ -1961,6 +1978,7 @@ async function init() {
 
   await new Promise(r => setTimeout(r, 600));
   let chpDHRows = null, chpIndRows = null;
+  await new Promise(r => setTimeout(r, 800)); // 429-esto: tauko ennen DS 201
   try {
     chpDHRows = await fetchYesterday(DS.chpDH, 'DS 201');
     if (chpDHRows && chpDHRows.length) {
