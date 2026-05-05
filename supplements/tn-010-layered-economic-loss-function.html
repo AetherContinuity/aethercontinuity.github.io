@@ -73,8 +73,8 @@ tr:last-child td{border-bottom:none;}
   <h1>Layered Economic Loss Function for Electricity Endurance Risk</h1>
   <p class="subtitle">Why VAR fails for outage risk — and what replaces it</p>
   <div class="aci-meta">
-    <span><strong>Version</strong> 0.4 Working Draft</span>
-    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.4)</span>
+    <span><strong>Version</strong> 0.5 Working Draft</span>
+    <span><strong>Date</strong> 2026-05-04 · rev. 2026-05-04 (v0.5)</span>
     <span><strong>Domain</strong> D-1 · D-3 · D-4</span>
     <span><strong>Basis</strong> TN-009 · WEM §11 SP_cluster · WP-001</span>
     <span><strong>New elements</strong> LELF · CEL band P50/P90/P99 · ESL chain · CAT→action mapping · VAR contrast · R_fuel core variable</span>
@@ -85,6 +85,11 @@ tr:last-child td{border-bottom:none;}
 <div class="abstract">
   <div class="abstract-label">Abstract</div>
   <div class="callout">
+  <div class="callout-label">CFO Illustration</div>
+  <p>A Finnish industrial firm with €2B annual revenue allocates a €20M VAR risk budget for electricity price exposure — approximately 1% of revenue, consistent with standard practice. Under the LELF framework, the same firm's CEL₉₀ for a 48-hour compound winter event is approximately €400M — 20× the VAR budget, representing exposure to 20% of annual revenue in a single event. The VAR budget is correctly sized for price risk. It does not model the risk that CEL quantifies. The firm is optimising against 1% of its actual electricity endurance exposure.</p>
+</div>
+
+<div class="callout">
   <div class="callout-label">Illustrative Full-Stack Example</div>
   <p>OL3 unplanned outage + cold period (T &lt; −15°C) + wind drought + SE1 at capacity: compound probability P ≈ 0.5% per winter. Duration P90 ≈ 36 hours (from TN-009 tail distribution). CEL₉₀ at 36 hours: €0.5–2.0 billion (L4–L5 threshold, sector-weighted). Expected annual loss contribution: P × CEL₉₀ = 0.005 × €1.25B = €6.25M/year. This figure does not appear in any current financial risk model for Finnish electricity exposure. The remainder of this note develops the framework that produces it.</p>
 </div>
@@ -223,11 +228,24 @@ this is the mechanism behind the L4 threshold severity in wastewater.
 <p>The cascade timeline: at L1 (0–2h), fuel stations begin failing. By L2 (2–6h), approximately 95% of retail fuel stations are non-operational. Backup generators across hospitals, data centres, telecommunications base stations, and water pumping stations begin drawing down their stored diesel reserves. By L3 (6–12h), only facilities with dedicated fuel contracts and pre-positioned reserves (major hospitals, large data centres, critical telecoms nodes) retain meaningful fuel security. All other backup-dependent systems begin entering forced shutdown as their stored diesel is exhausted.</p>
 <p>This creates a structural revision to all other subsystem θ(s) values: the nominal backup duration (e.g., hospital 72h, data centre 48h) applies only if fuel resupply logistics function. Under an extended outage with simultaneous road network disruption (weather, traffic management failure), effective backup duration collapses to stored-diesel capacity only — typically 12–24 hours for most facilities. The fuel distribution subsystem is therefore not a LELF category in its own right but a time-dependent modifier R_fuel(d) applied to all backup-dependent subsystems:</p>
 <div class="formula">
-R_resupply(d) — resupply availability scalar:
-  R_resupply(d) ≈ 1.0  for d &lt; 4h   (stations operational, resupply possible)
-  R_resupply(d) ≈ 0.6  for 4h ≤ d &lt; 12h  (major stations only)
-  R_resupply(d) ≈ 0.2  for 12h ≤ d &lt; 24h  (dedicated contracts only)
-  R_resupply(d) ≈ 0.0  for d ≥ 24h   (stored reserves only, no resupply)
+R_resupply(d) — resupply availability scalar (sigmoidal collapse):
+  R_resupply(d) = 1 / (1 + e^(k·(d − dᶜ)))
+
+  where:
+    dᶜ ≈ 10–14h  (critical point: fuel network percolation threshold)
+    k  ≈ 0.4     (collapse steepness — empirically, most stations fail
+                  within a 4–6h window around dᶜ, not gradually)
+
+  Approximate values:
+    d = 4h:  R_resupply ≈ 0.88  (most stations still operational)
+    d = 10h: R_resupply ≈ 0.50  (critical point — rapid collapse)
+    d = 14h: R_resupply ≈ 0.12  (near-complete failure)
+    d = 24h: R_resupply ≈ 0.02  (stored reserves only)
+
+  Note: The linear approximation (v0.3) understated cascade severity.
+  The sigmoidal form reflects the percolation physics of fuel network
+  failure — a connected network becomes disconnected abruptly at a
+  critical threshold, not gradually.
 
 R_fuel_effective(s,d) — effective backup duration modifier:
   R_fuel_effective = R_resupply(d) × stored_factor(s)
@@ -338,6 +356,32 @@ Financial equivalents:
   CEL_P99 ≈ Tail scenario            — catastrophe reinsurance territory
 </div>
 
+<h3>Linkage to EENS and VoLL literature</h3>
+<p>The CEL framework is compatible with — and extends — the standard power systems reliability metric Expected Energy Not Served (EENS). The relationship is:</p>
+
+<div class="formula">
+CEL = Σₛ αₛ · EENSₛ · VoLL_s(d)
+
+where:
+  EENSₛ  = Expected Energy Not Served to sector s (MWh)
+  VoLL_s(d) = duration-dependent Value of Lost Load for sector s
+              derived from LELF threshold structure
+  αₛ     = sector economic weight
+
+Key difference from standard VoLL:
+  Standard VoLL: constant €/MWh (linear — misses threshold effects)
+  LELF-derived VoLL_s(d): step function that jumps at θᵢ(s)
+  
+  VoLL_industry(2h)  ≈ €1,500–3,000/MWh  (L1: operational disruption)
+  VoLL_industry(12h) ≈ €8,000–15,000/MWh  (L3: process destruction)
+  VoLL_water(24h)    ≈ €20,000+/MWh       (L4: contamination event)
+
+This formulation makes CEL directly comparable to EENS-based reliability
+assessments used by Fingrid, ENTSO-E, and regulators — while correcting
+the linear VoLL assumption that causes standard models to underestimate
+L3–L5 damage by 2–3×.
+</div>
+
 <p>SP_cluster already exists in WEM §11 as T₁₆₈ — the longest single stress episode in the 168-hour window. WEM v2.7.2 also incorporates a persistence premium P(T₁₆₈) directly into the EPP calculation (+0.05 for T₁₆₈ ≥ 6h, +0.12 for T₁₆₈ ≥ 24h), which provides a real-time endurance signal that feeds naturally into CEL estimation. It currently reports the longest stress episode duration and episode count. What is missing is the mapping from SP_cluster values to the LELF threshold layers — and the sector weight vector that translates system stress into economic damage estimates.</p>
 
 <p>For operational use, CEL is most informative in two concrete forms:</p>
@@ -422,7 +466,22 @@ Calibration requires the empirical inputs described in §05.
 <span class="sec-num">§ 07</span>
 <h2>Open Questions</h2>
 
-<p><strong>Recovery dynamics.</strong> The LELF as specified models direct outage damage. A critical additional component is recovery cost — the damage incurred after power is restored but before the system returns to normal operation. Recovery costs are nonlinear and in several sectors exceed direct outage costs for events beyond L3 threshold.</p>
+<p><strong>Recovery dynamics — the dominant term beyond L3.</strong> Total system loss has two components: direct outage damage (LELF) and recovery cost. Beyond the L3 threshold, recovery cost becomes the dominant term — which explains why 72 hours costs approximately the same as 48 hours in direct damage but significantly more in total loss. This is the mechanism behind the nonlinearity that standard models miss.</p>
+
+<div class="formula">
+Total Loss(d) = LELF(d) + L_recovery(d)
+
+Dominance crossover:
+  d &lt; 12h:  LELF dominates  (~80% of total loss)
+  d = 24h:  approximately equal
+  d &gt; 48h:  L_recovery dominates (~60–80% of total loss)
+
+This is why:
+  72h total ≈ 48h total  (direct LELF plateaus, recovery still growing)
+  but 48h total >> 24h total  (LELF jumps, recovery kicks in)
+</div>
+
+<p><strong>Recovery dynamics — sector-specific β values.</strong> The LELF as specified models direct outage damage. A critical additional component is recovery cost — the damage incurred after power is restored but before the system returns to normal operation. Recovery costs are nonlinear and in several sectors exceed direct outage costs for events beyond L3 threshold.</p>
 
 <div class="formula">
 Total Loss = LELF(d, t, s) + L_recovery(d, s)
@@ -557,7 +616,30 @@ but R(hospital,96h)≈0.20 as fuel reserves are exhausted.. Estimating R(s) requ
 
 <h3>Non-intuitive findings</h3>
 
-<p><strong>Finding 1:</strong> DC→generator switching is always worse than keeping DCs on grid under compound stress. The grid load relief does not compensate for the diesel pool competition it creates.</p>
+<p><strong>Finding 1:</strong> DC→generator switching is always worse than keeping DCs on grid under compound stress — and the reason is marginal utility, not simulation artefact. During compound stress, diesel fuel is a scarce resource with a clear social priority ordering:</p>
+
+<div class="formula">
+Marginal social value of diesel, descending priority:
+  1. Healthcare (hospitals, emergency services)
+  2. Water and wastewater (contamination prevention)
+  3. Telecommunications (coordination backbone)
+  4. Logistics (fuel resupply, emergency response)
+  5. Data centres (commercial, deferrable workload)
+
+DC-to-generator switching moves DC from position 5 (deferrable, grid-powered)
+to competing with positions 1–4 for the same limited diesel pool.
+The marginal social value of diesel in DC use is lower than its
+marginal value in hospital, water, or telecoms use by a factor of
+approximately 5–10× (based on VoLL ordering in the LELF framework).
+
+This is not a simulation result — it is a direct consequence of the
+social priority ordering that should govern resource allocation under
+emergency conditions. The policy recommendation (DC sleep protocol,
+no generator switching) follows from this ordering, not from model
+parameters.
+</div>
+
+<p><strong>Finding 1 (restated):</strong> DC→generator switching is always worse than keeping DCs on grid under compound stress. The grid load relief does not compensate for the diesel pool competition it creates.</p>
 
 <p><strong>Finding 2:</strong> Early (t=0h) full sleep or offline is also suboptimal — DC direct losses exceed cascade savings when action is taken before threshold crossings have begun.</p>
 
@@ -597,12 +679,17 @@ OL3 + cold                      1.8%      €80–300M     €1.4–5.4M
 OL3 + cold + wind drought        0.5%     €500M–2B     €2.5–10M
 Two-unit + cold + wind           0.1%     €2–10B       €2–10M
 ────────────────────────────────────────────────────────────────
-Total ESL (approximate)                               €7–30M/year
+Total ESL using P90 (approximate, conservative)        €7–30M/year
 
-This is the annual cost of electricity endurance risk in Finland
-under current structural conditions — a figure that currently
-appears in no financial risk model, insurance reserve calculation,
-or regulatory stress test.
+Note: Using mean CEL (not P90) raises this estimate to €20–80M/year,
+because the fat tail of the duration distribution contributes
+disproportionately to the expectation. P90-based ESL understates
+true expected loss when the distribution is heavy-tailed (as compound
+winter events are). The range €7–80M/year brackets the likely true
+expected annual cost of electricity endurance risk in Finland.
+
+This figure currently appears in no financial risk model, insurance
+reserve calculation, or regulatory stress test.
 </div>
 
 <span class="sec-num">§ 06.2</span>
@@ -611,12 +698,12 @@ or regulatory stress test.
 <p>The Compound Alert Trigger (TN-009 §03.1) becomes operationally meaningful only when mapped to specific response actions. The following table provides a starting framework; thresholds require calibration against institutional mandates:</p>
 
 <table>
-  <thead><tr><th>CAT</th><th>CEL₉₀ range</th><th>EPP*</th><th>Response action</th><th>Responsible actor</th></tr></thead>
+  <thead><tr><th>CAT</th><th>CEL₉₀ range</th><th>EPP*</th><th>Response action</th><th>Time-to-action</th><th>Responsible actor</th></tr></thead>
   <tbody>
-    <tr><td>0</td><td>&lt; €50M</td><td>&lt; 0.50</td><td>Standard monitoring</td><td>WEM operator</td></tr>
-    <tr><td>1 (slope)</td><td>€50–200M</td><td>0.50–0.65</td><td>Readiness: fuel pre-positioning, standby personnel, contingency review</td><td>Fingrid, HVK</td></tr>
-    <tr><td>1 (level)</td><td>€200M–1B</td><td>0.65–0.75</td><td>Active: demand response activation, reserve capacity alert, public communication</td><td>Fingrid, TEM</td></tr>
-    <tr><td>1 (compound)</td><td>&gt; €1B</td><td>&gt; 0.75</td><td>Emergency: load control, cross-border coordination, civil authority activation</td><td>Fingrid, VNK, pelastustoimi</td></tr>
+    <tr><td>0</td><td>&lt; €50M</td><td>&lt; 0.50</td><td>Standard monitoring</td><td>—</td><td>WEM operator</td></tr>
+    <tr><td>1 (slope)</td><td>€50–200M</td><td>0.50–0.65</td><td>Readiness: fuel pre-positioning, standby personnel, DC sleep-protocol alert, contingency review</td><td><strong>Within 2h</strong></td><td>Fingrid, HVK</td></tr>
+    <tr><td>1 (level)</td><td>€200M–1B</td><td>0.65–0.75</td><td>Active: DC load reduction to 50%, demand response activation, reserve capacity alert, public communication</td><td><strong>Within 1h</strong></td><td>Fingrid, TEM</td></tr>
+    <tr><td>1 (compound)</td><td>&gt; €1B</td><td>&gt; 0.75</td><td>Emergency: DC load to 20%, load control, cross-border coordination, civil authority activation, fuel resupply priority order activated</td><td><strong>Within 30min</strong></td><td>Fingrid, VNK, pelastustoimi</td></tr>
   </tbody>
 </table>
 
