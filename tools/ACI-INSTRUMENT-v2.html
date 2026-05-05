@@ -1630,9 +1630,9 @@ function drawLayerChart(data) {
   if (!lData.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#7a7468">Kerrosaineisto ei saatavilla</text>'; return; }
 
   const n = lData.length;
-  const maxV = 12000; // Kiinteä skaala — kattaa talvihuiput ~11 500 MW
+  const maxV = Math.max(...lData.map(d => d.p), 1) * 1.06; // Automaattinen skaala
   const xS = i => pad.l + (i / Math.max(1, n-1)) * cW;
-  const yS = v => pad.t + cH - (Math.min(v, maxV) / maxV) * cH;
+  const yS = v => pad.t + cH - (Math.min(v, maxV) / maxV) * cH; // autoskaala
 
   let h = '';
 
@@ -1666,7 +1666,7 @@ function drawLayerChart(data) {
   }
 
   // Y ticks
-  [0, 2000, 4000, 6000, 8000, 10000, 12000].forEach(v => {
+  [0, maxV*0.25, maxV*0.5, maxV*0.75, maxV].forEach(v => {
     h += `<line x1="${pad.l}" y1="${yS(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yS(v).toFixed(1)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;
     h += `<text x="${pad.l-5}" y="${(yS(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#7a7468">${(v/1000).toFixed(0)}k</text>`;
   });
@@ -1714,14 +1714,16 @@ function drawMainChart(data) {
   const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
   if (!data.length) { svg.innerHTML = ''; return; }
 
-  const minV = 0;    // Kiinteä skaala — yhtenäinen Fingridin kanssa
-  const maxV = 12000;
+  const allVals = data.flatMap(d => [d.c, d.p]).filter(v => v != null);
+  const minV = Math.min(...allVals) * 0.95;
+  const maxV = Math.max(...allVals) * 1.04;
   const n = data.length;
   const xS = i => pad.l + (i / Math.max(1, n - 1)) * cW;
   const yS = v => pad.t + cH - ((v - minV) / (maxV - minV)) * cH;
 
   // Y ticks
-  const yTicks = [0, 2000, 4000, 6000, 8000, 10000, 12000]; // 0–12k kattaa talvihuiput
+  const steps = 5;
+  const yTicks = Array.from({ length: steps + 1 }, (_, i) => minV + (maxV - minV) * i / steps);
 
   // X ticks (every 12h or 24h depending on window)
   const xInterval = data.length > 100 ? 24 : 12;
