@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI CN-010 — The Missing Insurance Market: Grid Endurance Risk and the Price Signal That Doesn't Exist</title>
+<meta name="description" content="Finland's power system faces seven concurrent structural risks. The peak load reserve has been dismantled. CHP capacity sits idle. The compound risk has no market price. This note argues that SM-011's flexibility premium is the closest available substitute for the insurance market that should exist but doesn't.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+    --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; opacity:.5; }
+  .dih { border-top:2px solid var(--ink); border-bottom:1px solid var(--rule); padding:1.5rem 2rem 1.25rem; margin:0 auto; max-width:740px; display:grid; grid-template-columns:1fr auto; gap:1.5rem; align-items:start; }
+  .dih-left { display:flex; flex-direction:column; gap:.2rem; }
+  .dih-institute { font-family:var(--mono); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .dih-series { font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); margin-top:.2rem; }
+  .dih-title { font-size:1.55rem; font-weight:500; line-height:1.2; margin-top:.5rem; }
+  .dih-sub { font-size:.95rem; color:var(--muted); font-style:italic; margin-top:.3rem; }
+  .dih-right { font-family:var(--mono); font-size:.65rem; color:var(--muted); text-align:right; line-height:1.8; }
+  .body-wrap { max-width:740px; margin:0 auto; padding:2.5rem 2rem 5rem; }
+  p { margin-bottom:1.25rem; }
+  h2 { font-size:1.15rem; font-weight:600; margin:2.5rem 0 .75rem; letter-spacing:-.01em; }
+  h3 { font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:2rem 0 .5rem; }
+  .lede { font-size:1.12rem; line-height:1.7; margin-bottom:1.5rem; color:#2a2520; }
+  blockquote { border-left:3px solid var(--rule); padding:.75rem 1.25rem; margin:1.5rem 0; color:var(--muted); font-style:italic; }
+  .finding { background:var(--paper-2); border:1px solid var(--rule); border-left:3px solid var(--accent); padding:1rem 1.25rem; margin:1.5rem 0; font-size:.93rem; }
+  .finding-label { font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+  .ref-block { border-top:1px solid var(--rule); margin-top:3rem; padding-top:1rem; font-family:var(--mono); font-size:.62rem; color:var(--muted); line-height:2; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Commentary Note · CN-010</span>
+    <div class="dih-title">The Missing Insurance Market:<br>Grid Endurance Risk and the Price Signal That Doesn't Exist</div>
+    <div class="dih-sub">On the structural absence of compound risk pricing in the Finnish electricity system</div>
+  </div>
+  <div class="dih-right">
+    May 2026<br>
+    Domain D-2 · D-4<br>
+    Basis: TN-009 · SM-011<br>
+    WEM v2.7.2
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <p class="lede">When shipping insurers raised premiums for vessels transiting the Strait of Hormuz, the signal propagated immediately through freight rates, supply chains, and investment decisions — without any regulator issuing a directive. The price of risk became visible, and actors adapted. Finland's electricity system faces a structurally analogous situation, with one critical difference: the compound risk has no market price. No one is charging for it. No one is adapting to it in advance.</p>
+
+  <h3>The Reserve That Isn't There</h3>
+
+  <p>Finland has operated a peak load reserve system since 2007 — a statutory backstop of 300–600 MW held outside the market, available when supply cannot meet demand. It has been activated once, in January 2010, for three hours. For the period November 2025 to October 2026, the Energy Authority decided to procure zero capacity for the system. The total cost billed to all main grid customers for the previous period was €91,297 — less than the annual salary of a single grid engineer.</p>
+
+  <p>The system was designed for a different era. Its pricing mechanism sets the activation price at €10,000/MWh — multiples above any realistic niukkuustilanne value. As Fingrid's own analysis noted: it is like paying fire insurance and then, when the fire starts, being told you can buy a new house at castle prices. The reserve exists on paper. It does not exist as operational capacity.</p>
+
+  <h3>Seven Risks, One Missing Signal</h3>
+
+  <p>TN-009 documents seven concurrent structural pressures on the Finnish system. The first five are resource risks — OL3 unavailability, SE1 import margin erosion, Nordic hydrological deficit, CHP capacity phase-out, transmission infrastructure failure. The sixth is a structural coincidence: SE1's own electricity demand is growing by over 1,500 MW through 2030 (Stegra, HYBRIT, Northvolt) precisely as Finland's CHP buffer is being decommissioned. The seventh is a control-plane modulator: telecommunications degradation under compound stress shifts all sectoral endurance thresholds 20–40% earlier by blinding the SCADA dispatch logic.</p>
+
+  <p>None of these risks carries a market price. Data centres connecting to the grid do not pay a premium reflecting the 24/7 flat load they add to a system already operating with thin compound margins. CHP plants that could serve as temperature-correlated reserves are not compensated for their endurance value — only for real-time energy and reserve market participation, which is insufficient to keep turbines turning when spot prices are low. The peak load reserve is empty. Fingrid's own director of power system operations said publicly that a capacity mechanism is needed "on a rapid schedule." The mechanism does not exist.</p>
+
+  <div class="finding">
+    <div class="finding-label">Core Observation</div>
+    <p>The compound risk — cold, still, dry conditions coinciding with OL3 unavailability, SE1 saturation, and CHP non-activation — produces an estimated CEL of €3–6 billion for a 72-hour event. This is approximately 1–2% of Finland's annual GDP. The annual probability is estimated at 0.1–2.0%. No actor in the system currently pays a premium that reflects this exposure. The risk is real, unpriced, and growing.</p>
+  </div>
+
+  <h3>The Hormuz Analogy and Its Limits</h3>
+
+  <p>The Hormuz analogy is instructive precisely because of where it breaks down. Shipping insurers can price Hormuz risk because each vessel's exposure is individual and diversifiable across a portfolio. The insurer does not face the same loss on every policy simultaneously. Finnish grid compound risk is the opposite: it is a systemic risk that affects all actors at the same moment. When OL3 is offline during a cold–still week with SE1 at saturation, every hospital, every industrial process, every data centre, and every heating system faces the same stress simultaneously. This is not insurable through normal diversification logic.</p>
+
+  <p>This is why compound systemic risks historically require either a public backstop — a reserve held outside the market — or a mechanism that prices the risk into connection and operation decisions ex ante, before the event. The peak load reserve was the public backstop. It is gone. The ex ante pricing mechanism does not yet exist.</p>
+
+  <h3>SM-011 as Systemic Risk Premium</h3>
+
+  <p>The flexibility quota and auction mechanism proposed in SM-011 is not, at its core, a connection policy. It is the closest currently available substitute for the missing insurance market. An inflexible load — a 500 MW data centre running a 24/7 flat profile — adds compound risk to the system in a way that a flexible load does not. The flexible load (a CHP plant with reserve market commitment, an electrolyser that shifts timing, an industrial process that accepts capacity limitation) can respond when compound stress materialises. The inflexible load cannot. It consumes the margin that would otherwise allow the system to absorb the compound shock.</p>
+
+  <p>The auction premium paid by inflexible loads is therefore structurally equivalent to an insurance premium: it is the price of the optionality they consume without providing. The proceeds directed to Fingrid's grid investment fund are structurally equivalent to the reserve accumulation that a well-functioning insurance market would generate. The mechanism does not require new legislation — it builds on flexible connection agreements in force since February 2026, and requires only a Fingrid board decision.</p>
+
+  <blockquote>"The system needs a cost-effective targeted capacity mechanism on a rapid schedule to support security of supply and contain possible extreme price spikes." — Tuomas Rauhala, Director of Power System Operations, Fingrid, 2025</blockquote>
+
+  <p>Rauhala's statement is the institutional acknowledgment that the current structure is insufficient. The question is not whether a mechanism is needed — Fingrid has answered that. The question is which mechanism can be implemented without waiting for legislative cycles that take years. SM-011 answers that question.</p>
+
+  <h3>The CHP Reserve Problem</h3>
+
+  <p>There is a second dimension to the missing price signal. Finland retains approximately 2,500 MW of CHP sähköntuotantokapasiteetti — already grid-connected, temperature-correlated, geographically distributed. This is the precise reserve profile that the compound risk requires: it produces most when SE1 exports least (cold conditions), and it is already embedded in the grid infrastructure without requiring new connection. But it is not producing electricity. The turbines are being bypassed because spot prices are low. The market correctly prices today's hour. It does not price the 168-hour endurance window.</p>
+
+  <p>This is the activation failure that TN-009's Risk 6 describes. The fuel is in the tank. The engine is connected to the grid. But the market signal that would purchase that fuel — for today, against the risk of needing it tomorrow — does not exist. A well-designed capacity mechanism would provide that signal. SM-011's Track 1 priority for reserve-participating loads is a partial substitute: it preserves the connection capacity that CHP-retrofit nodes require, and it provides a structural incentive for operators to maintain reserve market participation as the condition for grid access priority.</p>
+
+  <h3>What Actors Are Adapting To</h3>
+
+  <p>In the absence of compound risk pricing, actors adapt to the signals that do exist. Energy-intensive industry optimises against spot prices. Data centres optimise against connection availability and PPA terms. Kaukolämpö companies optimise against heat production economics. None of these optimisation functions contains a term for 168-hour compound endurance contribution. The result is individually rational behaviour that is collectively fragile — the same coordination failure that SM-010 diagnosed at the governance level, now operating at the market level.</p>
+
+  <p>The Hormuz insurers changed this by making risk visible in prices. The flexibility auction would change this by making inflexibility visible in connection costs. The CAT trigger in TN-009 would change this by making compound stress visible in operational posture. These are three different instruments operating on three different timescales — real-time, ex ante, and structural — and they are complementary rather than substitutes.</p>
+
+  <div class="finding">
+    <div class="finding-label">Conclusion</div>
+    <p>Finland's grid compound risk is unpriced because it is uninsurable through conventional diversification — the systemic nature of the risk prevents normal insurance market formation. The peak load reserve was the public substitute; it has been dismantled. The market does not price the compound exposure into connection or operation decisions. SM-011's flexibility premium is the closest currently implementable substitute for the missing insurance mechanism: it prices inflexibility at the point of connection, directs proceeds to grid resilience investment, and preserves the flexible capacity that constitutes the system's actual compound buffer. It does not require new law. It requires a decision.</p>
+  </div>
+
+  <div class="ref-block">
+    <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis: Seven Concurrent Pressures</a> ·
+    <a href="/papers/sm-011-industrial-grid-connection-flexibility-quota.html">SM-011 — Industrial Grid Connection: Flexibility Quota and Auction</a> ·
+    <a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010 — Financing Instruments and Energy Clusters</a> ·
+    <a href="/papers/wp-001-duration-adequacy.html">WP-001 — Duration Adequacy</a> ·
+    Fingrid, Tuomas Rauhala, Sähkön riittävyys 2025 ·
+    Energiavirasto, Tehoreservipäätös 2025–2026 ·
+    Energiateollisuus, CHP Statistics 2025
+  </div>
+
+</div>
+</body>
+</html>
