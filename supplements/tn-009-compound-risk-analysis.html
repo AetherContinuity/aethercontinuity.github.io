@@ -307,10 +307,11 @@ premium proportional to the risk that actually matters.
 </div>
 
 <div class="section">
-  <span class="section-marker">Risk 7 — May 2026 Addition</span>
-  <h2>Risk 7: Observability Collapse Cascade (OCC)</h2>
+  <span class="section-marker">System Observability Layer — May 2026 Addition</span>
+  <h2>Observability Collapse Cascade (OCC) — Control-Plane Modulator</h2>
 
-  <p><strong>Definition:</strong> Risk that telecommunications degradation leads to loss of real-time grid observability and partial failure of SCADA-dependent control functions, causing the power system to transition from closed-loop to degraded open-loop operation during compound stress. This is distinct from Risk 5b (physical transmission infrastructure failure): Risk 7 describes a control-plane failure — the physical grid remains intact but can no longer be reliably observed or directed.</p>
+  <p><strong>Architectural note:</strong> OCC is not an independent additive risk in the same dimension as Risks 1–6. Risks 1–6 describe physical or energetic stressors — capacity deficits measured in MW or TWh. OCC describes a control-plane failure — a degradation of decision-making quality that changes the conditional probability and severity of all other risks materialising. Adding OCC as a seventh independent component would introduce double-counting: the same meteorological regime that triggers Risk 5b (storm-induced line failure) also triggers telecom degradation, and both escalate the same L3→L4 transition. Instead, OCC is structured here as a <strong>multiplicative modulator</strong> on EPP*: when OCC conditions are met, the effective EPP is scaled upward and all sectoral endurance thresholds are shifted earlier. This preserves causal clarity and avoids redundancy in the FRP calculation.</p>
+  <p><strong>Definition:</strong> Risk that telecommunications degradation leads to loss of real-time grid observability and partial failure of SCADA-dependent control functions, causing the power system to transition from closed-loop to degraded open-loop operation during compound stress. This is distinct from Risk 5b (physical transmission infrastructure failure): OCC describes a control-plane failure — the physical grid remains intact but can no longer be reliably observed or directed.</p>
 
   <h3>Mechanism</h3>
   <p>SCADA systems in the Finnish transmission grid operate over TCP/IP-based telecommunications backhaul. When telecom backbone availability falls below 60–70% at critical nodes — a condition that can develop within hours of a compound stress event — four control functions degrade simultaneously:</p>
@@ -343,8 +344,9 @@ premium proportional to the risk that actually matters.
   <p>Risk 7 operates as a multiplier on all other risks. OL3 absence (Risk 1) becomes harder to compensate because reserve deployment requires observability. SE1 import-margin assessment (Risk 2) degrades because real-time cross-border flows are uncertain. Hydro dispatch (Risk 3) loses precision. CHP reserve activation (Risk 4/6) is delayed because the capacity is not visible to dispatch. Risk 7 does not add a new failure mode — it degrades the system's ability to respond to all existing failure modes simultaneously.</p>
 
   <div class="finding">
-    <div class="finding-label">CEL Impact — Risk 7</div>
-    <p>In a 48h compound scenario (baseline CEL ~€2.4B), observability collapse increases cascade probability at the L3→L4 transition (blind optimisation), extends recovery time (β increases), and raises CEL₉₀ by an estimated 20–40% — from ~€2.4B to €2.9–3.4B. This increment is entirely attributable to the control-plane failure, not to additional physical damage. It is currently unmodelled in TN-009.</p>
+    <div class="finding-label">CEL Impact — OCC as Multiplier</div>
+    <p>OCC does not add an independent loss component to CEL. Instead it scales the realised CEL of all other compound risks. Formally: EPP*(OCC=1) = EPP × (1 + OCC_penalty), where OCC_penalty ∈ [0.20, 0.40] depending on telecom degradation depth and duration. In a 48h compound scenario (baseline CEL ~€2.4B without OCC), the OCC multiplier raises CEL₉₀ to €2.9–3.4B. This increment represents the cost of suboptimal decision-making under information scarcity — delayed CHP activation, missed load-shedding opportunities, slower reserve deployment — not additional physical damage. It is currently unmodelled in TN-009's FRP and CAT formulation.</p>
+    <p>Conditional probability structure: P(Risk 1 impact | OCC=1) ↑, P(SE1 import compensation effectiveness | OCC=1) ↓, P(CHP activation within response window | OCC=1) ↓, P(L3→L4 transition | OCC=1) ↑. OCC shifts all thresholds simultaneously — which is precisely why it cannot be treated as an additive seventh risk without double-counting.</p>
   </div>
 
   <h3>WEM Integration Proposal</h3>
