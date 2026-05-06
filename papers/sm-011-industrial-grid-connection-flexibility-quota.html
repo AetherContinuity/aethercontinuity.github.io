@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-011 — Industrial Grid Connection: Flexibility Quota and Auction for Inflexible Loads | ACI</title>
+<meta name="description" content="A mechanism for allocating scarce transmission connection capacity: flexible loads (industry, CHP, SGFA nodes, electrolysis) receive priority; inflexible loads (24/7 data centres) compete within a capped quota via auction.">
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .75rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .example-box { background: #f5f3ef; border: 1px solid var(--rule); padding: 1.1rem 1.4rem; margin: 1.25rem 0; font-size: .9rem; }
+  .example-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .5rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-left"><a href="/">ACI</a></span>
+  <span class="nav-right">
+    <a href="/papers/">Papers</a>
+    <a href="/supplements/">Supplements</a>
+    <a href="/tools/">Tools</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">ACI · Synthesis Memo · SM-011</div>
+  <div class="doc-meta-grid">
+    <span><strong>Version</strong>0.1 · May 2026</span>
+    <span><strong>Domain</strong>D-2 · D-4</span>
+    <span><strong>Status</strong>Working Draft</span>
+    <span><strong>Basis</strong>SM-010 · WP-019 · WEM §12</span>
+    <span><strong>Instrument</strong>Fingrid board decision</span>
+    <span><strong>Legislation</strong>Sähkömarkkinalaki §20b–20c</span>
+  </div>
+  <h1 class="doc-title">Industrial Grid Connection: Flexibility Quota and Auction for Inflexible Loads</h1>
+  <p class="doc-subtitle">Allocating scarce transmission capacity without displacing system-valuable loads</p>
+  <div class="doc-abstract">
+    <p>Fingrid has restricted new connections above 10 MW in several Southern Finland areas until early 2027 due to transmission capacity saturation. Simultaneously, data centres are competing for hundreds of megawatts of 24/7 flat load. This memo proposes a two-track connection mechanism: flexible loads (industry, SGFA nodes, electrolysis, CHP replacements) receive priority access via the standard process; inflexible loads (data centres with 24/7 flat profiles) compete within a capped annual quota via auction. The auction produces a price signal — inflexibility has a cost — and directs proceeds to Fingrid's grid investment fund. The mechanism requires no new legislation; it builds on the flexible connection agreement framework in force since February 2026.</p>
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="section">
+    <span class="section-marker">§ 01</span>
+    <h2>The Problem</h2>
+    <p>Fingrid's transmission grid in Southern Finland is approaching saturation. New connections above 10 MW have been restricted in multiple areas until early 2027. The restriction reflects both current load growth and the pipeline of committed data centre investments — 17 projects with investment decisions taken, aggregate capacity potentially exceeding 2,200 MW by 2030.</p>
+    <p>The connection queue does not distinguish between load types. A 500 MW data centre and a 50 MW adjustable electrolyser queue under the same rules. This is a governance failure: the allocation mechanism does not price flexibility, and no institution guides applicants toward the system-valuable mix.</p>
+    <p>Inflexible loads — data centres running 24/7 flat profiles — occupy transmission capacity permanently. They do not offer frequency reserves, do not shift consumption in response to price signals, and do not support the grid's balancing needs during high-stress periods. Their net fiscal contribution is, according to Verohallinto Director General Heikura (May 2026), presently negative for the largest operators.</p>
+    <p>Flexible loads — industrial processes that can shift timing, electrolysers that absorb surplus, SGFA-type nodes that simultaneously produce district heat and grid reserves, CHP replacements — deliver system value beyond their electricity consumption. They reduce the compound risk described in TN-009: the coincidence of cold, still, dry conditions with declining domestic firm capacity.</p>
+
+    <div class="finding">
+      <div class="finding-label">Core Diagnosis</div>
+      <p>Flexible and inflexible loads compete for the same connection capacity under rules that treat them identically. This systematically displaces system-valuable loads in favour of high-capital, infrastructure-light operators. The result is consistent with SM-010's coordination failure diagnosis: individually rational, systemically costly.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 02</span>
+    <h2>Proposed Mechanism: Flexibility Quota + Auction</h2>
+
+    <h3>Two-track structure</h3>
+    <p><strong>Track 1 — Flexible loads:</strong> Standard connection process, priority access. A load qualifies as flexible if it commits to Fingrid's flexible connection agreement terms: acceptance of capacity limitation during defined stress periods, participation in reserve markets, or load shifting responsive to price signals. This definition is already in regulation (Energiavirasto flexible connection agreement rules, in force 1 February 2026).</p>
+    <p><strong>Track 2 — Inflexible loads:</strong> Capped annual quota per region, allocated via auction. A load is inflexible if it does not commit to flexible connection terms. Data centres with 24/7 flat profiles are the primary category. Within the quota, inflexible loads compete by price: the highest bidder secures the connection. Auction proceeds are directed to Fingrid's grid investment fund.</p>
+
+    <h3>Key properties</h3>
+    <ul>
+      <li>Flexible and inflexible loads do not compete with each other. The quota is carved from the inflexible allocation only.</li>
+      <li>The auction price signals scarcity and inflexibility premium. Data centres choosing not to offer flexibility pay more. The signal is clear and market-based.</li>
+      <li>Auction proceeds finance the grid expansion that inflexible loads necessitate — a direct cost-causality link that is currently absent.</li>
+      <li>The quota is dynamic (§03 below), not a permanent cap.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 03</span>
+    <h2>Two Design Questions</h2>
+
+    <h3>Question 1: Defining "inflexible"</h3>
+    <p>The flexible connection agreement framework (Sähkömarkkinalaki §20b–20c, Energiavirasto rules effective 1 February 2026) already defines two categories: temporarily flexible (pending grid development) and permanently flexible (with Energiavirasto permit). An inflexible load is one that declines to enter either category.</p>
+    <p>No new definition is needed. The mechanism inverts the existing rule: flexible connection agreement = Track 1. No flexible connection agreement = Track 2. This is implementable through Fingrid's existing connection terms without legislative change.</p>
+
+    <h3>Question 2: Quota size</h3>
+    <p>The quota must be calibrated to avoid two failure modes:</p>
+    <ul>
+      <li><strong>Too small:</strong> Data centres relocate to Sweden or Norway, where connection is easier. Finland loses investment pipeline. The correct policy response would then be a different instrument.</li>
+      <li><strong>Too large:</strong> Inflexible loads continue to displace flexible ones. The Heikura fiscal problem persists.</li>
+    </ul>
+    <p>Proposed approach: the quota is <strong>dynamic and regional</strong>, calibrated annually by Fingrid against three inputs:</p>
+    <ol>
+      <li><strong>Transmission utilisation rate</strong> (WEM §12, SE1→FI TRR). When spare transmission capacity exists, the quota can be larger. When TRR is elevated, the quota tightens.</li>
+      <li><strong>Flexible load queue.</strong> The quota remains small until all queued flexible applicants have been accommodated. Flexible loads are not waiting while inflexible loads connect.</li>
+      <li><strong>Committed grid expansion timeline</strong> (Fingrid 2026–2035 main grid plan). As new capacity is confirmed and dated, the quota can grow in anticipation.</li>
+    </ol>
+
+    <div class="example-box">
+      <div class="example-label">Worked Example — Southern Finland 2027</div>
+      <p>Fingrid projects 200 MW of new connection capacity available in Southern Finland in 2027. Flexible load queue: 150 MW (industrial electrolysis, one SGFA-candidate CHP replacement, two industrial loads with reserve agreements). These receive connection priority. Remaining capacity: 50 MW.</p>
+      <p>Inflexible quota: 50 MW (25% of new capacity, after flexible queue served). Five data centres are queuing, each requesting 50–100 MW. They compete in an auction. Highest bidder secures the 50 MW connection. Auction proceeds (estimated €5–15M depending on competition) are directed to Fingrid's investment fund. The four unsuccessful bidders queue for next year's auction or reconsider offering flexibility.</p>
+      <p>Result: flexible loads are not displaced. Data centres pay for inflexibility. Grid investment is partially self-financing from inflexibility premium.</p>
+    </div>
+
+    <p><strong>Initial calibration suggestion:</strong> 10–20% of new connection capacity per region allocated to inflexible quota. Review annually. Provide data centres with 3–5 year forward visibility on quota trajectory to support their investment planning.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 04</span>
+    <h2>Regulatory Basis</h2>
+    <table>
+      <thead><tr><th>Element</th><th>Existing regulation</th><th>SM-011 addition</th></tr></thead>
+      <tbody>
+        <tr><td>Flexible connection agreements</td><td>Sähkömarkkinalaki §20b–20c; Energiavirasto rules, 1 Feb 2026</td><td>Used as Track 1/Track 2 dividing line — no new definition needed</td></tr>
+        <tr><td>Connection capacity constraints</td><td>Fingrid announcement (10 MW restriction to 2027)</td><td>Factual basis for the mechanism — constraint already exists</td></tr>
+        <tr><td>Fingrid's connection pricing authority</td><td>Sähkömarkkinalaki, Energiavirasto pricing guidelines</td><td>Auction operates within existing connection pricing framework</td></tr>
+        <tr><td>Inflexible quota cap</td><td>Not in regulation</td><td>New element — requires Fingrid board decision, not legislation</td></tr>
+        <tr><td>Auction mechanism</td><td>Not in regulation</td><td>New element — Fingrid board decision, with TEM guidance if needed</td></tr>
+        <tr><td>Proceeds to investment fund</td><td>Not formalised</td><td>New element — requires Fingrid board decision</td></tr>
+      </tbody>
+    </table>
+    <p>SM-011 does not require new legislation. The flexible connection agreement infrastructure is in place. The remaining elements — quota, auction, and proceeds allocation — are within Fingrid's operational and governance authority. TEM can reinforce through a non-binding recommendation without initiating a legislative process.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 05</span>
+    <h2>Recommendations</h2>
+    <p><strong>1. Fingrid board decision.</strong> Fingrid adopts a connection allocation policy that: (a) confirms flexible connection agreement commitment as the criterion for Track 1 priority; (b) establishes an annual inflexible quota per region; (c) implements a sealed-bid or ascending auction within the quota; (d) directs auction proceeds to a dedicated grid investment fund.</p>
+    <p><strong>2. TEM guidance.</strong> TEM issues a recommendation supporting Fingrid's policy, signalling that inflexibility pricing is consistent with national energy policy objectives. No legislation required.</p>
+    <p><strong>3. Transparency.</strong> Fingrid publishes annually: the quota by region, auction clearing prices, queue lengths by load category, and proceeds directed to investment. This creates market-facing accountability and allows data centre investors to plan.</p>
+    <p><strong>4. Pilot year.</strong> Implement in one region (Southern Finland) for 2027, then evaluate before national rollout.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 06</span>
+    <h2>Relation to ACI Documents</h2>
+    <p><strong>SM-010</strong> diagnoses the coordination failure: no institution prices flexibility at the connection stage. SM-011 proposes a specific mechanism Fingrid can adopt within its existing authority.</p>
+    <p><strong>WP-019</strong> identifies SGFA-type nodes (CHP retrofit + reserve + P2X) as the archetypal flexible load that should not be displaced by data centres. SM-011 gives these nodes formal priority in Track 1.</p>
+    <p><strong>TN-009</strong> establishes that compound risk — cold, still, dry, with declining domestic firm capacity — is the system's critical vulnerability. The flexibility quota directly addresses the capacity composition risk by protecting the flexible loads that can respond to such conditions.</p>
+    <p><strong>WEM §12</strong> (SE1→FI TRR) provides the real-time transmission utilisation signal that should feed into the dynamic quota calibration. When TRR approaches saturation, the inflexible quota tightens automatically.</p>
+    <p><strong>WP-018</strong> (IQS) provides the analytical basis for distinguishing inflexible loads (IQS D2 score near zero — no flexibility contribution) from flexible loads (IQS D2 score elevated by reserve participation, demand response, waste heat). The IQS framework can operationalise the Track 1 eligibility assessment.</p>
+  </div>
+
+  <div class="section ref-list">
+    <span class="section-marker">References</span>
+    <p><a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010 — Financing Instruments and Energy Clusters</a> · <a href="/papers/wp-019-pool-method.html">WP-019 — SGFA Retrofit Pathways</a> · <a href="/papers/wp-018-integration-quality-score.html">WP-018 — Integration Quality Score</a> · <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis</a> · <a href="/tools/ACI-INSTRUMENT-v2.html">WEM — Winter Endurance Monitor §12</a> · Sähkömarkkinalaki §20b–20c · Energiavirasto, Joustavat liittymissopimukset, 1 Feb 2026</p>
+  </div>
+
+</div>
+</body>
+</html>
