@@ -97,8 +97,8 @@ def collect_html_files(root: Path) -> list[dict]:
             "filename": f.name,
         })
 
-    # Folder indexes (papers/, supplements/, tools/)
-    for folder in ["papers", "supplements", "tools"]:
+    # Folder indexes (papers/, supplements/, tools/, fiction/)
+    for folder in ["papers", "supplements", "tools", "fiction"]:
         folder_path = root / folder
         if not folder_path.exists():
             continue
