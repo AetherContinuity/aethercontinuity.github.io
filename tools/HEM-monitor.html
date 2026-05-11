@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HEM — Hydrological Endurance Monitor · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0e0d0b; --paper:#f5f0e8; --paper-2:#ede7d8; --paper-3:#e4dccb;
+  --accent:#8b4513; --muted:#7a7468; --rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
+  --sg:#2d6b3a; --sy:#7a6010; --so:#8b3a10; --sr:#8b1010;
+  --bg-g:#eef6f0; --bg-y:#faf6e8; --bg-o:#faf0e8; --bg-r:#faf0f0;
+  --cn:#4a7ec0; --bg-n:#eef2fa;
+  --water:#2a5f8f; --water-light:#d0e8f5;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
+
+/* HEADER */
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
+.dih-left{display:flex;flex-direction:column;gap:.2rem;}
+.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.dih-ser span{color:var(--accent);}
+.dih-title{font-size:1.4rem;font-weight:500;margin-top:.2rem;}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
+
+nav{max-width:1060px;margin:0 auto;padding:.6rem 2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted);}
+nav a{color:var(--muted);text-decoration:none;margin-right:1.5rem;}
+nav a:hover{color:var(--ink);}
+
+.wrap{max-width:1060px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+
+/* STATUS BAR */
+.status-bar{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--paper-2);border:1px solid var(--rule);margin-bottom:2rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;}
+.status-item{color:var(--muted);}
+.status-item strong{color:var(--ink);}
+.status-item.ok strong{color:var(--sg);}
+.status-item.warn strong{color:var(--so);}
+.status-item.err strong{color:var(--sr);}
+.btn-refresh{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.3rem .85rem;background:transparent;border:1px solid var(--rule);color:var(--muted);cursor:pointer;transition:all .15s;margin-left:auto;}
+.btn-refresh:hover{border-color:var(--accent);color:var(--accent);}
+
+/* MAIN GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+@media(max-width:760px){.grid{grid-template-columns:1fr;}}
+
+.card{border:1px solid var(--rule);padding:1.25rem 1.5rem;background:var(--paper-2);}
+.card-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.card-value{font-family:var(--mono);font-size:2.8rem;font-weight:500;line-height:1;letter-spacing:-.02em;}
+.card-unit{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:.3rem;}
+.card-sub{font-size:.85rem;color:var(--muted);margin-top:.4rem;font-style:italic;}
+
+/* HEPP HERO */
+.hepp-hero{border:1px solid var(--rule);padding:1.5rem 2rem;background:var(--paper-2);margin-bottom:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+.hepp-val{font-family:var(--mono);font-size:5rem;font-weight:500;line-height:1;letter-spacing:-.02em;transition:color .5s;}
+.hepp-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--rule);padding:.25rem .9rem;transition:border-color .5s;}
+.hepp-badge-dot{width:7px;height:7px;border-radius:50%;transition:background .5s;}
+.hepp-badge-text{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;}
+.hepp-right{flex:1;min-width:200px;}
+.hepp-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.hepp-desc{font-size:.95rem;color:var(--muted);}
+
+/* NVE CARD */
+.nve-card{border:1px solid var(--rule);padding:1.25rem 1.5rem;background:var(--bg-n);margin-bottom:1.5rem;}
+.nve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:.75rem;}
+@media(max-width:600px){.nve-grid{grid-template-columns:repeat(2,1fr);}}
+.nve-item{font-family:var(--mono);}
+.nve-item-label{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.nve-item-value{font-size:1.4rem;font-weight:500;margin-top:.1rem;}
+.nve-item-unit{font-size:.55rem;color:var(--muted);}
+
+/* SECTION */
+.shdr{display:flex;align-items:baseline;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--rule);margin-bottom:1rem;}
+.snum{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);flex-shrink:0;}
+.stit{font-size:1.05rem;font-weight:500;}
+
+/* ERROR / LOADING */
+.data-err{font-family:var(--mono);font-size:.7rem;color:var(--sr);padding:.5rem;background:var(--bg-r);border:1px solid #e8c0c0;}
+.loading{font-family:var(--mono);font-size:.65rem;color:var(--muted);animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+/* CHART */
+.chart-wrap{height:160px;position:relative;border:1px solid var(--rule);background:var(--paper-3);overflow:hidden;}
+.chart-canvas{width:100%;height:100%;}
+.chart-label{font-family:var(--mono);font-size:.5rem;color:var(--muted);position:absolute;bottom:4px;right:6px;}
+
+/* FOOTER */
+.foot{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:2;}
+.foot a{color:var(--muted);text-decoration:none;}
+.foot a:hover{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/tools/ACI-INSTRUMENT-v2.html">WEM</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-inst">Aether Continuity Institute · ACI</span>
+    <span class="dih-ser">Diagnostic Instrument · <span>HEM v1.1</span></span>
+    <div class="dih-title">Hydrological Endurance Monitor</div>
+  </div>
+  <div class="dih-meta">
+    Saimaa · Norja<br>
+    SYKE · NVE · FMI<br>
+    <span id="fetch-time">—</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="status-bar">
+    <div class="status-item" id="st-nve">NVE <strong>—</strong></div>
+    <div class="status-item" id="st-syke">SYKE <strong>—</strong></div>
+    <div class="status-item" id="st-fmi">FMI <strong>—</strong></div>
+    <div class="status-item" id="st-ts">Päivitetty <strong>—</strong></div>
+    <button class="btn-refresh" onclick="fetchAll()">↻ Päivitä</button>
+  </div>
+
+  <!-- HEPP hero -->
+  <div class="hepp-hero">
+    <div>
+      <div class="hepp-label">HEPP · Hydrological Endurance Pressure Proxy</div>
+      <div class="hepp-val" id="hepp-val">—</div>
+      <div id="hepp-badge" class="hepp-badge" style="margin-top:.6rem;">
+        <span class="hepp-badge-dot" id="hepp-dot" style="background:var(--muted)"></span>
+        <span class="hepp-badge-text" id="hepp-regime">Ladataan</span>
+      </div>
+    </div>
+    <div class="hepp-right">
+      <div class="hepp-label">Tulkinta</div>
+      <div class="hepp-desc" id="hepp-desc">—</div>
+    </div>
+  </div>
+
+  <!-- 3-card grid -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Norja · Täyttöaste</div>
+      <div class="card-value" id="nve-fill">—</div>
+      <div class="card-unit">% reservoaareista</div>
+      <div class="card-sub" id="nve-label">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Saimaa · Vedenkorkeus</div>
+      <div class="card-value" id="syke-wl">—</div>
+      <div class="card-unit">cm (Lauritsala)</div>
+      <div class="card-sub" id="syke-date">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">FMI · Lappeenranta</div>
+      <div class="card-value" id="fmi-temp">—</div>
+      <div class="card-unit">°C · sade <span id="fmi-precip">—</span> mm</div>
+      <div class="card-sub" id="fmi-date">—</div>
+    </div>
+  </div>
+
+  <!-- NVE detail -->
+  <div class="shdr"><span class="snum">§ 01</span><span class="stit">NVE Norja — Magasinstatistikk</span></div>
+  <div class="nve-card" id="nve-detail">
+    <div class="loading">Haetaan NVE-dataa…</div>
+  </div>
+
+  <!-- SYKE detail -->
+  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 02</span><span class="stit">SYKE Hydrologiarajapinta — Saimaa / Lauritsala</span></div>
+  <div id="syke-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
+    <span class="loading">Haetaan SYKE-dataa…</span>
+  </div>
+
+  <!-- FMI detail -->
+  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 03</span><span class="stit">FMI — Lappeenranta Lepola (101756)</span></div>
+  <div id="fmi-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
+    <span class="loading">Haetaan FMI-dataa…</span>
+  </div>
+
+  <div class="foot">
+    <a href="/tools/ACI-INSTRUMENT-v2.html">WEM — Winter Endurance Monitor</a> ·
+    <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
+    <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis</a>
+    <br>
+    Data: NVE Magasinstatistikk · SYKE Hydrologiarajapinta (CC BY 4.0) · FMI Open Data (CC BY 4.0)
+  </div>
+
+</div>
+
+<script>
+const PROXY = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
+
+// ── Värit ───────────────────────────────────────────────────────
+function heppColor(v) {
+  if (v < 0.3) return 'var(--sg)';
+  if (v < 0.5) return 'var(--sy)';
+  if (v < 0.7) return 'var(--so)';
+  return 'var(--sr)';
+}
+function heppRegime(v) {
+  if (v < 0.3) return 'Low stress';
+  if (v < 0.5) return 'Normal';
+  if (v < 0.7) return 'Elevated';
+  return 'High stress';
+}
+function heppDesc(v, nve) {
+  if (!v && !nve) return 'Odottaa dataa.';
+  const parts = [];
+  if (nve) {
+    if (nve.filling_pct < 40) parts.push(`Norjan reservoaarivarastot matalat (${nve.filling_pct}% — historiallinen mediaani ${nve.median_pct}%).`);
+    else if (nve.filling_pct > 70) parts.push(`Norjan reservoaarivarastot korkeat (${nve.filling_pct}%).`);
+    else parts.push(`Norjan reservoaarivarastot normaalitasolla (${nve.filling_pct}%).`);
+  }
+  if (v !== null) {
+    if (v > 0.6) parts.push('Hydrologinen endurance-paine koholla.');
+    else parts.push('Hydrologinen paine normaali.');
+  }
+  return parts.join(' ') || '—';
+}
+
+// ── Status-palkin päivitys ──────────────────────────────────────
+function setStatus(id, text, cls) {
+  const el = document.getElementById(id);
+  el.className = 'status-item ' + (cls||'');
+  el.innerHTML = id.replace('st-','').toUpperCase() + ' <strong>' + text + '</strong>';
+}
+
+// ── NVE ─────────────────────────────────────────────────────────
+async function fetchNVE() {
+  try {
+    const r = await fetch(PROXY + '/');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    document.getElementById('nve-fill').textContent = d.filling_pct ?? '—';
+    document.getElementById('nve-label').textContent =
+      (d.label === 'low' ? '▼ Matala' : d.label === 'high' ? '▲ Korkea' : '◆ Normaali') +
+      ` · hydro_RF ${d.hydro_RF}`;
+
+    document.getElementById('nve-detail').innerHTML = `
+      <div class="nve-grid">
+        <div class="nve-item">
+          <div class="nve-item-label">Täyttöaste</div>
+          <div class="nve-item-value" style="color:${d.filling_pct < 45 ? 'var(--so)' : 'var(--sg)'}">${d.filling_pct}%</div>
+          <div class="nve-item-unit">Koko Norja</div>
+        </div>
+        <div class="nve-item">
+          <div class="nve-item-label">Edellinen viikko</div>
+          <div class="nve-item-value">${d.prev_pct ?? '—'}%</div>
+          <div class="nve-item-unit">Muutos ${d.change_pp > 0 ? '+' : ''}${d.change_pp ?? '—'} pp</div>
+        </div>
+        <div class="nve-item">
+          <div class="nve-item-label">Kapasiteetti</div>
+          <div class="nve-item-value">${d.capacity_twh?.toFixed(1) ?? '—'}</div>
+          <div class="nve-item-unit">TWh</div>
+        </div>
+        <div class="nve-item">
+          <div class="nve-item-label">Sisältö nyt</div>
+          <div class="nve-item-value">${d.content_twh?.toFixed(1) ?? '—'}</div>
+          <div class="nve-item-unit">TWh · hist.med ${d.median_pct}%</div>
+        </div>
+      </div>
+      <div style="margin-top:.75rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);">
+        Viikko ${d.week} · Seuraava julkaisu ${d.next_update?.slice(0,10) ?? '—'}
+      </div>`;
+
+    setStatus('st-nve', d.week, 'ok');
+    return d;
+  } catch(e) {
+    document.getElementById('nve-detail').innerHTML = `<div class="data-err">NVE virhe: ${e.message}</div>`;
+    setStatus('st-nve', 'Virhe', 'err');
+    return null;
+  }
+}
+
+// ── SYKE ─────────────────────────────────────────────────────────
+async function fetchSYKE() {
+  const end = new Date().toISOString().slice(0,10);
+  const start = new Date(Date.now() - 30*24*3600*1000).toISOString().slice(0,10);
+  try {
+    const r = await fetch(`${PROXY}/syke?paikka=200&suure=1&start=${start}&end=${end}&top=30`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error + (d.url ? ' → ' + d.url : ''));
+
+    const rows = d.rows || [];
+    if (!rows.length) throw new Error('Ei dataa');
+
+    const latest = rows[rows.length - 1];
+    document.getElementById('syke-wl').textContent = latest.value ?? '—';
+    document.getElementById('syke-date').textContent = latest.date ?? '—';
+
+    // Piirretään viimeiset 30 päivää
+    const vals = rows.map(r => r.value).filter(v => v != null);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const range = max - min || 1;
+    const pts = rows.filter(r => r.value != null).map((r, i, arr) => {
+      const x = (i / (arr.length - 1)) * 100;
+      const y = 100 - ((r.value - min) / range) * 80 - 10;
+      return `${x},${y}`;
+    }).join(' ');
+
+    document.getElementById('syke-detail').innerHTML = `
+      <div class="chart-wrap">
+        <svg class="chart-canvas" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polyline points="${pts}" fill="none" stroke="var(--water)" stroke-width="0.8"/>
+          <line x1="0" y1="${100 - ((latest.value - min)/range)*80 - 10}" x2="100" y2="${100 - ((latest.value - min)/range)*80 - 10}"
+                stroke="var(--rule)" stroke-width="0.3" stroke-dasharray="2,2"/>
+        </svg>
+        <div class="chart-label">cm · ${start} → ${end}</div>
+      </div>
+      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);">
+        n=${rows.length} päivää · min ${min} cm · max ${max} cm · nyt <strong>${latest.value} cm</strong> (${latest.date})
+      </div>`;
+
+    setStatus('st-syke', latest.date, 'ok');
+    return latest;
+  } catch(e) {
+    document.getElementById('syke-wl').textContent = '—';
+    document.getElementById('syke-detail').innerHTML = `<div class="data-err">SYKE virhe: ${e.message}</div>`;
+    setStatus('st-syke', 'Virhe', 'err');
+    return null;
+  }
+}
+
+// ── FMI ──────────────────────────────────────────────────────────
+async function fetchFMI() {
+  const end = new Date().toISOString().slice(0,10);
+  const start = new Date(Date.now() - 7*24*3600*1000).toISOString().slice(0,10);
+  try {
+    const r = await fetch(`${PROXY}/fmi?station=101756&param=tday,rrday&start=${start}&end=${end}`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    const rows = d.rows || [];
+    if (!rows.length) throw new Error('Ei dataa');
+
+    // Etsi viimeisimmät arvot
+    const temps = rows.filter(r => r.param === 'tday').sort((a,b) => b.date.localeCompare(a.date));
+    const precips = rows.filter(r => r.param === 'rrday').sort((a,b) => b.date.localeCompare(a.date));
+
+    const latestT = temps[0];
+    const latestP = precips[0];
+
+    document.getElementById('fmi-temp').textContent = latestT?.value?.toFixed(1) ?? '—';
+    document.getElementById('fmi-precip').textContent = latestP?.value?.toFixed(1) ?? '—';
+    document.getElementById('fmi-date').textContent = latestT?.date ?? '—';
+
+    // Taulukko viimeisistä päivistä
+    const dates = [...new Set(rows.map(r => r.date))].sort().reverse().slice(0,7);
+    const rows_html = dates.map(date => {
+      const t = rows.find(r => r.param==='tday' && r.date===date);
+      const p = rows.find(r => r.param==='rrday' && r.date===date);
+      return `<tr>
+        <td style="padding:.15rem .5rem;">${date}</td>
+        <td style="padding:.15rem .5rem;text-align:right;">${t?.value?.toFixed(1) ?? '—'} °C</td>
+        <td style="padding:.15rem .5rem;text-align:right;">${p?.value?.toFixed(1) ?? '—'} mm</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('fmi-detail').innerHTML = `
+      <table style="font-family:var(--mono);font-size:.62rem;border-collapse:collapse;width:100%;max-width:340px;">
+        <thead><tr style="color:var(--muted);">
+          <th style="padding:.15rem .5rem;text-align:left;font-weight:400;">Päivä</th>
+          <th style="padding:.15rem .5rem;text-align:right;font-weight:400;">Lämpötila</th>
+          <th style="padding:.15rem .5rem;text-align:right;font-weight:400;">Sade</th>
+        </tr></thead>
+        <tbody>${rows_html}</tbody>
+      </table>
+      <div style="margin-top:.5rem;font-size:.55rem;color:var(--muted);">Lappeenranta Lepola · FMI 101756</div>`;
+
+    setStatus('st-fmi', latestT?.date ?? 'ok', 'ok');
+    return { temp: latestT?.value, precip: latestP?.value };
+  } catch(e) {
+    document.getElementById('fmi-temp').textContent = '—';
+    document.getElementById('fmi-detail').innerHTML = `<div class="data-err">FMI virhe: ${e.message}</div>`;
+    setStatus('st-fmi', 'Virhe', 'err');
+    return null;
+  }
+}
+
+// ── HEPP laskenta ────────────────────────────────────────────────
+function computeHEPP(nve, syke, fmi) {
+  if (!nve && !syke && !fmi) return null;
+
+  // RF: Norjan täyttöaste suhteessa mediaaniin
+  const rf = nve ? Math.max(0, Math.min(1, 1 - nve.hydro_RF)) : 0.5;
+
+  // SD: Yksinkertainen proxy — ei SYKE-historiadataa tässä versiossa
+  const sd = 0.3; // placeholder kunnes SYKE-historia saatavilla
+
+  // HSP: Norjan low-label → stressiä
+  const hsp = nve ? (nve.label === 'low' ? 0.7 : nve.label === 'high' ? 0.2 : 0.35) : 0.35;
+
+  const hepp = 0.40*sd + 0.35*hsp + 0.25*rf;
+  return Math.min(1, Math.max(0, hepp));
+}
+
+// ── Pääfunktio ───────────────────────────────────────────────────
+async function fetchAll() {
+  document.getElementById('fetch-time').textContent = 'Ladataan…';
+  setStatus('st-ts', '…', '');
+
+  const [nve, syke, fmi] = await Promise.all([fetchNVE(), fetchSYKE(), fetchFMI()]);
+
+  // HEPP
+  const hepp = computeHEPP(nve, syke, fmi);
+  if (hepp !== null) {
+    const col = heppColor(hepp);
+    document.getElementById('hepp-val').textContent = hepp.toFixed(2);
+    document.getElementById('hepp-val').style.color = col;
+    document.getElementById('hepp-dot').style.background = col;
+    document.getElementById('hepp-regime').textContent = heppRegime(hepp);
+    document.getElementById('hepp-badge').style.borderColor = col;
+  }
+  document.getElementById('hepp-desc').textContent = heppDesc(hepp, nve);
+
+  const now = new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
+  document.getElementById('fetch-time').textContent = now;
+  setStatus('st-ts', now, 'ok');
+}
+
+// ── Käynnistys ───────────────────────────────────────────────────
+fetchAll();
+</script>
+</body>
+</html>
