@@ -190,6 +190,25 @@ nav a:hover{color:var(--ink);}
     Data: NVE Magasinstatistikk · SYKE Hydrologiarajapinta (CC BY 4.0) · FMI Open Data (CC BY 4.0)
   </div>
 
+
+  <!-- Trendigraafit -->
+  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 04</span><span class="stit">FMI Lappeenranta — Vuositrendi 10 v</span></div>
+  <div id="trend-charts" style="display:grid;gap:1.5rem;">
+    <div>
+      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Vuotuinen keskilämpötila (°C)</div>
+      <svg id="chart-temp" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
+    </div>
+    <div>
+      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Vuotuinen sademäärä (mm)</div>
+      <svg id="chart-precip" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
+    </div>
+    <div>
+      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Kuukausittainen sademäärä (mm) — viimeiset 24kk</div>
+      <svg id="chart-monthly" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
+    </div>
+  </div>
+
+
 </div>
 
 <script>
@@ -454,6 +473,109 @@ function computeHEPP(nve, iisvesi, fmiData) {
   return { value: Math.min(1, Math.max(0, hepp)), sd, hsp, rf };
 }
 
+
+// ── Trendigraafit ─────────────────────────────────────────────────
+function drawCharts(fmiData) {
+  if (!fmiData || !fmiData.dates || !fmiData.byDate) return;
+
+  const { dates, byDate } = fmiData;
+
+  // 1. Vuotuinen keskilämpötila
+  const yearlyTemp = {};
+  const yearlyPrecip = {};
+  for (const d of dates) {
+    const y = d.slice(0, 4);
+    const t = byDate[d]?.tday;
+    const p = byDate[d]?.rrday;
+    if (t != null && t > -50) {
+      if (!yearlyTemp[y]) yearlyTemp[y] = [];
+      yearlyTemp[y].push(t);
+    }
+    if (p != null && p >= 0) {
+      if (!yearlyPrecip[y]) yearlyPrecip[y] = [];
+      yearlyPrecip[y].push(p);
+    }
+  }
+
+  const years = Object.keys(yearlyTemp).sort();
+  const avgTemps = years.map(y => yearlyTemp[y].reduce((a,b)=>a+b,0)/yearlyTemp[y].length);
+  const totalPrecip = years.map(y => (yearlyPrecip[y]||[]).reduce((a,b)=>a+b,0));
+
+  drawBarChart('chart-temp',  years, avgTemps,   '#2a5f8f', v => v.toFixed(1) + '°C');
+  drawBarChart('chart-precip', years, totalPrecip, '#5a9f6f', v => Math.round(v) + 'mm');
+
+  // 2. Kuukausittainen sade (24kk)
+  const recentDates = dates.slice(-730);
+  const monthly = {};
+  for (const d of recentDates) {
+    const ym = d.slice(0, 7);
+    const p = byDate[d]?.rrday;
+    if (p != null && p >= 0) {
+      monthly[ym] = (monthly[ym] || 0) + p;
+    }
+  }
+  const months = Object.keys(monthly).sort().slice(-24);
+  const mVals  = months.map(m => monthly[m] || 0);
+  drawBarChart('chart-monthly', months.map(m=>m.slice(5)), mVals, '#5a9f6f', v => Math.round(v)+'mm', true);
+}
+
+function drawBarChart(svgId, labels, values, color, fmt, small=false) {
+  const svg = document.getElementById(svgId);
+  if (!svg || !values.length) return;
+
+  const W = svg.clientWidth || 700;
+  const H = 120;
+  const pad = { t: 12, r: 8, b: 28, l: 36 };
+  const w = W - pad.l - pad.r;
+  const h = H - pad.t - pad.b;
+
+  const mn = Math.min(...values);
+  const mx = Math.max(...values);
+  const range = mx - mn || 1;
+  const bw = Math.max(1, w / values.length - 2);
+  const trend = values.length > 2 ? values[values.length-1] - values[0] : 0;
+
+  let s = `<svg width="100%" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,monospace" font-size="9">`;
+
+  // Gridline at mean
+  const mean = values.reduce((a,b)=>a+b,0)/values.length;
+  const meanY = pad.t + h - ((mean-mn)/range)*h;
+  s += `<line x1="${pad.l}" y1="${meanY}" x2="${W-pad.r}" y2="${meanY}" stroke="#ccc" stroke-dasharray="3,3" stroke-width="0.8"/>`;
+
+  // Bars
+  values.forEach((v, i) => {
+    const x = pad.l + i * (w/values.length) + 1;
+    const barH = Math.max(2, ((v-mn)/range)*h);
+    const y = pad.t + h - barH;
+    const isLast = i === values.length - 1;
+    s += `<rect x="${x}" y="${y}" width="${bw}" height="${barH}" fill="${isLast ? '#c04040' : color}" opacity="${isLast ? 1 : 0.75}"/>`;
+  });
+
+  // X labels (every n-th)
+  const step = Math.max(1, Math.round(labels.length / 8));
+  labels.forEach((l, i) => {
+    if (i % step === 0 || i === labels.length-1) {
+      const x = pad.l + i * (w/values.length) + bw/2;
+      s += `<text x="${x}" y="${H-8}" text-anchor="middle" fill="#888">${l}</text>`;
+    }
+  });
+
+  // Y axis labels
+  [mn, mean, mx].forEach(v => {
+    const y = pad.t + h - ((v-mn)/range)*h;
+    s += `<text x="${pad.l-3}" y="${y+3}" text-anchor="end" fill="#666">${fmt(v)}</text>`;
+  });
+
+  // Trend indicator
+  const trendStr = trend >= 0 ? `+${fmt(trend)}` : fmt(trend);
+  const trendCol = (color === '#2a5f8f' ? trend > 0 : trend < 0) ? '#c04040' : '#2a8f5f';
+  s += `<text x="${W-pad.r}" y="${pad.t}" text-anchor="end" fill="${trendCol}">${trendStr} 10v</text>`;
+
+  s += '</svg>';
+  svg.outerHTML = s;
+}
+
+
 // ── Pääfunktio ───────────────────────────────────────────────────
 async function fetchAll() {
   document.getElementById('fetch-time').textContent = 'Ladataan…';
@@ -486,6 +608,8 @@ async function fetchAll() {
   const now = new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
   document.getElementById('fetch-time').textContent = now;
   setStatus('st-ts', now, 'ok');
+  // Trendigraafit
+  if (fmi) drawCharts(fmi);
 }
 
 fetchAll();
