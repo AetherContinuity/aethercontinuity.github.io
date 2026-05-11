@@ -110,8 +110,8 @@ nav a:hover{color:var(--ink);}
     <div class="dih-title">Hydrological Endurance Monitor</div>
   </div>
   <div class="dih-meta">
-    Saimaa · Norja<br>
-    SYKE · NVE · FMI<br>
+    Iisvesi · Norja<br>
+    WSFS · NVE · FMI<br>
     <span id="fetch-time">—</span>
   </div>
 </div>
@@ -151,9 +151,9 @@ nav a:hover{color:var(--ink);}
       <div class="card-sub" id="nve-label">—</div>
     </div>
     <div class="card">
-      <div class="card-label">Saimaa · Vedenkorkeus</div>
+      <div class="card-label">Iisvesi · WSFS-ennuste</div>
       <div class="card-value" id="syke-wl">—</div>
-      <div class="card-unit">cm (Lauritsala)</div>
+      <div class="card-unit">keväthuippu 2026</div>
       <div class="card-sub" id="syke-date">—</div>
     </div>
     <div class="card">
@@ -171,13 +171,13 @@ nav a:hover{color:var(--ink);}
   </div>
 
   <!-- SYKE detail -->
-  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 02</span><span class="stit">SYKE Hydrologiarajapinta — Saimaa / Lauritsala</span></div>
+  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 02</span><span class="stit">Iisvesi WSFS — Vedenkorkeus (Rautalammin reitti)</span></div>
   <div id="syke-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
     <span class="loading">Haetaan SYKE-dataa…</span>
   </div>
 
   <!-- FMI detail -->
-  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 03</span><span class="stit">FMI — Lappeenranta Lepola (101756)</span></div>
+  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 03</span><span class="stit">FMI — Lappeenranta sää (GitHub cache)</span></div>
   <div id="fmi-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
     <span class="loading">Haetaan FMI-dataa…</span>
   </div>
@@ -348,53 +348,41 @@ async function fetchSYKE() {
 
 // ── FMI ──────────────────────────────────────────────────────────
 async function fetchFMI() {
-  const end = new Date().toISOString().slice(0,10);
-  const start = new Date(Date.now() - 7*24*3600*1000).toISOString().slice(0,10);
   try {
-    const r = await fetch(`${PROXY}/fmi?station=101756&param=tday,rrday&start=${start}&end=${end}`);
+    const r = await fetch(FMI_CACHE + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
-    if (d.error) throw new Error(d.error);
-
     const rows = d.rows || [];
     if (!rows.length) throw new Error('Ei dataa');
 
-    // Etsi viimeisimmät arvot
-    const temps = rows.filter(r => r.param === 'tday').sort((a,b) => b.date.localeCompare(a.date));
-    const precips = rows.filter(r => r.param === 'rrday').sort((a,b) => b.date.localeCompare(a.date));
+    // Ryhmittele päivämäärän mukaan
+    const byDate = {};
+    for (const row of rows) {
+      if (!byDate[row.date]) byDate[row.date] = {};
+      byDate[row.date][row.param] = row.value;
+    }
+    const dates = Object.keys(byDate).sort();
+    const latestDate = dates[dates.length - 1];
+    const temp = byDate[latestDate]?.tday ?? null;
+    const precip = byDate[latestDate]?.rrday ?? null;
 
-    const latestT = temps[0];
-    const latestP = precips[0];
+    document.getElementById('fmi-temp').textContent    = temp   !== null ? temp.toFixed(1)   : '—';
+    document.getElementById('fmi-precip').textContent  = precip !== null ? precip.toFixed(1) : '—';
+    document.getElementById('fmi-date').textContent    = latestDate;
 
-    document.getElementById('fmi-temp').textContent = latestT?.value?.toFixed(1) ?? '—';
-    document.getElementById('fmi-precip').textContent = latestP?.value?.toFixed(1) ?? '—';
-    document.getElementById('fmi-date').textContent = latestT?.date ?? '—';
-
-    // Taulukko viimeisistä päivistä
-    const dates = [...new Set(rows.map(r => r.date))].sort().reverse().slice(0,7);
-    const rows_html = dates.map(date => {
-      const t = rows.find(r => r.param==='tday' && r.date===date);
-      const p = rows.find(r => r.param==='rrday' && r.date===date);
-      return `<tr>
-        <td style="padding:.15rem .5rem;">${date}</td>
-        <td style="padding:.15rem .5rem;text-align:right;">${t?.value?.toFixed(1) ?? '—'} °C</td>
-        <td style="padding:.15rem .5rem;text-align:right;">${p?.value?.toFixed(1) ?? '—'} mm</td>
-      </tr>`;
-    }).join('');
-
+    // FMI detail
+    const temps = dates.map(dt => byDate[dt].tday).filter(v => v != null && v > -50);
+    const avg30 = temps.slice(-30).reduce((a,b)=>a+b,0) / Math.max(1, temps.slice(-30).length);
     document.getElementById('fmi-detail').innerHTML = `
-      <table style="font-family:var(--mono);font-size:.62rem;border-collapse:collapse;width:100%;max-width:340px;">
-        <thead><tr style="color:var(--muted);">
-          <th style="padding:.15rem .5rem;text-align:left;font-weight:400;">Päivä</th>
-          <th style="padding:.15rem .5rem;text-align:right;font-weight:400;">Lämpötila</th>
-          <th style="padding:.15rem .5rem;text-align:right;font-weight:400;">Sade</th>
-        </tr></thead>
-        <tbody>${rows_html}</tbody>
-      </table>
-      <div style="margin-top:.5rem;font-size:.55rem;color:var(--muted);">Lappeenranta Lepola · FMI 101756</div>`;
+      <div style="font-family:var(--mono);font-size:.68rem;line-height:2;">
+        Lämpötila nyt: <strong>${temp?.toFixed(1) ?? '—'} °C</strong> · sade: ${precip?.toFixed(1) ?? '—'} mm<br>
+        30pv keskiarvo: ${avg30.toFixed(1)} °C<br>
+        Aikasarja: ${dates[0]} → ${latestDate} (${dates.length} pv)<br>
+        <span style="color:var(--muted);font-size:.6rem;">FMI Lappeenranta 101756 · GitHub cache · päivittyy päivittäin</span>
+      </div>`;
 
-    setStatus('st-fmi', latestT?.date ?? 'ok', 'ok');
-    return { temp: latestT?.value, precip: latestP?.value };
+    setStatus('st-fmi', latestDate, 'ok');
+    return { temp, precip, byDate, dates };
   } catch(e) {
     document.getElementById('fmi-temp').textContent = '—';
     document.getElementById('fmi-detail').innerHTML = `<div class="data-err">FMI virhe: ${e.message}</div>`;
@@ -471,10 +459,15 @@ async function fetchAll() {
   document.getElementById('fetch-time').textContent = 'Ladataan…';
   setStatus('st-ts', '…', '');
 
-  const [nve, iisvesi, fmiData] = await Promise.all([fetchNVE(), fetchIisvesi(), fetchSYKE()]);
+  // Kolme rinnakkaista hakua
+  const [nve, iisvesi, fmi] = await Promise.all([
+    fetchNVE(),
+    fetchIisvesi(),
+    fetchFMI()
+  ]);
 
-  // HEPP — käyttää Iisvesi SD:nä, NVE HSP+RF:nä
-  const heppResult = computeHEPP(nve, iisvesi, fmiData);
+  // HEPP — SD=Iisvesi vajaus, HSP+RF=NVE
+  const heppResult = computeHEPP(nve, iisvesi, fmi);
   if (heppResult !== null) {
     const hepp = heppResult.value;
     const col = heppColor(hepp);
@@ -483,11 +476,11 @@ async function fetchAll() {
     document.getElementById('hepp-dot').style.background = col;
     document.getElementById('hepp-regime').textContent = heppRegime(hepp);
     document.getElementById('hepp-badge').style.borderColor = col;
-    document.getElementById('hepp-desc').textContent =
-      heppDesc(hepp, nve) +
-      (iisvesi ? ` Iisvesi keväthuippu ${iisvesi.wl?.toFixed(2)} m NN (vajaus normaalista ${iisvesi.deficit?.toFixed(2)} m).` : '');
+    const desc = heppDesc(hepp, nve) +
+      (iisvesi?.wl ? ` Iisvesi keväthuippu ${iisvesi.wl.toFixed(2)} m NN (vajaus normaalista ${iisvesi.deficit?.toFixed(2)} m).` : '');
+    document.getElementById('hepp-desc').textContent = desc;
   } else {
-    document.getElementById('hepp-desc').textContent = heppDesc(null, nve);
+    document.getElementById('hepp-desc').textContent = 'Odottaa dataa.';
   }
 
   const now = new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
@@ -495,7 +488,6 @@ async function fetchAll() {
   setStatus('st-ts', now, 'ok');
 }
 
-// ── Käynnistys ───────────────────────────────────────────────────
 fetchAll();
 </script>
 </body>
