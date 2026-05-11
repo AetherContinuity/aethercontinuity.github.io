@@ -146,6 +146,33 @@ footer a{color:var(--accent);text-decoration:none}
 </div>
 <div class="dbox" id="hepp-stats" style="font-size:.65rem">Ladataan HEPP-historiadataa…</div>
 
+
+<div class="shdr"><span class="snum">§ 06</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
+<div class="dbox" style="line-height:2.1">
+  <b>NVE Magasinstatistikk</b> — Norjan vesivoimavarannot, täyttöaste (%), kapasiteetti (TWh), hydro_RF<br>
+  &nbsp;&nbsp;Lähde: <a href="https://www.nve.no/energi/magasinstatistikk/" style="color:var(--accent)">nve.no/energi/magasinstatistikk</a> · päivittyy viikottain · CC BY 4.0<br>
+  &nbsp;&nbsp;Rooli: HSP + RF-komponentit HEPP:ssä<br>
+  <br>
+  <b>SYKE WSFS — Iisvesi/Virmasvesi</b> — vedenkorkeus, keväthuippuennuste (m NN), virtaamat<br>
+  &nbsp;&nbsp;Lähde: <a href="https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html" style="color:var(--accent)">wwwi2.ymparisto.fi · Rautalammin reitti</a> · SYKE CC BY 4.0<br>
+  &nbsp;&nbsp;Asema: l147221001y (Iisvesi) · Vesistöalue 14 (Kymijoki) · säännöstelemätön<br>
+  &nbsp;&nbsp;Rooli: SD-komponentti HEPP:ssä — vedenkorkeusvaje normaalista<br>
+  <br>
+  <b>FMI Avoin data — Kuopio</b> — päivittäinen lämpötila (tday, °C) + sade (rrday, mm)<br>
+  &nbsp;&nbsp;Lähde: <a href="https://opendata.fmi.fi/wfs" style="color:var(--accent)">opendata.fmi.fi</a> · place=Kuopio · storedquery daily::simple · CC BY 4.0<br>
+  &nbsp;&nbsp;Aikasarja: 2016–nykypäivä · GitHub Actions päivittää päivittäin<br>
+  &nbsp;&nbsp;Rooli: EP-laskenta (Thornthwaite 1948) + RF-tuki<br>
+  <br>
+  <b>HEPP-laskenta</b> — Hydrological Endurance Pressure Proxy<br>
+  &nbsp;&nbsp;HEPP = 0.35·SD + 0.25·EP_anomalia + 0.25·RF + 0.15·HSP<br>
+  &nbsp;&nbsp;SD: (normaali keväthuippu − havaittu) / 0.90 · Normaali ≈ 98.25 m NN (karkea arvio)<br>
+  &nbsp;&nbsp;EP: Thornthwaite (1948) PET — kuukausittainen lämpötilapohjainen haihdunta<br>
+  &nbsp;&nbsp;RF: 1 − (kuukausisade / mediaanisade) · Referenssi: FMI Kuopio 2016–2023<br>
+  &nbsp;&nbsp;HSP: NVE-label (low=0.70, normal=0.38, high=0.15) — pohjoismainen proxy<br>
+  &nbsp;&nbsp;Kynnykset: Normal &lt;0.45 · Elevated ≥0.45 · High ≥0.65<br>
+  &nbsp;&nbsp;Katso: <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html" style="color:var(--accent)">TN-014 §04</a>
+</div>
+
 <footer>
   <a href="https://aethercontinuity.org/tools/">WEM</a> ·
   <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
