@@ -280,7 +280,13 @@ async function fetchNVE() {
 }
 
 // ── FMI Cache (GitHub Actions päivittää) ─────────────────────────
-const FMI_CACHE = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/fmi.json';
+const FMI_CACHE      = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/fmi.json';
+const IISVESI_CACHE  = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/iisvesi.json';
+const ERA5_CACHE     = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/era5_daily.json';
+
+// Iisvesi normaali keväthuippu (historiallinen mediaaniarvio)
+const IISVESI_SPRING_NORM = 98.25; // m NN — karkea arvio, tarkennettava WSFS-historiasta
+const IISVESI_MNW = 97.45;
 
 async function fetchSYKE() {
   // SYKE-rajapinta ei ole saavutettavissa — käytetään FMI-cachea
@@ -397,30 +403,67 @@ async function fetchFMI() {
   }
 }
 
+// ── Iisvesi vedenkorkeus ─────────────────────────────────────────
+async function fetchIisvesi() {
+  try {
+    const r = await fetch(IISVESI_CACHE + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const wl = d.forecast_central_m;
+    const mhw = d.mhw_m;
+    const peak = d.peak_timing || '—';
+
+    document.getElementById('syke-wl').textContent = wl ? wl.toFixed(2) + ' m NN' : '—';
+    document.getElementById('syke-date').textContent = `huippu ${peak}`;
+
+    const deficit = wl ? (IISVESI_SPRING_NORM - wl) : null;
+    document.getElementById('syke-detail').innerHTML = `
+      <div style="font-family:var(--mono);font-size:.68rem;line-height:2;color:var(--ink);">
+        Keväthuippuennuste: <strong>${wl?.toFixed(2) ?? '—'} m NN</strong><br>
+        Normaali keväthuippu: ~${IISVESI_SPRING_NORM} m NN<br>
+        Vajaus normaalista: <strong style="color:${deficit > 0.5 ? 'var(--sr)' : 'var(--sy)'}">${deficit ? '−' + deficit.toFixed(2) + ' m' : '—'}</strong><br>
+        MNW: ${IISVESI_MNW} m NN &nbsp;·&nbsp; MHW: ${mhw ?? '—'} m NN (${d.mhw_date ?? '?'})<br>
+        <span style="color:var(--muted);font-size:.6rem;">SYKE WSFS · Rautalammin reitti · säännöstelemätön</span>
+      </div>`;
+
+    setStatus('st-syke', `${wl?.toFixed(2) ?? '?'} m`, wl && deficit > 0.5 ? 'warn' : 'ok');
+    return { wl, deficit, peak };
+  } catch(e) {
+    document.getElementById('syke-wl').textContent = '—';
+    document.getElementById('syke-detail').innerHTML = `<div class="data-err">Iisvesi virhe: ${e.message}</div>`;
+    setStatus('st-syke', 'Virhe', 'err');
+    return null;
+  }
+}
+
 // ── HEPP laskenta ────────────────────────────────────────────────
-function computeHEPP(nve, fmiData, fmiLatest) {
-  if (!nve) return null;
+function computeHEPP(nve, iisvesi, fmiData) {
+  if (!nve && !iisvesi) return null;
 
-  // RF: Norjan täyttöaste suhteessa mediaaniin (0=korkea stressi, 1=normaali)
-  const rf = Math.max(0, Math.min(1, 1 - nve.hydro_RF));
-
-  // HSP: Norjan label + lämpötilatrendi
-  const hsp = nve.label === 'low' ? 0.70 : nve.label === 'high' ? 0.15 : 0.35;
-
-  // SD: Lämpötila-anomalia (korkea lämpötila = korkea haihdunta = stressi)
-  let sd = 0.30; // oletusarvo
-  if (fmiData && fmiData.byDate && fmiData.dates) {
+  // SD: Iisvesi vedenkorkeusvaje suhteessa normaaliin keväthuippuun
+  // Jos Iisvesi-data puuttuu, käytetään lämpötila-proxya
+  let sd = 0.30;
+  if (iisvesi && iisvesi.deficit !== null) {
+    // deficit = normaali - havaittu (m). Normaali ~0.8-1.0 m jää yli MNW:n
+    // 0 cm vajaus → sd=0.1, 80 cm → sd=0.9
+    sd = Math.max(0, Math.min(1, iisvesi.deficit / 0.9));
+  } else if (fmiData && fmiData.byDate && fmiData.dates) {
     const recent = fmiData.dates.slice(-30);
     const temps = recent.map(d => fmiData.byDate[d]?.tday).filter(v => v != null && v > -50);
     if (temps.length > 10) {
       const avg = temps.reduce((a,b) => a+b, 0) / temps.length;
-      // Normaali toukokuun lämpötila ~10°C, >15 = korkea stressi
       sd = Math.max(0, Math.min(1, (avg - 5) / 20));
     }
   }
 
+  // HSP: NVE-label (Norja proxyna pohjoismaiselle hydrologiselle stressille)
+  const hsp = nve ? (nve.label === 'low' ? 0.70 : nve.label === 'high' ? 0.15 : 0.35) : 0.40;
+
+  // RF: NVE hydro_RF — täyttöaste suhteessa mediaaniin
+  const rf = nve ? Math.max(0, Math.min(1, 1 - nve.hydro_RF)) : 0.40;
+
   const hepp = 0.40*sd + 0.35*hsp + 0.25*rf;
-  return Math.min(1, Math.max(0, hepp));
+  return { value: Math.min(1, Math.max(0, hepp)), sd, hsp, rf };
 }
 
 // ── Pääfunktio ───────────────────────────────────────────────────
@@ -428,21 +471,24 @@ async function fetchAll() {
   document.getElementById('fetch-time').textContent = 'Ladataan…';
   setStatus('st-ts', '…', '');
 
-  const [nve, fmiData] = await Promise.all([fetchNVE(), fetchSYKE()]);
-  // FMI-haku on nyt yhdistetty fetchSYKE()-funktioon (cache)
+  const [nve, iisvesi, fmiData] = await Promise.all([fetchNVE(), fetchIisvesi(), fetchSYKE()]);
 
-  // HEPP
-  const fmiLatest = fmiData ? fmiData.temp : null;
-  const hepp = computeHEPP(nve, fmiData, fmiLatest);
-  if (hepp !== null) {
+  // HEPP — käyttää Iisvesi SD:nä, NVE HSP+RF:nä
+  const heppResult = computeHEPP(nve, iisvesi, fmiData);
+  if (heppResult !== null) {
+    const hepp = heppResult.value;
     const col = heppColor(hepp);
     document.getElementById('hepp-val').textContent = hepp.toFixed(2);
     document.getElementById('hepp-val').style.color = col;
     document.getElementById('hepp-dot').style.background = col;
     document.getElementById('hepp-regime').textContent = heppRegime(hepp);
     document.getElementById('hepp-badge').style.borderColor = col;
+    document.getElementById('hepp-desc').textContent =
+      heppDesc(hepp, nve) +
+      (iisvesi ? ` Iisvesi keväthuippu ${iisvesi.wl?.toFixed(2)} m NN (vajaus normaalista ${iisvesi.deficit?.toFixed(2)} m).` : '');
+  } else {
+    document.getElementById('hepp-desc').textContent = heppDesc(null, nve);
   }
-  document.getElementById('hepp-desc').textContent = heppDesc(hepp, nve);
 
   const now = new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
   document.getElementById('fetch-time').textContent = now;
