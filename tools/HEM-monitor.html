@@ -1,617 +1,303 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HEM — Hydrological Endurance Monitor · ACI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HEM — Hydrological Endurance Monitor | ACI</title>
 <style>
-:root {
-  --ink:#0e0d0b; --paper:#f5f0e8; --paper-2:#ede7d8; --paper-3:#e4dccb;
-  --accent:#8b4513; --muted:#7a7468; --rule:#c8bfad;
-  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
-  --sg:#2d6b3a; --sy:#7a6010; --so:#8b3a10; --sr:#8b1010;
-  --bg-g:#eef6f0; --bg-y:#faf6e8; --bg-o:#faf0e8; --bg-r:#faf0f0;
-  --cn:#4a7ec0; --bg-n:#eef2fa;
-  --water:#2a5f8f; --water-light:#d0e8f5;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f3ee;--ink:#1c1a17;--muted:#6b6758;--line:#d8d3c8;
+  --panel:#ebe7df;--panel2:#e2ddd4;
+  --accent:#2a4a6e;--water:#2a5f8f;--water-lt:#d4e8f4;
+  --sr:#b03020;--sy:#c07010;--sg:#2a7a40;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:Georgia,'Times New Roman',serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;scroll-behavior:smooth;}
-body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
-
-/* HEADER */
-.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
-.dih-left{display:flex;flex-direction:column;gap:.2rem;}
-.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
-.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
-.dih-ser span{color:var(--accent);}
-.dih-title{font-size:1.4rem;font-weight:500;margin-top:.2rem;}
-.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
-
-nav{max-width:1060px;margin:0 auto;padding:.6rem 2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted);}
-nav a{color:var(--muted);text-decoration:none;margin-right:1.5rem;}
-nav a:hover{color:var(--ink);}
-
-.wrap{max-width:1060px;margin:0 auto;padding:1.5rem 2rem 4rem;}
-
-/* STATUS BAR */
-.status-bar{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--paper-2);border:1px solid var(--rule);margin-bottom:2rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;}
-.status-item{color:var(--muted);}
-.status-item strong{color:var(--ink);}
-.status-item.ok strong{color:var(--sg);}
-.status-item.warn strong{color:var(--so);}
-.status-item.err strong{color:var(--sr);}
-.btn-refresh{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;padding:.3rem .85rem;background:transparent;border:1px solid var(--rule);color:var(--muted);cursor:pointer;transition:all .15s;margin-left:auto;}
-.btn-refresh:hover{border-color:var(--accent);color:var(--accent);}
-
-/* MAIN GRID */
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
-@media(max-width:760px){.grid{grid-template-columns:1fr;}}
-
-.card{border:1px solid var(--rule);padding:1.25rem 1.5rem;background:var(--paper-2);}
-.card-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
-.card-value{font-family:var(--mono);font-size:2.8rem;font-weight:500;line-height:1;letter-spacing:-.02em;}
-.card-unit{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:.3rem;}
-.card-sub{font-size:.85rem;color:var(--muted);margin-top:.4rem;font-style:italic;}
-
-/* HEPP HERO */
-.hepp-hero{border:1px solid var(--rule);padding:1.5rem 2rem;background:var(--paper-2);margin-bottom:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
-.hepp-val{font-family:var(--mono);font-size:5rem;font-weight:500;line-height:1;letter-spacing:-.02em;transition:color .5s;}
-.hepp-badge{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--rule);padding:.25rem .9rem;transition:border-color .5s;}
-.hepp-badge-dot{width:7px;height:7px;border-radius:50%;transition:background .5s;}
-.hepp-badge-text{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;}
-.hepp-right{flex:1;min-width:200px;}
-.hepp-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
-.hepp-desc{font-size:.95rem;color:var(--muted);}
-
-/* NVE CARD */
-.nve-card{border:1px solid var(--rule);padding:1.25rem 1.5rem;background:var(--bg-n);margin-bottom:1.5rem;}
-.nve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:.75rem;}
-@media(max-width:600px){.nve-grid{grid-template-columns:repeat(2,1fr);}}
-.nve-item{font-family:var(--mono);}
-.nve-item-label{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-.nve-item-value{font-size:1.4rem;font-weight:500;margin-top:.1rem;}
-.nve-item-unit{font-size:.55rem;color:var(--muted);}
-
-/* SECTION */
-.shdr{display:flex;align-items:baseline;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--rule);margin-bottom:1rem;}
-.snum{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);flex-shrink:0;}
-.stit{font-size:1.05rem;font-weight:500;}
-
-/* ERROR / LOADING */
-.data-err{font-family:var(--mono);font-size:.7rem;color:var(--sr);padding:.5rem;background:var(--bg-r);border:1px solid #e8c0c0;}
-.loading{font-family:var(--mono);font-size:.65rem;color:var(--muted);animation:pulse 1.4s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-
-/* CHART */
-.chart-wrap{height:160px;position:relative;border:1px solid var(--rule);background:var(--paper-3);overflow:hidden;}
-.chart-canvas{width:100%;height:100%;}
-.chart-label{font-family:var(--mono);font-size:.5rem;color:var(--muted);position:absolute;bottom:4px;right:6px;}
-
-/* FOOTER */
-.foot{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;font-family:var(--mono);font-size:.58rem;color:var(--muted);line-height:2;}
-.foot a{color:var(--muted);text-decoration:none;}
-.foot a:hover{color:var(--ink);}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:15px;line-height:1.7;max-width:820px;margin:0 auto;padding:32px 20px 80px}
+nav{font-family:var(--mono);font-size:.65rem;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:24px}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.2rem}
+.kicker{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:6px}
+h1{font-size:1.5rem;font-weight:400;letter-spacing:-.02em;margin-bottom:4px}
+.sub{font-family:var(--mono);font-size:.67rem;color:var(--muted);margin-bottom:20px}
+.sbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:.64rem;color:var(--muted);border:1px solid var(--line);background:var(--panel);padding:7px 12px;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .3s}
+.dot.ok{background:var(--sg)}.dot.warn{background:var(--sy)}.dot.err{background:var(--sr)}
+.btn{margin-left:auto;font-family:var(--mono);font-size:.64rem;border:1px solid var(--line);background:none;color:var(--accent);padding:4px 12px;cursor:pointer}
+.btn:hover{background:var(--panel2)}
+.hepp{border:2px solid var(--line);padding:16px 20px;margin-bottom:22px;display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:start;transition:border-color .4s}
+.hnum{font-family:var(--mono);font-size:2.8rem;font-weight:700;line-height:1;transition:color .4s}
+.hlbl{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:3px}
+.hregime{font-size:.95rem;font-weight:700;margin-bottom:5px;transition:color .4s}
+.hdesc{font-size:.8rem;color:var(--muted);line-height:1.65}
+.hcomp{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:7px;display:flex;gap:12px;flex-wrap:wrap}
+.hcomp b{color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+@media(max-width:520px){.cards{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);padding:11px 13px;background:var(--panel)}
+.clbl{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.cval{font-family:var(--mono);font-size:1.55rem;font-weight:700;line-height:1.1}
+.cunit{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+.csub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:2px}
+.shdr{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin:26px 0 12px}
+.snum{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.stit{font-size:.84rem;font-weight:600}
+.dbox{background:var(--panel);border:1px solid var(--line);padding:11px 13px;font-family:var(--mono);font-size:.71rem;line-height:1.9}
+.derr{color:var(--sr)}
+.gauge{border:1px solid var(--water);background:var(--water-lt);padding:11px 13px;margin-bottom:10px}
+.gval{font-family:var(--mono);font-size:1.3rem;font-weight:700;color:var(--water)}
+.gbar{height:7px;background:#c8dde8;border-radius:2px;margin:7px 0;overflow:hidden}
+.gfill{height:100%;background:var(--water);transition:width .7s ease;border-radius:2px}
+.glbls{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.57rem;color:var(--muted)}
+.cwrap{margin:10px 0}
+.clabel{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-bottom:3px}
+footer{border-top:1px solid var(--line);margin-top:44px;padding-top:12px;font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:2}
+footer a{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="/">ACI</a>
-  <a href="/tools/ACI-INSTRUMENT-v2.html">WEM</a>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/supplements/">Supplements</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
 </nav>
 
-<div class="dih">
-  <div class="dih-left">
-    <span class="dih-inst">Aether Continuity Institute · ACI</span>
-    <span class="dih-ser">Diagnostic Instrument · <span>HEM v1.1</span></span>
-    <div class="dih-title">Hydrological Endurance Monitor</div>
+<div class="kicker">ACI · Diagnostic Instrument · HEM v1.2</div>
+<h1>Hydrological Endurance Monitor</h1>
+<p class="sub">Iisvesi/Virmasvesi · NVE Norja · Kuopio FMI · SYKE WSFS</p>
+
+<div class="sbar">
+  <span class="pill"><span class="dot" id="d-nve"></span>NVE <span id="s-nve">—</span></span>
+  <span class="pill"><span class="dot" id="d-iis"></span>WSFS <span id="s-iis">—</span></span>
+  <span class="pill"><span class="dot" id="d-fmi"></span>FMI <span id="s-fmi">—</span></span>
+  <span style="color:var(--ink)">TS <span id="s-ts">—</span></span>
+  <button class="btn" onclick="fetchAll()">↻ Päivitä</button>
+</div>
+
+<div class="hepp" id="hbadge">
+  <div>
+    <div class="hlbl">HEPP</div>
+    <div class="hnum" id="hval">—</div>
   </div>
-  <div class="dih-meta">
-    Iisvesi · Norja<br>
-    WSFS · NVE · FMI<br>
-    <span id="fetch-time">—</span>
+  <div>
+    <div class="hlbl">Hydrological Endurance Pressure Proxy</div>
+    <div class="hregime" id="hregime">Ladataan…</div>
+    <div class="hdesc" id="hdesc"></div>
+    <div class="hcomp">SD <b id="hsd">—</b> · HSP <b id="hhsp">—</b> · RF <b id="hrf">—</b></div>
   </div>
 </div>
 
-<div class="wrap">
-
-  <div class="status-bar">
-    <div class="status-item" id="st-nve">NVE <strong>—</strong></div>
-    <div class="status-item" id="st-syke">SYKE <strong>—</strong></div>
-    <div class="status-item" id="st-fmi">FMI <strong>—</strong></div>
-    <div class="status-item" id="st-ts">Päivitetty <strong>—</strong></div>
-    <button class="btn-refresh" onclick="fetchAll()">↻ Päivitä</button>
+<div class="cards">
+  <div class="card">
+    <div class="clbl">Norja · Täyttöaste</div>
+    <div class="cval" id="c-nve">—</div>
+    <div class="cunit">% reservoaareista</div>
+    <div class="csub" id="c-nve2">—</div>
   </div>
-
-  <!-- HEPP hero -->
-  <div class="hepp-hero">
-    <div>
-      <div class="hepp-label">HEPP · Hydrological Endurance Pressure Proxy</div>
-      <div class="hepp-val" id="hepp-val">—</div>
-      <div id="hepp-badge" class="hepp-badge" style="margin-top:.6rem;">
-        <span class="hepp-badge-dot" id="hepp-dot" style="background:var(--muted)"></span>
-        <span class="hepp-badge-text" id="hepp-regime">Ladataan</span>
-      </div>
-    </div>
-    <div class="hepp-right">
-      <div class="hepp-label">Tulkinta</div>
-      <div class="hepp-desc" id="hepp-desc">—</div>
-    </div>
+  <div class="card">
+    <div class="clbl">Iisvesi · Keväthuippu</div>
+    <div class="cval" id="c-iis">—</div>
+    <div class="cunit">m NN · WSFS-ennuste</div>
+    <div class="csub" id="c-iis2">—</div>
   </div>
-
-  <!-- 3-card grid -->
-  <div class="grid">
-    <div class="card">
-      <div class="card-label">Norja · Täyttöaste</div>
-      <div class="card-value" id="nve-fill">—</div>
-      <div class="card-unit">% reservoaareista</div>
-      <div class="card-sub" id="nve-label">—</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Iisvesi · WSFS-ennuste</div>
-      <div class="card-value" id="syke-wl">—</div>
-      <div class="card-unit">keväthuippu 2026</div>
-      <div class="card-sub" id="syke-date">—</div>
-    </div>
-    <div class="card">
-      <div class="card-label">FMI · Lappeenranta</div>
-      <div class="card-value" id="fmi-temp">—</div>
-      <div class="card-unit">°C · sade <span id="fmi-precip">—</span> mm</div>
-      <div class="card-sub" id="fmi-date">—</div>
-    </div>
+  <div class="card">
+    <div class="clbl">Kuopio · Lämpötila</div>
+    <div class="cval" id="c-fmi">—</div>
+    <div class="cunit">°C · sade <span id="c-prec">—</span> mm</div>
+    <div class="csub" id="c-fmi2">—</div>
   </div>
-
-  <!-- NVE detail -->
-  <div class="shdr"><span class="snum">§ 01</span><span class="stit">NVE Norja — Magasinstatistikk</span></div>
-  <div class="nve-card" id="nve-detail">
-    <div class="loading">Haetaan NVE-dataa…</div>
-  </div>
-
-  <!-- SYKE detail -->
-  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 02</span><span class="stit">Iisvesi WSFS — Vedenkorkeus (Rautalammin reitti)</span></div>
-  <div id="syke-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
-    <span class="loading">Haetaan SYKE-dataa…</span>
-  </div>
-
-  <!-- FMI detail -->
-  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 03</span><span class="stit">FMI — Lappeenranta sää (GitHub cache)</span></div>
-  <div id="fmi-detail" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:.5rem 0;">
-    <span class="loading">Haetaan FMI-dataa…</span>
-  </div>
-
-  <div class="foot">
-    <a href="/tools/ACI-INSTRUMENT-v2.html">WEM — Winter Endurance Monitor</a> ·
-    <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
-    <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis</a>
-    <br>
-    Data: NVE Magasinstatistikk · SYKE Hydrologiarajapinta (CC BY 4.0) · FMI Open Data (CC BY 4.0)
-  </div>
-
-
-  <!-- Trendigraafit -->
-  <div class="shdr" style="margin-top:2rem;"><span class="snum">§ 04</span><span class="stit">FMI Lappeenranta — Vuositrendi 10 v</span></div>
-  <div id="trend-charts" style="display:grid;gap:1.5rem;">
-    <div>
-      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Vuotuinen keskilämpötila (°C)</div>
-      <svg id="chart-temp" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
-    </div>
-    <div>
-      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Vuotuinen sademäärä (mm)</div>
-      <svg id="chart-precip" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
-    </div>
-    <div>
-      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Kuukausittainen sademäärä (mm) — viimeiset 24kk</div>
-      <svg id="chart-monthly" width="100%" height="120" style="display:block;background:var(--paper-2);border:1px solid var(--rule);"></svg>
-    </div>
-  </div>
-
-
 </div>
+
+<div class="shdr"><span class="snum">§ 01</span><span class="stit">NVE Norja — Magasinstatistikk</span></div>
+<div class="dbox" id="nve-det">Ladataan…</div>
+
+<div class="shdr"><span class="snum">§ 02</span><span class="stit">Iisvesi WSFS — Vedenkorkeus (Rautalammin reitti, säännöstelemätön)</span></div>
+<div class="gauge">
+  <div class="gval" id="gval">— m NN</div>
+  <div class="gbar"><div class="gfill" id="gfill" style="width:0%"></div></div>
+  <div class="glbls"><span>MNW 97.45</span><span id="gpct">—</span><span>MHW 98.46</span></div>
+</div>
+<div class="dbox" id="iis-det">Ladataan…</div>
+
+<div class="shdr"><span class="snum">§ 03</span><span class="stit">FMI — Kuopio Savilahti (101590)</span></div>
+<div class="dbox" id="fmi-det">Ladataan…</div>
+
+<div class="shdr"><span class="snum">§ 04</span><span class="stit">Vuositrendi 2016–2026 · Kuopio Savilahti</span></div>
+<div class="cwrap">
+  <div class="clabel">Vuotuinen keskilämpötila (°C) · punainen = tämä vuosi</div>
+  <svg id="ct" width="100%" height="110" style="display:block"></svg>
+</div>
+<div class="cwrap">
+  <div class="clabel">Vuotuinen sademäärä (mm)</div>
+  <svg id="cp" width="100%" height="110" style="display:block"></svg>
+</div>
+<div class="cwrap">
+  <div class="clabel">Kuukausikeskilämpötila — viimeiset 24 kk</div>
+  <svg id="cm" width="100%" height="110" style="display:block"></svg>
+</div>
+
+<footer>
+  <a href="https://aethercontinuity.org/tools/">WEM</a> ·
+  <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
+  <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html">TN-014</a><br>
+  Data: NVE Magasinstatistikk · SYKE WSFS (CC BY 4.0) · FMI Avoin data (CC BY 4.0)
+</footer>
 
 <script>
-const PROXY = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
+const PROXY='https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
+const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache';
+const NORM=98.25,MNW=97.45,MHW=98.46;
 
-// ── Värit ───────────────────────────────────────────────────────
-function heppColor(v) {
-  if (v < 0.3) return 'var(--sg)';
-  if (v < 0.5) return 'var(--sy)';
-  if (v < 0.7) return 'var(--so)';
-  return 'var(--sr)';
+function dot(id,s){const e=document.getElementById('d-'+id);if(e)e.className='dot '+s}
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+function setHTML(id,v){const e=document.getElementById(id);if(e)e.innerHTML=v}
+
+async function fetchNVE(){
+  try{
+    const d=await(await fetch(PROXY+'/')).json();
+    const pct=d.filling_pct,rf=d.hydro_RF??0.5,lbl=d.label??'—';
+    setText('c-nve',pct??'—');
+    setText('c-nve2',(lbl==='low'?'▼ Matala':lbl==='high'?'▲ Korkea':'→ Normaali')+' · RF '+rf.toFixed(3));
+    setText('s-nve',d.week??'—');
+    setHTML('nve-det',`Täyttöaste: <b>${pct}%</b> · Edellinen: ${d.previous_week_pct??'—'}%<br>
+      Kapasiteetti: ${d.capacity_twh??'—'} TWh · Sisältö: ${d.content_twh??'—'} TWh (hist.med ${d.median_pct??'—'}%)<br>
+      ${d.week??''} · hydro_RF: ${rf.toFixed(3)}`);
+    dot('nve','ok');
+    return{pct,rf,label:lbl};
+  }catch(e){setHTML('nve-det',`<span class="derr">NVE: ${e.message}</span>`);dot('nve','err');return null;}
 }
-function heppRegime(v) {
-  if (v < 0.3) return 'Low stress';
-  if (v < 0.5) return 'Normal';
-  if (v < 0.7) return 'Elevated';
-  return 'High stress';
+
+async function fetchIisvesi(){
+  try{
+    const d=await(await fetch(RAW+'/iisvesi.json?t='+Date.now())).json();
+    const wl=d.forecast_central_m,deficit=wl?+(NORM-wl).toFixed(2):null;
+    const pct=wl?Math.max(0,Math.min(100,((wl-MNW)/(MHW-MNW))*100)):0;
+    setText('c-iis',wl?wl.toFixed(2):'—');
+    setText('c-iis2','Huippu '+(d.peak_timing??'—').trim());
+    setText('gval',(wl?wl.toFixed(2):'—')+' m NN');
+    document.getElementById('gfill').style.width=pct+'%';
+    setText('gpct',(wl?wl.toFixed(2):'—')+' m ('+pct.toFixed(0)+'%)');
+    setText('s-iis',(wl?wl.toFixed(2):'?')+' m');
+    setHTML('iis-det',`Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> (${(d.peak_timing??'').trim()})<br>
+      Normaali keväthuippu: ~${NORM} m NN<br>
+      Vajaus normaalista: <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
+      MNW: ${MNW} m · MHW: ${MHW} m (${d.mhw_date??'?'})<br>
+      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön</span>`);
+    dot('iis',deficit>0.5?'warn':'ok');
+    return{wl,deficit};
+  }catch(e){setHTML('iis-det',`<span class="derr">Iisvesi: ${e.message}</span>`);dot('iis','err');return null;}
 }
-function heppDesc(v, nve) {
-  if (!v && !nve) return 'Odottaa dataa.';
-  const parts = [];
-  if (nve) {
-    if (nve.filling_pct < 40) parts.push(`Norjan reservoaarivarastot matalat (${nve.filling_pct}% — historiallinen mediaani ${nve.median_pct}%).`);
-    else if (nve.filling_pct > 70) parts.push(`Norjan reservoaarivarastot korkeat (${nve.filling_pct}%).`);
-    else parts.push(`Norjan reservoaarivarastot normaalitasolla (${nve.filling_pct}%).`);
+
+async function fetchFMI(){
+  try{
+    const d=await(await fetch(RAW+'/fmi.json?t='+Date.now())).json();
+    const rows=d.rows||[];
+    const byDate={};
+    for(const r of rows){if(!byDate[r.date])byDate[r.date]={};byDate[r.date][r.param]=r.value;}
+    const dates=Object.keys(byDate).sort();
+    const last=dates[dates.length-1];
+    const temp=byDate[last]?.tday,prec=byDate[last]?.rrday;
+    setText('c-fmi',temp!=null?temp.toFixed(1):'—');
+    setText('c-prec',prec!=null?prec.toFixed(1):'—');
+    setText('c-fmi2',last??'—');
+    setText('s-fmi',last??'—');
+    const t30=dates.slice(-30).map(dt=>byDate[dt]?.tday).filter(v=>v!=null&&v>-50);
+    const avg30=t30.length?(t30.reduce((a,b)=>a+b,0)/t30.length).toFixed(1):'—';
+    setHTML('fmi-det',`Viimeisin: <b>${temp?.toFixed(1)??'—'} °C</b> · sade ${prec?.toFixed(1)??'—'} mm (${last})<br>
+      30pv keskilämpötila: ${avg30} °C<br>
+      Aikasarja: ${dates[0]} → ${last} · ${dates.length} päivää · ${d.station_name??d.station}<br>
+      <span style="color:var(--muted)">FMI avoin data · GitHub cache · päivittyy päivittäin</span>`);
+    dot('fmi','ok');
+    return{byDate,dates,temp,prec};
+  }catch(e){setHTML('fmi-det',`<span class="derr">FMI: ${e.message}</span>`);dot('fmi','err');return null;}
+}
+
+function computeHEPP(nve,iis,fmi){
+  let sd=0.30;
+  if(iis?.deficit!=null)sd=Math.max(0,Math.min(1,iis.deficit/0.90));
+  else if(fmi?.dates){
+    const t=fmi.dates.slice(-30).map(d=>fmi.byDate[d]?.tday).filter(v=>v!=null&&v>-50);
+    if(t.length>5)sd=Math.max(0,Math.min(1,(t.reduce((a,b)=>a+b,0)/t.length-5)/20));
   }
-  if (v !== null) {
-    if (v > 0.6) parts.push('Hydrologinen endurance-paine koholla.');
-    else parts.push('Hydrologinen paine normaali.');
-  }
-  return parts.join(' ') || '—';
+  const hsp=nve?.label==='low'?0.70:nve?.label==='high'?0.15:0.38;
+  const rf=nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40;
+  return{val:+(0.40*sd+0.35*hsp+0.25*rf).toFixed(2),sd:+sd.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2)};
 }
 
-// ── Status-palkin päivitys ──────────────────────────────────────
-function setStatus(id, text, cls) {
-  const el = document.getElementById(id);
-  el.className = 'status-item ' + (cls||'');
-  el.innerHTML = id.replace('st-','').toUpperCase() + ' <strong>' + text + '</strong>';
-}
+function hCol(v){return v>=0.65?'var(--sr)':v>=0.45?'var(--sy)':'var(--sg)'}
+function hReg(v){return v>=0.65?'High stress':v>=0.45?'Elevated':'Normal'}
 
-// ── NVE ─────────────────────────────────────────────────────────
-async function fetchNVE() {
-  try {
-    const r = await fetch(PROXY + '/');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    if (d.error) throw new Error(d.error);
-
-    document.getElementById('nve-fill').textContent = d.filling_pct ?? '—';
-    document.getElementById('nve-label').textContent =
-      (d.label === 'low' ? '▼ Matala' : d.label === 'high' ? '▲ Korkea' : '◆ Normaali') +
-      ` · hydro_RF ${d.hydro_RF}`;
-
-    document.getElementById('nve-detail').innerHTML = `
-      <div class="nve-grid">
-        <div class="nve-item">
-          <div class="nve-item-label">Täyttöaste</div>
-          <div class="nve-item-value" style="color:${d.filling_pct < 45 ? 'var(--so)' : 'var(--sg)'}">${d.filling_pct}%</div>
-          <div class="nve-item-unit">Koko Norja</div>
-        </div>
-        <div class="nve-item">
-          <div class="nve-item-label">Edellinen viikko</div>
-          <div class="nve-item-value">${d.prev_pct ?? '—'}%</div>
-          <div class="nve-item-unit">Muutos ${d.change_pp > 0 ? '+' : ''}${d.change_pp ?? '—'} pp</div>
-        </div>
-        <div class="nve-item">
-          <div class="nve-item-label">Kapasiteetti</div>
-          <div class="nve-item-value">${d.capacity_twh?.toFixed(1) ?? '—'}</div>
-          <div class="nve-item-unit">TWh</div>
-        </div>
-        <div class="nve-item">
-          <div class="nve-item-label">Sisältö nyt</div>
-          <div class="nve-item-value">${d.content_twh?.toFixed(1) ?? '—'}</div>
-          <div class="nve-item-unit">TWh · hist.med ${d.median_pct}%</div>
-        </div>
-      </div>
-      <div style="margin-top:.75rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);">
-        Viikko ${d.week} · Seuraava julkaisu ${d.next_update?.slice(0,10) ?? '—'}
-      </div>`;
-
-    setStatus('st-nve', d.week, 'ok');
-    return d;
-  } catch(e) {
-    document.getElementById('nve-detail').innerHTML = `<div class="data-err">NVE virhe: ${e.message}</div>`;
-    setStatus('st-nve', 'Virhe', 'err');
-    return null;
-  }
-}
-
-// ── FMI Cache (GitHub Actions päivittää) ─────────────────────────
-const FMI_CACHE      = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/fmi.json';
-const IISVESI_CACHE  = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/iisvesi.json';
-const ERA5_CACHE     = 'https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache/era5_daily.json';
-
-// Iisvesi normaali keväthuippu (historiallinen mediaaniarvio)
-const IISVESI_SPRING_NORM = 98.25; // m NN — karkea arvio, tarkennettava WSFS-historiasta
-const IISVESI_MNW = 97.45;
-
-async function fetchSYKE() {
-  // SYKE-rajapinta ei ole saavutettavissa — käytetään FMI-cachea
-  // jota GitHub Actions päivittää päivittäin
-  try {
-    const r = await fetch(FMI_CACHE + '?t=' + Date.now());
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    const rows = d.rows || [];
-    if (!rows.length) throw new Error('Ei dataa');
-
-    // Ryhmittele päivämäärän mukaan
-    const byDate = {};
-    for (const row of rows) {
-      if (!byDate[row.date]) byDate[row.date] = {};
-      byDate[row.date][row.param] = row.value;
-    }
-    const dates = Object.keys(byDate).sort();
-    const latestDate = dates[dates.length - 1];
-    const latest = byDate[latestDate];
-
-    const temp = latest.tday ?? null;
-    const precip = latest.rrday ?? null;
-
-    document.getElementById('syke-wl').textContent = temp !== null ? temp.toFixed(1) + '°C' : '—';
-    document.getElementById('syke-date').textContent = latestDate;
-
-    // Lämpötila-sparkline
-    const temps = dates.map(dt => byDate[dt].tday).filter(v => v != null && v > -50);
-    const tmin = Math.min(...temps), tmax = Math.max(...temps);
-    const trange = tmax - tmin || 1;
-    const pts = temps.map((v, i) => {
-      const x = (i / (temps.length - 1)) * 100;
-      const y = 100 - ((v - tmin) / trange) * 80 - 10;
-      return `${x},${y}`;
-    }).join(' ');
-
-    document.getElementById('syke-detail').innerHTML = `
-      <div class="chart-wrap">
-        <svg class="chart-canvas" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polyline points="${pts}" fill="none" stroke="#c04040" stroke-width="0.8"/>
-        </svg>
-        <div class="chart-label">Lappeenranta lämpötila ${dates[0]} → ${latestDate}</div>
-      </div>
-      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.55rem;color:var(--muted);">
-        ${dates.length} päivää · nyt <strong>${temp !== null ? temp.toFixed(1) + '°C' : '—'}</strong> · sade ${precip !== null ? precip.toFixed(1) + ' mm' : '—'} · ${latestDate}
-        <br>Lähde: FMI 101756 · päivittyy automaattisesti
-      </div>`;
-
-    setStatus('st-syke', latestDate, 'ok');
-    return { temp, precip, dates, byDate };
-  } catch(e) {
-    document.getElementById('syke-wl').textContent = '—';
-    document.getElementById('syke-detail').innerHTML = `<div class="data-err">FMI cache virhe: ${e.message}</div>`;
-    setStatus('st-syke', 'Virhe', 'err');
-    return null;
-  }
-}
-
-// ── FMI ──────────────────────────────────────────────────────────
-async function fetchFMI() {
-  try {
-    const r = await fetch(FMI_CACHE + '?t=' + Date.now());
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    const rows = d.rows || [];
-    if (!rows.length) throw new Error('Ei dataa');
-
-    // Ryhmittele päivämäärän mukaan
-    const byDate = {};
-    for (const row of rows) {
-      if (!byDate[row.date]) byDate[row.date] = {};
-      byDate[row.date][row.param] = row.value;
-    }
-    const dates = Object.keys(byDate).sort();
-    const latestDate = dates[dates.length - 1];
-    const temp = byDate[latestDate]?.tday ?? null;
-    const precip = byDate[latestDate]?.rrday ?? null;
-
-    document.getElementById('fmi-temp').textContent    = temp   !== null ? temp.toFixed(1)   : '—';
-    document.getElementById('fmi-precip').textContent  = precip !== null ? precip.toFixed(1) : '—';
-    document.getElementById('fmi-date').textContent    = latestDate;
-
-    // FMI detail
-    const temps = dates.map(dt => byDate[dt].tday).filter(v => v != null && v > -50);
-    const avg30 = temps.slice(-30).reduce((a,b)=>a+b,0) / Math.max(1, temps.slice(-30).length);
-    document.getElementById('fmi-detail').innerHTML = `
-      <div style="font-family:var(--mono);font-size:.68rem;line-height:2;">
-        Lämpötila nyt: <strong>${temp?.toFixed(1) ?? '—'} °C</strong> · sade: ${precip?.toFixed(1) ?? '—'} mm<br>
-        30pv keskiarvo: ${avg30.toFixed(1)} °C<br>
-        Aikasarja: ${dates[0]} → ${latestDate} (${dates.length} pv)<br>
-        <span style="color:var(--muted);font-size:.6rem;">FMI Lappeenranta 101756 · GitHub cache · päivittyy päivittäin</span>
-      </div>`;
-
-    setStatus('st-fmi', latestDate, 'ok');
-    return { temp, precip, byDate, dates };
-  } catch(e) {
-    document.getElementById('fmi-temp').textContent = '—';
-    document.getElementById('fmi-detail').innerHTML = `<div class="data-err">FMI virhe: ${e.message}</div>`;
-    setStatus('st-fmi', 'Virhe', 'err');
-    return null;
-  }
-}
-
-// ── Iisvesi vedenkorkeus ─────────────────────────────────────────
-async function fetchIisvesi() {
-  try {
-    const r = await fetch(IISVESI_CACHE + '?t=' + Date.now());
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    const wl = d.forecast_central_m;
-    const mhw = d.mhw_m;
-    const peak = d.peak_timing || '—';
-
-    document.getElementById('syke-wl').textContent = wl ? wl.toFixed(2) + ' m NN' : '—';
-    document.getElementById('syke-date').textContent = `huippu ${peak}`;
-
-    const deficit = wl ? (IISVESI_SPRING_NORM - wl) : null;
-    document.getElementById('syke-detail').innerHTML = `
-      <div style="font-family:var(--mono);font-size:.68rem;line-height:2;color:var(--ink);">
-        Keväthuippuennuste: <strong>${wl?.toFixed(2) ?? '—'} m NN</strong><br>
-        Normaali keväthuippu: ~${IISVESI_SPRING_NORM} m NN<br>
-        Vajaus normaalista: <strong style="color:${deficit > 0.5 ? 'var(--sr)' : 'var(--sy)'}">${deficit ? '−' + deficit.toFixed(2) + ' m' : '—'}</strong><br>
-        MNW: ${IISVESI_MNW} m NN &nbsp;·&nbsp; MHW: ${mhw ?? '—'} m NN (${d.mhw_date ?? '?'})<br>
-        <span style="color:var(--muted);font-size:.6rem;">SYKE WSFS · Rautalammin reitti · säännöstelemätön</span>
-      </div>`;
-
-    setStatus('st-syke', `${wl?.toFixed(2) ?? '?'} m`, wl && deficit > 0.5 ? 'warn' : 'ok');
-    return { wl, deficit, peak };
-  } catch(e) {
-    document.getElementById('syke-wl').textContent = '—';
-    document.getElementById('syke-detail').innerHTML = `<div class="data-err">Iisvesi virhe: ${e.message}</div>`;
-    setStatus('st-syke', 'Virhe', 'err');
-    return null;
-  }
-}
-
-// ── HEPP laskenta ────────────────────────────────────────────────
-function computeHEPP(nve, iisvesi, fmiData) {
-  if (!nve && !iisvesi) return null;
-
-  // SD: Iisvesi vedenkorkeusvaje suhteessa normaaliin keväthuippuun
-  // Jos Iisvesi-data puuttuu, käytetään lämpötila-proxya
-  let sd = 0.30;
-  if (iisvesi && iisvesi.deficit !== null) {
-    // deficit = normaali - havaittu (m). Normaali ~0.8-1.0 m jää yli MNW:n
-    // 0 cm vajaus → sd=0.1, 80 cm → sd=0.9
-    sd = Math.max(0, Math.min(1, iisvesi.deficit / 0.9));
-  } else if (fmiData && fmiData.byDate && fmiData.dates) {
-    const recent = fmiData.dates.slice(-30);
-    const temps = recent.map(d => fmiData.byDate[d]?.tday).filter(v => v != null && v > -50);
-    if (temps.length > 10) {
-      const avg = temps.reduce((a,b) => a+b, 0) / temps.length;
-      sd = Math.max(0, Math.min(1, (avg - 5) / 20));
-    }
-  }
-
-  // HSP: NVE-label (Norja proxyna pohjoismaiselle hydrologiselle stressille)
-  const hsp = nve ? (nve.label === 'low' ? 0.70 : nve.label === 'high' ? 0.15 : 0.35) : 0.40;
-
-  // RF: NVE hydro_RF — täyttöaste suhteessa mediaaniin
-  const rf = nve ? Math.max(0, Math.min(1, 1 - nve.hydro_RF)) : 0.40;
-
-  const hepp = 0.40*sd + 0.35*hsp + 0.25*rf;
-  return { value: Math.min(1, Math.max(0, hepp)), sd, hsp, rf };
-}
-
-
-// ── Trendigraafit ─────────────────────────────────────────────────
-function drawCharts(fmiData) {
-  if (!fmiData || !fmiData.dates || !fmiData.byDate) return;
-
-  const { dates, byDate } = fmiData;
-
-  // 1. Vuotuinen keskilämpötila
-  const yearlyTemp = {};
-  const yearlyPrecip = {};
-  for (const d of dates) {
-    const y = d.slice(0, 4);
-    const t = byDate[d]?.tday;
-    const p = byDate[d]?.rrday;
-    if (t != null && t > -50) {
-      if (!yearlyTemp[y]) yearlyTemp[y] = [];
-      yearlyTemp[y].push(t);
-    }
-    if (p != null && p >= 0) {
-      if (!yearlyPrecip[y]) yearlyPrecip[y] = [];
-      yearlyPrecip[y].push(p);
-    }
-  }
-
-  const years = Object.keys(yearlyTemp).sort();
-  const avgTemps = years.map(y => yearlyTemp[y].reduce((a,b)=>a+b,0)/yearlyTemp[y].length);
-  const totalPrecip = years.map(y => (yearlyPrecip[y]||[]).reduce((a,b)=>a+b,0));
-
-  drawBarChart('chart-temp',  years, avgTemps,   '#2a5f8f', v => v.toFixed(1) + '°C');
-  drawBarChart('chart-precip', years, totalPrecip, '#5a9f6f', v => Math.round(v) + 'mm');
-
-  // 2. Kuukausittainen sade (24kk)
-  const recentDates = dates.slice(-730);
-  const monthly = {};
-  for (const d of recentDates) {
-    const ym = d.slice(0, 7);
-    const p = byDate[d]?.rrday;
-    if (p != null && p >= 0) {
-      monthly[ym] = (monthly[ym] || 0) + p;
-    }
-  }
-  const months = Object.keys(monthly).sort().slice(-24);
-  const mVals  = months.map(m => monthly[m] || 0);
-  drawBarChart('chart-monthly', months.map(m=>m.slice(5)), mVals, '#5a9f6f', v => Math.round(v)+'mm', true);
-}
-
-function drawBarChart(svgId, labels, values, color, fmt, small=false) {
-  const svg = document.getElementById(svgId);
-  if (!svg || !values.length) return;
-
-  const W = svg.clientWidth || 700;
-  const H = 120;
-  const pad = { t: 12, r: 8, b: 28, l: 36 };
-  const w = W - pad.l - pad.r;
-  const h = H - pad.t - pad.b;
-
-  const mn = Math.min(...values);
-  const mx = Math.max(...values);
-  const range = mx - mn || 1;
-  const bw = Math.max(1, w / values.length - 2);
-  const trend = values.length > 2 ? values[values.length-1] - values[0] : 0;
-
-  let s = `<svg width="100%" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,monospace" font-size="9">`;
-
-  // Gridline at mean
-  const mean = values.reduce((a,b)=>a+b,0)/values.length;
-  const meanY = pad.t + h - ((mean-mn)/range)*h;
-  s += `<line x1="${pad.l}" y1="${meanY}" x2="${W-pad.r}" y2="${meanY}" stroke="#ccc" stroke-dasharray="3,3" stroke-width="0.8"/>`;
-
-  // Bars
-  values.forEach((v, i) => {
-    const x = pad.l + i * (w/values.length) + 1;
-    const barH = Math.max(2, ((v-mn)/range)*h);
-    const y = pad.t + h - barH;
-    const isLast = i === values.length - 1;
-    s += `<rect x="${x}" y="${y}" width="${bw}" height="${barH}" fill="${isLast ? '#c04040' : color}" opacity="${isLast ? 1 : 0.75}"/>`;
+function drawBars(id,labels,values,color){
+  const el=document.getElementById(id);
+  if(!el||!values.length)return;
+  const W=el.clientWidth||760,H=110,P={t:14,r:8,b:22,l:36};
+  const w=W-P.l-P.r,h=H-P.t-P.b;
+  const mn=Math.min(...values),mx=Math.max(...values),rng=mx-mn||1;
+  const mean=values.reduce((a,b)=>a+b,0)/values.length;
+  const bw=Math.max(2,Math.floor(w/values.length)-2);
+  const step=Math.max(1,Math.ceil(labels.length/9));
+  const f=v=>typeof v==='number'?v.toFixed(v>100?0:1):v;
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
+  const my=P.t+h-((mean-mn)/rng)*h;
+  s+=`<line x1="${P.l}" y1="${my|0}" x2="${W-P.r}" y2="${my|0}" stroke="#bbb" stroke-dasharray="3 2" stroke-width=".8"/>`;
+  values.forEach((v,i)=>{
+    const x=P.l+i*(w/values.length)+1,bh=Math.max(2,((v-mn)/rng)*h),y=P.t+h-bh;
+    const last=i===values.length-1;
+    s+=`<rect x="${x|0}" y="${y|0}" width="${bw}" height="${bh|0}" fill="${last?'#c04040':color}" opacity="${last?1:.72}" rx="1"/>`;
   });
-
-  // X labels (every n-th)
-  const step = Math.max(1, Math.round(labels.length / 8));
-  labels.forEach((l, i) => {
-    if (i % step === 0 || i === labels.length-1) {
-      const x = pad.l + i * (w/values.length) + bw/2;
-      s += `<text x="${x}" y="${H-8}" text-anchor="middle" fill="#888">${l}</text>`;
+  labels.forEach((l,i)=>{
+    if(i%step===0||i===labels.length-1){
+      const x=P.l+i*(w/values.length)+bw/2;
+      s+=`<text x="${x|0}" y="${H-5}" text-anchor="middle" fill="#888">${l}</text>`;
     }
   });
-
-  // Y axis labels
-  [mn, mean, mx].forEach(v => {
-    const y = pad.t + h - ((v-mn)/range)*h;
-    s += `<text x="${pad.l-3}" y="${y+3}" text-anchor="end" fill="#666">${fmt(v)}</text>`;
+  [[mn,mx,mean]].flat().forEach(v=>{
+    const y=P.t+h-((v-mn)/rng)*h;
+    s+=`<text x="${P.l-3}" y="${(y+3)|0}" text-anchor="end" fill="#777">${f(v)}</text>`;
   });
-
-  // Trend indicator
-  const trendStr = trend >= 0 ? `+${fmt(trend)}` : fmt(trend);
-  const trendCol = (color === '#2a5f8f' ? trend > 0 : trend < 0) ? '#c04040' : '#2a8f5f';
-  s += `<text x="${W-pad.r}" y="${pad.t}" text-anchor="end" fill="${trendCol}">${trendStr} 10v</text>`;
-
-  s += '</svg>';
-  svg.outerHTML = s;
-}
-
-
-// ── Pääfunktio ───────────────────────────────────────────────────
-async function fetchAll() {
-  document.getElementById('fetch-time').textContent = 'Ladataan…';
-  setStatus('st-ts', '…', '');
-
-  // Kolme rinnakkaista hakua
-  const [nve, iisvesi, fmi] = await Promise.all([
-    fetchNVE(),
-    fetchIisvesi(),
-    fetchFMI()
-  ]);
-
-  // HEPP — SD=Iisvesi vajaus, HSP+RF=NVE
-  const heppResult = computeHEPP(nve, iisvesi, fmi);
-  if (heppResult !== null) {
-    const hepp = heppResult.value;
-    const col = heppColor(hepp);
-    document.getElementById('hepp-val').textContent = hepp.toFixed(2);
-    document.getElementById('hepp-val').style.color = col;
-    document.getElementById('hepp-dot').style.background = col;
-    document.getElementById('hepp-regime').textContent = heppRegime(hepp);
-    document.getElementById('hepp-badge').style.borderColor = col;
-    const desc = heppDesc(hepp, nve) +
-      (iisvesi?.wl ? ` Iisvesi keväthuippu ${iisvesi.wl.toFixed(2)} m NN (vajaus normaalista ${iisvesi.deficit?.toFixed(2)} m).` : '');
-    document.getElementById('hepp-desc').textContent = desc;
-  } else {
-    document.getElementById('hepp-desc').textContent = 'Odottaa dataa.';
+  if(values.length>2){
+    const tr=values[values.length-1]-values[0];
+    s+=`<text x="${W-P.r}" y="${P.t+2}" text-anchor="end" fill="${tr>0?'#c04040':'#2a7a40'}" font-size="8">${tr>=0?'+':''}${f(tr)} 10v</text>`;
   }
-
-  const now = new Date().toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit'});
-  document.getElementById('fetch-time').textContent = now;
-  setStatus('st-ts', now, 'ok');
-  // Trendigraafit
-  if (fmi) drawCharts(fmi);
+  s+='</svg>';
+  el.outerHTML=s;
 }
 
+function drawCharts(fmi){
+  if(!fmi?.dates)return;
+  const{dates,byDate}=fmi;
+  const yt={},yp={};
+  for(const d of dates){
+    const y=d.slice(0,4),t=byDate[d]?.tday,p=byDate[d]?.rrday;
+    if(t!=null&&t>-50){yt[y]=yt[y]||[];yt[y].push(t);}
+    if(p!=null&&p>=0){yp[y]=yp[y]||[];yp[y].push(p);}
+  }
+  const yrs=[...new Set([...Object.keys(yt),...Object.keys(yp)])].sort();
+  drawBars('ct',yrs,yrs.map(y=>yt[y]?+(yt[y].reduce((a,b)=>a+b,0)/yt[y].length).toFixed(2):0),'#2a5f8f');
+  drawBars('cp',yrs,yrs.map(y=>yp[y]?+yp[y].reduce((a,b)=>a+b,0).toFixed(0):0),'#4a8f5f');
+  const mo={};
+  for(const d of dates.slice(-730)){const ym=d.slice(0,7),t=byDate[d]?.tday;if(t!=null&&t>-50){mo[ym]=mo[ym]||[];mo[ym].push(t);}}
+  const mk=Object.keys(mo).sort().slice(-24);
+  drawBars('cm',mk.map(m=>m.slice(5)),mk.map(m=>+(mo[m].reduce((a,b)=>a+b,0)/mo[m].length).toFixed(1)),'#2a5f8f');
+}
+
+async function fetchAll(){
+  setText('s-ts','…');
+  const[nve,iis,fmi]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI()]);
+  const h=computeHEPP(nve,iis,fmi);
+  const col=hCol(h.val);
+  setText('hval',h.val.toFixed(2));document.getElementById('hval').style.color=col;
+  setText('hregime',hReg(h.val));document.getElementById('hregime').style.color=col;
+  document.getElementById('hbadge').style.borderColor=col;
+  setText('hsd',h.sd);setText('hhsp',h.hsp);setText('hrf',h.rf);
+  setText('hdesc',(nve?`NVE täyttöaste ${nve.pct}% (hist.med ~58%). `:'')+
+    (iis?.wl?`Iisvesi ${iis.wl.toFixed(2)} m NN, vajaus ${iis.deficit} m normaalista. `:'')+
+    (fmi?.temp!=null?`Kuopio ${fmi.temp.toFixed(1)} °C.`:''));
+  drawCharts(fmi);
+  setText('s-ts',new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'}));
+}
 fetchAll();
 </script>
 </body>
