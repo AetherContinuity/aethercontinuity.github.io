@@ -138,6 +138,14 @@ footer a{color:var(--accent);text-decoration:none}
   <svg id="cm" width="100%" height="110" style="display:block"></svg>
 </div>
 
+
+<div class="shdr"><span class="snum">§ 05</span><span class="stit">HEPP-aikasarja 2016–2026 · Kuopio FMI + Thornthwaite EP</span></div>
+<div class="cwrap">
+  <div class="clabel">Kuukausittainen HEPP · Normal &lt;0.45 · Elevated ≥0.45 · High ≥0.65</div>
+  <svg id="ch" width="100%" height="130" style="display:block"></svg>
+</div>
+<div class="dbox" id="hepp-stats" style="font-size:.65rem">Ladataan HEPP-historiadataa…</div>
+
 <footer>
   <a href="https://aethercontinuity.org/tools/">WEM</a> ·
   <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
@@ -149,6 +157,7 @@ footer a{color:var(--accent);text-decoration:none}
 const PROXY='https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
 const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache';
 const NORM=98.25,MNW=97.45,MHW=98.46;
+const HEPP_URL=RAW+'/hepp_monthly.json';
 
 function dot(id,s){const e=document.getElementById('d-'+id);if(e)e.className='dot '+s}
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
@@ -298,7 +307,69 @@ async function fetchAll(){
   drawCharts(fmi);
   setText('s-ts',new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'}));
 }
+
+async function fetchHEPP(){
+  try{
+    const d=await(await fetch(HEPP_URL+'?t='+Date.now())).json();
+    const rows=d.rows||[];
+    if(!rows.length)return;
+
+    // Piirrä aikasarjakaavio
+    const W=document.getElementById('ch').clientWidth||760,H=130;
+    const P={t:14,r:8,b:22,l:36};
+    const w=W-P.l-P.r,h=H-P.t-P.b;
+    const n=rows.length;
+    const step=Math.max(1,Math.ceil(n/12));
+    let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
+    // Taustavyöhykkeet
+    const y65=P.t+h*(1-0.65),y45=P.t+h*(1-0.45);
+    s+=`<rect x="${P.l}" y="${P.t}" width="${w}" height="${(y45-P.t).toFixed(0)}" fill="#fee" opacity=".3"/>`;
+    s+=`<rect x="${P.l}" y="${y45.toFixed(0)}" width="${w}" height="${(y65-y45).toFixed(0)}" fill="#ffd" opacity=".3"/>`;
+    // Gridviivat
+    [0.25,0.45,0.65].forEach(v=>{
+      const y=P.t+h*(1-v);
+      s+=`<line x1="${P.l}" y1="${y.toFixed(1)}" x2="${W-P.r}" y2="${y.toFixed(1)}" stroke="${v>=0.65?'#c04040':v>=0.45?'#c07010':'#aaa'}" stroke-dasharray="3 2" stroke-width=".8"/>`;
+      s+=`<text x="${P.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" fill="#888">${v.toFixed(2)}</text>`;
+    });
+    // Viivakuvaaja
+    const pts=rows.map((r,i)=>{
+      const x=P.l+i*(w/(n-1));
+      const y=P.t+h*(1-Math.min(1,r.hepp));
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    s+=`<polyline points="${pts}" fill="none" stroke="var(--water)" stroke-width="1.2"/>`;
+    // Pisteet elevated/high
+    rows.forEach((r,i)=>{
+      if(r.hepp>=0.45){
+        const x=P.l+i*(w/(n-1)),y=P.t+h*(1-Math.min(1,r.hepp));
+        const col=r.hepp>=0.65?'#c04040':'#c07010';
+        s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}"/>`;
+      }
+    });
+    // X-akselimerkit (vuosi)
+    rows.forEach((r,i)=>{
+      if(i%step===0||i===n-1){
+        const x=P.l+i*(w/(n-1));
+        s+=`<text x="${x.toFixed(1)}" y="${H-5}" text-anchor="middle" fill="#888">${r.month}</text>`;
+      }
+    });
+    s+='</svg>';
+    document.getElementById('ch').outerHTML=s;
+
+    // Tilastot
+    const elevated=rows.filter(r=>r.hepp>=0.45).length;
+    const high=rows.filter(r=>r.hepp>=0.65).length;
+    const max_r=rows.reduce((a,b)=>a.hepp>b.hepp?a:b);
+    const last3=rows.slice(-3);
+    setText('hepp-stats',
+      `Huippu: ${max_r.month} = ${max_r.hepp.toFixed(3)} (${max_r.hepp>=0.65?'High stress':'Elevated'})`+
+      ` · Elevated ≥0.45: ${elevated}/${rows.length} kk (${(elevated/rows.length*100).toFixed(0)}%)`+
+      ` · High ≥0.65: ${high} kk · Viimeinen: ${last3.map(r=>r.month+'='+r.hepp.toFixed(2)).join(', ')}`);
+  }catch(e){setText('hepp-stats','HEPP-historia: '+e.message);}
+}
+
 fetchAll();
+fetchHEPP();
 </script>
 </body>
 </html>
