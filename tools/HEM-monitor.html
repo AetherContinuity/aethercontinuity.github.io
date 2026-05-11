@@ -126,15 +126,15 @@ footer a{color:var(--accent);text-decoration:none}
 
 <div class="shdr"><span class="snum">§ 04</span><span class="stit">Vuositrendi 2016–2026 · Kuopio Savilahti</span></div>
 <div class="cwrap">
-  <div class="clabel">Vuotuinen keskilämpötila (°C) · punainen = tämä vuosi</div>
+  <div class="clabel">Kuukausikeskilämpötila (°C) · harmaa nauha = historiallinen vaihteluväli p10–p90 (2016–2023)</div>
   <svg id="ct" width="100%" height="110" style="display:block"></svg>
 </div>
 <div class="cwrap">
-  <div class="clabel">Vuotuinen sademäärä (mm)</div>
+  <div class="clabel">Kuukausisademäärä (mm) · nauha = p10–p90 viitekausi</div>
   <svg id="cp" width="100%" height="110" style="display:block"></svg>
 </div>
 <div class="cwrap">
-  <div class="clabel">Kuukausikeskilämpötila — viimeiset 24 kk</div>
+  <div class="clabel">Lämpötila viimeiset 36 kk — sininen viiva vs. historiallinen vaihteluväli</div>
   <svg id="cm" width="100%" height="110" style="display:block"></svg>
 </div>
 
@@ -185,6 +185,7 @@ const PROXY='https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
 const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache';
 const NORM=98.25,MNW=97.45,MHW=98.46;
 const HEPP_URL=RAW+'/hepp_monthly.json';
+const BANDS_URL=RAW+'/fmi_bands.json';
 
 function dot(id,s){const e=document.getElementById('d-'+id);if(e)e.className='dot '+s}
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
@@ -301,22 +302,88 @@ function drawBars(id,labels,values,color){
   el.outerHTML=s;
 }
 
-function drawCharts(fmi){
-  if(!fmi?.dates)return;
-  const{dates,byDate}=fmi;
-  const yt={},yp={};
-  for(const d of dates){
-    const y=d.slice(0,4),t=byDate[d]?.tday,p=byDate[d]?.rrday;
-    if(t!=null&&t>-50){yt[y]=yt[y]||[];yt[y].push(t);}
-    if(p!=null&&p>=0){yp[y]=yp[y]||[];yp[y].push(p);}
+
+function drawEnvelope(id,series,bands,valKey,color,fmtFn,title){
+  const el=document.getElementById(id);
+  if(!el||!series.length)return;
+  const W=el.clientWidth||760,H=140,P={t:18,r:10,b:24,l:42};
+  const w=W-P.l-P.r,h=H-P.t-P.b;
+  const vals=series.map(s=>s[valKey]).filter(v=>v!=null);
+  let allV=[...vals];
+  if(bands)series.forEach(s=>{const b=bands[s.mo];if(b){allV.push(b.p10,b.p90);}});
+  const mn=Math.min(...allV),mx=Math.max(...allV),rng=mx-mn||1;
+  const toY=v=>+(P.t+h-((v-mn)/rng)*h).toFixed(1);
+  const toX=i=>+(P.l+i*(w/Math.max(series.length-1,1))).toFixed(1);
+  const step=Math.max(1,Math.ceil(series.length/10));
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
+  // Grid
+  [mn,(mn+mx)/2,mx].forEach(v=>{
+    const y=toY(v);
+    s+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#ddd" stroke-width=".5"/>`;
+    s+=`<text x="${P.l-3}" y="${+y+3}" text-anchor="end" fill="#888">${fmtFn(v)}</text>`;
+  });
+  if(bands){
+    // P10-P90 vaalea nauha
+    const p10pts=series.map((s2,i)=>{const b=bands[s2.mo];return b?`${toX(i)},${toY(b.p10)}`:null;}).filter(Boolean);
+    const p90pts=series.map((s2,i)=>{const b=bands[s2.mo];return b?`${toX(i)},${toY(b.p90)}`:null;}).filter(Boolean);
+    if(p10pts.length)s+=`<polygon points="${p90pts.join(' ')} ${[...p10pts].reverse().join(' ')}" fill="#ddd" opacity=".65"/>`;
+    // P25-P75 tummempi
+    const p25pts=series.map((s2,i)=>{const b=bands[s2.mo];return b?`${toX(i)},${toY(b.p25)}`:null;}).filter(Boolean);
+    const p75pts=series.map((s2,i)=>{const b=bands[s2.mo];return b?`${toX(i)},${toY(b.p75)}`:null;}).filter(Boolean);
+    if(p25pts.length)s+=`<polygon points="${p75pts.join(' ')} ${[...p25pts].reverse().join(' ')}" fill="#bbb" opacity=".55"/>`;
+    // Mediaani
+    const medPts=series.map((s2,i)=>{const b=bands[s2.mo];return b?`${toX(i)},${toY(b.med)}`:null;}).filter(Boolean);
+    if(medPts.length)s+=`<polyline points="${medPts.join(' ')}" fill="none" stroke="#999" stroke-width=".8" stroke-dasharray="4 2"/>`;
   }
-  const yrs=[...new Set([...Object.keys(yt),...Object.keys(yp)])].sort();
-  drawBars('ct',yrs,yrs.map(y=>yt[y]?+(yt[y].reduce((a,b)=>a+b,0)/yt[y].length).toFixed(2):0),'#2a5f8f');
-  drawBars('cp',yrs,yrs.map(y=>yp[y]?+yp[y].reduce((a,b)=>a+b,0).toFixed(0):0),'#4a8f5f');
-  const mo={};
-  for(const d of dates.slice(-730)){const ym=d.slice(0,7),t=byDate[d]?.tday;if(t!=null&&t>-50){mo[ym]=mo[ym]||[];mo[ym].push(t);}}
-  const mk=Object.keys(mo).sort().slice(-24);
-  drawBars('cm',mk.map(m=>m.slice(5)),mk.map(m=>+(mo[m].reduce((a,b)=>a+b,0)/mo[m].length).toFixed(1)),'#2a5f8f');
+  // Havaintoviiva sininen
+  const obsPts=series.map((s2,i)=>s2[valKey]!=null?`${toX(i)},${toY(s2[valKey])}`:null).filter(Boolean);
+  if(obsPts.length)s+=`<polyline points="${obsPts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.5"/>`;
+  // Viimeisin piste
+  const lst=series.filter(s2=>s2[valKey]!=null).at(-1);
+  if(lst){
+    const li=series.lastIndexOf(lst);
+    const b=bands&&bands[lst.mo];
+    const anom=b&&(lst[valKey]>b.p90||lst[valKey]<b.p10);
+    s+=`<circle cx="${toX(li)}" cy="${toY(lst[valKey])}" r="3" fill="${anom?'#c04040':color}"/>`;
+  }
+  // X-merkit
+  series.forEach((s2,i)=>{
+    if(i%step===0||i===series.length-1)
+      s+=`<text x="${toX(i)}" y="${H-5}" text-anchor="middle" fill="#888">${s2.ym}</text>`;
+  });
+  s+=`<text x="${P.l}" y="${P.t-4}" fill="#555" font-size="8">${title}</text>`;
+  s+='</svg>';
+  el.outerHTML=s;
+}
+
+async function drawCharts(fmi){
+  if(!fmi?.dates)return;
+  // Hae persentiilinauhat
+  let bands_t=null,bands_p=null;
+  try{
+    const bd=await(await fetch(BANDS_URL+'?t='+Date.now())).json();
+    bands_t=bd.bands_t; bands_p=bd.bands_p;
+    // Muunna avaimet numeroiksi
+    bands_t=Object.fromEntries(Object.entries(bands_t).map(([k,v])=>[+k,v]));
+    bands_p=Object.fromEntries(Object.entries(bands_p).map(([k,v])=>[+k,v]));
+  }catch(e){console.warn('Bands ei saatavilla',e);}
+
+  // Rakennetaan kuukausisarjat FMI-datasta
+  const{dates,byDate}=fmi;
+  const mt={},mp={};
+  for(const d of dates){
+    const ym=d.slice(0,7),mo=+d.slice(5,7);
+    const t=byDate[d]?.tday,p=byDate[d]?.rrday;
+    if(t!=null&&t>-50){if(!mt[ym])mt[ym]={mo,vals:[]};mt[ym].vals.push(t);}
+    if(p!=null&&p>=0){if(!mp[ym])mp[ym]={mo,vals:[]};mp[ym].vals.push(p);}
+  }
+  const serT=Object.keys(mt).sort().map(ym=>({ym,mo:mt[ym].mo,val:+(mt[ym].vals.reduce((a,b)=>a+b,0)/mt[ym].vals.length).toFixed(1)}));
+  const serP=Object.keys(mp).sort().map(ym=>({ym,mo:mp[ym].mo,val:+mp[ym].vals.reduce((a,b)=>a+b,0).toFixed(0)}));
+
+  drawEnvelope('ct',serT,bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Kuukausikeskilämpötila · harmaa=p10-p90 (2016-2023)');
+  drawEnvelope('cp',serP,bands_p,'val','#4a8f5f',v=>Math.round(v)+'mm','Kuukausisademäärä mm');
+  // Viimeiset 36kk
+  drawEnvelope('cm',serT.slice(-36),bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Lämpötila 36kk · mediaaninauha');
 }
 
 async function fetchAll(){
