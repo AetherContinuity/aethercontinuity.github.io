@@ -148,18 +148,30 @@ tr:last-child td{border-bottom:none;}
 <p>The HEPP instrument is designed to change this structure by providing an externally observable, time-stamped index that documents when the endurance condition crossed from Normal to Elevated to High. This does not compel action, but it makes inaction visible. A regulator or water authority reviewing the record in May 2026 can observe that HEPP crossed 0.50 in October 2025 — and that no weir adjustment was made before that date.</p>
 
 <span class="sec-num">§ 06</span>
-<h2>HEM Design Implications</h2>
+<h2>Regulatory Architecture: The Unregulated Route Problem</h2>
 
-<p>The Virmasvesi case generates three concrete design requirements for the HEM instrument.</p>
+<p>Research into the governing framework reveals a finding that fundamentally sharpens the institutional analysis. Virmasvesi/Iisvesi is part of the Rautalammin reitti — and the Rautalammin reitti is <em>entirely unregulated</em>. It is Finland's largest free-flowing inland waterway, running unregulated from Pielavesi to Konnevesi. The Kymijoki main channel downstream has 12 hydropower plants with ~220 MW combined capacity, but these are separated from the Rautalammin reitti by Konnevesi and operate on a different regulatory basis entirely.</p>
 
-<h3>Basin-specific calibration</h3>
-<p>Virmasvesi has a regulated outlet (bottom weir adjustable), a catchment that is highly sensitive to snow water equivalent, and a regulatory framework that is calendar-anchored. HEPP weights for this basin should amplify the RF (Recharge Failure) component relative to the default WEM configuration, reflecting the disproportionate role of snowmelt in annual water balance.</p>
+<p>This means the three-gap analysis must be revised upward in severity:</p>
 
-<h3>Regulatory calendar integration</h3>
-<p>The gap between endurance condition and regulatory response is partly a function of when in the calendar year the deficit occurs. A deficit developing in October — just before the regulatory winter-mode transition — faces a longer path to correction than one developing in March. HEM should track the distance between current HEPP level and the next scheduled regulatory decision point.</p>
+<table>
+  <thead><tr><th>Gap</th><th>Regulated lake</th><th>Rautalammin reitti (unregulated)</th></tr></thead>
+  <tbody>
+    <tr><td>Measurement gap</td><td>Monitoring exists; integration gap only</td><td>Same integration gap, but no regulatory trigger at all</td></tr>
+    <tr><td>Sanction gap</td><td>Operator faces regulatory scrutiny for non-compliance</td><td>No operator; no licence; no obligation; no scrutiny</td></tr>
+    <tr><td>Correction gap</td><td>Permit modification path exists (AVI, vesilaki VL 18:3a)</td><td>No existing permit to modify; intervention requires new legal process</td></tr>
+  </tbody>
+</table>
 
-<h3>Lead time documentation</h3>
-<p>The primary institutional value of HEM is not prediction but record. A time-stamped HEPP series that shows the endurance trajectory from autumn 2025 to spring 2026 creates an evidentiary basis for institutional review. It answers the question: at what point was the deficit detectable, and what decisions were available at that point? This is the accountability function that CN-010 identifies as the missing instrument.</p>
+<p>The absence of regulation is not a neutral condition. For regulated lakes, the Water Act (vesilaki 587/2011, §18:3a) provides a mechanism: a padotus- ja juoksutusselvitys (impoundment and flow review) can be ordered to address drought conditions, and ELY-keskus can act as the state permit holder to adjust operations. For unregulated lakes, this mechanism does not exist. There is no permit to review, no holder to instruct, and no scheduled decision point at which endurance conditions enter institutional consideration.</p>
+
+<p>The climate relevance is direct. Vesi.fi documents that the "kevätkuoppa" requirement in many regulation permits — the mandatory spring drawdown to create flood buffer — is becoming problematic as snow accumulation decreases and melt timing shifts earlier. For regulated lakes, this creates a known adaptation pathway: permits can be modified. For the Rautalammin reitti, the equivalent problem (low snow → no recharge → persistent deficit) has no equivalent institutional pathway.</p>
+
+<h3>HEM Design Implications</h3>
+
+<p>For unregulated basins like Virmasvesi, HEM's institutional function shifts from <em>prompt</em> (flagging that a scheduled decision should be made differently) to <em>document</em> (creating a record that an endurance deficit is accumulating in a basin where no institutional actor is currently responsible for responding to it). This is a harder problem — the missing instrument is not just a better signal but a missing institutional role.</p>
+
+<p>Three design implications follow. First, HEPP weights for snow-dependent unregulated basins should amplify the RF (Recharge Failure) component, reflecting the disproportionate role of snowmelt when no active flow management exists. Second, HEM should identify the responsible ELY-keskus district (Pohjois-Savon ELY in this case) and the relevant Water Act provision (VL 18:3a or VL 18:4 for emergency intervention) as part of the basin configuration. Third, the lead-time documentation function is especially important for unregulated basins: a HEPP series that crosses 0.50 in October creates a public record that the condition was detectable — and that no institutional mechanism existed to respond to it.</p>
 
 <div class="finding">
   <h3>Core Finding</h3>
