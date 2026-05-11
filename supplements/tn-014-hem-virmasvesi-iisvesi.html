@@ -308,6 +308,52 @@ tr:last-child td{border-bottom:none;}
 
 <p>The commentary identifies three directions for future development that are acknowledged but not addressed in this version. First, calibration: the current HEPP weights (SD 0.40, HSP 0.35, RF 0.25) are conceptually motivated but not empirically validated. Retrospective hindcast analysis of the 2024–2026 deficit period against SYKE observational records would constitute the first calibration step. Second, sensitivity analysis: how sensitive are HEPP readings to weight perturbations, and under what parameterisations do false positive rates become problematic? Third, the energy-water nexus: the Kemijoki discussion in §08 opens the observation that reservoir drawdown for electricity dispatch is part of the hydrological stress system. Integrating Fingrid production data with basin-level hydrology would extend HEM into genuinely novel territory — a direction flagged for a future technical note.</p>
 
+<span class="sec-num">§ 12</span>
+<h2>Empirical Validation: Computed HEPP Series 2016–2026</h2>
+
+<p>With the data pipeline now operational — FMI Kuopio daily observations (2016–2026), Thornthwaite evapotranspiration, and NVE reservoir filling as the Nordic proxy — it is possible to present the first computed HEPP time series for the Iisvesi/Virmasvesi basin. This section documents what the series shows and what it confirms or revises in the preceding analysis.</p>
+
+<h3>Series overview</h3>
+
+<table>
+  <thead><tr><th>Metric</th><th>Value</th><th>Interpretation</th></tr></thead>
+  <tbody>
+    <tr><td>Series length</td><td>125 months (2016-01 → 2026-05)</td><td>10-year baseline</td></tr>
+    <tr><td>Elevated months (HEPP ≥ 0.45)</td><td>9 / 125 (7.2%)</td><td>Stress is exceptional, not routine</td></tr>
+    <tr><td>High stress months (HEPP ≥ 0.65)</td><td>1 / 125 (0.8%)</td><td>2026-03 is the only instance in 10 years</td></tr>
+    <tr><td>Peak value</td><td>0.677 · March 2026</td><td>SD=0.88, EP-anomalia=1.00, RF=0.30</td></tr>
+    <tr><td>2024 annual mean</td><td>0.229</td><td>Drought onset year</td></tr>
+    <tr><td>2025 annual mean</td><td>0.223</td><td>Drought persistence — no recovery</td></tr>
+    <tr><td>2026 annual mean (Jan–May)</td><td>0.342</td><td>Escalation — highest in series</td></tr>
+  </tbody>
+</table>
+
+<h3>The causal chain quantified</h3>
+
+<p>The series confirms the causal chain formalised in §11. The drought did not appear suddenly in spring 2026. It is visible in elevated HEPP values from late 2024 onward, with the critical transition occurring in March 2026 when three components converged simultaneously: an unusually warm month (T=3.0°C, well above the March norm) produced maximum EP anomaly (EP-anomalia=1.00), combined with below-normal precipitation (24 mm vs. ~39 mm normal) and the accumulated storage deficit from the preceding dry period. The result — HEPP 0.677 — is the only High stress reading in ten years of computed data.</p>
+
+<p>The annual means tell the structural story: 2016–2023 average 0.154 (Normal range); 2024 rises to 0.229; 2025 holds at 0.223 (persistence, not recovery); 2026 escalates to 0.342 in the first five months. The two-year drought identified in §07 (Saimaa context) is directly visible as a step change in the HEPP baseline.</p>
+
+<h3>HEPP formula and component weights</h3>
+
+<p>The computed series uses the following specification:</p>
+
+<div class="finding">
+  <h3>HEPP v1.0 — Iisvesi Basin Specification</h3>
+  <p><strong>HEPP = 0.35·SD + 0.25·EP_anomalia + 0.25·RF + 0.15·HSP</strong></p>
+  <p><strong>SD (Storage Deficit, weight 0.35):</strong> (IISVESI_SPRING_NORM − observed_peak) / 0.90. Spring norm ≈ 98.25 m NN (provisional; requires historical WSFS series for calibration). Observation: WSFS forecast 97.51 m NN for May 2026, yielding SD = 0.82.</p>
+  <p><strong>EP_anomalia (Evaporation Pressure, weight 0.25):</strong> Thornthwaite (1948) monthly PET computed from FMI Kuopio daily mean temperature. Anomaly = (monthly PET − median PET) / median PET, capped at [0,1]. Reference period: 2016–2023.</p>
+  <p><strong>RF (Recharge Failure, weight 0.25):</strong> 1 − (monthly precipitation / median monthly precipitation). Precipitation from FMI Kuopio daily rrday. Reference: 2016–2023 monthly medians.</p>
+  <p><strong>HSP (Hydrological Stress Persistence, weight 0.15):</strong> NVE Norway reservoir filling label (low=0.70, normal=0.38, high=0.15). Nordic proxy for regional hydro-climatic stress.</p>
+  <p><strong>Thresholds:</strong> Normal &lt;0.45 · Elevated ≥0.45 · High stress ≥0.65. Thresholds are provisional and subject to revision as the empirical series extends.</p>
+</div>
+
+<h3>What the series does not yet confirm</h3>
+
+<p>Three limitations are worth stating explicitly. First, the SD component uses a provisional spring norm (98.25 m NN) that has not been validated against a long WSFS historical series. The actual multi-decadal median spring peak for Iisvesi may differ; when WSFS historical data becomes available, SD should be recalibrated. Second, the series covers only ten years — too short to distinguish a multi-year drought event from a structural shift in the hydrological regime. The latter would require a longer baseline and attribution analysis. Third, the NVE HSP proxy is geographically distant from Iisvesi; a Finland-specific persistence indicator based on WSFS or SYKE data would improve spatial relevance when the data pipeline matures.</p>
+
+<p>Despite these limitations, the core finding holds: the computed HEPP series would have identified Elevated conditions in autumn 2024 and escalating stress through winter 2025–2026, reaching the High stress threshold in March 2026 — months before the anomalous spring peak became visible to shoreline observers and before any institutional process was triggered.</p>
+
 <div class="preceded">
   <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis: Seven Concurrent Pressures</a> ·
   <a href="/supplements/tn-013-reduciner-sgfa.html">TN-013 — Reduciner SGFA Integration</a> ·
