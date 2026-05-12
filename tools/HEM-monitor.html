@@ -217,11 +217,42 @@ async function fetchIisvesi(){
     document.getElementById('gfill').style.width=pct+'%';
     setText('gpct',(wl?wl.toFixed(2):'—')+' m ('+pct.toFixed(0)+'%)');
     setText('s-iis',(wl?wl.toFixed(2):'?')+' m');
-    setHTML('iis-det',`Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> (${(d.peak_timing??'').trim()})<br>
-      Normaali keväthuippu: ~${NORM} m NN (ka 1910–2025)<br>
-      Vajaus normaalista: <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
-      MNW: ${MNW} m · MHW: ${MHW} m (${d.mhw_date??'?'})<br>
-      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön</span>`);
+    // Ennustekäyrä SVG
+    const fcs=(d.f14||d).forecasts||[];
+    let fcSvg='';
+    if(fcs.length>=2&&wl){
+      const W=680,H=80,P={t:8,r:6,b:20,l:44};
+      const w=W-P.l-P.r,h=H-P.t-P.b;
+      const allV=[wl,...fcs.flatMap(f=>[f.p5??f.mean,f.p95??f.mean])];
+      const mn=Math.min(...allV)-0.05,mx=Math.max(NORM+0.05,...allV),rng=mx-mn||0.5;
+      const toX=i=>P.l+(i/(fcs.length))*w;
+      const toY=v=>P.t+h-((v-mn)/rng)*h;
+      let s=`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="${H}" font-size="8" font-family="ui-monospace,monospace">`;
+      // Referenssiviivat
+      s+=`<line x1="${P.l}" y1="${toY(NORM)|0}" x2="${W-P.r}" y2="${toY(NORM)|0}" stroke="#2a7a40" stroke-dasharray="3 2" stroke-width=".8"/>`;
+      s+=`<text x="${P.l-2}" y="${(toY(NORM)+3)|0}" text-anchor="end" fill="#2a7a40">ka</text>`;
+      s+=`<line x1="${P.l}" y1="${toY(MNW)|0}" x2="${W-P.r}" y2="${toY(MNW)|0}" stroke="#c04040" stroke-dasharray="3 2" stroke-width=".8"/>`;
+      s+=`<text x="${P.l-2}" y="${(toY(MNW)+3)|0}" text-anchor="end" fill="#c04040">MNW</text>`;
+      // p5-p95 varjostus
+      const shade=fcs.map((f,i)=>`${toX(i+1)|0},${toY(f.p95??f.mean)|0}`);
+      const shade2=[...fcs].reverse().map((f,i)=>`${toX(fcs.length-i)|0},${toY(f.p5??f.mean)|0}`);
+      s+=`<polygon points="${toX(0)|0},${toY(wl)|0} ${shade.join(' ')} ${shade2.join(' ')}" fill="#b0c8e0" opacity=".45"/>`;
+      // Viiva
+      const line=[`${toX(0)|0},${toY(wl)|0}`,...fcs.map((f,i)=>`${toX(i+1)|0},${toY(f.mean)|0}`)].join(' ');
+      s+=`<polyline points="${line}" fill="none" stroke="var(--water)" stroke-width="1.5"/>`;
+      // Pisteet ja x-merkit
+      [{x:0,v:wl,lbl:'Nyt'},...fcs.map((f,i)=>({x:i+1,v:f.mean,lbl:f.date.slice(0,5)}))].forEach(p=>{
+        s+=`<circle cx="${toX(p.x)|0}" cy="${toY(p.v)|0}" r="2.5" fill="var(--water)"/>`;
+        s+=`<text x="${toX(p.x)|0}" y="${H-4}" text-anchor="middle" fill="#888">${p.lbl}</text>`;
+      });
+      s+='</svg>';
+      fcSvg=s;
+    }
+    setHTML('iis-det',`${fcSvg}
+      Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> · ka 1910–2025: ${NORM} m · vajaus <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
+      Kesäennuste: VI 97.47 → VII 97.41 → VIII 97.36 m · 2027 huippu ka 97.92 m<br>
+      MNW: ${MNW} m · MHW: ${MHW} m · pienin vuosimaksimi: 97.36 m (1942)<br>
+      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300</span>`);
     dot('iis',deficit>0.5?'warn':'ok');
     return{wl,deficit};
   }catch(e){setHTML('iis-det',`<span class="derr">Iisvesi: ${e.message}</span>`);dot('iis','err');return null;}
