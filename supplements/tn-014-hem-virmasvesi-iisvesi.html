@@ -411,14 +411,78 @@ tr:last-child td{border-bottom:none;}
   <p>Source: SYKE WSFS-O, 11 May 2026 · <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor/blob/main/data/source/wsfs_iisvesi_20260511.pdf">wsfs_iisvesi_20260511.pdf</a> · vesistöalue 14 722 Iisvesi, koko alue 3664 km²</p>
 </div>
 
-<div class="preceded">
-  <a href="/supplements/tn-009-compound-risk-analysis.html">TN-009 — Compound Risk Analysis: Seven Concurrent Pressures</a> ·
-  <a href="/supplements/tn-013-reduciner-sgfa.html">TN-013 — Reduciner SGFA Integration</a> ·
-  <a href="/papers/sp-007-biological-constraints-institutional-continuity.html">SP-007 — Biological Constraints and Institutional Continuity</a> ·
-  <a href="/papers/cn-010-missing-insurance-market-grid-endurance.html">CN-010 — The Missing Insurance Market</a> ·
-  <a href="/papers/cn-011-instruments-designed-within-architecture.html">CN-011 — Instruments Designed Within the Architecture They Compensate</a> ·
-  <a href="/tools/HEM-monitor.html">HEM — Hydrological Endurance Monitor</a>
+<span class="sec-num">§ 14</span>
+<h2>HEM as a Secondary Interpretive Layer: Formalising the Integration Gap</h2>
+
+<p>The preceding sections have drawn on publicly available hydrological data — SYKE WSFS, FMI open data, NVE Magasinstatistikk — to construct an empirical picture of the Iisvesi/Virmasvesi endurance deficit. This final methodological section makes explicit the conceptual position that distinguishes HEM from the underlying measurement infrastructure, and identifies three formal claims that the empirical record now supports.</p>
+
+<h3>1. The integration gap: from process silos to system state</h3>
+
+<p>Finland's hydrological monitoring infrastructure is comprehensive. WSFS produces daily forecasts for snow water equivalent, soil moisture, groundwater storage, lake water levels, inflow and outflow, lake evaporation, and cumulative precipitation — all for the Iisvesi basin specifically. FMI provides daily temperature and precipitation observations at Kuopio stretching back to 1959. This is not a data gap.</p>
+
+<p>What is absent is a persistent, cross-domain interpretive layer that aggregates these process-specific views into a single system-state indicator. Each WSFS output answers the question <em>what is happening in this variable right now?</em> None of them answers the question <em>how much capacity does the system retain to absorb further stress without reaching a new, lower equilibrium?</em> That is the question HEM is designed to address.</p>
+
+<p>The distinction can be stated precisely:</p>
+
+<table>
+  <thead><tr><th>Process-specific view</th><th>HEM endurance layer</th></tr></thead>
+  <tbody>
+    <tr><td>Single variable at one time</td><td>Cross-variable coupling over time</td></tr>
+    <tr><td>Instantaneous state</td><td>Persistence and trajectory</td></tr>
+    <tr><td>Seasonal anomaly</td><td>Cumulative deficit</td></tr>
+    <tr><td>Storage value</td><td>Recovery capacity</td></tr>
+    <tr><td>Point forecast</td><td>Endurance trajectory</td></tr>
+  </tbody>
+</table>
+
+<p>HEM is therefore best understood as a <strong>secondary interpretive layer built on top of existing public hydrological infrastructure</strong> — not an alternative to it. This is an institutionally important distinction: HEM does not compete with WSFS or FMI; it aggregates their outputs into a form optimised for persistence monitoring rather than process forecasting.</p>
+
+<h3>2. Formalising the multi-layer deficit</h3>
+
+<p>The WSFS document for Iisvesi (11 May 2026; §13 of this note) presents snow water equivalent, soil moisture storage, and groundwater storage as separate outputs. Each is shown against the 1962–2025 reference distribution. HEM makes explicit what these three series jointly imply: a layered buffer system in which each component has a different depletion rate and a different recovery timescale.</p>
+
+<p>The total storage deficit can be written as:</p>
+
+<div class="finding">
+  <p style="font-family:var(--mono);font-size:.9rem;text-align:center">D<sub>total</sub> = w<sub>s</sub>·D<sub>s</sub> + w<sub>m</sub>·D<sub>m</sub> + w<sub>g</sub>·D<sub>g</sub></p>
+  <p>where D<sub>s</sub>, D<sub>m</sub>, D<sub>g</sub> are the fractional deficits in snow, soil moisture, and groundwater respectively, and the weights w<sub>i</sub> reflect both the relative capacity of each buffer and its persistence timescale. Snow recharges in one winter; soil moisture in weeks to months; groundwater in months to years. A deficit concentrated in the slow buffers (w<sub>g</sub> dominant) is therefore more persistent and more resistant to single-season recovery than one concentrated in snow.</p>
+  <p>For May 2026, WSFS data yields: D<sub>s</sub> ≈ 1.0 (complete absence of snowmelt pulse), D<sub>m</sub> ≈ 0.33, D<sub>g</sub> ≈ 0.40. Even with uniform weights, D<sub>total</sub> ≈ 0.58 — a substantial compound deficit that no single WSFS output presents in integrated form.</p>
 </div>
 
-</body>
-</html>
+<h3>3. The recovery condition: T<sub>recovery</sub> &gt; T<sub>next stress</sub></h3>
+
+<p>Hydrological resilience can be formalised through a simple condition. A system is in a stable regime if:</p>
+
+<div class="finding">
+  <p style="font-family:var(--mono);font-size:.9rem;text-align:center">T<sub>recovery</sub> &lt; T<sub>next stress</sub></p>
+  <p>where T<sub>recovery</sub> is the time required to return from an elevated stress state (HEPP ≥ 0.45) to baseline (&lt; 0.30), and T<sub>next stress</sub> is the interval before the next stress episode begins. When this inequality reverses — when recovery takes longer than the interval to the next stress — the system cannot return to its prior baseline. Each successive episode begins from a higher floor, producing the baseline drift observed in the 1959–2026 HEPP series.</p>
+</div>
+
+<p>The empirical record supports this framing. The 67-year HEPP series (FMI Kuopio, ref. 1961–2010 WMO) shows 60 distinct elevated episodes. The decade-by-decade elevated frequency rose from 1.7–5.5% (1960–1990) to 15–22% (2000–2026). The decade-level baseline HEPP median rose from 0.127–0.151 (1960s–1990s) to 0.224–0.296 (2000s–2020s). The system's resting state has approximately doubled over six decades. While T<sub>recovery</sub> cannot be precisely measured from monthly data alone, the pattern is consistent with the recovery condition being violated with increasing frequency since approximately 2000.</p>
+
+<h3>4. The gain change: same precipitation, more stress</h3>
+
+<p>The strongest empirical finding of this analysis concerns not the frequency of extreme events but the sensitivity of the system to ordinary precipitation variation. For years with annual precipitation in the 500–620 mm band — a common range that spans slightly-below-normal to normal years at Kuopio — the mean annual HEPP was:</p>
+
+<table>
+  <thead><tr><th>Period</th><th>n years (500–620mm band)</th><th>Mean annual HEPP</th></tr></thead>
+  <tbody>
+    <tr><td>1959–1999</td><td>17</td><td>0.158</td></tr>
+    <tr><td>2000–2026</td><td>8</td><td>0.274</td></tr>
+    <tr><td colspan="2"><strong>Gain change</strong></td><td><strong>+0.116 (+73%)</strong></td></tr>
+  </tbody>
+</table>
+
+<p>The same precipitation input now produces 73% higher hydrological stress than it did before 2000. This is the empirical signature of a gain change — a structural shift in the transfer function between meteorological forcing and hydrological response. The mechanism is identifiable through the HEPP components: temperature has risen 2–3°C over the comparison period, driving higher evapotranspiration (EP component) that reduces the fraction of precipitation converted to recharge. The result is that the HEPP response to a given precipitation year has steepened, independently of whether that year is anomalously dry or not.</p>
+
+<p>This finding — if it holds as the series extends — is a stronger claim than "droughts are becoming more frequent." It implies that the system's baseline sensitivity has changed: not just that extreme events are worse, but that ordinary years are more stressful than they used to be. That is the condition under which endurance monitoring becomes institutionally relevant: not as an alarm for exceptional events, but as a running indicator that the system's buffer capacity is being consumed faster than it is being replenished.</p>
+
+<div class="finding">
+  <h3>Summary: Three Empirical Claims</h3>
+  <p><strong>1. Integration gap:</strong> All physical components of hydrological endurance are already measured by WSFS and FMI. HEM aggregates them into a persistence-oriented composite that no existing operational product provides.</p>
+  <p><strong>2. Recovery condition:</strong> The 1959–2026 HEPP record is consistent with T<sub>recovery</sub> &gt; T<sub>next stress</sub> becoming binding with increasing frequency since ~2000, producing an observed baseline drift from 0.13 to 0.29 in the system's resting-state median.</p>
+  <p><strong>3. Gain change:</strong> The same precipitation forcing now produces 73% higher mean HEPP than before 2000, consistent with a structural increase in evapotranspiration pressure reducing effective recharge capacity.</p>
+  <p>None of these claims requires new physics. All three are derivable from existing public data. The contribution of HEM is to make the integration and the persistence signal explicit and continuously observable.</p>
+</div>
+
+<div class="preceded">
