@@ -201,7 +201,7 @@ footer a{color:var(--accent);text-decoration:none}
   <br>
   <b>HEPP-laskenta</b> — Hydrological Endurance Pressure Proxy<br>
   &nbsp;&nbsp;HEPP = 0.35·SD + 0.25·EP_anomalia + 0.25·RF + 0.15·HSP<br>
-  &nbsp;&nbsp;SD: (normaali keväthuippu − havaittu) / 0.90 · Normaali ≈ 98.25 m NN (karkea arvio)<br>
+  &nbsp;&nbsp;SD: (normaali keväthuippu − havaittu) / 0.90 · Normaali = 98.01 m NN (WSFS ka 1910–2025)<br>
   &nbsp;&nbsp;EP: Thornthwaite (1948) PET — kuukausittainen lämpötilapohjainen haihdunta<br>
   &nbsp;&nbsp;RF: 1 − (kuukausisade / mediaanisade) · Referenssi: FMI Kuopio 1961–2010 (WMO)<br>
   &nbsp;&nbsp;HSP: NVE-label (low=0.70, normal=0.38, high=0.15) — pohjoismainen proxy<br>
@@ -245,10 +245,10 @@ async function fetchNVE(){
 async function fetchIisvesi(){
   try{
     const d=await(await fetch(RAW+'/iisvesi.json?t='+Date.now())).json();
-    const wl=d.forecast_central_m,deficit=wl?+(NORM-wl).toFixed(2):null;
+    const wl=d.forecast_central_m??d.f14?.peak_wl_mean??null,deficit=wl?+(NORM-wl).toFixed(2):null;
     const pct=wl?Math.max(0,Math.min(100,((wl-MNW)/(MHW-MNW))*100)):0;
     setText('c-iis',wl?wl.toFixed(2):'—');
-    setText('c-iis2','Huippu '+(d.peak_timing??'—').trim());
+    setText('c-iis2','Huippu '+((d.peak_timing??d.f14?.peak_date_mean??'—')).trim());
     setText('gval',(wl?wl.toFixed(2):'—')+' m NN');
     document.getElementById('gfill').style.width=pct+'%';
     setText('gpct',(wl?wl.toFixed(2):'—')+' m ('+pct.toFixed(0)+'%)');
@@ -302,7 +302,13 @@ async function fetchFMI(){
     for(const r of rows){if(!byDate[r.date])byDate[r.date]={};byDate[r.date][r.param]=r.value;}
     const dates=Object.keys(byDate).sort();
     const last=dates[dates.length-1];
-    const temp=byDate[last]?.tday,prec=byDate[last]?.rrday;
+    const temp=byDate[last]?.tday;
+    // Hae viimeisin ei-null sade (FMI voi olla puuttuva nykyiseltä päivältä)
+    let prec=byDate[last]?.rrday;
+    if(prec==null||prec<0){
+      const prevDate=dates.slice().reverse().find(d=>byDate[d]?.rrday!=null&&byDate[d]?.rrday>=0);
+      prec=prevDate?byDate[prevDate]?.rrday:null;
+    }
     setText('c-fmi',temp!=null?temp.toFixed(1):'—');
     setText('c-prec',prec!=null?prec.toFixed(1):'—');
     setText('c-fmi2',last??'—');
