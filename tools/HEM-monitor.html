@@ -183,7 +183,28 @@ footer a{color:var(--accent);text-decoration:none}
   Lähde: FMI Kuopio 1959–2026 · HEPP ref. 1961–2010 (WMO) · Thornthwaite 1948
 </div>
 
-<div class="shdr"><span class="snum">§ 07</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
+
+<div class="shdr"><span class="snum">§ 07</span><span class="stit">Temporaalinen klusterianalyysi 1959–2026 · Baseline drift</span></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+  <div>
+    <div class="clabel">Elevated-frekvenssi per vuosikymmen (% kuukausista ≥ 0.45)</div>
+    <svg id="cd" width="100%" height="160" style="display:block"></svg>
+  </div>
+  <div>
+    <div class="clabel">Baseline drift — vuosikymmen-mediaani (järjestelmän lepotila)</div>
+    <svg id="cb" width="100%" height="160" style="display:block"></svg>
+  </div>
+</div>
+
+<div class="dbox" style="font-size:.68rem">
+  <b>Rakenteellinen murtuma ~2000:</b> Elevated-frekvenssi kasvoi 1.7–5.5% → 15–22% (kolminkertaistui).<br>
+  <b>Baseline drift:</b> Järjestelmän lepotilamediaani 0.13 (1960–1990) → 0.29 (2000–2026). Kaksinkertaistunut.<br>
+  <b>Tulkinta:</b> Sama meteorologinen paine tuottaa korkeamman hydrologisen stressin kuin 40 vuotta sitten.<br>
+  Mekanismi: lämpötila ↑ → haihduntapaine ↑ → palautumiskyky ↓ → baseline ↑
+</div>
+
+<div class="shdr"><span class="snum">§ 08</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
 <div class="dbox" style="line-height:2.1">
   <b>NVE Magasinstatistikk</b> — Norjan vesivoimavarannot, täyttöaste (%), kapasiteetti (TWh), hydro_RF<br>
   &nbsp;&nbsp;Lähde: <a href="https://www.nve.no/energi/magasinstatistikk/" style="color:var(--accent)">nve.no/energi/magasinstatistikk</a> · päivittyy viikottain · CC BY 4.0<br>
@@ -623,8 +644,78 @@ async function drawEpisodeScatter(fmi) {
   el.outerHTML = s;
 }
 
+
+const TEMPORAL_URL = RAW+'/hepp_temporal.json';
+
+async function drawTemporalCharts() {
+  let data;
+  try {
+    data = await (await fetch(TEMPORAL_URL + '?t=' + Date.now())).json();
+  } catch(e) { return; }
+
+  const ds = data.decade_stats;
+  const dm = data.decade_baseline_median;
+  if (!ds || !dm) return;
+
+  // Elevated frekvenssi
+  const decEl = Object.entries(ds)
+    .filter(([d,v]) => v.n >= 12)
+    .map(([d,v]) => ({dec: +d, pct: v.el_pct}));
+
+  drawDecadeBar('cd', decEl.map(d=>d.dec+'s'), decEl.map(d=>d.pct),
+    v => v.toFixed(0)+'%',
+    d => d.pct > 10 ? '#c07010' : '#2a5f8f',
+    '2000');
+
+  // Baseline mediaani
+  const decBl = Object.entries(dm)
+    .map(([d,v]) => ({dec: +d, med: v}))
+    .sort((a,b) => a.dec - b.dec);
+
+  drawDecadeBar('cb', decBl.map(d=>d.dec+'s'), decBl.map(d=>d.med),
+    v => v.toFixed(3),
+    d => d.med > 0.20 ? '#c07010' : '#2a5f8f',
+    '2000');
+}
+
+function drawDecadeBar(id, labels, values, fmtFn, colorFn, breakLabel) {
+  const el = document.getElementById(id);
+  if (!el || !values.length) return;
+  const W = el.clientWidth || 380, H = 160, P = {t:14,r:6,b:28,l:40};
+  const w = W-P.l-P.r, h = H-P.t-P.b;
+  const mn = 0, mx = Math.max(...values)*1.1, rng = mx-mn || 1;
+  const bw = Math.floor(w/values.length) - 3;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
+  // Grid
+  [mx/2, mx].forEach(v => {
+    const y = P.t + h - (v/rng)*h;
+    s += `<line x1="${P.l}" y1="${y|0}" x2="${W-P.r}" y2="${y|0}" stroke="#eee" stroke-width=".5"/>`;
+    s += `<text x="${P.l-3}" y="${(y+3)|0}" text-anchor="end" fill="#aaa">${fmtFn(v)}</text>`;
+  });
+  // Murtuma-viiva
+  if (breakLabel) {
+    const bi = labels.findIndex(l => l.startsWith(breakLabel));
+    if (bi >= 0) {
+      const bx = P.l + bi*(w/values.length);
+      s += `<line x1="${bx}" y1="${P.t}" x2="${bx}" y2="${H-P.b}" stroke="#c04040" stroke-dasharray="3 2" stroke-width="1"/>`;
+    }
+  }
+  // Pylväät
+  values.forEach((v, i) => {
+    const x = P.l + i*(w/values.length) + 1;
+    const bh = Math.max(2, (v/rng)*h);
+    const y = P.t + h - bh;
+    const col = colorFn({pct:v, med:v});
+    s += `<rect x="${x|0}" y="${y|0}" width="${bw}" height="${bh|0}" fill="${col}" opacity=".8" rx="1"/>`;
+    s += `<text x="${(x+bw/2)|0}" y="${H-8}" text-anchor="middle" fill="#888">${labels[i]}</text>`;
+  });
+  s += '</svg>';
+  el.outerHTML = s;
+}
+
 fetchAll();
 fetchHEPP();
+drawTemporalCharts();
 
 </script>
 </body>
