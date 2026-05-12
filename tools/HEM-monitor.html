@@ -147,7 +147,43 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="dbox" id="hepp-stats" style="font-size:.65rem">Ladataan HEPP-historiadataa…</div>
 
 
-<div class="shdr"><span class="snum">§ 06</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
+
+<div class="shdr"><span class="snum">§ 06</span><span class="stit">Episodivertailu 1959–2026 · sama sadanta, eri stressi</span></div>
+
+<!-- Episodikortit -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+  <div class="card" style="border-color:#888">
+    <div class="clbl">Episodi 1978–79</div>
+    <div class="cval" style="font-size:1.1rem;color:#555">0.13</div>
+    <div class="cunit">HEPP-vuosikeskiarvo</div>
+    <div class="csub">Sadanta 436–546 mm<br>Lämpötila 1.5–3.1 °C<br><span style="color:var(--sg)">Normaali</span></div>
+  </div>
+  <div class="card" style="border-color:#888">
+    <div class="clbl">Episodi 1959–60</div>
+    <div class="cval" style="font-size:1.1rem;color:#555">0.18</div>
+    <div class="cunit">HEPP-vuosikeskiarvo</div>
+    <div class="csub">Sadanta 437–475 mm<br>Lämpötila 3.1–3.4 °C<br><span style="color:var(--sg)">Normaali</span></div>
+  </div>
+  <div class="card" style="border-color:var(--sy)">
+    <div class="clbl">Episodi 2024–25</div>
+    <div class="cval" style="font-size:1.1rem;color:var(--sy)">0.34</div>
+    <div class="cunit">HEPP-vuosikeskiarvo</div>
+    <div class="csub">Sadanta 536–549 mm<br>Lämpötila 5.5–6.3 °C<br><span style="color:var(--sy)">Kohonnut</span></div>
+  </div>
+</div>
+
+<!-- Scatter: vuosisadanta vs HEPP -->
+<div class="cwrap">
+  <div class="clabel">Vuosisadanta vs. HEPP-vuosikeskiarvo · väri = vuosikymmen · trendi näkyy oikealla</div>
+  <svg id="cs" width="100%" height="180" style="display:block"></svg>
+</div>
+<div class="dbox" style="font-size:.68rem">
+  <b>Havainto:</b> Sama sadanta tuottaa korkeamman HEPP:n 2010-luvun jälkeen kuin aiemmilla vuosikymmenillä.<br>
+  Mekanismi: lämpötila +2–3 °C → haihduntapaine kasvaa → sama sademäärä riittää vähemmän recharge-pulssiin.<br>
+  Lähde: FMI Kuopio 1959–2026 · HEPP ref. 1961–2010 (WMO) · Thornthwaite 1948
+</div>
+
+<div class="shdr"><span class="snum">§ 07</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
 <div class="dbox" style="line-height:2.1">
   <b>NVE Magasinstatistikk</b> — Norjan vesivoimavarannot, täyttöaste (%), kapasiteetti (TWh), hydro_RF<br>
   &nbsp;&nbsp;Lähde: <a href="https://www.nve.no/energi/magasinstatistikk/" style="color:var(--accent)">nve.no/energi/magasinstatistikk</a> · päivittyy viikottain · CC BY 4.0<br>
@@ -493,8 +529,97 @@ async function fetchHEPP(){
   }catch(e){setText('hepp-stats','HEPP-historia: '+e.message);}
 }
 
+
+async function drawEpisodeScatter(fmi) {
+  if (!fmi?.dates) return;
+  const {dates, byDate} = fmi;
+
+  // Vuosittainen sadanta ja HEPP
+  let heppData = null;
+  try {
+    const hr = await fetch(HEPP_URL + '?t=' + Date.now());
+    heppData = await hr.json();
+  } catch(e) { return; }
+
+  const yearly_p = {}, yearly_h = {};
+  for (const d of dates) {
+    const y = d.slice(0,4);
+    const p = byDate[d]?.rrday;
+    if (p != null && p >= 0) {
+      yearly_p[y] = (yearly_p[y] || 0) + p;
+    }
+  }
+  if (heppData?.rows) {
+    for (const r of heppData.rows) {
+      const y = r.month.slice(0,4);
+      if (!yearly_h[y]) yearly_h[y] = [];
+      yearly_h[y].push(r.hepp);
+    }
+  }
+
+  const pts = [];
+  for (const y of Object.keys(yearly_p)) {
+    if (yearly_h[y] && yearly_h[y].length >= 10 && yearly_p[y] > 200) {
+      const decade = Math.floor(+y/10)*10;
+      pts.push({y: +y, p: yearly_p[y], h: yearly_h[y].reduce((a,b)=>a+b,0)/yearly_h[y].length, decade});
+    }
+  }
+  if (!pts.length) return;
+
+  const el = document.getElementById('cs');
+  if (!el) return;
+  const W = el.clientWidth || 760, H = 180, P = {t:14,r:80,b:28,l:44};
+  const w = W-P.l-P.r, h = H-P.t-P.b;
+  const ps = pts.map(p=>p.p), hs = pts.map(p=>p.h);
+  const mnP=Math.min(...ps)-20, mxP=Math.max(...ps)+20;
+  const mnH=0, mxH=Math.max(...hs)+0.05;
+  const toX=p=>(P.l+(p-mnP)/(mxP-mnP)*w)|0;
+  const toY=h=>(P.t+H-P.b-h/(mxH-mnH)*(H-P.t-P.b))|0;
+
+  // Värit per vuosikymmen
+  const cols = {1950:'#aaa',1960:'#888',1970:'#666',1980:'#555',1990:'#444',
+                2000:'#2a5f8f',2010:'#c07010',2020:'#c04040'};
+
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
+
+  // Grid
+  [300,400,500,600,700].forEach(p => {
+    const x = toX(p);
+    s += `<line x1="${x}" y1="${P.t}" x2="${x}" y2="${H-P.b}" stroke="#eee" stroke-width=".5"/>`;
+    s += `<text x="${x}" y="${H-8}" text-anchor="middle" fill="#aaa">${p}mm</text>`;
+  });
+  [0.1,0.2,0.3,0.4].forEach(hv => {
+    const y = toY(hv);
+    s += `<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#eee" stroke-width=".5"/>`;
+    s += `<text x="${P.l-3}" y="${y+3}" text-anchor="end" fill="#aaa">${hv.toFixed(1)}</text>`;
+  });
+
+  // Pisteet
+  for (const pt of pts) {
+    const x = toX(pt.p), y = toY(pt.h);
+    const col = cols[pt.decade] || '#999';
+    const isRecent = pt.y >= 2018;
+    s += `<circle cx="${x}" cy="${y}" r="${isRecent?4:3}" fill="${col}" opacity="${isRecent?1:.7}"/>`;
+    if (isRecent) s += `<text x="${x+5}" y="${y+3}" fill="${col}" font-size="8">${pt.y}</text>`;
+  }
+
+  // Legenda
+  const decades = [...new Set(pts.map(p=>p.decade))].sort();
+  decades.forEach((d,i) => {
+    const col = cols[d]||'#999';
+    s += `<rect x="${W-P.r+5}" y="${P.t+i*14}" width="8" height="8" fill="${col}"/>`;
+    s += `<text x="${W-P.r+16}" y="${P.t+i*14+7}" fill="#666">${d}s</text>`;
+  });
+
+  // Akselin otsikot
+  s += `<text x="${P.l}" y="${P.t-2}" fill="#888" font-size="8">HEPP</text>`;
+  s += '</svg>';
+  el.outerHTML = s;
+}
+
 fetchAll();
 fetchHEPP();
+
 </script>
 </body>
 </html>
