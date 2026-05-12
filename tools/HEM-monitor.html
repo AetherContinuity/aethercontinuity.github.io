@@ -183,7 +183,7 @@ footer a{color:var(--accent);text-decoration:none}
 <script>
 const PROXY='https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
 const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache';
-const NORM=98.25,MNW=97.45,MHW=98.46;
+const NORM=98.01,MNW=97.45,MHW=98.46; // NORM=1910-2025 keskimääräinen vuotuinen maksimi (WSFS)
 const HEPP_URL=RAW+'/hepp_monthly.json';
 const BANDS_URL=RAW+'/fmi_bands.json';
 
@@ -218,7 +218,7 @@ async function fetchIisvesi(){
     setText('gpct',(wl?wl.toFixed(2):'—')+' m ('+pct.toFixed(0)+'%)');
     setText('s-iis',(wl?wl.toFixed(2):'?')+' m');
     setHTML('iis-det',`Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> (${(d.peak_timing??'').trim()})<br>
-      Normaali keväthuippu: ~${NORM} m NN<br>
+      Normaali keväthuippu: ~${NORM} m NN (ka 1910–2025)<br>
       Vajaus normaalista: <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
       MNW: ${MNW} m · MHW: ${MHW} m (${d.mhw_date??'?'})<br>
       <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön</span>`);
