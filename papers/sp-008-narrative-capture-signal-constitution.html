@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACI SP-008 — Narrative Capture and Signal Constitution</title>
+  <meta name="description" content="SP-008 examines the substitution dynamic between narrative and signal in institutional decision-making. Narrative activates fast, creates group coherence, and retroactively constitutes facts. Signal requires slow processing, resists falsification, and loses the immediate political contest. The paper argues that instruments like WEM and HEM are not alternatives to narrative — they are structures that survive narrative and become legible when narrative fails." />
+  <link rel="canonical" href="https://aethercontinuity.org/papers/sp-008-narrative-capture-signal-constitution.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+      --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+      --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; }
+    body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+    .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+    .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+    .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+    .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+    .dih-meta strong { color: var(--ink); font-weight: 400; }
+    .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+    .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+    .dih-status-text { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    h1.doc-title { font-size: 1.75rem; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-top: 0.6rem; }
+    .doc-subtitle { font-style: italic; color: var(--muted); font-size: 1rem; margin-top: 0.4rem; }
+    .body-wrap { max-width: 740px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+    .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .abstract-block p { margin-bottom: 0.9rem; font-size: 0.95rem; line-height: 1.7; }
+    .abstract-block p:last-child { margin-bottom: 0; }
+    .section { margin-bottom: 3rem; }
+    .section-marker { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.1rem; letter-spacing: -0.01em; }
+    h3 { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 2rem 0 0.6rem; }
+    p { margin-bottom: 1.1rem; }
+    p:last-child { margin-bottom: 0; }
+    .finding { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+    .finding-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .finding p { font-size: 0.95rem; margin-bottom: 0.7rem; }
+    .finding p:last-child { margin-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.5rem 0; }
+    th { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--rule); }
+    td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+    tr:last-child td { border-bottom: none; }
+    .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1rem; font-family: var(--mono); font-size: 0.62rem; color: var(--muted); line-height: 2; }
+    .ref-block a { color: var(--muted); text-decoration: none; }
+    .ref-block a:hover { color: var(--ink); }
+    nav { max-width: 740px; margin: 0 auto; padding: 1rem 2rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; gap: 1.5rem; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Supporting Paper · SP-008</span>
+    <h1 class="doc-title">Narrative Capture and Signal Constitution</h1>
+    <p class="doc-subtitle">Why instruments lose the immediate political contest — and why that is not their failure condition</p>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>Version</strong> 0.1 · May 2026<br>
+      <strong>Domain</strong> D-3 · D-5 · D-6<br>
+      <strong>Basis</strong> SP-007 · CN-007 · CN-013 · CN-011<br>
+      <strong>Status</strong> Published
+    </div>
+    <div class="dih-status">
+      <span class="dih-status-dot"></span>
+      <span class="dih-status-text">Published</span>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p>SP-007 identified neurocognitive mechanisms — status-based signal routing, conflict avoidance, coalition coherence — that degrade institutional decision-processing capacity (D<sub>p</sub>). SP-008 examines a related but distinct mechanism: the substitution of narrative for signal in institutional information processing. Narrative is not a failure of rationality. It is Homo sapiens' evolutionarily optimised tool for rapid social coordination under uncertainty. Its substitution for empirical signal is therefore not surprising — it is the default. The problem arises when narrative replaces the feedback loop connecting institutional behaviour to real-world consequences.</p>
+    <p>SP-008 argues that diagnostic instruments like WEM (Winter Endurance Monitor) and HEM (Hydrological Endurance Monitor) do not compete with narrative on narrative's terms. They constitute signals in a form that survives narrative and becomes legible when narrative fails. This is not a weakness. It is their design condition. The instrument is not built to win today's political argument. It is built to be there when that argument exhausts itself.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 01</span>
+    <h2>The Evolutionary Function of Narrative</h2>
+
+    <p>Homo sapiens has practiced narrative for at least forty thousand years — well before writing, agriculture, or any institutional structure recognisable to modern political science. The cave paintings at Lascaux, the oral traditions of every known human culture, the structure of myth and folklore across all continents: the universal presence of narrative is not accidental. It is functional.</p>
+
+    <p>Narrative performs several cognitive and social operations simultaneously. It converts events into causal sequences, making the world appear predictable. It assigns agency — actors who intend, who cause, who bear responsibility — reducing the cognitive load of ambiguous situations. It creates group coherence by establishing shared understanding of who we are, who threatens us, and what constitutes a just outcome. And it operates fast: a well-formed narrative can propagate across a social group in hours and produce coordinated response in days.</p>
+
+    <p>These properties made narrative an extraordinarily effective tool for small-group coordination in conditions of genuine uncertainty, scarce information, and real physical threat. They remain effective today. The problem is context mismatch: narrative is optimised for the social environment of the Pleistocene, not for the institutional governance of interconnected infrastructure systems whose relevant state spaces are high-dimensional, whose feedback loops operate over months to decades, and whose causal structures are not visible to any individual observer.</p>
+
+    <h3>The D<sub>p</sub> degradation mechanism</h3>
+
+    <p>SP-007 described D<sub>p</sub> (decision-processing capacity) as the variable that determines whether an institution can act within the relevant window of a decision. Narrative degrades D<sub>p</sub> through a specific mechanism: once a narrative is adopted, incoming signals are processed through it rather than evaluated independently. Confirmatory signals amplify. Disconfirmatory signals are reframed, discounted, or attributed to bad-faith sources. The institution's information processing narrows to the channel the narrative defines.</p>
+
+    <p>This is not irrational behaviour. It is efficient behaviour within the narrative frame. The cognitive cost of maintaining a narrative is lower than the cognitive cost of updating a model. For an institution under time pressure and political scrutiny — which describes most institutions most of the time — narrative adoption is locally rational even when it is globally costly.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 02</span>
+    <h2>Narrative's Distinctive Power: Retroactive Fact Constitution</h2>
+
+    <p>CN-013 observed that the theft narrative applied to congestion rent, transfer pricing, and hydrological neglect is analytically incorrect but politically effective. SP-008 examines why more precisely.</p>
+
+    <p>The theft frame requires a prior owner — someone who possessed the value before it was taken. In the cases CN-013 analyses, no such prior owner existed in any technical sense: congestion rent was not constituted as a Swedish claim before EU regulation defined its allocation; the data centre margin was not Finnish tax revenue before corporate structure placed it elsewhere; the lake's endurance value was not anyone's asset before the deficit accumulated. Technically, nothing was taken from anyone.</p>
+
+    <p>But the theft narrative does something that technical analysis cannot: it retroactively constitutes the owner. "Bryssel varastaa meidän sähkörahamme" — "Brussels is stealing our electricity money" — does not describe a prior fact. It creates one. Once the narrative is accepted, the prior ownership is treated as having been real. This is not deception in the ordinary sense. It is narrative's fundamental cognitive operation: it organises experience into a story that feels true because its internal logic is coherent, regardless of whether the facts it presupposes actually existed.</p>
+
+    <p>This gives narrative a power that signal lacks: it can win the allocation race a second time. The actor who defines the allocation rule wins the first race. The actor who successfully narrates the grievance wins the second — reopening a settled question by constituting, through story, the ownership that was never formally established. CN-013 noted this in §03; SP-008 makes the mechanism explicit.</p>
+
+    <div class="finding">
+      <div class="finding-label">Core mechanism</div>
+      <p>Narrative does not merely describe the world. It constitutes facts about the world that did not previously exist as explicit claims. The theft frame retroactively creates the owner. The victim narrative retroactively establishes the harm. Once the narrative is socially established, these retroactively constituted facts have political reality regardless of their technical accuracy. This is narrative's specific advantage over signal: a signal can only report what is; narrative can constitute what was.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 03</span>
+    <h2>Why Signal Loses the Immediate Contest</h2>
+
+    <p>Against this background, the political weakness of diagnostic instruments is structural, not contingent. It is not that WEM or HEM are poorly designed or insufficiently communicated. It is that they operate in a different cognitive register from narrative, and that register requires higher D<sub>p</sub> to access.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Narrative</th>
+          <th>Signal / Instrument</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Processing speed</td>
+          <td>Fast: activates existing schemas, emotional response immediate</td>
+          <td>Slow: requires model construction, interpretation, context</td>
+        </tr>
+        <tr>
+          <td>Group function</td>
+          <td>Creates coherence: shared story → shared identity → coordinated action</td>
+          <td>Differentiates: reveals disagreement about interpretation, requires negotiation</td>
+        </tr>
+        <tr>
+          <td>Fact relationship</td>
+          <td>Constitutive: can create facts retroactively through social acceptance</td>
+          <td>Descriptive: reports state of world, cannot constitute new facts</td>
+        </tr>
+        <tr>
+          <td>Failure mode</td>
+          <td>Disconnects from feedback: narrative persists after facts change</td>
+          <td>Ignored: signal present but not registered by D<sub>p</sub>-limited institutions</td>
+        </tr>
+        <tr>
+          <td>D<sub>p</sub> requirement</td>
+          <td>Low: accessible to institutions under time and political pressure</td>
+          <td>High: requires deliberate processing, model maintenance, tolerance for ambiguity</td>
+        </tr>
+        <tr>
+          <td>Time horizon</td>
+          <td>Short: optimised for immediate coordination</td>
+          <td>Long: value accrues over time as signal series accumulates</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>An institution choosing between narrative and signal under pressure will choose narrative almost every time. This is not stupidity or bad faith. It is the rational response of a biological organism optimising for immediate social coordination under cognitive load. The instrument designer who is frustrated that a clear EPP reading fails to prompt action is observing this mechanism in operation.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 04</span>
+    <h2>When Signal Wins</h2>
+
+    <p>Signal is not permanently inferior to narrative. There are specific conditions under which signal displaces narrative — and understanding these conditions is essential for designing instruments that survive long enough to become useful.</p>
+
+    <h3>Narrative exhaustion</h3>
+
+    <p>Narratives fail when they make predictions that do not come true. The "austerity works" narrative failed in the eurozone when output gaps persisted. The "deregulation produces stability" narrative failed in 2008. The "natural gas is a bridge fuel" narrative is currently under strain. In each case, the narrative did not fail immediately — it persisted for years past the point of empirical disconfirmation, because institutions had invested heavily in it and because disconfirmation required high D<sub>p</sub> to process. But eventually, the accumulation of disconfirming signal became too large to reframe, and the narrative collapsed.</p>
+
+    <p>At that point, the instrument that had been quietly recording the disconfirming signal became suddenly legible. The signal was there all along. It was not registered because narrative occupied the processing channel. When the narrative failed, the channel opened.</p>
+
+    <h3>Crisis-induced D<sub>p</sub> elevation</h3>
+
+    <p>Crises temporarily elevate institutional D<sub>p</sub> by reducing the social cost of narrative deviation. When the system is visibly failing, the coalition defending the narrative loses coherence — the cost of maintaining the story rises above the cost of updating it. At this point, signal that was previously ignored becomes the basis for rapid institutional learning. The Finnish energy crisis of winter 2022–23 produced more policy learning in three months than the preceding decade of ordinary operation.</p>
+
+    <p>This is the paradoxical design condition of diagnostic instruments: they are most useful precisely when the narrative they contradict is most dominant. They accumulate the record that makes crisis-learning possible. An instrument that is ignored for five years and then consulted intensively during a crisis has succeeded, not failed.</p>
+
+    <h3>Institutional niche: the slow-processing actor</h3>
+
+    <p>Not all actors in an institutional system process at the same D<sub>p</sub>. Some actors — research institutions, regulatory bodies with long mandates, legal systems with procedural constraints — are structurally required to process slowly. These actors are narrative-resistant not because they are smarter but because their institutional design includes friction that prevents fast narrative adoption. Signal is most legible to these actors, and instruments designed for them face a different competitive environment than instruments designed for political audiences.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 05</span>
+    <h2>Signal Constitution as Prior Work</h2>
+
+    <p>CN-013 made a distinction that SP-008 now places in a broader context: SM-011 proposes a new allocation rule for a system where value is being captured. HEM constitutes the signal for a system where value is not being captured at all. In narrative terms: SM-011 intervenes in an existing story. HEM creates the conditions under which a story can eventually be told.</p>
+
+    <p>This is a different kind of institutional work. It does not compete with the dominant narrative. It does not attempt to provide a better story. It creates a time-stamped, reproducible, non-narrative record of system state that exists independently of whatever story happens to be dominant at the moment of recording. When the dominant narrative eventually fails — as all narratives do, under sufficient disconfirmation — this record is available.</p>
+
+    <p>The HEM project for Virmasvesi/Iisvesi (TN-014, HEM v1.2) illustrates this precisely. There is currently no politically salient narrative about Virmasvesi water levels. The deficit is not on any political agenda. No institutional actor is responsible for responding. The signal — HEPP 0.68, elevated, with a 67-year baseline showing structural shift — dissipates without a narrative receiver. This is the orphaned signal condition described in CN-013.</p>
+
+    <p>But the signal is being constituted and time-stamped. If and when a politically salient narrative about Finnish lake systems emerges — triggered by a severe summer, an ecological threshold crossing, a property value shock, or simply the accumulation of years of anomalous readings — the HEM record will be available. It will not need to be constructed after the fact. It will already exist, in a form that institutional actors with elevated D<sub>p</sub> (researchers, legal proceedings, insurance actuaries) can access without depending on any particular narrative framing.</p>
+
+    <div class="finding">
+      <div class="finding-label">Design principle</div>
+      <p>A diagnostic instrument is not a narrative competitor. It is a structure that survives narrative and becomes legible when narrative fails. Its value is not in the political contest it wins today but in the record it constitutes for the institutional moment when high-D<sub>p</sub> processing becomes available. Designing for this condition requires accepting that the instrument will be ignored during its most important period of operation — the period when the signal it is recording contradicts the dominant narrative most sharply.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="section-marker">§ 06</span>
+    <h2>The Endurance Horizon</h2>
+
+    <p>SP-008's central claim can now be stated precisely. The question "why don't people just tell a good story?" — directed at ACI's instrument-building programme — assumes that the relevant time horizon is the current political cycle. Within that horizon, narrative wins. Always. Signal requires D<sub>p</sub> that political cycles do not sustain.</p>
+
+    <p>The instrument programme is not optimised for that horizon. It is optimised for what CN-013's framework calls the endurance condition: the ability of a system to maintain function under sustained pressure without crossing into a new, lower equilibrium. The narrative question is "who is winning now?" The instrument question is "what is the trajectory, and where does it lead?"</p>
+
+    <p>These are different questions with different time horizons and different processing requirements. Narrative is better at the first. Signal is better at the second. The choice between them is not a choice between truth and falsehood, or between rationality and irrationality. It is a choice between time horizons — between optimising for immediate coordination and optimising for accurate system-state tracking over time.</p>
+
+    <p>ACI's diagnostic instruments are built on a bet: that the endurance horizon matters more than the immediate political contest. Not because narratives are wrong — they often encode genuine experience and legitimate grievance. But because systems that operate primarily on narrative rather than feedback loop eventually lose contact with the state of the world they are governing. When that contact is lost, the cost of recovery is paid by the system, not by the narrative.</p>
+
+    <p>The instrument is there when the bill arrives.</p>
+  </div>
+
+  <div class="ref-block">
+    Basis: <a href="/papers/sp-007-biological-constraints-institutional-continuity.html">SP-007 — Biological Constraints and Institutional Continuity</a> ·
+    <a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html">CN-007</a> ·
+    <a href="/papers/cn-011-instruments-designed-within-architecture.html">CN-011</a> ·
+    <a href="/papers/cn-013-spatial-value-capture.html">CN-013</a><br>
+    Applied: <a href="/papers/sm-011-grid-connection-flexibility.html">SM-011</a> ·
+    <a href="/supplements/tn-014-hem-virmasvesi-iisvesi.html">TN-014</a> ·
+    <a href="/tools/HEM-monitor.html">HEM v1.2</a><br>
+    Aether Continuity Institute · aethercontinuity.org · May 2026
+  </div>
+
+</div>
+</body>
+</html>
