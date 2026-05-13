@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aether One™ · Dual-Pi Edge Intelligence Platform</title>
+<meta name="description" content="Aether One — Dual Raspberry Pi arkkitehtuuri trust-infrastruktuurille ja edge-sensoreille. TrustCore v1.0, KRI-laskenta, PQC attestation."/>
+<link rel="canonical" href="https://aethercontinuity.org/aether-one/"/>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fafaf8; --muted: #666; --rule: #ddd;
+    --accent: #2a2a6a; --light: #f4f3ef; --green: #2a6a2a;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--serif); background: var(--paper); color: var(--ink);
+    max-width: 760px; margin: 0 auto; padding: 0 1.5rem 5rem; line-height: 1.75; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 0; margin-bottom: 2.5rem;
+    font-family: Arial, sans-serif; font-size: .82rem; display: flex; gap: 1.5rem; }
+  nav a { color: var(--accent); text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  .badge { font-family: var(--mono); font-size: .6rem; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .4rem; }
+  h1 { font-size: 2rem; font-weight: normal; margin-bottom: .2rem; }
+  h1 sup { font-size: .7rem; color: var(--muted); vertical-align: super; }
+  .tagline { color: var(--muted); font-style: italic; margin-bottom: .5rem; }
+  .status { display: inline-flex; align-items: center; gap: .4rem;
+    font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  hr { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 .7rem; }
+  p { margin-bottom: 1rem; }
+  pre { background: #1a1a1a; color: #e8e8e0; padding: 1rem 1.2rem;
+    font-family: var(--mono); font-size: .78rem; overflow-x: auto;
+    border-radius: 2px; margin: 1rem 0; line-height: 1.6; }
+  .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .node { border: 1px solid var(--rule); padding: 1rem 1.2rem; background: var(--light); }
+  .node-title { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+  .node ul { padding-left: 1.2rem; font-size: .88rem; }
+  .node li { margin-bottom: .3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 1rem 0; }
+  th { font-family: Arial, sans-serif; font-size: .65rem; letter-spacing: .08em;
+    text-transform: uppercase; text-align: left; padding: .4rem .6rem;
+    border-bottom: 1px solid var(--ink); color: var(--muted); }
+  td { padding: .4rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .tick { color: var(--green); }
+  .cross { color: var(--muted); }
+  footer { margin-top: 4rem; border-top: 1px solid var(--rule); padding-top: 1rem;
+    font-family: Arial, sans-serif; font-size: .72rem; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: none; }
+  @media (max-width: 520px) { .arch { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/music/">Musiikki</a>
+  <a href="/tools/">Työkalut</a>
+</nav>
+
+<span class="badge">Aether Continuity · Laitteistoprojekti</span>
+<h1>Aether One<sup>™</sup></h1>
+<p class="tagline">Dual Raspberry Pi — Trust Infrastructure &amp; Edge Intelligence</p>
+<div class="status"><span class="dot"></span>Active · v1.0 · 2026</div>
+
+<p>Aether One yhdistää <strong>trust-infrastruktuurin</strong> ja <strong>edge-sensorit</strong> kahdeksi erilliseksi, optimoiduksi yksiköksi. Pi 2 toimii dedikoidun trust-ankkurina (PQC attestation, decision hash audit), Pi 5 edge-laskentana ja sensorien lukijana (MQ-9, AetherCam, KRI-laskenta).</p>
+
+<p>Arkkitehtuuri seuraa TN-002:n DCEIN-konseptia (Duration-Capable Edge Intelligence Node) fyysisellä tasolla: hajautettu, paikallisesti operoiva, attestoitu solmu joka ei riipu pilviyhteydestä.</p>
+
+<hr>
+
+<h2>Arkkitehtuuri</h2>
+
+<div class="arch">
+  <div class="node">
+    <div class="node-title">Pi 2 · Trust Server</div>
+    <ul>
+      <li>PQC attestation (Dilithium3)</li>
+      <li>Nonce generation</li>
+      <li>Device enrollment</li>
+      <li>Decision hash audit</li>
+      <li>Port 5000 · IP 192.168.1.50</li>
+    </ul>
+  </div>
+  <div class="node">
+    <div class="node-title">Pi 5 · Edge Node</div>
+    <ul>
+      <li>MQ-9 kaasusensori (ADC)</li>
+      <li>AetherCam (S21 IP-stream)</li>
+      <li>TrustCore v1.0 C-kernel</li>
+      <li>KRI + LR laskenta</li>
+      <li>Web UI + Drift Monitor</li>
+      <li>Port 8080</li>
+    </ul>
+  </div>
+</div>
+
+<pre>
+Pi 2 (Trust) ←—— WiFi attestation ——→ Pi 5 (Edge)
+  PQC + SHA-256                    Sensors → KRI → UI
+  Erillinen laite                  Reaaliaikainen laskenta
+  Ei näe sensordataa               Attestoi Pi 2:lta
+</pre>
+
+<hr>
+
+<h2>Miksi kaksi laitetta?</h2>
+
+<p><strong>Trust-ankkuri on fyysisesti erillinen.</strong> Pi 2 ei näe sensordataa suoraan — se ei ole "judge in its own case". Auditlokit ovat erillisellä laitteella. Rakenne muistuttaa HSM/TPM-jaottelua oikeassa tuotantoinfrastruktuurissa.</p>
+
+<p><strong>Pi 5:n teho tarvitaan edge-laskentaan.</strong> Sensorien luku (ADC, I2C, IP-stream), TrustCore v1.0 C-kernel (KRI, LR-D), mahdollinen ML-päättely (32 TOPS suunnitelma). Pi 2 riittää mainiosti kevyeen attestation-tehtävään.</p>
+
+<hr>
+
+<h2>Tekninen yhteenveto</h2>
+
+<table>
+  <thead><tr><th>Metriikka</th><th>Pi 2 (Trust)</th><th>Pi 5 (Edge)</th></tr></thead>
+  <tbody>
+    <tr><td>Prosessori</td><td>ARM Cortex-A7, 900 MHz</td><td>ARM Cortex-A76, 2.4 GHz</td></tr>
+    <tr><td>RAM</td><td>1 GB</td><td>4–8 GB</td></tr>
+    <tr><td>Latenssi</td><td>&lt;10ms (PQC verify)</td><td>&lt;50ms (sensor → KRI)</td></tr>
+    <tr><td>CPU-kuorma</td><td>~5%</td><td>~20–40%</td></tr>
+    <tr><td>Sensorit</td><td><span class="cross">—</span></td><td><span class="tick">MQ-9 + AetherCam + mock</span></td></tr>
+    <tr><td>Dashboard</td><td><span class="cross">—</span></td><td><span class="tick">Web UI + Drift Monitor</span></td></tr>
+    <tr><td>C-kernel</td><td><span class="cross">—</span></td><td><span class="tick">TrustCore v1.0 (optional)</span></td></tr>
+    <tr><td>TPM 2.0</td><td>Valinnainen</td><td>Valinnainen</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>Nopea aloitus</h2>
+
+<pre>
+# Pi 2
+scp -r pi2_trust_server/ pi@192.168.1.50:~/
+ssh pi@192.168.1.50
+cd ~/pi2_trust_server && ./install.sh && ./start.sh
+
+# Pi 5
+scp -r pi5_edge_node/ pi@192.168.1.51:~/
+ssh pi@192.168.1.51
+cd ~/pi5_edge_node && ./install.sh && ./start.sh
+
+# Tarkistus
+curl http://192.168.1.50:5000/nonce
+curl http://192.168.1.51:8080/attestation
+</pre>
+
+<hr>
+
+<p style="font-size:.85rem;color:var(--muted)">
+  Perustuu: <a href="/papers/wp-006-continuity-computing.html">WP-006</a> · TN-002 (DCEIN) · D-5<br>
+  Lisää dokumentaatiota tulossa.
+</p>
+
+<footer>
+  Aether One™ · Aether Continuity Institute ·
+  <a href="/">aethercontinuity.org</a> ·
+  <a href="/music/">Musiikki</a>
+</footer>
+
+</body>
+</html>
