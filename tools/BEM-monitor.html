@@ -250,7 +250,7 @@ async function fetchERA5() {
 }
 
 async function fetchNDVIScenes() {
-  const r = await fetch(`${BEM_PROXY}/ndvi?bbox=${BBOX}&date=2023-07-01/2023-08-31&cloud=20`);
+  const r = await fetch(`${PROXY}/ndvi?bbox=${BBOX}&date=2023-07-01/2023-08-31&cloud=20`);
   if (!r.ok) throw new Error(`NDVI ${r.status}`);
   return r.json();
 }
@@ -473,25 +473,28 @@ async function fetchAll() {
   }
 
   // NDVI scenes
-  if (ndvi.status === 'fulfilled') {
+  const ndviBox = document.getElementById('ndvi-box');
+  if (ndvi.status === 'fulfilled' && ndviBox) {
     const d = ndvi.value;
-    const box = document.getElementById('ndvi-box');
-    if (box) {
-      if (d.scene_id) {
-        const cloudStr = d.cloud_pct != null ? d.cloud_pct.toFixed(1)+'%' : '?%';
-        box.innerHTML = `Paras scene: <b>${d.date||'?'}</b> · pilvisyys ${cloudStr} · ` +
-          `<a href="${d.b04_url}" target="_blank" style="color:var(--accent)">B04</a> · ` +
-          `<a href="${d.b08_url}" target="_blank" style="color:var(--accent)">B08</a> &nbsp;` +
-          `<span style="color:var(--muted);font-size:.6rem">${d.all_scenes} sceneä löydetty</span>`;
-        setDot('d-ndvi', 'ok');
-        setText('s-ndvi', 'OK');
-      } else {
-        box.innerHTML = `<span class="derr">${d.error || 'Ei scenejä'}</span>`;
-        setDot('d-ndvi', 'warn');
-      }
+    if (d && (d.scene_id || d.scene_count >= 0)) {
+      const cloudStr = d.cloud_pct != null ? d.cloud_pct.toFixed(1)+'%' : '?%';
+      const sceneInfo = d.scene_id
+        ? `Paras scene: <b>${d.date||'?'}</b> · pilvisyys ${cloudStr} · ` +
+          `<a href="${d.b04_url||'#'}" target="_blank" style="color:var(--accent)">B04</a> · ` +
+          `<a href="${d.b08_url||'#'}" target="_blank" style="color:var(--accent)">B08</a>`
+        : `<span style="color:var(--muted)">Ei scenejä löydetty</span>`;
+      ndviBox.innerHTML = sceneInfo +
+        `<span style="color:var(--muted);font-size:.6rem;margin-left:8px">${d.all_scenes||0} sceneä</span>`;
+      setDot('d-ndvi', d.scene_id ? 'ok' : 'warn');
+      setText('s-ndvi', d.scene_id ? 'OK' : '—');
+    } else {
+      ndviBox.innerHTML = `<span class="derr">${(d&&d.error)||'Ei dataa'}</span>`;
+      setDot('d-ndvi', 'warn');
     }
-  } else {
+  } else if (ndvi.status === 'rejected') {
+    if (ndviBox) ndviBox.innerHTML = `<span class="derr">NDVI: ${ndvi.reason?.message||'virhe'}</span>`;
     setDot('d-ndvi', 'err');
+    setText('s-ndvi', 'err');
   }
   fetchCopernicus();
 }
