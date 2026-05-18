@@ -235,19 +235,11 @@ const BEM_PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
 // ERA5 via Open-Meteo — sadevaje ja lämpötila-anomalia (D_c komponentti)
 async function fetchERA5() {
   // GitHub cache (BEM-pilot repo, sama arkkitehtuuri kuin HEM)
-  const CACHE = 'https://raw.githubusercontent.com/AetherContinuity/bem-pilot/main/data/cache/era5_daily.json';
-  const OPM   = 'https://archive-api.open-meteo.com/v1/archive';
-  return (async () => {
-    try {
-      const r = await fetch(CACHE + '?t=' + Date.now());
-      if (r.ok) { const d = await r.json(); if ((d.rows||[]).length > 10) return { src:'cache', ...d }; }
-    } catch(e) {}
-    // Fallback: Open-Meteo
-    const end = new Date().toISOString().slice(0,10);
-    const r = await fetch(`${OPM}?latitude=62.95&longitude=26.85&start_date=2015-01-01&end_date=${end}&daily=precipitation_sum,temperature_2m_mean&timezone=Europe%2FHelsinki`);
-    if (!r.ok) throw new Error(`ERA5 ${r.status}`);
-    return { src:'open_meteo', ...(await r.json()) };
-  })()
+  // NVE-proxy /era5 — sama proxy joka HEM:llä, ei uusia workereita
+  const NVE = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
+  const r = await fetch(`${NVE}/era5?lat=62.95&lng=26.85&start=2015-01-01`);
+  if (!r.ok) throw new Error(`ERA5 ${r.status}`);
+  return r.json()
 
 async function fetchNDVIScenes() {
   const r = await fetch(`${PROXY}/ndvi?bbox=${BBOX}&date=2023-07-01/2023-08-31&cloud=20`);
@@ -525,12 +517,15 @@ fetchAll();
     const box = document.getElementById('era5-box');
     if (box) {
       let anomPct=null, recent12=null, lastT=null, srcLbl='';
-      if (ev.stats?.precip_anomaly_pct != null) {
-        // GitHub cache format
+      if (ev.precip_anomaly_pct != null) {
+        // NVE proxy /era5 format (esilaskettu)
+        anomPct = ev.precip_anomaly_pct;
+        recent12 = ev.precip_12mo_mm;
+        lastT = ev.temp_30d_avg_c;
+        srcLbl = 'ERA5 · NVE proxy';
+      } else if (ev.stats?.precip_anomaly_pct != null) {
         anomPct = ev.stats.precip_anomaly_pct;
         recent12 = ev.stats.recent_precip_12mo_mm;
-        const tr = (ev.rows||[]).slice(-30).map(r=>r.temp_c).filter(v=>v!=null);
-        lastT = tr.length ? tr.reduce((a,b)=>a+b,0)/tr.length : null;
         srcLbl = 'ERA5-Land CDS';
       } else if (ev.daily?.precipitation_sum) {
         // Open-Meteo format
