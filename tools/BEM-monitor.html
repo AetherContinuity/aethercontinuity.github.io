@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BEM — Biodiversity Endurance Monitor | ACI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f0eb;--ink:#1a1c17;--muted:#6b6a5e;--line:#d0cdc3;
+  --panel:#e8e5dc;--panel2:#dedad0;
+  --accent:#2a5a2a;--eco:#3a7a3a;--eco-lt:#d4ecd4;
+  --sr:#8b2000;--sy:#8b6000;--sg:#2a6a2a;--sn:#3a5a3a;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:Georgia,'Times New Roman',serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:15px;line-height:1.7;max-width:820px;margin:0 auto;padding:32px 20px 80px}
+nav{font-family:var(--mono);font-size:.65rem;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:24px}
+nav a{color:var(--accent);text-decoration:none;margin-right:1.2rem}
+.kicker{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:6px}
+h1{font-size:1.5rem;font-weight:400;letter-spacing:-.02em;margin-bottom:4px}
+.sub{font-family:var(--mono);font-size:.67rem;color:var(--muted);margin-bottom:20px}
+.sbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:.64rem;color:var(--muted);border:1px solid var(--line);background:var(--panel);padding:7px 12px;margin-bottom:20px}
+.pill{display:inline-flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .3s}
+.dot.ok{background:var(--sg)}.dot.warn{background:var(--sy)}.dot.err{background:var(--sr)}
+.btn{margin-left:auto;font-family:var(--mono);font-size:.64rem;border:1px solid var(--line);background:none;color:var(--accent);padding:4px 12px;cursor:pointer}
+.btn:hover{background:var(--panel2)}
+
+/* BEPP badge */
+.bepp{border:2px solid var(--line);padding:16px 20px;margin-bottom:22px;display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:start;transition:border-color .4s;background:var(--panel)}
+.bnum{font-family:var(--mono);font-size:2.8rem;font-weight:700;line-height:1;transition:color .4s;color:var(--eco)}
+.blbl{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:3px}
+.bregime{font-size:.95rem;font-weight:700;margin-bottom:5px;transition:color .4s}
+.bdesc{font-size:.8rem;color:var(--muted);line-height:1.65}
+.bcomp{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:7px;display:flex;gap:12px;flex-wrap:wrap}
+.bcomp b{color:var(--ink)}
+
+/* Component cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{border:1px solid var(--line);padding:11px 13px;background:var(--panel)}
+.clbl{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.cval{font-family:var(--mono);font-size:1.55rem;font-weight:700;line-height:1.1;color:var(--eco)}
+.cunit{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+.csub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:2px}
+
+/* Section headers */
+.shdr{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin:26px 0 12px}
+.snum{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.stit{font-size:.84rem;font-weight:600}
+
+/* Species table */
+.sp-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.7rem;margin-bottom:16px}
+.sp-table th{text-align:left;padding:5px 8px;border-bottom:2px solid var(--line);color:var(--muted);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em}
+.sp-table td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.trend-up{color:var(--sg)}
+.trend-dn{color:var(--sr)}
+.trend-st{color:var(--sn)}
+.trend-nd{color:var(--muted)}
+
+/* Trajectory bar */
+.traj{background:var(--panel);border:1px solid var(--line);padding:12px 14px;margin-bottom:10px}
+.traj-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:6px}
+.traj-bar{height:6px;background:var(--panel2);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.traj-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.traj-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted);display:flex;justify-content:space-between}
+
+/* Thresholds */
+.thresh{display:flex;gap:4px;margin:10px 0;font-family:var(--mono);font-size:.58rem}
+.tband{flex:1;padding:4px 6px;text-align:center;border-radius:2px}
+.tband.normal{background:#d4ecd4;color:#1a4a1a}
+.tband.elevated{background:#f0e4c4;color:#4a3a00}
+.tband.critical{background:#f0d4c4;color:#5a1a00}
+.tband.bp{background:#e0c4c4;color:#5a0000}
+.tband.active{outline:2px solid var(--ink)}
+
+/* Info box */
+.dbox{background:var(--panel);border:1px solid var(--line);padding:11px 13px;font-family:var(--mono);font-size:.71rem;line-height:1.9}
+.derr{color:var(--sr)}
+.note{font-size:.75rem;color:var(--muted);font-style:italic;margin:8px 0}
+
+footer{border-top:1px solid var(--line);margin-top:44px;padding-top:12px;font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:2}
+footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/papers/">Papers</a>
+  <a href="https://aethercontinuity.org/tools/">Tools</a>
+  <a href="https://aethercontinuity.org/supplements/tn-015-biodiversity-endurance-monitor.html">TN-015</a>
+</nav>
+
+<div class="kicker">ACI · BEM v0.1 · Biodiversity Endurance Monitor</div>
+<h1>Rautalammin reitti — Ekologinen tilannearvio</h1>
+<p class="sub">Indikaattorilajit · BEPP-indeksi · FinBIF · Copernicus · Pohjois-Savo</p>
+
+<div class="sbar">
+  <span class="pill"><span class="dot" id="d-finbif"></span>FinBIF <span id="s-finbif">—</span></span>
+  <span class="pill"><span class="dot" id="d-cop"></span>Copernicus <span id="s-cop">—</span></span>
+  <span style="color:var(--ink)">TS <span id="s-ts">—</span></span>
+  <button class="btn" onclick="fetchAll()">↻ Päivitä</button>
+</div>
+
+<!-- BEPP Badge -->
+<div class="bepp" id="bepp-badge">
+  <div>
+    <div class="blbl">BEPP</div>
+    <div class="bnum" id="bepp-val">—</div>
+    <div class="cunit">v2 · multiplicative</div>
+  </div>
+  <div>
+    <div class="bregime" id="bepp-regime">Ladataan...</div>
+    <div class="bdesc" id="bepp-desc">Biodiversity Endurance Pressure Proxy — ekologisen kestävyyden kumulatiivinen stressimittari.</div>
+    <div class="bcomp">
+      <span>D_f <b id="c-df">—</b></span>
+      <span>D_s <b id="c-ds">—</b></span>
+      <span>D_c <b id="c-dc">—</b></span>
+      <span>R <b id="c-r">—</b></span>
+    </div>
+  </div>
+</div>
+
+<!-- Threshold bands -->
+<div class="thresh" id="thresh-bands">
+  <div class="tband normal" id="t-normal">Normal &lt;0.25</div>
+  <div class="tband elevated" id="t-elevated">Elevated 0.25–0.50</div>
+  <div class="tband critical" id="t-critical">Critical 0.50–0.75</div>
+  <div class="tband bp" id="t-bp">BP-like &gt;0.75</div>
+</div>
+
+<!-- Component cards -->
+<div class="cards">
+  <div class="card">
+    <div class="clbl">D_s · Lajistressi</div>
+    <div class="cval" id="ds-val">—</div>
+    <div class="csub" id="ds-class">FinBIF live</div>
+  </div>
+  <div class="card">
+    <div class="clbl">D_f · Fragmentaatio</div>
+    <div class="cval" id="df-val">—</div>
+    <div class="csub">Proxy · CORINE</div>
+  </div>
+  <div class="card">
+    <div class="clbl">D_c · Kum. häiriö</div>
+    <div class="cval" id="dc-val">—</div>
+    <div class="csub">YVA-pipeline</div>
+  </div>
+  <div class="card">
+    <div class="clbl">R · Palautuminen</div>
+    <div class="cval" id="r-val">—</div>
+    <div class="csub">Suojelualueet</div>
+  </div>
+</div>
+
+<!-- §01 Indikaattorilajit -->
+<div class="shdr"><span class="snum">§ 01</span><span class="stit">Indikaattorilajit — FinBIF live</span></div>
+
+<table class="sp-table" id="species-table">
+  <thead>
+    <tr>
+      <th>Laji</th>
+      <th>Ref/v (2000–10)</th>
+      <th>Nyk/v (2020–26)</th>
+      <th>Norm. suhde</th>
+      <th>Trendi</th>
+    </tr>
+  </thead>
+  <tbody id="species-body">
+    <tr><td colspan="5" style="color:var(--muted);padding:12px 8px">Ladataan FinBIF-dataa...</td></tr>
+  </tbody>
+</table>
+
+<p class="note">Normalisointi: havaintoaktiivisuuden kasvu ×1.8 (iNaturalist 2020-luvulla). Aikajaksojen pituus normalisoitu vuosikeskiarvoihin.</p>
+
+<!-- §02 Trajektori -->
+<div class="shdr"><span class="snum">§ 02</span><span class="stit">BEPP-trajektori 2010–2026</span></div>
+
+<div class="traj">
+  <div class="traj-label">BEPP v2 — estimoitu aikasarja (statistiikkaproxy)</div>
+  <div style="display:flex;gap:8px;align-items:flex-end;height:60px;margin-bottom:8px" id="traj-bars"></div>
+  <div class="traj-meta">
+    <span>2010</span><span>2018</span><span>2026</span>
+  </div>
+</div>
+
+<div class="dbox" id="traj-info">
+  <span style="color:var(--muted)">dS/dt:</span> <span id="dsdt-val">—</span> &nbsp;
+  <span style="color:var(--muted)">Tipping risk T(t):</span> <span id="tipping-val">—</span> &nbsp;
+  <span style="color:var(--muted)">Trendi:</span> <span id="trend-val">—</span>
+</div>
+
+<!-- §03 Copernicus -->
+<div class="shdr"><span class="snum">§ 03</span><span class="stit">Sentinel-2 / CORINE — D_f pipeline</span></div>
+
+<div class="dbox" id="cop-box">
+  <span class="derr">Ladataan...</span>
+</div>
+
+<!-- §04 Metodologia -->
+<div class="shdr"><span class="snum">§ 04</span><span class="stit">Metodologia</span></div>
+<div class="dbox">
+BEPP v2 = (D_f^1.2 · D_s^1.0 · D_c^0.8) · (1−R)^1.5<br>
+dS/dt = P(t) − λ·R(t)·S(t) − μ·S(t)²<br>
+T(t)  = S(t) · max(0, dS/dt) · (1−R(t))<br><br>
+D_s: FinBIF indikaattorilajihavainnot — aikajakso + havaintoaktiivisuus normalisoitu<br>
+D_f: CORINE maankäyttö + Sentinel-2 NDVI (proxy 2026)<br>
+D_c: YVA-pipeline 56.3 GW tuulivoima (estimoitu)<br>
+R:   SYKE suojelualueet (estimoitu 0.38)<br><br>
+Pilottialue: Rautalammin reitti, bbox 26.00–27.50°E, 62.40–63.50°N<br>
+Instrumenttiperhe: <a href="https://aethercontinuity.org/tools/ACI-INSTRUMENT-v2.html">WEM</a> · <a href="https://aethercontinuity.org/tools/HEM-monitor.html">HEM</a> · BEM
+</div>
+
+<footer>
+  BEM — Biodiversity Endurance Monitor · ACI · v0.1 · Pilot<br>
+  Proxy: <a href="https://github.com/AetherContinuity/aci-bem-proxy">aci-bem-proxy</a> ·
+  Dokumentaatio: <a href="https://aethercontinuity.org/supplements/tn-015-biodiversity-endurance-monitor.html">TN-015</a> ·
+  <a href="https://aethercontinuity.org/">aethercontinuity.org</a>
+</footer>
+
+<script>
+const PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
+const BBOX = '26.00,62.40,27.50,63.50';
+
+// Estimated series (proxy until real pipelines complete)
+const SERIES = [
+  {year:2010, Df:0.28, Ds:0.30, Dc:0.18, R:0.48},
+  {year:2018, Df:0.41, Ds:0.38, Dc:0.35, R:0.42},
+  {year:2026, Df:null, Ds:null, Dc:0.61, R:0.38}, // D_s filled from live
+];
+
+function bepp_v2(Df, Ds, Dc, R) {
+  return Math.min((Math.pow(Df,1.2)*Math.pow(Ds,1.0)*Math.pow(Dc,0.8))*Math.pow(1-R,1.5), 1.0);
+}
+
+function classify(S) {
+  if (S < 0.25) return {label:'Normal', color:'var(--sg)', id:'t-normal'};
+  if (S < 0.50) return {label:'Elevated', color:'var(--sy)', id:'t-elevated'};
+  if (S < 0.75) return {label:'Critical', color:'var(--sr)', id:'t-critical'};
+  return {label:'BP-like', color:'var(--sr)', id:'t-bp'};
+}
+
+function trendIcon(t) {
+  if (!t || t==='no_data') return '<span class="trend-nd">—</span>';
+  if (t==='increasing') return '<span class="trend-up">↑ kasvussa</span>';
+  if (t==='stable') return '<span class="trend-st">→ vakaa</span>';
+  if (t==='declining') return '<span class="trend-dn">↓ laskussa</span>';
+  if (t==='strongly_declining') return '<span class="trend-dn">↓↓ vahvasti laskussa</span>';
+  return `<span class="trend-nd">${t}</span>`;
+}
+
+function setDot(id, state) {
+  const el = document.getElementById(id);
+  if (el) { el.className='dot'; el.classList.add(state); }
+}
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+async function fetchSpecies() {
+  try {
+    const r = await fetch(`${PROXY}/finbif/species?bbox=${BBOX}&ref_years=2000-2010&cur_years=2020-2026`);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    setDot('d-finbif','ok');
+    setText('s-finbif','OK');
+
+    // Update D_s
+    const Ds = d.D_s || 0.44;
+    document.getElementById('ds-val').textContent = Ds.toFixed(3);
+    document.getElementById('ds-class').textContent = d.D_s_classification || '—';
+    document.getElementById('c-ds').textContent = Ds.toFixed(3);
+
+    // Update series 2026 D_s
+    SERIES[2].Ds = Ds;
+
+    // Species table
+    const tbody = document.getElementById('species-body');
+    const rows = Object.entries(d.species||{}).map(([id, s]) => {
+      const ref = s.ref_annual != null ? s.ref_annual.toFixed(1) : (s.ref_total||0);
+      const cur = s.cur_annual != null ? s.cur_annual.toFixed(1) : (s.cur_total||0);
+      const norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : '—';
+      const trend = trendIcon(s.norm_trend || s.trend);
+      const name = (s.name||id).split('(')[1]?.replace(')','') || s.name || id;
+      return `<tr><td>${name}</td><td>${ref}</td><td>${cur}</td><td>${norm}</td><td>${trend}</td></tr>`;
+    }).join('');
+    tbody.innerHTML = rows || '<tr><td colspan="5">Ei dataa</td></tr>';
+
+    return Ds;
+  } catch(e) {
+    setDot('d-finbif','err');
+    setText('s-finbif','err');
+    document.getElementById('species-body').innerHTML =
+      `<tr><td colspan="5" class="derr">${e.message}</td></tr>`;
+    return 0.44; // fallback
+  }
+}
+
+async function fetchCopernicus() {
+  try {
+    const r = await fetch(`${PROXY}/copernicus/ndvi?bbox=${BBOX}&date=2024-06-01/2024-09-30&cloud=20`);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    setDot('d-cop','ok');
+    setText('s-cop','OK');
+    const box = document.getElementById('cop-box');
+    box.innerHTML = `Sentinel-2 scenejä löydetty: <b>${d.scene_count}</b> (2024 kesä, pilvisyys ≤20%)<br>` +
+      (d.scenes||[]).slice(0,3).map(s =>
+        `<span style="color:var(--muted)">${s.date?.slice(0,10)||'?'}</span> ` +
+        `pilvisyys ${s.cloud_cover?.toFixed(1)||'?'}% — NDVI-bandien URL saatavilla`
+      ).join('<br>') +
+      (d.scenes?.length > 3 ? `<br>... ja ${d.scenes.length-3} muuta` : '');
+  } catch(e) {
+    setDot('d-cop','warn');
+    setText('s-cop','—');
+    document.getElementById('cop-box').innerHTML =
+      `<span class="derr">Copernicus STAC ei saatavilla: ${e.message}</span><br>` +
+      `<span style="color:var(--muted)">D_f lasketaan proxy-estimaateista.</span>`;
+  }
+}
+
+function updateBEPP(Ds) {
+  // Fill in 2026 D_s from live data
+  const s = SERIES[2];
+  if (Ds) s.Ds = Ds;
+  s.Df = s.Df || 0.52; // proxy
+
+  // Compute series
+  const vals = SERIES.map(s => ({
+    year: s.year,
+    S: bepp_v2(s.Df, s.Ds, s.Dc, s.R)
+  }));
+
+  const latest = vals[vals.length-1];
+  const prev = vals[vals.length-2];
+  const dSdt = (latest.S - prev.S) / 8;
+  const T = latest.S * Math.max(0, dSdt) * (1 - SERIES[2].R);
+  const cls = classify(latest.S);
+
+  // Update badge
+  document.getElementById('bepp-val').textContent = latest.S.toFixed(3);
+  document.getElementById('bepp-val').style.color = cls.color;
+  document.getElementById('bepp-regime').textContent = cls.label;
+  document.getElementById('bepp-regime').style.color = cls.color;
+  document.getElementById('c-df').textContent = SERIES[2].Df.toFixed(3);
+  document.getElementById('c-ds').textContent = SERIES[2].Ds.toFixed(3);
+  document.getElementById('c-dc').textContent = SERIES[2].Dc.toFixed(3);
+  document.getElementById('c-r').textContent = SERIES[2].R.toFixed(3);
+
+  // Cards
+  document.getElementById('df-val').textContent = SERIES[2].Df.toFixed(3);
+  document.getElementById('dc-val').textContent = SERIES[2].Dc.toFixed(3);
+  document.getElementById('r-val').textContent = SERIES[2].R.toFixed(3);
+
+  // Thresholds
+  ['t-normal','t-elevated','t-critical','t-bp'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
+  document.getElementById(cls.id)?.classList.add('active');
+
+  // Trajectory bars
+  const maxS = Math.max(...vals.map(v=>v.S), 0.1);
+  document.getElementById('traj-bars').innerHTML = vals.map(v => {
+    const h = Math.max(8, Math.round(v.S / maxS * 56));
+    const c = classify(v.S);
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+      <span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">${v.S.toFixed(3)}</span>
+      <div style="width:100%;height:${h}px;background:${c.color};border-radius:2px 2px 0 0;opacity:.8"></div>
+    </div>`;
+  }).join('');
+
+  // Trajectory info
+  document.getElementById('dsdt-val').textContent = (dSdt>=0?'+':'')+dSdt.toFixed(5)+'/v';
+  document.getElementById('dsdt-val').style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+  document.getElementById('tipping-val').textContent = T.toFixed(6);
+  document.getElementById('trend-val').textContent = dSdt > 0 ? '⚠ heikkeneminen' : '✓ elpyminen';
+  document.getElementById('trend-val').style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+}
+
+async function fetchAll() {
+  document.getElementById('s-ts').textContent = new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'});
+  const Ds = await fetchSpecies();
+  updateBEPP(Ds);
+  fetchCopernicus();
+}
+
+// Init
+fetchAll();
+</script>
+</body>
+</html>
