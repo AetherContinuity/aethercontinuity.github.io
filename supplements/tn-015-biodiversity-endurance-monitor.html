@@ -84,25 +84,53 @@ td{padding:.45rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
   <p>All three instruments share the same epistemological structure: they measure accumulated stress over time, not instantaneous state. All three are diagnostically useless if applied only at the moment of crisis.</p>
 </div>
 
-<h2>§ 02 — The BEPP index (proposed)</h2>
+<h2>§ 02 — BEPP v2: dynamic stress model</h2>
 
-<p>By analogy with EPP (Endurance Pressure Proxy) in WEM and HEPP in HEM, BEM would compute a <strong>Biodiversity Endurance Pressure Proxy (BEPP)</strong> — a synthetic index [0–1] measuring cumulative ecological stress over a defined spatial and temporal window.</p>
+<p>BEPP v1 (additive index) is a valid starting point but has three structural weaknesses: additivity assumes component independence; linear weighting misses ecological threshold behaviour; and the formulation is a snapshot, not a trajectory detector. BEPP v2 addresses all three.</p>
 
-<p>Proposed component structure:</p>
+<h3>Component transformations (non-linearity)</h3>
+
+<p>Each raw input is transformed through a sigmoid function σ(x) = 1/(1+e⁻ˣ) before entering the stress computation. This enforces saturation behaviour — consistent with observed ecological dynamics where stress accumulates slowly until a threshold, then accelerates.</p>
 
 <table>
-  <thead><tr><th>Component</th><th>Symbol</th><th>Measures</th><th>Data source (candidate)</th></tr></thead>
+  <thead><tr><th>Component</th><th>Symbol</th><th>Raw input</th><th>Data source (candidate)</th></tr></thead>
   <tbody>
-    <tr><td>Fragmentation pressure</td><td>D_f</td><td>Loss of contiguous habitat corridors: fraction of historical ecological connectivity remaining in assessment window</td><td>SYKE ILMAVERSO aerial interpretation · Metsäkeskus forest structure · CORINE land cover</td></tr>
-    <tr><td>Species stress index</td><td>D_s</td><td>Indicator species population trend relative to reference period: negative trend in keystone and umbrella species</td><td>SYKE biodiversity monitoring · Luontolaatu · flying squirrel / wolverine / raptor surveys</td></tr>
-    <tr><td>Cumulative disturbance</td><td>D_c</td><td>Aggregate permitted disturbance footprint in region per rolling 10-year window: YVA-approved projects, area affected</td><td>YVA database (YHTEYSVIRANOMAINEN) · Fingrid grid connection permits · Metsähallitus wind permits</td></tr>
-    <tr><td>Recovery capacity</td><td>D_r</td><td>Fraction of total regional area with legal protection or voluntary conservation status: available recovery buffer</td><td>SYKE protected area registry · MH conservation areas · voluntary METSO agreements</td></tr>
+    <tr><td>Fragmentation</td><td>D_f(t) = σ(k_f · F(t))</td><td>Loss of contiguous habitat corridors vs reference period</td><td>SYKE ILMAVERSO · Metsäkeskus · CORINE land cover</td></tr>
+    <tr><td>Species stress</td><td>D_s(t) = σ(k_s · S_bio(t))</td><td>Indicator species population trend; NDVI canopy continuity proxy</td><td>SYKE biodiversity monitoring · remote sensing</td></tr>
+    <tr><td>Cumulative disturbance</td><td>D_c(t) = σ(k_c · C(t))</td><td>Effective footprint weighted by irreversibility (not raw area)</td><td>YVA database · Fingrid grid permits · Metsähallitus wind permits</td></tr>
+    <tr><td>Recovery capacity</td><td>R(t) = σ(k_r · R_cap(t))</td><td>Protected and conservation area fraction — modulates threshold dynamics</td><td>SYKE protected area registry · METSO agreements</td></tr>
   </tbody>
 </table>
 
-<span class="mono">BEPP = D_f × 0.35 + D_s × 0.30 + D_c × 0.20 + (1 − D_r) × 0.15</span>
+<h3>Multiplicative stress core</h3>
 
-<p>Weights are provisional. The index is intended to be regional (biogeographic zone or watershed), not national — ecological stress is spatially heterogeneous in ways that national averages obscure.</p>
+<span class="mono">S(t) = (D_f(t)^α · D_s(t)^β · D_c(t)^γ) · (1 − R(t))^δ</span>
+
+<p>The multiplicative structure means that high fragmentation combined with high species stress produces a non-linear amplification rather than a simple sum. Exponents α, β, γ, δ are calibration parameters — regional pilot data determines their values. Recovery capacity R(t) acts as a fragility modifier: low recovery capacity accelerates the approach to tipping thresholds rather than simply subtracting from stress.</p>
+
+<h3>Time dynamics</h3>
+
+<span class="mono">dS/dt = P(t) − λ·R(t)·S(t) − μ·S(t)²</span>
+
+<p>Where P(t) is the rate of new ecological pressure (incoming YVA permits, land-use change); λ·R(t)·S(t) is recovery damping (resilience slows stress accumulation); and μ·S(t)² is self-reinforcing degradation — fragmentation accelerates further fragmentation. The μS² term is the mechanism that produces tipping point behaviour.</p>
+
+<h3>Output: state vector and tipping risk</h3>
+
+<span class="mono">BEPP_v2(t) = (S(t), dS/dt, M(t), R(t))</span>
+
+<p>M(t) = dS/dt is the momentum signal — the BEM analogue of WEM's stress persistence (SP) component. A system with moderate S but positive M is on a deterioration trajectory; a system with high S but negative M is recovering. The distinction is operationally critical and invisible to snapshot indices.</p>
+
+<p>Tipping risk — a single administrative summary if needed:</p>
+
+<span class="mono">T(t) = S(t) · max(0, dS/dt) · (1 − R(t))</span>
+
+<p>T(t) rises rapidly as level, trend, and vulnerability converge — the characteristic signature of a system approaching nonlinear state change. This is the institutional "alarm" trigger: T(t) exceeds threshold → regional YVA review mandated.</p>
+
+<div class="panel">
+  <div class="panel-label">V1 → V2 in one sentence</div>
+  <p>BEPP v1 answers: <em>how much stress is present?</em><br>
+  BEPP v2 answers: <em>which direction is the ecosystem moving, how fast, and how close to a state transition it cannot reverse?</em></p>
+</div>
 
 <h2>§ 03 — Why project-level YVA cannot substitute</h2>
 
