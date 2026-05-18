@@ -278,15 +278,25 @@ async function fetchSpecies() {
 
     // Species table
     const tbody = document.getElementById('species-body');
-    const rows = Object.entries(d.species||{}).map(([id, s]) => {
-      const ref = s.ref_annual != null ? s.ref_annual.toFixed(1) : (s.ref_total||0);
-      const cur = s.cur_annual != null ? s.cur_annual.toFixed(1) : (s.cur_total||0);
-      const norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : '—';
-      const trend = trendIcon(s.norm_trend || s.trend);
-      const name = (s.name||id).split('(')[1]?.replace(')','') || s.name || id;
-      return `<tr><td>${name}</td><td>${ref}</td><td>${cur}</td><td>${norm}</td><td>${trend}</td></tr>`;
-    }).join('');
-    tbody.innerHTML = rows || '<tr><td colspan="5">Ei dataa</td></tr>';
+    const sp = d.species || {};
+    const keys = Object.keys(sp);
+    if (keys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">FinBIF ei palauttanut lajidataa</td></tr>';
+    } else {
+      const rows = keys.map(id => {
+        const s = sp[id];
+        const ref = s.ref_annual != null ? s.ref_annual.toFixed(1) : (s.ref_total != null ? s.ref_total : '—');
+        const cur = s.cur_annual != null ? s.cur_annual.toFixed(1) : (s.cur_total != null ? s.cur_total : '—');
+        const norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : (s.ratio != null ? s.ratio.toFixed(3) : '—');
+        const trendKey = s.norm_trend || s.trend || 'no_data';
+        const trend = trendIcon(trendKey);
+        // Näytä lajin nimi selkeästi
+        const nameFull = s.name || id;
+        const nameFi = nameFull.match(/\(([^/]+)\//)?.[1] || nameFull.split('(')[0].trim();
+        return `<tr><td title="${nameFull}">${nameFi}</td><td>${ref}</td><td>${cur}</td><td>${norm}</td><td>${trend}</td></tr>`;
+      }).join('');
+      tbody.innerHTML = rows;
+    }
 
     return Ds;
   } catch(e) {
