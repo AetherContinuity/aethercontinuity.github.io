@@ -99,6 +99,8 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="sbar">
   <span class="pill"><span class="dot" id="d-finbif"></span>FinBIF <span id="s-finbif">—</span></span>
   <span class="pill"><span class="dot" id="d-cop"></span>Copernicus <span id="s-cop">—</span></span>
+  <span class="pill"><span class="dot" id="d-era5"></span>ERA5 <span id="s-era5">—</span></span>
+  <span class="pill"><span class="dot" id="d-ndvi"></span>NDVI <span id="s-ndvi">—</span></span>
   <span style="color:var(--ink)">TS <span id="s-ts">—</span></span>
   <button class="btn" onclick="fetchAll()">↻ Päivitä</button>
 </div>
@@ -191,11 +193,19 @@ footer a{color:var(--accent);text-decoration:none}
   <span style="color:var(--muted)">Trendi:</span> <span id="trend-val">—</span>
 </div>
 
-<!-- §03 Copernicus -->
-<div class="shdr"><span class="snum">§ 03</span><span class="stit">Sentinel-2 / CORINE — D_f pipeline</span></div>
+<!-- §03 Sentinel-2 NDVI + ERA5 -->
+<div class="shdr"><span class="snum">§ 03</span><span class="stit">Sentinel-2 NDVI + ERA5 ilmastodata</span></div>
+
+<div class="dbox" id="ndvi-box" style="margin-bottom:8px">
+  <span class="derr">Haetaan NDVI-scenejä...</span>
+</div>
+
+<div class="dbox" id="era5-box" style="margin-bottom:8px">
+  <span class="derr">Haetaan ERA5-dataa...</span>
+</div>
 
 <div class="dbox" id="cop-box">
-  <span class="derr">Ladataan...</span>
+  <span style="color:var(--muted)">Copernicus OData...</span>
 </div>
 
 <!-- §04 Metodologia -->
@@ -220,6 +230,39 @@ Instrumenttiperhe: <a href="https://aethercontinuity.org/tools/ACI-INSTRUMENT-v2
 </footer>
 
 <script>
+const BEM_PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
+
+// ERA5 via Open-Meteo — sadevaje ja lämpötila-anomalia (D_c komponentti)
+async function fetchERA5() {
+  const lat = 62.95, lng = 26.85; // Rautalammin reitti keskipiste
+  // Historiallinen kuukausikeskiarvo 2020-2026 vs 1991-2020 referenssi
+  const url = `https://archive-api.open-meteo.com/v1/archive?` +
+    `latitude=${lat}&longitude=${lng}` +
+    `&start_date=2020-01-01&end_date=2026-04-30` +
+    `&monthly=precipitation_sum,temperature_2m_mean,soil_moisture_0_to_7cm_mean` +
+    `&timezone=Europe/Helsinki`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`ERA5 ${r.status}`);
+  return r.json();
+}
+
+async function fetchNDVIScenes() {
+  const r = await fetch(`${BEM_PROXY}/ndvi?bbox=${BBOX}&date=2023-07-01/2023-08-31&cloud=20`);
+  if (!r.ok) throw new Error(`NDVI ${r.status}`);
+  return r.json();
+}
+
+function calcPrecipAnomaly(monthly) {
+  if (!monthly?.precipitation_sum?.length) return null;
+  const vals = monthly.precipitation_sum.filter(v => v != null);
+  const recent = vals.slice(-24); // viimeiset 24 kk
+  const older = vals.slice(0, -24);
+  if (!recent.length || !older.length) return null;
+  const recentMean = recent.reduce((a,b)=>a+b,0)/recent.length;
+  const refMean = older.reduce((a,b)=>a+b,0)/older.length;
+  return refMean > 0 ? (recentMean - refMean) / refMean : 0;
+}
+
 const PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
 const BBOX = '26.00,62.40,27.50,63.50';
 
@@ -391,8 +434,57 @@ function updateBEPP(Ds) {
 
 async function fetchAll() {
   document.getElementById('s-ts').textContent = new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'});
-  const Ds = await fetchSpecies();
-  updateBEPP(Ds);
+
+  // Parallel fetches
+  const [Ds, era5, ndvi] = await Promise.allSettled([
+    fetchSpecies(),
+    fetchERA5(),
+    fetchNDVIScenes()
+  ]);
+
+  const DsVal = Ds.status === 'fulfilled' ? Ds.value : 0.44;
+  updateBEPP(DsVal);
+
+  // ERA5 ilmastodata
+  if (era5.status === 'fulfilled') {
+    const precip = calcPrecipAnomaly(era5.value.monthly);
+    const d = era5.value.monthly;
+    const box = document.getElementById('era5-box');
+    if (box && d) {
+      const lastTemp = d.temperature_2m_mean?.slice(-1)[0];
+      const lastPrecip = d.precipitation_sum?.slice(-1)[0];
+      const anomStr = precip != null ? (precip >= 0 ? '+' : '') + (precip*100).toFixed(1) + '% sadevaje' : '—';
+      box.innerHTML = `Sadevaje (vs ref): <b>${anomStr}</b> &nbsp;
+        Lämpötila (viimeisin kk): <b>${lastTemp?.toFixed(1) || '—'} °C</b> &nbsp;
+        Sademäärä: <b>${lastPrecip?.toFixed(0) || '—'} mm</b>`;
+      setDot('d-era5', 'ok');
+      setText('s-era5', 'OK');
+    }
+  } else {
+    setDot('d-era5', 'warn');
+    setText('s-era5', '—');
+  }
+
+  // NDVI scenes
+  if (ndvi.status === 'fulfilled') {
+    const d = ndvi.value;
+    const box = document.getElementById('ndvi-box');
+    if (box) {
+      if (d.scene_id) {
+        box.innerHTML = `Paras scene: <b>${d.date}</b> · pilvisyys ${d.cloud_pct?.toFixed(1)}% · ` +
+          `<a href="${d.b04_url}" target="_blank" style="color:var(--accent)">B04</a> · ` +
+          `<a href="${d.b08_url}" target="_blank" style="color:var(--accent)">B08</a> &nbsp;` +
+          `<span style="color:var(--muted);font-size:.6rem">${d.all_scenes} sceneä löydetty</span>`;
+        setDot('d-ndvi', 'ok');
+        setText('s-ndvi', 'OK');
+      } else {
+        box.innerHTML = `<span class="derr">${d.error || 'Ei scenejä'}</span>`;
+        setDot('d-ndvi', 'warn');
+      }
+    }
+  } else {
+    setDot('d-ndvi', 'err');
+  }
   fetchCopernicus();
 }
 
