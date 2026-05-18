@@ -236,11 +236,14 @@ const BEM_PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
 async function fetchERA5() {
   const lat = 62.95, lng = 26.85; // Rautalammin reitti keskipiste
   // Historiallinen kuukausikeskiarvo 2020-2026 vs 1991-2020 referenssi
+  // Open-Meteo ERA5 — historical monthly aggregates
+  const today = new Date();
+  const endDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`;
   const url = `https://archive-api.open-meteo.com/v1/archive?` +
     `latitude=${lat}&longitude=${lng}` +
-    `&start_date=2020-01-01&end_date=2026-04-30` +
-    `&monthly=precipitation_sum,temperature_2m_mean,soil_moisture_0_to_7cm_mean` +
-    `&timezone=Europe/Helsinki`;
+    `&start_date=2015-01-01&end_date=${endDate}` +
+    `&daily=precipitation_sum,temperature_2m_mean` +
+    `&timezone=Europe%2FHelsinki`;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`ERA5 ${r.status}`);
   return r.json();
@@ -447,16 +450,20 @@ async function fetchAll() {
 
   // ERA5 ilmastodata
   if (era5.status === 'fulfilled') {
-    const precip = calcPrecipAnomaly(era5.value.monthly);
-    const d = era5.value.monthly;
+    const daily = era5.value?.daily;
     const box = document.getElementById('era5-box');
-    if (box && d) {
-      const lastTemp = d.temperature_2m_mean?.slice(-1)[0];
-      const lastPrecip = d.precipitation_sum?.slice(-1)[0];
-      const anomStr = precip != null ? (precip >= 0 ? '+' : '') + (precip*100).toFixed(1) + '% sadevaje' : '—';
-      box.innerHTML = `Sadevaje (vs ref): <b>${anomStr}</b> &nbsp;
-        Lämpötila (viimeisin kk): <b>${lastTemp?.toFixed(1) || '—'} °C</b> &nbsp;
-        Sademäärä: <b>${lastPrecip?.toFixed(0) || '—'} mm</b>`;
+    if (box && daily?.precipitation_sum) {
+      const p = daily.precipitation_sum.filter(v=>v!=null);
+      const t = daily.temperature_2m_mean?.filter(v=>v!=null) || [];
+      const recent12mo = p.slice(-365).reduce((a,b)=>a+b,0);
+      const ref = p.slice(0,-365);
+      const refAnn = ref.length > 0 ? ref.reduce((a,b)=>a+b,0)/ref.length*365 : null;
+      const anomPct = refAnn ? ((recent12mo-refAnn)/refAnn*100) : null;
+      const anomStr = anomPct!=null ? (anomPct>=0?'+':'')+anomPct.toFixed(1)+'%' : '—';
+      const lastT = t.slice(-30).reduce((a,b)=>a+b,0)/Math.max(1,t.slice(-30).length);
+      box.innerHTML = `Sademäärä 12kk: <b>${recent12mo.toFixed(0)} mm</b> &nbsp;
+        anomalia vs ref: <b style="color:${anomPct<-10?'var(--sr)':'var(--sg)'}">${anomStr}</b> &nbsp;
+        lämpötila 30vrk: <b>${lastT.toFixed(1)} °C</b>`;
       setDot('d-era5', 'ok');
       setText('s-era5', 'OK');
     }
@@ -471,7 +478,8 @@ async function fetchAll() {
     const box = document.getElementById('ndvi-box');
     if (box) {
       if (d.scene_id) {
-        box.innerHTML = `Paras scene: <b>${d.date}</b> · pilvisyys ${d.cloud_pct?.toFixed(1)}% · ` +
+        const cloudStr = d.cloud_pct != null ? d.cloud_pct.toFixed(1)+'%' : '?%';
+        box.innerHTML = `Paras scene: <b>${d.date||'?'}</b> · pilvisyys ${cloudStr} · ` +
           `<a href="${d.b04_url}" target="_blank" style="color:var(--accent)">B04</a> · ` +
           `<a href="${d.b08_url}" target="_blank" style="color:var(--accent)">B08</a> &nbsp;` +
           `<span style="color:var(--muted);font-size:.6rem">${d.all_scenes} sceneä löydetty</span>`;
