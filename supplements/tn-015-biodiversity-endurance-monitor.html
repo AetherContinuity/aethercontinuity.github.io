@@ -194,6 +194,40 @@ td{padding:.45rem .7rem;border-bottom:1px solid var(--line);vertical-align:top;}
   <p>The Rautalammin reitti watershed is the natural BEM pilot region: HEM is already operational there, CN-012 documents the aquatic biomass loop, SYKE ILMAVERSO III covers the lake network, and wind power YVA applications affect the surrounding forest landscape. A BEM pilot here would close the monitoring triangle: energy (WEM) · hydrology (HEM) · ecology (BEM).</p>
 </div>
 
+<h2>§ 07 — System architecture: observability platform, not notebook</h2>
+
+<p>BEM is not a research report. It is a continuously updating observation system — closer in architecture to a meteorological pipeline than to an analysis notebook. This distinction determines every subsequent technical decision.</p>
+
+<h3>Core architectural principle: separate feature layer from model</h3>
+
+<p>The single most important decision is to not hardcode BEPP into a fixed formula. Instead, BEM maintains a model registry alongside a stable feature layer:</p>
+
+<span class="mono">Feature layer (stable): D_f, D_s, D_c, R pipelines<br>
+Model registry (versioned):<br>
+  BEPP_v1: additive formula<br>
+  BEPP_v2: multiplicative + sigmoid<br>
+  BEPP_v3: dynamic ODE (dS/dt)<br></span>
+
+<p>The feature layer processes raw data into ecological indicators. The model layer computes BEPP from those indicators. When the model is updated — better mathematics, better calibration, better understanding — the feature layer does not change. This is the distinction between research code and an instrument.</p>
+
+<h3>Pipeline structure</h3>
+
+<table>
+  <thead><tr><th>Layer</th><th>Function</th><th>Technology</th></tr></thead>
+  <tbody>
+    <tr><td>Data ingestion</td><td>Sentinel-2 (NDVI, land cover), FinBIF (species), YVA permits, Metsähallitus protection areas</td><td>SentinelHub STAC API · PostGIS · GeoJSON</td></tr>
+    <tr><td>Spatial-temporal storage</td><td>Indexed raster + vector data with time dimension</td><td>PostgreSQL + PostGIS · Cloud Optimized GeoTIFF</td></tr>
+    <tr><td>Feature engine</td><td>D_f: forest cover, patch size, edge density, corridor loss<br>D_s: species presence, indicator trends<br>D_c: disturbance rate, effective footprint<br>R: recovery capacity, buffer ratio</td><td>GeoPandas · Rasterio · Xarray</td></tr>
+    <tr><td>BEPP core</td><td>S(t) computation via model registry</td><td>Python · versioned model config</td></tr>
+    <tr><td>Dynamic engine</td><td>dS/dt, d²S/dt², T(t), tipping probability</td><td>SciPy ODE solver</td></tr>
+    <tr><td>Visualisation</td><td>Regional map, BEPP heatmap, trajectory arrows, tipping zones, replay 2015→2026</td><td>Kepler.gl · MapLibre</td></tr>
+  </tbody>
+</table>
+
+<h3>Strategic vision: shared observability platform</h3>
+
+<p>The long-term architectural goal is convergence: WEM (energy), HEM (hydrology), and BEM (ecology) sharing the same ingestion layer, trajectory engine, and tipping framework — with domain-specific data sources and models on top. This transforms ACI from a document collection into a monitoring architecture. The 30-day pilot sprint (PostGIS setup → Sentinel NDVI pipeline → FinBIF integration → first BEPP heatmap) is the first concrete step toward that convergence.</p>
+
 <div class="refs">
   <strong>References</strong><br>
   SYKE — Tuuli- ja aurinkovoiman ekologinen kestävyys Suomessa, May 2026<br>
