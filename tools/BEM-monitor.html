@@ -8,9 +8,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f2f0eb;--ink:#1a1c17;--muted:#6b6a5e;--line:#d0cdc3;
-  --panel:#e8e5dc;--panel2:#dedad0;
-  --accent:#2a5a2a;--eco:#3a7a3a;--eco-lt:#d4ecd4;
-  --sr:#8b2000;--sy:#8b6000;--sg:#2a6a2a;--sn:#3a5a3a;
+  --panel:#e8e5dc;--panel2:#dedad0;--accent:#2a5a2a;
+  --sr:#8b2000;--sy:#8b6000;--sg:#2a6a2a;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --serif:Georgia,'Times New Roman',serif;
 }
@@ -18,55 +17,20 @@ body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:15
 nav{font-family:var(--mono);font-size:.65rem;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:24px}
 nav a{color:var(--accent);text-decoration:none;margin-right:1.2rem}
 .kicker{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:6px}
-h1{font-size:1.5rem;font-weight:400;letter-spacing:-.02em;margin-bottom:4px}
+h1{font-size:1.5rem;font-weight:400;margin-bottom:4px}
 .sub{font-family:var(--mono);font-size:.67rem;color:var(--muted);margin-bottom:20px}
 .sbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:.64rem;color:var(--muted);border:1px solid var(--line);background:var(--panel);padding:7px 12px;margin-bottom:20px}
 .pill{display:inline-flex;align-items:center;gap:5px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .3s}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dot.ok{background:var(--sg)}.dot.warn{background:var(--sy)}.dot.err{background:var(--sr)}
 .btn{margin-left:auto;font-family:var(--mono);font-size:.64rem;border:1px solid var(--line);background:none;color:var(--accent);padding:4px 12px;cursor:pointer}
-.btn:hover{background:var(--panel2)}
-
-/* BEPP badge */
-.bepp{border:2px solid var(--line);padding:16px 20px;margin-bottom:22px;display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:start;transition:border-color .4s;background:var(--panel)}
-.bnum{font-family:var(--mono);font-size:2.8rem;font-weight:700;line-height:1;transition:color .4s;color:var(--eco)}
+.bepp{border:1px solid var(--line);padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:start;background:var(--panel)}
+.bnum{font-family:var(--mono);font-size:2.8rem;font-weight:700;line-height:1;color:var(--sg)}
 .blbl{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:3px}
-.bregime{font-size:.95rem;font-weight:700;margin-bottom:5px;transition:color .4s}
+.bregime{font-size:.95rem;font-weight:700;margin-bottom:5px}
 .bdesc{font-size:.8rem;color:var(--muted);line-height:1.65}
 .bcomp{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:7px;display:flex;gap:12px;flex-wrap:wrap}
 .bcomp b{color:var(--ink)}
-
-/* Component cards */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
-@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
-.card{border:1px solid var(--line);padding:11px 13px;background:var(--panel)}
-.clbl{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
-.cval{font-family:var(--mono);font-size:1.55rem;font-weight:700;line-height:1.1;color:var(--eco)}
-.cunit{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
-.csub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:2px}
-
-/* Section headers */
-.shdr{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin:26px 0 12px}
-.snum{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
-.stit{font-size:.84rem;font-weight:600}
-
-/* Species table */
-.sp-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.7rem;margin-bottom:16px}
-.sp-table th{text-align:left;padding:5px 8px;border-bottom:2px solid var(--line);color:var(--muted);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em}
-.sp-table td{padding:6px 8px;border-bottom:1px solid var(--line)}
-.trend-up{color:var(--sg)}
-.trend-dn{color:var(--sr)}
-.trend-st{color:var(--sn)}
-.trend-nd{color:var(--muted)}
-
-/* Trajectory bar */
-.traj{background:var(--panel);border:1px solid var(--line);padding:12px 14px;margin-bottom:10px}
-.traj-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:6px}
-.traj-bar{height:6px;background:var(--panel2);border-radius:2px;overflow:hidden;margin-bottom:4px}
-.traj-fill{height:100%;border-radius:2px;transition:width .8s ease}
-.traj-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted);display:flex;justify-content:space-between}
-
-/* Thresholds */
 .thresh{display:flex;gap:4px;margin:10px 0;font-family:var(--mono);font-size:.58rem}
 .tband{flex:1;padding:4px 6px;text-align:center;border-radius:2px}
 .tband.normal{background:#d4ecd4;color:#1a4a1a}
@@ -74,17 +38,27 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:-.02em;margin-bottom:4px}
 .tband.critical{background:#f0d4c4;color:#5a1a00}
 .tband.bp{background:#e0c4c4;color:#5a0000}
 .tband.active{outline:2px solid var(--ink)}
-
-/* Info box */
-.dbox{background:var(--panel);border:1px solid var(--line);padding:11px 13px;font-family:var(--mono);font-size:.71rem;line-height:1.9}
-.derr{color:var(--sr)}
-.note{font-size:.75rem;color:var(--muted);font-style:italic;margin:8px 0}
-
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{border:1px solid var(--line);padding:11px 13px;background:var(--panel)}
+.clbl{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.cval{font-family:var(--mono);font-size:1.55rem;font-weight:700;line-height:1.1;color:var(--sg)}
+.csub{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:2px}
+.shdr{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin:26px 0 12px}
+.snum{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.stit{font-size:.84rem;font-weight:600}
+.sp-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.7rem;margin-bottom:10px}
+.sp-table th{text-align:left;padding:5px 8px;border-bottom:2px solid var(--line);color:var(--muted);font-size:.6rem;text-transform:uppercase}
+.sp-table td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.up{color:var(--sg)}.dn{color:var(--sr)}.st{color:var(--muted)}
+.dbox{background:var(--panel);border:1px solid var(--line);padding:11px 13px;font-family:var(--mono);font-size:.71rem;line-height:1.9;margin-bottom:10px}
+.note{font-size:.75rem;color:var(--muted);font-style:italic;margin:6px 0}
 footer{border-top:1px solid var(--line);margin-top:44px;padding-top:12px;font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:2}
 footer a{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
+
 <nav>
   <a href="https://aethercontinuity.org/">ACI</a>
   <a href="https://aethercontinuity.org/papers/">Papers</a>
@@ -94,27 +68,25 @@ footer a{color:var(--accent);text-decoration:none}
 
 <div class="kicker">ACI · BEM v0.1 · Biodiversity Endurance Monitor</div>
 <h1>Rautalammin reitti — Ekologinen tilannearvio</h1>
-<p class="sub">Indikaattorilajit · BEPP-indeksi · FinBIF · Copernicus · Pohjois-Savo</p>
+<p class="sub">Indikaattorilajit · BEPP-indeksi · FinBIF · ERA5 · Pohjois-Savo</p>
 
 <div class="sbar">
   <span class="pill"><span class="dot" id="d-finbif"></span>FinBIF <span id="s-finbif">—</span></span>
-  <span class="pill"><span class="dot" id="d-cop"></span>Copernicus <span id="s-cop">—</span></span>
   <span class="pill"><span class="dot" id="d-era5"></span>ERA5 <span id="s-era5">—</span></span>
-
+  <span class="pill"><span class="dot" id="d-cop"></span>Copernicus <span id="s-cop">—</span></span>
   <span style="color:var(--ink)">TS <span id="s-ts">—</span></span>
-  <button class="btn" onclick="fetchAll()">↻ Päivitä</button>
+  <button class="btn" onclick="fetchAll()">&#8635; Päivitä</button>
 </div>
 
-<!-- BEPP Badge -->
-<div class="bepp" id="bepp-badge">
+<div class="bepp">
   <div>
     <div class="blbl">BEPP</div>
     <div class="bnum" id="bepp-val">—</div>
-    <div class="cunit">v2 · multiplicative</div>
+    <div class="csub">v2 · multiplicative</div>
   </div>
   <div>
     <div class="bregime" id="bepp-regime">Ladataan...</div>
-    <div class="bdesc" id="bepp-desc">Biodiversity Endurance Pressure Proxy — ekologisen kestävyyden kumulatiivinen stressimittari.</div>
+    <div class="bdesc">Biodiversity Endurance Pressure Proxy — ekologisen kestävyyden kumulatiivinen stressimittari.</div>
     <div class="bcomp">
       <span>D_f <b id="c-df">—</b></span>
       <span>D_s <b id="c-ds">—</b></span>
@@ -124,15 +96,13 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
 </div>
 
-<!-- Threshold bands -->
-<div class="thresh" id="thresh-bands">
-  <div class="tband normal" id="t-normal">Normal &lt;0.25</div>
+<div class="thresh">
+  <div class="tband normal"   id="t-normal">Normal &lt;0.25</div>
   <div class="tband elevated" id="t-elevated">Elevated 0.25–0.50</div>
   <div class="tband critical" id="t-critical">Critical 0.50–0.75</div>
-  <div class="tband bp" id="t-bp">BP-like &gt;0.75</div>
+  <div class="tband bp"       id="t-bp">BP-like &gt;0.75</div>
 </div>
 
-<!-- Component cards -->
 <div class="cards">
   <div class="card">
     <div class="clbl">D_s · Lajistressi</div>
@@ -141,440 +111,282 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
   <div class="card">
     <div class="clbl">D_f · Fragmentaatio</div>
-    <div class="cval" id="df-val">—</div>
+    <div class="cval">0.520</div>
     <div class="csub">Proxy · CORINE</div>
   </div>
   <div class="card">
     <div class="clbl">D_c · Kum. häiriö</div>
-    <div class="cval" id="dc-val">—</div>
+    <div class="cval">0.610</div>
     <div class="csub">YVA-pipeline</div>
   </div>
   <div class="card">
     <div class="clbl">R · Palautuminen</div>
-    <div class="cval" id="r-val">—</div>
+    <div class="cval">0.380</div>
     <div class="csub">Suojelualueet</div>
   </div>
 </div>
 
-<!-- §01 Indikaattorilajit -->
 <div class="shdr"><span class="snum">§ 01</span><span class="stit">Indikaattorilajit — FinBIF live</span></div>
-
-<table class="sp-table" id="species-table">
+<table class="sp-table">
   <thead>
     <tr>
-      <th>Laji</th>
-      <th>Ref/v (2000–10)</th>
-      <th>Nyk/v (2020–26)</th>
-      <th>Norm. suhde</th>
-      <th>Trendi</th>
+      <th>Laji</th><th>Ref/v (2000–10)</th><th>Nyk/v (2020–26)</th><th>Norm. suhde</th><th>Trendi</th>
     </tr>
   </thead>
-  <tbody id="species-body">
+  <tbody id="sp-body">
     <tr><td colspan="5" style="color:var(--muted);padding:12px 8px">Ladataan FinBIF-dataa...</td></tr>
   </tbody>
 </table>
+<p class="note">Normalisointi: havaintoaktiivisuuden kasvu x1.8. Aikajaksojen pituus normalisoitu vuosikeskiarvoihin.</p>
 
-<p class="note">Normalisointi: havaintoaktiivisuuden kasvu ×1.8 (iNaturalist 2020-luvulla). Aikajaksojen pituus normalisoitu vuosikeskiarvoihin.</p>
-
-<!-- §02 Trajektori -->
 <div class="shdr"><span class="snum">§ 02</span><span class="stit">BEPP-trajektori 2010–2026</span></div>
-
-<div class="traj">
-  <div class="traj-label">BEPP v2 — estimoitu aikasarja (statistiikkaproxy)</div>
-  <div style="display:flex;gap:8px;align-items:flex-end;height:60px;margin-bottom:8px" id="traj-bars"></div>
-  <div class="traj-meta">
-    <span>2010</span><span>2018</span><span>2026</span>
+<div class="dbox">
+  <div style="font-size:.6rem;color:var(--muted);margin-bottom:8px">BEPP v2 — estimoitu aikasarja (statistiikkaproxy)</div>
+  <div style="display:flex;gap:8px;align-items:flex-end;height:60px;margin-bottom:8px" id="traj-bars">
+    <div style="flex:1;text-align:center;color:var(--muted);font-size:.6rem;padding-top:50px">2010</div>
+    <div style="flex:1;text-align:center;color:var(--muted);font-size:.6rem;padding-top:50px">2018</div>
+    <div style="flex:1;text-align:center;color:var(--muted);font-size:.6rem;padding-top:50px">2026</div>
+  </div>
+  <div style="font-family:var(--mono);font-size:.7rem">
+    dS/dt: <span id="dsdt-val">—</span> &nbsp;
+    Tipping risk T(t): <span id="tipping-val">—</span> &nbsp;
+    Trendi: <span id="trend-val">—</span>
   </div>
 </div>
 
-<div class="dbox" id="traj-info">
-  <span style="color:var(--muted)">dS/dt:</span> <span id="dsdt-val">—</span> &nbsp;
-  <span style="color:var(--muted)">Tipping risk T(t):</span> <span id="tipping-val">—</span> &nbsp;
-  <span style="color:var(--muted)">Trendi:</span> <span id="trend-val">—</span>
-</div>
+<div class="shdr"><span class="snum">§ 03</span><span class="stit">ERA5 ilmastodata + Copernicus</span></div>
+<div class="dbox" id="era5-box">Haetaan ERA5-dataa...</div>
+<div class="dbox" id="cop-box">Haetaan Copernicus-dataa...</div>
 
-<!-- §03 Sentinel-2 NDVI + ERA5 -->
-<div class="shdr"><span class="snum">§ 03</span><span class="stit">Sentinel-2 NDVI + ERA5 ilmastodata</span></div>
-
-<div class="dbox" id="ndvi-box" style="margin-bottom:8px">
-  <span class="derr">Haetaan NDVI-scenejä...</span>
-</div>
-
-<div class="dbox" id="era5-box" style="margin-bottom:8px">
-  <span class="derr">Haetaan ERA5-dataa...</span>
-</div>
-
-<div class="dbox" id="cop-box">
-  <span style="color:var(--muted)">Copernicus OData...</span>
-</div>
-
-<!-- §04 Metodologia -->
 <div class="shdr"><span class="snum">§ 04</span><span class="stit">Metodologia</span></div>
 <div class="dbox">
-BEPP v2 = (D_f^1.2 · D_s^1.0 · D_c^0.8) · (1−R)^1.5<br>
-dS/dt = P(t) − λ·R(t)·S(t) − μ·S(t)²<br>
-T(t)  = S(t) · max(0, dS/dt) · (1−R(t))<br><br>
-D_s: FinBIF indikaattorilajihavainnot — aikajakso + havaintoaktiivisuus normalisoitu<br>
-D_f: CORINE maankäyttö + Sentinel-2 NDVI (proxy 2026)<br>
-D_c: YVA-pipeline 56.3 GW tuulivoima (estimoitu)<br>
-R:   SYKE suojelualueet (estimoitu 0.38)<br><br>
-Pilottialue: Rautalammin reitti, bbox 26.00–27.50°E, 62.40–63.50°N<br>
-Instrumenttiperhe: <a href="https://aethercontinuity.org/tools/ACI-INSTRUMENT-v2.html">WEM</a> · <a href="https://aethercontinuity.org/tools/HEM-monitor.html">HEM</a> · BEM
+BEPP v2 = (D_f^1.2 * D_s^1.0 * D_c^0.8) * (1-R)^1.5<br>
+dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
+T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
+D_s: FinBIF — liito-orava, palokärki, kalasääski<br>
+D_f: CORINE 2018 proxy (0.52)<br>
+D_c: YVA-pipeline 56.3 GW tuulivoima (0.61)<br>
+R:   SYKE suojelualueet (0.38)<br><br>
+Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
+Instrumenttiperhe: WEM · HEM · BEM
 </div>
 
 <footer>
-  BEM — Biodiversity Endurance Monitor · ACI · v0.1 · Pilot<br>
-  Proxy: <a href="https://github.com/AetherContinuity/aci-bem-proxy">aci-bem-proxy</a> ·
-  Dokumentaatio: <a href="https://aethercontinuity.org/supplements/tn-015-biodiversity-endurance-monitor.html">TN-015</a> ·
+  BEM — Biodiversity Endurance Monitor · ACI · v0.1<br>
+  <a href="https://github.com/AetherContinuity/aci-bem-proxy">aci-bem-proxy</a> ·
+  <a href="https://aethercontinuity.org/supplements/tn-015-biodiversity-endurance-monitor.html">TN-015</a> ·
   <a href="https://aethercontinuity.org/">aethercontinuity.org</a>
 </footer>
 
 <script>
-const BEM_PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
+var PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
+var NVE   = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
+var BBOX  = '26.00,62.40,27.50,63.50';
 
-// ERA5 via Open-Meteo — sadevaje ja lämpötila-anomalia (D_c komponentti)
-async function fetchERA5() {
-  // GitHub cache (BEM-pilot repo, sama arkkitehtuuri kuin HEM)
-  // NVE-proxy /era5 — sama proxy joka HEM:llä, ei uusia workereita
-  const NVE = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
-  const r = await fetch(`${NVE}/era5?lat=62.95&lng=26.85&start=2015-01-01`);
-  if (!r.ok) throw new Error(`ERA5 ${r.status}`);
-  return r.json()
-
-async function fetchNDVIScenes() {
-  const r = await fetch(`${PROXY}/ndvi?bbox=${BBOX}&date=2023-07-01/2023-08-31&cloud=20`);
-  if (!r.ok) throw new Error(`NDVI ${r.status}`);
-  return r.json();
-}
-
-function calcPrecipAnomaly(monthly) {
-  if (!monthly?.precipitation_sum?.length) return null;
-  const vals = monthly.precipitation_sum.filter(v => v != null);
-  const recent = vals.slice(-24); // viimeiset 24 kk
-  const older = vals.slice(0, -24);
-  if (!recent.length || !older.length) return null;
-  const recentMean = recent.reduce((a,b)=>a+b,0)/recent.length;
-  const refMean = older.reduce((a,b)=>a+b,0)/older.length;
-  return refMean > 0 ? (recentMean - refMean) / refMean : 0;
-}
-
-const PROXY = 'https://aci-bem-proxy.ruotsalainen-marko.workers.dev';
-const BBOX = '26.00,62.40,27.50,63.50';
-
-// Estimated series (proxy until real pipelines complete)
-const SERIES = [
+var SERIES = [
   {year:2010, Df:0.28, Ds:0.30, Dc:0.18, R:0.48},
   {year:2018, Df:0.41, Ds:0.38, Dc:0.35, R:0.42},
-  {year:2026, Df:null, Ds:null, Dc:0.61, R:0.38}, // D_s filled from live
+  {year:2026, Df:0.52, Ds:0.44, Dc:0.61, R:0.38}
 ];
 
-function bepp_v2(Df, Ds, Dc, R) {
-  return Math.min((Math.pow(Df,1.2)*Math.pow(Ds,1.0)*Math.pow(Dc,0.8))*Math.pow(1-R,1.5), 1.0);
+function beppV2(Df, Ds, Dc, R) {
+  var S = Math.pow(Df,1.2) * Math.pow(Ds,1.0) * Math.pow(Dc,0.8) * Math.pow(1-R,1.5);
+  return Math.min(S, 1.0);
 }
 
 function classify(S) {
-  if (S < 0.25) return {label:'Normal', color:'var(--sg)', id:'t-normal'};
+  if (S < 0.25) return {label:'Normal',   color:'var(--sg)', id:'t-normal'};
   if (S < 0.50) return {label:'Elevated', color:'var(--sy)', id:'t-elevated'};
   if (S < 0.75) return {label:'Critical', color:'var(--sr)', id:'t-critical'};
-  return {label:'BP-like', color:'var(--sr)', id:'t-bp'};
+  return              {label:'BP-like',   color:'var(--sr)', id:'t-bp'};
 }
 
 function trendIcon(t) {
-  if (!t || t==='no_data') return '<span class="trend-nd">—</span>';
-  if (t==='increasing') return '<span class="trend-up">↑ kasvussa</span>';
-  if (t==='stable') return '<span class="trend-st">→ vakaa</span>';
-  if (t==='declining') return '<span class="trend-dn">↓ laskussa</span>';
-  if (t==='strongly_declining') return '<span class="trend-dn">↓↓ vahvasti laskussa</span>';
-  return `<span class="trend-nd">${t}</span>`;
+  if (!t || t === 'no_data')      return '<span class="st">—</span>';
+  if (t === 'increasing')         return '<span class="up">kasvussa</span>';
+  if (t === 'stable')             return '<span class="st">vakaa</span>';
+  if (t === 'declining')          return '<span class="dn">laskussa</span>';
+  if (t === 'strongly_declining') return '<span class="dn">vahvasti laskussa</span>';
+  return '<span class="st">' + t + '</span>';
 }
 
 function setDot(id, state) {
-  const el = document.getElementById(id);
-  if (el) { el.className='dot'; el.classList.add(state); }
+  var el = document.getElementById(id);
+  if (el) { el.className = 'dot'; el.classList.add(state); }
 }
+
 function setText(id, val) {
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   if (el) el.textContent = val;
 }
 
-async function fetchSpecies() {
-  try {
-    const r = await fetch(`${PROXY}/finbif/species?bbox=${BBOX}&ref_years=2000-2010&cur_years=2020-2026`);
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
-    setDot('d-finbif','ok');
-    setText('s-finbif','OK');
-
-    // Update D_s
-    const Ds = d.D_s || 0.44;
-    document.getElementById('ds-val').textContent = Ds.toFixed(3);
-    document.getElementById('ds-class').textContent = d.D_s_classification || '—';
-    document.getElementById('c-ds').textContent = Ds.toFixed(3);
-
-    // Update series 2026 D_s
-    SERIES[2].Ds = Ds;
-
-    // Species table
-    const tbody = document.getElementById('species-body');
-    const sp = d.species || {};
-    const keys = Object.keys(sp);
-    if (keys.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">FinBIF ei palauttanut lajidataa</td></tr>';
-    } else {
-      const rows = keys.map(id => {
-        const s = sp[id];
-        const ref = s.ref_annual != null ? s.ref_annual.toFixed(1) : (s.ref_total != null ? s.ref_total : '—');
-        const cur = s.cur_annual != null ? s.cur_annual.toFixed(1) : (s.cur_total != null ? s.cur_total : '—');
-        const norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : (s.ratio != null ? s.ratio.toFixed(3) : '—');
-        const trendKey = s.norm_trend || s.trend || 'no_data';
-        const trend = trendIcon(trendKey);
-        // Näytä lajin nimi selkeästi
-        const nameFull = s.name || id;
-        const nameFi = nameFull.match(/\(([^/]+)\//)?.[1] || nameFull.split('(')[0].trim();
-        return `<tr><td title="${nameFull}">${nameFi}</td><td>${ref}</td><td>${cur}</td><td>${norm}</td><td>${trend}</td></tr>`;
-      }).join('');
-      tbody.innerHTML = rows;
-    }
-
-    return Ds;
-  } catch(e) {
-    setDot('d-finbif','err');
-    setText('s-finbif','err');
-    document.getElementById('species-body').innerHTML =
-      `<tr><td colspan="5" class="derr">${e.message}</td></tr>`;
-    return 0.44; // fallback
-  }
-}
-
-async function fetchCopernicus() {
-  try {
-    const r = await fetch(`${PROXY}/copernicus/ndvi?bbox=${BBOX}&date=2024-06-01/2024-09-30&cloud=20`);
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
-    setDot('d-cop','ok');
-    setText('s-cop','OK');
-    const box = document.getElementById('cop-box');
-    box.innerHTML = `Sentinel-2 scenejä löydetty: <b>${d.scene_count}</b> (2024 kesä, pilvisyys ≤20%)<br>` +
-      (d.scenes||[]).slice(0,3).map(s =>
-        `<span style="color:var(--muted)">${s.date?.slice(0,10)||'?'}</span> ` +
-        `pilvisyys ${s.cloud_cover?.toFixed(1)||'?'}% — NDVI-bandien URL saatavilla`
-      ).join('<br>') +
-      (d.scenes?.length > 3 ? `<br>... ja ${d.scenes.length-3} muuta` : '');
-  } catch(e) {
-    setDot('d-cop','warn');
-    setText('s-cop','—');
-    document.getElementById('cop-box').innerHTML =
-      `<span class="derr">Copernicus STAC ei saatavilla: ${e.message}</span><br>` +
-      `<span style="color:var(--muted)">D_f lasketaan proxy-estimaateista.</span>`;
-  }
-}
-
 function updateBEPP(Ds) {
-  // Fill in 2026 D_s from live data
-  const s = SERIES[2];
-  if (Ds) s.Ds = Ds;
-  s.Df = s.Df || 0.52; // proxy
-
-  // Compute series
-  const vals = SERIES.map(s => ({
-    year: s.year,
-    S: bepp_v2(s.Df, s.Ds, s.Dc, s.R)
-  }));
-
-  const latest = vals[vals.length-1];
-  const prev = vals[vals.length-2];
-  const dSdt = (latest.S - prev.S) / 8;
-  const T = latest.S * Math.max(0, dSdt) * (1 - SERIES[2].R);
-  const cls = classify(latest.S);
-
-  // Update badge
-  document.getElementById('bepp-val').textContent = latest.S.toFixed(3);
-  document.getElementById('bepp-val').style.color = cls.color;
-  document.getElementById('bepp-regime').textContent = cls.label;
-  document.getElementById('bepp-regime').style.color = cls.color;
-  document.getElementById('c-df').textContent = SERIES[2].Df.toFixed(3);
-  document.getElementById('c-ds').textContent = SERIES[2].Ds.toFixed(3);
-  document.getElementById('c-dc').textContent = SERIES[2].Dc.toFixed(3);
-  document.getElementById('c-r').textContent = SERIES[2].R.toFixed(3);
-
-  // Cards
-  document.getElementById('df-val').textContent = SERIES[2].Df.toFixed(3);
-  document.getElementById('dc-val').textContent = SERIES[2].Dc.toFixed(3);
-  document.getElementById('r-val').textContent = SERIES[2].R.toFixed(3);
-
-  // Thresholds
-  ['t-normal','t-elevated','t-critical','t-bp'].forEach(id => {
-    document.getElementById(id)?.classList.remove('active');
+  if (Ds != null) SERIES[2].Ds = Ds;
+  var vals = SERIES.map(function(s) {
+    return { year: s.year, S: beppV2(s.Df, s.Ds, s.Dc, s.R) };
   });
-  document.getElementById(cls.id)?.classList.add('active');
+  var latest = vals[2];
+  var prev   = vals[1];
+  var dSdt   = (latest.S - prev.S) / 8;
+  var T      = latest.S * Math.max(0, dSdt) * (1 - SERIES[2].R);
+  var cls    = classify(latest.S);
 
-  // Trajectory bars
-  const maxS = Math.max(...vals.map(v=>v.S), 0.1);
-  document.getElementById('traj-bars').innerHTML = vals.map(v => {
-    const h = Math.max(8, Math.round(v.S / maxS * 56));
-    const c = classify(v.S);
-    return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
-      <span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">${v.S.toFixed(3)}</span>
-      <div style="width:100%;height:${h}px;background:${c.color};border-radius:2px 2px 0 0;opacity:.8"></div>
-    </div>`;
-  }).join('');
+  setText('bepp-val', latest.S.toFixed(3));
+  document.getElementById('bepp-val').style.color = cls.color;
+  setText('bepp-regime', cls.label);
+  document.getElementById('bepp-regime').style.color = cls.color;
+  setText('c-df', SERIES[2].Df.toFixed(3));
+  setText('c-ds', SERIES[2].Ds.toFixed(3));
+  setText('c-dc', SERIES[2].Dc.toFixed(3));
+  setText('c-r',  SERIES[2].R.toFixed(3));
 
-  // Trajectory info
-  document.getElementById('dsdt-val').textContent = (dSdt>=0?'+':'')+dSdt.toFixed(5)+'/v';
-  document.getElementById('dsdt-val').style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
-  document.getElementById('tipping-val').textContent = T.toFixed(6);
-  document.getElementById('trend-val').textContent = dSdt > 0 ? '⚠ heikkeneminen' : '✓ elpyminen';
-  document.getElementById('trend-val').style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+  var bands = ['t-normal','t-elevated','t-critical','t-bp'];
+  for (var i = 0; i < bands.length; i++) {
+    var el = document.getElementById(bands[i]);
+    if (el) el.classList.remove('active');
+  }
+  var active = document.getElementById(cls.id);
+  if (active) active.classList.add('active');
+
+  var maxS = 0;
+  for (var j = 0; j < vals.length; j++) { if (vals[j].S > maxS) maxS = vals[j].S; }
+  if (maxS === 0) maxS = 0.1;
+
+  var html = '';
+  for (var k = 0; k < vals.length; k++) {
+    var v  = vals[k];
+    var h  = Math.max(8, Math.round(v.S / maxS * 52));
+    var c  = classify(v.S);
+    html += '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">' +
+      '<span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">' + v.S.toFixed(3) + '</span>' +
+      '<div style="width:100%;height:' + h + 'px;background:' + c.color + ';border-radius:2px 2px 0 0;opacity:.8"></div>' +
+      '</div>';
+  }
+  document.getElementById('traj-bars').innerHTML = html;
+
+  var dsEl = document.getElementById('dsdt-val');
+  if (dsEl) {
+    dsEl.textContent = (dSdt >= 0 ? '+' : '') + dSdt.toFixed(5) + '/v';
+    dsEl.style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+  }
+  setText('tipping-val', T.toFixed(6));
+  var trEl = document.getElementById('trend-val');
+  if (trEl) {
+    trEl.textContent = dSdt > 0 ? 'heikkeneminen' : 'elpyminen';
+    trEl.style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+  }
 }
 
-async function fetchAll() {
-  document.getElementById('s-ts').textContent = new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'});
+function fetchSpecies() {
+  var url = PROXY + '/finbif/species?bbox=' + BBOX + '&ref_years=2000-2010&cur_years=2020-2026';
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(function(d) {
+      setDot('d-finbif', 'ok');
+      setText('s-finbif', 'OK');
 
-  // Parallel fetches
-  const [Ds, era5, ndvi] = await Promise.allSettled([
-    fetchSpecies(),
-    fetchERA5(),
-    fetchNDVIScenes()
-  ]);
+      var Ds = d.D_s || 0.44;
+      setText('ds-val', Ds.toFixed(3));
+      setText('ds-class', d.D_s_classification || '');
+      updateBEPP(Ds);
 
-  const DsVal = Ds.status === 'fulfilled' ? Ds.value : 0.44;
-  updateBEPP(DsVal);
+      var sp   = d.species || {};
+      var keys = Object.keys(sp);
+      var tbody = document.getElementById('sp-body');
+      if (!tbody) return;
 
-  // ERA5 ilmastodata
-  if (era5.status === 'fulfilled') {
-    const ev = era5.value;
-    const box = document.getElementById('era5-box');
-    if (box && ev) {
-      let anomPct = null, recent12mo = null, lastT = null;
-      let srcLabel = '';
-
-      // Formaatti 1: GitHub cache (stats esilaskettu)
-      if (ev.stats && ev.stats.precip_anomaly_pct != null) {
-        anomPct = ev.stats.precip_anomaly_pct;
-        recent12mo = ev.stats.recent_precip_12mo_mm;
-        const temps = (ev.rows||[]).slice(-30).map(r=>r.temp_c).filter(v=>v!=null);
-        lastT = temps.length ? temps.reduce((a,b)=>a+b,0)/temps.length : null;
-        srcLabel = ' · ERA5-Land CDS';
+      if (keys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">FinBIF ei palauttanut lajidataa</td></tr>';
+        return;
       }
-      // Formaatti 2: Open-Meteo daily
-      else if (ev.daily?.precipitation_sum) {
-        const p = ev.daily.precipitation_sum.filter(v=>v!=null);
-        const t = ev.daily.temperature_2m_mean?.filter(v=>v!=null) || [];
-        recent12mo = p.slice(-365).reduce((a,b)=>a+b,0);
-        const ref = p.slice(0,-365);
-        const refAnn = ref.length > 0 ? ref.reduce((a,b)=>a+b,0)/ref.length*365 : null;
-        anomPct = refAnn ? ((recent12mo-refAnn)/refAnn*100) : null;
-        lastT = t.slice(-30).reduce((a,b)=>a+b,0)/Math.max(1,t.slice(-30).length);
-        srcLabel = ' · Open-Meteo';
+      var rows = '';
+      for (var i = 0; i < keys.length; i++) {
+        var id = keys[i];
+        var s  = sp[id];
+        var ref  = s.ref_annual != null ? s.ref_annual.toFixed(1) : String(s.ref_total || 0);
+        var cur  = s.cur_annual != null ? s.cur_annual.toFixed(1) : String(s.cur_total || 0);
+        var norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : (s.ratio != null ? s.ratio.toFixed(3) : '—');
+        var name = (s.name || id).split(" ")[0];
+        rows += '<tr><td title="' + (s.name||id) + '">' + name + '</td>' +
+                '<td>' + ref + '</td><td>' + cur + '</td>' +
+                '<td>' + norm + '</td><td>' + trendIcon(s.norm_trend || s.trend) + '</td></tr>';
       }
+      tbody.innerHTML = rows;
+    })
+    .catch(function(e) {
+      setDot('d-finbif', 'err');
+      setText('s-finbif', 'err');
+      var tb = document.getElementById('sp-body');
+      if (tb) tb.innerHTML = '<tr><td colspan="5" style="color:var(--sr)">' + e.message + '</td></tr>';
+      updateBEPP(null);
+    });
+}
 
-      const anomStr = anomPct!=null ? (anomPct>=0?'+':'')+anomPct.toFixed(1)+'%' : '—';
-      const anomColor = anomPct!=null && anomPct < -10 ? 'var(--sr)' : 'var(--sg)';
-      box.innerHTML = `Sademäärä 12kk: <b>${recent12mo?.toFixed(0)||'—'} mm</b> &nbsp;
-        anomalia vs ref: <b style="color:${anomColor}">${anomStr}</b> &nbsp;
-        lämpötila 30vrk: <b>${lastT?.toFixed(1)||'—'} °C</b>
-        <span style="color:var(--muted);font-size:.58rem">${srcLabel}</span>`;
+function fetchERA5() {
+  var url = NVE + '/era5?lat=62.95&lng=26.85&start=2015-01-01';
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(function(d) {
+      var box = document.getElementById('era5-box');
+      if (!box) return;
+      var anom = d.precip_anomaly_pct;
+      var aStr = anom != null ? (anom >= 0 ? '+' : '') + anom.toFixed(1) + '%' : '—';
+      var aCol = (anom != null && anom < -10) ? 'var(--sr)' : 'var(--sg)';
+      box.innerHTML = 'Sademäärä 12kk: <b>' + (d.precip_12mo_mm || '—') + ' mm</b>' +
+        ' &nbsp; anomalia: <b style="color:' + aCol + '">' + aStr + '</b>' +
+        ' &nbsp; lämpötila 30vrk: <b>' + (d.temp_30d_avg_c != null ? d.temp_30d_avg_c.toFixed(1) : '—') + ' °C</b>' +
+        ' <span style="color:var(--muted);font-size:.58rem">ERA5 · NVE proxy</span>';
       setDot('d-era5', 'ok');
       setText('s-era5', 'OK');
-    }
-  } else {
-    setDot('d-era5', 'warn');
-    setText('s-era5', '—');
-  }
+    })
+    .catch(function(e) {
+      setDot('d-era5', 'warn');
+      setText('s-era5', '—');
+      var b = document.getElementById('era5-box');
+      if (b) b.innerHTML = '<span style="color:var(--sr)">ERA5: ' + e.message + '</span>';
+    });
+}
 
-  // NDVI scenes
-  const ndviBox = document.getElementById('ndvi-box');
-  if (ndvi.status === 'fulfilled' && ndviBox) {
-    const d = ndvi.value;
-    if (d && (d.scene_id || d.scene_count >= 0)) {
-      const cloudStr = d.cloud_pct != null ? d.cloud_pct.toFixed(1)+'%' : '?%';
-      const sceneInfo = d.scene_id
-        ? `Paras scene: <b>${d.date||'?'}</b> · pilvisyys ${cloudStr} · ` +
-          `<a href="${d.b04_url||'#'}" target="_blank" style="color:var(--accent)">B04</a> · ` +
-          `<a href="${d.b08_url||'#'}" target="_blank" style="color:var(--accent)">B08</a>`
-        : `<span style="color:var(--muted)">Ei scenejä löydetty</span>`;
-      ndviBox.innerHTML = sceneInfo +
-        `<span style="color:var(--muted);font-size:.6rem;margin-left:8px">${d.all_scenes||0} sceneä</span>`;
-      setDot('d-ndvi', d.scene_id ? 'ok' : 'warn');
-      setText('s-ndvi', d.scene_id ? 'OK' : '—');
-    } else {
-      ndviBox.innerHTML = `<span class="derr">${(d&&d.error)||'Ei dataa'}</span>`;
-      setDot('d-ndvi', 'warn');
-    }
-  } else if (ndvi.status === 'rejected') {
-    if (ndviBox) ndviBox.innerHTML = `<span class="derr">NDVI: ${ndvi.reason?.message||'virhe'}</span>`;
-    setDot('d-ndvi', 'err');
-    setText('s-ndvi', 'err');
-  }
+function fetchCopernicus() {
+  var url = PROXY + '/copernicus/ndvi?bbox=' + BBOX + '&date=2024-06-01/2024-09-30&cloud=20';
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(function(d) {
+      var box = document.getElementById('cop-box');
+      if (!box) return;
+      if (d.scene_count > 0) {
+        box.innerHTML = 'Sentinel-2: <b>' + d.scene_count + '</b> sceneä löydetty (2024 kesä, pilvisyys ≤20%)';
+        setDot('d-cop', 'ok');
+        setText('s-cop', 'OK');
+      } else {
+        box.innerHTML = '<span style="color:var(--muted)">Copernicus: ei scenejä löydetty</span>';
+        setDot('d-cop', 'warn');
+      }
+    })
+    .catch(function(e) {
+      setDot('d-cop', 'warn');
+      var b = document.getElementById('cop-box');
+      if (b) b.innerHTML = '<span style="color:var(--muted)">Copernicus: ' + e.message + '</span>';
+    });
+}
+
+function fetchAll() {
+  setText('s-ts', new Date().toLocaleTimeString('fi-FI', {hour:'2-digit', minute:'2-digit'}));
+  updateBEPP(null);
+  fetchSpecies();
+  fetchERA5();
   fetchCopernicus();
 }
 
-// Init
-fetchAll();
-const ev = era5.value || {};
-    const box = document.getElementById('era5-box');
-    if (box) {
-      let anomPct=null, recent12=null, lastT=null, srcLbl='';
-      if (ev.precip_anomaly_pct != null) {
-        // NVE proxy /era5 format (esilaskettu)
-        anomPct = ev.precip_anomaly_pct;
-        recent12 = ev.precip_12mo_mm;
-        lastT = ev.temp_30d_avg_c;
-        srcLbl = 'ERA5 · NVE proxy';
-      } else if (ev.stats?.precip_anomaly_pct != null) {
-        anomPct = ev.stats.precip_anomaly_pct;
-        recent12 = ev.stats.recent_precip_12mo_mm;
-        srcLbl = 'ERA5-Land CDS';
-      } else if (ev.daily?.precipitation_sum) {
-        // Open-Meteo format
-        const p = ev.daily.precipitation_sum.filter(v=>v!=null);
-        const t = (ev.daily.temperature_2m_mean||[]).filter(v=>v!=null);
-        recent12 = p.slice(-365).reduce((a,b)=>a+b,0);
-        const ref = p.slice(0,-365);
-        const refA = ref.length ? ref.reduce((a,b)=>a+b,0)/ref.length*365 : null;
-        anomPct = refA ? (recent12-refA)/refA*100 : null;
-        lastT = t.slice(-30).reduce((a,b)=>a+b,0)/Math.max(1,t.slice(-30).length);
-        srcLbl = 'Open-Meteo ERA5';
-      }
-      const aStr = anomPct!=null ? (anomPct>=0?'+':'')+anomPct.toFixed(1)+'%' : '—';
-      const aCol = anomPct!=null&&anomPct<-10 ? 'var(--sr)' : 'var(--sg)';
-      box.innerHTML = `Sademäärä 12kk: <b>${recent12?.toFixed(0)||'—'} mm</b> &nbsp; anomalia: <b style="color:${aCol}">${aStr}</b> &nbsp; lämpötila 30vrk: <b>${lastT?.toFixed(1)||'—'} °C</b> <span style="color:var(--muted);font-size:.58rem">${srcLbl}</span>`;
-      setDot('d-era5', 'ok');
-      setText('s-era5', 'OK');
-    }
-  } else {
-    setDot('d-era5', 'warn');
-    setText('s-era5', '—');
-  }
-
-  // NDVI scenes
-  const ndviBox = document.getElementById('ndvi-box');
-  if (ndvi.status === 'fulfilled' && ndviBox) {
-    const d = ndvi.value;
-    if (d && (d.scene_id || d.scene_count >= 0)) {
-      const cloudStr = d.cloud_pct != null ? d.cloud_pct.toFixed(1)+'%' : '?%';
-      const sceneInfo = d.scene_id
-        ? `Paras scene: <b>${d.date||'?'}</b> · pilvisyys ${cloudStr} · ` +
-          `<a href="${d.b04_url||'#'}" target="_blank" style="color:var(--accent)">B04</a> · ` +
-          `<a href="${d.b08_url||'#'}" target="_blank" style="color:var(--accent)">B08</a>`
-        : `<span style="color:var(--muted)">Ei scenejä löydetty</span>`;
-      ndviBox.innerHTML = sceneInfo +
-        `<span style="color:var(--muted);font-size:.6rem;margin-left:8px">${d.all_scenes||0} sceneä</span>`;
-      setDot('d-ndvi', d.scene_id ? 'ok' : 'warn');
-      setText('s-ndvi', d.scene_id ? 'OK' : '—');
-    } else {
-      ndviBox.innerHTML = `<span class="derr">${(d&&d.error)||'Ei dataa'}</span>`;
-      setDot('d-ndvi', 'warn');
-    }
-  } else if (ndvi.status === 'rejected') {
-    if (ndviBox) ndviBox.innerHTML = `<span class="derr">NDVI: ${ndvi.reason?.message||'virhe'}</span>`;
-    setDot('d-ndvi', 'err');
-    setText('s-ndvi', 'err');
-  }
-  fetchCopernicus();
-}
-
-// Init
 fetchAll();
 </script>
 </body>
