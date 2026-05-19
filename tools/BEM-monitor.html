@@ -312,7 +312,10 @@ function fetchSpecies() {
         var ref  = s.ref_annual != null ? s.ref_annual.toFixed(1) : String(s.ref_total || 0);
         var cur  = s.cur_annual != null ? s.cur_annual.toFixed(1) : String(s.cur_total || 0);
         var norm = s.norm_ratio != null ? s.norm_ratio.toFixed(3) : (s.ratio != null ? s.ratio.toFixed(3) : '—');
-        var name = (s.name || id).split(" ")[0];
+        // Näytä suomenkielinen nimi: "Dryocopus martius (palokärki / ...)" → "palokärki"
+        var fullName = s.name || id;
+        var fiMatch = fullName.match(/\(([^\/]+)\//);
+        var name = fiMatch ? fiMatch[1].trim() : fullName.split(' ')[0];
         rows += '<tr><td title="' + (s.name||id) + '">' + name + '</td>' +
                 '<td>' + ref + '</td><td>' + cur + '</td>' +
                 '<td>' + norm + '</td><td>' + trendIcon(s.norm_trend || s.trend) + '</td></tr>';
