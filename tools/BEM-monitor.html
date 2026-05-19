@@ -293,13 +293,16 @@ function fetchSpecies() {
       setText('ds-class', d.D_s_classification || '');
       updateBEPP(Ds);
 
+      console.log('FinBIF D_s:', d.D_s, 'species keys:', Object.keys(d.species || {}).length);
+      console.log('FinBIF full response:', JSON.stringify(d).slice(0, 500));
+
       var sp   = d.species || {};
       var keys = Object.keys(sp);
       var tbody = document.getElementById('sp-body');
       if (!tbody) return;
 
       if (keys.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">FinBIF ei palauttanut lajidataa</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">FinBIF ei palauttanut lajidataa (D_s=' + d.D_s + ')</td></tr>';
         return;
       }
       var rows = '';
