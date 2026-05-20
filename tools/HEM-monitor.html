@@ -494,8 +494,9 @@ async function fetchMuonio() {
   try {
     const d = await(await fetch(RAW+'/muonio.json?t='+Date.now())).json();
     const wl = d.forecast_central_m ?? d.f14?.peak_wl_mean ?? null;
-    const MNW_M = d.ref_min_max ?? 243.0;
-    const MHW_M = d.mhw_m ?? 246.0;
+    const MNW_M = d.ref_min_max ?? 231.45;
+    const MHW_M = d.mhw_m       ?? 233.79;
+    const NORM_M = d.ref_mean_max ?? 232.57;
     const pct = wl ? Math.max(0,Math.min(100,((wl-MNW_M)/(MHW_M-MNW_M))*100)) : 0;
 
     if (el) el.textContent = (wl ? wl.toFixed(2) : '—') + ' m NN';
@@ -509,7 +510,7 @@ async function fetchMuonio() {
     if (mhw) mhw.textContent = 'MHW ' + MHW_M.toFixed(2);
     if (det) det.innerHTML =
       'Keväthuippu: ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
-      ' · ka ' + (d.ref_mean_max ?? '—') + ' m' +
+      ' · ka ' + (NORM_M.toFixed(2)) + ' m' +
       ' · Huippu ' + (d.peak_date_mean ?? d.f14?.peak_date_mean ?? '—') +
       '<br>MNW: ' + MNW_M.toFixed(2) + ' m · MHW: ' + MHW_M.toFixed(2) + ' m' +
       '<br>Muonionjoki · Tornionjoen vesistöalue 67 · säännöstelemätön · WSFS q6700800y';
