@@ -489,32 +489,43 @@ async function drawCharts(fmi){
 }
 
 async function fetchMuonio() {
+  const det = document.getElementById('muo-det');
+  const el  = document.getElementById('muo-gval');
   try {
-    const r = await fetch(PROXY + '/syke/wsfs?point=q6700800y');
-    if (!r.ok) throw new Error(r.status);
+    // SYKE WSFS JSON suoraan — sama kuin Iisvesi mutta Tornionjoki
+    const r = await fetch(PROXY + '/syke?location=67.112.0.001&start=2024-01-01');
+    if (!r.ok) throw new Error('SYKE ' + r.status);
     const d = await r.json();
-
-    // WSFS palauttaa ennusteen - haetaan viimeisin arvo
-    const vals = d.forecast || d.rows || [];
-    const latest = vals.length ? vals[0] : null;
-    const wl = latest ? (latest.value ?? latest.w ?? latest.Wvalue) : null;
-
-    const el = document.getElementById('muo-gval');
-    const det = document.getElementById('muo-det');
+    const rows = d.rows || [];
+    const last = rows[rows.length - 1];
+    const wl = last ? last.value : null;
 
     if (wl != null) {
       if (el) el.textContent = wl.toFixed(2) + ' m NN';
-      if (det) det.textContent = 'Muonionjoki Muonio · ' + (latest.date || '?') +
-        ' · Tornionjoen vesistöalue · q6700800y · n=' + vals.length;
+      const fill = document.getElementById('muo-gfill');
+      // Muonion normaali noin 244 m NN, MNW ~243, MHW ~246
+      const MNW_M=243.0, MHW_M=246.0;
+      if (fill) fill.style.width = Math.max(0,Math.min(100,
+        (wl-MNW_M)/(MHW_M-MNW_M)*100)).toFixed(1)+'%';
+      const pct = document.getElementById('muo-gpct');
+      if (pct) pct.textContent = last.date || '?';
+      const mnw = document.getElementById('muo-mnw');
+      if (mnw) mnw.textContent = 'MNW ' + MNW_M;
+      const mhw = document.getElementById('muo-mhw');
+      if (mhw) mhw.textContent = 'MHW ' + MHW_M;
+      if (det) det.innerHTML = 'Muonionjoki Muonio · ' + (last.date||'?') +
+        ' · ' + wl.toFixed(2) + ' m NN' +
+        ' · <a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html"' +
+        ' target="_blank" style="color:var(--accent)">WSFS ennuste</a>' +
+        ' · Tornionjoen vesistöalue 67 · säännöstelemätön';
     } else {
       if (el) el.textContent = '— m NN';
-      if (det) det.innerHTML = 'WSFS: data saatavilla · ' +
-        '<a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" ' +
-        'target="_blank" style="color:var(--accent)">wwwi2.ymparisto.fi</a>';
+      if (det) det.innerHTML = 'Ei dataa · <a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" target="_blank" style="color:var(--accent)">WSFS Muonio</a>';
     }
   } catch(e) {
-    const det = document.getElementById('muo-det');
-    if (det) det.textContent = 'Muonio: ' + e.message;
+    if (el) el.textContent = '— m NN';
+    if (det) det.innerHTML = 'Muonio: ' + e.message +
+      ' · <a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" target="_blank" style="color:var(--accent)">WSFS Muonio</a>';
   }
 }
 
