@@ -121,6 +121,14 @@ footer a{color:var(--accent);text-decoration:none}
 </div>
 <div class="dbox" id="iis-det">Ladataan…</div>
 
+<div class="shdr"><span class="snum">§ 02b</span><span class="stit">Muonionjoki Muonio WSFS — Vedenkorkeus (Tornionjoki, subarktinen)</span></div>
+<div class="gauge">
+  <div class="gval" id="muo-gval">— m NN</div>
+  <div class="gbar"><div class="gfill" id="muo-gfill" style="width:0%"></div></div>
+  <div class="glbls"><span id="muo-mnw">MNW —</span><span id="muo-gpct">—</span><span id="muo-mhw">MHW —</span></div>
+</div>
+<div class="dbox" id="muo-det">Ladataan…</div>
+
 <div class="shdr"><span class="snum">§ 03</span><span class="stit">FMI — Kuopio Savilahti (101590)</span></div>
 <div class="dbox" id="fmi-det">Ladataan…</div>
 
@@ -480,9 +488,40 @@ async function drawCharts(fmi){
   drawEnvelope('cm',serT.slice(-36),bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Lämpötila 36kk · mediaaninauha');
 }
 
+async function fetchMuonio() {
+  try {
+    const r = await fetch(PROXY + '/syke/wsfs?point=q6700800y');
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+
+    // WSFS palauttaa ennusteen - haetaan viimeisin arvo
+    const vals = d.forecast || d.rows || [];
+    const latest = vals.length ? vals[0] : null;
+    const wl = latest ? (latest.value ?? latest.w ?? latest.Wvalue) : null;
+
+    const el = document.getElementById('muo-gval');
+    const det = document.getElementById('muo-det');
+
+    if (wl != null) {
+      if (el) el.textContent = wl.toFixed(2) + ' m NN';
+      if (det) det.textContent = 'Muonionjoki Muonio · ' + (latest.date || '?') +
+        ' · Tornionjoen vesistöalue · q6700800y · n=' + vals.length;
+    } else {
+      if (el) el.textContent = '— m NN';
+      if (det) det.innerHTML = 'WSFS: data saatavilla · ' +
+        '<a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" ' +
+        'target="_blank" style="color:var(--accent)">wwwi2.ymparisto.fi</a>';
+    }
+  } catch(e) {
+    const det = document.getElementById('muo-det');
+    if (det) det.textContent = 'Muonio: ' + e.message;
+  }
+}
+
 async function fetchAll(){
   setText('s-ts','…');
   const[nve,iis,fmi]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI()]);
+  fetchMuonio();
   const h=computeHEPP(nve,iis,fmi);
   const col=hCol(h.val);
   setText('hval',h.val.toFixed(2));document.getElementById('hval').style.color=col;
