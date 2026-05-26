@@ -94,250 +94,100 @@
 </div>
 
 <div class="abstract">
-  <strong>Tiivistelmä.</strong> CN-014 tarkastelee Suomen kolmen erillisen helikopterijärjestelmän
-  (Puolustusvoimat, Rajavartiolaitos, FinnHEMS) koordinaatiovajetta ja esittää M-komponentin
-  (mobility resilience) lisäämistä DRD-08:n R-kerrokseen. Norjan NAWSARH/SAR Queen -ohjelma
-  tarjoaa validoitua vertailukohtaa: oikeusministeriön omistamat, ilmavoimien operoimat ja
-  Hovedredningssentralenin johtamat 16–18 AW101-helikopteria muodostavat yhtenäisen järjestelmän.
-  Suomen ~30 virka-aputehtävän vuosittainen volyymi on vain murto-osa potentiaalisesta
-  kapasiteetista. Esitetään kolme toimenpidettä: (1) NH90-kaksoisroolin systematisointi,
-  (2) HEMS-kattavuuden laajentaminen Itä- ja Pohjois-Suomeen, (3) reserviläisrahoitusmalli.
-  Budjettivaikutus alle 1–2 % DRD-08:n energiainvestoinneista.
+  <strong>Ydinhavainto.</strong> Suomen helikopterikapasiteetti on jaettu kolmeen
+  erilliseen järjestelmään ilman yhteistä dispatch-logiikkaa, command authority -selkeyttä
+  tai korvausmallia. Ongelma ei ole kaluston määrä vaan päätöksenteon yhteensopimattomuus.
+  Testattava hypoteesi: jos yhteinen tehtäväpriorisointikerros rakennetaan,
+  vasteajat alenevat ilman kalustomuutosta.
 </div>
+<h2>§ 1 — Ydinhavainto</h2>
 
-<h2>§ 1 — Helikopterit R-kerroksen liikkuvana infrastruktuurina</h2>
+<p>Suomessa helikopterikapasiteetti on jaettu kolmeen erilliseen järjestelmään:
+FinnHEMS (sote-HEMS), Rajavartiolaitos (SAR ja merellinen valvonta) ja Puolustusvoimat
+(sotilaallinen kuljetus ja virka-apu). Näillä järjestelmillä ei ole yhtenäistä
+tehtävien priorisointia, yhteistä dispatch-logiikkaa tai yhtenäistä resurssien
+allokointimallia.</p>
 
-<p>DRD-08:n R-kerros rakentuu E (energiaresilienssi) ja D (dataresilienssi) komponenteista,
-joiden yhteisvaikutus on <code>√(E·D)</code>. Tähän lisätään neljäs operatiivinen ulottuvuus:
-<strong>M (mobility resilience)</strong> — liikkuva kyvykkyys joka mahdollistaa C2-kyvyn
-säilyttämisen, logistiikan jatkuvuuden ja ihmishenkien pelastamisen myös silloin kun kiinteä
-infrastruktuuri on vaurioitunut.</p>
+<h2>§ 2 — Keskeinen ongelma</h2>
 
-<p>Helikopterit ovat tämän liikkuvan resilienssin ydin — mobiileina C2-solmuina, logistiikan
-jatkuvuuden mahdollistajina ja henkien pelastajina. Nykyinen kolmen erillisen organisaation
-malli on tämän tavoitteen este.</p>
-
-<h2>§ 2 — Nykytila: kolme järjestelmää, yksi katto</h2>
-
-<table>
-  <thead>
-    <tr><th>Organisaatio</th><th>Kalusto</th><th>Päätehtävä</th><th>Rooli kriisissä</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><strong>Puolustusvoimat (Utti)</strong></td>
-      <td>20 NH90 + 7 MD500</td>
-      <td>Sotilastehtävät + ~30 virka-apua/v</td>
-      <td>Määrittelemätön</td></tr>
-    <tr><td><strong>Rajavartiolaitos</strong></td>
-      <td>Super Puma, AB206</td>
-      <td>Meripelastus, raja</td>
-      <td>Määrittelemätön</td></tr>
-    <tr><td><strong>FinnHEMS (siviili)</strong></td>
-      <td>EC135, H145 · 8 tukikohtaa</td>
-      <td>Lääkärihelikopteri</td>
-      <td>Jatkuu (?)</td></tr>
-  </tbody>
-</table>
-
-<p>FinnHEMS tavoittaa 70–80 % suomalaisista 30 minuutissa — mutta Lappi ja Itä-Suomi ovat
-alipeitettyjä. Rovaniemi on pohjoisin tukikohta. Ongelma on tunnistettu jo 2019-selvityksessä
-ilman korjaavia toimenpiteitä.</p>
-
-<div class="finding">
-  <strong>Kriittinen havainto:</strong> Puolustusvoimilla on 20 NH90:ää jotka suorittavat
-  ~30 virka-aputehtävää vuodessa. Norjalla 18 AW101:llä lentää tuhansia tehtäviä vuodessa.
-  Sama kalusto, eri käyttöaste — este on organisatorinen, ei tekninen.
-</div>
-
-<h2>§ 2b — Aslak: koordinaatiovaje käytännössä</h2>
-
-<p>Pelastushelikopteri Aslak Lapissa on täsmälleen se järjestelmätason epäonnistuminen
-jota CN-014 kuvaa koordinaatiovajeena. Kriittinen pelastushelikopteri harvaan asutulla
-alueella toimii epävakaalla rahoituksella — jopa lahjoitusvaroin — ja on keskeyttänyt
-toimintaansa talousvaikeuksien ja teknisten ongelmien vuoksi.</p>
-
-<p>Sisäministeriö myönsi 500 000 euron erillisrahoituksen marraskuussa 2025.
-Se on väliaikaisratkaisu rakenteelliseen ongelmaan: kolme erillistä järjestelmää,
-joista yksi on jatkuvassa kriisissä, eikä mikään taho omaa kokonaisvastuuta.</p>
-
-<div class="finding">
-  <strong>Aslak osoittaa:</strong> Koordinaatiovaje ei ole teoreettinen. Se tarkoittaa
-  että Rovaniemen pohjoispuolella ihminen voi kuolla siksi että pelastushelikopterin
-  rahoitus on epäselvä — samalla kun 20 NH90:ää seisoo Utissa ~30 tehtävää vuodessa.
-</div>
-
-<h2>§ 3 — Vertailukohta: Norjan NAWSARH/SAR Queen -malli</h2>
-
-<p>Norjan ratkaisu: integraatio, ei lisäkalusto. 16–18 Leonardo AW101 SAR Queen -helikopteria
-seitsemältä tukikohdalta (Tromssan tukikohta lisätty tammikuussa 2026), hallintomalli kolmen ministeriön yhteistyönä:</p>
-
-<table>
-  <thead><tr><th>Taso</th><th>Toimija</th><th>Tehtävä</th></tr></thead>
-  <tbody>
-    <tr><td>Omistajuus</td><td>Oikeusministeriö</td><td>Kalusto valtion omaisuutta</td></tr>
-    <tr><td>Operointi</td><td>Ilmavoimat (330 Squadron)</td><td>Lentotoiminta, tekniset valmiudet</td></tr>
-    <tr><td>Operatiivinen johto</td><td>Hovedredningssentralen</td><td>Siviilipelastustehtävien johtaminen</td></tr>
-  </tbody>
-</table>
-
-<p>Sama AW101 toimii normaalioloissa SAR-tehtävissä ja kriisitilanteessa siirtyy sotilaskäyttöön.
-Alkuperäinen 16 koneen sopimuksen arvo ~1,15 mrd EUR (2013). Suorituskyky: operoi arktisilla
-alueilla, jäissä ja kovassa merenkäynnissä.</p>
-
-<table>
-  <thead><tr><th>Mittari</th><th>Suomi</th><th>Norja</th></tr></thead>
-  <tbody>
-    <tr><td>Väkiluku</td><td>5,6 M</td><td>5,5 M</td></tr>
-    <tr><td>Helikopterit (pelastus/HEMS)</td><td>8 (FinnHEMS) + RVL</td><td>18 (SAR Queen, 7 tukikohtaa)</td></tr>
-    <tr><td>Sotilaallinen kalusto</td><td>20 NH90 + 7 MD500</td><td>0 (SAR Queen = kaksoisrooli)</td></tr>
-    <tr><td>Yhtenäinen järjestelmä</td><td><strong>Ei</strong> (3 org.)</td><td><strong>Kyllä</strong> (1 järjestelmä)</td></tr>
-    <tr><td>Pelastustehtävät/v</td><td>~30 (virka-apu)</td><td>~1 000 (SAR)</td></tr>
-  </tbody>
-</table>
-
-<h3>Norjan NH90-varoitus</h3>
-
-<p>Norja päätyi marraskuussa 2025 sopimukseen jossa NHI maksaa 375 miljoonaa euroa
-ja ottaa takaisin kaikki Norjan NH90-helikopterit — Norja siirtyy MH-60R Seahawk-kalustoon.
-NH90:n operatiiviset ongelmat olivat kroonisia.</p>
-
-<p>Suomi on onnistunut NH90:n kanssa paremmin (20 konetta, 10 000 lentotuntia, maailman
-neljänneksi suurin käyttö). Norjan kokemus korostaa kuitenkin tarvetta hajauttaa
-helikopteriresilienssi useamman alustan varaan — kaksoisroolin systematisointi ei tarkoita
-kaiken laittamista yhden kalustokannan varaan.</p>
-
-<p><strong>Kriittinen erottava tekijä Suomelle:</strong> AW101 SAR Queen on nimenomaan
-SAR-kalusto, ei moniroolinen taistelualusta. Norja ei yhdistänyt sotilaallista
-kuljetushelikopteria, rajavalvontaa ja lääkäri-HEMSiä samaan runkoon — nämä ovat
-Norjassakin eriytetyt. Suomi yrittää yhdistää kolme eri funktiota joita Norjan malli
-ei yhdistänyt. Tämä on oleellinen rajoite joka pitää tunnustaa ennen kuin
-kaksoisroolisuunnitelmat viedään käytäntöön.</p>
-
-<h2>§ 4 — Toimenpidesuositukset</h2>
-
-<h3>1. NH90-kaksoisroolin systematisointi (prioriteetti 1)</h3>
+<p>Ongelma ei ole helikopterien määrä. Ongelma on päätöksenteon ja
+tehtäväpriorisoinnin hajautuminen ilman yhteistä sääntöpohjaa. Tämä johtaa kolmeen
+ilmiöön:</p>
 <ul>
-  <li>Määritellään NH90:n kaksoisrooli: normaalioloissa SAR/HEMS, kriisitilanteessa sotilastehtävät</li>
-  <li>Perustetaan poikkihallinnollinen ohjausryhmä (OM + PLM + STM) Norjan mallin mukaisesti</li>
-  <li>Varustetaan NH90 HEMS/SAR-konfiguraatioon: pelastusköysi, ensihoitovälineet, potilaskuljetus</li>
+  <li>Vasteajan vaihtelu katvealueilla — erityisesti Itä- ja Pohjois-Suomessa,
+  joissa yksi kone on usein ainoa kapasiteetti eikä läntisen Suomen kaltaista
+  päällekkäistä peittoa ole</li>
+  <li>Päällekkäinen tai alikäyttöinen kapasiteetti — ~30 virka-aputehtävää vuodessa
+  20 NH90:llä kertoo käyttöasteesta, ei valmiudesta</li>
+  <li>Epäselvä vastuunjako poikkeustilanteissa — kuka saa määrätä lennon
+  (command authority) ja kuka maksaa väärän priorisoinnin kustannuksen
+  (korvausmalli) ovat eri kysymyksiä, joihin ei ole vastausta</li>
 </ul>
-<p><em>Arvioitu kustannus: 10–20 M€ (varustus + koulutus)</em></p>
 
-<h3>2. HEMS-kattavuuden laajentaminen (prioriteetti 2)</h3>
-<ul>
-  <li>2–3 NH90 päivystysvalmiuteen Itä-Suomeen ja Lappiin (Joensuu, Kuopio, Rovaniemi/Oulu)</li>
-  <li>NH90-miehistöjen koulutus ensihoitotehtäviin yhteistyössä FinnHEMS:n kanssa</li>
-  <li>Kustannukset katetaan valtion budjetista, ei hyvinvointialueilta</li>
-</ul>
-<p><em>Arvioitu kustannus: 5–10 M€/v</em></p>
+<h2>§ 3 — Rakenteellinen vertailu: Norja</h2>
 
-<h3>3. Reserviläisrahoitusmalli (prioriteetti 3)</h3>
-<ul>
-  <li>Reservin ikärajan nosto kohdennetaan helikopteritoiminnan erikoisasiantuntijoihin</li>
-  <li>Yrityksille verotuksellinen hyöty reservikoulutuksen rahoittamisesta</li>
-  <li>Pelastus- ja ensihoitoalan ammattilaiset NH90-miehistöjen täydennyskoulutukseen</li>
-</ul>
-<p><em>Arvioitu kustannus: 0–5 M€/v</em></p>
-
-<h2>§ 4b — Operatiivinen harjaantuminen: reaalimaailma harjoitusten sijaan</h2>
-
-<p>Tässä on yksi kaksoisroolin vahvimmista argumenteista jota puolustushallinnon
-laskelmissa harvoin painotetaan: NH90-miehistöt harjaantuvat oikeissa operaatioissa,
-ei teennäisissä harjoituksissa.</p>
-
-<p>Nykyisellä ~30 virka-aputehtävän vuositasolla Utin helikopteripataljoonan miehistöt
-käyttävät suurimman osan lentotunneistaan harjoitteluun simuloiduissa tilanteissa.
-Norjan SAR Queen -miehistöt lentävät tuhansia oikeita tehtäviä vuodessa — pelastuksia,
-lääkintäkuljetuksia, merihätätilanteita. Jokainen tehtävä on oikea tilannepaine,
-oikea päätöksenteko, oikea sää.</p>
+<p>Norjassa SAR-kapasiteetti on järjestetty yhtenäiseksi kokonaisuudeksi:
+oikeusministeriö + ilmavoimat + keskitetty SAR-johto. AW101 SAR Queen on nimenomaan
+SAR-kalusto — Norja optimoi yhden tehtäväluokan yhdelle kalustotyypille.
+Suomi yrittää optimoida kolmea eri tehtäväluokkaa rinnakkain.</p>
 
 <div class="finding">
-  <strong>Harjaantumishyöty:</strong> HEMS- ja SAR-tehtävissä opittu taito siirtyy
-  suoraan sotilasoperaatioihin. Navigointi vaikeassa säässä, nopea päätöksenteko
-  paineen alla, toiminta epäselvässä tilanteessa — nämä ovat täsmälleen ne taidot
-  joita kriisitilanteessa tarvitaan. Kalusto ei myöskään seiso tyhjän panttina:
-  lentokoneiden käyttämättömyys heikentää teknistä luotettavuutta ja miehistön
-  valmiutta samanaikaisesti.
+  <strong>Kriittinen erottava tekijä:</strong> Norja ei yhdistänyt sotilaallista
+  kuljetushelikopteria, rajavalvontaa ja lääkäri-HEMSiä samaan runkoon. Suomi yrittää
+  tätä NH90:n kautta. Nämä eivät ole suoraan vertailukelpoisia järjestelmäarkkitehtuureja.
+  Norja-malli on relevantti referenssi integraatiosta — ei kaluston moniroolisuudesta.
 </div>
 
-<p>Tämä muuttaa kaksoisroolin kustannus-hyöty-laskelman olennaisesti: HEMS-tehtävät
-eivät ole lisäkustannus puolustusvalmiudelle vaan korvike harjoittelukustannuksille —
-ja samalla tuottavat siviilille kriittisen palvelun. Sama euro tekee kaksi työtä.</p>
+<h2>§ 4 — Operatiivinen pullonkaula</h2>
 
-<h2>§ 5 — Kiinnittyminen DRD-08:n R-kerrokseen</h2>
+<p>Kriittinen rajoite ei ole tekninen eikä kalustollinen. Se on puuttuva yhteinen
+tehtäväpriorisointikerros. Tämä sisältää neljä kysymystä joihin ei tällä hetkellä
+ole vastausta:</p>
+<ol>
+  <li>Kuka saa käyttää kalustoa — millä prioriteetilla eri organisaatiot kilpailevat</li>
+  <li>Command authority — kuka saa määrätä lennon poikkeustilanteessa</li>
+  <li>Korvausmalli — kuka maksaa kun yksi organisaatio käyttää toisen resurssia</li>
+  <li>NH90:n SAR-rooli (ei täysi HEMS) — EMC-sertifiointi ja kabinointi puuttuvat,
+  realistinen käyttö on SAR + potilaan stabilointi + siirto</li>
+</ol>
 
-<table>
-  <thead><tr><th>R-kerroksen komponentti</th><th>DRD-08 termi</th><th>CN-014 implementaatio</th></tr></thead>
-  <tbody>
-    <tr><td>Hajautettu sähköntuotanto</td><td>E-komponentti</td><td>NH90 = liikkuva varavoima (kenttäsairaalat, C2-solmut)</td></tr>
-    <tr><td>Tietoliikenteen redundanssi</td><td>D-komponentti</td><td>NH90 = mobiili C2-solmu (tilannekuvan välittäjä)</td></tr>
-    <tr><td><strong>Liikkuva pelastuskyky</strong></td><td><strong>M-komponentti (uusi)</strong></td><td>NH90 = HEMS/SAR-kalusto, henkien pelastaja, evakuointi</td></tr>
-    <tr><td>Kotitalouspuskuri</td><td>R-layer floor</td><td>NH90 = evakuointikyky siviiliväestölle</td></tr>
-  </tbody>
-</table>
+<h2>§ 5 — Testattava hypoteesi</h2>
 
-<p>Ilman M-komponenttia R-kerros on epätäydellinen. Energiaa ja dataa voi olla, mutta jos
-ihmisiä ei voida evakuoida, haavoittuneita ei voida hoitaa ja C2-solmuja ei voida siirtää,
-järjestelmä on staattinen — ja staattinen järjestelmä on haavoittuva järjestelmä.</p>
+<p>Jos yhteistä dispatch-logiikkaa ei ole: kaluston lisääminen ei poista katveita,
+vasteajat eivät alene rakenteellisesti, järjestelmä jää reaktiiviseksi.</p>
 
-<h2>§ 6 — Budjettivaikutus</h2>
+<p>Jos dispatch-logiikka yhtenäistetään: vasteaikaerot pienenevät ilman kaluston
+lisäystä, käyttöaste tasaantuu, päällekkäisyydet vähenevät.</p>
 
-<table>
-  <thead><tr><th>Toimenpide</th><th>Kertakustannus</th><th>Vuosikustannus</th></tr></thead>
-  <tbody>
-    <tr><td>NH90-kaksoisrooli</td><td>10–20 M€</td><td>—</td></tr>
-    <tr><td>HEMS-kattavuus (Itä/Pohjoinen)</td><td>—</td><td>5–10 M€/v</td></tr>
-    <tr><td>Reserviläisrahoitusmalli</td><td>—</td><td>0–5 M€/v</td></tr>
-    <tr style="font-weight:600;border-top:2px solid var(--ink)">
-      <td>Yhteensä (10 v)</td><td>10–20 M€</td><td>5–15 M€/v</td></tr>
-    <tr><td>Suhteessa DRD-08 energiainvestointiin (1,2 mrd €)</td><td colspan="2">~1–2 %</td></tr>
-    <tr><td>Suhteessa F-35-elinkaareen (25 mrd €)</td><td colspan="2">&lt; 0,1 %</td></tr>
-  </tbody>
-</table>
+<h2>§ 6 — Hallintomalli</h2>
 
-<div class="finding">
-  <strong>Johtopäätös:</strong> Norjan malli osoittaa että helikopteriresilienssi on
-  ratkaistavissa integraatiolla, ei lisäkalustolla. Suomella on kalusto — puuttuu järjestelmä.
-  Kolme erillistä organisaatiota, yksi katto, kriittinen koordinaatiovaje.
-  M-komponentin lisääminen DRD-08:n R-kerrokseen on seuraava päivitys.
-</div>
-
-<h2>§ 7 — Hallintomalli: RGL ja Lex Queen</h2>
-
-<p>Koordinaatiovajeen korjaaminen ei vaadi pakkomekanismeja — se vaatii rakenteellisen
-vetovoiman. Realistic Governance Layer (RGL) tekee yhteistyöstä institutionaalisesti
-edullisimman vaihtoehdon kolmella tasolla:</p>
-
+<p>Kolmikerroksinen malli ilman pakkomekanismeja:</p>
 <ul>
   <li><strong>Yhteinen tilannekuva:</strong> FinnHEMS, RVL ja PV näkevät toistensa
-  tehtävät samassa järjestelmässä. Ei päätösvallan muutosta — vain näkyvyys.
-  <em>Same map, different owners.</em></li>
-  <li><strong>Joint Tasking Protocol (JTP):</strong> Ministeriöiden välinen sopimus
-  ennaltamääritellyistä prioriteettisäännöistä. Suositus — ei pakko. Päätös pysyy ihmisellä.</li>
-  <li><strong>Kannustinmalli:</strong> Onnistunut integraatio (CDSI-parannus) tuo
-  lisärahoituksen. Yhteistyö = enemmän resursseja. Ei sakkoja.</li>
+  tehtävät — ei päätösvallan muutosta, vain näkyvyys</li>
+  <li><strong>Joint Tasking Protocol:</strong> Ministeriöiden välinen sopimus
+  prioriteettisäännöistä. Suositus — ei pakko. Päätös pysyy ihmisellä.</li>
+  <li><strong>Kannustinmalli:</strong> Onnistunut integraatio tuo lisärahoituksen.
+  Ei sakkoja.</li>
 </ul>
 
-<p>Hallinnollinen diagnosi kolmella indeksillä: RSM (Resilience Structural Margin) = −0.42
-— datakeskuskonsentraatio on vienyt verkkomarginaalin negatiiviseksi. IRS (Institutional
-Inertia Score) = 8.8/10 — F-35-elinkaarisidonnaisuus lukitsee budjettiajattelun A-kerrokseen.
-TSM (Tactical Synergy Multiplier) = 0.18 — VIRVE vs PV-viestintä ei kohtaa.</p>
+<p><strong>Lex Queen</strong> — lainsäädäntöohjelma yli 7 tonnin valtion helikoptereille
+Norjan NAWSARH-mallin mukaisesti, sovellettuna Suomen kolmen funktion todellisuuteen.
+Omistus pysyy ministeriöillä, operatiivinen johto siviilitehtävissä siirtyy
+pelastuskeskukselle. Poikkeusoloissa johto palautuu puolustusvoimille 48 tunnin
+kuluessa ennalta sovitun protokollan mukaan.</p>
 
-<p><strong>Lex Queen</strong> — lainsäädäntöohjelma joka velvoittaa yli 7 tonnin
-valtion helikopterit (NH90, Super Puma) osaksi kansallista pelastusvauhtipyörää
-Norjan NAWSARH-mallin mukaisesti. Omistus pysyy ministeriöillä, operatiivinen johto
-siviilipelastustehtävissä siirtyy pelastuskeskukselle. Poikkeusoloissa johto palautuu
-puolustusvoimille 48 tunnin kuluessa ennalta sovitun protokollan mukaan.</p>
-
-<p>Tekninen toteutus: Federated Dispatch Overlay olemassa olevien järjestelmien
-päällä — ei korvaa FinnHEMS dispatchia, RVL:n johtoa eikä PV:n virka-apuprosessia,
-vaan yhdistää ne API-tasolla. MVP: yhteinen karttataso, yhteinen tehtävä-ID standardi,
-kolmen organisaation API-yhdyskäytävä, suositusalgoritmi ja VTV-yhteensopiva audit log.</p>
+<h2>§ 7 — Johtopäätös</h2>
 
 <div class="finding">
-  <strong>Ydinargumentti:</strong> Jos järjestelmä vaatii pakon toimiakseen, se ei ole
-  operatiivisesti kestävä. Norja onnistui integraatiolla, ei kompulsiolla —
-  arkkitehtuuri teki yhteistyöstä edullisimman vaihtoehdon.
+  <strong>Suomen helikopterijärjestelmän keskeinen rajoite ei ole kapasiteetti vaan
+  yhtenäisen päätöksenteko- ja priorisointimallin puute kolmen organisaation välillä.</strong>
+  Tämä on hallinnollinen eikä tekninen ongelma. Ratkaisu ei ensisijaisesti ole
+  kalustohankinta vaan yhteinen dispatch-sääntöpohja, priorisointilogiikka
+  poikkeustilanteisiin ja selkeä vastuun ja kustannusten jako.
+  <br><br>
+  Falsifioitava testi: jos dispatch-viive ei alene ilman kalustomuutosta Joensuun
+  2027 -pilotissa, ongelma ei ole pelkkä näkyvyys tai koordinaatio.
 </div>
 
 <div class="ref-block">
