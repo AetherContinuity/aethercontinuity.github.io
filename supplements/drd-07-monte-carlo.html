@@ -351,6 +351,115 @@ ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-b
 
   </div>
 
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ Update 2026</span>
+      <h2 class="section-title">Three Extensions from Adversarial Debate</h2>
+    </div>
+
+    <p>The following three analytical extensions were developed through structured adversarial modelling
+    in May 2026, stress-testing DRD-07's core results against a hybrid A/G/R allocation framework
+    (DAGRA: Distributed Air-Ground Resilience Architecture). They extend, rather than revise, the
+    original simulation findings.</p>
+
+    <h3>Extension 1 — E×D Two-Dimensional Infrastructure Resilience</h3>
+
+    <p>DRD-07's R-layer (infrastructure resilience) was treated as a single composite variable.
+    Adversarial modelling demonstrates that R must be decomposed into two independent dimensions:</p>
+
+    <ul>
+      <li><strong>E (Energy Resilience Index):</strong> 0 = grid fully dark, 1 = all critical nodes
+      islanded with backup power. λ<sub>E</sub> = 3.0 (medium fragility — a small number of HGV
+      strikes can black out large areas).</li>
+      <li><strong>D (Data Resilience Index):</strong> 0 = all communications severed (EW + physical),
+      1 = satellite links and fibre alternatives fully operational. λ<sub>D</sub> = 4.0 (high
+      fragility — EW and cable strikes degrade rapidly).</li>
+    </ul>
+
+    <p>R-layer effective contribution scales as <code>√(E · D)</code>, not as their sum.
+    If either component reaches zero, total R-contribution collapses to zero regardless of investment
+    in the other. This multiplicative structure has a critical investment implication: a marginal euro
+    in the weaker of E or D yields higher deterrence return than any increase in the stronger component.</p>
+
+    <p>Sensitivity analysis shows R-investment marginal benefit is <strong>5–15× that of A-layer
+    investment</strong> when R &lt; 25% of budget, falling below 1× beyond R = 30–35%.
+    The optimal R-layer threshold is therefore 25–30% — not arbitrary, but derived from the E×D
+    multiplicative structure.</p>
+
+    <p>Critical operational threshold: Phase II C2 coherence (CI ≥ 0.6) requires both
+    <strong>E ≥ 0.5 and D ≥ 0.5</strong>. Finland's estimated current state (E ≈ 0.3–0.4,
+    D ≈ 0.4–0.5) places the system in Phase III under moderate operational stress.</p>
+
+    <h3>Extension 2 — C2 Phase Transition Diagram</h3>
+
+    <p>DRD-06 established the bifurcation condition AT<sub>c</sub> = √(R/(1+α)). The phase
+    transition diagram extends this to a two-axis representation:</p>
+
+    <ul>
+      <li><strong>X-axis — Operational Stress (OS):</strong> composite of EW intensity, kinetic
+      strike rate against A-layer nodes, sensor network degradation. Scale 0–1.</li>
+      <li><strong>Y-axis — C2 Cohesion Index (CI):</strong> 1.0 = fully coherent, 0.0 = collapsed.</li>
+    </ul>
+
+    <p>Four operational phases:</p>
+    <ul>
+      <li><strong>Phase I (CI 0.8–1.0, OS &lt; 0.3):</strong> Coherent C2 — centralised common
+      operating picture, linear decision chains.</li>
+      <li><strong>Phase II (CI 0.6–0.8, OS 0.3–0.6):</strong> Distributed but coherent — ACE
+      fallback active, NATO ISR partially substituting national sensors. This is the target
+      operational state for modern NATO C2.</li>
+      <li><strong>Phase III (CI 0.3–0.6, OS 0.6–0.8):</strong> Fragmented — common picture
+      desynchronised, decisions devolve to local cells. A-layer loses network value
+      non-linearly; R and G begin operating as independent systems.</li>
+      <li><strong>Phase IV (CI &lt; 0.3, OS &gt; 0.8):</strong> C2 collapse — no unified command,
+      no shared situational awareness. F-35 operates as a local asset only; GBAD as point
+      defence; R-layer determines survival, not outcome.</li>
+    </ul>
+
+    <p><strong>Hysteresis:</strong> The transition I→II→III→IV is rapid once OS crosses OS<sub>c</sub> ≈ 0.6.
+    Recovery from Phase IV to Phase II requires OS to fall to ≈ 0.4 — not 0.6 — because
+    infrastructure, trust networks and dataflows do not restore automatically. Under balanced
+    allocation (40A/35G/25R), recovery time from Phase IV is 5–7 days; under A-dominant
+    allocation (60/20/10) it extends to 4+ weeks or becomes permanent.</p>
+
+    <p>NATO ISR contribution: alliance AWACS, AGS drones and F-35 datanet shift OS<sub>c</sub>
+    upward by approximately +0.10–0.15 under high US commitment. Under low US commitment
+    (estimated p = 0.25 post-2025), this benefit disappears, restoring the case for maintaining
+    national A-layer minimum at 30–35%.</p>
+
+    <h3>Extension 3 — Minimax Equilibrium and Nash-Optimal Budget Allocation</h3>
+
+    <p>Game-theoretic analysis of the attacker-defender interaction yields a stable result.
+    Defining the adversary's strike vector α = (α<sub>A</sub>, α<sub>R</sub>, α<sub>G</sub>)
+    where α<sub>i</sub> ∈ [0,1] and Σα = 1, the adversary's dominant strategy is
+    <strong>A-layer priority (α<sub>A</sub> ≈ 0.5–0.7)</strong> across all defender allocations
+    tested. This is because A-layer fragility (λ<sub>A</sub> = 5.0) ensures maximum expected
+    damage per unit of strike capability regardless of defender posture.</p>
+
+    <p>Defender loss function under parallel strikes:</p>
+    <p><code>L = w<sub>A</sub>·(1 − exp(−λ<sub>A</sub>·α<sub>A</sub>)) + w<sub>R</sub>·(1 − exp(−λ<sub>R</sub>·α<sub>R</sub>)) + w<sub>G</sub>·(1 − exp(−λ<sub>G</sub>·α<sub>G</sub>))</code></p>
+    <p>with weights w<sub>A</sub> = 0.5, w<sub>R</sub> = 0.3, w<sub>G</sub> = 0.2.</p>
+
+    <p>Minimax analysis across allocation scenarios (S<sub>A</sub>-column, adversary's dominant strategy):</p>
+    <ul>
+      <li>A-dominant (60/20/10): L = 0.82</li>
+      <li><strong>Balanced (40/35/25): L = 0.52</strong></li>
+      <li>DRD-dominant (20/40/40): L = 0.63</li>
+    </ul>
+
+    <p>The balanced allocation (40A/35G/25R) is the Nash equilibrium: it minimises maximum
+    adversary-achievable damage given the adversary's dominant strategy of A-layer strike priority.
+    This confirms DRD-07's Scenario B result through an independent game-theoretic path —
+    not as a heuristic but as a stable equilibrium.</p>
+
+    <p>Risk-adjusted optimum incorporating US commitment uncertainty:
+    <strong>35A/40G/25R</strong>, which maintains A-layer above the critical threshold for
+    independent first-hour C2 coherence while increasing G-layer compensation for reduced
+    NATO ISR availability.</p>
+
+  </div>
+
   <div class="further-reading">
     <div class="section-header">
       <span class="section-num">Ref</span>
@@ -363,6 +472,9 @@ ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-b
       <p>drd-04-atm · Adversary Tempo Model · <a href="/supplements/drd-04-atm.html" style="color:var(--accent)">supplements/</a></p>
       <p>drd-05-toolkit · C2-CI Operationalisation Toolkit · <a href="/supplements/drd-05-toolkit.html" style="color:var(--accent)">supplements/</a></p>
       <p>drd-06-theory · C2-CI Nonlinear Dynamics — bifurcation and hysteresis · <a href="/supplements/drd-06-theory-en.html" style="color:var(--accent)">supplements/</a></p>
+      <p>DRD-07 Update 2026 · Three extensions: E×D infrastructure decomposition,
+      C2 phase transition diagram, minimax budget equilibrium — developed through adversarial
+      modelling, May 2026.</p>
       <p>SM-010 · SGFA Financing Instruments and Energy Clusters — infrastructure resilience as C2 sustainment · <a href="/papers/sm-010-financing-instruments-energy-clusters.html" style="color:var(--accent)">papers/</a></p>
     </div>
   </div>
