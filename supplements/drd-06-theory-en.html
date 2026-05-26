@@ -279,6 +279,108 @@ ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-b
     <p>The fiscal endurance variable (Normal(μ=4, σ=1.5) months) maps onto the hysteresis asymmetry: once C2 has been degraded past bifurcation, restoration costs exceed prevention costs by a structural margin. Platform-centric's 21% fiscal collapse probability reflects a system that cannot recover once its high-value interceptor stocks are attrited below the operational threshold — a direct instance of the G(Φ) ≈ 0 condition in the collapsed state.</p>
   </div>
 
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">§ Extension 2026</span>
+      <h2 class="section-title">Three Formal Extensions from Adversarial Analysis</h2>
+    </div>
+
+    <p>The following extensions were developed through adversarial modelling and diagram analysis
+    in May 2026. They extend the core dΦ/dt formulation, the C_crit threshold structure,
+    and the AT(t) input assumption, producing a more complete dynamical model.</p>
+
+    <h3>Extension A — A-Layer Multiplicative Coherence</h3>
+
+    <p>The original model treats the degradation pressure α and the resilience term R as
+    independent scalars. Adversarial analysis of the DAGRA architecture (DRD-08) identifies
+    A-layer coherence as a multiplicative factor, not an additive one: partial A-layer loss
+    does not reduce C2 effectiveness linearly but collapses G- and R-layer operational
+    capacity non-linearly, before the formal bifurcation threshold is crossed.</p>
+
+    <p>The corrected dynamic equation introduces A(t) ∈ [0, 1] as the A-layer coherence state:</p>
+
+    <p><code>dΦ/dt = −α · A(t) · Φ + R · (1 − Φ) − β · Φ²</code></p>
+
+    <p>where A(t) = 1 represents full sensor fusion and datanet coherence, A(t) = 0 represents
+    complete A-layer collapse. The multiplicative coupling means that at A(t) = 0.5, the
+    effective degradation pressure is halved — but the system's ability to resist further
+    collapse is simultaneously degraded because G and R layers lose coordination capacity.
+    The bifurcation threshold AT_c must be recalculated as a function of A(t):</p>
+
+    <p><code>AT_c(A) = √(R · A(t) / (1 + α))</code></p>
+
+    <p>This formalises the DRD-08 finding that A-layer investment is not primarily about
+    platform count but about maintaining the coherence multiplier above the level where
+    G and R can function as coordinated rather than independent systems.</p>
+
+    <h3>Extension B — C_crit Two-Component Decomposition</h3>
+
+    <p>The original α parameter is a single scalar representing adversary tempo pressure.
+    Diagram analysis suggests α has two structurally distinct components with opposite signs:</p>
+
+    <p><code>C_crit = f(D, R_d, A_q, E_p) − g(K, N_d)</code></p>
+
+    <p>where the threshold-raising function f captures:</p>
+    <ul>
+      <li><strong>D</strong> — Distribution of C2 nodes (geographic dispersal)</li>
+      <li><strong>R_d</strong> — Redundancy of communication pathways</li>
+      <li><strong>A_q</strong> — Autonomy quality of sub-units (DRD-03 AQ parameter)</li>
+      <li><strong>E_p</strong> — EW protection of sensor and data links</li>
+    </ul>
+
+    <p>and the threshold-lowering function g captures:</p>
+    <ul>
+      <li><strong>K</strong> — Node concentration (inverse of D; high K = few critical nodes)</li>
+      <li><strong>N_d</strong> — Network dependency ratio (shared infrastructure creating
+      correlated failure modes)</li>
+    </ul>
+
+    <p>This decomposition has a direct investment implication: reducing K (dispersing critical
+    nodes, eliminating single points of failure) operates on the subtractive term g and may
+    produce higher C_crit lift per euro than increasing R_d alone. The testable hypothesis is
+    whether marginal investment in K-reduction yields greater threshold displacement than
+    equivalent investment in redundancy R_d. DRD-08's sensitivity analysis suggests K-reduction
+    is the higher-leverage intervention at current Finnish infrastructure concentration levels.</p>
+
+    <h3>Extension C — Pulsed AT(t) and Recovery Dynamics</h3>
+
+    <p>The original model treats AT as a parameter — either a constant or monotonically
+    increasing pressure. The diagram analysis introduces a pulsed structure: three distinct
+    attack waves (T+0, T+6h, T+24h) targeting different DAGRA layers. This changes the
+    bifurcation analysis fundamentally.</p>
+
+    <p>If AT(t) is pulsed rather than sustained, the threshold crossing may be temporary:
+    the system can enter Phase III (fragmented) and return to Phase II (distributed coherent)
+    if resilience is sufficient and the pulse duration is shorter than the recovery timescale.
+    The existing hysteresis model does not accommodate this — it assumes that once AT_c is
+    exceeded, recovery requires a full state restoration.</p>
+
+    <p>The proposed recovery dynamics equation:</p>
+
+    <p><code>Φ(t + Δ) = Φ_collapse · exp(−γ · R_eff · Δ) + Φ_eq · (1 − exp(−γ · R_eff · Δ))</code></p>
+
+    <p>where:</p>
+    <ul>
+      <li>γ = recovery rate constant (system-specific, calibrated from historical C2 restoration data)</li>
+      <li>R_eff = √(E · D) — the E×D multiplicative resilience index from DRD-08 Extension 1</li>
+      <li>Φ_collapse = CI immediately post-pulse</li>
+      <li>Φ_eq = equilibrium CI at current AT level</li>
+    </ul>
+
+    <p>This formulation directly links DRD-06's hysteresis model to DRD-08's E×D infrastructure
+    decomposition. The recovery rate is governed by R_eff — meaning energy and data resilience
+    jointly determine not just whether the system survives a pulse, but how quickly it returns
+    to Phase II coherence after a temporary threshold crossing.</p>
+
+    <p>The critical design implication: under pulsed AT(t), the minimum R_eff required to
+    recover before the next pulse arrives sets a hard infrastructure investment floor independent
+    of the AT_c threshold calculation. If pulse interval is 6 hours and recovery with R_eff = 0.35
+    requires 14+ hours, no amount of AT_c-raising investment prevents cumulative coherence
+    degradation across pulse sequences.</p>
+
+  </div>
+
   <div class="further-reading">
     <div class="section-header">
       <span class="section-num">Series</span>
@@ -314,6 +416,11 @@ ul.body-list li { font-size: 0.95rem; line-height: 1.8; color: #2a2520; margin-b
         <span class="fr-num">WP 2026-07</span>
         <span class="fr-title">Dynamic Outcome Distributions Under Strategic Uncertainty — Monte Carlo Analysis</span>
         <a href="/supplements/drd-07-monte-carlo.html" class="fr-link">Read →</a>
+      </div>
+      <div class="fr-item">
+        <span class="fr-num">WP 2026-08</span>
+        <span class="fr-title">DAGRA — Distributed Air-Ground Resilience Architecture · Infrastructure Sensitivity Analysis</span>
+        <a href="/supplements/drd-08-dagra.html" class="fr-link">Read →</a>
       </div>
     </div>
   </div>
