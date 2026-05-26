@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-017 — RKOM: Resilience Enforcement Mechanism | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-017-rkom-mechanism.html"/>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fafaf8; --paper-2: #f0f0ec; --paper-3: #e8e4dc;
+    --accent: #8b2500; --muted: #666; --rule: #ddd;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+    font-size: 1.05rem; line-height: 1.8; max-width: 780px; margin: 0 auto;
+    padding: 2rem 1.5rem 5rem; }
+  nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    border-bottom: 1px solid var(--rule); padding-bottom: .6rem; margin-bottom: 2rem; }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+  .dih { border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+  .dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); display: block; margin-bottom: .2rem; }
+  .dih-series { font-family: var(--mono); font-size: .8rem; color: var(--accent); }
+  .doc-title { font-size: 1.5rem; font-weight: 400; margin: .4rem 0 .25rem; }
+  .doc-sub { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  .dih-meta { font-family: var(--mono); font-size: .68rem; color: var(--muted);
+    text-align: right; line-height: 1.9; }
+  .dih-meta strong { color: var(--ink); }
+  .abstract { border-left: 3px solid var(--accent); padding: .75rem 1.2rem;
+    background: var(--paper-3); margin: 1.5rem 0; font-size: .95rem; line-height: 1.7; }
+  h2 { font-size: 1.1rem; font-weight: 500; margin: 2rem 0 .6rem;
+    border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; }
+  p { margin-bottom: .85rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: .85rem; }
+  li { margin-bottom: .35rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1rem 0; }
+  th { text-align: left; padding: 5px 9px; border-bottom: 2px solid var(--ink);
+    font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+  td { padding: 5px 9px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+    margin: 1rem 0; background: var(--paper-2); }
+  .finding strong { color: var(--accent); }
+  .metric { font-family: var(--mono); font-size: .9rem; font-weight: 600; color: var(--accent); }
+  code { font-family: var(--mono); font-size: .82em; background: var(--paper-3);
+    padding: .1em .35em; }
+  .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.2rem;
+    font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 2; }
+  .ref-block a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Concept Note · CN-017</span>
+    <h1 class="doc-title">RKOM — Resilience Enforcement Mechanism</h1>
+    <p class="doc-sub">Institutionaalisen resilienssin pakotteet · Lex Queen · ORM-kiintiö · Mikroverkkopakote</p>
+  </div>
+  <div>
+    <div class="dih-meta">
+      <strong>Date</strong> 2026-05-26<br>
+      <strong>Series</strong> DRD · CN-sarja<br>
+      <strong>Continues</strong> DRD-08 · CN-014–016<br>
+      <strong>Status</strong> Julkinen · Toimenpide-ehdotus
+    </div>
+  </div>
+</div>
+
+<div class="abstract">
+  <strong>Abstract.</strong> CN-017 introduces the RKOM (Resilienssin Kantokyvyn Ohjausmekanismi)
+  — an operational enforcement model that converts political intent into administrative
+  compulsion. Three instruments: (1) "Lex Queen" legislation mandating dual-use helicopter
+  integration on the Norwegian model; (2) automatic flight-hour quota requiring 400 real
+  HEMS/SAR tasks per year with a 5% budget transfer penalty for non-compliance;
+  (3) civil-military microgrid obligation for C2 node islanding. Without these enforcement
+  mechanisms, DRD-08's R-layer investments remain voluntary and DRI stays near baseline
+  (0.066) until the next crisis forces action.
+</div>
+
+<h2>§ 01 — Institutional Friction: Three Diagnosed Anomalies</h2>
+
+<p>The structural failure is not technical but institutional. Three quantified anomalies
+lock Finland's resilience posture at sub-optimal equilibrium:</p>
+
+<table>
+  <thead><tr><th>Index</th><th>Value</th><th>Mechanism</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>RSM</strong><br>Resilience Structural Margin</td>
+      <td><span class="metric">−0.42</span></td>
+      <td>Southern Finland data centre concentration (K-term) has driven grid static
+      reserve margin negative. A single targeted transformer strike triggers cascade.</td>
+    </tr>
+    <tr>
+      <td><strong>IRS</strong><br>Institutional Inertia Score</td>
+      <td><span class="metric">8.8 / 10</span></td>
+      <td>F-35 lifecycle commitment (25–30B EUR) locks budget thinking into A-layer.
+      R-layer marginal return is 5–15× higher but receives ~10% of allocation.</td>
+    </tr>
+    <tr>
+      <td><strong>TSM</strong><br>Tactical Synergy Multiplier</td>
+      <td><span class="metric">0.18</span></td>
+      <td>Security regulations and organisational silos prevent civilian-military
+      situational picture from converging. VIRVE vs PV communications are incompatible.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Combined effect: DRI = 0.066. Without structural compulsion, DRI will not rise
+meaningfully before the next crisis creates the political conditions for change — at
+which point the decision window will already have closed.</p>
+
+<h2>§ 02 — RKOM: Three Enforcement Instruments</h2>
+
+<h3>Instrument 1 — "Lex Queen": Helicopter Integration Legislation</h3>
+
+<p>A law mandating that all state-owned helicopters above 7 tonnes (NH90, Super Puma)
+become part of a national rescue flywheel on the Norwegian NAWSARH model.</p>
+
+<ul>
+  <li><strong>Ownership</strong> remains with ministries. <strong>Operational command</strong>
+  in civilian rescue tasks transfers to the rescue coordination centre.</li>
+  <li><strong>Funding</strong> for HEMS/SAR tasks comes from a joint state rescue fund
+  drawing annual transfers from both Defence and Interior budgets.</li>
+  <li><strong>Crisis transition:</strong> In emergency conditions, operational command
+  returns to Defence Forces within 48 hours under a pre-defined protocol.</li>
+  <li><strong>Legal prerequisite:</strong> Protocol for sequential (not simultaneous)
+  role transition must satisfy Geneva Convention requirements for protected aircraft
+  status — documented before first dual-use operation.</li>
+</ul>
+
+<p>Legislative preparation: Government proposal (HE) for spring 2027. ACI delivers
+legal framework draft by June 2026.</p>
+
+<h3>Instrument 2 — Automatic Flight-Hour Quota (ORM Compulsion)</h3>
+
+<p>Statutory minimum task requirement for the NH90 fleet in eastern and northern
+Finland HEMS/SAR operations:</p>
+
+<ul>
+  <li><strong>Quota:</strong> Minimum 400 real tasks per year (current: ~30).</li>
+  <li><strong>Reporting:</strong> Monthly statistics to the National Audit Office (VTV).</li>
+  <li><strong>Clearing mechanism (penalty):</strong> If annual quota falls below 400,
+  5% of the Defence Ministry's following-year budget transfers automatically to the
+  supply security fund, ring-fenced for R-layer energy and data investment.</li>
+</ul>
+
+<div class="finding">
+  <strong>Enforcement logic:</strong> Seisottaminen tulee kalliimmaksi kuin lentäminen.
+  The penalty makes non-use more expensive than use. Simultaneously, real operations
+  build ORM (Operational Readiness Multiplier) — crews training in actual conditions
+  rather than simulations. The flywheel is self-reinforcing.
+</div>
+
+<h3>Instrument 3 — Civil-Military Microgrid Obligation</h3>
+
+<p>Legislation requiring critical C2 nodes (command centres, radar stations) and
+their adjacent civilian critical infrastructure (hospitals, data centres) to connect
+to shared islanding-capable microgrids meeting DRD-08 E×D specifications:</p>
+
+<ul>
+  <li>Automatic islanding (no manual administrative decision required)</li>
+  <li>Black Start capability (inverter-based, recovery in minutes not hours)</li>
+  <li>Minimum 30-day fuel reserve</li>
+  <li>Data redundancy: satellite + HF radio + physically separate fibre routes</li>
+</ul>
+
+<p><strong>Funding split:</strong> Defence Ministry (C2 nodes) · Ministry of Economic
+Affairs (industrial data centres) · welfare districts (hospitals) · joint fund
+administered by National Emergency Supply Agency (HVK) for overruns.</p>
+
+<p><strong>Investment requirement:</strong> ~1.2–1.4B EUR one-time (DRD-08 §03).
+~15–20% of one year's defence budget. Proposed source: reallocation from A-layer
+(deferred F-35 lifecycle spending) plus supplementary appropriation.</p>
+
+<h2>§ 03 — Implementation Timeline</h2>
+
+<table>
+  <thead><tr><th>Phase</th><th>Action</th><th>Owner</th><th>Timeline</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Legislative drafts (Lex Queen + Microgrid Law)</td>
+      <td>ACI → Ministry of Justice</td><td>June 2026</td></tr>
+    <tr><td>2</td><td>Government proposal (HE)</td>
+      <td>Security Committee + ministries</td><td>September 2026</td></tr>
+    <tr><td>3</td><td>Eastern Finland pilot (CN-018)</td>
+      <td>Defence Forces + FinnHEMS + Siun sote</td><td>January 2027</td></tr>
+    <tr><td>4</td><td>Laws enter into force + quota monitoring</td>
+      <td>Parliament</td><td>1.1.2028</td></tr>
+    <tr><td>5</td><td>Annual DRI reporting in Security Report</td>
+      <td>Government</td><td>From 2028</td></tr>
+  </tbody>
+</table>
+
+<h2>§ 04 — Recommendation to the Security Committee</h2>
+
+<ol>
+  <li>Adopt the RKOM framework as the governing model for resilience investment.</li>
+  <li>Commission legal drafts for "Lex Queen" and "Microgrid Law" based on ACI's
+  framework.</li>
+  <li>Initiate CN-018 pilot planning with Defence Forces, FinnHEMS and Pohjois-Karjala
+  welfare district.</li>
+  <li>Set DRI as an annual tracking metric in the Security Report, target:
+  DRI 0.066 → 0.296 by 2030.</li>
+</ol>
+
+<div class="finding">
+  <strong>Core argument:</strong> Voluntary cooperation between three siloed organisations
+  has produced ~30 real tasks per year for 20 NH90 helicopters.
+  Norway achieves ~1,000 tasks with 18 aircraft through institutional compulsion —
+  not better equipment, not more budget, not goodwill.
+  RKOM replicates the compulsion. Without it, DRD-08's analysis remains a diagnosis
+  without a treatment plan.
+</div>
+
+<div class="ref-block">
+  <strong>References</strong><br>
+  <a href="/supplements/drd-08-dagra.html">DRD-08 — DAGRA · R-layer investment framework</a><br>
+  <a href="/supplements/drd-09-dynamic-resilience-index.html">DRD-09 — DRI composite metric</a><br>
+  <a href="/papers/cn-014-helicopter-resilience.html">CN-014 — Distributed Helicopter Resilience</a><br>
+  <a href="/papers/cn-015-helicopter-implementation.html">CN-015 — Implementation Plan 2026–2030</a><br>
+  <a href="/papers/cn-016-hems-coverage.html">CN-016 — HEMS Coverage Analysis</a><br>
+  <a href="/papers/cn-018-joensuu-pilot.html">CN-018 — Eastern Finland Pilot 2027</a>
+</div>
+
+</body>
+</html>
