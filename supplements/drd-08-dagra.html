@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DRD-08 — DAGRA: Distributed Air-Ground Resilience Architecture | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/drd-08-dagra.html"/>
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+  font-size: 1.05rem; line-height: 1.75; max-width: 780px; margin: 0 auto;
+  padding: 2rem 1.5rem 5rem; }
+nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+  border-bottom: 1px solid var(--rule); padding-bottom: .75rem; margin-bottom: 2rem;
+  display: flex; justify-content: space-between; }
+nav a { color: var(--accent); text-decoration: none; }
+.dih { border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin-bottom: 2rem;
+  background: var(--paper-2); display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+.dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted); display: block; margin-bottom: .25rem; }
+.dih-series { font-family: var(--mono); font-size: .8rem; }
+.series-accent { color: var(--accent); font-weight: 600; }
+.dih-meta { font-family: var(--mono); font-size: .7rem; line-height: 1.8;
+  color: var(--muted); text-align: right; }
+.dih-meta strong { color: var(--ink); }
+h1 { font-size: 1.65rem; font-weight: 500; letter-spacing: -.01em; margin-bottom: .35rem; }
+.subtitle { font-family: var(--mono); font-size: .75rem; color: var(--muted);
+  margin-bottom: 1.75rem; }
+.abstract { border-left: 3px solid var(--accent); padding: .75rem 1.25rem;
+  background: var(--paper-3); margin-bottom: 2rem; font-size: .95rem; }
+.section { margin-bottom: 2.5rem; }
+.section-header { border-bottom: 1px solid var(--rule); padding-bottom: .4rem;
+  margin-bottom: 1rem; display: flex; align-items: baseline; gap: .75rem; }
+.section-num { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); }
+h2 { font-size: 1.15rem; font-weight: 500; }
+h3 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 .5rem; }
+p { margin-bottom: .9rem; }
+ul, ol { padding-left: 1.5rem; margin-bottom: .9rem; }
+li { margin-bottom: .35rem; }
+code { font-family: var(--mono); font-size: .85em; background: var(--paper-3);
+  padding: .1em .3em; border-radius: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 1rem 0; }
+th { text-align: left; padding: 6px 10px; border-bottom: 2px solid var(--ink);
+  font-family: var(--mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.highlight { background: var(--paper-3); border: 1px solid var(--rule);
+  padding: .75rem 1rem; margin: 1rem 0; font-size: .9rem; }
+.finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+  margin: 1rem 0; background: var(--paper-2); }
+.finding strong { color: var(--accent); }
+.further-reading { border-top: 1px solid var(--rule); padding-top: 1.5rem;
+  margin-top: 3rem; font-family: var(--mono); font-size: .72rem;
+  color: var(--muted); line-height: 2; }
+.further-reading a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <span>DRD Series · WP 2026-08</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Distributed Resilience Doctrine · <span class="series-accent">Working Paper 08</span></span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>Date</strong> 2026-05-26<br>
+      <strong>Series</strong> DRD Supplement<br>
+      <strong>Continues</strong> DRD-07 · Monte Carlo Extensions<br>
+      <strong>Language</strong> English
+    </div>
+  </div>
+</div>
+
+<h1>DAGRA: Distributed Air-Ground Resilience Architecture</h1>
+<p class="subtitle">Infrastructure Sensitivity Analysis · Budget Optimization · Hypersonic Threat Layer</p>
+
+<div class="abstract">
+  <strong>Abstract.</strong> DRD-08 formalizes the DAGRA (Distributed Air-Ground Resilience
+  Architecture) three-layer model (A/G/R) developed through adversarial modelling in May 2026.
+  The central argument is that energy and data infrastructure haavoittuvuus constitutes a larger
+  structural risk than platform inventory. Against hypersonic threats (Kinzhal, Tsirkon, Avangard),
+  F-35 assets represent concentrated vulnerability — eggs in few baskets — while R-layer
+  investment is the only instrument retaining meaningful defensive value across the full threat
+  spectrum including nuclear HGV. Sensitivity analysis demonstrates R-layer marginal returns
+  5–15× those of A-layer investment when R &lt; 25% of budget. The Nash-equilibrium allocation
+  is 40A/35G/25R; risk-adjusted for US commitment uncertainty: 35A/40G/25R.
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 01</span>
+    <h2>DAGRA: Three-Layer Architecture</h2>
+  </div>
+
+  <p>DAGRA structures defence investment into three functionally distinct layers, each with
+  different fragility profiles, adversary targeting logic, and diminishing-returns curves:</p>
+
+  <table>
+    <thead>
+      <tr><th>Layer</th><th>Content</th><th>Fragility λ</th><th>Diminishing returns</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>A — Air coherence</strong></td>
+        <td>F-35 fleet, NATO ISR integration, C2 core, sensor fusion, EW protection</td>
+        <td>5.0 (high)</td>
+        <td>Rapid above 40%</td>
+      </tr>
+      <tr>
+        <td><strong>G — Ground denial</strong></td>
+        <td>GBAD (Patriot/NASAMS/IRIS-T), mobile radars, MANPADS, long-range fires, C-UAS</td>
+        <td>1.0 (low)</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td><strong>R — Resilience</strong></td>
+        <td>Energy islanding, data redundancy, logistics continuity, C2 fallbacks, cyber</td>
+        <td>2.5–4.0 (E/D split)</td>
+        <td>Very low below 30%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The deterrence function is non-additive:</p>
+  <p><code>D = (A · G) + (R · (A + G)) − failure_thresholds</code></p>
+
+  <p>This multiplicative structure means A without R is brittle, R without A lacks strategic
+  reach, and G without A cannot prioritise engagements. The three layers are complements,
+  not substitutes — except in catastrophic scenarios where A and G are eliminated and only
+  R determines post-strike survivability.</p>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 02</span>
+    <h2>The Infrastructure Vulnerability Argument</h2>
+  </div>
+
+  <p>The central claim of DRD-08 is not that F-35 is a poor investment in isolation, but that
+  under the 2026 threat environment it represents concentrated vulnerability — eggs in few
+  baskets — while energy and data infrastructure represent a larger structural risk that
+  receives systematically less investment.</p>
+
+  <h3>The concentration problem</h3>
+
+  <p>Finland's F-35 fleet of 64 aircraft, even when dispersed under ACE doctrine across highway
+  strips and dispersal bases, remains a finite and enumerable set of high-value targets. Each
+  aircraft represents approximately 150–200 million euros in acquisition cost plus lifecycle
+  overhead. A coordinated first strike with 6–8 Kinzhal missiles against three primary airbases
+  — each capable of Mach 10 penetration at ranges exceeding 2 000 km — would destroy or
+  disable a significant fraction of the fleet before dispersal is complete.</p>
+
+  <p>Energy and data infrastructure presents the inverse problem: it is geographically distributed
+  but functionally centralised. Finland's grid has fewer than 20 critical transformer nodes whose
+  simultaneous destruction would black out the country. Fibre backbone routes follow a small
+  number of physical corridors. GPS dependency permeates military and civil systems alike.</p>
+
+  <div class="finding">
+    <strong>Structural finding:</strong> F-35 concentration risk is mitigated by dispersal doctrine
+    (ACE) but cannot be eliminated. Infrastructure concentration risk is mitigated only by
+    islanding and redundancy investment — which currently receives approximately 10% of the
+    defence budget versus 60% for A-layer.
+  </div>
+
+  <h3>The E×D decomposition</h3>
+
+  <p>R-layer effectiveness is not a single scalar but the product of two independent dimensions:</p>
+  <ul>
+    <li><strong>E (Energy Resilience Index):</strong> probability that critical nodes retain
+    power post-strike. λ<sub>E</sub> = 3.0. A small number of HGV strikes against transformer
+    stations can collapse grid over large areas.</li>
+    <li><strong>D (Data Resilience Index):</strong> probability that C2 communications survive
+    EW and physical attack. λ<sub>D</sub> = 4.0. EW at Kinzhal/Tsirkon ranges degrades GPS,
+    radio and fibre simultaneously.</li>
+  </ul>
+
+  <p>R-layer effective contribution: <code>R_eff = √(E · D)</code></p>
+
+  <p>If either E or D reaches zero, R-layer contribution collapses regardless of investment in
+  the other. A defence posture with excellent energy islanding but no data redundancy — or
+  vice versa — achieves near-zero R-layer effectiveness under combined EW + kinetic attack.</p>
+
+  <table>
+    <thead><tr><th>E</th><th>D</th><th>R_eff = √(E·D)</th><th>C2 phase</th></tr></thead>
+    <tbody>
+      <tr><td>0.8</td><td>0.8</td><td>0.80</td><td>Phase I–II (coherent)</td></tr>
+      <tr><td>0.6</td><td>0.6</td><td>0.60</td><td>Phase II (boundary)</td></tr>
+      <tr><td>0.5</td><td>0.5</td><td>0.50</td><td>Phase II–III transition</td></tr>
+      <tr><td>0.4</td><td>0.6</td><td>0.49</td><td>Phase III (fragmented)</td></tr>
+      <tr><td>0.3</td><td>0.3</td><td>0.30</td><td>Phase III–IV boundary</td></tr>
+      <tr><td>0.8</td><td>0.1</td><td>0.28</td><td>Phase IV despite strong energy</td></tr>
+    </tbody>
+  </table>
+
+  <p>The last row is critical: high energy resilience with low data resilience produces Phase IV
+  collapse. The weakest of E or D governs the system outcome. This has a direct investment
+  implication — the marginal euro should go to whichever of E or D is currently lower, not to
+  the one already higher.</p>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 03</span>
+    <h2>Infrastructure Sensitivity Analysis</h2>
+  </div>
+
+  <h3>Marginal return on R-layer investment</h3>
+
+  <p>Using the loss function <code>L = Σ w_k · (1 − exp(−λ_k · α_k))</code> with weights
+  w<sub>A</sub>=0.5, w<sub>R</sub>=0.3, w<sub>G</sub>=0.2, sensitivity analysis compares
+  the effect of a marginal 100M EUR added to A-layer versus R-layer:</p>
+
+  <table>
+    <thead>
+      <tr><th>R baseline</th><th>+100M to A (ΔL)</th><th>+100M to R (ΔL)</th><th>R/A benefit ratio</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>R = 10% (E=D=0.2)</td><td>−0.01</td><td>−0.15</td><td><strong>15×</strong></td></tr>
+      <tr><td>R = 20% (E=D=0.4)</td><td>−0.02</td><td>−0.10</td><td><strong>5×</strong></td></tr>
+      <tr><td>R = 30% (E=D=0.55)</td><td>−0.03</td><td>−0.06</td><td>2×</td></tr>
+      <tr><td>R = 40% (E=D=0.7)</td><td>−0.04</td><td>−0.03</td><td>0.75× (A now better)</td></tr>
+    </tbody>
+  </table>
+
+  <p>R-layer marginal returns exceed A-layer returns by 5–15× when R &lt; 25% of budget.
+  Finland's current R allocation (~10%) places it in the 15× marginal return zone —
+  the highest possible infrastructure investment leverage point.</p>
+
+  <h3>Critical operational thresholds</h3>
+
+  <p>Phase II C2 coherence (CI ≥ 0.6) requires E ≥ 0.5 and D ≥ 0.5 simultaneously.
+  Estimated current Finnish state: E ≈ 0.3–0.4, D ≈ 0.4–0.5. This places the system
+  in Phase III under moderate operational stress — without any kinetic engagement.</p>
+
+  <div class="highlight">
+    <strong>Investment priority order for R-layer:</strong><br>
+    1. Energy islanding of critical C2 nodes (microgrid + 30-day fuel reserves): ~500M EUR<br>
+    2. Data redundancy (satellite terminals, HF radio backup, fibre rerouting): ~300M EUR<br>
+    3. Physical hardening (underground cables, transformer dispersal): ~400M EUR<br>
+    Total: ~1.2B EUR — approximately 15–20% of annual defence budget, one-time investment
+    bringing E and D from ~0.35 to ~0.65, crossing Phase II threshold.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 04</span>
+    <h2>Hypersonic Threat Layer and DAGRA Implications</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>System</th><th>Speed</th><th>Warhead</th><th>Intercept</th><th>DAGRA relevance</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Kh-47M2 Kinzhal</strong><br><span style="font-size:.75rem;color:var(--muted)">MiG-31K / Tu-22M3 · range 2 000+ km · proven in Ukraine</span></td>
+        <td>Mach 10</td><td>480–500 kg conventional</td>
+        <td>Patriot: limited</td><td>G-layer design case</td>
+      </tr>
+      <tr>
+        <td><strong>3M22 Tsirkon</strong><br><span style="font-size:.75rem;color:var(--muted)">Ship / submarine / ground · range ≈1 000 km · limited Ukraine deployment</span></td>
+        <td>Mach 8–9</td><td>Conventional</td>
+        <td>Extremely difficult</td><td>G-layer marginal</td>
+      </tr>
+      <tr>
+        <td><strong>Avangard HGV</strong><br><span style="font-size:.75rem;color:var(--muted)">ICBM-carried · range 6 000+ km · altitude 80–90 km · production constrained</span></td>
+        <td>Mach 20+</td><td><strong>Nuclear</strong></td>
+        <td><strong>Not interceptable</strong></td><td><strong>R-layer only + Article 5</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Against Avangard, A-layer and G-layer are operationally irrelevant as defensive instruments.
+  The only structurally coherent responses are NATO collective deterrence (Article 5) and
+  R-layer post-strike survivability. This is the strongest possible argument for R-layer
+  investment: it is the sole defensive layer with relevance across the full threat spectrum
+  from drone swarms through conventional hypersonics to nuclear HGV.</p>
+
+  <p>Note on production constraints: Russia has reported Avangard production limitations.
+  Small inventory does not reduce strategic threat — a handful of strikes against Finnish
+  C2 and energy nodes would achieve rapid systemic collapse. Limited inventory reinforces
+  rather than diminishes the R-hardening case.</p>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 05</span>
+    <h2>Budget Simulation: Current vs Optimal Allocation</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>A</th><th>G</th><th>R</th><th>L (Venäjä strikes A)</th><th>Risk profile</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Current (64 F-35)</strong></td>
+        <td>60%</td><td>20%</td><td>10%</td>
+        <td>0.82</td>
+        <td>High rapid-collapse risk</td>
+      </tr>
+      <tr>
+        <td><strong>Nash optimum 6.5B</strong></td>
+        <td>40%</td><td>35%</td><td>25%</td>
+        <td>0.52</td>
+        <td>Balanced, all scenarios</td>
+      </tr>
+      <tr>
+        <td><strong>Risk-adjusted (US uncertainty)</strong></td>
+        <td>35%</td><td>40%</td><td>25%</td>
+        <td>0.55</td>
+        <td>Robust to low US commitment</td>
+      </tr>
+      <tr>
+        <td><strong>Nash optimum 8.5B</strong></td>
+        <td>40%</td><td>35%</td><td>25%</td>
+        <td>0.48</td>
+        <td>High deterrence, R fully funded</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Path dependency note: the F-35 lifecycle commitment (~25–30B EUR over 30 years, with
+  ~730M EUR currency losses already accrued) constrains rapid reallocation. The realistic
+  transition path is 60/20/10 → 45/35/20 (near-term) → 40/35/25 (medium-term as F-35
+  early costs are absorbed). The critical constraint is that R must reach 20% before G
+  reaches 35% — the multiplicative E×D structure means an under-resourced R negates G
+  investment effectiveness in extended conflict.</p>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 06</span>
+    <h2>Investment Priority Sequence</h2>
+  </div>
+
+  <ol>
+    <li><strong>Energy islanding of C2 critical nodes</strong> — highest marginal return
+    (15× vs A-layer), achieves E ≥ 0.5 threshold. ~500M EUR. Timeline: 3–5 years.</li>
+    <li><strong>Data redundancy infrastructure</strong> — satellite terminals, HF radio,
+    fibre rerouting. Achieves D ≥ 0.5. ~300M EUR. Timeline: 2–4 years.</li>
+    <li><strong>GBAD expansion</strong> — Kinzhal is the primary design case.
+    NASAMS/Patriot mobile units, C-UAS. ~800M EUR/yr additional. Ongoing.</li>
+    <li><strong>F-35 dispersal infrastructure</strong> — ACE highway strips, hardened
+    dispersal points. Reduces A-layer concentration without reducing airframe count. ~300M EUR.</li>
+    <li><strong>Further F-35 acquisition</strong> — lowest marginal return once R ≥ 25%
+    and G ≥ 35%. Lifecycle commitments already made; future acquisition decisions
+    should apply diminishing-returns test explicitly.</li>
+  </ol>
+
+  <div class="finding">
+    <strong>Core finding:</strong> Against the 2026 threat environment (Kinzhal + Tsirkon +
+    Avangard + drone swarms), energy and data infrastructure hardening produces higher
+    deterrence return per euro than additional airframe acquisition at current allocation ratios.
+    This is not an argument against F-35 — it is an argument for correcting systematic
+    R-layer underinvestment before the E×D multiplicative floor collapses C2 coherence
+    regardless of platform inventory.
+  </div>
+</div>
+
+<div class="further-reading">
+  <div class="section-header">
+    <span class="section-num">Ref</span>
+    <h2 class="section-title" style="font-size:1rem">Series References</h2>
+  </div>
+  <p>WP-02 · Distributed Resilience Doctrine — core framework · <a href="/papers/wp-002-drd.html">aethercontinuity.org/papers/</a></p>
+  <p>DRD-06 · C2-CI Nonlinear Dynamics — bifurcation and hysteresis · <a href="/supplements/drd-06-theory-en.html">supplements/</a></p>
+  <p>DRD-07 · Monte Carlo Simulation + 2026 Extensions (E×D, phase transition, minimax, hypersonic taxonomy) · <a href="/supplements/drd-07-monte-carlo.html">supplements/</a></p>
+  <p>TN-010 · LELF — Layered Economic Loss Function (infrastructure as defence layer) · <a href="/supplements/tn-010-layered-economic-loss-function.html">supplements/</a></p>
+  <p>SM-010 · SGFA Financing Instruments — infrastructure resilience as C2 sustainment · <a href="/papers/sm-010-financing-instruments-energy-clusters.html">papers/</a></p>
+</div>
+
+</div>
+</body>
+</html>
