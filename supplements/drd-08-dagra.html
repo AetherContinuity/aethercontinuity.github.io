@@ -211,6 +211,52 @@ td { padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: to
 
 <div class="section">
   <div class="section-header">
+    <span class="section-num">§ 02b</span>
+    <h2>Black Start Capability and Data Centre Concentration Risk</h2>
+  </div>
+
+  <h3>Black Start: the dynamic E-component</h3>
+
+  <p>Energy resilience (E) has two sub-dimensions. <em>Static E</em> measures whether critical
+  nodes have power during an attack. <em>Dynamic E</em> measures how quickly power is restored
+  after a pulse — the recovery rate γ in DRD-06 Extension C. Black Start capability — automatic
+  inverter-based grid restoration in minutes rather than hours — governs γ directly.</p>
+
+  <p>Under pulsed AT(t) with 6-hour inter-pulse intervals, a γ implying 14-hour recovery time
+  means the system cannot return to Phase II coherence before the next pulse. Black Start is
+  therefore not supplementary hardening but a prerequisite for pulsed resilience. Without it,
+  microgrid investment raises static E while leaving dynamic E near zero. Estimated additional
+  cost: ~150–200M EUR above the core energy islanding programme.</p>
+
+  <h3>Data centre concentration: a new K-term</h3>
+
+  <p>Rapid data centre growth in southern Finland introduces a new node concentration risk
+  (the K-term in DRD-06 Extension B, C_crit = f(D,R_d,A_q,E_p) − g(K,N_d)). Data centres
+  concentrate grid load and fibre traffic in the area with Finland's highest existing
+  transformer density, creating three compounding effects:</p>
+
+  <ul>
+    <li><strong>Shared physical infrastructure:</strong> Military C2 nodes and commercial
+    data centres draw from the same transformer stations and fibre corridors. A strike
+    targeting data centre infrastructure simultaneously degrades military C2.</li>
+    <li><strong>Increased N_d (network dependency):</strong> Smart-grid integration of
+    data centre power management creates correlated failure modes absent in simpler
+    architectures.</li>
+    <li><strong>Huoltovarmuus degradation:</strong> Supply security experts have warned
+    the data centre boom draws grid capacity toward commercial optimisation at the
+    expense of resilience-critical uses.</li>
+  </ul>
+
+  <div class="finding">
+    <strong>Structural implication:</strong> Data centre concentration in southern Finland
+    raises K and N_d simultaneously, lowering C_crit without any change in adversary
+    capability. This is a self-inflicted reduction in the bifurcation threshold.
+  </div>
+
+</div>
+
+<div class="section">
+  <div class="section-header">
     <span class="section-num">§ 03</span>
     <h2>Infrastructure Sensitivity Analysis</h2>
   </div>
@@ -266,12 +312,18 @@ td { padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: to
         <td>~400M EUR</td><td>E/D baseline +0.10</td>
         <td>Resilience floor</td>
       </tr>
+      <tr>
+        <td><strong>Black Start</strong></td>
+        <td>Automatic inverter-based grid restoration for C2 nodes (dynamic E recovery rate γ)</td>
+        <td>~150–200M EUR</td><td>γ: hours → minutes</td>
+        <td>Pulsed resilience enabled</td>
+      </tr>
       <tr style="font-weight:600;border-top:2px solid var(--ink)">
         <td><strong>Total</strong></td>
-        <td>One-time investment — all three categories required for E×D multiplicative floor</td>
-        <td><strong>~1.2B EUR</strong></td>
-        <td>E≈0.65, D≈0.65</td>
-        <td><strong>Phase III → Phase II</strong></td>
+        <td>All categories required — E×D multiplicative + Black Start dynamic recovery</td>
+        <td><strong>~1.35–1.4B EUR</strong></td>
+        <td>E≈0.65, D≈0.65, γ fast</td>
+        <td><strong>Phase III → Phase II + pulse resilience</strong></td>
       </tr>
     </tbody>
   </table>
