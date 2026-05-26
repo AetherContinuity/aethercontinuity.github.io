@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-021 — Pilot Design & Metrics Validation | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-021-pilot-metrics.html"/>
+<style>
+  :root{--ink:#1a1a1a;--paper:#fafaf8;--paper-2:#f0f0ec;--paper-3:#e8e4dc;
+    --accent:#8b2500;--muted:#666;--rule:#ddd;
+    --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:1.05rem;line-height:1.8;max-width:780px;margin:0 auto;padding:2rem 1.5rem 5rem}
+  nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+    border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2rem}
+  nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+  .dih{border:1px solid var(--rule);background:var(--paper-2);padding:1.2rem 1.5rem;
+    margin-bottom:2rem;display:grid;grid-template-columns:1fr auto;gap:1rem}
+  .dih-institute{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.2rem}
+  .dih-series{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
+  .doc-title{font-size:1.5rem;font-weight:400;margin:.4rem 0 .25rem}
+  .doc-sub{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .dih-meta{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:right;line-height:1.9}
+  .dih-meta strong{color:var(--ink)}
+  .abstract{border-left:3px solid var(--accent);padding:.75rem 1.2rem;
+    background:var(--paper-3);margin:1.5rem 0;font-size:.95rem;line-height:1.7}
+  h2{font-size:1.1rem;font-weight:500;margin:2rem 0 .6rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem}
+  h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .4rem}
+  p{margin-bottom:.85rem}
+  ul,ol{padding-left:1.5rem;margin-bottom:.85rem}
+  li{margin-bottom:.35rem}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;margin:1rem 0}
+  th{text-align:left;padding:5px 9px;border-bottom:2px solid var(--ink);
+    font-family:var(--mono);font-size:.68rem;text-transform:uppercase}
+  td{padding:5px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+  .finding{border-left:3px solid var(--accent);padding:.5rem 1rem;margin:1rem 0;background:var(--paper-2)}
+  .finding strong{color:var(--accent)}
+  code{font-family:var(--mono);font-size:.83em;background:var(--paper-3);padding:.1em .35em}
+  .ref-block{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1.2rem;
+    font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2}
+  .ref-block a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav><a href="/">ACI</a><a href="/papers/">Papers</a><a href="/research.html">Research</a></nav>
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Concept Note · CN-021</span>
+    <h1 class="doc-title">Pilot Design &amp; Metrics Validation (PDMV)</h1>
+    <p class="doc-sub">RGL-järjestelmän kiistaton testaus Itä-Suomen operatiivisessa ympäristössä</p>
+  </div>
+  <div><div class="dih-meta">
+    <strong>Päivämäärä</strong> 2026-05-26<br>
+    <strong>Sarja</strong> DRD · CN-sarja<br>
+    <strong>Jatkuu</strong> CN-020<br>
+    <strong>Status</strong> Pilottisuunnittelu
+  </div></div>
+</div>
+
+<div class="abstract">
+  <strong>Tiivistelmä.</strong> CN-021 määrittää ensimmäisen kontrolloidun, mitattavan ja
+  vertailukelpoisen pilotin RGL-mallille. Pilotti toteutetaan Itä-Suomessa
+  (Joensuu–Kuopio–Kajaani) ja sen tarkoitus on vastata yhteen kysymykseen:
+  parantaako yhteinen tilannekuva + suosituskerros vasteaikaa, resurssien käyttöä
+  ja kattavuutta ilman pakottavaa ohjausta?
+</div>
+
+<h2>§ 1 — Kontrolliasetelma</h2>
+
+<p>CN-021:n kriittisin suunnitteluperiaate: ei "ennen–jälkeen" ilman kontrollialuetta.
+Länsi-Suomi toimii kontrollialueena (ei RGL-interventiota),
+Itä-Suomi koealueena (RGL käytössä). Tämä mahdollistaa kausaalisen tulkinnan.</p>
+
+<p><strong>Kontrollialueen valinta on myös rakenteellinen havainto:</strong>
+Länsi-Suomi ei ole vain "verrokkialue" — se on eri palvelujärjestelmä.
+Lännessä HEMS toimii tiheän tukikohtaverkon ja päällekkäisen peiton varassa,
+useampi kone voi saavuttaa saman kohteen 20–30 minuutissa.
+Idässä yksi kone ei ole "lisäkapasiteetti" vaan usein ainoa kapasiteetti.
+Tämä tarkoittaa, että RGL:n vaikutus on rakenteellisesti erilainen — ja
+pilotti tuottaa tietoa joka ei suoraan skaalaudu länteen.</p>
+
+<h2>§ 2 — Pilottialue ja aikataulu</h2>
+
+<ul>
+  <li><strong>Alue:</strong> Joensuu–Kuopio–Kajaani -kolmio, ±150 km säde</li>
+  <li><strong>Kesto:</strong> 12 kuukautta, tammikuu–joulukuu 2027</li>
+  <li><strong>Resurssit:</strong> FinnHEMS (baseline) + RVL Super Puma (SAR fallback) + PV NH90 (testattava)</li>
+</ul>
+
+<h2>§ 3 — Interventio: mitä RGL lisää</h2>
+
+<p>Pilotti ei muuta kalustoa. Se lisää kolme asiaa:</p>
+<ol>
+  <li><strong>Yhteinen tilannekuva</strong> — kaikki tehtävät samassa järjestelmässä, reaaliaikainen resurssisijainti</li>
+  <li><strong>Suosituskerros</strong> — ehdottaa optimaalisinta yksikköä (etäisyys, sää, tehtävätyyppi, kuormitus). Ei pakota.</li>
+  <li><strong>Auditointi</strong> — jokainen päätös tallentuu, VTV-yhteensopiva</li>
+</ol>
+
+<h2>§ 4 — No interference principle</h2>
+
+<p>Järjestelmä saa: suositella, näyttää, tallentaa.<br>
+Järjestelmä ei saa: määrätä, estää, ohittaa.<br>
+Pilotti ei muuta hälytyskriteerejä eikä komentoketjuja.</p>
+
+<h2>§ 5 — Mittarit</h2>
+
+<table>
+  <thead><tr><th>Mittari</th><th>Kaava</th><th>Tavoite</th></tr></thead>
+  <tbody>
+    <tr><td><strong>RTD</strong> — Response Time Delta</td>
+      <td><code>RT_RGL − RT_baseline</code></td><td>Negatiivinen (parannus)</td></tr>
+    <tr><td><strong>CRI</strong> — Coverage Resolution Index</td>
+      <td><code>hoidetut katve / kaikki katve</code></td><td>+25 % optimistinen</td></tr>
+    <tr><td><strong>RAE</strong> — Resource Allocation Efficiency</td>
+      <td><code>optimaalinen yksikkö / kaikki tehtävät</code></td><td>+15–30 %</td></tr>
+    <tr><td><strong>ORM</strong></td>
+      <td><code>todelliset / kokonaistehtävät</code></td><td>≥ 0.60</td></tr>
+  </tbody>
+</table>
+
+<h2>§ 6 — Hypoteesit</h2>
+
+<ul>
+  <li><strong>H1:</strong> Yhteinen tilannekuva vähentää vasteaikaa ilman kalustomuutoksia</li>
+  <li><strong>H2:</strong> Suosituskerros parantaa resurssiallokaatiota &gt;15 %</li>
+  <li><strong>H3:</strong> Auditointikerros lisää läpinäkyvyyttä ilman operatiivista hidastumista</li>
+</ul>
+
+<h2>§ 7 — Kriittinen testattava väite</h2>
+
+<div class="finding">
+  <strong>CN-021 ei testaa teknologiaa. Se testaa:</strong> voiko kolmen itsenäisen
+  viranomaisjärjestelmän päätöksenteko parantua ilman että niiden valtaa muutetaan?
+  Jos RGL ei paranna vasteaikaa ilman pakottavaa ohjausta, ongelma ei ole näkyvyys
+  vaan päätösvallan rakenne.
+</div>
+
+<h2>§ 8 — Skenaariot</h2>
+
+<table>
+  <thead><tr><th>Skenaario</th><th>RTD</th><th>CRI</th><th>Johtopäätös</th></tr></thead>
+  <tbody>
+    <tr><td>Optimistinen</td><td>−10–20 %</td><td>+25 %</td><td>RGL skaalautuu kansallisesti</td></tr>
+    <tr><td>Neutraali</td><td>~0</td><td>+5–10 %</td><td>Datajärjestelmä jää silti käyttöön</td></tr>
+    <tr><td>Negatiivinen</td><td>&gt;0</td><td>ei muutos</td><td>Ongelma on päätösvallan rakenne, ei näkyvyys</td></tr>
+  </tbody>
+</table>
+
+<div class="ref-block">
+  <a href="/papers/cn-020-transition-plan.html">CN-020 — Transition Plan</a><br>
+  <a href="/papers/cn-019-realistic-governance.html">CN-019 — RGL</a><br>
+  <a href="/papers/cn-018-joensuu-pilot.html">CN-018 — Joensuu-pilotti</a><br>
+  <a href="/papers/cn-016-hems-coverage.html">CN-016 — HEMS-kattavuus (Itä-Länsi-ero)</a>
+</div>
+</body>
+</html>
