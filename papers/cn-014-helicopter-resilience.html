@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-014 — Hajautettu helikopteriresilienssi | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-014-helicopter-resilience.html"/>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fafaf8; --paper-2: #f0f0ec; --paper-3: #e8e4dc;
+    --accent: #8b2500; --muted: #666; --rule: #ddd;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+    font-size: 1.05rem; line-height: 1.8; max-width: 780px; margin: 0 auto;
+    padding: 2rem 1.5rem 5rem; }
+  nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    border-bottom: 1px solid var(--rule); padding-bottom: .6rem; margin-bottom: 2rem; }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+  .dih { border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+  .dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); display: block; margin-bottom: .2rem; }
+  .dih-series { font-family: var(--mono); font-size: .8rem; color: var(--accent); }
+  .doc-title { font-size: 1.5rem; font-weight: 400; margin: .4rem 0 .25rem; }
+  .doc-sub { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  .dih-meta { font-family: var(--mono); font-size: .68rem; color: var(--muted);
+    text-align: right; line-height: 1.9; }
+  .dih-meta strong { color: var(--ink); }
+  .abstract { border-left: 3px solid var(--accent); padding: .75rem 1.2rem;
+    background: var(--paper-3); margin: 1.5rem 0; font-size: .95rem; line-height: 1.7; }
+  h2 { font-size: 1.1rem; font-weight: 500; margin: 2rem 0 .6rem;
+    border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; }
+  p { margin-bottom: .85rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: .85rem; }
+  li { margin-bottom: .3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1rem 0; }
+  th { text-align: left; padding: 5px 9px; border-bottom: 2px solid var(--ink);
+    font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+  td { padding: 5px 9px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+    margin: 1rem 0; background: var(--paper-2); }
+  .finding strong { color: var(--accent); }
+  code { font-family: var(--mono); font-size: .85em; background: var(--paper-3);
+    padding: .1em .3em; }
+  .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.2rem;
+    font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 2; }
+  .ref-block a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Concept Note · CN-014</span>
+    <h1 class="doc-title">Hajautettu helikopteriresilienssi</h1>
+    <p class="doc-sub">Koordinaatiovaje ja R-kerroksen liikkuva kapasiteetti · M-komponentti</p>
+  </div>
+  <div>
+    <div class="dih-meta">
+      <strong>Päivämäärä</strong> 2026-05-26<br>
+      <strong>Sarja</strong> DRD · CN-sarja<br>
+      <strong>Jatkuu</strong> DRD-08 · R-kerros<br>
+      <strong>Status</strong> Analyysi · Suositus
+    </div>
+  </div>
+</div>
+
+<div class="abstract">
+  <strong>Tiivistelmä.</strong> CN-014 tarkastelee Suomen kolmen erillisen helikopterijärjestelmän
+  (Puolustusvoimat, Rajavartiolaitos, FinnHEMS) koordinaatiovajetta ja esittää M-komponentin
+  (mobility resilience) lisäämistä DRD-08:n R-kerrokseen. Norjan NAWSARH/SAR Queen -ohjelma
+  tarjoaa validoitua vertailukohtaa: oikeusministeriön omistamat, ilmavoimien operoimat ja
+  Hovedredningssentralenin johtamat 16–18 AW101-helikopteria muodostavat yhtenäisen järjestelmän.
+  Suomen ~30 virka-aputehtävän vuosittainen volyymi on vain murto-osa potentiaalisesta
+  kapasiteetista. Esitetään kolme toimenpidettä: (1) NH90-kaksoisroolin systematisointi,
+  (2) HEMS-kattavuuden laajentaminen Itä- ja Pohjois-Suomeen, (3) reserviläisrahoitusmalli.
+  Budjettivaikutus alle 1–2 % DRD-08:n energiainvestoinneista.
+</div>
+
+<h2>§ 1 — Helikopterit R-kerroksen liikkuvana infrastruktuurina</h2>
+
+<p>DRD-08:n R-kerros rakentuu E (energiaresilienssi) ja D (dataresilienssi) komponenteista,
+joiden yhteisvaikutus on <code>√(E·D)</code>. Tähän lisätään neljäs operatiivinen ulottuvuus:
+<strong>M (mobility resilience)</strong> — liikkuva kyvykkyys joka mahdollistaa C2-kyvyn
+säilyttämisen, logistiikan jatkuvuuden ja ihmishenkien pelastamisen myös silloin kun kiinteä
+infrastruktuuri on vaurioitunut.</p>
+
+<p>Helikopterit ovat tämän liikkuvan resilienssin ydin — mobiileina C2-solmuina, logistiikan
+jatkuvuuden mahdollistajina ja henkien pelastajina. Nykyinen kolmen erillisen organisaation
+malli on tämän tavoitteen este.</p>
+
+<h2>§ 2 — Nykytila: kolme järjestelmää, yksi katto</h2>
+
+<table>
+  <thead>
+    <tr><th>Organisaatio</th><th>Kalusto</th><th>Päätehtävä</th><th>Rooli kriisissä</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Puolustusvoimat (Utti)</strong></td>
+      <td>20 NH90 + 7 MD500</td>
+      <td>Sotilastehtävät + ~30 virka-apua/v</td>
+      <td>Määrittelemätön</td></tr>
+    <tr><td><strong>Rajavartiolaitos</strong></td>
+      <td>Super Puma, AB206</td>
+      <td>Meripelastus, raja</td>
+      <td>Määrittelemätön</td></tr>
+    <tr><td><strong>FinnHEMS (siviili)</strong></td>
+      <td>EC135, H145 · 8 tukikohtaa</td>
+      <td>Lääkärihelikopteri</td>
+      <td>Jatkuu (?)</td></tr>
+  </tbody>
+</table>
+
+<p>FinnHEMS tavoittaa 70–80 % suomalaisista 30 minuutissa — mutta Lappi ja Itä-Suomi ovat
+alipeitettyjä. Rovaniemi on pohjoisin tukikohta. Ongelma on tunnistettu jo 2019-selvityksessä
+ilman korjaavia toimenpiteitä.</p>
+
+<div class="finding">
+  <strong>Kriittinen havainto:</strong> Puolustusvoimilla on 20 NH90:ää jotka suorittavat
+  ~30 virka-aputehtävää vuodessa. Norjalla 18 AW101:llä lentää tuhansia tehtäviä vuodessa.
+  Sama kalusto, eri käyttöaste — este on organisatorinen, ei tekninen.
+</div>
+
+<h2>§ 3 — Vertailukohta: Norjan NAWSARH/SAR Queen -malli</h2>
+
+<p>Norjan ratkaisu: integraatio, ei lisäkalusto. 16 Leonardo AW101 SAR Queen -helikopteria
+kuudelta tukikohdalta, hallintomalli kolmen ministeriön yhteistyönä:</p>
+
+<table>
+  <thead><tr><th>Taso</th><th>Toimija</th><th>Tehtävä</th></tr></thead>
+  <tbody>
+    <tr><td>Omistajuus</td><td>Oikeusministeriö</td><td>Kalusto valtion omaisuutta</td></tr>
+    <tr><td>Operointi</td><td>Ilmavoimat (330 Squadron)</td><td>Lentotoiminta, tekniset valmiudet</td></tr>
+    <tr><td>Operatiivinen johto</td><td>Hovedredningssentralen</td><td>Siviilipelastustehtävien johtaminen</td></tr>
+  </tbody>
+</table>
+
+<p>Sama AW101 toimii normaalioloissa SAR-tehtävissä ja kriisitilanteessa siirtyy sotilaskäyttöön.
+Alkuperäinen 16 koneen sopimuksen arvo ~1,15 mrd EUR (2013). Suorituskyky: operoi arktisilla
+alueilla, jäissä ja kovassa merenkäynnissä.</p>
+
+<table>
+  <thead><tr><th>Mittari</th><th>Suomi</th><th>Norja</th></tr></thead>
+  <tbody>
+    <tr><td>Väkiluku</td><td>5,6 M</td><td>5,5 M</td></tr>
+    <tr><td>Helikopterit (pelastus/HEMS)</td><td>8 (FinnHEMS) + RVL</td><td>18 (SAR Queen)</td></tr>
+    <tr><td>Sotilaallinen kalusto</td><td>20 NH90 + 7 MD500</td><td>0 (SAR Queen = kaksoisrooli)</td></tr>
+    <tr><td>Yhtenäinen järjestelmä</td><td><strong>Ei</strong> (3 org.)</td><td><strong>Kyllä</strong> (1 järjestelmä)</td></tr>
+    <tr><td>Pelastustehtävät/v</td><td>~30 (virka-apu)</td><td>~1 000 (SAR)</td></tr>
+  </tbody>
+</table>
+
+<h2>§ 4 — Toimenpidesuositukset</h2>
+
+<h3>1. NH90-kaksoisroolin systematisointi (prioriteetti 1)</h3>
+<ul>
+  <li>Määritellään NH90:n kaksoisrooli: normaalioloissa SAR/HEMS, kriisitilanteessa sotilastehtävät</li>
+  <li>Perustetaan poikkihallinnollinen ohjausryhmä (OM + PLM + STM) Norjan mallin mukaisesti</li>
+  <li>Varustetaan NH90 HEMS/SAR-konfiguraatioon: pelastusköysi, ensihoitovälineet, potilaskuljetus</li>
+</ul>
+<p><em>Arvioitu kustannus: 10–20 M€ (varustus + koulutus)</em></p>
+
+<h3>2. HEMS-kattavuuden laajentaminen (prioriteetti 2)</h3>
+<ul>
+  <li>2–3 NH90 päivystysvalmiuteen Itä-Suomeen ja Lappiin (Joensuu, Kuopio, Rovaniemi/Oulu)</li>
+  <li>NH90-miehistöjen koulutus ensihoitotehtäviin yhteistyössä FinnHEMS:n kanssa</li>
+  <li>Kustannukset katetaan valtion budjetista, ei hyvinvointialueilta</li>
+</ul>
+<p><em>Arvioitu kustannus: 5–10 M€/v</em></p>
+
+<h3>3. Reserviläisrahoitusmalli (prioriteetti 3)</h3>
+<ul>
+  <li>Reservin ikärajan nosto kohdennetaan helikopteritoiminnan erikoisasiantuntijoihin</li>
+  <li>Yrityksille verotuksellinen hyöty reservikoulutuksen rahoittamisesta</li>
+  <li>Pelastus- ja ensihoitoalan ammattilaiset NH90-miehistöjen täydennyskoulutukseen</li>
+</ul>
+<p><em>Arvioitu kustannus: 0–5 M€/v</em></p>
+
+<h2>§ 5 — Kiinnittyminen DRD-08:n R-kerrokseen</h2>
+
+<table>
+  <thead><tr><th>R-kerroksen komponentti</th><th>DRD-08 termi</th><th>CN-014 implementaatio</th></tr></thead>
+  <tbody>
+    <tr><td>Hajautettu sähköntuotanto</td><td>E-komponentti</td><td>NH90 = liikkuva varavoima (kenttäsairaalat, C2-solmut)</td></tr>
+    <tr><td>Tietoliikenteen redundanssi</td><td>D-komponentti</td><td>NH90 = mobiili C2-solmu (tilannekuvan välittäjä)</td></tr>
+    <tr><td><strong>Liikkuva pelastuskyky</strong></td><td><strong>M-komponentti (uusi)</strong></td><td>NH90 = HEMS/SAR-kalusto, henkien pelastaja, evakuointi</td></tr>
+    <tr><td>Kotitalouspuskuri</td><td>R-layer floor</td><td>NH90 = evakuointikyky siviiliväestölle</td></tr>
+  </tbody>
+</table>
+
+<p>Ilman M-komponenttia R-kerros on epätäydellinen. Energiaa ja dataa voi olla, mutta jos
+ihmisiä ei voida evakuoida, haavoittuneita ei voida hoitaa ja C2-solmuja ei voida siirtää,
+järjestelmä on staattinen — ja staattinen järjestelmä on haavoittuva järjestelmä.</p>
+
+<h2>§ 6 — Budjettivaikutus</h2>
+
+<table>
+  <thead><tr><th>Toimenpide</th><th>Kertakustannus</th><th>Vuosikustannus</th></tr></thead>
+  <tbody>
+    <tr><td>NH90-kaksoisrooli</td><td>10–20 M€</td><td>—</td></tr>
+    <tr><td>HEMS-kattavuus (Itä/Pohjoinen)</td><td>—</td><td>5–10 M€/v</td></tr>
+    <tr><td>Reserviläisrahoitusmalli</td><td>—</td><td>0–5 M€/v</td></tr>
+    <tr style="font-weight:600;border-top:2px solid var(--ink)">
+      <td>Yhteensä (10 v)</td><td>10–20 M€</td><td>5–15 M€/v</td></tr>
+    <tr><td>Suhteessa DRD-08 energiainvestointiin (1,2 mrd €)</td><td colspan="2">~1–2 %</td></tr>
+    <tr><td>Suhteessa F-35-elinkaareen (25 mrd €)</td><td colspan="2">&lt; 0,1 %</td></tr>
+  </tbody>
+</table>
+
+<div class="finding">
+  <strong>Johtopäätös:</strong> Norjan malli osoittaa että helikopteriresilienssi on
+  ratkaistavissa integraatiolla, ei lisäkalustolla. Suomella on kalusto — puuttuu järjestelmä.
+  Kolme erillistä organisaatiota, yksi katto, kriittinen koordinaatiovaje.
+  M-komponentin lisääminen DRD-08:n R-kerrokseen on seuraava päivitys.
+</div>
+
+<div class="ref-block">
+  <strong>Viitteet</strong><br>
+  <a href="/supplements/drd-08-dagra.html">DRD-08 — DAGRA: Distributed Air-Ground Resilience Architecture</a><br>
+  <a href="/supplements/drd-06-theory-en.html">DRD-06 — C2-CI Nonlinear Dynamics</a><br>
+  <a href="/papers/wp-016-health-data-continuity-index.html">WP-016 — HDCI · §9 Healthcare Integration</a><br>
+  <a href="/papers/wp-002-drd.html">WP-002 — Distributed Resilience Doctrine</a><br>
+  Norja: NAWSARH / SAR Queen · <a href="https://www.regjeringen.no/en/topics/samfunnssikkerhet-og-beredskap/innsikt/nawsarh/id2340017/" target="_blank">regjeringen.no</a><br>
+  Suomi: Utin jääkärirykmentti · Helikopteripataljoona · <a href="https://maavoimat.fi/en/utti-jaeger-regiment/about-us" target="_blank">maavoimat.fi</a>
+</div>
+
+</body>
+</html>
