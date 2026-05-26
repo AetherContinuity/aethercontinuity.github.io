@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-016 — HEMS-kattavuuden erityisanalyysi | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-016-hems-coverage.html"/>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fafaf8; --paper-2: #f0f0ec; --paper-3: #e8e4dc;
+    --accent: #8b2500; --muted: #666; --rule: #ddd;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+    font-size: 1.05rem; line-height: 1.8; max-width: 780px; margin: 0 auto;
+    padding: 2rem 1.5rem 5rem; }
+  nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    border-bottom: 1px solid var(--rule); padding-bottom: .6rem; margin-bottom: 2rem; }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+  .dih { border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+  .dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); display: block; margin-bottom: .2rem; }
+  .dih-series { font-family: var(--mono); font-size: .8rem; color: var(--accent); }
+  .doc-title { font-size: 1.5rem; font-weight: 400; margin: .4rem 0 .25rem; }
+  .doc-sub { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  .dih-meta { font-family: var(--mono); font-size: .68rem; color: var(--muted);
+    text-align: right; line-height: 1.9; }
+  .dih-meta strong { color: var(--ink); }
+  .abstract { border-left: 3px solid var(--accent); padding: .75rem 1.2rem;
+    background: var(--paper-3); margin: 1.5rem 0; font-size: .95rem; line-height: 1.7; }
+  h2 { font-size: 1.1rem; font-weight: 500; margin: 2rem 0 .6rem;
+    border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; }
+  p { margin-bottom: .85rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: .85rem; }
+  li { margin-bottom: .35rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1rem 0; }
+  th { text-align: left; padding: 5px 9px; border-bottom: 2px solid var(--ink);
+    font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+  td { padding: 5px 9px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+    margin: 1rem 0; background: var(--paper-2); }
+  .finding strong { color: var(--accent); }
+  .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.2rem;
+    font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 2; }
+  .ref-block a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Concept Note · CN-016</span>
+    <h1 class="doc-title">HEMS-kattavuuden erityisanalyysi</h1>
+    <p class="doc-sub">Itä- ja Pohjois-Suomen haasteet · Kolmen järjestelmän potentiaali · Kaksoisroolin oikeudelliset reunaehdot</p>
+  </div>
+  <div>
+    <div class="dih-meta">
+      <strong>Päivämäärä</strong> 2026-05-26<br>
+      <strong>Sarja</strong> DRD · CN-sarja<br>
+      <strong>Jatkuu</strong> CN-014 · CN-015<br>
+      <strong>Status</strong> Alueellinen analyysi
+    </div>
+  </div>
+</div>
+
+<div class="abstract">
+  <strong>Tiivistelmä.</strong> CN-016 syventää CN-014:n koordinaatiovajeanalyysiä
+  tarkastelemalla HEMS-kattavuusaukkoja alueellisesti. FinnHEMSin kahdeksan tukikohtaa
+  kattaa 80 % väestöstä 30 minuutissa, mutta Rovaniemen tukikohdassa ei ole
+  ensihoitolääkäriä, ja Itä-Suomessa itärajan tuntumassa on kriittisiä katvealueita.
+  Puolustusvoimien NH90 (20 konetta, ~30 virka-apua/v), Rajavartiolaitoksen
+  Super Pumat (14 konetta) ja MD500 muodostavat täydentävän kapasiteetin jota ei
+  systemaattisesti hyödynnetä. CN-016 käsittelee myös kaksoisroolin oikeudelliset
+  reunaehdot — Geneven sopimukset asettavat vaatimuksen selkeälle siviili/sotilasroolien
+  erottamiselle kriisitilanteessa.
+</div>
+
+<h2>§ 1 — HEMS-kattavuuden nykytila</h2>
+
+<p>FinnHEMSin kahdeksan tukikohtaa: Vantaa, Turku, Kouvola (avattu 2025),
+Tampere, Seinäjoki, Kuopio, Oulu, Rovaniemi. Järjestelmä tavoittaa
+80 % suomalaisista 30 minuutin vasteajalla.</p>
+
+<table>
+  <thead>
+    <tr><th>Tukikohta</th><th>Kalusto</th><th>Henkilöstö</th><th>Kriittinen havainto</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Rovaniemi</td><td>H145</td><td>2 lentäjää + 2 ensihoitajaa</td>
+      <td><strong>Ei ensihoitolääkäriä</strong> — vakava puute Lapin olosuhteissa</td></tr>
+    <tr><td>Oulu</td><td>H145</td><td>Lääkäri + ensihoitajat</td><td>Kattaa Pohjois-Pohjanmaan</td></tr>
+    <tr><td>Kuopio</td><td>H145</td><td>Lääkäri + ensihoitajat</td><td>Pohjois-Savo, mutta Itä-Suomi katvealue</td></tr>
+    <tr><td>Kouvola</td><td>H145</td><td>Lääkäri + ensihoitajat</td><td>Uusi 2025 — parantaa Kaakkois-Suomea</td></tr>
+  </tbody>
+</table>
+
+<div class="finding">
+  <strong>Rovaniemi-ongelma:</strong> Pohjoisen vilkkain helikopteriasema toimii
+  ilman ensihoitolääkäriä. Lapissa pitkät välimatkat ja vaativat sääolosuhteet
+  tarkoittavat että lääkäritasoinen ensihoito on usein ainoa ratkaisu —
+  mutta sitä ei ole saatavilla.
+</div>
+
+<h2>§ 2 — Alueelliset kattavuusaukot</h2>
+
+<table>
+  <thead>
+    <tr><th>Alue</th><th>Ongelma</th><th>Nykyinen lähin tukikohta</th><th>Tyypillinen matka</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Lappi (pohjoinen)</td><td>Ei lääkäriä, pitkät matkat</td>
+      <td>Rovaniemi</td><td>60–150+ km</td></tr>
+    <tr><td>Itäraja (Kainuu–Pohjois-Karjala)</td><td>30 min raja ei täyty</td>
+      <td>Kuopio / Oulu</td><td>80–180 km</td></tr>
+    <tr><td>Koillismaa</td><td>Katvealue Oulun ja Rovaniemen välissä</td>
+      <td>Oulu tai Rovaniemi</td><td>100–160 km</td></tr>
+    <tr><td>Pielinen–Lieksa</td><td>Järvistö hidastaa maayksikköä</td>
+      <td>Kuopio</td><td>90–130 km</td></tr>
+  </tbody>
+</table>
+
+<h2>§ 3 — Kolmen järjestelmän potentiaali</h2>
+
+<h3>3.1 Puolustusvoimat — NH90 ja MD500</h3>
+
+<table>
+  <thead><tr><th>Kalusto</th><th>Määrä</th><th>Soveltuvuus HEMS/SAR</th><th>Rajoitus</th></tr></thead>
+  <tbody>
+    <tr><td>NH90 TTH</td><td>20</td><td>Korkea — teknisesti täysin kykenevä</td>
+      <td>Ei systemaattista roolia, ~30 tehtävää/v</td></tr>
+    <tr><td>MD500</td><td>7</td><td>Rajoitettu — kevyt, ei potilaskuljetus</td>
+      <td>Sopii etsintä- ja tiedustelutehtäviin</td></tr>
+  </tbody>
+</table>
+
+<p>NH90:n TTH-versio kykenee SAR-tehtäviin maalla ja merellä,
+instrumenttiolosuhteissa ja jäätymisolosuhteissa. Tekninen este on olematon —
+este on organisatorinen ja oikeudellinen.</p>
+
+<h3>3.2 Rajavartiolaitos — Super Puma</h3>
+
+<p>RVL:n vartiolentolaivueella on 14 helikopteria, joista Super Pumat ovat
+meripelastuksen selkäranka (~4 000 lentotuntia/v). Super Puma on
+suurempi ja kantavampi kuin NH90 — soveltuu myös maaston SAR-tehtäviin
+ja raskaampiin potilaskuljetuksiin.</p>
+
+<p>RVL operoi jo de facto HEMS-tyyppisissä tehtävissä rannikkosaariston alueella.
+Systemaattinen laajennus sisämaahan edellyttää koordinaatioprotokollaa
+FinnHEMSin kanssa.</p>
+
+<h3>3.3 MD500 — täydentävä rooli</h3>
+
+<p>MD500 soveltuu etsintä-, tarkkailu- ja kevyisiin siirtotehtäviin.
+Pienempi koko ja nopea reaktiokyky tekevät siitä täydentävän resurssin
+erityisesti Itä-Suomen metsäisessä maastossa — ei potilaskuljetus
+vaan maastoetsintä ja tilannekuva.</p>
+
+<h2>§ 4 — Kaksoisroolin oikeudelliset reunaehdot</h2>
+
+<p>Norjan mallissa nousee esiin kysymys jota CN-014 ja CN-015 eivät käsitelleet:
+miten siviili-SAR-tehtävissä toimiva helikopteri säilyttää kansainvälisen
+oikeudellisen suojansa mahdollisessa konfliktitilanteessa?</p>
+
+<h3>Geneven sopimusten vaatimukset</h3>
+
+<p>Geneven sopimukset suojaavat humanitaarisia ilma-aluksia — ne on merkittävä
+selkeästi (Punainen Risti), ja niitä ei saa käyttää sotilaallisiin tarkoituksiin.
+Kaksoisrooli luo oikeudellisen dilemman: sama kone ei voi olla samanaikaisesti
+sekä suojattu humanitaarinen alus että sotilasajoneuvo.</p>
+
+<h3>Käytännön ratkaisu</h3>
+
+<p>Norja on ratkaissut tämän selkeällä roolien erottamisella:</p>
+<ul>
+  <li>Normaaliolot: kone toimii siviili-SAR-tehtävissä ilman sotilasmerkintöjä</li>
+  <li>Kriisin kynnys: ennen siirtymistä sotilaskäyttöön kone palaa tukikohtaan,
+  merkinnät muutetaan ja rooli vaihdetaan virallisesti</li>
+  <li>Ei samanaikaista kaksoisroolia — vaan peräkkäinen roolin vaihto</li>
+</ul>
+
+<div class="finding">
+  <strong>Oikeudellinen reunaehto Suomelle:</strong> NH90-kaksoisrooli on
+  toteutettavissa, mutta edellyttää selkeää protokollaa siirtymiselle
+  siviilitehtävistä sotilaskäyttöön. Siirtymiskynnys määritellään
+  etukäteen — ei tapauskohtaisesti kriisitilanteessa.
+  CN-015:n ohjausryhmän tehtävä: kirjata protokolla ennen pilottia.
+</div>
+
+<h2>§ 5 — Kustannusarviot</h2>
+
+<table>
+  <thead>
+    <tr><th>Toimenpide</th><th>Kertakustannus</th><th>Vuosikustannus</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>NH90-pilotti Itä-Suomessa (varustus + koulutus)</td>
+      <td>5 M€</td><td>2–3 M€</td></tr>
+    <tr><td>Ensihoitolääkäri Rovaniemelle</td>
+      <td>—</td><td>0,5–1 M€</td></tr>
+    <tr><td>RVL Super Puma HEMS-systematisointi</td>
+      <td>2 M€ (koulutus)</td><td>1 M€</td></tr>
+    <tr><td>MD500 etsintärooli Itä-Suomi</td>
+      <td>0,5 M€ (protokolla + varustus)</td><td>0,3 M€</td></tr>
+    <tr style="font-weight:600;border-top:2px solid var(--ink)">
+      <td>Yhteensä (5 vuotta)</td>
+      <td><strong>7,5 M€</strong></td><td><strong>3,8–5,3 M€/v</strong></td></tr>
+  </tbody>
+</table>
+
+<h2>§ 6 — Suositukset</h2>
+
+<ol>
+  <li><strong>Ensihoitolääkäri Rovaniemelle välittömästi.</strong> Tämä ei vaadi
+  uusia helikoptereita eikä hallinnollisia muutoksia — pelkkä henkilöstöpäätös
+  STM:ltä ja hyvinvointialueelta. Nopein yksittäinen parannus koko analyysissä.</li>
+
+  <li><strong>NH90-pilotti Itä-Suomessa 2027.</strong> Yksi NH90 Joensuuhun tai
+  Kajaaniin kesäkaudeksi 2027 — HEMS/SAR-tehtävät, arviointi syksyllä.
+  Oikeudellinen protokolla (siviili/sotilasroolien vaihto) kirjattu ennen pilottia.</li>
+
+  <li><strong>RVL Super Puma -koordinaatioprotokolla.</strong> FinnHEMSin ja
+  RVL:n välinen ruuhka- ja poikkeustilanteen koordinaatiomalli. Ei uutta kalustoa,
+  ei uutta lainsäädäntöä — operatiivinen sopimus kahden organisaation välillä.</li>
+
+  <li><strong>MD500 etsintärooli Itä-Suomen katvealueille.</strong> Pielinen,
+  Kainuu, Koillismaa — MD500 tilannekuva ja maastoetsintä kun NH90 on sidottuna
+  muualle. Täydentää, ei korvaa.</li>
+
+  <li><strong>Oikeudellinen selvitys kaksoisroolista</strong> ennen CN-015:n
+  ohjausryhmän perustamista. Geneven sopimusten vaatimukset on kirjattava
+  selkeästi ennen kuin NH90 ottaa ensimmäisenkin HEMS-tehtävän.</li>
+</ol>
+
+<div class="finding">
+  <strong>Tärkein yksittäinen toimenpide:</strong> Ensihoitolääkäri Rovaniemelle.
+  Kustannus alle 1 M€/v. Vaikutus: Lapin pohjoisosan kriittinen ensihoito
+  paranee välittömästi ilman yhtään uutta helikopteria.
+</div>
+
+<div class="ref-block">
+  <strong>Viitteet</strong><br>
+  <a href="/papers/cn-014-helicopter-resilience.html">CN-014 — Hajautettu helikopteriresilienssi</a><br>
+  <a href="/papers/cn-015-helicopter-implementation.html">CN-015 — Toteutussuunnitelma 2026–2030</a><br>
+  <a href="/supplements/drd-08-dagra.html">DRD-08 — DAGRA · §02c M-komponentti</a><br>
+  <a href="https://www.finnhems.fi" target="_blank">FinnHEMS · finnhems.fi</a><br>
+  <a href="https://raja.fi" target="_blank">Rajavartiolaitos · raja.fi</a><br>
+  <a href="https://maavoimat.fi/en/utti-jaeger-regiment/about-us" target="_blank">Utin jääkärirykmentti · maavoimat.fi</a>
+</div>
+
+</body>
+</html>
