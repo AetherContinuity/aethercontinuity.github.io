@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-015 — Helikopteriresilienssin toteutussuunnitelma | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-015-helicopter-implementation.html"/>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fafaf8; --paper-2: #f0f0ec; --paper-3: #e8e4dc;
+    --accent: #8b2500; --muted: #666; --rule: #ddd;
+    --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+    font-size: 1.05rem; line-height: 1.8; max-width: 780px; margin: 0 auto;
+    padding: 2rem 1.5rem 5rem; }
+  nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    border-bottom: 1px solid var(--rule); padding-bottom: .6rem; margin-bottom: 2rem; }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+  .dih { border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+  .dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); display: block; margin-bottom: .2rem; }
+  .dih-series { font-family: var(--mono); font-size: .8rem; color: var(--accent); }
+  .doc-title { font-size: 1.5rem; font-weight: 400; margin: .4rem 0 .25rem; }
+  .doc-sub { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  .dih-meta { font-family: var(--mono); font-size: .68rem; color: var(--muted);
+    text-align: right; line-height: 1.9; }
+  .dih-meta strong { color: var(--ink); }
+  .abstract { border-left: 3px solid var(--accent); padding: .75rem 1.2rem;
+    background: var(--paper-3); margin: 1.5rem 0; font-size: .95rem; line-height: 1.7; }
+  h2 { font-size: 1.1rem; font-weight: 500; margin: 2rem 0 .6rem;
+    border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; }
+  p { margin-bottom: .85rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: .85rem; }
+  li { margin-bottom: .35rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1rem 0; }
+  th { text-align: left; padding: 5px 9px; border-bottom: 2px solid var(--ink);
+    font-family: var(--mono); font-size: .68rem; text-transform: uppercase; }
+  td { padding: 5px 9px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+    margin: 1rem 0; background: var(--paper-2); }
+  .finding strong { color: var(--accent); }
+  .milestone { background: var(--paper-3); border: 1px solid var(--rule);
+    padding: .6rem 1rem; margin: .5rem 0; font-size: .9rem; }
+  .milestone .year { font-family: var(--mono); font-size: .75rem; color: var(--accent);
+    font-weight: 600; margin-right: .5rem; }
+  code { font-family: var(--mono); font-size: .85em; background: var(--paper-3);
+    padding: .1em .3em; }
+  .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.2rem;
+    font-family: var(--mono); font-size: .7rem; color: var(--muted); line-height: 2; }
+  .ref-block a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Concept Note · CN-015</span>
+    <h1 class="doc-title">Helikopteriresilienssin toteutussuunnitelma 2026–2030</h1>
+    <p class="doc-sub">Aikataulu · Vastuutahot · Rahoitusmekanismit · M-komponentin operationalisointi</p>
+  </div>
+  <div>
+    <div class="dih-meta">
+      <strong>Päivämäärä</strong> 2026-05-26<br>
+      <strong>Sarja</strong> DRD · CN-sarja<br>
+      <strong>Jatkuu</strong> CN-014 · M-komponentti<br>
+      <strong>Status</strong> Toteutussuunnitelma
+    </div>
+  </div>
+</div>
+
+<div class="abstract">
+  <strong>Tiivistelmä.</strong> CN-015 operationalisoi CN-014:n kolme toimenpidesuositusta
+  konkreettiseksi toteutuspoluksi vuosille 2026–2030. Hallinnollinen integraatio edellyttää
+  yhden poikkihallinnollisen ohjausryhmän perustamista (OM + PLM + STM) ennen kalusto-
+  tai koulutusinvestointeja. Kriittisin ensimmäinen askel on Aslakin vakinaistaminen osaksi
+  kansallista järjestelmää — se on sekä nopein voitto että konkreettisin osoitus
+  koordinaatiovajeen korjaamisesta. Kokonaisaikataulu: ohjausryhmä Q3/2026,
+  pilottitoiminta Itä-Suomessa 2027, täysi integraatio 2029–2030.
+</div>
+
+<h2>§ 1 — Lähtökohta ja toteutuksen järjestys</h2>
+
+<p>CN-014 osoitti että este ei ole tekninen vaan organisatorinen. Toteutus on siksi
+ensisijaisesti hallinnollinen prosessi — ei hankintaprojekti. Järjestys on kriittinen:</p>
+
+<ol>
+  <li><strong>Hallinnollinen rakenne ensin</strong> — ilman ohjausryhmää ja mandaattia
+  kaikki muut toimenpiteet ovat koordinoimattomia</li>
+  <li><strong>Aslak-vakinaistaminen</strong> — nopein voitto, korjaa akuutin
+  koordinaatiovajeen Lapissa</li>
+  <li><strong>NH90-kaksoisrooli</strong> — edellyttää ohjausryhmän päätöstä ja
+  varusteluinvestointia</li>
+  <li><strong>HEMS-kattavuuden laajennus</strong> — pilotointi Itä-Suomessa,
+  sitten pohjoiseen</li>
+  <li><strong>Reserviläisrahoitusmalli</strong> — viimeisenä, koska edellyttää
+  toimivaa järjestelmää johon resursoida</li>
+</ol>
+
+<h2>§ 2 — Hallinnollinen rakenne: poikkihallinnollinen ohjausryhmä</h2>
+
+<p>Norjan NAWSARH-mallin kriittisin oppi: hankintaprosessia johti oikeusministeriö
+yhteistyössä puolustus- ja terveysministeriön kanssa. Sama kolmijako tarvitaan Suomeen.</p>
+
+<table>
+  <thead>
+    <tr><th>Ministeriö</th><th>Rooli</th><th>Vastuualue</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Oikeusministeriö (OM)</strong></td>
+      <td>Omistajuus + koordinaatio</td>
+      <td>Pelastustoimi, hätäkeskustoiminta, Aslak-rahoitus</td>
+    </tr>
+    <tr>
+      <td><strong>Puolustusministeriö (PLM)</strong></td>
+      <td>Kalusto + operointi</td>
+      <td>NH90-kaksoisrooli, Utin jääkärirykmentti, varusteluinvestoinnit</td>
+    </tr>
+    <tr>
+      <td><strong>Sosiaali- ja terveysministeriö (STM)</strong></td>
+      <td>HEMS-integraatio</td>
+      <td>FinnHEMS-sopimukset, ensihoitoprotokollat, rahoitusmalli</td>
+    </tr>
+    <tr>
+      <td><strong>Rajavartiolaitos (RVL)</strong></td>
+      <td>Meripelastusintegraatio</td>
+      <td>Super Puma -koordinaatio, rajat ylittävät tehtävät</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Ohjausryhmä ei tarvitse lainsäädäntömuutoksia käynnistyäkseen — riittää
+valtioneuvoston asettamispäätös. Vastaava rakenne on toiminut Kokonaisturvallisuuden
+neuvottelukunnan alaisissa teemakohtaisissa ryhmissä.</p>
+
+<div class="milestone">
+  <span class="year">Q3/2026</span>
+  Ohjausryhmä perustettu, mandaatti hyväksytty, ensimmäinen kokous pidetty.
+  Lähtötilanne kartoitettu: NH90-kapasiteetti, FinnHEMS-aukot, Aslak-status.
+</div>
+
+<h2>§ 3 — Vaihe 1: Aslak-vakinaistaminen (2026–2027)</h2>
+
+<p>Aslak on akuutti prioriteetti. Lahjoitusrahoituksella toimiva kriittinen
+pelastushelikopteri Lapissa on suora osoitus järjestelmätason epäonnistumisesta.
+Sisäministeriön 500 000 EUR hätärahoitus (marraskuussa 2025) on väliaikaisratkaisu —
+vakinaistaminen on pysyvä.</p>
+
+<h3>Vaihtoehdot</h3>
+<ul>
+  <li><strong>A — Valtion suorarahoitus:</strong> Aslak integroidaan FinnHEMS-sopimukseen
+  tai saa suoran valtionavustuksen pelastustoimen momentilta. Yksinkertaisin ja nopein.</li>
+  <li><strong>B — NH90-pilotti:</strong> 1–2 NH90 sijoitetaan Rovaniemelle tai Sodankylään
+  päivystysvalmiuteen korvaamaan Aslakin tehtäviä. Testaa kaksoisroolin käytännössä.</li>
+  <li><strong>C — Hybridimalli:</strong> Aslak vakinaistetaan lyhyellä aikavälillä (A),
+  NH90-pilotti käynnistetään rinnalla (B), ja 2028–2029 arvioidaan kumpi malli jää.</li>
+</ul>
+
+<p>Suositus: vaihtoehto C. Aslak on vakinaistettava välittömästi —
+se ei voi odottaa NH90-pilotin tuloksia.</p>
+
+<div class="milestone">
+  <span class="year">Q4/2026</span>
+  Aslak vakinaistettu — joko FinnHEMS-integraatiolla tai suoralla valtionavustuksella.
+  Rahoitusmalli selkeä, ei enää lahjoitusvaroja.
+</div>
+<div class="milestone">
+  <span class="year">Q1/2027</span>
+  NH90-pilotti Lapissa käynnistyy: 1 NH90 Rovaniemelle tai Sodankylään
+  6 kuukauden koejaksoksi HEMS-tehtävissä.
+</div>
+
+<h2>§ 4 — Vaihe 2: NH90-kaksoisrooli (2027–2028)</h2>
+
+<p>NH90 TTH (Tactical Transport Helicopter) on teknisesti kykenevä HEMS- ja
+SAR-tehtäviin — este on organisatorinen. Kaksoisroolin systematisointi edellyttää:</p>
+
+<h3>Varusteluinvestointi</h3>
+<table>
+  <thead><tr><th>Varuste</th><th>Kustannus/kone</th><th>Koneet</th><th>Yhteensä</th></tr></thead>
+  <tbody>
+    <tr><td>Pelastusköysi + vinssi</td><td>~0,5 M€</td><td>4–6</td><td>2–3 M€</td></tr>
+    <tr><td>Ensihoitovarustus (HEMS-kit)</td><td>~0,3 M€</td><td>4–6</td><td>1,5–2 M€</td></tr>
+    <tr><td>Potilaskuljetuskapasiteetti</td><td>~0,2 M€</td><td>4–6</td><td>1–1,5 M€</td></tr>
+    <tr><td>Miehistökoulutus (HEMS/SAR)</td><td>~0,15 M€/lentäjä</td><td>20–30</td><td>3–4,5 M€</td></tr>
+    <tr style="font-weight:600;border-top:2px solid var(--ink)">
+      <td>Yhteensä</td><td>—</td><td>—</td><td><strong>7,5–11 M€</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>Operatiivinen protokolla</h3>
+<p>Norjan malli: siviilijohtoinen operatiivinen johto normaalioloissa,
+sotilasjohto kriisitilanteessa. Suomessa vastaava rakenne:</p>
+<ul>
+  <li><strong>Normaaliolot:</strong> Hätäkeskuslaitos (ERICA) johtaa HEMS-tehtävät,
+  NH90 vastaa samoin kuin FinnHEMS</li>
+  <li><strong>Kriisi:</strong> Puolustusvoimien johto, NH90 siirtyy sotilastehtäviin
+  ennalta sovitun protokollan mukaan</li>
+  <li><strong>Kynnys:</strong> Ohjausryhmä määrittelee siirtymäkynnyksen —
+  ei tapauskohtainen päätös vaan ennakolta sovittu taso</li>
+</ul>
+
+<div class="milestone">
+  <span class="year">2027</span>
+  4–6 NH90:ää varustettu HEMS/SAR-konfiguraatiolla.
+  Operatiivinen protokolla (siviili/sotilasjohtaminen) hyväksytty.
+</div>
+<div class="milestone">
+  <span class="year">2028</span>
+  NH90-HEMS-pilotti arvioitu. Päätös laajentamisesta tai mallista.
+  ERICA-integraatio testattu.
+</div>
+
+<h2>§ 5 — Vaihe 3: HEMS-kattavuuden laajennus (2028–2030)</h2>
+
+<p>Tavoite: FinnHEMS + NH90 yhdessä kattavat koko Suomen 30 minuutin
+vasteajalla — mukaan lukien Lappi ja Itä-Suomi.</p>
+
+<h3>Tukikohtajärjestys</h3>
+<table>
+  <thead><tr><th>Tukikohta</th><th>Kalusto</th><th>Kattaa</th><th>Vuosi</th></tr></thead>
+  <tbody>
+    <tr><td>Rovaniemi / Sodankylä</td><td>NH90 (pilotti → pysyvä)</td>
+      <td>Lappi pohjois- ja itäosa</td><td>2027→2028</td></tr>
+    <tr><td>Kuopio tai Joensuu</td><td>NH90 (uusi päivystyspiste)</td>
+      <td>Itä-Suomi, Pohjois-Savo</td><td>2028–2029</td></tr>
+    <tr><td>Kajaani tai Oulu</td><td>NH90 tai FinnHEMS-laajennus</td>
+      <td>Kainuu, Pohjois-Pohjanmaa</td><td>2029–2030</td></tr>
+  </tbody>
+</table>
+
+<h3>Rahoitusmalli</h3>
+<p>Kriittinen periaate: kustannukset katetaan valtion budjetista, ei hyvinvointialueilta.
+Hyvinvointialueilla ei ole kapasiteettia rahoittaa helikopterioperaatioita osana
+jo ylikuormitettua sotepisteitä. Rahoituslähde:</p>
+<ul>
+  <li>Puolustusbudjetti: NH90-lentokustannukset (lisääntyy ~200 lentotuntia/v per tukikohta)</li>
+  <li>Sisäministeriö / pelastustoimen momentti: HEMS-tehtävät, ensihoitohenkilöstö</li>
+  <li>STM: lääkärihelikopterikorvaukset FinnHEMS-sopimuksen laajennuksena</li>
+</ul>
+
+<div class="milestone">
+  <span class="year">2029</span>
+  Kaksi uutta NH90-päivystyspistettä toiminnassa (Itä-Suomi + Pohjoinen).
+  M-komponentin arvo: M ≈ 0.50 (nykyinen M ≈ 0.20).
+</div>
+<div class="milestone">
+  <span class="year">2030</span>
+  Täysi integraatio: yhteinen operatiivinen protokolla,
+  ERICA johtaa siviilitehtävät, Puolustusvoimat sotilastilanteet.
+  M ≈ 0.65–0.70. R_eff nousee merkittävästi.
+</div>
+
+<h2>§ 6 — Vaihe 4: Reserviläisrahoitusmalli (2028 alkaen)</h2>
+
+<p>Reservin ikärajan nosto 65:een luo pohjan. Helikopteritoiminnan erikoisasiantuntijat:</p>
+<ul>
+  <li>Lentotekniikka (NH90-huolto, HEMS-varustus)</li>
+  <li>Ensihoitolääkärit ja ensihoitajat (HEMS-tehtävät)</li>
+  <li>Lentäjät joilla siviili-HEMS-kokemus</li>
+</ul>
+
+<p><strong>Mekanismi:</strong> Yritys rahoittaa työntekijän reservikoulutuksen
+→ saa verovähennyksen. Malli on analoginen nykyiselle vapaaehtoiselle
+maanpuolustuskoulutukselle (MPK). Lainsäädäntömuutos tarvitaan —
+sisällytetään seuraavaan puolustushallinnon kehittämisohjelmaan.</p>
+
+<div class="milestone">
+  <span class="year">2028</span>
+  Lainsäädäntömuutos hyväksytty. Ensimmäiset yritykset mukana.
+</div>
+
+<h2>§ 7 — Kokonaisaikataulu ja M-komponentin kehitys</h2>
+
+<table>
+  <thead><tr><th>Vaihe</th><th>Ajankohta</th><th>M-arvo</th><th>R_eff muutos</th></tr></thead>
+  <tbody>
+    <tr><td>Nykytila</td><td>2026</td><td>≈ 0.20</td><td>Lähtötaso</td></tr>
+    <tr><td>Ohjausryhmä + Aslak</td><td>Q4/2026</td><td>≈ 0.25</td><td>+koordinaatio</td></tr>
+    <tr><td>NH90-kaksoisrooli</td><td>2027–2028</td><td>≈ 0.40</td><td>+liikkuva C2</td></tr>
+    <tr><td>HEMS-laajennus Itä/Pohjoinen</td><td>2028–2029</td><td>≈ 0.55</td><td>+kattavuus</td></tr>
+    <tr><td>Täysi integraatio</td><td>2029–2030</td><td>≈ 0.65–0.70</td><td>Norjan taso</td></tr>
+  </tbody>
+</table>
+
+<p>Kokonaisbudjetti 2026–2030: 10–20 M€ kertainvestointi (varustelu) +
+5–15 M€/v juoksevat kulut. Suhteessa DRD-08:n energia- ja datainvestointeihin (1,2 mrd €)
+tämä on alle 2 % — korkein kustannus-hyöty-suhde koko R-kerroksen portfoliossa.</p>
+
+<div class="finding">
+  <strong>Kriittisin havainto:</strong> Koko toteutuspolku voidaan käynnistää ilman
+  yhtään uutta helikopteria ja ilman lainsäädäntömuutoksia — pelkällä
+  valtioneuvoston asettamispäätöksellä poikkihallinnollisesta ohjausryhmästä.
+  Norja onnistui integroimalla. Suomi voi tehdä saman.
+</div>
+
+<div class="ref-block">
+  <strong>Viitteet</strong><br>
+  <a href="/papers/cn-014-helicopter-resilience.html">CN-014 — Hajautettu helikopteriresilienssi</a><br>
+  <a href="/supplements/drd-08-dagra.html">DRD-08 — DAGRA · §02c M-komponentti</a><br>
+  <a href="/papers/wp-016-health-data-continuity-index.html">WP-016 — §9 Healthcare Integration</a><br>
+  Norja NAWSARH: <a href="https://www.regjeringen.no/en/topics/samfunnssikkerhet-og-beredskap/innsikt/nawsarh/id2340017/" target="_blank">regjeringen.no</a><br>
+  FinnHEMS: <a href="https://www.finnhems.fi" target="_blank">finnhems.fi</a>
+</div>
+
+</body>
+</html>
