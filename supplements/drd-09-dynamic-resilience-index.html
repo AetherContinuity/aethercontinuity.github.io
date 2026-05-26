@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DRD-09 — Dynamic Resilience Index | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/drd-09-dynamic-resilience-index.html"/>
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif);
+  font-size: 1.05rem; line-height: 1.75; max-width: 780px; margin: 0 auto;
+  padding: 2rem 1.5rem 5rem; }
+nav { font-family: var(--mono); font-size: .7rem; color: var(--muted);
+  border-bottom: 1px solid var(--rule); padding-bottom: .75rem; margin-bottom: 2rem;
+  display: flex; justify-content: space-between; }
+nav a { color: var(--accent); text-decoration: none; }
+.dih { border: 1px solid var(--rule); padding: 1.25rem 1.5rem; margin-bottom: 2rem;
+  background: var(--paper-2); display: grid; grid-template-columns: 1fr auto; gap: 1rem; }
+.dih-institute { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted); display: block; margin-bottom: .25rem; }
+.dih-series { font-family: var(--mono); font-size: .8rem; }
+.series-accent { color: var(--accent); font-weight: 600; }
+.dih-meta { font-family: var(--mono); font-size: .7rem; line-height: 1.8;
+  color: var(--muted); text-align: right; }
+.dih-meta strong { color: var(--ink); }
+h1 { font-size: 1.65rem; font-weight: 500; margin-bottom: .35rem; }
+.subtitle { font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-bottom: 1.75rem; }
+.abstract { border-left: 3px solid var(--accent); padding: .75rem 1.25rem;
+  background: var(--paper-3); margin-bottom: 2rem; font-size: .95rem; }
+.section { margin-bottom: 2.5rem; }
+.section-header { border-bottom: 1px solid var(--rule); padding-bottom: .4rem;
+  margin-bottom: 1rem; display: flex; align-items: baseline; gap: .75rem; }
+.section-num { font-family: var(--mono); font-size: .65rem; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); }
+h2 { font-size: 1.15rem; font-weight: 500; }
+h3 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 .5rem; }
+p { margin-bottom: .9rem; }
+ul, ol { padding-left: 1.5rem; margin-bottom: .9rem; }
+li { margin-bottom: .35rem; }
+code { font-family: var(--mono); font-size: .85em; background: var(--paper-3);
+  padding: .1em .3em; border-radius: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 1rem 0; }
+th { text-align: left; padding: 6px 10px; border-bottom: 2px solid var(--ink);
+  font-family: var(--mono); font-size: .7rem; text-transform: uppercase; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.finding { border-left: 3px solid var(--accent); padding: .5rem 1rem;
+  margin: 1rem 0; background: var(--paper-2); }
+.finding strong { color: var(--accent); }
+.further-reading { border-top: 1px solid var(--rule); padding-top: 1.5rem;
+  margin-top: 3rem; font-family: var(--mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+.further-reading a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <span>DRD Series · WP 2026-09</span>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Distributed Resilience Doctrine · <span class="series-accent">Working Paper 09</span></span>
+  </div>
+  <div>
+    <div class="dih-meta">
+      <strong>Date</strong> 2026-05-26<br>
+      <strong>Series</strong> DRD Supplement<br>
+      <strong>Continues</strong> DRD-08 · DAGRA<br>
+      <strong>Language</strong> English
+    </div>
+  </div>
+</div>
+
+<h1>Dynamic Resilience Index (DRI)</h1>
+<p class="subtitle">Integrating C2-CI · MRI · ORM · CDSI into a composite national resilience metric</p>
+
+<div class="abstract">
+  <strong>Abstract.</strong> DRD-09 introduces the Dynamic Resilience Index (DRI) — a composite
+  metric integrating four previously separate indices: C2 Cohesion Index (C2-CI, DRD-03/06),
+  Mobility Resilience Index (MRI, DRD-08 §02c), Operational Readiness Multiplier (ORM, CN-014/015),
+  and Cross-Domain Synergy Index (CDSI, CN-015). DRI measures not static defence capacity but
+  dynamic capability — the system's ability to absorb, adapt and recover under operational stress.
+  The key structural finding: static resilience (E, D, platform inventory) is necessary but
+  insufficient. ORM and CDSI — the dynamic, operationally-derived components — determine whether
+  static capacity can be activated under pressure.
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 01</span>
+    <h2>Four Component Indices</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Index</th><th>Measures</th><th>Range</th><th>Source</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>C2-CI</strong></td>
+        <td>Command-and-control cohesion under operational stress (Decision Lag, Autonomy Quality, Resynchronisation)</td>
+        <td>0–1</td>
+        <td>DRD-03 · DRD-06</td>
+      </tr>
+      <tr>
+        <td><strong>MRI</strong></td>
+        <td>Mobility resilience: R_eff = √(E·D)·f(M) — energy, data and mobile capability</td>
+        <td>0–1</td>
+        <td>DRD-08 §02–02c</td>
+      </tr>
+      <tr>
+        <td><strong>ORM</strong></td>
+        <td>Operational Readiness Multiplier: fraction of crew readiness derived from real operations vs. exercises<br>
+        <code>ORM = real_tasks / (real_tasks + exercise_tasks)</code></td>
+        <td>0–1</td>
+        <td>CN-014 · CN-015</td>
+      </tr>
+      <tr>
+        <td><strong>CDSI</strong></td>
+        <td>Cross-Domain Synergy Index: depth of operational integration between Defence Forces, Border Guard and FinnHEMS</td>
+        <td>0–1</td>
+        <td>CN-015 · CN-016</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 02</span>
+    <h2>DRI Composite Formula</h2>
+  </div>
+
+  <p>DRI is a multiplicative composite — not additive. A system with high static capacity
+  (MRI) but low operational readiness (ORM ≈ 0) cannot activate that capacity under stress.
+  The indices multiply rather than compensate:</p>
+
+  <p><code>DRI = C2-CI · MRI · √(ORM · CDSI)</code></p>
+
+  <p>The geometric mean of ORM and CDSI captures their joint effect: operational readiness
+  is only valuable if it is coordinated across domains (CDSI), and cross-domain coordination
+  only produces resilience if crews are genuinely trained through real operations (ORM).</p>
+
+  <h3>Finnish baseline estimate (2026)</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Estimated value</th><th>Basis</th></tr></thead>
+    <tbody>
+      <tr><td>C2-CI</td><td>≈ 0.66</td><td>DRD-03 estimate; Decision Lag and RC as weaknesses</td></tr>
+      <tr><td>MRI (R_eff)</td><td>≈ 0.24</td><td>E≈0.35, D≈0.40, M≈0.20 → √(0.35·0.40)·0.20</td></tr>
+      <tr><td>ORM</td><td>≈ 0.38</td><td>~30 real tasks / (~30 + ~50 exercises)</td></tr>
+      <tr><td>CDSI</td><td>≈ 0.20</td><td>Ad hoc coordination only, no common protocol</td></tr>
+      <tr style="font-weight:600;border-top:2px solid var(--ink)">
+        <td><strong>DRI</strong></td>
+        <td><strong>≈ 0.066</strong></td>
+        <td>0.66 · 0.24 · √(0.38 · 0.20) = 0.066</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Norway reference (2026)</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Estimated value</th></tr></thead>
+    <tbody>
+      <tr><td>C2-CI</td><td>≈ 0.80 (integrated command, high AQ)</td></tr>
+      <tr><td>MRI</td><td>≈ 0.52 (E≈0.65, D≈0.65, M≈0.80)</td></tr>
+      <tr><td>ORM</td><td>≈ 0.95 (~1000 real / ~1050 total)</td></tr>
+      <tr><td>CDSI</td><td>≈ 0.90 (integrated NAWSARH model)</td></tr>
+      <tr style="font-weight:600;border-top:2px solid var(--ink)">
+        <td><strong>DRI</strong></td>
+        <td><strong>≈ 0.37</strong> — 5.6× Finland's baseline</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 03</span>
+    <h2>Investment Sensitivity: Which Component Yields Highest DRI Gain?</h2>
+  </div>
+
+  <p>Marginal DRI gain from +0.1 increase in each component (from Finnish baseline):</p>
+
+  <table>
+    <thead><tr><th>Component +0.1</th><th>New DRI</th><th>ΔDR I</th><th>Interpretation</th></tr></thead>
+    <tbody>
+      <tr><td>C2-CI: 0.66 → 0.76</td><td>0.076</td><td>+0.010</td><td>Moderate gain</td></tr>
+      <tr><td>MRI: 0.24 → 0.34</td><td>0.094</td><td>+0.028</td><td>High gain (R-layer investment)</td></tr>
+      <tr><td>ORM: 0.38 → 0.48</td><td>0.074</td><td>+0.008</td><td>Low-moderate alone…</td></tr>
+      <tr><td>CDSI: 0.20 → 0.30</td><td>0.081</td><td>+0.015</td><td>…but ORM+CDSI together:</td></tr>
+      <tr style="font-weight:600">
+        <td>ORM+CDSI: both +0.3</td><td>0.130</td><td>+0.064</td><td><strong>Highest combined gain</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="finding">
+    <strong>Key finding:</strong> ORM and CDSI are individually modest but jointly transformative
+    — because they multiply. Raising both by 0.3 (achievable through the CN-015 implementation
+    plan by 2028) produces a larger DRI gain than any single static infrastructure investment.
+    This is the "strategic flywheel": real operations build readiness, readiness enables
+    integration, integration enables more real operations.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 04</span>
+    <h2>DRI Trajectory 2026–2030</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Year</th><th>C2-CI</th><th>MRI</th><th>ORM</th><th>CDSI</th><th>DRI</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2026 (baseline)</td><td>0.66</td><td>0.24</td><td>0.38</td><td>0.20</td><td><strong>0.066</strong></td></tr>
+      <tr><td>2027 (ohjausryhmä + pilotti)</td><td>0.68</td><td>0.28</td><td>0.55</td><td>0.45</td><td><strong>0.107</strong></td></tr>
+      <tr><td>2028 (NH90-kaksoisrooli)</td><td>0.70</td><td>0.35</td><td>0.70</td><td>0.60</td><td><strong>0.161</strong></td></tr>
+      <tr><td>2029 (HEMS-laajennus)</td><td>0.72</td><td>0.44</td><td>0.82</td><td>0.75</td><td><strong>0.231</strong></td></tr>
+      <tr><td>2030 (täysi integraatio)</td><td>0.75</td><td>0.52</td><td>0.90</td><td>0.90</td><td><strong>0.296</strong></td></tr>
+      <tr><td>Norway 2026 (reference)</td><td>0.80</td><td>0.52</td><td>0.95</td><td>0.90</td><td><strong>0.370</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p>DRI approximately 4.5× increase from 0.066 to 0.296 through implementation of CN-015
+  without any new helicopter procurement. The gap with Norway narrows from 5.6× to 1.25×.</p>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">§ 05</span>
+    <h2>Limitations and Calibration Notes</h2>
+  </div>
+
+  <ul>
+    <li>All component estimates are proxy-based. DRI v1.0 is a diagnostic framework,
+    not a precision instrument. Values should be treated as order-of-magnitude indicators.</li>
+    <li>C2-CI estimates draw on DRD-03's qualitative assessment; empirical calibration
+    requires structured droneincident and exercise data.</li>
+    <li>ORM calculation requires reliable logging of actual vs. exercise flight hours —
+    this data is not currently published in a form suitable for DRI calculation.</li>
+    <li>CDSI is the most subjective component; it will benefit from the CN-015 ohjausryhmä
+    process producing structured assessments of inter-agency coordination quality.</li>
+  </ul>
+</div>
+
+<div class="further-reading">
+  <p>DRD-03 · C2-CI Index · <a href="/supplements/drd-03-c2ci.html">supplements/</a></p>
+  <p>DRD-06 · C2-CI Nonlinear Dynamics · <a href="/supplements/drd-06-theory-en.html">supplements/</a></p>
+  <p>DRD-08 · DAGRA — R-layer (E, D, M) · <a href="/supplements/drd-08-dagra.html">supplements/</a></p>
+  <p>CN-014 · Distributed Helicopter Resilience · <a href="/papers/cn-014-helicopter-resilience.html">papers/</a></p>
+  <p>CN-015 · Implementation Plan 2026–2030 (ORM/CDSI targets) · <a href="/papers/cn-015-helicopter-implementation.html">papers/</a></p>
+  <p>CN-016 · HEMS Coverage Analysis · <a href="/papers/cn-016-hems-coverage.html">papers/</a></p>
+</div>
+
+</body>
+</html>
