@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vatanen & Koistinen · Kesäristikko 2026 · ACI</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1209;
+  --paper: #f5f0e8;
+  --paper2: #ede8da;
+  --cream: #faf7f0;
+  --accent: #8b2500;
+  --gold: #c8960c;
+  --muted: #7a6e5f;
+  --rule: #c8bfad;
+  --wem: #2a4a6b;
+  --cell: 42px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IM Fell English', Georgia, serif;
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+.masthead {
+  text-align: center;
+  border-bottom: 2px solid var(--ink);
+  border-top: 2px solid var(--ink);
+  padding: .6rem 0;
+  margin-bottom: .3rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  text-align: center;
+  margin: .5rem 0;
+}
+.title h1 {
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.title .sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: .2rem;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+/* CLUES */
+.clues {
+  font-size: .88rem;
+  line-height: 1.5;
+}
+.clues h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .25rem;
+  margin-bottom: .6rem;
+}
+.clue-item {
+  display: grid;
+  grid-template-columns: 1.8rem 1fr auto;
+  gap: .3rem;
+  margin-bottom: .5rem;
+  align-items: start;
+}
+.clue-num {
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-align: right;
+  padding-top: .05rem;
+}
+.clue-text { font-size: .83rem; }
+.clue-len {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* GRID */
+.grid-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+}
+
+.crossword-grid {
+  border-collapse: collapse;
+  border: 2px solid var(--ink);
+}
+
+.crossword-grid td {
+  width: var(--cell);
+  height: var(--cell);
+  border: 1px solid var(--rule);
+  padding: 0;
+  position: relative;
+}
+
+td.black {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+td.wem-cell {
+  background: #d4e4f0;
+  border-color: #8aabcc;
+}
+
+td.active input { background: #ffeedd; }
+
+.cell-num {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: .52rem;
+  color: var(--accent);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cell-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--ink);
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  caret-color: var(--accent);
+}
+
+.wem-label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--wem);
+  letter-spacing: .05em;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: .7rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: .45rem 1rem;
+  border: 1px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn:hover { background: var(--ink); color: var(--cream); }
+.btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn.primary:hover { background: #6a1c00; }
+
+#result {
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  padding: .4rem .8rem;
+  display: none;
+  text-align: center;
+}
+#result.ok { background: #d4edd4; color: #1a4a1a; border: 1px solid #6a9a6a; }
+#result.fail { background: #f5ddd4; color: #5a1a0a; border: 1px solid #c87a6a; }
+
+/* Image */
+.illustration {
+  width: 100%;
+  max-width: 540px;
+  border: 1px solid var(--rule);
+  display: block;
+  margin: 1rem auto 0;
+}
+
+.theme-note {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: .4rem;
+  letter-spacing: .05em;
+}
+
+/* Footer */
+.footer {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 2rem;
+  border-top: 1px solid var(--rule);
+  padding-top: .6rem;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 700px) {
+  :root { --cell: 34px; }
+  .layout { grid-template-columns: 1fr; }
+  .layout .clues:first-child { order: 2; }
+  .layout .grid-wrap { order: 1; }
+  .layout .clues:last-child { order: 3; }
+  .clue-text { font-size: .78rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="masthead">Aether Continuity Institute · Fiktioliite · Kesä 2026</div>
+<div class="title">
+  <h1>Vatanen &amp; Koistinen<br><em>Kesäristikko</em></h1>
+  <div class="sub">Laiturilta Lausunnonomistamatta™ · WEM valvoo · GTK ei tunnista</div>
+</div>
+<div class="masthead" style="margin-top:.3rem;margin-bottom:0">Ratkaise huolella · Sauna avaa ajatukset · Koistinen kirjoittaa vastaukset ylös</div>
+
+<div class="layout">
+
+<!-- Vaakasuorat -->
+<div class="clues">
+  <h3>Vaakasuorat</h3>
+  <div class="clue-item"><span class="clue-num">3</span><span class="clue-text">Mittari tallentaa, mutta ei tee tätä</span><span class="clue-len">(6)</span></div>
+  <div class="clue-item"><span class="clue-num">7</span><span class="clue-text">Fingridin lupauksen rakenne</span><span class="clue-len">(10)</span></div>
+  <div class="clue-item"><span class="clue-num">12</span><span class="clue-text">Kiviharju Ventures pääraaka-aine</span><span class="clue-len">(4)</span></div>
+  <div class="clue-item"><span class="clue-num">15</span><span class="clue-text">GTK:n vakiolausunto</span><span class="clue-len">(12)</span></div>
+</div>
+
+<!-- Grid -->
+<div class="grid-wrap">
+  <table class="crossword-grid" id="grid"></table>
+
+  <div class="controls">
+    <button class="btn primary" onclick="checkSolution()">Tarkista</button>
+    <button class="btn" onclick="revealAll()">Paljasta</button>
+    <button class="btn" onclick="clearAll()">Tyhjennä</button>
+  </div>
+  <div id="result"></div>
+
+  <div class="theme-note">
+    <span style="color:var(--wem);font-weight:600">W · E · M</span>
+    &nbsp;— mittaa, mutta ei päätä
+  </div>
+</div>
+
+<!-- Pystysuorat -->
+<div class="clues">
+  <h3>Pystysuorat</h3>
+  <div class="clue-item"><span class="clue-num">2</span><span class="clue-text">Koistinen ja Vatanen tekevät tätä laiturilla</span><span class="clue-len">(9)</span></div>
+  <div class="clue-item"><span class="clue-num">5</span><span class="clue-text">91 297 euron vakuutus</span><span class="clue-len">(5)</span></div>
+  <div class="clue-item"><span class="clue-num">9</span><span class="clue-text">Saunan jälkeen tämä riittää</span><span class="clue-len">(5)</span></div>
+  <div class="clue-item"><span class="clue-num">11</span><span class="clue-text">Erkki Kalmarin motivaatio</span><span class="clue-len">(6)</span></div>
+</div>
+
+</div><!-- /layout -->
+
+<img src="/fiction/file_00000000da407243ac67544d0efcaf37.png"
+  alt="Vatanen ja Koistinen ristikon äärellä — Kiviharju Ventures, DCEIN-node, luonnonvety"
+  class="illustration">
+
+<div class="footer">
+  <a href="/fiction/peruskivet.html">← Peruskivet</a> &nbsp;·&nbsp;
+  <a href="/fiction/">Kaikki fiktio</a> &nbsp;·&nbsp;
+  <a href="/">ACI</a> &nbsp;·&nbsp;
+  WEM v2.7 · HEM v1.2 · GTK: Emme tunnista ristikkoa
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ─── Grid definition ───────────────────────────────────────────────
+// 13 rows (0-12), 14 cols (0-13)
+// Words and their positions:
+const ROWS = 13, COLS = 14;
+
+const WORDS = [
+  // {id, answer, row, col, dir, num, clue}
+  {id:'3A',  answer:'PÄÄTÖS',       row:3,  col:2,  dir:'across', num:3},
+  {id:'7A',  answer:'TAUTOLOGIA',   row:5,  col:4,  dir:'across', num:7},
+  {id:'12A', answer:'VETY',         row:8,  col:3,  dir:'across', num:12},
+  {id:'15A', answer:'EMMETUNNISTA', row:12, col:1,  dir:'across', num:15},
+  {id:'2D',  answer:'ODOTTAVAT',    row:0,  col:5,  dir:'down',   num:2},
+  {id:'5D',  answer:'TYHJÄ',        row:5,  col:7,  dir:'down',   num:5},
+  {id:'9D',  answer:'KAHVI',        row:8,  col:9,  dir:'down',   num:9},
+  {id:'11D', answer:'LEHMÄT',       row:7,  col:11, dir:'down',   num:11},
+];
+
+// WEM pre-filled theme cells
+const WEM = [{row:6,col:8,letter:'W'},{row:6,col:9,letter:'E'},{row:6,col:10,letter:'M'}];
+
+// ─── Build solution grid ────────────────────────────────────────────
+const solution = Array.from({length:ROWS}, ()=>Array(COLS).fill(null));
+const cellWords = Array.from({length:ROWS}, ()=>Array(COLS).fill(null).map(()=>[]));
+
+WORDS.forEach(w => {
+  const letters = w.answer.split('');
+  letters.forEach((ch, i) => {
+    const r = w.dir==='across' ? w.row : w.row+i;
+    const c = w.dir==='across' ? w.col+i : w.col;
+    if (solution[r][c] && solution[r][c] !== ch) {
+      console.error(`CONFLICT at (${r},${c}): ${solution[r][c]} vs ${ch} — ${w.id}`);
+    }
+    solution[r][c] = ch;
+    cellWords[r][c].push(w.id);
+  });
+});
+
+// Cell numbering: assign numbers reading order
+const cellNums = Array.from({length:ROWS}, ()=>Array(COLS).fill(0));
+const numToWord = {};
+let nextNum = 1;
+// Collect starting positions
+const starts = [];
+WORDS.forEach(w => starts.push({row:w.row, col:w.col, num:w.num}));
+// Sort by reading order
+starts.sort((a,b) => a.row!==b.row ? a.row-b.row : a.col-b.col);
+// Deduplicate by position and assign numbers
+const posNums = {};
+WORDS.forEach(w => {
+  const key = `${w.row},${w.col}`;
+  if (!posNums[key]) posNums[key] = w.num;
+  else if (posNums[key] !== w.num) {
+    // Two words start at same cell — keep lower number
+    posNums[key] = Math.min(posNums[key], w.num);
+  }
+});
+Object.entries(posNums).forEach(([key, num]) => {
+  const [r,c] = key.split(',').map(Number);
+  cellNums[r][c] = num;
+});
+
+// WEM set
+const wemSet = new Set(WEM.map(w=>`${w.row},${w.col}`));
+const wemMap = {};
+WEM.forEach(w => wemMap[`${w.row},${w.col}`] = w.letter);
+
+// ─── Render grid ───────────────────────────────────────────────────
+const gridEl = document.getElementById('grid');
+const inputs = [];
+
+for (let r = 0; r < ROWS; r++) {
+  const tr = document.createElement('tr');
+  for (let c = 0; c < COLS; c++) {
+    const td = document.createElement('td');
+    const key = `${r},${c}`;
+
+    if (wemSet.has(key)) {
+      td.className = 'wem-cell';
+      const span = document.createElement('span');
+      span.className = 'wem-label';
+      span.textContent = wemMap[key];
+      td.appendChild(span);
+    } else if (solution[r][c]) {
+      // White cell with input
+      if (cellNums[r][c]) {
+        const num = document.createElement('span');
+        num.className = 'cell-num';
+        num.textContent = cellNums[r][c];
+        td.appendChild(num);
+      }
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.maxLength = 2; // allow 2 for Finnish chars like Ä
+      inp.className = 'cell-input';
+      inp.dataset.row = r;
+      inp.dataset.col = c;
+      inp.setAttribute('autocomplete','off');
+      inp.setAttribute('autocorrect','off');
+      inp.setAttribute('spellcheck','false');
+
+      inp.addEventListener('input', function(e) {
+        // Normalize: take last char, uppercase
+        let val = this.value.toUpperCase();
+        // Handle multi-char entries (paste etc): take last char
+        if (val.length > 1) val = val.slice(-1);
+        this.value = val;
+        if (val) {
+          // Move to next cell in active word direction
+          moveNext(r, c);
+        }
+      });
+
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value) {
+          movePrev(r, c);
+        }
+        if (e.key === 'ArrowRight') { e.preventDefault(); focusCell(r, c+1); }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); focusCell(r, c-1); }
+        if (e.key === 'ArrowDown')  { e.preventDefault(); focusCell(r+1, c); }
+        if (e.key === 'ArrowUp')    { e.preventDefault(); focusCell(r-1, c); }
+      });
+
+      td.appendChild(inp);
+      inputs.push({r, c, inp, td});
+    } else {
+      td.className = 'black';
+    }
+    tr.appendChild(td);
+  }
+  gridEl.appendChild(tr);
+}
+
+function getInput(r, c) {
+  if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
+  return inputs.find(i => i.r===r && i.c===c) || null;
+}
+
+function focusCell(r, c) {
+  const cell = getInput(r, c);
+  if (cell) cell.inp.focus();
+}
+
+// Simple navigation: move to next white cell in same column or row
+let activeDir = 'across';
+function moveNext(r, c) {
+  // Try horizontal first, then vertical
+  const nextH = getInput(r, c+1);
+  const nextV = getInput(r+1, c);
+  if (nextH) { nextH.inp.focus(); return; }
+  if (nextV) { nextV.inp.focus(); }
+}
+function movePrev(r, c) {
+  const prevH = getInput(r, c-1);
+  const prevV = getInput(r-1, c);
+  if (prevH) { prevH.inp.focus(); return; }
+  if (prevV) { prevV.inp.focus(); }
+}
+
+// ─── Check / Reveal / Clear ─────────────────────────────────────────
+function normalize(s) {
+  return s.toUpperCase()
+    .replace(/Ä/g,'Ä').replace(/Ö/g,'Ö')  // keep Finnish
+    .trim();
+}
+
+function checkSolution() {
+  let correct = 0, total = 0, wrong = 0;
+  inputs.forEach(({r, c, inp, td}) => {
+    const expected = solution[r][c];
+    const given = normalize(inp.value);
+    total++;
+    if (!given) return;
+    if (given === expected) {
+      inp.style.color = '#1a4a1a';
+      correct++;
+    } else {
+      inp.style.color = '#9a1a0a';
+      wrong++;
+    }
+  });
+
+  const filled = inputs.filter(i => i.inp.value).length;
+  const res = document.getElementById('result');
+  res.style.display = 'block';
+
+  if (correct === total) {
+    res.className = 'ok';
+    res.textContent = '✓ Oikein! Mittari rekisteröi ratkaisun. WEM on tyytyväinen.';
+  } else if (wrong > 0) {
+    res.className = 'fail';
+    res.textContent = `Virheitä: ${wrong} ruutua. GTK:n lausunto: "Emme tunnista oikeaa vastausta tässä ristikossa."`;
+  } else {
+    res.className = 'fail';
+    res.style.background = '#fdf8ec';
+    res.style.color = '#5a4010';
+    res.style.borderColor = '#c8a050';
+    res.textContent = `Täytetty: ${filled}/${total} ruutua. Koistinen odottaa.`;
+  }
+}
+
+function revealAll() {
+  inputs.forEach(({r, c, inp}) => {
+    inp.value = solution[r][c];
+    inp.style.color = 'var(--muted)';
+  });
+  const res = document.getElementById('result');
+  res.style.display = 'block';
+  res.className = 'ok';
+  res.textContent = 'Vastaukset paljastettu. Saunan jälkeen tämä riittää.';
+}
+
+function clearAll() {
+  inputs.forEach(({inp}) => {
+    inp.value = '';
+    inp.style.color = '';
+  });
+  const res = document.getElementById('result');
+  res.style.display = 'none';
+}
+</script>
+</body>
+</html>
