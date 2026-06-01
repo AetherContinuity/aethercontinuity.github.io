@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACI SP-009 — Social Contract Recalibration: Policy Pathways</title>
+  <meta name="description" content="SP-009 translates SM-013's diagnostic findings into minimum architectural conditions for recalibration. Four structural problem sets: tax base erosion, energy-welfare transmission, SurplusCitizen accumulation, and sensor inadequacy. Eight concrete policy pathways with timelines and decision authorities." />
+  <link rel="canonical" href="https://aethercontinuity.org/papers/sp-009-social-contract-recalibration.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+      --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+      --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; }
+    body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+    .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+    .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+    .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+    .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+    .dih-meta strong { color: var(--ink); font-weight: 400; }
+    .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+    .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+    .dih-status-text { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    h1.doc-title { font-size: 1.75rem; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-top: 0.6rem; }
+    .doc-subtitle { font-style: italic; color: var(--muted); font-size: 1rem; margin-top: 0.4rem; }
+    .body-wrap { max-width: 740px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+    .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .abstract-block p { margin-bottom: 0.9rem; font-size: 0.95rem; line-height: 1.7; }
+    .abstract-block p:last-child { margin-bottom: 0; }
+    .section { margin-bottom: 3rem; }
+    .section-marker { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.1rem; letter-spacing: -0.01em; }
+    h3 { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 2rem 0 0.6rem; }
+    p { margin-bottom: 1.1rem; }
+    p:last-child { margin-bottom: 0; }
+    .finding { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+    .finding-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .finding p { font-size: 0.95rem; margin-bottom: 0.7rem; }
+    .finding p:last-child { margin-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1.5rem 0; }
+    th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--rule); }
+    td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+    tr:last-child td { border-bottom: none; }
+    .scenario-note { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--muted); padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 0.88rem; font-style: italic; color: var(--muted); }
+    .ref-block { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1rem; font-family: var(--mono); font-size: 0.62rem; color: var(--muted); line-height: 2; }
+    .ref-block a { color: var(--muted); text-decoration: none; }
+    .ref-block a:hover { color: var(--ink); }
+    nav { max-width: 740px; margin: 0 auto; padding: 1rem 2rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; gap: 1.5rem; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "ACI SP-009 — Social Contract Recalibration: Policy Pathways",
+    "author": {"@type": "Organization", "name": "Aether Continuity Institute"},
+    "publisher": {"@type": "Organization", "name": "ACI", "url": "https://aethercontinuity.org"},
+    "url": "https://aethercontinuity.org/papers/sp-009-social-contract-recalibration.html",
+    "datePublished": "2026-06"
+  }
+  </script>
+  <meta property="og:title" content="ACI SP-009 — Social Contract Recalibration: Policy Pathways" />
+  <meta property="og:description" content="SP-009 translates SM-013 diagnostics into minimum architectural conditions for recalibration. Tax base erosion, energy-welfare transmission, SurplusCitizen accumulation, sensor inadequacy. Eight policy pathways with timelines." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aethercontinuity.org/papers/sp-009-social-contract-recalibration.html" />
+  <meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+<nav>
+  <a href="/">ACI</a>
+  <a href="/papers/">Papers</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute · ACI</span>
+    <span class="dih-series">Supporting Paper · SP-009</span>
+    <h1 class="doc-title">Social Contract Recalibration: Policy Pathways</h1>
+    <p class="doc-subtitle">Minimum architectural conditions derived from SM-013's convergence diagnosis</p>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">
+      <strong>Version</strong> 0.1 · June 2026<br>
+      <strong>Domain</strong> D-3 · D-4<br>
+      <strong>Basis</strong> SM-013 · SM-012 · SM-001 · WP-017<br>
+      <strong>Status</strong> Working Draft
+    </div>
+    <div class="dih-status">
+      <span class="dih-status-dot"></span>
+      <span class="dih-status-text">Working Draft</span>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+<div class="abstract-block">
+  <div class="abstract-label">Abstract</div>
+  <p>SM-013 established that the post-war social contract is miscalibrated across three failed structural assumptions, and that the failure follows the same pattern ACI has documented in energy, fiscal, and governance domains. This paper translates that diagnosis into policy pathways — not as a comprehensive reform programme but as minimum architectural conditions that any durable response must satisfy.</p>
+  <p>Four structural problem sets are identified: tax base erosion under technological and behavioural change; energy system shock transmission to welfare financing; SurplusCitizen accumulation and self-organisation; and sensor inadequacy in current governance instruments. Eight concrete pathways are mapped against these problem sets with indicative timelines and decision authorities. An energy shock scenario — illustrative, not empirically calibrated — demonstrates the cross-domain transmission mechanism that makes delayed response progressively more costly.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 01</span>
+  <h2>From Diagnosis to Pathway</h2>
+
+  <p>SP-series papers in the ACI corpus occupy a specific methodological position: they translate diagnostic findings into minimum conditions for response, without crossing into comprehensive policy prescription. SM-013 identifies that the social contract system is miscalibrated; this paper asks what properties a recalibrated system must have, and what the smallest set of moves is that would begin to produce them.</p>
+
+  <p>The distinction matters. A comprehensive reform programme requires political negotiation, institutional capacity, and democratic deliberation that ACI does not provide. Minimum architectural conditions are different: they are the properties without which any specific reform, however well-designed, cannot succeed. A pension reform that does not address tax base erosion will fail regardless of its parametric design. A welfare expansion that operates on miscalibrated sensors will fail regardless of its funding level.</p>
+
+  <p>This paper identifies four structural problem sets, each derived directly from SM-013's diagnostic framework, and maps eight pathways — concrete enough to have decision authorities and timelines, general enough to be consistent with multiple specific policy choices.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 02</span>
+  <h2>Structural Problem Set I: Tax Base Erosion</h2>
+
+  <p>The social contract's financing architecture is not only miscalibrated toward labour — it is also miscalibrated toward specific consumption and activity patterns that are themselves changing. The result is a compound erosion: the payroll base shrinks as automation substitutes for labour, and simultaneously several major non-labour tax streams are weakening structurally.</p>
+
+  <h3>The Finnish fuel tax case</h3>
+
+  <p>Motor fuel taxation has been one of Finland's most reliable fiscal instruments: relatively inelastic demand, high rates, straightforward collection. The electrification of road transport is converting this stability into a structural decline. Current projections — assuming EV penetration tracking EU fleet targets — imply a fuel tax revenue loss in the range of 500–800 million euros annually by the early 2030s. The electricity consumed by EVs is taxed at significantly lower rates than the fuel it replaces, and much of the charging infrastructure draws on renewable sources that benefit from further tax reductions.</p>
+
+  <p>This is not a policy failure. It is a designed consequence of climate policy intersecting with a tax architecture designed before that policy existed. The problem is that no mechanism exists to identify the erosion in advance and prepare compensating structure before the revenue gap appears. Finland will reach the gap before it has replaced it.</p>
+
+  <h3>The general pattern</h3>
+
+  <p>Fuel tax erosion is one instance of a broader pattern. Tobacco tax revenue has declined as usage rates fall and cross-border purchasing increases. Alcohol tax revenues are sensitive to both demographic change and the growth of home fermentation. More significantly, the payroll tax base — which finances not only pension contributions but social insurance more broadly — is eroding as automation substitutes for labour in manufacturing, logistics, and increasingly services.</p>
+
+  <p>Each of these erosions is individually foreseeable. The compound effect of simultaneous erosion across multiple streams has not been systematically modelled or publicly reported. The Ministry of Finance publishes annual tax revenue projections but does not publish structural sustainability assessments of individual tax bases under technological and behavioural change scenarios.</p>
+
+  <div class="finding">
+    <div class="finding-label">Structural observation</div>
+    <p>Tax base erosion is not primarily a revenue problem — it is a sensor problem. The current reporting framework shows what taxes are yielding; it does not show which tax bases are structurally degrading and at what rate. A government that cannot see structural erosion cannot respond to it before the gap becomes a crisis.</p>
+  </div>
+
+  <h3>Pathway 1: Tax base structural sustainability reporting</h3>
+  <p>Mandate the Ministry of Finance or Statistics Finland to publish an annual structural sustainability assessment of Finland's ten largest tax bases, modelling their projected yield trajectories under three scenarios: current trend, accelerated technological change, and policy-driven behavioural shift. This assessment should include explicit identification of bases currently in structural decline and projected inflection points. Decision authority: Ministry of Finance administrative order. Timeline: under twelve months.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 03</span>
+  <h2>Structural Problem Set II: Energy Shock Transmission</h2>
+
+  <p>SM-013's three reinforcing feedback loops (R1–R3) establish the theoretical mechanism by which energy system stress propagates into social contract financing failure. The transmission channel operates through the labour market: energy price shocks compress industrial margins, forcing structural layoffs that expand the SurplusCitizen pool while simultaneously reducing payroll-based pension contributions.</p>
+
+  <p>The following scenario analysis illustrates this transmission mechanism. The numbers are generated by a structural model and are explicitly not empirical projections — they are illustrative of the direction and relative magnitude of effects under stated assumptions, not forecasts.</p>
+
+  <div class="scenario-note">
+    Scenario note: The following data matrix represents a structural scenario analysis assuming a 40% regional electricity price spike beginning Q1 2027 and persisting through 2029. Parameters are illustrative; the model is not calibrated to Finnish empirical data. The scenario's purpose is to demonstrate transmission channel logic, not to project specific outcomes.
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Scenario</th>
+        <th>Automation-Adjusted Dependency Ratio</th>
+        <th>SurplusCitizen Pool</th>
+        <th>Human Labour Stability Index</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2026</td>
+        <td>Baseline</td>
+        <td>0.072</td>
+        <td>45,000</td>
+        <td>0.85</td>
+      </tr>
+      <tr>
+        <td>2027</td>
+        <td>Baseline</td>
+        <td>0.073</td>
+        <td>60,000</td>
+        <td>0.84</td>
+      </tr>
+      <tr>
+        <td>2027</td>
+        <td><strong>40% energy shock</strong></td>
+        <td><strong>0.101</strong></td>
+        <td><strong>105,000</strong></td>
+        <td><strong>0.76</strong></td>
+      </tr>
+      <tr>
+        <td>2029</td>
+        <td>Baseline</td>
+        <td>0.077</td>
+        <td>90,000</td>
+        <td>0.82</td>
+      </tr>
+      <tr>
+        <td>2029</td>
+        <td><strong>40% energy shock</strong></td>
+        <td><strong>0.116</strong></td>
+        <td><strong>175,000</strong></td>
+        <td><strong>0.72</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The scenario illustrates three transmission effects. First, the automation-adjusted dependency ratio degrades sharply because the energy shock idles capital-intensive automated production — the denominator of the ratio collapses simultaneously with the numerator expanding. Second, permanent structural layoffs in energy-intensive industry displace workers into the SurplusCitizen condition at a rate the welfare system cannot classify or absorb. Third, surviving firms accelerate automation to reduce variable labour costs, locking in Loop R1 from SM-013: the fiscal response to pension shortfall (increased labour taxation) further incentivises the substitution that created the shortfall.</p>
+
+  <p>The strategic implication is that energy system resilience and social contract resilience are not independent policy domains. SM-012 established that energy allocation is fiscal policy; this scenario adds that energy price stability is welfare policy. A government that manages these domains in separate ministries without cross-domain stress modelling is institutionally blind to the transmission channel.</p>
+
+  <h3>Pathway 2: Cross-domain stress modelling mandate</h3>
+  <p>Require that Finland's major energy price shock scenarios — currently modelled by Fingrid and TEM for energy security purposes — include explicit secondary modelling of labour market displacement, SurplusCitizen accumulation, and pension contribution base effects. This modelling should be incorporated into the National Risk Assessment and the Pension Centre's long-term sustainability reports. Decision authority: TEM + STM joint administrative instruction. Timeline: one to two years.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 04</span>
+  <h2>Structural Problem Set III: SurplusCitizen Accumulation</h2>
+
+  <p>SM-013 identified three Finnish population groups currently occupying or approaching the SurplusCitizen condition: long-term unemployed individuals with physical or psychological limitations that make sustained employment unlikely but who do not meet disability pension criteria; partial work-capacity individuals whose labour market attachment is episodic; and freelance and light-entrepreneur workers whose contribution histories are fragmented. Combined, these groups number in the range of 150,000–200,000 individuals in 2026, with the trajectory pointing upward under all plausible automation scenarios.</p>
+
+  <p>The institutional response to date — Prime Minister Orpo's May 2026 statement on transferring long-term unemployed individuals who are no longer work-capable to pension status — is classification after accumulation. It acknowledges the problem without addressing the architecture that produces it. The same individuals who are transferred to pension status today will be replaced in the SurplusCitizen condition by new entrants within eighteen to twenty-four months, because the structural forces generating the condition have not changed.</p>
+
+  <h3>Pathway 3: Osatyökykyisyys as a proactive category</h3>
+  <p>Restructure partial work-capacity support from a reactive benefit into a proactive labour market instrument. Rather than waiting for individuals to fall below employability thresholds before activating support, build automatic activation triggers based on employment pattern monitoring: individuals whose employment contracts have fragmented below a threshold of continuity automatically receive support planning, not after classification as disabled or long-term unemployed, but while still attached to the labour market. This does not require new spending; it requires redeployment of existing TE-palvelut capacity. Decision authority: TEM legislative amendment. Timeline: two to three years.</p>
+
+  <h3>Pathway 4: Kevytyrittäjä pension integration</h3>
+  <p>The fragmented contribution history of freelance and light-entrepreneur workers is a structural gap in TyEL coverage that grows as labour market forms diversify. A simplified accumulation mechanism — tracking total annual labour income regardless of contract form and attributing pension contribution equivalents — would close the coverage gap without requiring a new pension scheme. The technical infrastructure exists in the incomes register (tulorekisteri). Decision authority: STM legislative amendment. Timeline: two to three years.</p>
+
+  <h3>Pathway 5: Cross-party architectural working group</h3>
+  <p>Establish a permanent cross-party parliamentary working group on social contract architecture — modelled on Sweden's Pensionsgruppen, which initiated formal review in May 2025 following the Swedish Pensions Agency's structural warning. The group's mandate should be explicitly architectural: not to propose parametric adjustments (retirement age, contribution rates) but to assess whether the category system and financing structure remain appropriate under current and projected operating conditions. This requires only a parliamentary decision and no new legislation. Decision authority: Eduskunta. Timeline: under twelve months.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 05</span>
+  <h2>Structural Problem Set IV: Sensor Inadequacy</h2>
+
+  <p>SM-013's sensor adequacy principle — that a system cannot recalibrate toward a condition it cannot measure — generates the most tractable near-term pathways, because sensor development does not require political consensus on redistribution or architectural reform. It requires only a decision to measure differently.</p>
+
+  <h3>Pathway 6: Value retention rate reporting</h3>
+  <p>Mandate quarterly reporting of value retention rate — the fraction of domestically generated value that remains within the national tax base — for critical sectors: energy, datacentres, logistics infrastructure, digital services. SM-012 demonstrates that the same physical input produces a 44 billion euro ten-year difference in Finnish fiscal capacity depending solely on the institutional layer through which it passes. This difference is currently invisible to the Ministry of Finance because no instrument reports it. Implementation requires a reporting mandate to Statistics Finland and agreement on a calculation methodology; it does not require new legislation. Decision authority: VM administrative order. Timeline: under twelve months.</p>
+
+  <h3>Pathway 7: Automation-adjusted dependency ratio development</h3>
+  <p>Commission VATT or ETLA to develop a standardised automation-adjusted dependency ratio that accounts for productive capacity embedded in automated systems alongside human labour. The conventional demographic dependency ratio — currently the primary input to pension system sustainability assessments — counts biological age cohorts and is blind to the productive capacity of capital-embodied automation. A ratio that incorporates both produces a materially different picture of fiscal sustainability under automation scenarios. Development timeline: one to two years. Subsequent mandatory incorporation into Eläketurvakeskus sustainability assessments. Decision authority: OKM/VM research programme funding. Timeline: one to two years for development, three to four years for incorporation into official assessments.</p>
+
+  <h3>Pathway 8: Median household wealth as primary indicator</h3>
+  <p>Anchor the government's economic policy reporting to median household real wealth trajectory alongside GDP. Statistics Finland produces this data; it is not currently used as a primary policy indicator despite being a structurally more accurate measure of the social contract's operating condition. Finnish median household real wealth declined approximately 20 percent between 2019 and 2023 while GDP grew — the two indicators tell opposite stories about the same period. A government that reports GDP but not median wealth is choosing to be informed about the aggregate rather than the distribution. The choice is reversible at zero institutional cost. Decision authority: VM — change to government economic reporting conventions. Timeline: under twelve months.</p>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 06</span>
+  <h2>Implementation Map</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Pathway</th>
+        <th>Problem set</th>
+        <th>Decision authority</th>
+        <th>Timeline</th>
+        <th>Legislation required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Tax base structural sustainability reporting</td>
+        <td>Tax base erosion</td>
+        <td>VM</td>
+        <td>&lt; 12 months</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Cross-domain energy-welfare stress modelling</td>
+        <td>Energy transmission</td>
+        <td>TEM + STM</td>
+        <td>1–2 years</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Osatyökykyisyys proactive activation</td>
+        <td>SurplusCitizen</td>
+        <td>TEM</td>
+        <td>2–3 years</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Kevytyrittäjä pension integration</td>
+        <td>SurplusCitizen</td>
+        <td>STM</td>
+        <td>2–3 years</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Cross-party architectural working group</td>
+        <td>SurplusCitizen / sensor</td>
+        <td>Eduskunta</td>
+        <td>&lt; 12 months</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Value retention rate reporting</td>
+        <td>Sensor inadequacy</td>
+        <td>VM / Tilastokeskus</td>
+        <td>&lt; 12 months</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Automation-adjusted dependency ratio</td>
+        <td>Sensor inadequacy</td>
+        <td>OKM / VM</td>
+        <td>1–2 years dev, 3–4 years incorporation</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Median wealth as primary indicator</td>
+        <td>Sensor inadequacy</td>
+        <td>VM</td>
+        <td>&lt; 12 months</td>
+        <td>No</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Four of the eight pathways require no new legislation and can be initiated by administrative decision within twelve months. They share a structural property: they change what the government can see, not what it is required to do. Better sensors do not commit a government to any particular policy — they change which policies appear rational. This is the minimum viable first step of recalibration.</p>
+
+  <div class="finding">
+    <div class="finding-label">Key observation</div>
+    <p>The four no-legislation pathways (1, 5, 6, 8) are not incremental parametric adjustments. They are architectural moves: they change the measurement framework, the institutional mandate, and the political incentive structure within which subsequent reforms will be debated. A government that cannot see value retention rate, median wealth decline, and tax base structural erosion will continue to make policy calibrated to the indicators it does have — GDP, employment rate, demographic dependency ratio — which are calibrated to a world that no longer exists.</p>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-marker">§ 07</span>
+  <h2>What This Paper Does Not Claim</h2>
+
+  <p>This paper does not claim that these eight pathways are sufficient for social contract recalibration. They are necessary conditions — without them, more ambitious reforms cannot succeed — but they do not themselves constitute a recalibrated system. Value retention mechanisms, universal income floor proposals, and fundamental restructuring of pension financing require political processes and democratic deliberation that lie outside ACI's scope.</p>
+
+  <p>The energy shock scenario in §03 is explicitly illustrative. The numbers are structurally plausible given the transmission logic but are not empirically calibrated to Finnish data. They should not be cited as projections. Their purpose is to make the transmission mechanism visible, not to predict specific outcomes.</p>
+
+  <p>This paper does not argue that all eight pathways will be implemented or that the 2027–2032 risk window will be navigated successfully. SM-013's convergence finding implies that the institutional capacity available for social contract reform will be competing with simultaneous demands from energy transition, fiscal stabilisation, and governance stress. The pathways identified here are chosen in part because four of them require no legislation and no political consensus on redistribution — they are moves available even under the institutional constraint conditions that SM-007 and WP-017 document.</p>
+</div>
+
+<div class="ref-block">
+  <strong>Related documents:</strong><br>
+  <a href="/papers/sm-013-social-contract-calibration.html">SM-013 — Social Contract Calibration Failure</a> · primary diagnosis<br>
+  <a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html">SM-012 — Energy Allocation and Fiscal Sustainability</a> · value retention mechanism<br>
+  <a href="/papers/sm-001-finnish-fiscal-trajectory.html">SM-001 — Finnish Fiscal Trajectory</a> · debt and interest cost baseline<br>
+  <a href="/papers/wp-017-parliamentary-decision-latency.html">WP-017 — Parliamentary Decision Latency</a> · institutional constraint<br>
+  <a href="/papers/sm-007-convergence-finding.html">SM-007 — The Convergence Finding</a> · seventeen-domain synthesis<br>
+  <br>
+  <strong>Data sources:</strong><br>
+  Tilastokeskus, Kotitalouksien varallisuus 2023 · Tulorekisteri (Vero) ·
+  Eläketurvakeskus, Pitkän aikavälin laskelmat 2025 · Fingrid, Sähköjärjestelmän tila ·
+  VM, Talousarvioesitys 2026 · Statistics Sweden / Pensionsmyndigheten 2025
+</div>
+
+</div>
+</body>
+</html>
