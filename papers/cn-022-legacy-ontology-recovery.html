@@ -46,6 +46,8 @@ Related: <a href="/papers/sm-007-convergence-finding.html" style="color:var(--ac
 <div class="abstract">
 <strong>Abstract</strong>
 The critical failure mode in legacy modernisation is not technical debt but ontological loss. Systems do not fail because their code is old; they fail because the conceptual structure embedded in that code — the system's model of the world — has become decoupled from organisational memory. AI is the first instrument capable of systematically reconstructing this lost layer. The implication is not faster modernisation but a different kind: a shift from rewriting code to recovering what the system knows.
+
+<em>Core claim: Legacy systems encode operational ontology that is no longer representable in organisational memory but remains recoverable from system artefacts.</em>
 </div>
 
 <h2>§ 01 — The Problem Redefined</h2>
@@ -64,6 +66,8 @@ The critical failure mode in legacy modernisation is not technical debt but onto
 <p>A forty-year-old COBOL system is not merely a technical liability. It is a formal representation of how an organisation once modelled risk, payment flows, customer relationships, or product categories. That model may be wrong by current standards. It is not empty.</p>
 
 <p>The central observation follows directly: the longer a system has been in operation, the more likely that its functional logic exists only within the system — no longer in any human's memory.</p>
+
+<p>For the purposes of this memo, ontology refers to the operational mapping between system concepts and real-world decision objects — the structured set of entities, relationships, and constraints that govern how the system interprets inputs and produces outputs. This is distinct from the system's code (its implementation) and its documentation (its self-description, typically incomplete).</p>
 
 <p class="claim">This is ontological loss: the system knows more than its operators can explain.</p>
 
@@ -119,7 +123,7 @@ The critical failure mode in legacy modernisation is not technical debt but onto
 
 <p>The new dominant risk is <strong>wrong reconstruction</strong>: the system's structure is recovered accurately, but its functional meaning is interpreted incorrectly. The ontology is rebuilt — but rebuilt around the wrong model of what the organisation is actually doing.</p>
 
-<p>This risk is more dangerous than technical failure because it is less visible. A system that crashes produces a clear signal. A system that operates coherently but on a subtly wrong ontological model produces drift — decisions that are locally defensible but systematically misaligned.</p>
+<p>This risk is more dangerous than technical failure because it is less visible. A system that crashes produces a clear signal. A system that operates coherently but on a subtly wrong ontological model produces <em>local correctness with global drift</em>: every individual decision is defensible within the system's internal logic, but the aggregate trajectory diverges from what the organisation is actually doing. This is the same failure pattern SM-007 identifies in institutional systems under stress — coordination collapse does not announce itself.</p>
 
 <p class="claim">AI does not resolve the legacy problem. It makes the legacy problem explicitly analysable for the first time. That is a different thing.</p>
 
@@ -132,6 +136,11 @@ The critical failure mode in legacy modernisation is not technical debt but onto
 <p>AI changes this in two ways. It makes systematic ontological reconstruction possible from distributed, incomplete sources. And it shifts modernisation's centre of gravity from code to conceptual model.</p>
 
 <p>The risks do not disappear. They change character. Technical failure was the old dominant risk. Wrong reconstruction is the new one. Preparing for the second requires a different kind of discipline than preparing for the first — and most organisations do not yet have it.</p>
+
+<div class="refs" style="margin-top:1.5rem;padding:.7rem 1rem;background:#f3f0ea;border-left:2px solid #c8bfad;font-family:monospace;font-size:.68rem;color:#666">
+<strong>Proposed continuation</strong><br>
+CN-023 — Intentional Irrecoverability in Complex Systems: not what can be reconstructed, but what must not be reconstructed incorrectly even when technically possible. The risk-inverse of this memo.
+</div>
 
 <div class="refs">
   <strong>Related documents</strong><br>
