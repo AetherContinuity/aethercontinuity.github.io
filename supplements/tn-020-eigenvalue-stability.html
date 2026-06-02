@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TN-020 — Eigenvalue Stability of the Finnish Energy–Economy System · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/tn-020-eigenvalue-stability.html"/>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+.math-block{background:#f8f5f0;border:1px solid #e0d8cc;padding:.8rem 1.1rem;margin:1rem 0;overflow-x:auto}
+.mode{border:1px solid var(--rule);padding:.7rem 1rem;margin:.7rem 0;font-size:.9rem}
+.mode strong{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+  display:block;margin-bottom:.3rem;text-transform:uppercase}
+.phase-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+.phase-table th{background:#f0ece4;padding:.4rem .6rem;font-family:var(--mono);
+  font-size:.7rem;border-bottom:2px solid var(--rule);text-align:left}
+.phase-table td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.warning{background:#fff8f0;border:1px solid #e8c880;padding:.7rem 1rem;
+  margin:.8rem 0;font-size:.88rem;font-family:var(--mono)}
+.warning strong{color:#a06000}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>TN-020 — Eigenvalue Stability of the Finnish Energy–Economy System</h1>
+<p class="doc-id">Technical Note · Stability Regions and Phase Transitions<br>
+Domain D-1 · D-3 · D-4 · Version 0.1 (Open Working Draft) · June 2026<br>
+Builds on: <a href="/papers/cn-024-ppa-invisible-allocation.html" style="color:var(--accent);text-decoration:none">CN-024</a> · <a href="/papers/cn-025-agricultural-forestry-exposure.html" style="color:var(--accent);text-decoration:none">CN-025</a> · <a href="/supplements/tn-019-ppa-rigidity-math.html" style="color:var(--accent);text-decoration:none">TN-019</a> · <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a></p>
+
+<div class="abstract">
+<strong>Abstract</strong>
+This technical note reformulates the PPA allocation dynamics from CN-024 and TN-019 as a linearised stability problem. The central result: Finland's energy–economy system is not a single-equilibrium market but a multi-regime eigenstructure system, where PPA penetration acts as a structural operator that shifts eigenvalues — determining which actor groups absorb instability — rather than simply redistributing prices. Three dominant eigenmodes are identified: PPA compression, liquidity collapse, and institutional lag. Four phase regimes are defined, with the current Finnish system estimated to occupy Phase B (distorted equilibrium).
+
+<em>Status note: This is an open working draft. Key parameters ($\alpha, \beta, \gamma_i, \theta_c$) are structural placeholders pending calibration from Fingrid hourly data and Statistics Finland input-output tables. The qualitative phase structure is robust; quantitative thresholds are indicative.</em>
+</div>
+
+<h2>§ 01 — System (Minimal Form)</h2>
+
+<p>The CN-026 macro–energy state space reduces to a coupled dynamical system. Linearising around equilibrium $x^*$:</p>
+
+<div class="math-block">
+$$\dot{\delta x} = A^* \delta x$$
+</div>
+
+<p>where $A^*$ is the Jacobian of the coupled energy–economy system. Stability depends entirely on the eigenvalues of $A^*$:</p>
+
+<div class="math-block">
+$$\text{System stable} \iff \max_i \Re(\lambda_i(A^*)) < 0$$
+</div>
+
+<p>Three control parameters drive the dominant eigenvalue structure:</p>
+<ul>
+<li>$K_p$ — PPA penetration (TWh-committed generation share)</li>
+<li>$L$ — Nordpool FI market liquidity (exchange-traded volume / total consumption)</li>
+<li>$\tau$ — institutional response lag (time from signal to effective policy)</li>
+</ul>
+
+<h2>§ 02 — Three Dominant Eigenmodes</h2>
+
+<div class="mode">
+<strong>Mode 1 — PPA Compression Mode</strong>
+$$\lambda_1 \approx \alpha K_p - \beta L$$
+High $K_p$, declining $L$. Effect: spot price decouples from demand elasticity; volatility is displaced to marginal actors; industrial production insulates from price signals. Corresponds to CN-024's invisible allocation mechanism.
+</div>
+
+<div class="mode">
+<strong>Mode 2 — Liquidity Collapse Mode</strong>
+$$\lambda_2 \approx -\frac{1}{L} + \gamma V_s$$
+As $L \to 0$, this mode dominates. Effect: extreme price spikes; BESS/FPA hedging saturates; Layer 3–4 actors absorb shocks as residual volatility sinks. Corresponds to TN-019's negative price chasm.
+</div>
+
+<div class="mode">
+<strong>Mode 3 — Institutional Lag Mode</strong>
+$$\lambda_3 \approx \frac{1}{\tau} - \delta_{\text{policy}}$$
+When $\tau$ exceeds the system's own adjustment cycle. Effect: policy responses overshoot; corrections amplify rather than dampen volatility; structural drift accumulates. Corresponds to SM-013's drift regime and D-suppression.
+</div>
+
+<h2>§ 03 — Eigenvector Allocation: Who Absorbs Instability</h2>
+
+<p>The eigenvectors of $A^*$ determine which actors are loaded by each instability mode. The system does not eliminate volatility — it assigns it:</p>
+
+<ul>
+<li>$v_1$ (industrial sector) — insulated via PPA; near-zero loading on Mode 1</li>
+<li>$v_2$ (energy price system) — structural buffer; absorbs Mode 2 directly</li>
+<li>$v_3$ (agriculture + forestry, CN-025 Layer 3A/3B) — amplified loading; primary volatility sink for combined Modes 1+2</li>
+<li>$v_4$ (households) — residual sink; SM-013 SurplusCitizen condition is the social expression of $v_4$ dominance</li>
+</ul>
+
+<p class="claim">PPA does not change mean prices — it shifts eigenvalues, determining which eigenvector components carry instability. The observable consequence is not average price but distributional volatility: stable for Layer 1, amplified for Layers 3–4.</p>
+
+<h2>§ 04 — Phase Transitions</h2>
+
+<p>A critical surface in $(K_p, L)$ space determines regime transitions:</p>
+
+<div class="math-block">
+$$K_p \cdot \frac{1}{L} \geq \theta_c$$
+</div>
+
+<p>Empirical calibration of $\theta_c$: CN-024 estimates PPA share reaching 30–50% of zero-carbon generation by 2028 with 15–25% liquidity decline. This implies $\theta_c$ in the range of 0.6–0.8 (indicative). Fingrid quarterly data on contracted vs exchange-traded volumes would permit direct estimation.</p>
+
+<table class="phase-table">
+<tr><th>Phase</th><th>Condition</th><th>Eigenvalue signature</th><th>Finnish analogue</th></tr>
+<tr><td><strong>A — Classical equilibrium</strong></td><td>Low $K_p$, high $L$, fast $\tau$</td><td>All $\Re(\lambda_i) < 0$</td><td>Pre-2022 energy market</td></tr>
+<tr><td><strong>B — Distorted equilibrium</strong></td><td>Moderate $K_p$, declining $L$</td><td>Mixed: some $\Re(\lambda_i) \approx 0$</td><td><em>Current estimated position</em></td></tr>
+<tr><td><strong>C — Critical transition</strong></td><td>$K_p/L \geq \theta_c$</td><td>$\Re(\lambda_{\max}) \to 0$</td><td>2027–2029 projection</td></tr>
+<tr><td><strong>D — Structural instability</strong></td><td>High $K_p$, low $L$, high $\tau$</td><td>$\Re(\lambda_{\max}) > 0$</td><td>Scenario A in SM-013 skenaariotyö</td></tr>
+</table>
+
+<h2>§ 05 — One-Line Summary</h2>
+
+<p class="claim">Finland is a regime-switching eigenvalue system where PPA penetration moves the economy across stability boundaries by reallocating volatility rather than eliminating it.</p>
+
+<h2>§ 06 — Calibration Requirements and Open Questions</h2>
+
+<div class="warning">
+<strong>Open calibration gap</strong><br>
+Parameters $\alpha, \beta, \gamma_i$ (sector absorption coefficients) and $\theta_c$ (critical threshold) are structural placeholders. Calibration requires: (1) Fingrid hourly spot + contracted volume data 2019–2026; (2) Statistics Finland input-output tables for energy intensity by sector; (3) Farm and forestry income cycle data (MTT/Luke). Without calibration, this note provides qualitative regime structure, not quantitative forecasts. Claims about which phase Finland currently occupies are directional estimates, not measurements.
+</div>
+
+<p>The equilibrium point $x^*$ for linearisation is sensitive to choice of base year. Pre-energy-crisis (2021) and post-stabilisation (2025) give different Jacobian structures. A robust result would hold across both.</p>
+
+<h2>§ 07 — Falsification Conditions</h2>
+
+<p><strong>FC-1</strong> — Eigenvalues of $A^*$ remain stable (all $\Re(\lambda_i) < 0$) across observed PPA penetration 2022–2026. If true, the regime-shift hypothesis fails.</p>
+
+<p><strong>FC-2</strong> — Agriculture and forestry do not appear as dominant eigenvector loads in observed volatility events (2022–2024 energy crisis data). If Layer 3 exposure was not amplified relative to Layer 4 (households), the eigenvector assignment claim fails.</p>
+
+<p><strong>FC-3</strong> — Institutional lag $\tau$ does not correlate with policy overshoot amplitude. If policy corrections were appropriately damped despite delay, Mode 3 is not active.</p>
+
+<p><strong>FC-4</strong> — BESS growth rate $dK_b/dt$ is sufficient to offset liquidity decline $dL/dt$ over 2024–2028. If so, the liquidity collapse mode is stabilised by market response alone, reducing the urgency of CM-1/CM-2.</p>
+
+<div class="refs">
+<strong>Builds on</strong><br>
+<a href="/papers/cn-024-ppa-invisible-allocation.html">CN-024</a> — PPA as Invisible Allocation Mechanism<br>
+<a href="/papers/cn-025-agricultural-forestry-exposure.html">CN-025</a> — The Unprotected Layer<br>
+<a href="/supplements/tn-019-ppa-rigidity-math.html">TN-019</a> — PPA Rigidity and Price Formation<br>
+<a href="/papers/sm-013-social-contract-calibration.html">SM-013</a> — Social Contract Calibration Failure (drift regime)<br>
+<strong>Pending</strong><br>
+CN-026 — Unified Allocation System (full state-space model, open draft, parametrisation pending)<br>
+SM-014 — Phase A–D: Policy Implications Without Equations (in preparation)
+</div>
+
+</body>
+</html>
