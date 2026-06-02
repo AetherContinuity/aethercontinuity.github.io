@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-024 — PPA as Invisible Allocation Mechanism · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-024-ppa-invisible-allocation.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;
+  margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.quote{background:#f8f5f0;border-left:3px solid #c8a070;padding:.6rem .9rem;
+  margin:.8rem 0;font-size:.9rem;font-style:italic}
+.quote cite{font-style:normal;font-family:var(--mono);font-size:.68rem;
+  color:var(--muted);display:block;margin-top:.3rem}
+.falsification{background:#fff8f0;border:1px solid #e8c880;
+  padding:.7rem 1rem;margin:.8rem 0;font-size:.88rem}
+.falsification strong{font-family:var(--mono);font-size:.68rem;color:#a06000;
+  display:block;margin-bottom:.3rem;text-transform:uppercase}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>CN-024 — PPA as Invisible Allocation Mechanism</h1>
+<p class="doc-id">Concept Note · Liquidity, Cannibalisation, and the Market's Compensatory Response<br>
+Domain D-1 · D-3 · D-4 · Version 0.2 · June 2026<br>
+Continues: <a href="/diagnostic-assessments/da-007-dasc-pilot.html" style="color:var(--accent);text-decoration:none">DA-007</a> (F-6) · <a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html" style="color:var(--accent);text-decoration:none">SM-012</a> §03–05<br>
+Relates: <a href="/papers/sm-011-industrial-grid-connection-flexibility-quota.html" style="color:var(--accent);text-decoration:none">SM-011</a> · <a href="/papers/wp-015-residualization-spot-markets.html" style="color:var(--accent);text-decoration:none">WP-015</a> · <a href="/supplements/tn-019-ppa-rigidity-math.html" style="color:var(--accent);text-decoration:none">TN-019</a> (mathematical appendix)</p>
+
+<div class="abstract">
+<strong>Abstract</strong>
+DA-007 and SM-012 establish that long-term Power Purchase Agreements (PPAs) pre-allocate Finnish zero-carbon electricity to industrial off-takers, leaving households as residual price-takers and reducing the fiscal value retained within the Finnish perimeter. This memo extends the analysis to three systemic effects not yet fully integrated: Nordpool liquidity compression, price cannibalisation reinforced by PPA rigidity, and the emergence of compensatory markets (BESS, FPA, multi-market optimisation). PPAs are not merely a contracting instrument but an invisible allocation mechanism operating in parallel with the spot market, systematically altering price formation, risk distribution, and investment incentives. The compensatory market response mitigates some symptoms but does not restore structural equity or fiscal retention.
+
+<em>Core claim: Recognising PPA-driven liquidity decline as a systemic coordination failure — not a market malfunction — is a precondition for designing institutional countermeasures that respect contract freedom while restoring fiscal and household continuity.</em>
+</div>
+
+<h2>§ 01 — The PPA as Structural Displacement</h2>
+
+<p>DA-007 F-6 introduced PPA-driven structural displacement: long-term industrial contracts pre-allocate newly commissioned generation before it reaches the retail market. SM-012 quantified the fiscal consequence: a 3 GW allocation to foreign-owned data centres produces a 44 billion euro ten-year deficit compared to SGFA-type domestic value chains, primarily through profit repatriation and thin transfer-pricing margins.</p>
+
+<p>What those memos did not model was the market-level mechanism that translates individual PPAs into system-wide distortion. Each PPA is rational for the counterparties. Collectively, they remove a growing fraction of generation from the price-discovery process. The result is not merely distributional (households pay more) but functional: the spot market no longer reflects the true scarcity value of electricity.</p>
+
+<p>A further distinction not previously foregrounded: the majority of European PPAs are financial contracts, not physical delivery agreements. The electricity still flows through the exchange, but the buyer receives or pays the difference between the contract price and the market price. This does not remove the physical load from the system — it transfers the price risk while leaving the quantity risk (system balance) with the grid operator.</p>
+
+<h2>§ 02 — Nordpool Liquidity Compression: Empirical Scale</h2>
+
+<p>The PPA market has grown substantially. In 2025, European markets recorded 249 public PPA agreements with combined capacity of 15.5 GW and estimated annual output of 26.3 TWh. The IT sector accounts for approximately 35% of public PPA capacity. Nordic IT-sector PPA capacity alone exceeds 3.3 GW.</p>
+
+<p><strong>Finnish PPA footprint (estimated, 2025):</strong> Approximately 1 GW of industrial and data centre capacity is already under PPA-type agreements. Microsoft has contracted over 200 MW; Google has been the most active counterparty with at least five agreements. Autoliv and Alight contracted a 100 MW solar PPA (Eurajoki), the largest solar PPA in Finland to date.</p>
+
+<p><strong>Nordic industrial scale — Stegra alone:</strong></p>
+<table>
+<tr><th>Counterparty</th><th>Volume</th><th>Period</th></tr>
+<tr><td>Uniper</td><td>6.0 TWh/y</td><td>2027–2032</td></tr>
+<tr><td>Fortum</td><td>2.3 TWh/y (1.3 TWh index + 1.0 TWh fixed)</td><td>from 2026/27</td></tr>
+<tr><td>Axpo</td><td>2.25 TWh/y</td><td>long-term</td></tr>
+<tr><td>Swiss counterparty</td><td>2.0 TWh/y</td><td>long-term</td></tr>
+</table>
+<p>Stegra's total contracted volume exceeds 10 TWh/year — equivalent to approximately 1.2 GW of continuous load. HYBRIT is in the same capacity class. These are not marginal volumes.</p>
+
+<p><strong>Liquidity mechanism:</strong> When 30–50% of Finnish zero-carbon generation (wind, nuclear, hydro) is sold under long-term PPAs at fixed prices (€30–55/MWh), the remaining spot market volume thins. Lower liquidity produces higher volatility, larger intraday/day-ahead spreads, and amplified price spikes during demand shocks. ENTSO-E's 2025 Liquidity Assessment for the Nordic region documents declining bid-ask depth in the FI price area during high-wind hours. The projected impact on the Finnish spot market is a 15–25% volume reduction by 2028 under moderate growth assumptions.</p>
+
+<p><strong>Institutional gap:</strong> No authority monitors the cumulative liquidity impact of PPAs. The Energy Authority tracks contract registration but publishes neither a liquidity index nor the share of generation under fixed long-term contracts — the minimal transparency measure that would make the shift from exchange trading to bilateral contracting visible.</p>
+
+<h2>§ 03 — Cannibalisation Reinforced by PPA Rigidity</h2>
+
+<p>Nøland (NTNU, 2026) and WP-015 document the cannibalisation effect: wind power produces most when demand is low and least when demand is high, driving down spot prices during high-output hours and eroding revenues for all generators. BCG (2025) estimates wind developers receive approximately 50% of spot prices. Finnish state subsidy to legacy wind installations reached approximately 210 million euro in 2025 — a symptom of this structural contradiction.</p>
+
+<p><strong>PPA-specific amplification:</strong> A wind farm under a fixed-price PPA (e.g., €40/MWh) continues to produce regardless of spot price — including during negative price periods. The PPA counterparty pays the fixed price; the operator has no incentive to curtail. This extends negative-price duration and delays market exit of inefficient production.</p>
+
+<p><strong>Stranded asset risk:</strong> If negative prices exceed 500 hours/year by 2030, merchant (uncontracted) wind projects become unfinanceable. Finland's 6–9 GW pipeline of planned wind capacity faces a coordination trap: each new PPA-backed turbine worsens the spot price for all others, but no single developer internalises this externality. TN-019 models the mathematics of this halting mechanism.</p>
+
+<h2>§ 04 — Compensatory Response: BESS, FPA, and Multi-Market Optimisation</h2>
+
+<p>Markets are not passive. Since 2024, a new instrument layer has emerged specifically to manage the volatility created by PPA-driven illiquidity and cannibalisation.</p>
+
+<p><strong>Battery Energy Storage Systems (BESS):</strong> Nordic BESS capacity reached approximately 1.2 GW in 2025 (Finland ~400 MW). BESS captures intraday price spreads — charging during low or negative prices, discharging during spikes. It does not add net generation but improves temporal liquidity.</p>
+
+<p><strong>Flexibility Purchase Agreements (FPA):</strong> In September 2025, the first 1.8 GWh of FPA-linked BESS capacity was contracted in Finland (Fingrid/EPEX). Unlike PPAs, FPAs are short-term (days to months) and require load curtailment or shifting in exchange for an availability payment. FPAs restore demand elasticity — the opposite of PPA rigidity.</p>
+
+<p><strong>Multi-market optimisation:</strong> Sophisticated operators (e.g., Ilmatar Energy, 2025) combine day-ahead, intraday, FCR-N, FCR-D, and BESS revenues into a single revenue stack. This reduces dependence on any single market and has made some BESS projects profitable without long-term PPAs.</p>
+
+<p class="claim">The compensatory layer mitigates systemic volatility but does not restore distributional equity. FPAs and BESS benefit large, sophisticated counterparties. Households cannot access FPAs. Small district heating operators cannot optimise across markets. The irony is precise: the compensatory market does not fix the problem — it monetises the volatility the problem creates, capturing that value for the same class of actors who benefit from the original allocation.</p>
+
+<h2>§ 05 — The Invisible Allocation Mechanism and Institutional Legitimacy</h2>
+
+<p>SM-012 §05 described transfer-pricing arbitrage as legal but structurally distorting. The same logic applies here. Each PPA is individually legal, transparent to the counterparties, and economically rational. Collectively, they bypass democratic allocation of a public resource.</p>
+
+<p>The grid is built with public permits, state-guaranteed loans, and monopoly infrastructure (Fingrid). When a PPA allocates 500 MW of wind power to a foreign data centre for 15 years at €40/MWh, that electricity is no longer available for households during price spikes, domestic industry without PPA cover, grid balancing as a flexible reserve, or future SGFA-type domestic value chains. No democratic institution has voted on this allocation. No fiscal continuity assessment has been performed.</p>
+
+<p>Three public statements from May 2026 illustrate the institutional gap:</p>
+
+<div class="quote">
+"Kun sähkön kulutus kasvaa, se johtaa uusien tuulivoimainvestointien käynnistymiseen." / "Säätövoiman riittävyys pakkastalvina on todellinen ongelma."
+<cite>Jukka Leskelä, Energiateollisuus, HS 29.5.2026 — No reference to PPA liquidity impact or household residual risk.</cite>
+</div>
+
+<div class="quote">
+"Markkinat ovat hoitaneet sen erittäin hyvin. Suomessa on erittäin hyvin toimivat sähkömarkkinat."
+<cite>Antti Poikola, FDCA, Asian ytimessä 11.5.2026 — No reference to the 44 billion euro fiscal retention deficit (SM-012).</cite>
+</div>
+
+<div class="quote">
+"Vireillä on suunnitelmia, joissa datakeskukset kantavat osansa vastuusta."
+<cite>Sari Multala, Minister, Kaleva 16.5.2026 — "Osansa" undefined: voluntary or mandatory? SM-011's flexibility quota would be mandatory.</cite>
+</div>
+
+<p>A reader comment (Geddala, HS 29.5.2026) makes the legitimacy gap concrete: "Ensi alkuun olisi läpinäkyvyyden vuoksi hyvä saada pöytään datakeskusten kanssa tehdyt sähkösopimukset. Kaikki verkon parantamisesta johtuvat kulut maksaa jokainen sähkönkäyttäjä yhteisesti." This is precisely the transparency that CM-1 (below) would provide.</p>
+
+<h2>§ 06 — Allocation Contrast: Arctial vs. Hyperscale</h2>
+
+<p>The Kokkolan alumiinitehdas (Arctial, investment €4.7 billion, consumption 9 TWh/year, production from 2030, owners: Rio Tinto, Mitsubishi, Fortum, ABB, Siemens Financial Services) illustrates what SM-012 §06 calls the preferred allocation.</p>
+
+<table>
+<tr><th></th><th>Arctial (Kokkola aluminium)</th><th>Hyperscale data centre</th></tr>
+<tr><td>Energy path</td><td>Electricity → physical processing (aluminium)</td><td>Electricity → global AI/cloud compute</td></tr>
+<tr><td>Revenue booking</td><td>Finland (production, exports)</td><td>Ireland or Luxembourg (transfer pricing)</td></tr>
+<tr><td>Fiscal retention</td><td>High (corporate tax, wages, subcontracting)</td><td>Minimal (thin margins, capital repatriation)</td></tr>
+<tr><td>Strategic value</td><td>EU critical raw material, domestic value chain</td><td>Hyperscaler capacity for global markets</td></tr>
+<tr><td>Grid impact</td><td>Same as hyperscale at same MW</td><td>Same as aluminium at same MW</td></tr>
+</table>
+
+<p>Both consume the same grid capacity per MW. Only one returns the fiscal value to Finland. The PPA mechanism does not distinguish between them — which is why a fiscal continuity test (CM-3) is necessary.</p>
+
+<h2>§ 07 — Institutional Countermeasures</h2>
+
+<p>This memo does not propose restricting PPAs. That would be economically destructive and legally problematic. Three countermeasures would restore legibility without violating contract freedom:</p>
+
+<p><strong>CM-1 — Mandatory liquidity reporting.</strong> Fingrid or the Energy Authority should publish quarterly: the share of total generation under fixed-price long-term PPAs (>3 years); a liquidity index (exchange-traded volume as proportion of total consumption); and a stress test (if 50% of PPA volume were on spot, what would peak price reduction be?).</p>
+
+<p><strong>CM-2 — Cannibalisation adjustment in grid tariff.</strong> Wind and solar PPAs could include a negative price clawback: if spot price falls below –10 €/MWh, the PPA price is reduced by 50% of the negative spread. This aligns private incentives with system efficiency without banning production. Legal basis: grid connection terms, not retroactive contract modification.</p>
+
+<p><strong>CM-3 — Fiscal continuity test for allocations above 100 MW.</strong> Any new PPA or grid connection request above 100 MW should trigger a public fiscal impact assessment (tax revenue, trade balance, capital repatriation) published before the connection decision. Non-binding — but it makes the trade-off visible. The 100 MW threshold is calibrated to capture individual data centre connections (typically 50–500 MW) while excluding small industrial consumers.</p>
+
+<h2>§ 08 — Falsification Conditions</h2>
+
+<div class="falsification">
+<strong>FC-1</strong> Nordic spot market liquidity (bid-ask depth, volatility, spread) does not decline further as PPA share increases (ENTSO-E 2026–2027 data).
+</div>
+<div class="falsification">
+<strong>FC-2</strong> Household electricity prices show no correlation with PPA penetration in the Finnish price area when controlling for fuel and CO₂ costs.
+</div>
+<div class="falsification">
+<strong>FC-3</strong> A democratic mechanism is established that reviews all PPAs above 100 MW for systemic effects, with published reasoning. Its presence would falsify the claim of "invisible allocation."
+</div>
+
+<h2>§ 09 — Conclusion</h2>
+
+<p>Long-term power purchase agreements are not bad instruments. They provide price stability for industry and enable financing of new renewable generation. The problem is not the instrument but the absence of institutional oversight of the instrument's cumulative effect.</p>
+
+<p>When PPA share reaches 30–50% of zero-carbon generation, the spot market becomes structurally thinner, more volatile, and less equitable — households pay residual prices while industry pays fixed low rates. The compensatory market (BESS, FPA) reduces systemic volatility but captures the resulting value for large actors, not small consumers or municipalities.</p>
+
+<p>The solution is not restriction but transparency: publish the cumulative liquidity position, stress-test the price impact, and require a fiscal check before very large allocations. Each individual PPA is visible. Their aggregate effect currently is not. That invisibility is the coordination failure — and it is correctable without touching the contracts themselves.</p>
+
+<div class="refs">
+<strong>Sources and references</strong><br>
+PPA Marketplace Annual Review 2025 · ENTSO-E Liquidity Outlook 2025<br>
+Stegra: Uniper (2024), Fortum (2025), Axpo (2025) press releases<br>
+DIESL 2025: Finnish data centre census<br>
+Nøland, J.K. (NTNU), Affärsvärlden 2026; BCG report 2025<br>
+EPEX Nordic Quarterly Report Q3 2025 · Fingrid reserve market data 2025<br>
+HS 29.5.2026 (Saravirta, Leskelä, Geddala) · Kaleva 16.5.2026 (Multala) · Asian ytimessä 11.5.2026 (Poikola)<br>
+<a href="/supplements/tn-019-ppa-rigidity-math.html">TN-019</a> — PPA Rigidity and Price Formation: mathematical appendix<br>
+<a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html">SM-012</a> · <a href="/papers/sm-011-industrial-grid-connection-flexibility-quota.html">SM-011</a> · <a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a>
+</div>
+
+</body>
+</html>

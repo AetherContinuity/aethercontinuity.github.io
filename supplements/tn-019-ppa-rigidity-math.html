@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TN-019 — PPA Rigidity and Price Formation · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/tn-019-ppa-rigidity-math.html"/>
+<script>
+window.MathJax = {tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+.math-block{background:#f8f5f0;border:1px solid #e0d8cc;padding:.8rem 1.1rem;
+  margin:1rem 0;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.result{background:#eef4ee;border-left:3px solid #4a8a4a;padding:.6rem .9rem;
+  margin:.8rem 0;font-family:var(--mono);font-size:.85rem}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <a href="/papers/cn-024-ppa-invisible-allocation.html">CN-024</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>TN-019 — PPA Rigidity and Price Formation</h1>
+<p class="doc-id">Technical Note · Mathematical Appendix to CN-024 · Domain D-3 · D-4<br>
+Version 1.0 · June 2026<br>
+Appends: <a href="/papers/cn-024-ppa-invisible-allocation.html" style="color:var(--accent);text-decoration:none">CN-024</a> · Relates: <a href="/papers/wp-015-residualization-spot-markets.html" style="color:var(--accent);text-decoration:none">WP-015</a> · <a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html" style="color:var(--accent);text-decoration:none">SM-012</a></p>
+
+<div class="abstract">
+<strong>Abstract</strong>
+This technical note models mathematically how fixed-price Power Purchase Agreements (PPAs) transform contracted generation into must-run capacity on the Nordpool day-ahead market, accelerating price cannibalisation and extending negative-price duration. A parametrised example using Finnish system data (summer night, 2026) demonstrates the halting mechanism: PPA-backed inelastic supply drives spot prices negative, eliminating merchant revenue exactly when output is highest. The model confirms Nøland (2026) and supports CN-024's classification of PPA-driven liquidity decline as a coordination failure, not a market malfunction.
+</div>
+
+<h2>§ 01 — Market Balance: Baseline Model</h2>
+
+<p>In a standard electricity market, spot price $P_{\text{spot}}$ at time $t$ is determined by the intersection of aggregate demand $D(P,t)$ and supply $S(P,t)$:</p>
+
+<div class="math-block">
+$$P_{\text{spot}}(t) : D(P_{\text{spot}}, t) = S(P_{\text{spot}}, t)$$
+</div>
+
+<p>Supply is decomposed into three components:</p>
+
+<div class="math-block">
+$$S(P,t) = S_{\text{base}}(P,t) + S_{\text{merchant}}(P,t) + S_{\text{PPA}}(t)$$
+</div>
+
+<ul>
+<li>$S_{\text{base}}$: inflexible baseload (nuclear, industrial CHP) — low but positive price elasticity</li>
+<li>$S_{\text{merchant}}$: uncontracted renewables — responds directly to price signals</li>
+<li>$S_{\text{PPA}}(t)$: PPA-backed generation — <em>time-dependent only</em>, not price-dependent</li>
+</ul>
+
+<h2>§ 02 — PPA Producer Bidding Behaviour</h2>
+
+<p>For a PPA-backed wind farm, actual revenue per MWh produced ($R_{\text{PPA}}$) under a standard Pay-as-Produced contract without negative-price clauses is:</p>
+
+<div class="math-block">
+$$R_{\text{PPA}} = P_{\text{fixed}} \quad \text{(independent of } P_{\text{spot}}\text{)}$$
+</div>
+
+<p>Since marginal cost $MC \approx 0$ for wind, the operator's optimisation problem is to maximise volume at all prices where $R_{\text{PPA}} > MC$. To ensure dispatch and avoid curtailment costs, the operator sets their Nordpool bid at the technical price floor:</p>
+
+<div class="math-block">
+$$P_{\text{bid, PPA}} = P_{\text{floor}} = -500 \text{ €/MWh}$$
+</div>
+
+<p>This drives the price elasticity of PPA supply to zero across all relevant price ranges:</p>
+
+<div class="math-block">
+$$\epsilon_{\text{PPA}} = \frac{\partial S_{\text{PPA}}}{\partial P} \cdot \frac{P}{S_{\text{PPA}}} \approx 0$$
+</div>
+
+<p>$S_{\text{PPA}}(t)$ becomes a purely time-dependent (weather-driven) constant $\bar{S}_{\text{PPA}}(t)$ that shifts the supply curve horizontally regardless of demand level. This is the must-run condition.</p>
+
+<h2>§ 03 — The Negative Price Chasm</h2>
+
+<p>Define residual demand at $P = 0$ after removing PPA-backed supply:</p>
+
+<div class="math-block">
+$$D_{\text{res}}(0, t) = D(0, t) - \bar{S}_{\text{PPA}}(t) - S_{\text{base}}(0, t)$$
+</div>
+
+<p>When $D_{\text{res}}(0,t) < 0$, the market cannot clear at zero — it must clear at a negative price. Merchant generation exits at $P_{\text{spot}} \leq 0$, leaving only baseload and PPA supply. The price sensitivity to PPA capacity growth is:</p>
+
+<div class="math-block">
+$$\frac{\partial P_{\text{spot}}}{\partial \bar{S}_{\text{PPA}}} = -\frac{1}{\frac{\partial D}{\partial P} - \frac{\partial S_{\text{base}}}{\partial P}}$$
+</div>
+
+<p>In the low-price region, both demand elasticity $\frac{\partial D}{\partial P}$ and baseload elasticity $\frac{\partial S_{\text{base}}}{\partial P}$ approach zero. The denominator collapses:</p>
+
+<div class="math-block">
+$$\frac{\partial P_{\text{spot}}}{\partial \bar{S}_{\text{PPA}}} \rightarrow -\infty$$
+</div>
+
+<p class="claim">This mathematical discontinuity explains the observed empirical pattern: a marginal increase in must-run PPA capacity drives spot prices sharply negative within minutes, as documented in Finnish Fingrid data for 2024–2026.</p>
+
+<h2>§ 04 — Parametrised Example: Finnish Summer Night 2026</h2>
+
+<p>Realistic parameters based on Fingrid system data for a windy Sunday night:</p>
+
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Note</th></tr>
+<tr><td>Total demand $D$</td><td>5 200 MW</td><td>Low overnight load</td></tr>
+<tr><td>Inflexible baseload $S_{\text{base}}$</td><td>3 200 MW</td><td>Nuclear + industrial must-run, bid at 0 €/MWh</td></tr>
+<tr><td>PPA-backed wind $\bar{S}_{\text{PPA}}$</td><td>2 200 MW</td><td>Bid at −500 €/MWh</td></tr>
+<tr><td>Merchant wind potential</td><td>1 500 MW</td><td>Marginal cost ~2 €/MWh</td></tr>
+</table>
+
+<p><strong>Step 1 — Supply at P = 2 €/MWh:</strong></p>
+<div class="math-block">
+$$S_{\text{total}}(2) = 3\,200 + 1\,500 + 2\,200 = 6\,900 \text{ MW} > D = 5\,200 \text{ MW}$$
+</div>
+<p>Price must fall. Merchant exits at $P \leq 0$.</p>
+
+<p><strong>Step 2 — Supply at P = 0 €/MWh:</strong></p>
+<div class="math-block">
+$$S_{\text{total}}(0) = 3\,200 + 0 + 2\,200 = 5\,400 \text{ MW} > D = 5\,200 \text{ MW}$$
+</div>
+<p>Inelastic surplus: +200 MW. Market cannot clear at zero.</p>
+
+<p><strong>Step 3 — Clearing price:</strong> 200 MW of baseload must be curtailed. Using empirical Finnish baseload flexibility (100 MW reduction requires approximately –15 €/MWh price deviation):</p>
+
+<div class="math-block">
+$$P_{\text{spot}} = 0 - \frac{200 \text{ MW}}{100 \text{ MW}} \times 15 \text{ €/MWh} = -30 \text{ €/MWh}$$
+</div>
+
+<h2>§ 05 — Revenue Distribution at Clearing Price</h2>
+
+<table>
+<tr><th>Actor</th><th>Volume (MW)</th><th>Market revenue (€/h)</th><th>Actual revenue (€/h)</th></tr>
+<tr><td>PPA wind producer</td><td>2 200</td><td>−66 000</td><td>+88 000 (at P_fixed = 40 €/MWh)</td></tr>
+<tr><td>Merchant wind</td><td>0 (curtailed)</td><td>0</td><td>0 (lost option value)</td></tr>
+<tr><td>Baseload (nuclear)</td><td>3 000 (reduced)</td><td>−90 000</td><td>−90 000 (direct loss or curtailment cost)</td></tr>
+<tr><td>PPA off-taker (data centre)</td><td>2 200</td><td>+66 000</td><td>−88 000 (fixed cost under contract)</td></tr>
+<tr><td>Unprotected consumer</td><td>3 000</td><td>+90 000</td><td>Benefit offset by transmission fees and taxes</td></tr>
+</table>
+
+<p>The PPA producer receives +€88 000/hour while market revenue is −€66 000/hour — a 154 000 €/hour divergence from the spot market, funded by the PPA counterparty.</p>
+
+<h2>§ 06 — System-Level Coordination Failure</h2>
+
+<p>This model demonstrates Nøland's (2026) value erosion mechanism quantitatively. Each individual PPA decision is rational at project financing time. When aggregate PPA mass $\bar{S}_{\text{PPA}}$ crosses the critical threshold relative to minimum demand $D_{\text{min}}$, it structurally destroys spot market price formation.</p>
+
+<p>Two structural barriers to Finnish energy self-sufficiency follow directly:</p>
+
+<p><strong>Merchant investment blockade:</strong> PPA inelasticity drives spot prices deeply negative whenever wind is strong. Wind projects without PPA cover have zero or negative cashflow at precisely the hours of highest output. The investment case becomes unfundable without PPA support — but each new PPA worsens the spot price for all others. This is a coordination trap, not a technology problem.</p>
+
+<p><strong>Dispatchable capacity exit:</strong> Baseload absorbs negative prices (−90 000 €/h in the example). Traditional dispatchable generation cannot sustain this economics and exits the market. This worsens Leskelä's (2026) acknowledged cold-snap capacity deficit: the PPA structure provides no incentive to build the flexible capacity needed for calm, cold high-pressure conditions.</p>
+
+<div class="result">
+The Finnish BESS fleet (~400 MW) is an order of magnitude smaller than the PPA-inelastic surplus (~200–800 MW in high-wind conditions). The compensatory market cannot absorb the coordination failure — it can only monetise it.
+</div>
+
+<div class="refs">
+<strong>References</strong><br>
+Nøland, J.K. (NTNU 2026), Affärsvärlden — cannibalisation and value erosion<br>
+BCG (2025) — wind revenue at 50% of spot market price<br>
+Fingrid (2026) — hourly system data, negative price incidence 2024–2026<br>
+ENTSO-E (2025) — Nordic Liquidity Assessment, FI price area<br>
+<a href="/papers/cn-024-ppa-invisible-allocation.html">CN-024</a> — parent concept note<br>
+<a href="/papers/wp-015-residualization-spot-markets.html">WP-015</a> — residualisation and cannibalisation framework
+</div>
+
+</body>
+</html>
