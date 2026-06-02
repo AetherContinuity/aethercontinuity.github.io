@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SM-014 — Allocation Cascades and the Unprotected Layer · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-014-allocation-cascades-unprotected-layer.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.indicator{border:1px solid var(--rule);padding:.8rem 1rem;margin:.7rem 0}
+.indicator strong{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+  display:block;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em}
+.indicator .status{font-family:var(--mono);font-size:.75rem;margin-top:.3rem}
+.status-yellow{color:#a06000}
+.status-red{color:var(--accent)}
+.falsification{background:#fff8f0;border:1px solid #e8c880;
+  padding:.6rem .9rem;margin:.6rem 0;font-size:.88rem}
+.falsification strong{font-family:var(--mono);font-size:.68rem;color:#a06000;
+  display:block;margin-bottom:.2rem}
+.open-access{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  background:#f0ece4;padding:.5rem .8rem;margin-top:2rem;border-left:2px solid var(--rule)}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>SM-014 — Allocation Cascades and the Unprotected Layer</h1>
+<p class="doc-id">Synthesis Memo · Domain D-1 · D-3 · June 2026<br>
+Continues: <a href="/papers/cn-024-ppa-invisible-allocation.html" style="color:var(--accent);text-decoration:none">CN-024</a> · <a href="/papers/cn-025-agricultural-forestry-exposure.html" style="color:var(--accent);text-decoration:none">CN-025</a> · <a href="/supplements/tn-019-ppa-rigidity-math.html" style="color:var(--accent);text-decoration:none">TN-019</a> · <a href="/supplements/tn-020-eigenvalue-stability.html" style="color:var(--accent);text-decoration:none">TN-020</a><br>
+Relates: <a href="/papers/sm-007-convergence-finding.html" style="color:var(--accent);text-decoration:none">SM-007</a> · <a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html" style="color:var(--accent);text-decoration:none">SM-012</a> · <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a></p>
+
+<div class="abstract">
+<strong>Abstract — For decision-makers</strong>
+Finland's electricity market is not a single market. It is a four-layer allocation system. At the top, large industry and data centres are protected by long-term Power Purchase Agreements (PPAs) at fixed, low prices. At the bottom, households face spot market volatility. Somewhere in between — and systematically overlooked — are agricultural and forestry operators. They are classified as commercial entities, so they receive no household protection. They are too small for PPAs. Their income is irregular, so they cannot use standard hedging instruments. When PPA-protected industry causes grid costs or price spikes, those costs do not stay at the top. They cascade downward until they find a layer that cannot pass them further. That layer is agriculture and forestry. This memo explains why this is not an accident but a structural feature of the current allocation system — and why no institution is tasked with monitoring it.
+</div>
+
+<h2>§ 01 — The Four-Layer Model</h2>
+
+<table>
+<tr><th>Layer</th><th>Actors</th><th>Protection</th><th>Spot exposure</th><th>Cost pass-through</th></tr>
+<tr><td>1</td><td>Large industry, data centres</td><td>PPA (€30–55/MWh)</td><td>None</td><td>Full (product price)</td></tr>
+<tr><td>2</td><td>Industrial SMEs, larger farms</td><td>Fixed retail (€65–75/MWh)</td><td>At renewal</td><td>Partial</td></tr>
+<tr><td>3A</td><td>Small/medium farms, grain drying, livestock</td><td>None</td><td>Full</td><td>None</td></tr>
+<tr><td>3B</td><td>Forestry contractors, small sawmills</td><td>None</td><td>Full (episodic)</td><td>None</td></tr>
+<tr><td>4</td><td>Households</td><td>None (reactive support)</td><td>Full</td><td>None</td></tr>
+</table>
+
+<p class="claim">Layers 3A and 3B are classified as "commercial" — therefore excluded from consumer protection — but lack any of the instruments that make commercial risk management possible. They are too large for the household safety net and too small for the industrial toolkit. The system identifies them as too large for protection and too small for power.</p>
+
+<h2>§ 02 — How Risk Cascades Downward</h2>
+
+<p>When a PPA-protected data centre or heavy industry connects to the grid, four mechanisms transfer cost to lower layers:</p>
+
+<p><strong>Grid reinforcement costs are socialised.</strong> Connection-driven infrastructure investment is financed through transmission tariffs paid by all users — including farms and forestry contractors who neither requested nor benefit from the connection.</p>
+
+<p><strong>PPA-backed generation reduces spot market liquidity.</strong> Fixed-price contracts remove generation from price discovery. Lower liquidity produces higher volatility, which falls on unprotected layers (CN-024 §02, TN-019).</p>
+
+<p><strong>Price spikes during scarcity.</strong> When demand peaks and wind does not produce, spot prices spike. Protected industry does not react — their price is fixed. Layers 3 and 4 absorb the full spike with no instrument to reduce their exposure.</p>
+
+<p><strong>Regional concentration.</strong> Layer 3 operators are geographically concentrated in the same regions (Pohjanmaa, Kainuu, Lappi) where data centres, wind power, and heavy industry are expanding. They host the infrastructure and bear the cost. This is the spatial extraction loop identified in CN-025 §04.</p>
+
+<p class="claim">PPA contracts do not eliminate risk. They reflect it downward. The system is stable only as long as lower layers can absorb the volatility. Agriculture and forestry are the final absorbers — the structural ground of the Finnish electricity system.</p>
+
+<h2>§ 03 — Why Agriculture and Forestry Are Different</h2>
+
+<p><strong>Irregular income.</strong> A farm's income comes once or twice a year at harvest. A forestry contractor's income comes when timber is sold. Electricity costs are continuous. Standard hedging instruments assume regular cash flow — they do not fit the agricultural income profile.</p>
+
+<p><strong>No cost pass-through.</strong> An industrial SME can raise prices. A farm cannot — grain price is set at harvest, months after the electricity was consumed. A forestry contractor cannot renegotiate timber prices based on last winter's electricity bill.</p>
+
+<p><strong>Institutional gap.</strong> TEM (economic affairs) focuses on large industry. MMM (agriculture and forestry) lacks energy analysis capacity. Energiavirasto classifies them as commercial — consumer protection does not apply. No institution monitors the intersection. The monitoring mandate cannot be assigned without first assigning institutional ownership of the problem.</p>
+
+<h2>§ 04 — Three System Indicators</h2>
+
+<p>The system state can be read through three closed indicators — covering physical infrastructure, temporal synchronisation, and real-economy absorptive capacity. Together they form: grid → time → real economy.</p>
+
+<div class="indicator">
+<strong>Indicator 1 — Grid Reflection Index (GRI)</strong>
+Measures P1 corridor (North–South) saturation relative to Layer 1 demand inelasticity. When PPA-protected industry runs at full load regardless of price, Fingrid must conduct counter-trading to balance the system — at cost to all tariff payers.
+<div class="status status-yellow">Current status (2026): Yellow — P1 operating at capacity limit more than 15% of annual hours. Counter-trading continuous. Tariff pressure building.</div>
+</div>
+
+<div class="indicator">
+<strong>Indicator 2 — Phase-Lock Vulnerability (PLV)</strong>
+Measures whether Layer 3's peak energy demand (grain drying August–September, forestry winter cycles) coincides with grid saturation and spot price peaks.
+<div class="status status-yellow">Current status (2026): Moderate — seasonal demand and grid saturation increasingly overlapping. Layer 3 operators purchasing electricity at highest prices during their most energy-intensive periods.</div>
+</div>
+
+<div class="indicator">
+<strong>Indicator 3 — Layer D Shock Absorption (DSA)</strong>
+Measures the ratio of energy cost variance to free cash flow in agricultural and small forestry businesses. When unpredictable cost variation exceeds 20% of annual net income, investment stops and managed contraction begins.
+<div class="status status-red">Current status (2026): Pre-critical — absorptive capacity depleted. Buffer conditions for structural collapse of investment are present in the most exposed sub-sectors.</div>
+</div>
+
+<h2>§ 05 — Comparative Evidence</h2>
+
+<p>Sweden's government (May 2026) extended agricultural diesel tax relief through December 2027 — an automatic, targeted, anticipatory intervention recognising agriculture as a captive sector unable to absorb energy cost volatility independently. Finland's equivalent system requires active application and is structured as a general fuel tax reduction, not sector-targeted support.</p>
+
+<p>Evaluated against DA-007's three conditions for effective intervention: Sweden meets all three (automatic, anticipatory, captive customer recognition); Finland meets none in the primary sector context.</p>
+
+<p>This is not a policy comparison. It is an empirical observation: one neighbouring government has recognised the structural exposure of Layer 3. The other has not.</p>
+
+<h2>§ 06 — What Would Change the Picture</h2>
+
+<p>Three structural changes would alter the cascade. None requires new legislation — only institutional ownership and transparency.</p>
+
+<p><strong>Measure the exposure.</strong> MMM or Energiavirasto should track electricity cost exposure for Layer 3 separately from general commercial statistics. Currently not done. The monitoring mandate cannot be assigned without first resolving which institution owns the intersection.</p>
+
+<p><strong>Collective procurement (aggregator model).</strong> Farms and forestry operators individually fall below PPA thresholds. Collectively — regional cooperatives, grain drying associations, sawmill networks — they represent substantial, predictable demand. The AAP model (TN-018) provides the institutional architecture. This would not eliminate risk but would provide a hedging instrument that currently does not exist.</p>
+
+<p><strong>Regional grid tariff transparency.</strong> If grid reinforcement costs for large industrial connections are socialised regionally, Layer 3 operators are effectively subsidising the infrastructure that protects Layer 1. This is measurable from Fingrid's cost allocation methodology — but currently unmeasured and undiscussed.</p>
+
+<h2>§ 07 — Falsification Conditions</h2>
+
+<div class="falsification"><strong>FC-1</strong> Agricultural and forestry electricity cost volatility is no higher than household volatility (same contract types) over 2024–2027. If true, the structural asymmetry claim fails.</div>
+<div class="falsification"><strong>FC-2</strong> Layer 3 operators demonstrably access hedging instruments as effective, per MWh, as Layer 1 PPAs. If true, the toolkit gap does not exist.</div>
+<div class="falsification"><strong>FC-3</strong> MMM, TEM, or Energiavirasto publishes systematic tracking of primary sector electricity cost exposure, disaggregated from general commercial statistics. If true, the institutional gap is named and owned — the "invisible" claim fails.</div>
+<div class="falsification"><strong>FC-4</strong> Grid reinforcement costs for large industrial connections in northern and western Finland are borne substantially by the connecting parties (socialisation fraction below 20%). If true, the spatial extraction loop argument weakens.</div>
+
+<p>None of these conditions currently holds.</p>
+
+<h2>Conclusion — One Page for a Minister</h2>
+
+<p>Finland has built an electricity allocation system that works well for those at the top. Large industry and data centres have stable, low prices. Households have volatility but at least political attention.</p>
+
+<p>Somewhere in the middle — classified as commercial, too small for PPAs, with irregular income — are farms and forestry operators. They cannot pass costs forward. They cannot hedge effectively. They are concentrated in the same regions where grid costs are rising because of the very industry that is protected.</p>
+
+<p>This is not a market failure. It is a structural design feature of the allocation system. And it will remain invisible until the next price spike — because no institution is tasked with monitoring it.</p>
+
+<p>The solution is not subsidies. It is transparency (measure the exposure), aggregation (collective procurement), and tariff design that does not socialise industrial grid costs onto those who cannot pass them forward.</p>
+
+<p class="claim">The cascade will continue until it finds a layer that cannot refuse it. That layer is agriculture and forestry. And it is already showing signs of stress.</p>
+
+<div class="open-access">
+SM-014 · Aether Continuity Institute · June 2026<br>
+Open access. This memo may be shared, cited, or used as basis for parliamentary questions. No permission required.
+</div>
+
+<div class="refs">
+<strong>Related documents</strong><br>
+<a href="/papers/cn-024-ppa-invisible-allocation.html">CN-024</a> — PPA as Invisible Allocation Mechanism<br>
+<a href="/papers/cn-025-agricultural-forestry-exposure.html">CN-025</a> — The Unprotected Layer<br>
+<a href="/papers/sm-012-energy-allocation-fiscal-sustainability.html">SM-012</a> — Energy Allocation and Fiscal Sustainability (44 billion framework)<br>
+<a href="/papers/sm-013-social-contract-calibration.html">SM-013</a> — Social Contract Calibration Failure (SurplusCitizen condition)<br>
+<a href="/supplements/tn-018-adaptive-aggregator.html">TN-018</a> — Adaptive Aggregator Platform (collective procurement architecture)<br>
+<a href="/supplements/tn-020-eigenvalue-stability.html">TN-020</a> — Eigenvalue Stability (technical foundation)
+</div>
+
+</body>
+</html>
