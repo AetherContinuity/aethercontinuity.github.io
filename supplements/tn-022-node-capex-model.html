@@ -79,6 +79,54 @@ This note provides a component-level CAPEX model for TN-001 v1.1 duration-capabl
 
 <div class="note">Scale note: figures scale approximately with MW thermal output. S-1 at 30 MW ≈ 60% of stated costs; S-3 at 120 MW ≈ 160–180% due to electrolysis capacity increases.</div>
 
+
+<h2>§ 01A — Node Scaling Classes and Baseload Compatibility</h2>
+
+<p>TN-001 nodes are not a single size. Peak heat demand determines configuration class. The following classification applies regardless of jurisdiction — representative Finnish municipalities are noted as examples only.</p>
+
+<table>
+<tr><th>Class</th><th>Peak heat demand</th><th>Indicative configuration</th><th>LDR-50 relevance</th></tr>
+<tr><td><strong>N-1 Small</strong></td><td>30–80 MW</td><td>S-1 or S-2, single PEM module</td><td>Not recommended — LDR-50 output would dominate or exceed summer load</td></tr>
+<tr><td><strong>N-2 Medium</strong></td><td>80–200 MW</td><td>S-2, 2–3 generation modules</td><td>Conditional — depends on Baseload Compatibility Index (BCI, see below)</td></tr>
+<tr><td><strong>N-3 Large</strong></td><td>200–500 MW</td><td>S-2 or S-3, multiple modules</td><td>Viable when BCI &gt; 0.5</td></tr>
+<tr><td><strong>N-4 Metropolitan</strong></td><td>&gt;500 MW</td><td>S-3 + multiple LDR-50 units</td><td>Structurally attractive for baseload heat provision</td></tr>
+</table>
+
+<p style="font-size:.82rem;color:var(--muted);font-style:italic">Representative examples at N-1 scale: municipalities similar to Varkaus, Iisalmi, Lieksa. N-2: Joensuu, Kouvola, Seinäjoki. N-3: Oulu, Jyväskylä. N-4: Tampere, Turku, Helsinki metropolitan area. These are illustrative only — configuration class depends on heat demand profile, not administrative category.</p>
+
+<h3>Baseload Fraction (BF) and Baseload Compatibility Index (BCI)</h3>
+
+<p>Minimum load relative to peak load determines how much constant-output heat a node can absorb without surplus problems:</p>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+BF = D<sub>min</sub> / D<sub>peak</sub>
+</div>
+
+<p>where D<sub>min</sub> = annual minimum heat demand (typically summer night load) and D<sub>peak</sub> = design peak demand.</p>
+
+<table>
+<tr><th>Example</th><th>D<sub>peak</sub></th><th>D<sub>min</sub></th><th>BF</th><th>LDR-50 suitability</th></tr>
+<tr><td>City A (typical Finnish small city)</td><td>200 MW</td><td>20 MW</td><td>0.10</td><td>Poor — severe summer surplus at 50 MW LDR output</td></tr>
+<tr><td>City B (process heat anchor, industrial)</td><td>300 MW</td><td>120 MW</td><td>0.40</td><td>Good — LDR covers 42% of minimum load without surplus</td></tr>
+</table>
+
+<p>The Baseload Compatibility Index (BCI) formalises this for LDR-50 specifically:</p>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+BCI = D<sub>min</sub> / P<sub>baseload</sub>
+</div>
+
+<p>where P<sub>baseload</sub> = LDR-50 rated output (50 MW). Interpretation:</p>
+
+<table>
+<tr><th>BCI</th><th>Interpretation</th><th>Implication</th></tr>
+<tr><td>&lt; 0.5</td><td>Poor compatibility</td><td>LDR-50 exceeds summer load — chronic surplus, dumping or very large thermal storage required</td></tr>
+<tr><td>0.5–1.0</td><td>Conditional</td><td>Thermal storage can bridge the gap — BCI × TN-022 §08 SOEC/heat pump analysis required</td></tr>
+<tr><td>&gt; 1.0</td><td>Good compatibility</td><td>Minimum load exceeds LDR-50 output — no structural surplus problem</td></tr>
+</table>
+
+<p><strong>LDR-50 becomes structurally attractive when annual minimum heat demand exceeds approximately 30–40 MW and remains above 30% of peak load for a significant portion of the year (BF &gt; 0.3, BCI &gt; 0.6).</strong> Below this threshold, the operational complexity of managing constant LDR-50 output against variable demand outweighs the duration benefit.</p>
+
 <h2>§ 02 — Component CAPEX Breakdown</h2>
 
 <h3>Property A — Dispatchable Generation</h3>
@@ -228,6 +276,33 @@ This note provides a component-level CAPEX model for TN-001 v1.1 duration-capabl
 
 
 <h2>§ 07 — Complementarity with LDR-50 and Long-term Architecture</h2>
+
+<h3>Node and Node⁺ Architecture</h3>
+
+<p>LDR-50 does not replace the TN-001 node — it enhances one of its properties. The architectural relationship is:</p>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+Node &nbsp;&nbsp;= Properties A + B + C + D &nbsp;&nbsp;&nbsp;← baseline configuration<br>
+Node⁺ = Properties A + B + C + D + LDR &nbsp;← Property C enhanced with baseload nuclear heat
+</div>
+
+<p>LDR-50 is a Property C enhancer, not a standalone configuration. It extends the heat anchor's duration from weeks (Property B fuel store) to years (nuclear fuel cycle) — but only where BCI &gt; 0.6. Where BCI is low, Node without LDR is the correct configuration. Where BCI is high, Node⁺ becomes viable when LDR-50 reaches commercial deployment (2030+).</p>
+
+<h3>Expected Network Optimisation Result</h3>
+
+<p>If applied across the Finnish district heating stock, global optimisation would likely produce differentiated deployment rather than uniform rollout:</p>
+
+<table>
+<tr><th>Class</th><th>Expected configuration</th></tr>
+<tr><td>N-1 (30–80 MW)</td><td>S-1 or S-2 without LDR — PEM + biogas + CHP covers all needs</td></tr>
+<tr><td>N-2 (80–200 MW)</td><td>Predominantly S-2 — LDR conditional on BCI</td></tr>
+<tr><td>N-3 (200–500 MW)</td><td>S-2 + selective LDR-50 units where BCI &gt; 0.6</td></tr>
+<tr><td>N-4 (&gt;500 MW)</td><td>Multiple LDR-50 units + S-3 for peak and storage</td></tr>
+</table>
+
+<p>LDR-50 would not spread uniformly — it would concentrate in large load centres with high baseload fractions, while smaller municipalities deploy PEM-CHP-synthetic fuel combinations. This is structurally efficient: the technology's duration advantage is most valuable where constant output can always be absorbed.</p>
+
+
 
 <p>TN-001 nodes and the LDR-50 small heat reactor are not competing configurations. They operate in different time windows, address different system functions, and are architecturally complementary.</p>
 
