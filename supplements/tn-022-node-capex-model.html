@@ -120,10 +120,12 @@ BCI = D<sub>min</sub> / P<sub>baseload</sub>
 
 <table>
 <tr><th>BCI</th><th>Interpretation</th><th>Implication</th></tr>
-<tr><td>&lt; 0.5</td><td>Poor compatibility</td><td>LDR-50 exceeds summer load — chronic surplus, dumping or very large thermal storage required</td></tr>
-<tr><td>0.5–1.0</td><td>Conditional</td><td>Thermal storage can bridge the gap — BCI × TN-022 §08 SOEC/heat pump analysis required</td></tr>
-<tr><td>&gt; 1.0</td><td>Good compatibility</td><td>Minimum load exceeds LDR-50 output — no structural surplus problem</td></tr>
+<tr><td>&lt; 0.6</td><td>Poor — PEM+HP may dominate</td><td>LDR-50 exceeds summer load. PEM + heat pump likely delivers better economics without surplus risk. Node without LDR is preferred configuration.</td></tr>
+<tr><td>0.6–1.0</td><td>Conditional — simulation required</td><td>Thermal storage can bridge the gap but detailed hourly simulation required. LDR viable with enlarged Property C storage (+5–15 M€). BCI × seasonal profile determines outcome.</td></tr>
+<tr><td>&gt; 1.0</td><td>Good compatibility</td><td>Minimum load exceeds LDR-50 output — no structural surplus. Node⁺ is structurally sound. LDR-50 provides duration advantage with minimal operational complexity.</td></tr>
 </table>
+
+<p style="font-size:.85rem"><strong>Design rule (updated for PEM+HP integration):</strong> Where BCI &lt; 0.6, PEM + industrial heat pump delivers comparable heat output with full operational flexibility and no surplus constraint. LDR-50 adds duration but at the cost of structural rigidity that PEM+HP avoids. The crossover point is approximately BCI = 0.6–0.7 depending on electricity price and seasonal demand profile.</p>
 
 <p><strong>LDR-50 becomes structurally attractive when annual minimum heat demand exceeds approximately 30–40 MW and remains above 30% of peak load for a significant portion of the year (BF &gt; 0.3, BCI &gt; 0.6).</strong> Below this threshold, the operational complexity of managing constant LDR-50 output against variable demand outweighs the duration benefit.</p>
 
@@ -346,7 +348,9 @@ Node⁺ = Properties A + B + C + D + LDR &nbsp;← Property C enhanced with base
 <h3>Thermal State Equation</h3>
 
 <div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
-D<sub>heat</sub>(t) = Q<sub>LDR</sub>(t) + Q<sub>recover</sub>(t) + Q<sub>CHP</sub>(t) + Q<sub>store</sub>(t) − Q<sub>dump</sub>(t)
+D<sub>heat</sub>(t) = Q<sub>LDR</sub>(t) + Q<sub>recover</sub>(t) + Q<sub>CHP</sub>(t) + Q<sub>discharge</sub>(t) − Q<sub>charge</sub>(t) − Q<sub>dump</sub>(t)
+
+where Q<sub>discharge</sub> = heat drawn from thermal store, Q<sub>charge</sub> = heat stored (surplus absorbed), Q<sub>dump</sub> = irrecoverable surplus
 
 where Q<sub>recover</sub>(t) = Q<sub>electrolysis waste</sub>(t) + Q<sub>HP</sub>(t) = η<sub>th</sub> · P<sub>electrolysis</sub>(t) + COP · W<sub>HP</sub>(t)
 </div>
@@ -354,7 +358,7 @@ where Q<sub>recover</sub>(t) = Q<sub>electrolysis waste</sub>(t) + Q<sub>HP</sub
 <p>The hard constraint is LDR-50 rigidity: Q<sub>LDR</sub>(t) = 50 MW ∀t. This is the system's stiff mode condition — it forces summer surplus and makes winter shortfall structurally dependent on CHP. VTT's containerised PEM system (2024) adds an industrial heat pump to the electrolysis unit, changing the thermal coupling fundamentally. Q<sub>recover</sub>(t) now includes both electrolysis waste heat and heat pump output: at COP = 3–4, the heat pump can deliver 3–4 MWh of heat per MWh of electrical input, recovering low-grade waste heat to district heating temperatures. PtX is therefore not only a market-driven heat valve — it is simultaneously a heat producer. This has a counterintuitive consequence: in summer, PEM + heat pump may <em>worsen</em> the LDR-50 surplus problem rather than solve it. LDR-50 and PEM are not automatically synergistic heat sources; under certain conditions they compete. CHP functions as the residual controller — activated only when LDR-50 + PtX + storage do not meet demand:</p>
 
 <div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
-Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub>PtX</sub>(t) + Q<sub>store</sub>(t))
+Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub>recover</sub>(t) − Q<sub>discharge</sub>(t))
 </div>
 
 <p>CHP is a stress buffer actuator, not a production source. This distinction matters for fuel store sizing: winter CHP dispatch consumes Property B inventory at a rate determined by demand residual, not by generation economics.</p>

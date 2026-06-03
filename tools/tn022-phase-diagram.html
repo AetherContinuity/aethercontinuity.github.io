@@ -21,14 +21,18 @@ const W = 520, H = 380;
 const PAD = { top: 30, right: 30, bottom: 55, left: 60 };
 const P_MIN = 0, P_MAX = 150, R_MIN = 1, R_MAX = 10;
 
-function dominant(p, ratio, co2, biomass) {
+function dominant(p, ratio, co2, biomass, bci) {
+  // If BCI < 0.6, LDR-50 is not viable — suppress S-3 where LDR is assumed
+  // BCI affects whether high-duration configurations are structurally sound
+  const ldr_viable = bci > 0.6 ? (bci - 0.6) / 0.4 : 0; // 0 at BCI=0.6, 1 at BCI=1.0
   const elec_viable = Math.max(0, 1 - (p - 35) / 45);
   const co2_factor = co2;
   const s1_score = biomass * 0.6 - p * 0.002 + 0.15;
   const fuel_saving = Math.max(0, (55 - p) / 55) * co2_factor;
   const s2_score = fuel_saving * 0.8 + elec_viable * 0.5 + co2_factor * 0.4
                    - (1 - biomass) * 0.1 + (0.35 + ratio * 0.03) * 0.2;
-  const liquid_bonus = ratio > 5 ? (ratio - 5) * 0.08 : 0;
+  const liquid_bonus = ratio > 5 ? (ratio - 5) * 0.08 * ldr_viable : 0;
+  // BCI below 0.6: PEM+HP dominates over LDR-backed S-3
   const s3_score = fuel_saving * 0.7 + co2_factor * 0.5
                    + (0.6 + ratio * 0.05) * 0.25 + liquid_bonus
                    - (p > 70 ? (p - 70) * 0.01 : 0);
@@ -51,6 +55,7 @@ function PhaseDiagram() {
   const canvasRef = useRef(null);
   const [co2, setCo2] = useState(0.8);
   const [biomass, setBiomass] = useState(0.7);
+  const [bci, setBci] = useState(0.8);
   const [hovered, setHovered] = useState(null);
   const [cursor, setCursor] = useState(null);
 
@@ -78,7 +83,7 @@ function PhaseDiagram() {
       for (let py = PAD.top; py < PAD.top + innerH; py += STEP) {
         const p = P_MIN + ((px - PAD.left) / innerW) * (P_MAX - P_MIN);
         const r = R_MIN + (1 - (py - PAD.top) / innerH) * (R_MAX - R_MIN);
-        ctx.fillStyle = COLORS[dominant(p, r, co2, biomass)].fill + "cc";
+        ctx.fillStyle = COLORS[dominant(p, r, co2, biomass, bci)].fill + "cc";
         ctx.fillRect(px, py, STEP, STEP);
       }
     }
@@ -151,7 +156,7 @@ function PhaseDiagram() {
     const p = P_MIN + ((mx - PAD.left) / innerW) * (P_MAX - P_MIN);
     const r = R_MIN + (1 - (my - PAD.top) / innerH) * (R_MAX - R_MIN);
     setCursor({ p, r });
-    setHovered({ p: Math.round(p), r: r.toFixed(1), s: dominant(p, r, co2, biomass), boundary: ptxBoundary(r).toFixed(0) });
+    setHovered({ p: Math.round(p), r: r.toFixed(1), s: dominant(p, r, co2, biomass, bci), boundary: ptxBoundary(r).toFixed(0) });
   };
 
   return React.createElement("div", {
@@ -208,6 +213,7 @@ function PhaseDiagram() {
       ...[
         { label: "CO\u2082 availability", value: co2, setter: setCo2, note: co2 < 0.5 ? "S3 signal active" : "sufficient" },
         { label: "Biomass feedstock", value: biomass, setter: setBiomass, note: biomass > 0.7 ? "S-1 viable" : "limited" },
+        { label: "BCI (Baseload Compatibility)", value: bci, setter: setBci, note: bci < 0.6 ? "LDR-50 poor — PEM+HP preferred" : bci < 1.0 ? "LDR-50 conditional" : "LDR-50 structurally sound" },
       ].map(({ label, value, setter, note }) =>
         React.createElement("div", { key: label, style: { display: "flex", flexDirection: "column", gap: "0.4rem", minWidth: 180 } },
           React.createElement("div", { style: { display: "flex", justifyContent: "space-between" } },
