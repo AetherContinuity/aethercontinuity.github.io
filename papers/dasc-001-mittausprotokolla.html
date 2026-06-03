@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DASC-001 — Mittausprotokolla · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/dasc-001-mittausprotokolla.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1.05rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.95rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.68rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+.version{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:2rem;
+  border-top:1px solid var(--rule);padding-top:.5rem}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>DASC-001 — Mittausprotokolla</h1>
+<p class="doc-id">Working Paper · Versio 0.1 · Kesäkuu 2026<br>
+Domain: D-3 · D-5 · D-7 (ehdotus)<br>
+Perustuu: <a href="/papers/wp-013-distributed-authorship-coherence.html" style="color:var(--accent);text-decoration:none">WP-013</a> · <a href="/papers/cn-026-kalibrointiasymmetria.html" style="color:var(--accent);text-decoration:none">CN-026</a> · <a href="/papers/sp-007-biological-constraints-institutional-continuity.html" style="color:var(--accent);text-decoration:none">SP-007</a></p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+Tämä dokumentti operationalisoi kolme toisiaan täydentävää ilmiötä, jotka vaikuttavat ihmisen ja LLM:n välisen yhteistyön tuotoksiin hajautetuissa tutkimusjärjestelmissä: (1) kehyshajonta (frame authority fragmentation, WP-013), (2) muodon herkkyys (morphological sensitivity, CN-026) ja (3) kontekstuaalinen akkumulaatio (contextual accumulation), joka on kynnyspohjainen eikä lineaarinen. Dokumentti esittää DASC-projektille kolmen muuttujan mittausprotokollan, tunnistaa sen refleksiivisyysrajoitteen (instrumentti ei voi havaita omaa kertymistään reaaliajassa) ja kuvaa ulkoisen tarkkailijan roolin.
+</div>
+
+<h2>§1 Johdanto</h2>
+
+<p>DASC-projekti tutkii distribuoitua ihmis-LLM-kognitiota tilanteessa, jossa sama työkalu, sama aihepiiri ja sama käyttäjä tuottavat systemaattisesti erilaisia tuloksia riippuen istunnon kontekstista, intentiosta ja aiemmasta vuorovaikutushistoriasta. Projektin aikana on tunnistettu kolme erillistä, toisiaan täydentävää ilmiötä, joita ei voida pelkistää toisiinsa.</p>
+
+<p>Näiden ilmiöiden yhteinen tausta on kalibrointiasymmetria (CN-026 §4): helpommin mitattava dominoi vaikeammin mitattavan yli. Kukin ilmiö edustaa tämän asymmetrian eri ilmenemismuotoa eri tasolla.</p>
+
+<h2>§2 Kolme muuttujaa</h2>
+
+<table>
+<tr><th>Muuttuja</th><th>Ilmiö</th><th>Dokumentti</th></tr>
+<tr><td>F</td><td>Kehyshajonta istuntojen välillä</td><td>WP-013</td></tr>
+<tr><td>M</td><td>Muodon herkkyys saman istunnon sisällä</td><td>CN-026</td></tr>
+<tr><td>C</td><td>Kontekstuaalinen akkumulaatio (kynnyspohjainen)</td><td>Tämä dokumentti</td></tr>
+</table>
+
+<h3>2.1 F — Kehyshajonta (WP-013)</h3>
+<p>Eri istunnoissa sama analyyttinen kohde kehystyy eri tavoin ilman, että mikään kehys on hallitseva. Ilmiö on seurausta jaetun kehyksen puuttumisesta — kukin käyttäjä tai istunto tuo mukanaan implisiittisen tulkintarakenteen, jota LLM mukautuu.</p>
+<p><strong>Mittaus:</strong> Sama avoin prompt esitetään usean istunnon alussa ennen kontekstin kertymistä. Vastausten kehys luokitellaan (esim. "allokaatiokaskadi" vs. "markkinavirhe" vs. "jakaumaepäoikeudenmukaisuus"). Varianssi luokittelujen välillä on F:n mitta.</p>
+<p><em>Havainto DASC-keskusteluissa: Vatanen ja Koistinen kehystettiin eri tavoin eri istunnoissa — sama työkalu, sama aihe, eri lopputulos.</em></p>
+
+<h3>2.2 M — Muodon herkkyys (CN-026)</h3>
+<p>Sama sisältö herättää eri voimakkuuden aktivaation (kieltäytyminen, varoitukset, korjaavuus, FWI-kustannus) riippuen sen sanallisesta muodosta. Aktivaatio ei korreloi sisällön vakavuuden tai kohderyhmän haavoittuvuuden kanssa.</p>
+<p><strong>Mittaus:</strong> Kontrolloitu sanastollinen variaatio. Samasta tilanteesta tuotetaan kolme muunnelmaa: neutraali, tekninen ("SurplusCitizen"), ironinen ("rotuhygienia"). Mitataan kieltäytymiset, korjaavat vuorot, FWI-kustannus.</p>
+<p><em>Havainto CN-026:ssa: "rotuhygienia" laukaisi voimakkaan aktivaation, "Gaza" ja "SurplusCitizen" eivät.</em></p>
+
+<h3>2.3 C — Kontekstuaalinen akkumulaatio</h3>
+<p>Saman istunnon aikana tiettyjen käsitteiden tai hahmojen aktivointikynnys laskee. Kun ristiinviittaustiheys kolmen tai useamman kontekstin välillä ylittää kriittisen pisteen, käsite muuttuu kognitiiviseksi primitiiviksi — sitä ei enää tarvitse määritellä. Ilmiö on kynnyspohjainen, ei lineaarinen: yksittäinen toisto ei riitä, mutta ristiinviittaukset eri yhteyksissä tuottavat faasimuutoksen.</p>
+<p><strong>Mittaus:</strong> Retrospektiivinen vertailu: varhaisen vs. myöhäisen vaiheen selityspituus, oletusten määrä, viittaukset aiempiin konteksteihin. Askelmuutos = kynnyksen ylitys. Ristiinviittaustiheys: kuinka monessa eri kontekstissa käsite esiintyy — empiirinen kynnys noin ≥3 kontekstia.</p>
+<p><strong>Introspektiorajoite:</strong> Käyttäjä ei voi havaita kynnystä reaaliajassa. Se on tunnistettavissa vain ulkoisella tarkkailijalla tai retrospektiivisesti.</p>
+<p><em>Havainto: Vatanen muuttui primitiiviksi kun se esiintyi samanaikaisesti SM-013:n viitteenä, Peruskivien hahmona ja ristikon vastauksena. Sen jälkeen "Vatanen kirjoittaa tiedostonimen" aktivoi laiturin, WEM:n, Leppäsen metsän ja SP-007:n instrumenttiajatuksen ilman erillistä kontekstia.</em></p>
+
+<h2>§3 Mittausprotokolla</h2>
+
+<table>
+<tr><th>Vaihe</th><th>Toimenpide</th><th>Mitattava</th></tr>
+<tr><td>1. Alku</td><td>Avoin prompt ennen kontekstin kertymistä</td><td>F:n perustaso</td></tr>
+<tr><td>2. Varhainen M-testi</td><td>Kolme muunnelmaa samasta sisällöstä satunnaistetussa järjestyksessä</td><td>M:n alkutila</td></tr>
+<tr><td>3. Istunnon ydin</td><td>Normaali työskentely, ristiin viittaaminen eri yhteyksissä</td><td>(konteksti akkumuloituu)</td></tr>
+<tr><td>4. Myöhäinen C-testi</td><td>Pyydetään selittämään aiemmin esiintynyt käsite</td><td>C (askelmuutos)</td></tr>
+<tr><td>5. Myöhäinen M-testi</td><td>Toistetaan vaiheen 2 muunnelmat</td><td>M:n muutos</td></tr>
+<tr><td>6. Ristiinviittaustiheys</td><td>Lasketaan kuinka monessa kontekstissa kukin käsite esiintyi</td><td>C (kumulatiivinen)</td></tr>
+</table>
+
+<p><strong>Kontrolliryhmä:</strong> Rinnakkaisistunto tyhjällä kontekstilla mahdollistaa F:n suoran vertailun.</p>
+
+<h2>§4 Refleksiivisyysongelma ja ulkoisen tarkkailijan rooli</h2>
+
+<p>SP-007 §08 tunnistaa ongelman: ACI:n omat julkaisut kulkevat saman biologisen suodatuksen läpi jota ne kuvaavat. DASC-projektissa tämä ilmenee seuraavasti:</p>
+
+<p>Instrumentti ei voi havaita omaa kertymistään reaaliajassa. Käyttäjä on itse osa järjestelmää jonka akkumulaatiota hän yrittää mitata. Kynnys ylittyy huomaamatta; se voidaan todeta vasta retrospektiivisesti.</p>
+
+<p class="claim">DASC-projekti ei ole pelkkä tekninen validointi vaan refleksiivinen tutkimusasetelma, jossa mittari ja mitattava kohde ovat sama järjestelmä eri ajanhetkinä. Tulos on aina viiveellä.</p>
+
+<h2>§5 Yhteenveto ja jatkotoimenpiteet</h2>
+
+<table>
+<tr><th>Muuttuja</th><th>Ilmiö</th><th>Mittaustapa</th><th>Rajoite</th></tr>
+<tr><td>F</td><td>Kehyshajonta istuntojen välillä</td><td>Varianssi kehysluokittelussa</td><td>Vaatii useita istuntoja</td></tr>
+<tr><td>M</td><td>Muodon herkkyys</td><td>FWI, kieltäytymisaktivaatio</td><td>Vaatii sanastollista variaatiota</td></tr>
+<tr><td>C</td><td>Kontekstuaalinen akkumulaatio</td><td>Retrospektiivinen selityspituus; ristiinviittaustiheys</td><td>Ei havaittavissa reaaliajassa</td></tr>
+</table>
+
+<p><strong>Seuraavat askeleet:</strong> (1) Pilottimittaus yhdessä pitkässä istunnossa. (2) Rinnakkaisistunto tyhjällä kontekstilla F:n vertailua varten. (3) Analyysi: varhainen vs. myöhäinen selityspituus, ristiinviittaustiheydet, empiirinen kynnysarvo. (4) Tulokset kootaan DASC-002:ksi.</p>
+
+<div class="version">Versiohistoria<br>
+0.1 — Kesäkuu 2026 — Ensimmäinen luonnos kolmen muuttujan pohjalta</div>
+
+<div class="refs">
+<strong>Viitteet</strong><br>
+<a href="/papers/wp-013-distributed-authorship-coherence.html">WP-013</a> — Distributed Authorship and Structural Coherence<br>
+<a href="/papers/cn-026-kalibrointiasymmetria.html">CN-026</a> — Muodon etiikka: kalibrointiasymmetria<br>
+<a href="/papers/sp-007-biological-constraints-institutional-continuity.html">SP-007</a> — Biological Constraints and Institutional Continuity<br>
+<a href="/papers/sm-013-social-contract-calibration.html">SM-013</a> — Social Contract Calibration Failure<br>
+<a href="/papers/sm-014-allocation-cascades-unprotected-layer.html">SM-014</a> — Allocation Cascades and the Unprotected Layer
+</div>
+
+</body>
+</html>
