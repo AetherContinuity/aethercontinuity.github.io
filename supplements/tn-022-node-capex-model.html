@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TN-022 — Duration-Capable Node: CAPEX Model · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/tn-022-node-capex-model.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:720px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.93rem;font-weight:600;margin:1.4rem 0 .3rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.68rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+td.num{text-align:right;font-family:var(--mono);font-size:.8rem}
+td.label{font-weight:600}
+.scenario{border:1px solid var(--rule);padding:.8rem 1rem;margin:.8rem 0}
+.scenario h3{color:var(--accent);margin-top:0}
+.total{background:#f0ece4;font-weight:600;font-family:var(--mono)}
+.note{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  background:#f8f5f0;padding:.5rem .8rem;margin:.5rem 0;border-left:2px solid #ddd}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>TN-022 — Duration-Capable Node: CAPEX Model</h1>
+<p class="doc-id">Technical Note · Open Working Draft v0.1 · June 2026<br>
+Domain D-1 · D-4 · Companion to <a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html" style="color:var(--accent);text-decoration:none">TN-001 v1.1</a><br>
+Relates: <a href="/papers/wp-019-sgfa-retrofit-pathways.html" style="color:var(--accent);text-decoration:none">WP-019</a> · <a href="/papers/sm-010-financing-instruments-energy-clusters.html" style="color:var(--accent);text-decoration:none">SM-010</a> · <a href="/supplements/tn-011-ccu-flexibility-sink.html" style="color:var(--accent);text-decoration:none">TN-011</a></p>
+
+<div class="abstract">
+<strong>Scope</strong>
+This note provides a component-level CAPEX model for TN-001 v1.1 duration-capable energy nodes across three configuration scenarios: minimum viable (biomass-centric), standard electrolytic, and full hybrid. A 60 MW reference node is used for comparability. Results are compared against conventional CHP and the LDR-50 small heat reactor. All figures are indicative order-of-magnitude estimates derived from published technology costs and the SGFA Master Package analysis (Kuopio node, April 2026). This note does not constitute an investment appraisal.
+</div>
+
+<h2>§ 01 — Reference Node</h2>
+
+<p>The reference configuration is a 60 MW thermal output node supplying a district heating network of 15,000–25,000 households, with co-located chemical storage and VPP coordination. Three scenarios are modelled:</p>
+
+<table>
+<tr><th>Scenario</th><th>Property A</th><th>Property B</th><th>Character</th></tr>
+<tr><td><strong>S-1 Minimum</strong></td><td>Biogas CHP (Wärtsilä)</td><td>Anaerobic digestion only</td><td>Low capex, mature technology, biomass-constrained</td></tr>
+<tr><td><strong>S-2 Standard</strong></td><td>Flexible gas engine + SOFC</td><td>PEM electrolysis + methanation</td><td>Electrolytic hydrogen, grid-interactive</td></tr>
+<tr><td><strong>S-3 Full hybrid</strong></td><td>Flexible engine + SOFC</td><td>Electrolysis + Fischer-Tropsch + biogas</td><td>Liquid fuel store, maximum duration, highest capex</td></tr>
+</table>
+
+<div class="note">Scale note: figures scale approximately with MW thermal output. S-1 at 30 MW ≈ 60% of stated costs; S-3 at 120 MW ≈ 160–180% due to electrolysis capacity increases.</div>
+
+<h2>§ 02 — Component CAPEX Breakdown</h2>
+
+<h3>Property A — Dispatchable Generation</h3>
+<table>
+<tr><th>Component</th><th>S-1</th><th>S-2</th><th>S-3</th><th>Basis</th></tr>
+<tr><td>Wärtsilä flexible engine (3–6 MW units, biogas/synfuel)</td><td class="num">8–15</td><td class="num">12–20</td><td class="num">15–25</td><td>~1.5–2.5 M€/MW installed, multi-unit</td></tr>
+<tr><td>Elcogen/Convion SOFC (C250 units, baseload)</td><td class="num">—</td><td class="num">8–15</td><td class="num">10–18</td><td>~4–6 M€/MW at current pricing; declining</td></tr>
+<tr><td class="total">Property A subtotal (M€)</td><td class="num total">8–15</td><td class="num total">20–35</td><td class="num total">25–43</td><td></td></tr>
+</table>
+
+<h3>Property B — Chemical Energy Storage</h3>
+<table>
+<tr><th>Component</th><th>S-1</th><th>S-2</th><th>S-3</th><th>Basis</th></tr>
+<tr><td>Anaerobic digestion plant (biomass intake, biogas output)</td><td class="num">5–12</td><td class="num">3–6</td><td class="num">3–6</td><td>~200–400 €/kW biogas; mature technology</td></tr>
+<tr><td>PEM electrolysis (20 MW)</td><td class="num">—</td><td class="num">14–22</td><td class="num">14–22</td><td>~700–1100 €/kW installed (2026 market)</td></tr>
+<tr><td>Methanation reactor (SNG output)</td><td class="num">—</td><td class="num">8–15</td><td class="num">—</td><td>~400–750 €/kW; includes CO₂ conditioning</td></tr>
+<tr><td>Fischer-Tropsch reactor + product separation</td><td class="num">—</td><td class="num">—</td><td class="num">12–20</td><td>~600–1000 €/kW; liquid fuel output</td></tr>
+<tr><td>Liquid fuel storage tanks (F-T diesel equivalent)</td><td class="num">—</td><td class="num">—</td><td class="num">2–5</td><td>Standard above-ground tanks, ambient pressure</td></tr>
+<tr><td>Compressed biogas / SNG storage</td><td class="num">1–3</td><td class="num">2–4</td><td class="num">1–3</td><td>Buffer storage for operational flexibility</td></tr>
+<tr><td class="total">Property B subtotal (M€)</td><td class="num total">6–15</td><td class="num total">27–47</td><td class="num total">32–56</td><td></td></tr>
+</table>
+
+<h3>Property C — Heat System Anchor</h3>
+<table>
+<tr><th>Component</th><th>S-1</th><th>S-2</th><th>S-3</th><th>Basis</th></tr>
+<tr><td>Heat exchangers, district heating interface</td><td class="num">2–4</td><td class="num">3–6</td><td class="num">3–6</td><td>Standard DHN integration</td></tr>
+<tr><td>Heat accumulator (short-term thermal storage)</td><td class="num">1–3</td><td class="num">2–4</td><td class="num">2–4</td><td>Hot water tank; 4–8 h buffer</td></tr>
+<tr><td class="total">Property C subtotal (M€)</td><td class="num total">3–7</td><td class="num total">5–10</td><td class="num total">5–10</td><td></td></tr>
+</table>
+
+<h3>Property D — Market Flexibility Interface</h3>
+<table>
+<tr><th>Component</th><th>All scenarios</th><th>Basis</th></tr>
+<tr><td>VPP/SCADA platform (Wärtsilä GEMS or equivalent)</td><td class="num">1–2</td><td>SaaS + integration; ongoing licence not included</td></tr>
+<tr><td>Grid connection upgrade, metering, protection</td><td class="num">1–3</td><td>Site-specific; assumes existing grid point</td></tr>
+<tr><td class="total">Property D subtotal (M€)</td><td class="num total">2–5</td><td></td></tr>
+</table>
+
+<h3>Civil and Project Costs</h3>
+<table>
+<tr><th>Component</th><th>S-1</th><th>S-2</th><th>S-3</th></tr>
+<tr><td>Site preparation, foundations, buildings</td><td class="num">5–10</td><td class="num">8–15</td><td class="num">10–20</td></tr>
+<tr><td>Engineering, procurement, commissioning (EPC)</td><td class="num">4–8</td><td class="num">8–15</td><td class="num">10–18</td></tr>
+<tr><td>FOAK contingency (first-of-kind premium, ±30%)</td><td class="num">3–7</td><td class="num">8–15</td><td class="num">10–20</td></tr>
+<tr><td class="total">Civil + project subtotal (M€)</td><td class="num total">12–25</td><td class="num total">24–45</td><td class="num total">30–58</td></tr>
+</table>
+
+<h2>§ 03 — Scenario Totals</h2>
+
+<div class="scenario">
+<h3>S-1 — Minimum Viable (Biomass-centric)</h3>
+<p>Biogas CHP + anaerobic digestion only. Mature technology, no electrolysis, no synthesis reactor. Duration limited to biomass feedstock availability. Suited to rural nodes with reliable wet biomass supply (reed, agricultural residue). Cannot produce liquid synthetic fuel.</p>
+<table>
+<tr><th>Element</th><th>Low (M€)</th><th>High (M€)</th></tr>
+<tr><td>Property A</td><td class="num">8</td><td class="num">15</td></tr>
+<tr><td>Property B</td><td class="num">6</td><td class="num">15</td></tr>
+<tr><td>Property C</td><td class="num">3</td><td class="num">7</td></tr>
+<tr><td>Property D</td><td class="num">2</td><td class="num">5</td></tr>
+<tr><td>Civil + project</td><td class="num">12</td><td class="num">25</td></tr>
+<tr class="total"><td>Total S-1</td><td class="num">31</td><td class="num">67</td></tr>
+</table>
+<p class="note">Central estimate: <strong>45–55 M€</strong>. Comparable to a conventional biogas CHP plant of similar scale with district heating integration.</p>
+</div>
+
+<div class="scenario">
+<h3>S-2 — Standard Electrolytic (PEM + Methanation)</h3>
+<p>Flexible engine + SOFC for generation; PEM electrolysis + methanation for chemical storage. SNG output compatible with existing gas infrastructure. Grid-interactive: electrolysis absorbs surplus power, engine dispatches during scarcity. Central configuration for nodes with grid access and CO₂ feedstock.</p>
+<table>
+<tr><th>Element</th><th>Low (M€)</th><th>High (M€)</th></tr>
+<tr><td>Property A</td><td class="num">20</td><td class="num">35</td></tr>
+<tr><td>Property B</td><td class="num">27</td><td class="num">47</td></tr>
+<tr><td>Property C</td><td class="num">5</td><td class="num">10</td></tr>
+<tr><td>Property D</td><td class="num">2</td><td class="num">5</td></tr>
+<tr><td>Civil + project</td><td class="num">24</td><td class="num">45</td></tr>
+<tr class="total"><td>Total S-2</td><td class="num">78</td><td class="num">142</td></tr>
+</table>
+<p class="note">Central estimate: <strong>100–120 M€</strong>. Consistent with SGFA Master Package Kuopio analysis (120–180 M€ at 60–80 MW electrolysis scale).</p>
+</div>
+
+<div class="scenario">
+<h3>S-3 — Full Hybrid (F-T Liquid + Biogas)</h3>
+<p>Maximum duration configuration. Fischer-Tropsch liquid fuel provides highest energy density storage — months of reserve at ambient pressure. Directly compatible with Wärtsilä engines. Biogas provides parallel biomass pathway. Highest capex; justified where extended duration (Black Period resilience) is the primary design requirement.</p>
+<table>
+<tr><th>Element</th><th>Low (M€)</th><th>High (M€)</th></tr>
+<tr><td>Property A</td><td class="num">25</td><td class="num">43</td></tr>
+<tr><td>Property B</td><td class="num">32</td><td class="num">56</td></tr>
+<tr><td>Property C</td><td class="num">5</td><td class="num">10</td></tr>
+<tr><td>Property D</td><td class="num">2</td><td class="num">5</td></tr>
+<tr><td>Civil + project</td><td class="num">30</td><td class="num">58</td></tr>
+<tr class="total"><td>Total S-3</td><td class="num">94</td><td class="num">172</td></tr>
+</table>
+<p class="note">Central estimate: <strong>120–145 M€</strong>. Upper range approaches LDR-50 small heat reactor at comparable thermal output.</p>
+</div>
+
+<h2>§ 04 — Comparative Reference Points</h2>
+
+<table>
+<tr><th>Configuration</th><th>Thermal output</th><th>CAPEX (M€)</th><th>Build time</th><th>Fuel</th><th>Duration capability</th></tr>
+<tr><td>TN-001 S-1 (biomass)</td><td>60 MW</td><td>45–55</td><td>2–3 years</td><td>Biogas (local)</td><td>Seasonal (biomass-limited)</td></tr>
+<tr><td>TN-001 S-2 (electrolytic)</td><td>60 MW</td><td>100–120</td><td>3–4 years</td><td>SNG (self-produced)</td><td>Weeks–months</td></tr>
+<tr><td>TN-001 S-3 (F-T hybrid)</td><td>60 MW</td><td>120–145</td><td>3–5 years</td><td>Synthetic diesel (stored)</td><td>Months (ambient tank)</td></tr>
+<tr><td>Conventional biomass CHP</td><td>60 MW</td><td>40–70</td><td>2–3 years</td><td>Wood chip (market)</td><td>Days (fuel stock)</td></tr>
+<tr><td>LDR-50 heat reactor (FOAK)</td><td>50 MW</td><td>150–300</td><td>5–8 years</td><td>LEU (imported)</td><td>Years (fuel cycle)</td></tr>
+</table>
+
+<p class="claim">At comparable thermal output, TN-001 S-2 and S-3 are in the same investment order of magnitude as LDR-50, but buildable on current regulatory frameworks, faster, with dispatchable output and self-produced fuel. The duration advantage of LDR-50 (fuel cycle years) is real; the cost and regulatory risk are also substantially higher at FOAK stage.</p>
+
+<h2>§ 05 — Revenue Model and Payback</h2>
+
+<p>The four-revenue-stream model from SM-010 applies directly. The risk floor principle: node viability does not depend on speculative revenue streams.</p>
+
+<table>
+<tr><th>Revenue stream</th><th>Mechanism</th><th>Annual (M€, S-2 node)</th><th>Market risk</th></tr>
+<tr><td>Fossil fuel displacement (internal)</td><td>Own SNG/diesel replaces purchased fuel in Property A</td><td class="num">15–35</td><td>Very low — internal saving</td></tr>
+<tr><td>District heat sales</td><td>Property C output under long-term HPA contract</td><td class="num">8–20</td><td>Low — contract-based</td></tr>
+<tr><td>Reserve market (FCR-N/D, aFRR)</td><td>Property D VPP coordination</td><td class="num">2–6</td><td>Low–medium</td></tr>
+<tr><td>Surplus SNG / synthetic fuel sales</td><td>RFNBO-certified output to transport or industry</td><td class="num">2–10</td><td>Medium</td></tr>
+<tr class="total"><td>Total EBITDA (S-2 central)</td><td></td><td class="num">35–60</td><td></td></tr>
+</table>
+
+<p>Indicative payback at central CAPEX (110 M€) and central EBITDA (45 M€/year): <strong>2.4–3.1 years simple payback</strong>. IRR 14–20% at base case; 8–12% under stress (lower reserve prices, higher build cost). These figures match the SGFA Master Package analysis from the Kuopio node evaluation (April 2026).</p>
+
+<div class="note">Sensitivity: payback is most sensitive to (1) fossil fuel price — the internal saving that anchors the risk floor — and (2) district heat contract price. Reserve market and synthetic fuel revenues are upside, not floor.</div>
+
+<h2>§ 06 — Key Uncertainties</h2>
+
+<p><strong>Electrolysis cost trajectory.</strong> PEM electrolysis costs have fallen rapidly (from ~1500 €/kW in 2020 to ~700–900 €/kW in 2026) and are expected to continue declining. S-2 and S-3 costs will improve materially by 2028–2030 deployment timeframe.</p>
+
+<p><strong>SOFC pricing.</strong> Elcogen/Convion SOFC systems remain at ~4–6 M€/MW — reflecting relatively low production volumes. At higher volumes the cost structure is fundamentally different from combustion engines; learning curve effects could bring this to 2–3 M€/MW within the decade.</p>
+
+<p><strong>CO₂ feedstock availability.</strong> S-2 and S-3 methanation and F-T synthesis require local CO₂ supply. The S3 signal in TN-001 §04 applies: availability window is narrowing as industrial CO₂ streams commit to geological storage. Nodes planned after 2028 may face higher CO₂ sourcing costs.</p>
+
+<p><strong>FOAK premium.</strong> The ±30% FOAK contingency is the largest single uncertainty. For the second and subsequent nodes of identical design, civil and EPC costs fall significantly — analogous to the LDR-50 FOAK vs NOAK gap.</p>
+
+<div class="refs">
+<strong>References</strong><br>
+<a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">TN-001 v1.1</a> — Duration-Capable Local Energy Node (structural properties)<br>
+<a href="/supplements/tn-011-ccu-flexibility-sink.html">TN-011</a> — CCU as Flexibility Sink (CO₂ feedstock architecture)<br>
+<a href="/papers/wp-019-sgfa-retrofit-pathways.html">WP-019</a> — SGFA Retrofit Pathways and Regional Economic Multipliers<br>
+<a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010</a> — Financing Instruments and Energy Clusters (four-revenue model)<br>
+SGFA Master Package — Kuopio node analysis, April 2026 (internal ACI working document)<br>
+IRENA (2023). Green Hydrogen Cost Reduction. International Renewable Energy Agency.<br>
+IEA (2024). Electrolysers. Technology report.
+</div>
+
+</body>
+</html>
