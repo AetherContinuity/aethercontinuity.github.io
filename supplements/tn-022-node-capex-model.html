@@ -261,6 +261,20 @@ This note provides a component-level CAPEX model for TN-001 v1.1 duration-capabl
 
 <p>A node possessing Properties A–D and configured with a baseload heat source (LDR-50) faces a non-trivial optimisation problem: three heat sources with different temporal profiles must supply a district heating load that varies seasonally by a factor of 5–10.</p>
 
+<h3>Thermal State Equation</h3>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+D<sub>heat</sub>(t) = Q<sub>LDR</sub>(t) + Q<sub>PtX</sub>(t) + Q<sub>CHP</sub>(t) − Q<sub>store</sub>(t) − Q<sub>dump</sub>(t)
+</div>
+
+<p>The hard constraint is LDR-50 rigidity: Q<sub>LDR</sub>(t) = 50 MW ∀t. This is the system's stiff mode condition — it forces summer surplus and makes winter shortfall structurally dependent on CHP. PtX heat couples indirectly: Q<sub>PtX</sub>(t) = η<sub>th</sub>(p<sub>elec</sub>(t)) × P<sub>electrolysis</sub>(t). Low electricity price → high electrolysis → high waste heat. PtX is a market-driven heat valve, not a dispatchable source. CHP functions as the residual controller — activated only when LDR-50 + PtX + storage do not meet demand:</p>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub>PtX</sub>(t) + Q<sub>store</sub>(t))
+</div>
+
+<p>CHP is a stress buffer actuator, not a production source. This distinction matters for fuel store sizing: winter CHP dispatch consumes Property B inventory at a rate determined by demand residual, not by generation economics.</p>
+
 <h3>Three Heat Sources, Three Logics</h3>
 
 <table>
@@ -295,6 +309,14 @@ This note provides a component-level CAPEX model for TN-001 v1.1 duration-capabl
 <tr><td>SOEC integration premium over PEM</td><td class="num">+2–5 M€</td><td>S-2, S-3 (optional)</td></tr>
 <tr><td>LDR-50 minimum load negotiation</td><td class="num">0 M€</td><td>All — requires supplier confirmation</td></tr>
 </table>
+
+<p><strong>Optimisation objective extension.</strong> Thermal balance adds a fourth objective to the CAPEX/Duration/Resilience triplet — a thermal infeasibility penalty that forces the system to account for LDR-50 rigidity:</p>
+
+<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
+J<sub>thermal</sub> = ∫|D<sub>heat</sub>(t) − ΣQ<sub>i</sub>(t)| dt → min
+</div>
+
+<p>This penalises both surplus (summer dump) and deficit (winter shortfall). It makes SOEC and thermal storage CAPEX decisions dynamic rather than static — their value depends on the full annual load profile, not on peak sizing alone.</p>
 
 <p class="claim">Without thermal balance optimisation, a node with LDR-50 baseload will either dump summer heat (waste) or over-build CHP (inefficient). With SOEC integration, the summer surplus becomes higher hydrogen yield — transforming a thermal liability into a chemical asset.</p>
 
