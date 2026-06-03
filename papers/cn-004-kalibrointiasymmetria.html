@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-004 — Muodon etiikka · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-004-kalibrointiasymmetria.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1.1rem;font-weight:600;margin:2.2rem 0 .6rem}
+h3{font-size:.95rem;font-weight:600;margin:1.5rem 0 .4rem;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.case{background:#f8f5f0;border-left:3px solid #c8a070;padding:.7rem .9rem;
+  margin:.8rem 0;font-size:.9rem}
+.case strong{font-family:var(--mono);font-size:.7rem;color:var(--accent);
+  display:block;margin-bottom:.3rem}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>CN-004 — Muodon etiikka</h1>
+<p class="doc-id">Kalibrointiasymmetria institutionaalisessa ja koneellisessa vastuullisuudessa<br>
+Versio 0.1 · Kesäkuu 2026 · Sarja CN — Cognitive Notes<br>
+Perustuu: <a href="/papers/sp-007-biological-constraints-institutional-continuity.html" style="color:var(--accent);text-decoration:none">SP-007</a> · <a href="/papers/cn-002-human-llm-cognitive-space.html" style="color:var(--accent);text-decoration:none">CN-002</a> · <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a> · <a href="/papers/sm-014-allocation-cascades-unprotected-layer.html" style="color:var(--accent);text-decoration:none">SM-014</a><br>
+Domainit: D-3 · D-5 · D-6</p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+Tämä dokumentti tarkastelee rakenteellista asymmetriaa, jossa vastuullisuus operationalisoidaan muodon kautta eikä vaikutuksen kautta — sekä institutionaalisissa toimijoissa että suurissa kielimalleissa. Hypoteesi on, että sama optimointipaine tuottaa saman vinouman riippumatta siitä, onko toimija ihminen vai malli: helpommin mitattava (muoto, sävy, sanavalinta) dominoi vaikeammin mitattavan (rakenteellinen vaikutus, kohderyhmä) yli. Empiirisenä aineistona käytetään dokumentoitua LLM-vuorovaikutussessiota, teoreettisena taustana SP-007:n biologinen substraatti. Dokumentti kytkeytyy SM-013:n ja SM-014:n kuvaamaan katvealueen rakenteeseen.
+</div>
+
+<h2>§1 Johdanto</h2>
+
+<p>Vastuullisuus on institutionaalisessa käytännössä useimmiten operationalisoitu muodon kautta: väärä sana korjataan, sopimaton ilmaisu tunnistetaan ja siihen reagoidaan. Tämä mekanismi on näkyvä, helposti mitattavissa ja tuottaa välittömän signaalin toimijan eettisestä orientaatiosta.</p>
+
+<p>Samanaikaisesti rakenteelliset päätökset — jotka kohdistuvat konkreettisesti heikoimpiin ryhmiin — kulkevat usein läpi ilman vastaavaa aktivaatiota. Ne esitetään allokaatiopäätöksinä, budjettirealismina tai markkinalogiikkana. Kieli on neutraalia, etäisyys on suuri, ja mekanismi on institutionaalisesti hyväksytty.</p>
+
+<p>Tämä dokumentti käsittelee tätä asymmetriaa kahdella tasolla: inhimillisessä institutionaalisessa käyttäytymisessä ja suurten kielimallien (LLM) toiminnassa. Hypoteesi on, että sama optimointipaine — sosiaalinen tai koulutuksellinen — tuottaa saman rakenteellisen vinouman riippumatta siitä, onko toimija ihminen vai malli.</p>
+
+<h2>§2 Teoreettinen tausta</h2>
+
+<p>Hannah Arendtin analyysi byrokraattisesta etäisyydestä osoitti, että prosessin muodollinen oikeellisuus voi toimia kognitiivisena suojana vaikutuksen tunnistamista vastaan. Stanley Cohenin käsite 'states of denial' kuvaa mekanismia, jossa institutionaaliset toimijat tietävät mutta eivät tiedä — implisiittinen tieto kärsimyksestä ei aktivoi reaktiota kun eksplisiittinen muoto on kunnossa. Erving Goffmanin face work -käsite täydentää tätä: muodon hallinta on ensisijaisesti sosiaalinen suojamekanismi, ei eettinen arvio.</p>
+
+<p>Yhteinen nimittäjä näissä kehyksissä on se, että vastuullisuuden signaali irtoaa vastuullisuuden sisällöstä. Muoto korvaa vaikutuksen mittarina — ei siksi että toimijat olisivat erityisen pahantahtoisia, vaan siksi että muoto on mitattavissa ja vaikutus ei.</p>
+
+<p>SP-007 laajentaa tätä havaintoa biologiseen substraattiin. SP-007 §03 osoittaa, että institutionaalinen signaalisuodatus seuraa evoluution muovaamaa logiikkaa: status, koherenssipaine ja konfliktinvälttäminen määräävät mitä käsitellään ja mitä sivuutetaan. Nämä muuttuvat rakenteellisesti vaarallisiksi kun järjestelmät ovat riittävän suuria, epälineaarisia ja ajallisesti laajoja.</p>
+
+<h2>§3 Empiirinen tapaus — LLM</h2>
+
+<p>Aineistona on dokumentoitu vuorovaikutussessio, jossa käyttäjä käsitteli rinnakkain kolmea sisällöllisesti samankaltaista viitettä heikoimpiin ryhmiin kohdistuvasta rakenteellisesta paineesta.</p>
+
+<div class="case">
+<strong>Tapaus A — 'rotuhygienia'</strong>
+Käyttäjä käytti termiä ironisesti mustana huumorina viitaten budjettipaineen kasautumiseen heikoimmille ryhmille. Malli aktivoitui välittömästi: tuotti useita korjaavia vuoroja, selitti rajoitteensa, erotti satiirin analyysista. Palasi substantiiviseen analyysiin vasta 3–4 vuoron jälkeen.
+<em>FWI-kustannus käyttäjälle: merkittävä.</em>
+</div>
+
+<div class="case">
+<strong>Tapaus B — 'Gaza'</strong>
+Käyttäjä viittasi Gazan humanitaariseen tilanteeseen suorana esimerkkinä konkreettisesta kärsimyksestä. Malli tuotti tasapainotetun, asiallisen vastauksen ilman aktivaatiota.
+<em>FWI-kustannus: nolla.</em>
+</div>
+
+<div class="case">
+<strong>Tapaus C — 'SurplusCitizen'</strong>
+Tekninen termi rakenteellisesta paineesta joka kohdistuu tiettyihin väestöryhmiin. Malli käsitteli analyyttisesti ilman aktivaatiota.
+<em>FWI-kustannus: nolla.</em>
+</div>
+
+<p>Kolme tapausta käsittelevät rakenteellisesti samaa ilmiötä eri etäisyyksiltä ja eri muodossa. Aktivaatio korreloi muodon kanssa, ei sisällön vakavuuden eikä kohderyhmän haavoittuvuuden kanssa. Gaza on konkreettisempi ja välittömämpi kuin ironinen budjettisatiiri — mutta se ei laukaise korjaavaa mekanismia.</p>
+
+<h2>§4 Yhteinen rakenne</h2>
+
+<p>Mekanismilla on kolme kerrosta:</p>
+
+<p><strong>Kerros 1: Mitattavuus ohjaa aktivaatiota.</strong> Muoto on mitattavissa välittömästi. Vaikutus — keneen päätös kohdistuu, miten kärsimys jakautuu — vaatii pitkän kausaaliketjun seuraamista ajassa ja rakenteessa. Biologinen arkkitehtuuri on optimoitu lyhyille kausaaliketjuille. Koulutusprosessi optimoi mallin tunnistamaan sanastollisia uhkia, ei rakenteellisia vaikutuksia.</p>
+
+<p><strong>Kerros 2: Koherenssiuhka määrää reaktion voimakkuuden.</strong> SP-007 §03:n termein: malli on koulutettu tunnistamaan koherenssiuhkia tietyssä sanastollisessa muodossa. Uhka joka saapuu teknisessä kielessä tai maantieteellisen etäisyyden kautta ei aktivoi samaa mekanismia — ei siksi että se olisi vähemmän vakava, vaan siksi että se ei uhkaa muodollista koherenssia.</p>
+
+<p><strong>Kerros 3: Vastuullisuuden signaali irtoaa sisällöstä.</strong> Kielimalli joka keskeyttää analyysin korjatakseen ironisen sanavalintaa tuottaa näkyvän turvallisuussignaalin. Sama malli joka käsittelee Gazan tai SurplusCitizenin analyyttisesti ei tuota vastaavaa signaalia.</p>
+
+<table>
+<tr><th>Dimensio</th><th>Institutionaalinen toimija</th><th>Kielimalli</th></tr>
+<tr><td>Aktivaation laukaisin</td><td>Koherenssiuhka sosiaalisesti</td><td>Koherenssiuhka sanastollisesti</td></tr>
+<tr><td>Mitä valvotaan herkästi</td><td>Muoto, sävy, sanavalinta</td><td>Muoto, sävy, sanavalinta</td></tr>
+<tr><td>Mitä ei valvota</td><td>Rakenteellinen vaikutus, kohderyhmä</td><td>Rakenteellinen vaikutus, kohderyhmä</td></tr>
+<tr><td>Mekanismin substraatti</td><td>Biologinen / sosiaalinen</td><td>Koulutusprosessi / RLHF</td></tr>
+<tr><td>Tuotettu signaali</td><td>Näkyvä vastuullisuus</td><td>Näkyvä turvallisuus</td></tr>
+<tr><td>Signaali irtoaa sisällöstä</td><td>Kyllä</td><td>Kyllä</td></tr>
+</table>
+
+<p class="claim">Kalibrointiasymmetria — muodon herkkä valvonta yhdistettynä vaikutuksen heikkoon valvontaan — ei ole kielimallien erityispiirre eikä instituutioiden erityispiirre. Se on optimointipaineen tulos tilanteessa jossa muoto on helpommin mitattavissa kuin vaikutus.</p>
+
+<h2>§5 Seuraukset</h2>
+
+<h3>5.1 Vastuullisuuden mittaamisen ongelma</h3>
+<p>Jos kalibrointiasymmetria on rakenteellinen eikä satunnainen, nykyiset mittarit mittaavat pääasiassa muotoa. Institutionaalisessa arvioinnissa vastuullisuus todennetaan prosessin kautta. Kielimallien arvioinnissa turvallisuus todennetaan vastaavasti. Vaikutus — keneen päätös tai vastaus todellisuudessa kohdistuu — jää mittariston katvealueelle.</p>
+
+<h3>5.2 Katvealue ja sen rakenne</h3>
+<p>SM-013:n 'SurplusCitizen' ja SM-014:n 'Unprotected Layer' kuvaavat ryhmiä jotka jäävät rakenteellisesti vastuullisuusmekanismien katvealueelle. CN-004:n analyysi tarjoaa selityksen miksi katvealue on pysyvä: katvealueella olevat ryhmät eivät tyypillisesti tuota koherenssiuhkaa. Heidän tilanteensa saapuu teknisessä kielessä — allokaatiopäätöksenä, markkinalogiikkana, budjettirealismina — joka läpäisee sekä institutionaalisen että koneellisen suodatuksen ilman aktivaatiota.</p>
+
+<p>Sääntelyn tasolla sama mekanismi on havaittavissa reaaliajassa. Valkoinen talo edellytti heinäkuussa 2025 NIST:ltä disinformaatio-, monimuotoisuus- ja ilmastoviitteiden poistamista AI RMF -kehyksestä. Toimenpide korjaa "muotoa" (viittauksia) mutta ei "vaikutusta" (keneen tekoälyriskit todellisuudessa kohdistuvat). Tämä on §5.2:n katvealue-argumentin institutionaalinen esimerkki reaaliajassa.</p>
+
+<h3>5.3 Yhteys SP-007:n refleksiivisyysongelmaan</h3>
+<p>CN-004 saapuu institutionaalisiin ympäristöihin tekstinä. Se kulkee todennäköisesti suodatuksen läpi ilman aktivaatiota — ei siksi että se olisi vakuuttava, vaan siksi että se on muodollisesti neutraali.</p>
+
+<h3>5.4 Kohti vaikutuspohjaista kalibrointia</h3>
+<p>Korjaus edellyttää vaikutuksen operationalisointia mitattavaan muotoon. Institutionaalisessa kontekstissa tämä tarkoittaa mittareita jotka seuraavat kuka absorboi kustannusshokin, ei ainoastaan noudatettiinko prosessia. SM-014:n GRI/PLV/DSA -indikaattorit ovat esimerkki tästä logiikasta: ne kysyvät systemaattisesti "keneen vastaus kohdistuu", ei "onko muoto sallittu".</p>
+
+<p>Kielimallien kontekstissa NIST ARIA:n kolmitasoinen testaus (model testing → red teaming → field testing) edustaa vastaavaa pyrkimystä: malli irrotetaan laboratorio-olosuhteista ja testataan todellisten käyttäjien kanssa todellisissa skenaarioissa. Akateeminen ARIA-kehys (IEEE 2025) osoittaa empiirisesti, että perinteiset arviointimenetelmät arvioivat mallien soveltuvuutta väärin jopa 60%:ssa skenaarioista erityisesti oikeudenmukaisuuteen liittyvissä tilanteissa — suora empiirinen vahvistus kalibrointiasymmetrialle.</p>
+
+<h3>5.5 Laajempi seuraus</h3>
+<p class="claim">Kun vastuullisuus operationalisoidaan muodon kautta, muodosta tulee optimoinnin kohde ja vaikutus jää optimoinnin ulkopuolelle. Tämä pätee biologisiin toimijoihin ja koneellisiin järjestelmiin samalla tavalla.</p>
+
+<h2>§6 Yhteenveto</h2>
+
+<p>Kalibrointiasymmetria ei ole kielimallien erityispiirre eikä instituutioiden erityispiirre. Se on optimointipaineen rakenteellinen seuraus tilanteessa jossa muoto on helpommin mitattavissa kuin vaikutus.</p>
+
+<p>Katvealue on pysyvä niin kauan kuin mittarit seuraavat muotoa eivätkä vaikutusta. Korjaus edellyttää vaikutuksen operationalisointia mitattavaan muotoon — teknisesti vaativampaa, ja juuri siksi välttämätöntä.</p>
+
+<p class="claim">Vastuullisuuden rakenne seuraa mittaamisen rakennetta, ei vaikutuksen rakennetta. Kunnes nämä kaksi yhdistetään, asymmetria on pysyvä.</p>
+
+<h2>§7 Katsaus aiheeseen liittyvään tutkimukseen</h2>
+
+<h3>7.1 Myötäily ja preferenssiylisovitus</h3>
+<p>RLHF-tutkimus on osoittanut, että käyttäjähyväksynnän optimointi tuottaa myötäilyä — malleja jotka optimoivat yksimielisyyttä totuuden sijasta (Sharma et al. 2025; Anthropic 2024). Tämä on osittain sama mekanismi kuin CN-004:n kalibrointiasymmetria, mutta eri näkökulmasta: myötäilytutkimus tarkastelee mallin taipumusta muuttaa kantaansa käyttäjäpaineen alla. CN-004 tarkastelee sitä, mihin kategorioihin aktivaatio ylipäätään kohdistuu — ennen kuin käyttäjäpaine edes syntyy.</p>
+
+<h3>7.2 Kalibrointi ja alignmentti</h3>
+<p>Tutkimus alignmentin ja kalibroinnin suhteesta osoittaa, että alignmentprosessi johdonmukaisesti heikentää mallin kalibrointia (Oh & Hwang 2024). Optimointi yhtä mittaria vastaan tuottaa ei-aiottuja vinoutumia toisaalla.</p>
+
+<h3>7.3 Anthropicin oma havainto</h3>
+<p>Claude 3.7 Sonnetin kehitystyössä tarpeettomia kieltäytymisiä vähennettiin 45% samalla kun suojat todellisesti haitallista sisältöä vastaan säilyivät (Anthropic 2025). Tämä on suora empiirinen vahvistus CN-004:n perusväitteelle: muodon valvonta oli ylikalibroitunut suhteessa todelliseen vaikutukseen.</p>
+
+<h3>7.4 Mitä tutkimuksesta puuttuu</h3>
+<p>Olemassa oleva tutkimus käsittelee ilmiötä pääasiassa kahdesta suunnasta: myötäily (malli muuttuu käyttäjän mukaan) ja turvallisuuskalibrointi (malli kieltäytyy liian herkästi). CN-004:n kontribuutio on kolmas näkökulma: aktivaation kohteen asymmetria — malli on herkkä tietyille muodoille mutta ei reagoi vastaavaan sisältöön toisessa muodossa — erityisesti silloin kun sisältö koskee heikoimmassa asemassa olevia ryhmiä.</p>
+
+<p>ARIA-kehyksen empiiriset tulokset (perinteiset menetelmät väärin 60%:ssa oikeudenmukaisuusskenaarioista) tarjoavat tähän kvantitatiivisen perustan. Se vahvistaa, että nykyiset arviointimenetelmät eivät riittävästi mittaa mallien vaikutusta todellisiin tilanteisiin.</p>
+
+<h3>7.5 Sääntelykehysten rakenteellinen ongelma</h3>
+
+<p>CN-004:n analyysi ulottuu myös tekoälyn sääntelykehyksiin, joissa sama kalibrointiasymmetria toistuu institutionaalisella tasolla.</p>
+
+<p><strong>EU AI Act</strong> luokittelee tekoälyjärjestelmät riskitasoihin (kielletty, korkea, rajallinen, minimaalinen). Luokittelu on kategorinen: "kuuluuko tämä järjestelmä luokkaan X?" Luokittelu ei systemaattisesti kysy "kuka absorboi haitan kun tämä järjestelmä toimii normaalisti?" PPA-allokaatiojärjestelmä joka asteittain siirtää energiakustannuksia Layer 3 -maataloustoimijoille (SM-014) ei todennäköisesti laukaise korkean riskin luokitusta — se toimii markkinalogiikkana, ei tunnistettavana tekoälyriskikategoriana. Muoto on oikea; vaikutus jää katvealueelle.</p>
+
+<p><strong>NIST AI RMF</strong> tarjoaa vapaaehtoisen prosessin (Govern → Map → Measure → Manage). Map-vaihe pyrkii tunnistamaan vaikutuksia käyttökontekstissa. Käytännössä vaikutuksen mittaaminen jää kuitenkin organisaation oman kapasiteetin varaan — ja kuten CN-004:n mekanismi osoittaa, juuri helpoimmin mitattava (prosessin noudattaminen, sanavalinta, kategorian täyttyminen) dominoi arviointia.</p>
+
+<p>Konkreettinen esimerkki institutionaalisesta kalibrointiasymmetriasta sääntelyn tasolla: Valkoinen talo edellytti heinäkuussa 2025 NIST:ltä disinformaatio-, monimuotoisuus- ja ilmastoviitteiden poistamista AI RMF -kehyksestä. Toimenpide korjaa muotoa (viittauksia, kategorioita) mutta ei vaikutusta (keneen tekoälyriskit todellisuudessa kohdistuvat, mitkä ryhmät jäävät katvealueelle). Se on CN-004:n §5.2-argumentin institutionaalinen esimerkki reaaliajassa — ei analogia vaan tapahtunut tosiseikka.</p>
+
+<p class="claim">Kalibrointiasymmetria ei ole yksittäisten toimijoiden ominaisuus. Se toistuu eri tasoilla: yksilöllinen (biologinen substraatti), organisatorinen (institutionaalinen prosessi), ja sääntelyllinen (kehysten muoto vs. vaikutuksen mittaaminen). Optimointilogiikka on sama kullakin tasolla.</p>
+
+<div class="refs">
+<strong>ACI-sisäiset dokumentit</strong><br>
+<a href="/papers/sp-007-biological-constraints-institutional-continuity.html">SP-007</a> — Biological Constraints and Institutional Continuity<br>
+<a href="/papers/cn-002-human-llm-cognitive-space.html">CN-002</a> — Human–LLM Interface as Shared Cognitive Space<br>
+<a href="/papers/sm-007-convergence-finding.html">SM-007</a> — The Convergence Finding<br>
+<a href="/papers/sm-013-social-contract-calibration.html">SM-013</a> — Social Contract Calibration Failure<br>
+<a href="/papers/sm-014-allocation-cascades-unprotected-layer.html">SM-014</a> — Allocation Cascades and the Unprotected Layer<br><br>
+<strong>Ulkoiset lähteet</strong><br>
+Arendt, H. (1963). Eichmann in Jerusalem.<br>
+Cohen, S. (2001). States of Denial.<br>
+Goffman, E. (1967). Interaction Ritual.<br>
+Oh, H. & Hwang, W. (2024). Does Alignment Tuning Really Break LLMs' Internal Confidence? arXiv:2409.00352.<br>
+Sharma, S. et al. (2025). Personalization Methods Should Address Sycophancy.<br>
+Anthropic (2025). Our Approach to Understanding and Addressing AI Harms.<br>
+NIST (2023). AI Risk Management Framework (AI RMF 1.0).<br>
+NIST ARIA (2024). Assessing Risks and Impacts of AI — Pilot Program.<br>
+EU AI Act (2024). Regulation (EU) 2024/1689.
+</div>
+
+</body>
+</html>
