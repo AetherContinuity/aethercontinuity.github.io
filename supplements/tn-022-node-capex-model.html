@@ -271,10 +271,12 @@ This note provides a component-level CAPEX model for TN-001 v1.1 duration-capabl
 <h3>Thermal State Equation</h3>
 
 <div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
-D<sub>heat</sub>(t) = Q<sub>LDR</sub>(t) + Q<sub>PtX</sub>(t) + Q<sub>CHP</sub>(t) − Q<sub>store</sub>(t) − Q<sub>dump</sub>(t)
+D<sub>heat</sub>(t) = Q<sub>LDR</sub>(t) + Q<sub>recover</sub>(t) + Q<sub>CHP</sub>(t) + Q<sub>store</sub>(t) − Q<sub>dump</sub>(t)
+
+where Q<sub>recover</sub>(t) = Q<sub>electrolysis waste</sub>(t) + Q<sub>HP</sub>(t) = η<sub>th</sub> · P<sub>electrolysis</sub>(t) + COP · W<sub>HP</sub>(t)
 </div>
 
-<p>The hard constraint is LDR-50 rigidity: Q<sub>LDR</sub>(t) = 50 MW ∀t. This is the system's stiff mode condition — it forces summer surplus and makes winter shortfall structurally dependent on CHP. PtX heat couples indirectly: Q<sub>PtX</sub>(t) = η<sub>th</sub>(p<sub>elec</sub>(t)) × P<sub>electrolysis</sub>(t). Low electricity price → high electrolysis → high waste heat. PtX is a market-driven heat valve, not a dispatchable source. CHP functions as the residual controller — activated only when LDR-50 + PtX + storage do not meet demand:</p>
+<p>The hard constraint is LDR-50 rigidity: Q<sub>LDR</sub>(t) = 50 MW ∀t. This is the system's stiff mode condition — it forces summer surplus and makes winter shortfall structurally dependent on CHP. VTT's containerised PEM system (2024) adds an industrial heat pump to the electrolysis unit, changing the thermal coupling fundamentally. Q<sub>recover</sub>(t) now includes both electrolysis waste heat and heat pump output: at COP = 3–4, the heat pump can deliver 3–4 MWh of heat per MWh of electrical input, recovering low-grade waste heat to district heating temperatures. PtX is therefore not only a market-driven heat valve — it is simultaneously a heat producer. This has a counterintuitive consequence: in summer, PEM + heat pump may <em>worsen</em> the LDR-50 surplus problem rather than solve it. LDR-50 and PEM are not automatically synergistic heat sources; under certain conditions they compete. CHP functions as the residual controller — activated only when LDR-50 + PtX + storage do not meet demand:</p>
 
 <div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
 Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub>PtX</sub>(t) + Q<sub>store</sub>(t))
@@ -303,7 +305,9 @@ Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub
 
 <p><strong>1. Thermal storage (Property C enlargement).</strong> Store excess summer heat in hot water accumulators. Requires 200–400 MWh thermal capacity (2,000–8,000 m³ water tanks). CAPEX addition: 5–15 M€.</p>
 
-<p><strong>2. High-temperature electrolysis (SOEC).</strong> Route LDR-50 surplus heat directly into the electrolysis process at 700–850°C. SOEC efficiency improves from ~85% to ~95% when external heat replaces electrical heating. This transforms the summer surplus from a liability into a productivity gain — higher hydrogen yield per kWh electricity. Requires thermal integration between LDR-50 and Property B SOEC units. CAPEX premium over PEM: 2–5 M€.</p>
+<p><strong>PEM system value beyond hydrogen.</strong> The key insight from VTT's PEM system is that its value in a TN-001 node is not only the hydrogen it produces but its role as a thermal flexibility element. PEM operating at minimum load in summer avoids heat surplus; at maximum load in winter it simultaneously produces hydrogen (refilling Property B store), recovers heat (supplementing Property C), and participates in reserve markets (Property D). CHP fuel consumption is reduced because PEM covers part of the thermal load. This expands the S-2 economic frontier: the same investment now delivers hydrogen, SNG precursor, waste heat recovery, heat pump integration, and reserve market flexibility — without separate components. The CAPEX efficiency of S-2 improves relative to TN-022 §02 assumptions.</p>
+
+<p><strong>2. High-temperature electrolysis (SOEC).</strong> Route LDR-50 surplus heat into electrolysis at 700–850°C, improving efficiency from ~85% to ~95% and transforming summer surplus into higher hydrogen yield. TRL note: PEM (VTT containerised system, commercial 2024) is significantly further along than SOEC for this application. SOEC carries a higher FOAK penalty in the 2027–2032 deployment window — realistic commercial availability is 2030+. In the near term, PEM with industrial heat pump is the more reliable thermal recovery path. CAPEX premium over PEM when commercially available: 2–5 M€.</p>
 
 <p><strong>3. Seasonal CHP dispatch shift.</strong> Reduce CHP to near zero in summer; run LDR-50 at minimum; dump surplus heat to ambient if necessary. Operationally feasible but wasteful — acceptable only if thermal storage is constrained by site.</p>
 
