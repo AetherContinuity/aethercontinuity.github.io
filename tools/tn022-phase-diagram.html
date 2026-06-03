@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TN-022 Phase Diagram · ACI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#141209;font-family:'DM Mono','Courier New',monospace;color:#c8b89a}
+  input[type=range]{accent-color:#8b6a30;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState, useEffect, useRef } = React;
+
+const W = 520, H = 380;
+const PAD = { top: 30, right: 30, bottom: 55, left: 60 };
+const P_MIN = 0, P_MAX = 150, R_MIN = 1, R_MAX = 10;
+
+function dominant(p, ratio, co2, biomass) {
+  const elec_viable = Math.max(0, 1 - (p - 35) / 45);
+  const co2_factor = co2;
+  const s1_score = biomass * 0.6 - p * 0.002 + 0.15;
+  const fuel_saving = Math.max(0, (55 - p) / 55) * co2_factor;
+  const s2_score = fuel_saving * 0.8 + elec_viable * 0.5 + co2_factor * 0.4
+                   - (1 - biomass) * 0.1 + (0.35 + ratio * 0.03) * 0.2;
+  const liquid_bonus = ratio > 5 ? (ratio - 5) * 0.08 : 0;
+  const s3_score = fuel_saving * 0.7 + co2_factor * 0.5
+                   + (0.6 + ratio * 0.05) * 0.25 + liquid_bonus
+                   - (p > 70 ? (p - 70) * 0.01 : 0);
+  const scores = [s1_score, s2_score, s3_score];
+  const max = Math.max(...scores);
+  if (scores[2] === max) return 2;
+  if (scores[1] === max) return 1;
+  return 0;
+}
+
+function ptxBoundary(ratio) { return 42 + ratio * 2.8; }
+
+const COLORS = {
+  0: { fill: "#2d6a4f", label: "S-1", name: "Biomass CHP" },
+  1: { fill: "#1d4e8c", label: "S-2", name: "Electrolytic SNG" },
+  2: { fill: "#7c4a1e", label: "S-3", name: "F-T Liquid Hybrid" },
+};
+
+function PhaseDiagram() {
+  const canvasRef = useRef(null);
+  const [co2, setCo2] = useState(0.8);
+  const [biomass, setBiomass] = useState(0.7);
+  const [hovered, setHovered] = useState(null);
+  const [cursor, setCursor] = useState(null);
+
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
+
+  const toCanvas = (p, r) => ({
+    x: PAD.left + ((p - P_MIN) / (P_MAX - P_MIN)) * innerW,
+    y: PAD.top + (1 - (r - R_MIN) / (R_MAX - R_MIN)) * innerH,
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.scale(dpr, dpr);
+
+    const STEP = 3;
+    for (let px = PAD.left; px < PAD.left + innerW; px += STEP) {
+      for (let py = PAD.top; py < PAD.top + innerH; py += STEP) {
+        const p = P_MIN + ((px - PAD.left) / innerW) * (P_MAX - P_MIN);
+        const r = R_MIN + (1 - (py - PAD.top) / innerH) * (R_MAX - R_MIN);
+        ctx.fillStyle = COLORS[dominant(p, r, co2, biomass)].fill + "cc";
+        ctx.fillRect(px, py, STEP, STEP);
+      }
+    }
+    ctx.fillStyle = "rgba(20,18,14,0.08)";
+    ctx.fillRect(PAD.left, PAD.top, innerW, innerH);
+
+    // PtX/CHP boundary
+    ctx.beginPath(); ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = "rgba(255,220,100,0.85)"; ctx.lineWidth = 1.5;
+    let first = true;
+    for (let r = R_MIN; r <= R_MAX; r += 0.1) {
+      const p = ptxBoundary(r);
+      const { x, y } = toCanvas(p, r);
+      if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+
+    const mb = toCanvas(ptxBoundary(5.5), 5.5);
+    ctx.save(); ctx.translate(mb.x + 10, mb.y - 8); ctx.rotate(-0.3);
+    ctx.font = "9px 'DM Mono',monospace"; ctx.fillStyle = "rgba(255,220,100,0.9)";
+    ctx.fillText("PtX \u2194 CHP boundary", 0, 0); ctx.restore();
+
+    // Axes
+    ctx.strokeStyle = "rgba(200,180,150,0.4)"; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(PAD.left, PAD.top);
+    ctx.lineTo(PAD.left, PAD.top + innerH);
+    ctx.lineTo(PAD.left + innerW, PAD.top + innerH);
+    ctx.stroke();
+
+    ctx.font = "10px 'DM Mono',monospace"; ctx.textAlign = "center";
+    [0, 30, 60, 90, 120, 150].forEach(p => {
+      const x = PAD.left + ((p - P_MIN) / (P_MAX - P_MIN)) * innerW;
+      ctx.strokeStyle = "rgba(200,180,150,0.15)";
+      ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + innerH + 4); ctx.stroke();
+      ctx.fillStyle = "rgba(200,180,150,0.7)"; ctx.fillText(p, x, PAD.top + innerH + 16);
+    });
+    ctx.textAlign = "right";
+    [1, 2, 4, 6, 8, 10].forEach(r => {
+      const y = PAD.top + (1 - (r - R_MIN) / (R_MAX - R_MIN)) * innerH;
+      ctx.strokeStyle = "rgba(200,180,150,0.12)";
+      ctx.beginPath(); ctx.moveTo(PAD.left - 4, y); ctx.lineTo(PAD.left + innerW, y); ctx.stroke();
+      ctx.fillStyle = "rgba(200,180,150,0.7)"; ctx.fillText(r + "\xd7", PAD.left - 8, y + 4);
+    });
+
+    ctx.font = "11px 'DM Mono',monospace"; ctx.fillStyle = "rgba(200,180,150,0.9)";
+    ctx.textAlign = "center";
+    ctx.fillText("Electricity price (\u20ac/MWh)", PAD.left + innerW / 2, H - 4);
+    ctx.save(); ctx.translate(12, PAD.top + innerH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText("Winter/Summer demand ratio", 0, 0); ctx.restore();
+
+    if (cursor) {
+      const { x, y } = toCanvas(cursor.p, cursor.r);
+      ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + innerH);
+      ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + innerW, y);
+      ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "white"; ctx.fill();
+    }
+  }, [co2, biomass, cursor]);
+
+  const handleMouseMove = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    if (mx < PAD.left || mx > PAD.left + innerW || my < PAD.top || my > PAD.top + innerH) {
+      setCursor(null); setHovered(null); return;
+    }
+    const p = P_MIN + ((mx - PAD.left) / innerW) * (P_MAX - P_MIN);
+    const r = R_MIN + (1 - (my - PAD.top) / innerH) * (R_MAX - R_MIN);
+    setCursor({ p, r });
+    setHovered({ p: Math.round(p), r: r.toFixed(1), s: dominant(p, r, co2, biomass), boundary: ptxBoundary(r).toFixed(0) });
+  };
+
+  return React.createElement("div", {
+    style: { minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center",
+             justifyContent: "center", padding: "2rem 1rem" }
+  },
+    React.createElement("div", { style: { fontSize: "0.6rem", letterSpacing: "0.18em", color: "#4a3a20", marginBottom: "0.4rem" } },
+      "TN-022 · AETHER CONTINUITY INSTITUTE · PHASE DIAGRAM"),
+    React.createElement("h1", { style: { fontSize: "1.1rem", fontWeight: 400, color: "#e0cda8", letterSpacing: "0.04em", marginBottom: "0.25rem" } },
+      "Node Configuration Phase Diagram"),
+    React.createElement("p", { style: { fontSize: "0.7rem", color: "#5a4a30", marginBottom: "1.5rem", textAlign: "center", maxWidth: 520 } },
+      "S-1 / S-2 / S-3 dominance by electricity price \xd7 seasonal demand ratio"),
+
+    React.createElement("canvas", {
+      ref: canvasRef,
+      style: { display: "block", cursor: "crosshair" },
+      onMouseMove: handleMouseMove,
+      onMouseLeave: () => { setCursor(null); setHovered(null); }
+    }),
+
+    React.createElement("div", { style: { display: "flex", gap: "1.5rem", marginTop: "1rem", flexWrap: "wrap", justifyContent: "center" } },
+      ...[0, 1, 2].map(s =>
+        React.createElement("div", { key: s, style: { display: "flex", alignItems: "center", gap: "0.4rem" } },
+          React.createElement("div", { style: { width: 14, height: 14, borderRadius: 2, background: COLORS[s].fill, border: "1px solid rgba(255,255,255,0.2)" } }),
+          React.createElement("span", { style: { fontSize: "0.7rem" } },
+            React.createElement("strong", { style: { color: "#e0cda8" } }, COLORS[s].label),
+            " \u2014 " + COLORS[s].name))),
+      React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.4rem" } },
+        React.createElement("div", { style: { width: 20, height: 2, backgroundImage: "repeating-linear-gradient(90deg,rgba(255,220,100,0.85) 0 6px,transparent 6px 10px)" } }),
+        React.createElement("span", { style: { fontSize: "0.7rem", color: "rgba(255,220,100,0.8)" } }, "PtX \u2194 CHP boundary"))),
+
+    React.createElement("div", {
+      style: { height: 44, display: "flex", alignItems: "center", gap: "2rem", padding: "0 1.5rem",
+               background: "rgba(200,180,150,0.04)", border: "1px solid rgba(200,180,150,0.1)",
+               borderRadius: 4, margin: "1rem 0", minWidth: 480, justifyContent: "center", flexWrap: "wrap" }
+    },
+      hovered ? [
+        React.createElement("span", { key: "p", style: { fontSize: "0.7rem" } },
+          React.createElement("span", { style: { color: "#5a4a30" } }, "p_elec "),
+          React.createElement("strong", { style: { color: "#e0cda8" } }, hovered.p + " \u20ac/MWh")),
+        React.createElement("span", { key: "r", style: { fontSize: "0.7rem" } },
+          React.createElement("span", { style: { color: "#5a4a30" } }, "ratio "),
+          React.createElement("strong", { style: { color: "#e0cda8" } }, hovered.r + "\xd7")),
+        React.createElement("span", { key: "b", style: { fontSize: "0.7rem" } },
+          React.createElement("span", { style: { color: "#5a4a30" } }, "PtX/CHP "),
+          React.createElement("strong", { style: { color: "rgba(255,220,100,0.9)" } }, hovered.boundary + " \u20ac/MWh")),
+        React.createElement("span", { key: "s", style: { fontSize: "0.7rem" } },
+          React.createElement("span", { style: { color: "#5a4a30" } }, "dominant "),
+          React.createElement("strong", { style: { color: COLORS[hovered.s].fill, filter: "brightness(1.6)" } },
+            COLORS[hovered.s].label + " \u2014 " + COLORS[hovered.s].name)),
+      ] : React.createElement("span", { style: { fontSize: "0.7rem", color: "#3a2c1a" } }, "Move cursor over diagram")),
+
+    React.createElement("div", { style: { display: "flex", gap: "3rem", background: "rgba(200,180,150,0.04)", border: "1px solid rgba(200,180,150,0.1)", borderRadius: 4, padding: "1rem 2rem" } },
+      ...[
+        { label: "CO\u2082 availability", value: co2, setter: setCo2, note: co2 < 0.5 ? "S3 signal active" : "sufficient" },
+        { label: "Biomass feedstock", value: biomass, setter: setBiomass, note: biomass > 0.7 ? "S-1 viable" : "limited" },
+      ].map(({ label, value, setter, note }) =>
+        React.createElement("div", { key: label, style: { display: "flex", flexDirection: "column", gap: "0.4rem", minWidth: 180 } },
+          React.createElement("div", { style: { display: "flex", justifyContent: "space-between" } },
+            React.createElement("span", { style: { fontSize: "0.68rem" } }, label),
+            React.createElement("strong", { style: { fontSize: "0.68rem", color: "#e0cda8" } }, Math.round(value * 100) + "%")),
+          React.createElement("input", { type: "range", min: 0.1, max: 1, step: 0.05, value,
+            onChange: e => setter(parseFloat(e.target.value)), style: { width: "100%" } }),
+          React.createElement("span", { style: { fontSize: "0.6rem", color: "#4a3a28" } }, note)))),
+
+    React.createElement("div", { style: { marginTop: "1.5rem", fontSize: "0.6rem", color: "#3a2c1a", maxWidth: 520, textAlign: "center", lineHeight: 1.7 } },
+      "TN-022 \xb7 ACI June 2026 \xb7 Phase boundaries indicative \u2014 derived from \u00a708 cost and duration model. ",
+      React.createElement("a", { href: "/supplements/tn-022-node-capex-model.html", style: { color: "#5a4a30" } }, "Full document \u2192")));
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(PhaseDiagram));
+</script>
+</body>
+</html>
