@@ -172,6 +172,60 @@ Käytännössä:
 
 <p>DASC-002:n pilottimittaus voisi testata onko CA-indeksi laskettavissa ihminen–LLM-vuorovaikutuksesta: mitataan S_f (muodon aktivaatiot, kieltäytymiset, FWI) ja S_i (rakenteellinen vaikutus sisältöön) saman istunnon eri vaiheissa. Jos CA laskee istunnon edetessä (kontekstuaalinen akkumulaatio pienentää muodon herkkyyttä), se on mitattava osoitus C-muuttujan vaikutuksesta.</p>
 
+<h2>§8 — CA ≤ 1: saavutettavuus, ei tavoite</h2>
+
+<p>CA-indeksi (CA = S_f / S_i) ei konvergoidu yleisesti arvoon ≤ 1 sosioteknisissä järjestelmissä. Tämä ei ole mittausvirhe vaan rakenteellinen seuraus kolmesta ominaisuudesta:</p>
+
+<ul>
+<li><strong>Refleksiivisyys:</strong> S_i:n operationalisointi muuttaa sen S_f:ksi. Jokainen vaikutusmittari alkaa ohjata järjestelmän käyttäytymistä — Goodhartin laki, Campbellin laki.</li>
+<li><strong>Häntäjakaumarakenne:</strong> Vaikutukset realisoituvat harvoin mutta suurina, mikä tekee S_i:stä epävakaan estimaatin. Optimoimalla S_i-mittaria maksimoidaan todennäköisimmin todellisen tavoitteen kannalta pahimmat hännät.</li>
+<li><strong>Mittariekologinen paine:</strong> Mikä tahansa näkyvä S_i-komponentti alkaa itse ohjata järjestelmän käyttäytymistä. HDCI-komponentti joka nousee rahoitusohjauksen piiriin on jo muuttunut uudeksi S_f:ksi.</li>
+</ul>
+
+<p class="claim">CA ≤ 1 ei ole optimointitavoite vaan paikallinen tasapaino, joka on saavutettavissa vain rajatuissa, suljetuissa järjestelmissä. Kompleksisissa sosioteknisissä järjestelmissä se on liikkuva maali: jokainen korjaus siirtää asymmetrian uuteen paikkaan.</p>
+
+<h3>§8.1 — Navigoitava CA (CA-N)</h3>
+
+<p>CN-027 ottaa käyttöön johdetun käsitteen. Sen sijaan että tavoitellaan CA → 1, tavoitellaan CA-vektoria:</p>
+
+<div class="math">
+CA_N = (S_f/S_i, σ_CA, ΔCA/Δt)
+
+missä:
+  S_f/S_i   = hetkellinen kalibrointiasymmetria
+  σ_CA      = varianssi mittariekosysteemissä
+              (mittarin "heilunta Goodhartin paineessa")
+  ΔCA/Δt   = kalibrointidriftin suunta ja nopeus
+
+Tavoite ei ole:  CA → 1
+Tavoite on:      |ΔCA/Δt| → 0  (drift hidastuu)
+                 σ_CA minimoituu (heilunta pienenee)
+                 CA pysyy ennustettavassa rajassa
+</div>
+
+<p>Tämä muuttaa CA:n skalaarista kontrolloitavaksi prosessiksi. Instrumenttisuunnittelun tehtävä ei ole saavuttaa tasapaino — se on hidastaa ajautumista ja tehdä ajautuminen näkyväksi ennen kuin se ylittää toimintarajan.</p>
+
+<h3>§8.2 — CA vektorina: HDCI ↔ BRIDGE ↔ DASC-projektiot</h3>
+
+<p>Yksittäinen CA-mittaus kuvaa vain yhden projektion todellisuudesta. Kolmen tason malli tuottaa kolme toisistaan riippumatonta projektiota:</p>
+
+<table>
+<tr><th>Projektio</th><th>Instrumentti</th><th>Mittaa</th></tr>
+<tr><td>Terveydenhuolto</td><td>HDCI (DCI, IAI, RVI, RKI, PAI)</td><td>Integraation vaikutus hoitokokonaisuudessa</td></tr>
+<tr><td>Sääntely/instituutio</td><td>BRIDGE/MOSAIC</td><td>Sandboxin vaikutus vs. muodon noudattaminen</td></tr>
+<tr><td>Kognitiivinen/LLM</td><td>DASC-001 (F, M, C)</td><td>Kontekstuaalinen akkumulaatio vs. muodon herkkyys</td></tr>
+</table>
+
+<p>Yhdessä nämä muodostavat CA-vektorin, ei skalaarin. Vektori vähentää yksittäisen mittarin manipulointikelpoisuutta — yksittäisen komponentin optimointi ei nosta portfoliopistettä. Se paljastaa myös missä S_f kasvaa ilman S_i:n kasvua: jos HDCI paranee mutta BRIDGE-sandbox-tulokset eivät muutu, asymmetria on siirtynyt institutionaaliselle tasolle.</p>
+
+<h3>§8.3 — Keskeinen täsmennys CN-027:n johtopäätökseen</h3>
+
+<p>Aiempi muotoilu: "järjestelmä ei voi mitata omaa kalibrointiasymmetriaansa reaaliajassa."</p>
+
+<p>Täsmennys: järjestelmä voi hetkellisesti saavuttaa CA ≤ 1, mutta ei voi ylläpitää sitä ilman että S_i alkaa muuttua S_f:ksi. Pysyvä CA ≤ 1 edellyttäisi stabiilia, sulkeutunutta järjestelmää — joka ei muutu, ei opi, ei ole ulkopuolisten toimijoiden paineen kohteena. Kompleksinen sosiotekniinen järjestelmä on kaikki tätä vastaan.</p>
+
+<p class="claim">CA ei ole tasapainopiste. Se on dynaaminen attraktori, jota voi ainoastaan hidastaa — ei lukita. Instrumenttisuunnittelun tehtävä on tehdä CA navigoitavaksi: näkyväksi, rajoitetuksi ja ennustettavaksi, jotta päätöksentekijä voi kompensoida jäljellä olevan asymmetrian. Tämä on WEM:n, HDCI:n, DASC-001:n ja TN-022:n faasidiagrammin yhteinen tehtävä. Ne eivät väitä poistavansa CA:ta. Ne tekevät siitä navigoitavan.</p>
+
 <h2>§7 — Johtopäätös</h2>
 
 <p>Kalibrointiasymmetria ei ole yksittäisten järjestelmien vika. Se on optimointipaineen rakenteellinen seuraus kaikkialla missä muoto on helpommin mitattavissa kuin vaikutus — mikä on lähes aina.</p>
