@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-027 — Kalibrointiasymmetria kolmella tasolla · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-027-kalibrointiasymmetria-kolmella-tasolla.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.95rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.math{background:#f8f5f0;border:1px solid #e0d8cc;padding:.6rem 1rem;
+  margin:.8rem 0;font-family:var(--mono);font-size:.85rem}
+.level{border-left:3px solid #c8a070;padding:.7rem 1rem;margin:.8rem 0;background:#fdf9f4}
+.level strong{font-family:var(--mono);font-size:.7rem;color:var(--accent);
+  display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.08em}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>CN-027 — Kalibrointiasymmetria kolmella tasolla</h1>
+<p class="doc-id">Teoria, mittari ja instituutio yhteisessä kehyksessä<br>
+Versio 0.1 · Kesäkuu 2026 · Domainit D-1 · D-3 · D-5<br>
+Perustuu: <a href="/papers/cn-026-kalibrointiasymmetria.html" style="color:var(--accent);text-decoration:none">CN-026</a> · <a href="/papers/wp-016-health-data-continuity-index.html" style="color:var(--accent);text-decoration:none">WP-016</a> · BRIDGE/MOSAIC (EU/IHI 2025–2028)<br>
+Kytkeytyy: <a href="/papers/dasc-001-mittausprotokolla.html" style="color:var(--accent);text-decoration:none">DASC-001</a> · <a href="/papers/sm-007-convergence-finding.html" style="color:var(--accent);text-decoration:none">SM-007</a></p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+CN-026 dokumentoi kalibrointiasymmetrian yksittäisenä rakenteellisena ilmiönä: järjestelmät optimoivat mitattavaa muotoa vaikutuksen sijasta. Tämä dokumentti laajentaa diagnoosin kolmelle tasolle — teoriaan (CN-026), mittariin (WP-016 HDCI) ja instituutioon (BRIDGE/MOSAIC) — ja osoittaa, että sama asymmetria toistuu kaikilla kolmella tasolla itsenäisesti mutta rakenteellisesti samanlaisena. CA-indeksi (CN-026 §4) toimii yhteisena mittarina läpi tasojen. Johtopäätös: kalibrointiasymmetria ei ole yksittäisten järjestelmien vika vaan optimointipaineen rakenteellinen seuraus kaikkialla missä muoto on helpommin mitattavissa kuin vaikutus.
+</div>
+
+<h2>§1 — Kolme tasoa, yksi rakenne</h2>
+
+<p>CN-026 osoitti kalibrointiasymmetrian toimivan kahdella rinnakkaisella substraatilla: institutionaalisessa toiminnassa ja suurissa kielimalleissa. Sama optimointilogiikka tuottaa saman vinouman riippumatta siitä, onko toimija ihminen vai malli.</p>
+
+<p>Tässä dokumentissa väitämme, että asymmetria ulottuu vielä kolmannelle tasolle — institutionaaliseen mekanismiin itsessään. Kolmen tason rakenne on:</p>
+
+<table>
+<tr><th>Taso</th><th>Dokumentti</th><th>Ydinongelma</th><th>CA-arvo</th></tr>
+<tr><td><strong>Teoria</strong></td><td>CN-026</td><td>Kalibrointiasymmetria: muotoa valvotaan, vaikutusta ei — koska muoto on helpommin mitattavissa</td><td>Kuvaa CA:n rakennetta</td></tr>
+<tr><td><strong>Mittari</strong></td><td>WP-016 (HDCI)</td><td>Terveydenhuollon integraation vaikutusta ei mitata — nykyiset mittarit (kustannus, jono, sairastavuus) jättävät integraation katvealueelle</td><td>CA &gt;&gt; 1 → tavoite CA → 1</td></tr>
+<tr><td><strong>Instituutio</strong></td><td>BRIDGE/MOSAIC</td><td>Sääntelysandbox mahdollistaa muodon joustoa — mutta sandboxin oma muoto (raportointi, läpimeno) voi tulla optimoinnin kohteeksi vaikutuksen sijasta</td><td>CA &gt;&gt; 1 ilman HDCI-kytkentää</td></tr>
+</table>
+
+<h2>§2 — Kytkentä 1: Teoria → Mittari (CN-026 → HDCI)</h2>
+
+<p>CN-026:n perusväite: järjestelmät optimoivat sitä mitä ne mittaavat. Terveydenhuollossa mitataan kustannusta, jonojen pituutta ja sairastavuutta — ja siksi ne ovat optimoinnin kohteena. Integraation laatu ei näy näissä mittareissa, joten se jää rakenteellisesti katvealueelle.</p>
+
+<p>HDCI (WP-016) on instrumentti joka sulkee tämän katvealueen. Se operationalisoi vaikutuksen — integroidun hoidon laadun — mitattavaan muotoon. CN-026 §5.4 asettaa tälle eksplisiittisen vaatimuksen: "korjaus edellyttää vaikutuksen operationalisointia mitattavaan muotoon." HDCI:n viisi komponenttia (DCI, IAI, RVI, RKI, PAI) ovat yritys tehdä juuri se.</p>
+
+<p>Erityisen kiinnostava on RKI_adjusted — koordinoimattoman polyfarmasian mittari, joka on suora proxy vaikutukselle (haittatapahtumat), ei muodolle (onko hoitosuunnitelma kirjattu). Se on esimerkki siitä, miten Si-termi (vaikutusvaste) voidaan operationalisoida mittariksi ilman että se palautuu muodon valvontaan.</p>
+
+<div class="math">
+CA_terveydenhuolto = S_f / S_i
+
+Nykyinen seuranta: S_f = kustannus, jono, sairastavuus (korkea)
+                   S_i = integraation laatu (ei mitata → lähes 0)
+                   CA >> 1
+
+HDCI-tavoite:      S_f = sama dokumentaatio
+                   S_i = RKI_adjusted, IAI_conditioned (mitattu)
+                   CA → 1
+</div>
+
+<h2>§3 — Kytkentä 2: Mittari → Instituutio (HDCI → BRIDGE)</h2>
+
+<p>BRIDGE-hankkeen (EU/IHI 2025–2028) lähtökohta on seuraava: terveydenhuollon innovaatiot — yhdistelmäterapiat, tekoälylääkinnälliset laitteet, geeni- ja soluterapiat — eivät mahdu nykyisiin sääntelykehyksiin täysimittaisesti. Regulatory sandbox tarjoaa muodon joustoa: innovaattori saa kehittää ja testata tuotetta sääntelyadaptaatioiden alla valvottujen viranomaisten kanssa.</p>
+
+<p>Tässä on CN-026:n kuvaama riski: sandboxin muoto — raportointi, dokumentaatio, läpimeno, sääntelymuodon noudattaminen — voi tulla optimoinnin kohteeksi vaikutuksen sijasta. Sandboxi voi tuottaa näkyvän turvallisuussignaalin ("olemme testanneet sääntelyn puitteissa") ilman että sen vaikutusta potilaaseen mitataan.</p>
+
+<p>HDCI tarjoaa ratkaisun: jos sandboxin arviointi kytketään integraatiomittareihin — miten hyvin innovaatio integroituu potilaan hoitokokonaisuuteen — sandboxista tulee väline vaikutuksen parantamiseksi, ei pelkästään muodon väliaikaiseksi sallimiseksi.</p>
+
+<div class="math">
+CA_sandbox_tyypillinen = S_f / S_i
+
+S_f = raportit, läpimeno, sääntelymuoto (korkea)
+S_i = kliininen vaikutus (harvoin mitattu)
+CA >> 1
+
+CA_sandbox_HDCI-kytkennällä:
+S_f = sama muoto
+S_i = HDCI-mittarit integraatiolle (mitattu)
+CA → 1
+</div>
+
+<h2>§4 — Kytkentä 3: Instituutio → Teoria (BRIDGE → CN-026, takaisinkytkentä)</h2>
+
+<p>BRIDGE-hankkeen MOSAIC-malli — jossa sandboxeja rakennetaan modulaarisista "palikoista" — on institutionaalinen vastaus CN-026:n asymmetriaan. MOSAIC mahdollistaa sandboxin muodon räätälöinnin teknologian vaatimusten mukaan, vähentäen painetta sovittaa innovaatio olemassa olevaan muottiin.</p>
+
+<p>Mutta CN-026 §5.3 (refleksiivisyys) asettaa tähän varauman: MOSAIC itse on dokumentti, prosessi, muoto. Se voi läpäistä oman suodatuksensa ilman aktivaatiota — samoin kuin CN-026 itse tunnistaa kulkevansa suodatuksen läpi neutraalina analyysina. Kysymys kuuluu: kuka mittaa sandboxin vaikutusta?</p>
+
+<p>Jos vastaus on "sandboxin hallinnoija itse", refleksiivisyysongelma toistuu. HDCI voi toimia ulkoisena instrumenttina — aivan kuten DASC-projektissa ulkoinen tarkkailija (LLM toisessa roolissa) pystyi havaitsemaan kontekstuaalisen kynnyksen jota käyttäjä ei reaaliajassa nähnyt.</p>
+
+<p class="claim">Rakenne on rekursiivinen: kalibrointiasymmetria esiintyy teoriassa joka kuvaa sitä, mittarissa joka yrittää korjata sen, ja instituutiossa joka toteuttaa korjausta. Jokaisella tasolla tarvitaan ulkoinen tarkkailija tai instrumentti joka näkee saman asymmetrian tasolta käsin.</p>
+
+<h2>§5 — CA-indeksi yhteisenä kielenä</h2>
+
+<p>CN-026:n CA-indeksi (CA = S_f / S_i) toimii yhteisena mittarina läpi kolmen tason:</p>
+
+<table>
+<tr><th>Järjestelmä</th><th>S_f (muotovaste)</th><th>S_i (vaikutusvaste)</th><th>CA</th></tr>
+<tr><td>Nykyinen terveydenhuollon seuranta</td><td>Kustannus, jono, sairastavuus</td><td>Integraation laatu (ei mitattu)</td><td>&gt;&gt; 1</td></tr>
+<tr><td>HDCI-pilotti (tavoite)</td><td>Dokumentaatio, prosessit</td><td>RKI_adjusted, IAI_conditioned</td><td>→ 1</td></tr>
+<tr><td>BRIDGE-sandbox (tyypillinen)</td><td>Raportit, läpimeno, sääntelymuoto</td><td>Kliininen vaikutus (harvoin mitattu)</td><td>&gt;&gt; 1</td></tr>
+<tr><td>BRIDGE + HDCI-kytkentä</td><td>Sama muoto + integraatiomittari</td><td>Mitattu HDCI:llä</td><td>lähellä 1</td></tr>
+<tr><td>LLM-turvallisuuskalibrointi (CN-026 tapaus A)</td><td>Sanavalinta, muoto (rotuhygienia)</td><td>Rakenteellinen vaikutus (Gaza, SurplusCitizen)</td><td>&gt;&gt; 1</td></tr>
+<tr><td>ARIA-arviointi (tavoite)</td><td>Sama prosessi</td><td>Vaikutus kohderyhmiin (mitattu)</td><td>→ 1</td></tr>
+</table>
+
+<p>Taulukko tekee näkyväksi sen mitä CN-026 kuvaili sanallisesti: sama rakenne toistuu riippumatta domainista. Muoto on aina helpommin mitattavissa. Vaikutus vaatii aina erillisen instrumentin.</p>
+
+<h2>§6 — Yhteys DASC-projektiin</h2>
+
+<p>DASC-001:n kolme muuttujaa (F, M, C) ovat CN-026:n CA-asymmetrian eri ilmentymiä eri konteksteissa:</p>
+
+<ul>
+<li><strong>F (kehyshajonta)</strong> = eri toimijat mittaavat eri asioita — CA vaihtelee toimijan ja istunnon mukaan ilman jaettua kehystä</li>
+<li><strong>M (muodon herkkyys)</strong> = järjestelmä reagoi voimakkaasti muotoon (S_f korkea) eikä vaikutukseen (S_i matala) — CN-026:n tapaukset A/B/C</li>
+<li><strong>C (kontekstuaalinen akkumulaatio)</strong> = kynnys, jossa mittausjärjestelmä alkaa olettaa vaikutuksen — juuri se mitä HDCI yrittää operationalisoida eksplisiittiseksi</li>
+</ul>
+
+<p>DASC-002:n pilottimittaus voisi testata onko CA-indeksi laskettavissa ihminen–LLM-vuorovaikutuksesta: mitataan S_f (muodon aktivaatiot, kieltäytymiset, FWI) ja S_i (rakenteellinen vaikutus sisältöön) saman istunnon eri vaiheissa. Jos CA laskee istunnon edetessä (kontekstuaalinen akkumulaatio pienentää muodon herkkyyttä), se on mitattava osoitus C-muuttujan vaikutuksesta.</p>
+
+<h2>§7 — Johtopäätös</h2>
+
+<p>Kalibrointiasymmetria ei ole yksittäisten järjestelmien vika. Se on optimointipaineen rakenteellinen seuraus kaikkialla missä muoto on helpommin mitattavissa kuin vaikutus — mikä on lähes aina.</p>
+
+<p>Kolmen tason analyysi paljastaa rakenteen rekursiivisuuden: teoria joka kuvaa asymmetriaa on itse asymmetrian alainen (CN-026 §5.3), mittari joka yrittää korjata sen altistuu Campbellin laille (WP-016 §7.4), ja instituutio joka toteuttaa korjausta voi toistaa saman vinouman (BRIDGE ilman HDCI-kytkentää).</p>
+
+<p>Tämä ei tarkoita että korjaus on mahdoton. Se tarkoittaa, että korjaus vaatii ulkoisen instrumentin tai tarkkailijan jokaisella tasolla — ja että tämä ulkoisuus on rakenteellinen vaatimus, ei valinnainen lisä.</p>
+
+<p class="claim">Järjestelmä ei voi mitata omaa kalibrointiasymmetriaansa reaaliajassa. Se tarvitsee toisen järjestelmän, toisella tasolla, toisella instrumentilla. Tämä on DASC-projektin, HDCI:n ja BRIDGE:n yhteinen rakenteellinen ehto.</p>
+
+<div class="refs">
+<strong>Perustuu</strong><br>
+<a href="/papers/cn-026-kalibrointiasymmetria.html">CN-026</a> — Muodon etiikka: kalibrointiasymmetria institutionaalisessa ja koneellisessa vastuullisuudessa<br>
+<a href="/papers/wp-016-health-data-continuity-index.html">WP-016</a> — Health Data Continuity Index (HDCI): From Cost Accounting to Integration Accounting<br>
+<a href="/papers/dasc-001-mittausprotokolla.html">DASC-001</a> — Mittausprotokolla v0.1<br>
+<a href="/papers/sm-007-convergence-finding.html">SM-007</a> — The Convergence Finding<br><br>
+<strong>Ulkoiset lähteet</strong><br>
+BRIDGE project (2025–2028). Innovative Health Initiative. VTT: MOSAIC architecture for regulatory sandboxes.<br>
+Campbell, D.T. (1979). Assessing the Impact of Planned Social Change.<br>
+NIST ARIA (2024). Assessing Risks and Impacts of AI.<br>
+EU AI Act (2024). Regulation (EU) 2024/1689.<br>
+Goodhart, C. (1975). Problems of Monetary Management.
+</div>
+
+</body>
+</html>
