@@ -95,32 +95,41 @@ svg text{font-family:'DM Mono',monospace;}
 <script>
 const { useState } = React;
 
+// [nimi, lat, lon, peakMW, dmin, co2, grid, omistaja, omistustyyppi]
+// omistustyyppi: "municipal"=kunnallinen, "regional"=suomalainen alueyhtiö, "pe"=PE/kansainvälinen
 const CITIES = [
-  ["Helsinki metro", 60.17, 24.94, 1400, 0.38, 0.8, 1.0],
-  ["Tampere",        61.50, 23.76,  420, 0.32, 0.6, 0.9],
-  ["Turku",          60.45, 22.27,  380, 0.30, 0.5, 0.8],
-  ["Oulu",           65.01, 25.47,  280, 0.28, 0.7, 0.8],
-  ["Jyväskylä",      62.24, 25.75,  180, 0.25, 0.4, 0.7],
-  ["Kuopio",         62.90, 27.68,  160, 0.24, 0.5, 0.7],
-  ["Lahti",          60.98, 25.66,  160, 0.26, 0.5, 0.7],
-  ["Pori",           61.48, 21.80,  130, 0.24, 0.5, 0.6],
-  ["Kouvola",        60.87, 26.71,  110, 0.22, 0.4, 0.6],
-  ["Vaasa",          63.10, 21.61,  100, 0.22, 0.4, 0.6],
-  ["Joensuu",        62.60, 29.76,  100, 0.22, 0.3, 0.6],
-  ["Lappeenranta",   61.06, 28.19,   95, 0.22, 0.4, 0.6],
-  ["Hämeenlinna",    60.99, 24.46,   95, 0.23, 0.3, 0.6],
-  ["Kotka",          60.47, 26.94,   90, 0.22, 0.5, 0.6],
-  ["Seinäjoki",      62.79, 22.83,   85, 0.20, 0.3, 0.5],
-  ["Mikkeli",        61.69, 27.27,   75, 0.20, 0.3, 0.5],
-  ["Rauma",          61.13, 21.50,   65, 0.20, 0.3, 0.5],
-  ["Kemi",           65.73, 24.56,   60, 0.18, 0.5, 0.5],
-  ["Rovaniemi",      66.50, 25.73,   70, 0.18, 0.2, 0.4],
-  ["Varkaus",        62.31, 27.88,   55, 0.18, 0.4, 0.5],
-  ["Tornio",         65.85, 24.14,   50, 0.17, 0.3, 0.4],
-  ["Iisalmi",        63.56, 27.19,   40, 0.16, 0.2, 0.4],
-  ["Kajaani",        64.22, 27.73,   55, 0.16, 0.2, 0.4],
-  ["Savonlinna",     61.87, 28.88,   45, 0.18, 0.2, 0.4],
+  ["Helsinki metro", 60.17, 24.94, 1400, 0.38, 0.8, 1.0, "Helen (municipal)", "municipal"],
+  ["Tampere",        61.50, 23.76,  420, 0.32, 0.6, 0.9, "Tampereen Sähkölaitos (municipal) / Elenia verkko", "mixed"],
+  ["Turku",          60.45, 22.27,  380, 0.30, 0.5, 0.8, "Turku Energia (municipal)", "municipal"],
+  ["Oulu",           65.01, 25.47,  280, 0.28, 0.7, 0.8, "Oulun Energia (municipal)", "municipal"],
+  ["Jyväskylä",      62.24, 25.75,  180, 0.25, 0.4, 0.7, "Alva (municipal)", "municipal"],
+  ["Kuopio",         62.90, 27.68,  160, 0.24, 0.5, 0.7, "KSS / Kuopion Energia (municipal)", "municipal"],
+  ["Lahti",          60.98, 25.66,  160, 0.26, 0.5, 0.7, "Lahti Energia (municipal)", "municipal"],
+  ["Pori",           61.48, 21.80,  130, 0.24, 0.5, 0.6, "Porin Energia (municipal)", "municipal"],
+  ["Kouvola",        60.87, 26.71,  110, 0.22, 0.4, 0.6, "Kymenlaakson Sähkö (regional)", "regional"],
+  ["Vaasa",          63.10, 21.61,  100, 0.22, 0.4, 0.6, "Vaasan Sähkö (municipal)", "municipal"],
+  ["Joensuu",        62.60, 29.76,  100, 0.22, 0.3, 0.6, "PKS Sähkönsiirto (regional)", "regional"],
+  ["Lappeenranta",   61.06, 28.19,   95, 0.22, 0.4, 0.6, "Elenia (PE, myyty 2018)", "pe"],
+  ["Hämeenlinna",    60.99, 24.46,   95, 0.23, 0.3, 0.6, "Elenia (PE)", "pe"],
+  ["Kotka",          60.47, 26.94,   90, 0.22, 0.5, 0.6, "Kymenlaakson Sähkö (regional)", "regional"],
+  ["Seinäjoki",      62.79, 22.83,   85, 0.20, 0.3, 0.5, "Etelä-Pohjanmaan Voima (regional)", "regional"],
+  ["Mikkeli",        61.69, 27.27,   75, 0.20, 0.3, 0.5, "CapMan Infra (PE, kaukolämpö 2024)", "pe"],
+  ["Rauma",          61.13, 21.50,   65, 0.20, 0.3, 0.5, "Rauman Energia (municipal)", "municipal"],
+  ["Kemi",           65.73, 24.56,   60, 0.18, 0.5, 0.5, "Kemin Energia (municipal)", "municipal"],
+  ["Rovaniemi",      66.50, 25.73,   70, 0.18, 0.2, 0.4, "Rovakaira (regional)", "regional"],
+  ["Varkaus",        62.31, 27.88,   55, 0.18, 0.4, 0.5, "Savon Voima (regional)", "regional"],
+  ["Tornio",         65.85, 24.14,   50, 0.17, 0.3, 0.4, "Tornion Energia (municipal)", "municipal"],
+  ["Iisalmi",        63.56, 27.19,   40, 0.16, 0.2, 0.4, "Savon Voima (regional)", "regional"],
+  ["Kajaani",        64.22, 27.73,   55, 0.16, 0.2, 0.4, "Elenia (PE, verkko 2021)", "pe"],
+  ["Savonlinna",     61.87, 28.88,   45, 0.18, 0.2, 0.4, "Suur-Savon Sähkö (regional)", "regional"],
 ];
+
+const OWN_CFG = {
+  municipal: { label: "Kunnallinen",       color: "#1d4e8c", ring: "#1d4e8c" },
+  regional:  { label: "Suom. alueyhtiö",   color: "#7c6a20", ring: "#7c6a20" },
+  pe:        { label: "PE / kansainvälinen",color: "#8b1010", ring: "#8b1010" },
+  mixed:     { label: "Sekaomistus",        color: "#4a4a4a", ring: "#4a4a4a" },
+};
 
 const ZONE_CFG = {
   P0:{label:"LDR-50 core",   color:"#1d4e8c", bg:"#eef2fa", shape:"rect"},
@@ -154,13 +163,13 @@ function App(){
   const [hov,setHov]=useState(null);
   const [mode,setMode]=useState("lrf");
 
-  const cities=CITIES.map(([name,lat,lon,peak,dmin,co2,grid])=>{
+  const cities=CITIES.map(([name,lat,lon,peak,dmin,co2,grid,owner,otype])=>{
     const lrf=calcLRF(dmin,peak,co2,grid);
     const z=getZone(lrf);
     const bci=(dmin*peak)/50;
     const[x,y]=proj(lat,lon);
     const r=Math.max(5,Math.min(20,Math.sqrt(peak)*.75));
-    return{name,lat,lon,peak,bci,lrf,z,x,y,r,nc:nodeClass(peak)};
+    return{name,lat,lon,peak,bci,lrf,z,x,y,r,nc:nodeClass(peak),owner,otype};
   });
 
   const sel=hov?cities.find(c=>c.name===hov):null;
@@ -173,7 +182,7 @@ function App(){
         React.createElement("div",{className:"map-header"},
           React.createElement("span",null,"Finland · 24 nodes"),
           React.createElement("div",{className:"toggle-row",style:{padding:0,gap:".3rem"}},
-            ["lrf","bci"].map(m=>React.createElement("button",{key:m,
+            ["lrf","bci","own"].map(m=>React.createElement("button",{key:m,
               className:`tog${mode===m?" active":""}`,
               onClick:()=>setMode(m)},m.toUpperCase())))),
         React.createElement("div",{className:"map-body"},
@@ -189,6 +198,8 @@ function App(){
               if(mode==="bci"){
                 const v=Math.min(c.bci,1.5)/1.5;
                 fillColor=`hsl(${Math.round(220-v*180)},${Math.round(30+v*50)}%,${Math.round(60-v*30)}%)`;
+              }else if(mode==="own"){
+                fillColor=OWN_CFG[c.otype]?.color||"#888";
               }else fillColor=zc.color;
               return React.createElement("g",{key:c.name,
                 onMouseEnter:()=>setHov(c.name),onMouseLeave:()=>setHov(null),
@@ -222,6 +233,8 @@ function App(){
                   `${sel.z} — ${ZONE_CFG[sel.z].label}`),
                 [["Node class",sel.nc],["Peak demand",`${sel.peak} MW`],
                  ["BCI",sel.bci.toFixed(2)],["LRF index",sel.lrf.toFixed(2)],
+                 ["Omistaja",sel.owner],
+                 ["Omistustyyppi",OWN_CFG[sel.otype]?.label||sel.otype],
                  ["LDR-50",sel.bci>1.0?"structurally sound":sel.bci>0.6?"conditional":"PEM+HP preferred"],
                  ["S-config",sel.z==="P0"||sel.z==="P1"?"Node⁺ viable":"Node (no LDR)"]
                 ].map(([k,v])=>
@@ -259,6 +272,12 @@ function App(){
                   style:{borderLeft:`3px solid ${ZONE_CFG[z].color}`}},
                   React.createElement("span",{className:"stat-val"},n),z+" "+ZONE_CFG[z].label);
               }),
+              ...Object.entries(OWN_CFG).map(([k,{label,color}])=>
+                React.createElement("div",{className:"stat-cell",key:k,
+                  style:{borderLeft:`3px solid ${color}`,gridColumn:"1/-1",marginTop:".3rem"}},
+                  React.createElement("span",{className:"stat-val",style:{fontSize:".85rem"}},
+                    cities.filter(c=>c.otype===k).length+" kpl"),
+                  label+" ("+k+")")),
               React.createElement("div",{className:"stat-cell",key:"ldr",
                 style:{gridColumn:"1/-1",borderLeft:"3px solid #1d4e8c"}},
                 React.createElement("span",{className:"stat-val"},

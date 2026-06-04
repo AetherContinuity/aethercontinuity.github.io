@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-028 — Infrastruktuurin omistussiirtymä · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-028-infrastructure-ownership-transfer.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.95rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;margin:1rem 0;color:#333}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.note{background:#f8f5f0;border:1px solid #e0d8cc;padding:.6rem 1rem;margin:.8rem 0;font-size:.88rem}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav><a href="/papers/">Papers</a><a href="/">ACI</a></nav>
+
+<h1>CN-028 — Infrastruktuurin omistussiirtymä</h1>
+<p class="doc-id">Kuntien energiainfrastruktuurin yksityistyminen ja huoltovarmuuden katvealue<br>
+Versio 0.1 · Kesäkuu 2026 · Domainit D-1 · D-2 · D-3<br>
+Perustuu: <a href="/papers/sm-014-allocation-cascades-unprotected-layer.html" style="color:var(--accent);text-decoration:none">SM-014</a> · <a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html" style="color:var(--accent);text-decoration:none">CN-007</a> · <a href="/supplements/tn-001-duration-capable-local-energy-node.html" style="color:var(--accent);text-decoration:none">TN-001</a> · <a href="/supplements/tn-022-node-capex-model.html" style="color:var(--accent);text-decoration:none">TN-022</a></p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+Suomalaiset kunnat ovat myyneet sähköverkko- ja kaukolämpöinfrastruktuuriaan systemaattisesti vuodesta 2020 alkaen — tunnistettu vähintään 50 kauppaa. Ostajina ovat toimineet sekä suomalaiset alueelliset energiayhtiöt että kansainväliset PE-rahastot (Elenia, CapMan Infra, Alfa Energy). Tämä kehitys luo rakenteellisen katvealueen huoltovarmuuden ja kriittisen infrastruktuurin hallinnan kannalta: kunta, joka on myynyt kaukolämpö- tai sähköverkkonsa, menettää operatiivisen veto-oikeuden kriisitilanteessa riippumatta siitä onko fyysinen kapasiteetti olemassa. CN-028 dokumentoi ilmiön, analysoi sen kytkennän SM-014:n allokointikaskadiin ja TN-001:n solmuarkkitehtuuriin, sekä tunnistaa tarvittavat institutinaaliset korjausmekanismit.
+</div>
+
+<h2>§1 — Ilmiön laajuus</h2>
+
+<p>Kuntien energiainfrastruktuurin myynti ei ole marginaalinen ilmiö. Julkisten lähteiden perusteella tunnistetaan vähintään 50 kauppaa vuosilta 2018–2026, joista merkittävä osa on toteutunut 2021–2022. Talouselämä (kesäkuu 2026) raportoi 13 kaupasta, mutta todellinen luku on huomattavasti suurempi.</p>
+
+<p>Myydyt omaisuuserät jakautuvat kahteen pääluokkaan:</p>
+
+<ul>
+<li><strong>Sähkönjakeluverkot</strong> — siirtyvät pääosin Elenian haltuun. Elenia on brittiläisten infrastruktuurirahastojen omistuksessa. Tampere, Kajaani, Lappeenranta, Hämeenlinna ja kymmeniä pienempiä kuntia.</li>
+<li><strong>Kaukolämpöverkot ja -liiketoiminta</strong> — ostajina sekä alueelliset suomalaiset yhtiöt (Tampereen Sähkölaitos, KSS Lämpö) että PE-rahastot (CapMan Infra Hamina ja Mikkeli, Alfa Energy Sastamala ja Äänekoski).</li>
+</ul>
+
+<h2>§2 — Kaksi eri ostajaprofiiilia</h2>
+
+<table>
+<tr><th>Tyyppi</th><th>Esimerkkejä</th><th>Kotimaisuus</th><th>Huoltovarmuusriski</th></tr>
+<tr><td>Suomalainen alueyhtiö</td><td>Tampereen Sähkölaitos, KSS Lämpö, Porin Energia</td><td>Kotimainen</td><td>Matala — toimii saman instituutiorakenteen sisällä</td></tr>
+<tr><td>PE / kansainvälinen rahasto</td><td>Elenia (brit.), CapMan Infra, Alfa Energy</td><td>Ulkomainen omistus</td><td>Korkea — optimoi tuottoa, ei huoltovarmuutta</td></tr>
+</table>
+
+<p>Erottelu on kriittinen: suomalainen alueyhtiö, vaikka se ei olisikaan alkuperäinen kunta, toimii suomalaisen lainsäädännön, Energiaviraston valvonnan ja kotimaisessa yhteiskuntasopimuksessa. Kansainvälinen PE-rahasto optimoi exitiä ja tuottoa — sen horisontilla ei ole paikallista kriisiä.</p>
+
+<h2>§3 — Katvealue: operatiivinen veto-oikeus</h2>
+
+<p>Kun kunta myy kaukolämpö- tai sähköverkkonsa, se menettää <em>operatiivisen veto-oikeuden kriisitilanteessa</em>. Tämä ei tarkoita että kapasiteetti katoaisi — putket ovat edelleen olemassa, kompressorit käyvät. Se tarkoittaa, että kriisitilanteessa — kovapakkanen, energiavajaus, alueellinen häiriö — paikallinen viranomainen ei voi säätää toimintaparametreja vaikka niiden muuttaminen olisi yhteiskunnan kannalta välttämätöntä.</p>
+
+<p>Esimerkki: kaukolämpöyhtiö on PE-rahaston omistuksessa. Poikkeustilanteessa viranomaiset haluavat priorisoida lämpöä sairaaloille ja kouluille alentamalla muiden kohteiden lämpötilaa. Omistaja voi kieltäytyä vedoten sopimusvelvoitteisiin. Kunnalla ei ole operatiivista toimivaltaa.</p>
+
+<p class="claim">Fyysinen kapasiteetti ja operatiivinen kontrolli ovat eri asioita. Omistussiirtymä poistaa jälkimmäisen säilyttäen edellisen — juuri siksi se on huoltovarmuudelle vaarallisempi kuin infrastruktuurin puute.</p>
+
+<h2>§4 — Kytkentä SM-014:n allokointikaskadiin</h2>
+
+<p>SM-014 kuvaa kolmikerroksisen allokointikaskadit jossa Layer 1 (suurteollisuus, datakeskukset) on suojattu PPA-sopimuksilla, Layer 3 (maatalous, pienyritykset) on suojaamaton. CN-028 lisää neljännen dimension: <em>omistusrakenne</em> vaikuttaa siihen kuka voi puuttua kaskadiin kriisitilanteessa.</p>
+
+<table>
+<tr><th>Layer</th><th>Suoja</th><th>Omistusriskin vaikutus</th></tr>
+<tr><td>Layer 1 (suurteollisuus)</td><td>PPA-sopimus</td><td>Ei muutu — sopimus suojaa riippumatta omistajasta</td></tr>
+<tr><td>Layer 2 (pk-teollisuus)</td><td>Osittainen</td><td>Kasvaa — PE-omistaja ei priorisoi aluetaloudellisia näkökohtia</td></tr>
+<tr><td>Layer 3 (maatalous, pienyrittäjät)</td><td>Ei suojaa</td><td>Kasvaa merkittävästi — ei sopimuksia, ei vaikutusvaltaa</td></tr>
+<tr><td>Layer 4 (kotitaloudet)</td><td>Toimitusvelvollisuus</td><td>Lainsäädäntö suojaa, mutta hinnoittelu vapaa</td></tr>
+</table>
+
+<h2>§5 — Maantieteellinen konsentraatio</h2>
+
+<p>Elenia-konsolidaatio on maantieteellisesti epätasainen. Erityisesti Itä-Suomi ja Kainuu — SM-014:n Layer 3 -vyöhykkeen ydinalue — ovat siirtyneet Elenian jakeluverkkojen piiriin. Tuusniemi (Kiviharju) on yksi esimerkki: paikallinen sähköinfrastruktuuri on brittiläisen infrastruktuurirahaston hallussa.</p>
+
+<p>Tämä on kriittistä TN-001:n solmuarkkitehtuurin kannalta: Duration-Capable Local Energy Node edellyttää jonkinasteista paikallista koordinaatiokykyä infrastruktuurin kanssa. Jos kaukolämpöverkko tai sähkönjakeluverkko on PE-rahaston omistuksessa, Node⁺-arkkitehtuurin LDR-50-kytkentä vaatii erillistä sopimusneuvottelua ulkomaisen omistajan kanssa.</p>
+
+<h2>§6 — Paradoksi: myynti voi kasvattaa kustannuksia</h2>
+
+<p>Talouselämän (2026) tunnistama paradoksi: kunta myy energiayhtiönsä taseen korjaamiseksi, mutta pitkällä aikavälillä se menettää osinkotulot ja joutuu maksamaan verkkopalveluista markkinahintaa. Myyntitulot käytetään kertaluonteisiin investointeihin, mutta jatkuva kassavirta loppuu.</p>
+
+<p>SM-012:n fiskaalinen analyysi on relevantti: 44 miljardin euron kymmenen vuoden fiskaalinen ero DC- ja SGFA-polkujen välillä sisältää osin tämän kustannusrakenteen. Kunta joka on myynyt energiainfrastruktuurinsa on heikompi ottamaan SGFA-tyyppistä paikallista resilienssi-investointia — se on menettänyt sekä tasejoustoa että tulovirran.</p>
+
+<h2>§7 — Institutionaaliset korjausmekanismit</h2>
+
+<p>Kolme mekanismia jotka voisivat pysäyttää tai osittain kääntää kehitystä:</p>
+
+<p><strong>Lunastusoikeus kriisitilanteessa.</strong> Lainsäädäntö voisi säätää kunnalle tai valtiolle lunastusoikeuden kriittiseen energiainfrastruktuuriin poikkeustilanteessa. Tämä ei estä myyntiä normaalioloissa mutta antaa operatiivisen veto-oikeuden kriisitilanteessa.</p>
+
+<p><strong>Huoltovarmuusvelvoite omistajalle.</strong> Energiaviraston sääntelyä voisi laajentaa niin, että PE-omistajan on osoitettava huoltovarmuussuunnitelma ennen kaupan hyväksyntää. Tämä nostaisi ulkomaisten ostajien kustannuksia ja suojaisi strategisimmat kohteet.</p>
+
+<p><strong>TN-001-solmu omistusrakenteen ratkaisuna.</strong> Duration-Capable Local Energy Node, joka on kunnan tai alueellisen toimijan omistama, voi toimia energiainfrastruktuurin paikallisen kontrollin palauttajana — ei korvaamalla Elenian verkkoa vaan tarjoamalla vaihtoehtoisen tuotanto- ja varastointikapasiteetin joka on paikallisessa päätösvallassa.</p>
+
+<p class="claim">TN-001-solmu ei kilpaile Elenian kanssa. Se on vastaus tilanteeseen jossa Elenia ei pysty tai halua toimia — kriisitilanne, poikkeustila tai pelkkä markkinaveto pois alhaisen tuoton alueelta.</p>
+
+<div class="nav-footer">
+<strong style="color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.5rem">NAVIGATION — STATE · CAUSE · ACTION</strong>
+<strong>STATE:</strong>
+<a href="/supplements/ACI_DA-001_v1_1.html">DA-001 — Finland Pre-Shortage 2026–2032</a> &nbsp;·&nbsp;
+<a href="/papers/sm-014-allocation-cascades-unprotected-layer.html">SM-014 — Allocation Cascades</a><br>
+<strong>CAUSE:</strong>
+<a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html">CN-007 — Kolmen vajeen malli</a> &nbsp;·&nbsp;
+<a href="/papers/sm-007-convergence-finding.html">SM-007 — Convergence Finding</a><br>
+<strong>ACTION:</strong>
+<a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">TN-001 — Local Energy Node</a> &nbsp;·&nbsp;
+<a href="/supplements/tn-022-node-capex-model.html">TN-022 — CAPEX Model</a> &nbsp;·&nbsp;
+<a href="/tools/ldr50-bci-finland.html">BCI Finland Map</a>
+</div>
+
+</body>
+</html>
