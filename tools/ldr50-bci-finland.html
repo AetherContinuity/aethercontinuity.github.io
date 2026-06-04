@@ -49,10 +49,10 @@ function lrf(dmin_f, peakMW, co2, grid) {
 function bci(dmin_f, peakMW) { return (dmin_f * peakMW) / 50; }
 
 function zone(lrfVal) {
-  if (lrfVal > 0.75) return { z: "P0", label: "LDR-50 core", color: "#2d6a4f" };
-  if (lrfVal > 0.60) return { z: "P1", label: "LDR-50 viable", color: "#7c6a20" };
-  if (lrfVal > 0.40) return { z: "P2", label: "S-2 preferred", color: "#1d4e8c" };
-  return { z: "P3", label: "S-1/S-2 optimal", color: "#5a3a20" };
+  if (lrfVal > 0.75) return { z: "P0", label: "LDR-50 core", color: "#0077bb" };
+  if (lrfVal > 0.60) return { z: "P1", label: "LDR-50 viable", color: "#ee7733" };
+  if (lrfVal > 0.40) return { z: "P2", label: "S-2 preferred", color: "#ccbb44" };
+  return { z: "P3", label: "S-1/S-2 optimal", color: "#aaaaaa" };
 }
 
 function nodeClass(peakMW) {
@@ -141,13 +141,27 @@ function App() {
             onMouseLeave: () => setHovered(null),
             style: { cursor: "pointer" }
           },
-            React.createElement("circle", {
-              cx: c.x, cy: c.y, r: c.r,
-              fill: fillColor,
-              fillOpacity: isHov ? 1 : 0.75,
-              stroke: isHov ? "#fff" : "rgba(255,255,255,0.2)",
-              strokeWidth: isHov ? 1.5 : 0.5
-            }),
+            c.z.z === "P0"
+              ? React.createElement("rect", {
+                  x: c.x-c.r*0.85, y: c.y-c.r*0.85,
+                  width: c.r*1.7, height: c.r*1.7,
+                  fill: fillColor, fillOpacity: isHov?1:0.8,
+                  stroke: isHov?"#fff":"rgba(255,255,255,0.3)",
+                  strokeWidth: isHov?1.5:0.5
+                })
+              : c.z.z === "P1"
+              ? React.createElement("polygon", {
+                  points: `${c.x},${c.y-c.r} ${c.x+c.r},${c.y} ${c.x},${c.y+c.r} ${c.x-c.r},${c.y}`,
+                  fill: fillColor, fillOpacity: isHov?1:0.8,
+                  stroke: isHov?"#fff":"rgba(255,255,255,0.3)",
+                  strokeWidth: isHov?1.5:0.5
+                })
+              : React.createElement("circle", {
+                  cx: c.x, cy: c.y, r: c.r,
+                  fill: fillColor, fillOpacity: isHov?1:0.75,
+                  stroke: isHov?"#fff":"rgba(255,255,255,0.2)",
+                  strokeWidth: isHov?1.5:0.5
+                }),
             c.r > 10 && React.createElement("text", {
               x: c.x, y: c.y + 3.5,
               textAnchor: "middle", fontSize: 6,
@@ -177,13 +191,13 @@ function App() {
         },
           React.createElement("div", { style: { fontSize: "0.6rem", color: "#7a6a50", marginBottom: "0.5rem", letterSpacing: "0.1em" } }, "LRF ZONES"),
           ...[
-            { z: "P0", label: "LDR-50 core", color: "#2d6a4f", note: "LRF > 0.75" },
-            { z: "P1", label: "LDR-50 viable", color: "#7c6a20", note: "0.60–0.75" },
-            { z: "P2", label: "S-2 preferred", color: "#1d4e8c", note: "0.40–0.60" },
-            { z: "P3", label: "S-1/S-2", color: "#5a3a20", note: "< 0.40" },
+            { z: "P0", label: "LDR-50 core", color: "#0077bb", note: "LRF > 0.75" },
+            { z: "P1", label: "LDR-50 viable", color: "#ee7733", note: "0.60–0.75" },
+            { z: "P2", label: "S-2 preferred", color: "#ccbb44", note: "0.40–0.60" },
+            { z: "P3", label: "S-1/S-2", color: "#aaaaaa", note: "< 0.40" },
           ].map(({ z, label, color, note }) =>
             React.createElement("div", { key: z, style: { display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" } },
-              React.createElement("div", { style: { width: 10, height: 10, borderRadius: "50%", background: color, flexShrink: 0 } }),
+              React.createElement("div", { style: { width: 10, height: 10, borderRadius: z==="P0"?"0":z==="P1"?"0":"50%", transform: z==="P1"?"rotate(45deg)":"none", background: color, flexShrink: 0 } }),
               React.createElement("span", { style: { fontSize: "0.65rem", color: "#c8b89a" } },
                 React.createElement("strong", null, z), ` — ${label}`),
               React.createElement("span", { style: { fontSize: "0.6rem", color: "#5a4a30", marginLeft: "auto" } }, note)))),
