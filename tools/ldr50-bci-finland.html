@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LDR-50 BCI Surface — Finland · ACI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#141209;font-family:'DM Mono','Courier New',monospace;color:#c8b89a}</style>
+</head>
+<body><div id="root"></div>
+<script>
+const { useState } = React;
+
+// Finnish cities: [name, lat, lon, peakMW, Dmin_fraction, co2_index, grid_index]
+const CITIES = [
+  ["Helsinki metro", 60.17, 24.94, 1400, 0.38, 0.8, 1.0],
+  ["Tampere",        61.50, 23.76,  420, 0.32, 0.6, 0.9],
+  ["Turku",          60.45, 22.27,  380, 0.30, 0.5, 0.8],
+  ["Oulu",           65.01, 25.47,  280, 0.28, 0.7, 0.8],
+  ["Jyväskylä",      62.24, 25.75,  180, 0.25, 0.4, 0.7],
+  ["Kuopio",         62.90, 27.68,  160, 0.24, 0.5, 0.7],
+  ["Lahti",          60.98, 25.66,  160, 0.26, 0.5, 0.7],
+  ["Kouvola",        60.87, 26.71,  110, 0.22, 0.4, 0.6],
+  ["Vaasa",          63.10, 21.61,  100, 0.22, 0.4, 0.6],
+  ["Seinäjoki",      62.79, 22.83,   85, 0.20, 0.3, 0.5],
+  ["Joensuu",        62.60, 29.76,  100, 0.22, 0.3, 0.6],
+  ["Lappeenranta",   61.06, 28.19,   95, 0.22, 0.4, 0.6],
+  ["Mikkeli",        61.69, 27.27,   75, 0.20, 0.3, 0.5],
+  ["Kotka",          60.47, 26.94,   90, 0.22, 0.5, 0.6],
+  ["Rovaniemi",      66.50, 25.73,   70, 0.18, 0.2, 0.4],
+  ["Kajaani",        64.22, 27.73,   55, 0.16, 0.2, 0.4],
+  ["Varkaus",        62.31, 27.88,   55, 0.18, 0.4, 0.5],
+  ["Iisalmi",        63.56, 27.19,   40, 0.16, 0.2, 0.4],
+  ["Kemi",           65.73, 24.56,   60, 0.18, 0.5, 0.5],
+  ["Tornio",         65.85, 24.14,   50, 0.17, 0.3, 0.4],
+  ["Pori",           61.48, 21.80,  130, 0.24, 0.5, 0.6],
+  ["Rauma",          61.13, 21.50,   65, 0.20, 0.3, 0.5],
+  ["Hämeenlinna",    60.99, 24.46,   95, 0.23, 0.3, 0.6],
+  ["Savonlinna",     61.87, 28.88,   45, 0.18, 0.2, 0.4],
+];
+
+function lrf(dmin_f, peakMW, co2, grid) {
+  const bci = (dmin_f * peakMW) / 50;
+  const dheatNorm = Math.min(peakMW / 1400, 1);
+  return 0.40*Math.min(bci,1) + 0.25*dheatNorm + 0.20*co2 + 0.15*grid;
+}
+
+function bci(dmin_f, peakMW) { return (dmin_f * peakMW) / 50; }
+
+function zone(lrfVal) {
+  if (lrfVal > 0.75) return { z: "P0", label: "LDR-50 core", color: "#2d6a4f" };
+  if (lrfVal > 0.60) return { z: "P1", label: "LDR-50 viable", color: "#7c6a20" };
+  if (lrfVal > 0.40) return { z: "P2", label: "S-2 preferred", color: "#1d4e8c" };
+  return { z: "P3", label: "S-1/S-2 optimal", color: "#5a3a20" };
+}
+
+function nodeClass(peakMW) {
+  if (peakMW < 80) return "N-1";
+  if (peakMW < 200) return "N-2";
+  if (peakMW < 500) return "N-3";
+  return "N-4";
+}
+
+// Project lat/lon to SVG (simple linear, Finland-tuned)
+const LAT_MIN = 59.5, LAT_MAX = 70.5;
+const LON_MIN = 19.0, LON_MAX = 31.8;
+const SVG_W = 340, SVG_H = 520;
+
+function project(lat, lon) {
+  const x = ((lon - LON_MIN) / (LON_MAX - LON_MIN)) * SVG_W;
+  const y = ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * SVG_H;
+  return [x, y];
+}
+
+function App() {
+  const [hovered, setHovered] = useState(null);
+  const [showBCI, setShowBCI] = useState(true);
+
+  const cities = CITIES.map(([name, lat, lon, peak, dmin, co2, grid]) => {
+    const lrfVal = lrf(dmin, peak, co2, grid);
+    const bciVal = bci(dmin, peak);
+    const z = zone(lrfVal);
+    const [x, y] = project(lat, lon);
+    const r = Math.max(5, Math.min(22, Math.sqrt(peak) * 0.8));
+    return { name, lat, lon, peak, bciVal, lrfVal, z, x, y, r, nc: nodeClass(peak) };
+  });
+
+  return React.createElement("div", {
+    style: { minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center",
+             justifyContent: "flex-start", padding: "1.5rem 1rem", gap: "1rem" }
+  },
+    React.createElement("div", { style: { fontSize: "0.58rem", letterSpacing: "0.18em", color: "#4a3a20" } },
+      "TN-022 · ACI · FINLAND LDR-50 RATIONALITY SURFACE"),
+    React.createElement("h1", { style: { fontSize: "1rem", fontWeight: 400, color: "#e0cda8", letterSpacing: "0.04em" } },
+      "LDR-50 BCI Surface — Finland"),
+    React.createElement("p", { style: { fontSize: "0.68rem", color: "#5a4a30", textAlign: "center", maxWidth: 400 } },
+      "Node architecture by location. Bubble size = peak heat demand. Colour = LRF zone (LDR-50 rationality index)."),
+
+    // Toggle
+    React.createElement("div", { style: { display: "flex", gap: "0.8rem" } },
+      ["LRF zones", "BCI values"].map((label, i) =>
+        React.createElement("button", {
+          key: i,
+          onClick: () => setShowBCI(i === 1),
+          style: {
+            fontFamily: "inherit", fontSize: "0.65rem", padding: "0.25rem 0.7rem",
+            background: (i === 1) === showBCI ? "#8b2500" : "transparent",
+            color: (i === 1) === showBCI ? "#f0e0c8" : "#7a6a50",
+            border: "1px solid #4a3a20", cursor: "pointer", borderRadius: 2
+          }
+        }, label))),
+
+    // Map
+    React.createElement("div", { style: { display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" } },
+
+      React.createElement("svg", {
+        viewBox: `0 0 ${SVG_W} ${SVG_H}`,
+        style: { width: 280, height: 430, background: "#1a180f", border: "1px solid #3a3020" }
+      },
+        // Background grid lines
+        ...[60, 62, 64, 66, 68, 70].map(lat => {
+          const [, y] = project(lat, 25);
+          return React.createElement("line", { key: lat, x1: 0, y1: y, x2: SVG_W, y2: y,
+            stroke: "rgba(200,180,150,0.06)", strokeWidth: 0.5 });
+        }),
+        ...[20, 22, 24, 26, 28, 30].map(lon => {
+          const [x] = project(65, lon);
+          return React.createElement("line", { key: lon, x1: x, y1: 0, x2: x, y2: SVG_H,
+            stroke: "rgba(200,180,150,0.06)", strokeWidth: 0.5 });
+        }),
+
+        // Cities
+        ...cities.map(c => {
+          const fillColor = showBCI
+            ? `hsl(${Math.round(30 + c.bciVal * 80)},60%,${Math.round(20 + c.bciVal * 35)}%)`
+            : c.z.color;
+          const isHov = hovered === c.name;
+          return React.createElement("g", { key: c.name,
+            onMouseEnter: () => setHovered(c.name),
+            onMouseLeave: () => setHovered(null),
+            style: { cursor: "pointer" }
+          },
+            React.createElement("circle", {
+              cx: c.x, cy: c.y, r: c.r,
+              fill: fillColor,
+              fillOpacity: isHov ? 1 : 0.75,
+              stroke: isHov ? "#fff" : "rgba(255,255,255,0.2)",
+              strokeWidth: isHov ? 1.5 : 0.5
+            }),
+            c.r > 10 && React.createElement("text", {
+              x: c.x, y: c.y + 3.5,
+              textAnchor: "middle", fontSize: 6,
+              fill: "rgba(255,255,255,0.7)", pointerEvents: "none"
+            }, c.z.z)
+          );
+        }),
+
+        // Labels for large cities
+        ...cities.filter(c => c.peak > 150).map(c =>
+          React.createElement("text", {
+            key: c.name + "_label",
+            x: c.x + c.r + 3, y: c.y + 3,
+            fontSize: 6.5, fill: "rgba(200,180,150,0.7)", pointerEvents: "none"
+          }, c.name.split(" ")[0])
+        )
+      ),
+
+      // Info panel
+      React.createElement("div", {
+        style: { width: 220, display: "flex", flexDirection: "column", gap: "0.7rem" }
+      },
+        // Legend
+        React.createElement("div", {
+          style: { background: "rgba(200,180,150,0.05)", border: "1px solid rgba(200,180,150,0.1)",
+                   padding: "0.7rem", borderRadius: 3 }
+        },
+          React.createElement("div", { style: { fontSize: "0.6rem", color: "#7a6a50", marginBottom: "0.5rem", letterSpacing: "0.1em" } }, "LRF ZONES"),
+          ...[
+            { z: "P0", label: "LDR-50 core", color: "#2d6a4f", note: "LRF > 0.75" },
+            { z: "P1", label: "LDR-50 viable", color: "#7c6a20", note: "0.60–0.75" },
+            { z: "P2", label: "S-2 preferred", color: "#1d4e8c", note: "0.40–0.60" },
+            { z: "P3", label: "S-1/S-2", color: "#5a3a20", note: "< 0.40" },
+          ].map(({ z, label, color, note }) =>
+            React.createElement("div", { key: z, style: { display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" } },
+              React.createElement("div", { style: { width: 10, height: 10, borderRadius: "50%", background: color, flexShrink: 0 } }),
+              React.createElement("span", { style: { fontSize: "0.65rem", color: "#c8b89a" } },
+                React.createElement("strong", null, z), ` — ${label}`),
+              React.createElement("span", { style: { fontSize: "0.6rem", color: "#5a4a30", marginLeft: "auto" } }, note)))),
+
+        // City detail
+        hovered && (() => {
+          const c = cities.find(x => x.name === hovered);
+          if (!c) return null;
+          return React.createElement("div", {
+            style: { background: "rgba(200,180,150,0.07)", border: `1px solid ${c.z.color}44`,
+                     padding: "0.8rem", borderRadius: 3 }
+          },
+            React.createElement("div", { style: { fontSize: "0.72rem", color: "#e0cda8", fontWeight: 600, marginBottom: "0.4rem" } }, c.name),
+            ...[
+              ["Node class", c.nc],
+              ["Peak demand", `${c.peak} MW`],
+              ["BCI", c.bciVal.toFixed(2)],
+              ["LRF", c.lrfVal.toFixed(2)],
+              ["Zone", `${c.z.z} — ${c.z.label}`],
+              ["LDR-50", c.bciVal > 1.0 ? "✓ structurally sound" : c.bciVal > 0.6 ? "~ conditional" : "✗ PEM+HP preferred"],
+            ].map(([k, v]) =>
+              React.createElement("div", { key: k, style: { display: "flex", justifyContent: "space-between", fontSize: "0.65rem", marginBottom: "0.2rem" } },
+                React.createElement("span", { style: { color: "#7a6a50" } }, k),
+                React.createElement("span", { style: { color: "#e0cda8" } }, v))));
+        })(),
+
+        // Summary stats
+        React.createElement("div", {
+          style: { background: "rgba(200,180,150,0.04)", border: "1px solid rgba(200,180,150,0.1)",
+                   padding: "0.7rem", borderRadius: 3, fontSize: "0.62rem", color: "#5a4a30", lineHeight: 1.8 }
+        },
+          React.createElement("div", { style: { color: "#7a6a50", marginBottom: "0.3rem", letterSpacing: "0.08em" } }, "NATIONAL DISTRIBUTION"),
+          React.createElement("div", null, `P0 (core): ${cities.filter(c => c.z.z === "P0").length} nodes`),
+          React.createElement("div", null, `P1 (viable): ${cities.filter(c => c.z.z === "P1").length} nodes`),
+          React.createElement("div", null, `P2 (S-2): ${cities.filter(c => c.z.z === "P2").length} nodes`),
+          React.createElement("div", null, `P3 (S-1): ${cities.filter(c => c.z.z === "P3").length} nodes`),
+          React.createElement("div", { style: { marginTop: "0.4rem", borderTop: "1px solid #3a2c1a", paddingTop: "0.4rem" } },
+            "LDR-50 rationaalisuus: " + cities.filter(c => c.bciVal > 0.6).length + "/" + cities.length + " solmua"))
+      )
+    ),
+
+    React.createElement("div", { style: { fontSize: "0.58rem", color: "#2a2010", maxWidth: 520, textAlign: "center", lineHeight: 1.7 } },
+      "Synthetic model — TN-022 §01A (N-1–N-4) + BCI/LRF methodology. Representative Finnish municipalities. Not calibrated against real district heating data. ",
+      React.createElement("a", { href: "/supplements/tn-022-node-capex-model.html", style: { color: "#4a3a20" } }, "TN-022 full document →"))
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
