@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SM-015 — Political Feedback Loop · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-015-political-feedback-loop.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.95rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;
+  margin:1rem 0;color:#333}
+.loop-step{background:#f8f5f0;border-left:3px solid #c8960c;
+  padding:.6rem 1rem;margin:.5rem 0;font-size:.9rem}
+.loop-step strong{font-family:var(--mono);font-size:.65rem;color:var(--accent);
+  display:inline-block;min-width:2rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+.nav-footer strong{color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<nav><a href="/papers/">Papers</a><a href="/">ACI</a></nav>
+
+<h1>SM-015 — Political Feedback Loop</h1>
+<p class="doc-id">Kuinka rationaaliset päätökset tuottavat yhdessä institutionaalisesti näkymättömän systeemiriskin<br>
+Versio 0.1 · Kesäkuu 2026 · Domainit D-1 · D-3 · D-4<br>
+Perustuu: <a href="/papers/sm-007-convergence-finding.html" style="color:var(--accent);text-decoration:none">SM-007</a> · <a href="/papers/sm-006-2028-convergence-window.html" style="color:var(--accent);text-decoration:none">SM-006</a> · <a href="/papers/sm-014-allocation-cascades-unprotected-layer.html" style="color:var(--accent);text-decoration:none">SM-014</a> · <a href="/papers/cn-028-infrastructure-ownership-transfer.html" style="color:var(--accent);text-decoration:none">CN-028</a> · <a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html" style="color:var(--accent);text-decoration:none">CN-007</a></p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+SM-015 kuvaa mekanismin jolla Suomen energiajärjestelmän kolme samanaikaista kehityskulkua — kuormarakenteen muutos, omistusrakenteen muutos ja säätökapasiteetin poistuminen — vahvistavat toisiaan itseään vahvistavana silmukkana. Jokainen toimija tekee rationaalisen päätöksen omassa kehyksessään: kunta kaavoittaa ja myy, Fingrid investoi kantaverkkoon, PE-rahasto optimoi tuottoa, datakeskus sopii PPA:n. Yhdessä nämä päätökset tuottavat tilanteen jonka kukaan ei olisi hyväksynyt jos se olisi ehdotettu suoraan. Tämä on SM-007:n konvergenssilöydös poliittisella tasolla — ei musta joutsen vaan täysin ennakoitavissa oleva, hitaasti rakentuva, institutionaalisesti näkymätön systeeminen vika.
+</div>
+
+<h2>§1 — Kolme kehityskulkua</h2>
+
+<p>SM-006:n 2028-ikkuna rakentuu kolmesta samanaikaisesta kehityskulusta joista jokainen on yksin hallittavissa mutta yhdessä ne sulkevat päätösikkunan.</p>
+
+<table>
+<tr><th>Kehityskulku</th><th>Nopeus</th><th>Nykytila (2026)</th><th>Suunta</th></tr>
+<tr><td><strong>Kuormarakenne</strong></td><td>Nopea (1–3v)</td><td>500 000 MW liittymäkyselyissä, puolet datakeskuksilta. Q1/2025 kulutus +10,1%. Etelä-Suomi liittymärajoitukset 2027 asti.</td><td>Yksisuuntainen ↑</td></tr>
+<tr><td><strong>Omistusrakenne</strong></td><td>Hidas mutta pysyvä (5–10v)</td><td>50+ kuntakauppaa 2018–2026. Macquarie/Allianz omistaa Elenian. CapMan, Alfa Energy laajenevat.</td><td>Peruuttamaton →</td></tr>
+<tr><td><strong>Säätökapasiteetti</strong></td><td>Hidas (5–15v)</td><td>400 MW CHP poistunut Helsingistä. Ehdollinen liityntäsopimus 250 MW+ kohteille — Fingridin institutionaalinen myönnytys.</td><td>Yksisuuntainen ↓</td></tr>
+</table>
+
+<h2>§2 — Poliittinen palautesilmukka</h2>
+
+<p>Nämä kolme kehityskulkua eivät ole rinnakkaisia — ne muodostavat itseään vahvistavan silmukan jossa jokainen rationaalinen päätös tekee seuraavan rationaalisen päätöksen todennäköisemmäksi ja väistämättömämmäksi.</p>
+
+<div class="loop-step"><strong>1 →</strong> Kunta kaavoittaa datakeskukselle tai alumiinitehtaalle. Perustelut: työpaikat, verotulot, elinvoima. Päätös on rationaalinen.</div>
+
+<div class="loop-step"><strong>2 →</strong> Energiaintensiivinen toimija sopii PPA:n. Layer 1 -suoja lukittu. Sähkönhinta ei koske heitä kriisitilanteessa.</div>
+
+<div class="loop-step"><strong>3 →</strong> Kaukolämpöverkon ja sähköverkon kysyntä ja arvo kasvavat uuden kuorman myötä. Paras myyntiaika on nyt.</div>
+
+<div class="loop-step"><strong>4 →</strong> Kunta myy energiayhtiönsä PE-rahastolle huipputuloksella. Tase korjautuu. Kertaluonteinen tulo rakennusprojekteihin.</div>
+
+<div class="loop-step"><strong>5 →</strong> PE-rahasto (Macquarie-malli) optimoi säänneltyä tuottoa: velkavipu, osingonjako, kustannussäästöt. Investoinnit minimoidaan sallitulle tasolle.</div>
+
+<div class="loop-step"><strong>6 →</strong> CHP-laitos sulkee — marginaalihinta liian matala kannattavuudelle. 400 MW joustoa poistuu. Kukaan ei korvaa sitä.</div>
+
+<div class="loop-step"><strong>7 →</strong> Fingrid rajoittaa uusia liittymiä Etelä-Suomessa. Käynnistää 5,2 miljardin investointiohjelman. Maksunkorotus 8% — kustannus Layer 3:lle.</div>
+
+<div class="loop-step"><strong>8 →</strong> Liittymärajoitukset nostavat olemassa olevien liittymien arvoa. Kunta jolla on vapaa kapasiteetti saa kilpailuedun — kaavoittaa aggressiivisemmin. <strong>→ Takaisin kohtaan 1.</strong></div>
+
+<p class="claim">Silmukka vahvistaa itseään. Jokainen kierros tekee seuraavasta kierroksesta todennäköisemmän. Kukaan ei omista silmukkaa kokonaisuutena — jokainen toimija näkee vain oman askeleensa.</p>
+
+<h2>§3 — Kuka omistaa mitä</h2>
+
+<table>
+<tr><th>Toimija</th><th>Rationaalinen tavoite</th><th>Mitä ei näe / omista</th></tr>
+<tr><td>Kunta</td><td>Verotulot, tase, elinvoima</td><td>Silmukan kokonaissuunta, huoltovarmuuden heikkeneminen</td></tr>
+<tr><td>Fingrid</td><td>Kantaverkon kapasiteetti ja toimintavarmuus</td><td>Jakeluverkon omistusrakenne, kaukolämpöverkon tila</td></tr>
+<tr><td>Elenia / PE-rahasto</td><td>Säännelty tuotto, exit-arvo</td><td>Huoltovarmuus, Layer 3 -suoja — ei niiden tehtävä</td></tr>
+<tr><td>Datakeskus / Layer 1</td><td>Varma sähkö, oikea hinta</td><td>Järjestelmätason jousto — PPA hoitaa heidän osansa</td></tr>
+<tr><td>Energiavirasto</td><td>Hinnoittelun kohtuullisuus</td><td>Velkarakenne, investointitaso, omistusrakenteen pitkän tähtäimen vaikutus</td></tr>
+<tr><td>TEM / LVM</td><td>Energiapolitiikan kokonaisuus</td><td>Kuntien kahden liikkeen strategia, sen kumulatiivinen vaikutus</td></tr>
+</table>
+
+<p>Mandaattien hajautuminen on CN-007:n kolmen vajeen malli käytännössä: kukaan toimija ei omista silmukan kokonaisuutta, joten kukaan ei voi katkaista sitä yksipuolisesti.</p>
+
+<h2>§4 — Miksi tämä on institutionaalisesti näkymätöntä</h2>
+
+<p>SM-007:n konvergenssilöydös toteaa: kriittiset järjestelmät eivät epäonnistu koska ratkaisut ovat tuntemattomia — ne epäonnistuvat koska päätösikkuna sulkeutuu ennen kuin institutionaalinen vastaus ehtii muodostua.</p>
+
+<p>Poliittinen palautesilmukka on näkymätön kolmesta syystä:</p>
+
+<p><strong>Ajallinen hajaantuminen.</strong> Kunta tekee kaavoituspäätöksen tänään. Datakeskus rakentaa kolmen vuoden päästä. Energiayhtiö myydään viiden vuoden päästä. PE-rahaston velkavipu näkyy kymmenen vuoden päästä. Kukaan yksittäinen päättäjä ei näe koko ketjua omalla toimikaudellaan.</p>
+
+<p><strong>Toimivaltarajojen ylittäminen.</strong> Kaavoitus on kunnan asia. Sähköverkko on Energiaviraston asia. Kantaverkko on Fingridin asia. Huoltovarmuus on HVK:n asia. Silmukka kulkee kaikkien näiden rajojen läpi — se ei kuulu kenellekään.</p>
+
+<p><strong>Jokainen päätös on puolusteltavissa erikseen.</strong> Kunta voi perustella jokaisen kaavoituspäätöksensä ja jokaisen myynnin erikseen. Fingrid voi perustella investointiohjelmansa. PE-rahasto noudattaa sääntöjä. Yhdessä nämä tuottavat tuloksen jota kukaan ei olisi erikseen hyväksynyt.</p>
+
+<h2>§5 — Fingridin 5,2 miljardia: oikea vastaus väärään kysymykseen</h2>
+
+<p>Fingridin investointiohjelma 2026–2035 on välttämätön. Mutta se vastaa kysymykseen "miten kantaverkon kapasiteetti riittää kasvavalle kuormalle" — ei kysymykseen "miten järjestelmän kokonaiskestävyys säilyy kun säätökapasiteetti poistuu ja omistusrakenne hajautuu."</p>
+
+<p>Kantaverkon vahvistaminen siirtää sähköä tehokkaammin — mutta ei tuota joustoa eikä palauta operatiivista kontrollia kunnille. 8% maksunkorotus 2026 siirtää investointikustannukset niille joilla ei ole PPA-sopimusta — Layer 3:lle ja kotitalouksille. Tämä vahvistaa allokointikaskadia, ei heikennä sitä.</p>
+
+<p>Ehdollinen liityntäsopimus 250 MW+ kohteille on institutionaalinen myönnytys: Fingrid on jo siirtynyt ehdottomasta kapasiteetista joustavampaan malliin. Se tarkoittaa että järjestelmä ei enää toimi vanhan logiikan mukaan — mutta uutta logiikkaa ei ole yhteisesti määritelty.</p>
+
+<h2>§6 — Silmukan katkaiseminen</h2>
+
+<p>Silmukan katkaiseminen vaatii intervention johonkin sen askeleeseen. Kolme mahdollista interventiota:</p>
+
+<p><strong>Kaavoituksen ja myyntistrategian kytkeminen huoltovarmuusarviointiin.</strong> Ennen kuin kunta saa hyväksynnän yli 100 MW -liittymälle, sen tulisi tehdä arvio siitä miten kaavoituspäätös vaikuttaa paikalliseen säätökapasiteettiin ja kuka vastaa siitä kriisitilanteessa. Tämä ei estä kauppoja mutta tekee silmukan näkyväksi päätöksentekohetkellä.</p>
+
+<p><strong>Energiaviraston mandaatin laajentaminen.</strong> Hinnoitteluvalvonnan lisäksi valvonta velkarakenteen kehitykseen ja investointitason suhteeseen verkon ikärakenteeseen. Thames Water -malli tunnistetaan ennen kuin se realisoituu.</p>
+
+<p><strong>TN-001-solmu julkisena investointina.</strong> Duration-Capable Local Energy Node jonka omistaa kunta, alueellinen yhteisö tai huoltovarmuusorganisaatio — ei markkinaehtoinen toimija. Tämä ei kilpaile Elenian kanssa mutta tarjoaa operatiivisen kontrollipiste kriisitilanteessa. Satama joka on paikallisessa omistuksessa.</p>
+
+<p class="claim">Yksikään näistä interventioista ei ole helppoa. Jokainen vaatii toimivaltarajojen ylittämistä. Mutta ilman interventiota silmukka pyörii — jokainen rationaalinen päätös vahvistaa seuraavaa — kunnes järjestelmä kohtaa tilanteen joka on SM-006:n 2028-ikkunan kuvaus.</p>
+
+<h2>§7 — Yhteys SM-007:aan</h2>
+
+<p>SM-007 totesi: "yksi rakenteellinen ehto viidessä itsenäisessä analyyttisessä domainissa." Political Feedback Loop on se mekanismi jolla tuo rakenteellinen ehto toteutuu energiasektorilla poliittisella tasolla.</p>
+
+<p>SM-007 kuvasi mitä tapahtuu. SM-015 kuvaa miten se tapahtuu — askel askeleelta, toimija toimijalta, päätös päätökseltä. Ei salaliittona. Ei välinpitämättömyydestä. Vaan siksi että jokainen tekee parhaansa omilla välineillään ilman että kukaan omistaa kokonaisuutta.</p>
+
+<p>500 000 MW liittymäkyselyissä. 5,2 miljardia kantaverkkoinvestointeja. 50+ kuntakauppaa. CHP-laitokset sulkevat. Nämä ovat silmukan kierroksia — eivät erillisiä uutisia.</p>
+
+<div class="refs">
+<strong>Kytkeytyy</strong><br>
+<a href="/papers/sm-007-convergence-finding.html">SM-007</a> — The Convergence Finding<br>
+<a href="/papers/sm-006-2028-convergence-window.html">SM-006</a> — 2028 Convergence Window<br>
+<a href="/papers/sm-014-allocation-cascades-unprotected-layer.html">SM-014</a> — Allocation Cascades: The Unprotected Layer<br>
+<a href="/papers/cn-028-infrastructure-ownership-transfer.html">CN-028</a> — Infrastruktuurin omistussiirtymä<br>
+<a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html">CN-007</a> — Kolmen vajeen malli<br>
+<a href="/supplements/ACI_DA-001_v1_1.html">DA-001</a> — Finland Pre-Shortage 2026–2032<br>
+<a href="/supplements/tn-022-node-capex-model.html">TN-022</a> — Node CAPEX Model<br>
+</div>
+
+<div class="nav-footer">
+<strong>NAVIGATION — STATE · CAUSE · ACTION</strong>
+<strong>STATE:</strong>
+<a href="/supplements/ACI_DA-001_v1_1.html">DA-001 — Finland Pre-Shortage 2026–2032</a> &nbsp;·&nbsp;
+<a href="/papers/sm-006-2028-convergence-window.html">SM-006 — 2028 Convergence Window</a><br>
+<strong>CAUSE:</strong>
+<a href="/papers/sm-007-convergence-finding.html">SM-007 — Convergence Finding</a> &nbsp;·&nbsp;
+<a href="/papers/cn-028-infrastructure-ownership-transfer.html">CN-028 — Omistussiirtymä</a><br>
+<strong>ACTION:</strong>
+<a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">TN-001 — Local Energy Node</a> &nbsp;·&nbsp;
+<a href="/tools/ldr50-bci-finland.html">BCI Finland Map</a>
+</div>
+
+</body>
+</html>
