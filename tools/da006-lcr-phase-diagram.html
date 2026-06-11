@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DA-006 LCR Phase Diagram · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/tools/da006-lcr-phase-diagram.html"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;
+  --warn:#c8960c;--ok:#2d6a2d;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;
+  --mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1rem;line-height:1.8;max-width:800px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.4rem;font-weight:400;margin-bottom:.2rem}
+.doc-id{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:1.5rem}
+h2{font-size:.88rem;font-weight:600;font-family:var(--mono);text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);margin:1.8rem 0 .6rem}
+p{margin-bottom:.8rem;font-size:.9rem}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0 1.5rem}
+@media(max-width:560px){.controls{grid-template-columns:1fr}}
+.ctrl-group{background:#fff;border:1px solid var(--rule);padding:.8rem 1rem}
+.ctrl-label{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.4rem}
+.ctrl-value{font-family:var(--mono);font-size:1.2rem;font-weight:500;color:var(--accent);
+  display:block;margin-bottom:.3rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+canvas{border:1px solid var(--rule);background:#fff;display:block;width:100%;
+  max-width:680px;margin:0 auto}
+.legend{display:flex;gap:1.5rem;flex-wrap:wrap;font-family:var(--mono);font-size:.7rem;
+  margin:.8rem 0;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.state-display{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin:1.2rem 0}
+.state-box{border:1px solid var(--rule);padding:.6rem .8rem;text-align:center}
+.state-box .state-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:.2rem}
+.state-box .state-val{font-family:var(--mono);font-size:1.1rem;font-weight:500}
+.red{color:var(--accent)}.warn{color:var(--warn)}.ok{color:var(--ok)}
+.footnote{font-family:var(--mono);font-size:.62rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.7rem;line-height:2}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+.nav-footer strong{color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.4rem}
+.note{background:#f3f0ea;border-left:3px solid var(--rule);padding:.6rem .9rem;
+  font-size:.82rem;margin:1rem 0;color:#555}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/supplements/da-006-labour-market-allocation.html">DA-006</a>
+  <a href="/tools/sm015-ownership-monitor.html">SM-015 Monitori</a>
+  <a href="/tools/">Instrumentit</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>DA-006 LCR Phase Diagram</h1>
+<p class="doc-id">Labour Continuity Reserve — tilakuvaaja (L4, E) -avaruudessa<br>
+DA-006 §14 · SM-015-kytkentä · Mock-kalibrointi β=0.42</p>
+
+<div class="note">
+  <strong style="font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)">Episteeminen status — B/C-luokka</strong><br>
+  Phase diagram perustuu DA-006 v0.4 mock-kalibrointiin (L4 β=0.42, synteettinen data). δ on kalibroimaton — säädettävissä alla. Diagram on skenaariotyökalu, ei ennuste.
+</div>
+
+<h2>Parametrit</h2>
+<div class="controls">
+  <div class="ctrl-group">
+    <span class="ctrl-label">L4 Segmentaatio (nykyinen)</span>
+    <span class="ctrl-value" id="l4-val">0.55</span>
+    <input type="range" id="l4" min="0.30" max="0.80" step="0.01" value="0.55">
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted)">
+      <span>0.30 (matala)</span><span>0.80 (korkea)</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">E<sub>t</sub> SM-015 Energiastressitaso</span>
+    <span class="ctrl-value" id="et-val">0.18</span>
+    <input type="range" id="et" min="0.00" max="1.00" step="0.01" value="0.18">
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted)">
+      <span>0.00 (Normal)</span><span>1.00 (BP-like)</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">δ Kytkentäparametri (kalibroimaton)</span>
+    <span class="ctrl-value" id="delta-val">0.30</span>
+    <input type="range" id="delta" min="0.00" max="1.00" step="0.05" value="0.30">
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted)">
+      <span>0.00 (H₀: ei kytkentää)</span><span>1.00 (vahva)</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Aikaikkuna (vuosia)</span>
+    <span class="ctrl-value" id="years-val">10</span>
+    <input type="range" id="years" min="1" max="20" step="1" value="10">
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--muted)">
+      <span>1v</span><span>20v</span>
+    </div>
+  </div>
+</div>
+
+<h2>Tilaestimaatti</h2>
+<div class="state-display">
+  <div class="state-box">
+    <span class="state-label">LCR nyt</span>
+    <span class="state-val" id="lcr-now">—</span>
+  </div>
+  <div class="state-box">
+    <span class="state-label">LCR ennuste</span>
+    <span class="state-val" id="lcr-future">—</span>
+  </div>
+  <div class="state-box">
+    <span class="state-label">Tila</span>
+    <span class="state-val" id="regime">—</span>
+  </div>
+</div>
+
+<h2>Phase Diagram — LCR (L4 × E<sub>t</sub>) -avaruudessa</h2>
+<canvas id="canvas" width="680" height="480"></canvas>
+
+<div class="legend">
+  <span><span class="leg-dot" style="background:#2d6a2d"></span>Vakaa (LCR ≥ 0.60)</span>
+  <span><span class="leg-dot" style="background:#c8960c"></span>Jännite (0.40–0.60)</span>
+  <span><span class="leg-dot" style="background:#8b2500"></span>Kriittinen (LCR &lt; 0.40)</span>
+  <span><span class="leg-dot" style="background:#1a1a1a;border-radius:0"></span>Nykytila</span>
+  <span><span class="leg-dot" style="background:#666;opacity:.5;border-radius:0"></span>Bifurkaatioreuna</span>
+</div>
+
+<h2>LCR-dynamiikka ajan yli</h2>
+<canvas id="canvas2" width="680" height="220"></canvas>
+
+<p style="font-size:.82rem;color:var(--muted);margin-top:.5rem">
+  LCR<sub>t</sub> = LCR<sub>t-1</sub> − δ·ΔL4(E<sub>t</sub>) − 0.012 · Peruslasku −0.012/v + energiavahvistus
+</p>
+
+<div class="footnote">
+  Mock-kalibrointi: L4 β=0.42 · L3 β=−0.27 · LCR 2025 ≈ 0.54<br>
+  δ = kalibroimaton kytkentäparametri (H₀: δ=0, H₁: δ>0)<br>
+  LCR &lt; 0.40 = D-3/D-4 stressialue (WP-003 ITT-analogia)<br>
+  Phase diagram on skenaariotyökalu — ei ennuste<br>
+  DA-006 §13–§14 · SM-015 EPP · WP-003 ITT
+</div>
+
+<div class="nav-footer">
+  <strong>KYTKENNÄT</strong>
+  <a href="/supplements/da-006-labour-market-allocation.html">DA-006 §13–§14</a> &nbsp;·&nbsp;
+  <a href="/tools/sm015-ownership-monitor.html">SM-015 Monitori</a> &nbsp;·&nbsp;
+  <a href="/tools/ACI-INSTRUMENT-v2.html">WEM — SM-015 EPP</a> &nbsp;·&nbsp;
+  <a href="/papers/wp-003-institutional-termination-time.html">WP-003 ITT</a>
+</div>
+
+<script>
+// ---- Parametrit ----
+let L4 = 0.55, Et = 0.18, delta = 0.30, years = 10;
+
+// ---- LCR laskenta ----
+function computeLCR(l4, et, d) {
+  // Perus LCR ilman energiaa: 1 - (0.3*L1 + 0.4*L4 - 0.3*L3)
+  // Yksinkertaistettu: L1≈0.45, L3≈0.70 baseline
+  const L1 = 0.45, L3 = 0.70;
+  const base = 1 - (0.3 * L1 + 0.4 * l4 - 0.3 * (L3 - 0.1 * et));
+  // Energiavahvistus interaktiotermillä
+  const energyEffect = d * l4 * et;
+  return Math.max(0, Math.min(1, base - energyEffect));
+}
+
+function getRegime(lcr) {
+  if (lcr >= 0.60) return {label:'Vakaa', cls:'ok'};
+  if (lcr >= 0.40) return {label:'Jännite', cls:'warn'};
+  return {label:'Kriittinen', cls:'red'};
+}
+
+function getColor(lcr) {
+  if (lcr >= 0.60) return 'rgba(45,106,45,';
+  if (lcr >= 0.40) return 'rgba(200,150,12,';
+  return 'rgba(139,37,0,';
+}
+
+// ---- Phase diagram ----
+function drawPhase() {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const PAD = {l:50, r:20, t:20, b:50};
+  const w = W - PAD.l - PAD.r, h = H - PAD.t - PAD.b;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Taustaväritys
+  const steps = 80;
+  for (let xi = 0; xi < steps; xi++) {
+    for (let yi = 0; yi < steps; yi++) {
+      const l4v = 0.30 + (xi / steps) * 0.50;
+      const etv = 0.00 + (yi / steps) * 1.00;
+      const lcr = computeLCR(l4v, etv, delta);
+      const col = getColor(lcr);
+      const alpha = 0.35 + (1 - lcr) * 0.45;
+      ctx.fillStyle = col + alpha + ')';
+      const x = PAD.l + (xi / steps) * w;
+      const y = PAD.t + h - (yi / steps) * h;
+      ctx.fillRect(x, y, w/steps + 1, h/steps + 1);
+    }
+  }
+
+  // Bifurkaatioreunat (iso-LCR viivat)
+  [0.60, 0.40].forEach(threshold => {
+    ctx.beginPath();
+    ctx.strokeStyle = threshold === 0.60 ? 'rgba(45,106,45,0.7)' : 'rgba(139,37,0,0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5,4]);
+    let first = true;
+    for (let xi = 0; xi <= 100; xi++) {
+      const l4v = 0.30 + (xi / 100) * 0.50;
+      // Löydä Et jolla LCR = threshold
+      let lo = 0, hi = 1, etv = 0.5;
+      for (let iter = 0; iter < 30; iter++) {
+        etv = (lo + hi) / 2;
+        const lcr = computeLCR(l4v, etv, delta);
+        if (lcr > threshold) lo = etv; else hi = etv;
+      }
+      const x = PAD.l + (xi / 100) * w;
+      const y = PAD.t + h - etv * h;
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Nykytila-piste
+  const nx = PAD.l + ((L4 - 0.30) / 0.50) * w;
+  const ny = PAD.t + h - Et * h;
+  ctx.beginPath();
+  ctx.arc(nx, ny, 7, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Q2/2026 merkintä
+  ctx.font = '500 11px DM Mono, monospace';
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillText('Q2/2026', nx + 10, ny - 5);
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillStyle = '#666';
+  const lcrNow = computeLCR(L4, Et, delta);
+  ctx.fillText('LCR=' + lcrNow.toFixed(2), nx + 10, ny + 10);
+
+  // Akselit
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, PAD.t + h);
+  ctx.moveTo(PAD.l, PAD.t + h); ctx.lineTo(PAD.l + w, PAD.t + h);
+  ctx.stroke();
+
+  // Akselimerkinnät
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillStyle = '#666';
+  ctx.textAlign = 'center';
+  [0.30, 0.40, 0.50, 0.60, 0.70, 0.80].forEach(v => {
+    const x = PAD.l + ((v - 0.30) / 0.50) * w;
+    ctx.fillText(v.toFixed(2), x, PAD.t + h + 18);
+  });
+  ctx.textAlign = 'right';
+  [0, 0.25, 0.50, 0.75, 1.0].forEach(v => {
+    const y = PAD.t + h - v * h;
+    ctx.fillText(v.toFixed(2), PAD.l - 6, y + 4);
+  });
+  ctx.textAlign = 'center';
+  ctx.font = '12px DM Mono, monospace';
+  ctx.fillStyle = '#444';
+  ctx.fillText('L4 Segmentaatio', PAD.l + w/2, H - 8);
+  ctx.save();
+  ctx.translate(14, PAD.t + h/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('E_t SM-015 EPP', 0, 0);
+  ctx.restore();
+}
+
+// ---- LCR dynamiikka ----
+function drawDynamic() {
+  const canvas = document.getElementById('canvas2');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const PAD = {l:50, r:20, t:20, b:40};
+  const w = W - PAD.l - PAD.r, h = H - PAD.t - PAD.b;
+
+  ctx.clearRect(0,0,W,H);
+
+  const series = [];
+  let lcr = computeLCR(L4, Et * 0.1, 0); // Lähtötaso ilman energiastressiä
+
+  // Kolme skenaariota
+  const scenarios = [
+    {d: 0, label: 'H₀: δ=0 (perus)', color: '#2d6a2d'},
+    {d: delta, label: `H₁: δ=${delta.toFixed(2)} (valittu)`, color: '#8b2500'},
+    {d: delta * 1.5, label: `δ×1.5 (korkea stressi)`, color: '#c8960c'},
+  ];
+
+  scenarios.forEach(sc => {
+    const pts = [];
+    let l = 1 - (0.3 * 0.45 + 0.4 * L4 - 0.3 * 0.70); // Lähtötaso
+    for (let t = 0; t <= years; t++) {
+      const etNow = Et * (0.5 + 0.5 * (t / years));
+      const energyPush = sc.d * L4 * etNow;
+      if (t > 0) l = Math.max(0, l - 0.012 - energyPush * 0.05);
+      pts.push({t, lcr: l});
+    }
+    series.push({...sc, pts});
+  });
+
+  // Kriittinen vyöhyke
+  ctx.fillStyle = 'rgba(139,37,0,0.06)';
+  ctx.fillRect(PAD.l, PAD.t + h - 0.40 * h, w, 0.40 * h);
+  ctx.fillStyle = 'rgba(200,150,12,0.06)';
+  ctx.fillRect(PAD.l, PAD.t + h - 0.60 * h, w, 0.20 * h);
+
+  // Kynnysviivat
+  [0.60, 0.40].forEach(threshold => {
+    ctx.beginPath();
+    ctx.strokeStyle = threshold === 0.60 ? 'rgba(45,106,45,0.4)' : 'rgba(139,37,0,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,3]);
+    const y = PAD.t + h - threshold * h;
+    ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + w, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '10px DM Mono, monospace';
+    ctx.fillStyle = threshold === 0.60 ? '#2d6a2d' : '#8b2500';
+    ctx.textAlign = 'right';
+    ctx.fillText(threshold.toFixed(2), PAD.l - 4, y + 4);
+  });
+
+  // Sarjat
+  series.forEach(sc => {
+    ctx.beginPath();
+    ctx.strokeStyle = sc.color;
+    ctx.lineWidth = sc.d === delta ? 2.5 : 1.5;
+    sc.pts.forEach((p, i) => {
+      const x = PAD.l + (p.t / years) * w;
+      const y = PAD.t + h - Math.min(p.lcr, 1) * h;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    // Label
+    const last = sc.pts[sc.pts.length - 1];
+    const lx = PAD.l + w + 4;
+    const ly = PAD.t + h - Math.min(last.lcr, 1) * h;
+    ctx.font = '10px DM Mono, monospace';
+    ctx.fillStyle = sc.color;
+    ctx.textAlign = 'left';
+    ctx.fillText(last.lcr.toFixed(2), lx, ly + 4);
+  });
+
+  // Akselit
+  ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, PAD.t + h);
+  ctx.moveTo(PAD.l, PAD.t + h); ctx.lineTo(PAD.l + w, PAD.t + h);
+  ctx.stroke();
+
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillStyle = '#666'; ctx.textAlign = 'center';
+  for (let t = 0; t <= years; t += Math.max(1, Math.floor(years/5))) {
+    const x = PAD.l + (t / years) * w;
+    ctx.fillText(2025 + t, x, PAD.t + h + 16);
+  }
+
+  // Legenda
+  const legY = PAD.t + 12;
+  scenarios.forEach((sc, i) => {
+    const lx = PAD.l + i * (w / 3) + 10;
+    ctx.beginPath();
+    ctx.strokeStyle = sc.color; ctx.lineWidth = 2;
+    ctx.moveTo(lx, legY); ctx.lineTo(lx + 20, legY); ctx.stroke();
+    ctx.font = '10px DM Mono, monospace';
+    ctx.fillStyle = sc.color; ctx.textAlign = 'left';
+    ctx.fillText(sc.label, lx + 24, legY + 4);
+  });
+}
+
+// ---- Päivitys ----
+function update() {
+  L4 = parseFloat(document.getElementById('l4').value);
+  Et = parseFloat(document.getElementById('et').value);
+  delta = parseFloat(document.getElementById('delta').value);
+  years = parseInt(document.getElementById('years').value);
+
+  document.getElementById('l4-val').textContent = L4.toFixed(2);
+  document.getElementById('et-val').textContent = Et.toFixed(2);
+  document.getElementById('delta-val').textContent = delta.toFixed(2);
+  document.getElementById('years-val').textContent = years;
+
+  const lcrNow = computeLCR(L4, Et, delta);
+  document.getElementById('lcr-now').textContent = lcrNow.toFixed(3);
+  document.getElementById('lcr-now').className = 'state-val ' + getRegime(lcrNow).cls;
+
+  // Ennuste years vuotta eteenpäin
+  let lcrF = lcrNow;
+  for (let t = 0; t < years; t++) {
+    lcrF = Math.max(0, lcrF - 0.012 - delta * L4 * Et * 0.05);
+  }
+  document.getElementById('lcr-future').textContent = lcrF.toFixed(3);
+  document.getElementById('lcr-future').className = 'state-val ' + getRegime(lcrF).cls;
+
+  const reg = getRegime(lcrNow);
+  document.getElementById('regime').textContent = reg.label;
+  document.getElementById('regime').className = 'state-val ' + reg.cls;
+
+  drawPhase();
+  drawDynamic();
+}
+
+['l4','et','delta','years'].forEach(id => {
+  document.getElementById(id).addEventListener('input', update);
+});
+
+update();
+</script>
+</body>
+</html>
