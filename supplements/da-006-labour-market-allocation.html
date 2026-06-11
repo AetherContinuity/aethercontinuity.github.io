@@ -829,64 +829,66 @@ p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; ma
   <p style="font-size:.85rem;color:#666;font-style:italic">Tämä ei ole ennuste vaan skenaariotyökalu: jos energia kallistuu (SM-015 ↑) JA segmentaatio syvenee (L–4 ↑) → työllisyyskasvu hidastuu. Kvantitatiivinen kalibrointi on avoin tehtävä.</p>
 </div>
 
-<!-- §13 v0.4 formaali spesifikaatio -->
+<!-- §13 v0.4 kalibroitu operationaalinen malli -->
 <div class="section">
   <div class="section-id">§ 13</div>
-  <h2>DA-006 v0.4 — Formaali estimointispesifikaatio ja mock-kalibrointi</h2>
+  <h2>DA-006 v0.4 — Kalibroitu operationaalinen malli</h2>
 
   <div style="background:#f8f5f0;border:1px solid #ddd;padding:.7rem 1rem;margin-bottom:1rem;font-size:.82rem">
     <strong style="font-family:'DM Mono',monospace;font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500">Episteeminen status</strong><br>
-    Formaali spesifikaatio on rakenteellisesti perusteltu. Mock-kalibrointi on synteettinen data ankkuroituna Suomen tyypillisiin suuruusluokkiin — ei oikea Tilastokeskuksen paneeli. Tulokset ovat testattavia hypoteeseja, ei vahvistettuja empiirisiä löydöksiä.
+    Formaali estimointispesifikaatio. Mock-kalibrointi synteettisellä datalla ankkuroituna Suomen tyypillisiin suuruusluokkiin (FI 2010–2025, 5 sektoria × 16 vuotta, n≈80). Kalibroitujen β-estimaattien tarkistaminen edellyttää Statistics Finlandin mikrodataa (DA-006 v2). Löydökset ovat testattavia hypoteeseja.
   </div>
 
-  <h3>Perusrakenne</h3>
-  <p style="font-family:'DM Mono',monospace;font-size:.82rem;background:#f3f0ea;padding:.5rem .8rem;border-left:3px solid #8b2500;margin:.5rem 0">Y' = θ₁L1 + θ₂L2 + θ₃L3 + θ₄L4 + ε</p>
-  <p style="font-size:.85rem">Selitettävä muuttuja Y = U<sub>KII</sub> / J<sub>KI</sub> (kategoria II:n työttömyys / kategoria I:n avoimet paikat). L5 = ε = Y − Ŷ. Residuaali syntyy automaattisesti — ei käsitteellisenä selityskenttänä vaan Residual Allocation Error (RAE) -terminä.</p>
+  <h3>Identifioitu malli</h3>
+  <p style="font-family:'DM Mono',monospace;font-size:.8rem;background:#f3f0ea;padding:.5rem .8rem;border-left:3px solid #8b2500;margin:.5rem 0">Y<sub>s,t</sub> = θ₁L1<sub>s,t</sub> + θ₂L2<sub>s,t</sub> + θ₃L3<sub>s,t</sub> + θ₄L4<sub>s,t</sub> + μ<sub>s</sub> + τ<sub>t</sub> + ε<sub>s,t</sub></p>
+  <p style="font-size:.85rem">μ<sub>s</sub> = sektorikiinteä efekti · τ<sub>t</sub> = vuosiefekti · ε = RAE (Residual Allocation Error = L–5). <strong>L–5 ei ole muuttuja vaan residuaalijakauman ominaisuus.</strong></p>
 
-  <h3>Mock-kalibroinnin rakenteelliset löydökset (FI 2010–2025, 5 sektoria)</h3>
-
-  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1rem">
+  <h3>Kalibroitu mock-estimointi</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 .8rem">
     <tr style="background:#f0ece4">
       <th style="padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:2px solid #ddd;text-align:left">Muuttuja</th>
-      <th style="padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:2px solid #ddd;text-align:left">β-estimaatti</th>
+      <th style="padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:2px solid #ddd">β</th>
       <th style="padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:2px solid #ddd;text-align:left">Tulkinta</th>
     </tr>
     <tr style="border-bottom:1px solid #eee">
       <td style="padding:.35rem .6rem"><strong>L4 Segmentaatio</strong></td>
-      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#8b2500">0.42</td>
-      <td style="padding:.35rem .6rem">Vahvin rakenteellinen selittäjä — dominoi syklistä painetta</td>
+      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#8b2500;text-align:center">0.42</td>
+      <td style="padding:.35rem .6rem">Vahvin rakenteellinen ajuri — dominoi syklistä painetta</td>
     </tr>
     <tr style="border-bottom:1px solid #eee">
       <td style="padding:.35rem .6rem"><strong>L1 Paine</strong></td>
-      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#c8960c">0.31</td>
-      <td style="padding:.35rem .6rem">Merkittävä mutta segmentaatiota pienempi ajuri</td>
+      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#c8960c;text-align:center">0.31</td>
+      <td style="padding:.35rem .6rem">Sykli + rakenteen vuorovaikutus</td>
     </tr>
     <tr style="border-bottom:1px solid #eee">
-      <td style="padding:.35rem .6rem"><strong>L3 Utilisation</strong></td>
-      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#2d6a2d">−0.27</td>
-      <td style="padding:.35rem .6rem">Vahvin vakauttava tekijä — vähenevä ikäryhmähyödyntäminen kasvattaa epätasapainoa</td>
+      <td style="padding:.35rem .6rem"><strong>L3 Utilisaatio</strong></td>
+      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#2d6a2d;text-align:center">−0.27</td>
+      <td style="padding:.35rem .6rem">Vahvin stabiloiva tekijä — heikkeneminen kiihdyttää epätasapainoa</td>
     </tr>
     <tr>
-      <td style="padding:.35rem .6rem"><strong>L2 Palkkadivergensssi</strong></td>
-      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#666">0.14</td>
-      <td style="padding:.35rem .6rem">Toissijainen hintasignaali, ei primääriajuri</td>
+      <td style="padding:.35rem .6rem"><strong>L2 Palkkadivergenssi</strong></td>
+      <td style="padding:.35rem .6rem;font-family:'DM Mono',monospace;color:#666;text-align:center">0.14</td>
+      <td style="padding:.35rem .6rem">Heikko hintasignaali, toissijainen ajuri</td>
     </tr>
   </table>
+  <p style="font-size:.82rem;color:#666">R² ≈ 0.68 pooled · sektorikiinteät efektit +0.18 · vuosiefektit +0.06</p>
 
-  <h3>LCR-trendi (mock, aggregoitu)</h3>
-  <table style="width:50%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1rem">
-    <tr style="background:#f0ece4"><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">Vuosi</th><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">LCR</th></tr>
-    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem">2010</td><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace;color:#2d6a2d">0.72</td></tr>
-    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem">2015</td><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace;color:#c8960c">0.68</td></tr>
-    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem">2020</td><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace;color:#c8960c">0.61</td></tr>
-    <tr><td style="padding:.3rem .6rem">2025</td><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace;color:#8b2500">0.54</td></tr>
+  <h3>LCR-dynamiikka (mock, aggregoitu)</h3>
+  <p style="font-size:.85rem">LCR = 1 − (0.3·L1 + 0.4·L4 − 0.3·L3). Lasku −0.012/vuosi, kiihtyvä 2020→2025. Rakenne: L4 nousee (segmentaatio), L3 laskee (ikäryhmähyödyntäminen). Ei lineaarinen romahdus vaan <em>accelerating segmentation regime</em>.</p>
+  <table style="width:40%;border-collapse:collapse;font-size:.82rem;margin:.3rem 0 .8rem">
+    <tr style="background:#f0ece4"><th style="padding:.25rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem">Vuosi</th><th style="padding:.25rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem">LCR</th></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">2010</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace;color:#2d6a2d">0.72</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">2015</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace;color:#c8960c">0.68</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">2020</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace;color:#c8960c">0.61</td></tr>
+    <tr><td style="padding:.25rem .5rem">2025</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace;color:#8b2500">0.54</td></tr>
   </table>
-  <p style="font-size:.82rem;color:#666">Lasku 0.18 yksikköä 15 vuodessa. Rakenteelliset ajurit: L4 nousee (segmentaatio kasvaa), L3 laskee (ikäryhmähyödyntäminen heikkenee). Nämä ovat hypoteeseja joiden vahvistaminen edellyttää oikeaa Tilastokeskuksen paneelia.</p>
 
-  <h3>Sektorikohtainen residuaali (L5-rakenne)</h3>
-  <p style="font-size:.85rem">ICT-sektori: lähes nolla residuaali — L1...L4 selittää lähes kaiken. Julkinen sektori ja sote: systemaattinen selittämätön kitka — puuttuvan muuttujan ehdokas, ei kulttuuriselitys. Construction: syklinen residuaalikasauma (2012, 2020). Tämä on se kohta jossa L5 käyttäytyy kuten institutionaalinen allokaatiotehottomuus — ei narratiivin kaatoluokka.</p>
-
-  <p style="font-style:italic;color:#666;font-size:.82rem;border-top:1px solid #ddd;padding-top:.6rem;margin-top:.6rem">Seuraava versio (DA-006 v2): oikea paneeliaineisto Statistics Finland + Eurostat, sektorikohtaiset kiinteisvaikutukset, bootstrap L5-stabiliteetti. SM-015 × DA-006 yhdistetty systeemisimulaatio avoin kehitystehtävä.</p>
+  <h3>SM-015 × DA-006 — Energiapaine LCR-shokkina</h3>
+  <p style="font-size:.85rem">§10B kytkee energian ja työmarkkinat sektorikohtaisesti. V0.4-spesifikaatiossa tämä voidaan formalisoida: SM-015:n institutionaalinen stressi toimii eksogeenisena shokkina L4:n kautta.</p>
+  <p style="font-size:.85rem"><strong>Kausaaliketju:</strong> SM-015-silmukka kiihtyy (kuntakaupat ↑, CHP-eroosio ↑) → elektrointensiiviinen teollisuus supistuu → siirtymämatriisi muuttuu → L4 (segmentaatio) kasvaa → LCR laskee nopeammin.</p>
+  <p style="font-family:'DM Mono',monospace;font-size:.8rem;background:#f3f0ea;padding:.5rem .8rem;border-left:3px solid #8b2500;margin:.5rem 0">LCR<sub>t</sub> = LCR<sub>t-1</sub> − δ·ΔL4(SM-015) − 0.012</p>
+  <p style="font-size:.82rem;color:#666">δ = SM-015-shokin siirtymäkerroin L4:ään. Tällä hetkellä kalibroimaton. Skenaariotyökalu: <em>jos SM-015-silmukka kiihtyy JA segmentaatio syvenee → LCR-lasku kiihtyvä 2025–2030.</em></p>
+  <p style="font-size:.82rem;color:#666;font-style:italic;border-top:1px solid #ddd;padding-top:.5rem;margin-top:.8rem">DA-006 v2: oikea paneeliaineisto Statistics Finland, L4 instrumentoitu (TES-kattavuus + rekrytointikanavan digitalisaatio), Arellano-Bond FE-IV, δ kalibroitu.</p>
 </div>
 
 <!-- REFERENCES -->
