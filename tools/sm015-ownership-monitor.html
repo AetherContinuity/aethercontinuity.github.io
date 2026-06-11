@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SM-015 Omistusrakennemonitori · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/tools/sm015-ownership-monitor.html"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;
+  --warn:#c8960c;--ok:#2d6a2d;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;
+  --mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1rem;line-height:1.8;max-width:760px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.5rem;font-weight:400;margin-bottom:.2rem}
+.doc-id{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:1.5rem}
+.update-note{font-family:var(--mono);font-size:.68rem;background:#f3f0ea;
+  border:1px solid var(--rule);padding:.5rem .8rem;margin-bottom:2rem;color:var(--muted)}
+.update-note strong{color:var(--accent)}
+
+/* Indikaattorikortit */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--rule);padding:1rem 1.2rem;background:#fff}
+.card-label{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:.3rem}
+.card-value{font-size:1.6rem;font-weight:500;font-family:var(--mono);line-height:1.2}
+.card-sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.card-trend{font-family:var(--mono);font-size:.75rem;margin-top:.4rem}
+
+.red .card-value{color:var(--accent)}
+.red{border-left:3px solid var(--accent)}
+.warn .card-value{color:var(--warn)}
+.warn{border-left:3px solid var(--warn)}
+.ok .card-value{color:var(--ok)}
+.ok{border-left:3px solid var(--ok)}
+
+/* Kokonaisarvio */
+.verdict{background:#f3f0ea;border:1px solid var(--rule);padding:1rem 1.2rem;
+  margin:1.5rem 0;display:flex;align-items:center;gap:1rem}
+.verdict-label{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.2rem}
+.verdict-text{font-size:1rem;font-weight:500}
+.verdict-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.dot-red{background:var(--accent)}
+.dot-warn{background:var(--warn)}
+.dot-ok{background:var(--ok)}
+
+/* Taulukot */
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem}
+th{background:#f0ece4;text-align:left;padding:.35rem .6rem;
+  font-family:var(--mono);font-size:.67rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.tag-red{font-family:var(--mono);font-size:.62rem;color:var(--accent);font-weight:500}
+.tag-warn{font-family:var(--mono);font-size:.62rem;color:var(--warn);font-weight:500}
+.tag-ok{font-family:var(--mono);font-size:.62rem;color:var(--ok);font-weight:500}
+
+h2{font-size:.92rem;font-weight:600;font-family:var(--mono);text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);margin:2rem 0 .6rem}
+p{margin-bottom:.8rem;font-size:.92rem}
+.footnote{font-family:var(--mono);font-size:.62rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.7rem;line-height:1.9}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+.nav-footer strong{color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/tools/">Instrumentit</a>
+  <a href="/papers/sm-015-political-feedback-loop.html">SM-015</a>
+  <a href="/papers/cn-028-infrastructure-ownership-transfer.html">CN-028</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>SM-015 Omistusrakennemonitori</h1>
+<p class="doc-id">Institutionaalisen dynamiikan kvartaali-indikaattorit · SM-015 / CN-028<br>
+WEM-täydennys — fyysinen taso: <a href="/tools/ACI-INSTRUMENT-v2.html" style="color:var(--accent)">WEM →</a></p>
+
+<div class="update-note">
+  <strong>Päivitys Q2/2026</strong> · Manuaalinen · Seuraava päivitys: syyskuu 2026<br>
+  Lähteet: Energiavirasto · Fingrid · Kauppalehti · Kuntaliitto · julkiset vuosikertomukset
+</div>
+
+<!-- KOKONAISARVIO -->
+<div class="verdict">
+  <div class="verdict-dot dot-red"></div>
+  <div>
+    <span class="verdict-label">Kokonaisarvio — SM-015-silmukan tila</span>
+    <div class="verdict-text">Vahva rakenteellinen jännite — silmukka kiihtyy</div>
+  </div>
+</div>
+
+<!-- INDIKAATTORIT -->
+<div class="grid">
+
+  <div class="card red">
+    <div class="card-label">Kuntakaupat / vuosi (3v ka)</div>
+    <div class="card-value">6.3</div>
+    <div class="card-sub">Kynnys: &gt;5/v = punainen</div>
+    <div class="card-trend">↑ Kiihtyvä 2022–2026 · 50+ kauppaa yht.</div>
+  </div>
+
+  <div class="card red">
+    <div class="card-label">PE-investointiaste (Elenia)</div>
+    <div class="card-value">0.72</div>
+    <div class="card-sub">Investoinnit / poistot · &lt;1.0 = punainen</div>
+    <div class="card-trend">↓ −8% vs. 2024 · −60 M€ kustannussäästöt</div>
+  </div>
+
+  <div class="card warn">
+    <div class="card-label">PE-investointiaste (CapMan)</div>
+    <div class="card-value">1.15</div>
+    <div class="card-sub">Investoinnit / poistot · &gt;1.0 = keltainen</div>
+    <div class="card-trend">→ Vakaa · hiekkavarasto Pornaisiin</div>
+  </div>
+
+  <div class="card red">
+    <div class="card-label">Liittymäjono datakeskukset</div>
+    <div class="card-value">250 GW</div>
+    <div class="card-sub">Kaikki liittymäkyselyt yht. · 33× huippukulutus</div>
+    <div class="card-trend">↑ Puolet datakeskuksilta · Q1/2025 +10.1%</div>
+  </div>
+
+  <div class="card red">
+    <div class="card-label">CHP-säätökapasiteetti (Helsinki)</div>
+    <div class="card-value">−400 MW</div>
+    <div class="card-sub">Poistunut 2020–2026 · ei korvaanut</div>
+    <div class="card-trend">↓ Trendi jatkuu · markkinahinta ei kannata</div>
+  </div>
+
+  <div class="card warn">
+    <div class="card-label">PE-omistus jakeluverkosta</div>
+    <div class="card-value">~34%</div>
+    <div class="card-sub">Arvio · Elenia + Caruna + muut</div>
+    <div class="card-trend">↑ Kasvava · kuntakaupat jatkuvat</div>
+  </div>
+
+</div>
+
+<!-- KUNTAKAUPAT TAULUKKO -->
+<h2>Viimeisimmät kuntakaupat (2024–2026)</h2>
+<table>
+  <tr>
+    <th>Kohde</th><th>Ostaja</th><th>Profiili</th><th>Arvio</th>
+  </tr>
+  <tr>
+    <td>Porin Energia (49%)</td>
+    <td>Polhem Infra (Ruotsi)</td>
+    <td class="tag-ok">MATALA</td>
+    <td>Ruotsalainen valtiollinen — ei PE-malli</td>
+  </tr>
+  <tr>
+    <td>Useita kaukolämpöyhtiöitä</td>
+    <td>CapMan Infra</td>
+    <td class="tag-warn">KESKI</td>
+    <td>Suomalainen, investoi — hiekkavarasto 2025</td>
+  </tr>
+  <tr>
+    <td>Useita jakeluverkkoyhtiöitä</td>
+    <td>Alfa Energy</td>
+    <td class="tag-warn">KESKI</td>
+    <td>Vetyprojektit — rakentaa uutta</td>
+  </tr>
+  <tr>
+    <td>Elenia (jatkuva omistus)</td>
+    <td>Macquarie 45% / Allianz 45% / VER 10%</td>
+    <td class="tag-red">KORKEA</td>
+    <td>Macquarie Super Core 12.6 mrd € · Thames Water -malli</td>
+  </tr>
+</table>
+
+<!-- SILMUKAN ASKELTAULUKKO -->
+<h2>SM-015-silmukan askelten tila (Q2/2026)</h2>
+<table>
+  <tr><th>Askel</th><th>Kuvaus</th><th>Tila</th></tr>
+  <tr><td>1</td><td>Kunta kaavoittaa energiaintensiiville</td><td class="tag-red">AKTIIVINEN · GigaVaasa 190 ha, Pieksämäki, Simon Hittikka</td></tr>
+  <tr><td>2</td><td>Toimija sopii PPA-sopimuksen (Layer 1)</td><td class="tag-red">AKTIIVINEN · Microsoft, datakeskukset</td></tr>
+  <tr><td>3</td><td>Verkon arvo nousee</td><td class="tag-red">VAHVISTUU · liittymäjono 250 GW</td></tr>
+  <tr><td>4</td><td>Kunta myy energiayhtiönsä</td><td class="tag-red">AKTIIVINEN · 6.3 kauppaa/v</td></tr>
+  <tr><td>5</td><td>PE-rahasto optimoi tuottoa</td><td class="tag-red">AKTIIVINEN · Elenia 0.72</td></tr>
+  <tr><td>6</td><td>CHP sulkee, jousto poistuu</td><td class="tag-red">AKTIIVINEN · −400 MW Helsinki</td></tr>
+  <tr><td>7</td><td>Fingrid rajoittaa liittymiä</td><td class="tag-red">AKTIIVINEN · Etelä-Suomi 2025–2027</td></tr>
+  <tr><td>8</td><td>Kapasiteetti kallistuu → kaavoituspaine kasvaa</td><td class="tag-red">KIIHTYVÄ → askel 1</td></tr>
+</table>
+
+<!-- PUUTTUVAT MITTARIT -->
+<h2>Mittaamattomat muuttujat (avoin tutkimustarve)</h2>
+<p>Kaksi SM-015:n viidestä muuttujasta ei ole mitattavissa julkisista lähteistä:</p>
+<table>
+  <tr><th>Muuttuja</th><th>Status</th><th>Mitä tarvittaisiin</th></tr>
+  <tr>
+    <td><strong>Governance lag</strong><br>Päätös → toteutus -viive</td>
+    <td class="tag-red">EI MITATA</td>
+    <td>YVA-prosessien kestot + Fingrid-investointien aikataulut yhdistettynä</td>
+  </tr>
+  <tr>
+    <td><strong>Ownership fragmentation index</strong><br>Kontrollin hajautuminen</td>
+    <td class="tag-red">EI MITATA</td>
+    <td>Kaupparekisteri + jakeluverkkodata + HHI-laskenta yhtenä indikaattorina</td>
+  </tr>
+</table>
+
+<div class="footnote">
+  WEM mittaa SM-015:n fyysisen tason (EPP, CHP-paine, DC-kuorma).<br>
+  Tämä monitori mittaa institutionaalisen tason (omistus, investoinnit, kuntakaupat).<br>
+  Yhdessä ne kattavat 4/5 SM-015:n indikaattorista.<br><br>
+  Lähteet: Energiavirasto valvontatiedot · Fingrid avoin data · CN-028 ACI · Kauppalehti · Kuntaliitto<br>
+  Macquaire Super Core: 12.6 mrd €, 22 maata (ERAA 2024 · CN-028 §8)<br>
+  Kaikki luvut ovat julkisista lähteistä johdettuja arvioita, ei virallisia tilastoja.
+</div>
+
+<div class="nav-footer">
+  <strong>KYTKENNÄT</strong>
+  <a href="/papers/sm-015-political-feedback-loop.html">SM-015 — Political Feedback Loop</a> &nbsp;·&nbsp;
+  <a href="/papers/cn-028-infrastructure-ownership-transfer.html">CN-028 — Omistussiirtymä</a> &nbsp;·&nbsp;
+  <a href="/tools/ACI-INSTRUMENT-v2.html">WEM — Fyysinen taso</a> &nbsp;·&nbsp;
+  <a href="/supplements/ACI_DA-001_v1_1.html">DA-001 — Diagnostiikka</a>
+</div>
+
+</body>
+</html>
