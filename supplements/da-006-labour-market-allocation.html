@@ -891,10 +891,34 @@ p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; ma
   <p style="font-size:.82rem;color:#666;font-style:italic;border-top:1px solid #ddd;padding-top:.5rem;margin-top:.8rem">DA-006 v2: oikea paneeliaineisto Statistics Finland, L4 instrumentoitu (TES-kattavuus + rekrytointikanavan digitalisaatio), Arellano-Bond FE-IV, δ kalibroitu.</p>
 </div>
 
-<!-- §14 DA-006 v2 strukturaalinen estimointikehys -->
+<!-- §14 DA-006 v2 kompakti ydinversio -->
 <div class="section">
   <div class="section-id">§ 14</div>
-  <h2>DA-006 v2 — Strukturaalinen estimointikehys (SM-015-kytkentä)</h2>
+  <h2>DA-006 v2 — Kompakti ydinversio</h2>
+
+  <p>DA-006 v2 lisää SM-015:n <em>interaktioterminä</em>, ei erillisenä selittäjänä. Energia ei selitä Y:tä suoraan — se muuttaa L4:n vaikutuksen voimakkuutta:</p>
+
+  <p style="font-family:'DM Mono',monospace;font-size:.82rem;background:#f3f0ea;padding:.5rem .8rem;border-left:3px solid #8b2500;margin:.5rem 0">Y<sub>s,t</sub> = θ'X<sub>s,t</sub> + <strong>δ(L4<sub>s,t</sub> × E<sub>t</sub>)</strong> + μ<sub>s</sub> + τ<sub>t</sub> + ε</p>
+
+  <p style="font-size:.85rem">δ on olemassa vain jos: (1) E<sub>t</sub> vaihtelee ajassa, (2) L4 vaihtelee sektoreittain, (3) niiden yhdistelmä ei ole kiinteiden efektien selittämä. Jos nämä pitävät → δ mitattavissa. Jos eivät → energia ei kuulu malliin (δ = 0).</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.7rem 0">
+    <div style="border:1px solid #ddd;padding:.6rem .8rem;font-size:.85rem">
+      <strong style="font-family:'DM Mono',monospace;font-size:.7rem;color:#666">H₀: δ = 0</strong><br>
+      <span style="color:#666;font-size:.8rem">Energia ei vahvista segmentaatiota. SM-015 ja DA-006 riippumattomia.</span>
+    </div>
+    <div style="border:1px solid #8b2500;padding:.6rem .8rem;font-size:.85rem;background:#fff8f6">
+      <strong style="font-family:'DM Mono',monospace;font-size:.7rem;color:#8b2500">H₁: δ &gt; 0</strong><br>
+      <span style="color:#666;font-size:.8rem">Energiastressi vahvistaa segmentaatiota. LCR-lasku kiihtyy SM-015:n mukana.</span>
+    </div>
+  </div>
+
+  <p style="font-size:.85rem"><strong>Stressitesti (B-skenaario):</strong> Jos E<sub>t</sub> nousee +1σ (SM-015 EPP kiristyy talvistressin tasolle) ja mock-kalibroinnin L4-dominanssi (β=0.42) pitää, LCR-lasku kiihtyy δ × 0.42 × σ(E) lisää vuodessa. Tällä hetkellä δ kalibroimaton — tämä on se yksi luku joka tekee v2:sta empiirisen testin.</p>
+
+  <p style="font-style:italic;color:#666;font-size:.82rem;border-top:1px solid #ddd;padding-top:.5rem;margin-top:.5rem">DA-006 v2 käytännössä: Statistics Finland + Fingrid EPP-aikasarja → FE-IV. δ:n etumerkki ratkaisee onko kytkentä fakta vai hypoteesi.</p>
+</div>
+
+
 
   <div style="background:#f8f5f0;border:1px solid #ddd;padding:.7rem 1rem;margin-bottom:1rem;font-size:.82rem">
     <strong style="font-family:'DM Mono',monospace;font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500">Status</strong><br>
@@ -918,38 +942,6 @@ p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; ma
     <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace;color:#8b2500"><strong>δ</strong></td><td style="padding:.3rem .6rem">Kytkentäparametri: energiashokin kyky vahvistaa segmentaation vaikutusta työmarkkinatasapainoon. Tämä on v2:n uusi kontribuutio.</td></tr>
     <tr><td style="padding:.3rem .6rem;font-family:'DM Mono',monospace">μ<sub>s</sub>, τ<sub>t</sub></td><td style="padding:.3rem .6rem">Sektori- ja vuosikiinteät efektit — kontrolloivat havaitsemattoman heterogeenisuuden</td></tr>
   </table>
-
-  <h3>Mitä δ oikeasti mittaa</h3>
-  <p style="font-size:.85rem">δ ei ole "lisäkerroin energialle". Se on <strong>energiastressin heterogeeninen efekti segmentaatioon</strong>: kuinka paljon L4:n vaikutus Y:hyn vahvistuu tai heikkenee kun E<sub>t</sub> kasvaa. Formaalisti tämä on DiD + interaktio FE -malli.</p>
-  <p style="font-size:.85rem">SM-015:n eksogeenisuus on identifikaation avain: EPP-indeksi ei riipu yksittäisten sektoreiden rekrytointipäätöksistä, joten se toimii luonnollisena instrumenttina.</p>
-
-  <h3>SM-015 → L4 kausaaliketju</h3>
-  <p style="font-size:.85rem">Rakenteellinen tulkinta: SM-015-silmukka kiihtyy → elektrointensiiviinen teollisuus supistuu → siirtymämatriisi L4 muuttuu → segmentaatio syvenee. δ mittaa tämän ketjun voimakkuuden.</p>
-
-  <h3>Testattava hypoteesi (v2 core claim)</h3>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.5rem 0 1rem">
-    <div style="border:1px solid #ddd;padding:.6rem .8rem;font-size:.85rem">
-      <strong style="font-family:'DM Mono',monospace;font-size:.7rem;color:#666">H₀</strong><br>
-      δ = 0<br>
-      <span style="color:#666;font-size:.8rem">Energiajärjestelmän stressi ei vahvista työmarkkinasegmentaatiota. SM-015 ja DA-006 ovat toisistaan riippumattomia.</span>
-    </div>
-    <div style="border:1px solid #8b2500;padding:.6rem .8rem;font-size:.85rem;background:#fff8f6">
-      <strong style="font-family:'DM Mono',monospace;font-size:.7rem;color:#8b2500">H₁</strong><br>
-      δ &gt; 0<br>
-      <span style="color:#666;font-size:.8rem">Energiastressi vahvistaa segmentaatiota. SM-015:n kiristyminen kiihdyttää LCR-laskua yli sen mitä L1...L4 yksinään ennustaa.</span>
-    </div>
-  </div>
-
-  <h3>Identifiointistrategia</h3>
-  <p style="font-size:.85rem">Kolme tasoa:</p>
-  <ol style="font-size:.85rem;margin:.3rem 0 .8rem 1.2rem;line-height:1.9">
-    <li><strong>Cross-sectional</strong>: sektorikohtaiset L1–L4 arvot — elektrointensiiviset vs. ei-elektrointensiiviset</li>
-    <li><strong>Time-series</strong>: EPP-trendi 2010–2026 vs. LCR-trendi samalla ajanjaksolla</li>
-    <li><strong>Residuaalianalyysi</strong>: L5-varianssi ennen ja jälkeen E<sub>t</sub>-shokin kontrolloinnin</li>
-  </ol>
-
-  <p style="font-style:italic;color:#666;font-size:.82rem;border-top:1px solid #ddd;padding-top:.5rem;margin-top:.5rem">DA-006 v2 käytännössä: Statistics Finlandin mikropaneelidata + Fingridin EPP-aikasarja → FE-IV estimointi (L4 instrumentoitu TES-kattavuudella). δ:n etumerkki ja merkitsevyys ratkaisee onko SM-015 × DA-006 -kytkentä empiirinen fakta vai hypoteesi.</p>
-</div>
 
 <!-- REFERENCES -->
 <div class="section">
