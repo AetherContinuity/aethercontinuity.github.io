@@ -768,6 +768,55 @@ p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; ma
   </div>
 </div>
 
+<!-- §12 dekompositiomalli -->
+<div class="section">
+  <div class="section-id">§ 12</div>
+  <h2>Dekompositiomalli — L-indikaattorien mittausprokserit</h2>
+
+  <p>DA-006 siirtyy selitysjärjestelmästä kohti dekompositiomallia jossa L–5 on residuaali eikä tulkinnan ydin. Tämä edellyttää että L–1...L–4 määritellään mitattaviksi operatiivisiksi muuttujiksi joilla on tarkka proksy, odotettu jakauma ja lähde. Alla on ensimmäinen versio tästä määrittelystä — kehyksen seuraava revisio kalibroi nämä empiiriseen dataan.</p>
+
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:1rem 0">
+    <tr style="background:#f0ece4">
+      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Indikaattori</th>
+      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Mittausproksy</th>
+      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Odotettu jakauma</th>
+      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Lähde</th>
+    </tr>
+    <tr style="border-bottom:1px solid #eee">
+      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–1</strong><br>Avoimien työpaikkojen rakenne</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Avoimet paikat ikäryhmän mukaan / kaikki avoimet paikat. Erityisesti: hakemusten ikäjakaumavirhe (hakijat vs. kutsutut haastatteluun).</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–1 selittää kokonaan: +55-hakijoiden haastattelukutsuosuus = heidän osuutensa hakijoista. Poikkeama = L–1-signaali.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">TEM työnvälitystilastot, KEHA-rekrytointi­tutkimus</td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee">
+      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–2</strong><br>Rekrytointikanavan vinouma</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Osuus täytetyistä paikoista verkostohakuna vs. avoimena hakuna — ikäryhmittäin. LinkedIn-profiiliaktiivisuus yli 55 vs. alle 45.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–2 ei vinouma: verkostorekrytointiosuus sama eri ikäryhmissä. Poikkeama = L–2-signaali.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Taloustutkimus rekrytointikyselyt, TTL:n työelämätutkimukset</td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee">
+      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–3</strong><br>Hiljaisen tiedon siirtyvyys</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Työnantajakohtainen eläköitymisvauhti suhteessa rekrytointiaikaan samaan tehtävään. Sektorikohtainen "korvausviive" (kuukausina).</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–3 ei ole rajoite: korvausviive vakio eri sektoreilla. Infra/kunnossapito/hallinto poikkeavat = L–3-signaali.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Eläkevakuutusyhtiöt (eläköitymisdata), HR-barometrit, sektoritutkimukset</td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee">
+      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–4</strong><br>Institutionaalinen allokaatio</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">HR-päätöskriteerien ikäimplisiittisyys: "dynaaminen", "kasvuhaluinen", "pitkä ura edessä" -ilmaisut työpaikkailmoituksissa. Hylkäysaste ikäryhmittäin kontrolloituna osaamisella.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–4 ei vinouma: ilmoitusten ikä-implisiittiset termit jakautuvat tasaisesti sektoreilla. Kasautuminen = L–4-signaali.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Mol.fi ilmoitusanalyysi (NLP), Syrjintätutkimukset STM/THL</td>
+    </tr>
+    <tr>
+      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–5</strong><br>Narratiivinen residuaali</td>
+      <td style="padding:.4rem .6rem;vertical-align:top"><em>Ei omaa proksya — mitataan jäännöksellä.</em> L–5 = selittämätön osuus +55-työllistymisvajeesta sen jälkeen kun L–1...L–4 on kontrolloitu regressiomallissa.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–5 on pieni residuaali: L–1...L–4 selittää pääosan. Jos suuri: L–5 ansaitsee oman tutkimusohjelmansa. Tämä on se kohta jossa kehys on empiirisesti falsifioitavissa.</td>
+      <td style="padding:.4rem .6rem;vertical-align:top">Johdettu L–1...L–4 jälkeen</td>
+    </tr>
+  </table>
+
+  <p style="font-size:.85rem;color:#666;font-style:italic;border-top:1px solid #ddd;padding-top:.6rem;margin-top:.6rem">Tämä on kehyksen seuraavan version operationalisointisuunnitelma. Nykyversio on kategorinen — seuraava versio on dekompositiomalli jossa L-indikaattorit tuottavat erottelevan signaalin sektorien, ikäryhmien ja rekrytointikanavien välillä. L–5 on hypoteesi, ei selitys.</p>
+</div>
+
 <!-- REFERENCES -->
 <div class="section">
   <div class="section-id">Viitteet</div>
