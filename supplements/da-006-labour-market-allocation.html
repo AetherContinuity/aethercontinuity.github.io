@@ -771,50 +771,62 @@ p { font-family:var(--serif); font-size:1rem; line-height:1.8; color:#2a2520; ma
 <!-- §12 dekompositiomalli -->
 <div class="section">
   <div class="section-id">§ 12</div>
-  <h2>Dekompositiomalli — L-indikaattorien mittausprokserit</h2>
+  <h2>Dekompositiomalli — L-indikaattorien operationalisointi</h2>
 
-  <p>DA-006 siirtyy selitysjärjestelmästä kohti dekompositiomallia jossa L–5 on residuaali eikä tulkinnan ydin. Tämä edellyttää että L–1...L–4 määritellään mitattaviksi operatiivisiksi muuttujiksi joilla on tarkka proksy, odotettu jakauma ja lähde. Alla on ensimmäinen versio tästä määrittelystä — kehyksen seuraava revisio kalibroi nämä empiiriseen dataan.</p>
+  <p>DA-006 siirtyy selitysjärjestelmästä dekompositiomalliin jossa L–1...L–4 ovat B-tason johdettuja mittareita ja L–5 on C-tason residuaali. Alla on jokaisen indikaattorin tarkka proksy, datalähde, odotettu jakauma ja hälytyskynnys.</p>
 
-  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:1rem 0">
-    <tr style="background:#f0ece4">
-      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Indikaattori</th>
-      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Mittausproksy</th>
-      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Odotettu jakauma</th>
-      <th style="text-align:left;padding:.4rem .6rem;border-bottom:2px solid #ddd;font-family:'DM Mono',monospace;font-size:.67rem">Lähde</th>
-    </tr>
-    <tr style="border-bottom:1px solid #eee">
-      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–1</strong><br>Avoimien työpaikkojen rakenne</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Avoimet paikat ikäryhmän mukaan / kaikki avoimet paikat. Erityisesti: hakemusten ikäjakaumavirhe (hakijat vs. kutsutut haastatteluun).</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–1 selittää kokonaan: +55-hakijoiden haastattelukutsuosuus = heidän osuutensa hakijoista. Poikkeama = L–1-signaali.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">TEM työnvälitystilastot, KEHA-rekrytointi­tutkimus</td>
-    </tr>
-    <tr style="border-bottom:1px solid #eee">
-      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–2</strong><br>Rekrytointikanavan vinouma</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Osuus täytetyistä paikoista verkostohakuna vs. avoimena hakuna — ikäryhmittäin. LinkedIn-profiiliaktiivisuus yli 55 vs. alle 45.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–2 ei vinouma: verkostorekrytointiosuus sama eri ikäryhmissä. Poikkeama = L–2-signaali.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Taloustutkimus rekrytointikyselyt, TTL:n työelämätutkimukset</td>
-    </tr>
-    <tr style="border-bottom:1px solid #eee">
-      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–3</strong><br>Hiljaisen tiedon siirtyvyys</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Työnantajakohtainen eläköitymisvauhti suhteessa rekrytointiaikaan samaan tehtävään. Sektorikohtainen "korvausviive" (kuukausina).</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–3 ei ole rajoite: korvausviive vakio eri sektoreilla. Infra/kunnossapito/hallinto poikkeavat = L–3-signaali.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Eläkevakuutusyhtiöt (eläköitymisdata), HR-barometrit, sektoritutkimukset</td>
-    </tr>
-    <tr style="border-bottom:1px solid #eee">
-      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–4</strong><br>Institutionaalinen allokaatio</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">HR-päätöskriteerien ikäimplisiittisyys: "dynaaminen", "kasvuhaluinen", "pitkä ura edessä" -ilmaisut työpaikkailmoituksissa. Hylkäysaste ikäryhmittäin kontrolloituna osaamisella.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–4 ei vinouma: ilmoitusten ikä-implisiittiset termit jakautuvat tasaisesti sektoreilla. Kasautuminen = L–4-signaali.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Mol.fi ilmoitusanalyysi (NLP), Syrjintätutkimukset STM/THL</td>
-    </tr>
-    <tr>
-      <td style="padding:.4rem .6rem;vertical-align:top"><strong>L–5</strong><br>Narratiivinen residuaali</td>
-      <td style="padding:.4rem .6rem;vertical-align:top"><em>Ei omaa proksya — mitataan jäännöksellä.</em> L–5 = selittämätön osuus +55-työllistymisvajeesta sen jälkeen kun L–1...L–4 on kontrolloitu regressiomallissa.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Jos L–5 on pieni residuaali: L–1...L–4 selittää pääosan. Jos suuri: L–5 ansaitsee oman tutkimusohjelmansa. Tämä on se kohta jossa kehys on empiirisesti falsifioitavissa.</td>
-      <td style="padding:.4rem .6rem;vertical-align:top">Johdettu L–1...L–4 jälkeen</td>
-    </tr>
+  <p>Episteeminen kerrostuma: L–1...L–4 vastaavat SM-015-monitorin B-luokkaa (johdettu, mitattavissa julkisesta datasta). L–5 vastaa C-luokkaa (diagnostinen tiivistys, residuaali — ei primääriselittäjä).</p>
+
+  <h3>L–1 — Labour Supply Pressure Index</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1.2rem">
+    <tr style="background:#f0ece4"><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Ominaisuus</th><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Määritelmä</th></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Mittausproksy</td><td style="padding:.3rem .6rem">Pitkäaikaistyöttömyysaste (yli 12 kk) / avoimien työpaikkojen määrä. Vaihtoehto: työvoimapula-alojen määrä suhteessa työttömyysasteeseen samoilla aloilla.</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Lähde</td><td style="padding:.3rem .6rem">TEM · Statistics Finland · EURES</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Odotettu jakauma</td><td style="padding:.3rem .6rem">Suomi 2015–2024: 0.3–0.8 (indeksinä)</td></tr>
+    <tr><td style="padding:.3rem .6rem;font-weight:500;color:#8b2500">Hälytyskynnys</td><td style="padding:.3rem .6rem">≥0.6 = korkea paine (pula ja työttömyys samanaikaisesti)</td></tr>
   </table>
 
-  <p style="font-size:.85rem;color:#666;font-style:italic;border-top:1px solid #ddd;padding-top:.6rem;margin-top:.6rem">Tämä on kehyksen seuraavan version operationalisointisuunnitelma. Nykyversio on kategorinen — seuraava versio on dekompositiomalli jossa L-indikaattorit tuottavat erottelevan signaalin sektorien, ikäryhmien ja rekrytointikanavien välillä. L–5 on hypoteesi, ei selitys.</p>
+  <h3>L–2 — Wage Growth Divergence</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1.2rem">
+    <tr style="background:#f0ece4"><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Ominaisuus</th><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Määritelmä</th></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Mittausproksy</td><td style="padding:.3rem .6rem">Palkkakehityksen ero kansainvälisesti liikkuvilla aloilla (ICT, teollisuus) vs. ei-liikkuvilla (sote, julkinen hallinto)</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Lähde</td><td style="padding:.3rem .6rem">Statistics Finland palkkatilastot · Eurostat</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Odotettu jakauma</td><td style="padding:.3rem .6rem">Ero normaalisti 0–2 %-yksikköä vuodessa</td></tr>
+    <tr><td style="padding:.3rem .6rem;font-weight:500;color:#8b2500">Hälytyskynnys</td><td style="padding:.3rem .6rem">≥3 %-yksikköä = merkittävä divergenssi</td></tr>
+  </table>
+
+  <h3>L–3 — Domestic Skill Utilisation Rate</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1.2rem">
+    <tr style="background:#f0ece4"><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Ominaisuus</th><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Määritelmä</th></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Mittausproksy</td><td style="padding:.3rem .6rem">+55-vuotiaiden työllistymisaste / 35–54-vuotiaiden työllistymisaste samoilla aloilla (suhdelukuna)</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Lähde</td><td style="padding:.3rem .6rem">Statistics Finland työvoimatutkimus</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Odotettu jakauma</td><td style="padding:.3rem .6rem">0.85–0.95 (eli +55:n aste 85–95 % ydinkohortista)</td></tr>
+    <tr><td style="padding:.3rem .6rem;font-weight:500;color:#8b2500">Hälytyskynnys</td><td style="padding:.3rem .6rem">&lt;0.80 = merkittävä aliutilisointi</td></tr>
+  </table>
+
+  <h3>L–4 — Labour Market Segmentation Index</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0 1.2rem">
+    <tr style="background:#f0ece4"><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Ominaisuus</th><th style="padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd;text-align:left">Määritelmä</th></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Mittausproksy</td><td style="padding:.3rem .6rem">Yhdistelmäindeksi: (a) pitkäaikaistyöttömyyden osuus kaikesta työttömyydestä + (b) määräaikaisten osuus + (c) TES-kattavuuden ero sektoreiden välillä</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Lähde</td><td style="padding:.3rem .6rem">Statistics Finland · TEM · työmarkkinajärjestöt</td></tr>
+    <tr style="border-bottom:1px solid #eee"><td style="padding:.3rem .6rem;font-weight:500">Odotettu jakauma</td><td style="padding:.3rem .6rem">Indeksi 0–100 · Suomi 2015–2024: 45–55</td></tr>
+    <tr><td style="padding:.3rem .6rem;font-weight:500;color:#8b2500">Hälytyskynnys</td><td style="padding:.3rem .6rem">≥60 = korkea segmentaatio</td></tr>
+  </table>
+
+  <h3>L–5 — Residuaali ja hypoteesi (C-taso)</h3>
+  <div style="background:#f8f5f0;border:1px dashed #ccc;padding:.8rem 1rem;font-size:.85rem;margin:.5rem 0 1rem">
+    <p style="margin-bottom:.5rem"><strong>L–5 = havaittu työllisyysero / L–1...L–4 -mallin ennustama ero</strong></p>
+    <ul style="margin:.3rem 0 .3rem 1.2rem;font-size:.85rem">
+      <li>L–5 ≈ 1.0 → malli selittää kaiken, narratiivikuilua ei ole</li>
+      <li>L–5 &gt; 1.0 → on olemassa mittaamaton tekijä (mahdollisesti kulttuurinen allokointibias)</li>
+    </ul>
+    <p style="margin-top:.5rem;margin-bottom:0;font-style:italic;color:#666">L–5 ei ole oma proksyindikaattorinsa — se on jäännöstermi. Se on hypoteesi jota testataan sen jälkeen kun L–1...L–4 on kontrolloitu. Ei primääriselittäjä.</p>
+  </div>
+
+  <h3>Yhdistetty skenaariorakenne (SM-015 × DA-006)</h3>
+  <p style="font-size:.88rem">Kun L–1...L–4 on operationalisoitu, energia- ja työmarkkinadynamiikka voidaan kytkeä skenaariotyökaluksi:</p>
+  <p style="font-family:'DM Mono',monospace;font-size:.8rem;background:#f3f0ea;padding:.5rem .8rem;border-left:3px solid #8b2500;margin:.5rem 0">Työllisyys = f(suhdanne, työn tarjonta, energian hinta [SM-015], L–4-segmentaatio, L–5-residuaali)</p>
+  <p style="font-size:.85rem;color:#666;font-style:italic">Tämä ei ole ennuste vaan skenaariotyökalu: jos energia kallistuu (SM-015 ↑) JA segmentaatio syvenee (L–4 ↑) → työllisyyskasvu hidastuu. Kvantitatiivinen kalibrointi on avoin tehtävä.</p>
 </div>
 
 <!-- REFERENCES -->
