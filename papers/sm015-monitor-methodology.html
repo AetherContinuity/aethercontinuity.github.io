@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SM-015 Monitorin metodologia · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm015-monitor-methodology.html"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;
+  --warn:#c8960c;--ok:#2d6a2d;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;
+  --mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1rem;line-height:1.8;max-width:720px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.5rem;font-weight:400;margin-bottom:.2rem}
+.doc-id{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:2rem}
+h2{font-size:.9rem;font-weight:600;font-family:var(--mono);text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);margin:2rem 0 .7rem}
+h3{font-size:.95rem;font-weight:500;margin:1.2rem 0 .4rem}
+p{margin-bottom:.9rem;font-size:.92rem}
+ul,ol{margin:.4rem 0 .9rem 1.4rem;font-size:.92rem;line-height:1.9}
+li{margin-bottom:.2rem}
+
+/* Episteeminen taulukko */
+.ep-table{width:100%;border-collapse:collapse;margin:1rem 0}
+.ep-table th{padding:.4rem .7rem;font-family:var(--mono);font-size:.67rem;
+  text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid var(--rule);
+  text-align:left}
+.ep-table td{padding:.4rem .7rem;border-bottom:1px solid #eee;font-size:.85rem;
+  vertical-align:top}
+.tag-a{font-family:var(--mono);font-size:.63rem;font-weight:500;color:var(--ok)}
+.tag-b{font-family:var(--mono);font-size:.63rem;font-weight:500;color:var(--warn)}
+.tag-c{font-family:var(--mono);font-size:.63rem;font-weight:500;color:var(--accent)}
+
+/* Sääntölaatikot */
+.rule-box{border:1px solid var(--rule);padding:.9rem 1.1rem;margin:1rem 0;
+  background:#fff;font-size:.88rem}
+.rule-box .rule-label{font-family:var(--mono);font-size:.63rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+  display:block;margin-bottom:.5rem}
+.rule-box ul{margin:.3rem 0 0 1.2rem}
+
+/* Kielto */
+.prohibition{border:1px solid var(--accent);border-left:4px solid var(--accent);
+  padding:.7rem 1rem;margin:1rem 0;background:#fff8f6;font-size:.88rem}
+.prohibition .rule-label{font-family:var(--mono);font-size:.63rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+  display:block;margin-bottom:.4rem}
+
+.footnote{font-family:var(--mono);font-size:.62rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.7rem;line-height:2}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+.nav-footer strong{color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.5rem}
+blockquote{border-left:3px solid var(--rule);margin:1rem 0;padding:.4rem 1rem;
+  font-style:italic;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/tools/sm015-ownership-monitor.html">SM-015 Monitori</a>
+  <a href="/papers/sm-015-political-feedback-loop.html">SM-015</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>SM-015 Omistusrakennemonitorin metodologia</h1>
+<p class="doc-id">Episteeminen kerrostuma · B→C -siirtymäsäännöt · Päivitysprotokolla<br>
+v1.0 · Kesäkuu 2026 · Avoin</p>
+
+<p>Tämä dokumentti kuvaa SM-015 Omistusrakennemonitorin metodologiset periaatteet: mistä luvut tulevat, mitä ne tarkoittavat, ja milloin johdettua estimaattia saa käyttää narratiivisena tiivistyksenä. Tarkoitus on tehdä monitorin päivitys toistettavaksi myös ACI:n ulkopuolelta.</p>
+
+<h2>§1 — Episteeminen kerrostuma</h2>
+
+<p>Monitorin indikaattorit jaetaan kolmeen luokkaan joilla on eri ontologinen asema:</p>
+
+<table class="ep-table">
+  <tr>
+    <th>Luokka</th><th>Kuvaus</th><th>Esimerkki</th><th>Visualisointi</th>
+  </tr>
+  <tr>
+    <td><span class="tag-a">A · Mitattu</span></td>
+    <td>Suoraan verifioitavissa julkisesta primäärilähteestä ilman tulkintaa</td>
+    <td>Liittymäjono 250 GW (Fingrid), kuntakaupat 6.3/v (Kuntaliitto)</td>
+    <td>Iso kortti, värikoodattu raja</td>
+  </tr>
+  <tr>
+    <td><span class="tag-b">B · Johdettu</span></td>
+    <td>Laskettu tai estimoitu julkisesta datasta — sisältää mallioletuksia tai estimointivirhettä</td>
+    <td>Investointiaste 0.72 (tilinpäätös + Energiavirasto), PE-omistus ~34% (arvio)</td>
+    <td>Iso kortti, keltainen <strong>B</strong>-merkintä</td>
+  </tr>
+  <tr>
+    <td><span class="tag-c">C · Diagnostinen</span></td>
+    <td>Narratiivinen kompressio A/B-muuttujista — kehikon sisäinen tila, ei standardimuuttuja</td>
+    <td>"Silmukka kiihtyy", "Katkaisijat 1/3", "Vahva rakenteellinen jännite"</td>
+    <td>Pieni katkoviivakehys, kursiivi</td>
+  </tr>
+</table>
+
+<blockquote>C ei saa koskaan esiintyä samalla visuaalisella tasolla kuin A tai B. C on tiivistys — ei mittaus.</blockquote>
+
+<h2>§2 — Yksittäisten indikaattorien laskentaperiaatteet</h2>
+
+<h3>Kuntakaupat / vuosi (A)</h3>
+<p>Lähde: Kauppalehti, Talouselämä, Kuntaliitto. Lasketaan energia-infrastruktuurin (jakeluverkko, kaukolämpö, sähköntuotanto) kuntaomistuksen myynnitapahtumiksi. Kolmen vuoden liukuva keskiarvo tasoittaa yksittäisten vuosien vaihtelua. Kynnysarvo &gt;5/v on ACI:n heuristinen — ei virallinen standardi.</p>
+
+<h3>Investointiaste (B)</h3>
+<p>Lähde: yhtiön julkinen tilinpäätös (kaupparekisteri) + Energiaviraston valvontatiedot. Laskentakaava: käyttöomaisuusinvestoinnit / suunnitelman mukaiset poistot. Elenia 2025: investoinnit ~120–140 M€, poistot ~170–190 M€ → suhde 0.68–0.74, käytetään 0.72. Caruna: vastaava data ei julkinen, käytetään arviota ~0.85. Kynnysarvot: &lt;0.8 lypsää verkkoa · 0.8–1.1 ylläpito · &gt;1.1 kehittää.</p>
+
+<h3>CHP-eroosio (B)</h3>
+<p>Lähde: Fingridin tuotantotilastot + yritysten julkiset ilmoitukset. Helsinki −400 MW on dokumentoitu (Salmisaari, Suvilahti, Hanasaari 2024–2025). Porvoo/Neste −150 MW on arvio rakennemuutoksen perusteella — ei vahvistettu luku. Muut −100 MW on residuaali-estimaatti. Kokonaisluku −650 MW sisältää epävarmuutta noin ±100 MW.</p>
+
+<h3>PE-omistus jakeluverkosta (B)</h3>
+<p>Lähde: kaupparekisteri + julkiset kaupat. Elenia ~25% markkinaosuus (Macquarie/Allianz) + Caruna ~10% (Allianz/OMERS) + muut &lt;5% = arvio ~34–38%. Luku on estimaatti, ei rekisteripohjainen tilasto.</p>
+
+<h3>Liittymäjono (A)</h3>
+<p>Lähde: Fingridin avoin data, liittymäkyselyt. 250 GW on kaikki vireillä olevat kyselyt — valtaosa ei realisoidu. Toteutunut ~0.5 GW/12kk on erillinen luku. Molemmat on esitettävä rinnakkain tulkinnan estämiseksi.</p>
+
+<h3>Kaukolämmön hallinta (B)</h3>
+<p>Lähde: julkiset kuntakaupat. ~65% kunnallisessa hallinnassa on arvio joka perustuu tunnettuihin myyntitapahtumiin. Ei rekisteripohjainen tilasto.</p>
+
+<h2>§3 — B→C -siirtymäsäännöt</h2>
+
+<p>B-luokan johdettu estimaatti saa muuttua C-luokan narratiiviseksi tiivistykseksi vain kun kaikki kolme kriteeriä täyttyvät:</p>
+
+<div class="rule-box">
+  <span class="rule-label">Kriteeri 1 — Suunta on selvä useammassa kuin yhdessä B-muuttujassa</span>
+  <ul>
+    <li>Vähintään kolme B-muuttujaa viittaa samaan suuntaan samanaikaisesti</li>
+    <li>Ei riitä että yksi muuttuja on punaisella — tarvitaan koherenssi</li>
+    <li>Esimerkki: investointiaste laskee JA kuntakaupat kiihtyvät JA CHP-eroosio jatkuu → voidaan tiivistää "rakenteellinen paine kasvaa"</li>
+  </ul>
+</div>
+
+<div class="rule-box">
+  <span class="rule-label">Kriteeri 2 — Trendi on havaittavissa yli kahden kvartaalin</span>
+  <ul>
+    <li>Yksittäinen datapiste ei oikeuta C-luokan tiivistykseen</li>
+    <li>Tarvitaan vähintään kolme peräkkäistä kvartaalia joissa suunta on sama</li>
+    <li>Ensimmäinen datapiste (Q2/2026) on lähtötila — ei vielä trendi</li>
+  </ul>
+</div>
+
+<div class="rule-box">
+  <span class="rule-label">Kriteeri 3 — Tiivistys on falsifioitavissa</span>
+  <ul>
+    <li>C-luokan väite pitää sisältää ehto jolla se osoitettaisiin vääräksi</li>
+    <li>Esimerkki: "Silmukka kiihtyy" on falsifioitu jos kuntakaupat laskevat alle 3/v JA investointiaste nousee yli 1.0 samanaikaisesti</li>
+    <li>Ilman falsifiointiehtoa C-luokan väite on pelkkä narratiivi</li>
+  </ul>
+</div>
+
+<div class="prohibition">
+  <span class="rule-label">Kielto — C ei eskaloidu A:ksi</span>
+  C-luokan tiivistys ei koskaan saa saada A-luokan visuaalista asemaa riippumatta siitä kuinka vahvasti B-muuttujat tukevat sitä. C on aina tulkinta — se ei muutu mittaukseksi lisäevidenssin myötä. Jos haluaa eskaloida C:n asemaa, tarvitaan uusi A-luokan primäärimitta, ei vahvempi narratiivi.
+</div>
+
+<h2>§4 — Päivitysprotokolla</h2>
+
+<p>Monitori päivitetään kvartaaleittain. Päivitys sisältää:</p>
+<ol>
+  <li>A-muuttujat: tarkista Fingridin ja Kuntaliittojen tuorein data</li>
+  <li>B-muuttujat: tarkista onko uusia tilinpäätöksiä tai kaupparekisterimerkintöjä</li>
+  <li>C-muuttujat: tarkista täyttyvätkö B→C -siirtymäkriteerit edelleen</li>
+  <li>Governance lag -ketju: kirjaa onko WP-003/TN-006/DA-001 -käsitteisiin tullut uusia empiirisiä havaintoja</li>
+</ol>
+
+<p>Päivityksen tekijä dokumentoi jokaisen muuttuneen luvun lähteen ja laskentaperiaatteen. Estimaatit merkitään ~-merkillä. Epävarmuusalue ilmoitetaan kun se on yli ±15%.</p>
+
+<h2>§5 — Suhde WEM:iin</h2>
+
+<p>WEM mittaa fyysisen tason (EPP, CHP-paine, DC-kuorma) reaaliajassa. SM-015 monitori mittaa institutionaalisen tason kvartaaleittain. Ne ovat komplementaarisia — eivät korvaa toisiaan.</p>
+
+<p>Kriittinen ero: WEM:n EPP on synteettinen indeksi joka ei neuvottele statuksestaan — se on luku. SM-015 monitorin C-luokan kokonaisarvio on narratiivinen tiivistys joka voidaan aina kyseenalaistaa. Tämä ero pitää säilyttää.</p>
+
+<div class="footnote">
+  v1.0 · Kesäkuu 2026 · ACI<br>
+  Laadittu ulkoisten reviewien perusteella: tekninen review (normalisointi/Δ-termit) + käytännöllinen review (kynnysarvot/lähdeviitteet) + episteminen review (A/B/C-kerrostuma)<br>
+  SM-015 v2 tulee sisältämään governance lag -ketjun (WP-003→SM-007) eksplisiittisinä osafunktioina
+</div>
+
+<div class="nav-footer">
+  <strong>KYTKENNÄT</strong>
+  <a href="/tools/sm015-ownership-monitor.html">SM-015 Monitori</a> &nbsp;·&nbsp;
+  <a href="/papers/sm-015-political-feedback-loop.html">SM-015 Political Feedback Loop</a> &nbsp;·&nbsp;
+  <a href="/papers/wp-003-institutional-termination-time.html">WP-003 Institutional Termination Time</a> &nbsp;·&nbsp;
+  <a href="/supplements/tn-006-temporal-elasticity.html">TN-006 Temporal Elasticity</a>
+</div>
+
+</body>
+</html>
