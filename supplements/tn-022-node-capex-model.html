@@ -404,24 +404,26 @@ Q<sub>CHP</sub>(t) = max(0, D<sub>heat</sub>(t) − Q<sub>LDR</sub>(t) − Q<sub
 
 <p><strong>Optimisation objective extension.</strong> Thermal balance adds a fourth objective to the CAPEX/Duration/Resilience triplet — a thermal infeasibility penalty that forces the system to account for LDR-50 rigidity:</p>
 
-<div style="background:#f8f5f0;border:1px solid #e0d8cc;padding:.7rem 1.1rem;margin:.8rem 0;font-family:var(--mono);font-size:.85rem">
-J<sub>thermal</sub> = ∫|D<sub>heat</sub>(t) − ΣQ<sub>i</sub>(t)| dt → min
-</div>
 
-<p>This penalises both surplus (summer dump) and deficit (winter shortfall). It makes SOEC and thermal storage CAPEX decisions dynamic rather than static — their value depends on the full annual load profile, not on peak sizing alone.</p>
 
-<p class="claim">Without thermal balance optimisation, a node with LDR-50 baseload will either dump summer heat (waste) or over-build CHP (inefficient). With SOEC integration, the summer surplus becomes higher hydrogen yield — transforming a thermal liability into a chemical asset.</p>
-
-<div class="refs">
-<strong>References</strong><br>
-<a href="/supplements/ACI_TN-001_Duration-Capable_Local_Energy_Node_v1_0.html">TN-001 v1.1</a> — Duration-Capable Local Energy Node (structural properties)<br>
-<a href="/supplements/tn-011-ccu-flexibility-sink.html">TN-011</a> — CCU as Flexibility Sink (CO₂ feedstock architecture)<br>
-<a href="/papers/wp-019-sgfa-retrofit-pathways.html">WP-019</a> — SGFA Retrofit Pathways and Regional Economic Multipliers<br>
-<a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010</a> — Financing Instruments and Energy Clusters (four-revenue model)<br>
-SGFA Master Package — Kuopio node analysis, April 2026 (internal ACI working document)<br>
-IRENA (2023). Green Hydrogen Cost Reduction. International Renewable Energy Agency.<br>
-IEA (2024). Electrolysers. Technology report.<br>
-Louis, J.-N., Kiviluoma, J., &amp; Lindroos, T. J. (2024). Biomass availability at NUTS3 level for modelling European energy system with 3 future scenarios. Zenodo. <a href="https://doi.org/10.5281/zenodo.14506624" style="color:#8b2500">doi:10.5281/zenodo.14506624</a> — NUTS3-tason biomassapotentiaalidata Suomelle, CC BY 4.0.
+<div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.8rem 1.1rem;margin:1.5rem 0;font-size:.88rem">
+<strong style="font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500;display:block;margin-bottom:.5rem">Biomassapotentiaali — NUTS3-tason empiirinen validointi</strong>
+<p style="margin-bottom:.5rem">Lähde: Louis, Kiviluoma &amp; Lindroos (VTT/MOPO 2024), <a href="https://doi.org/10.5281/zenodo.14506624" style="color:#8b2500">doi:10.5281/zenodo.14506624</a> · CC BY 4.0 · db_biomass_ener_mopo.csv · medium-skenaario</p>
+<table style="width:100%;border-collapse:collapse;font-size:.82rem;margin:.4rem 0">
+  <tr style="background:#f0ece4">
+    <th style="text-align:left;padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">Maakunta</th>
+    <th style="text-align:left;padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">NUTS3</th>
+    <th style="text-align:right;padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">Low PJ</th>
+    <th style="text-align:right;padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">Medium PJ</th>
+    <th style="text-align:right;padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.67rem;border-bottom:1px solid #ddd">High PJ</th>
+  </tr>
+  <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem"><strong>Pohjois-Savo</strong></td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace">FI1D2</td><td style="padding:.25rem .5rem;text-align:right">56.7</td><td style="padding:.25rem .5rem;text-align:right"><strong>80.7</strong></td><td style="padding:.25rem .5rem;text-align:right">103.3</td></tr>
+  <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">Pohjanmaa</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace">FI1D6</td><td style="padding:.25rem .5rem;text-align:right">66.1</td><td style="padding:.25rem .5rem;text-align:right">83.5</td><td style="padding:.25rem .5rem;text-align:right">105.2</td></tr>
+  <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">Etelä-Savo</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace">FI1D1</td><td style="padding:.25rem .5rem;text-align:right">51.1</td><td style="padding:.25rem .5rem;text-align:right">68.1</td><td style="padding:.25rem .5rem;text-align:right">89.7</td></tr>
+  <tr style="border-bottom:1px solid #eee"><td style="padding:.25rem .5rem">Pohjois-Karjala</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace">FI1D3</td><td style="padding:.25rem .5rem;text-align:right">45.5</td><td style="padding:.25rem .5rem;text-align:right">62.2</td><td style="padding:.25rem .5rem;text-align:right">78.1</td></tr>
+  <tr><td style="padding:.25rem .5rem">Keski-Suomi</td><td style="padding:.25rem .5rem;font-family:'DM Mono',monospace">FI1D4</td><td style="padding:.25rem .5rem;text-align:right">32.2</td><td style="padding:.25rem .5rem;text-align:right">42.6</td><td style="padding:.25rem .5rem;text-align:right">52.7</td></tr>
+</table>
+<p style="margin-top:.5rem;margin-bottom:0">TN-022 vertailu — Pohjois-Savo 80.7 PJ/vuosi: N-1-solmu (1.4 PJ) kate <strong>56x</strong> · N-2-solmu (2.9 PJ) kate <strong>28x</strong> · 15 solmua N-1 (21.6 PJ) kate <strong>3.7x</strong>. Biomassa ei ole rajoite missään skenaariossa — rajoite on sopimusrakenne ja rahoitusmalli. Metsäbiomassa ~98% potentiaalista kaikilla SGFA-alueilla.</p>
 </div>
 
 </body>
