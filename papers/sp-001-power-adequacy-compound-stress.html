@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACI SP-001 — Reserve Duration and the Disappearing Buffer</title>
+<meta name="description" content="Adequacy risk in a wind-dominant power system as a structural condition: reserve duration is non-robust to wind persistence, and the dispatchable cross-border buffer is being legislated away. v2.0 withdraws the v1.0 reserve-sizing result.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --paper-2: #ede7d8;
+    --paper-3: #e4dccb;
+    --accent: #8b4513;
+    --muted: #7a7468;
+    --rule: #c8bfad;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  body { background-color: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.5; }
+
+  .dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; }
+  .dih-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+  .dih-series .series-accent { color: var(--accent); }
+  .dih-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+  .dih-meta strong { color: var(--ink); font-weight: 400; }
+  .dih-status { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); padding: 0.25rem 0.7rem; margin-top: 0.4rem; }
+  .dih-status-dot { width: 4px; height: 4px; border-radius: 50%; background: #5a8a5a; }
+  .dih-status-text { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-home:hover { color: var(--ink); }
+  .nav-home::before { content: '← '; }
+  .nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  .paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; animation: fadeUp 1.2s ease both; animation-delay: 0.15s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .title-block { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  h1.paper-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+  .paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .citation-box { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .domain-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .domain-tag { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0.2rem 0.6rem; color: var(--muted); }
+
+  .highlights { background: var(--paper-2); border: 1px solid var(--rule); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; }
+  .highlights-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .highlights ul { padding-left: 1.2rem; }
+  .highlights ul li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.3rem; color: #2a2520; }
+
+  .abstract-block { border: 1px solid var(--rule); padding: 1.75rem 2rem; margin-bottom: 3rem; background: var(--paper-3); }
+  .abstract-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .abstract-block p { font-size: 0.95rem; line-height: 1.8; color: #3a3530; margin-bottom: 0.8rem; }
+  .abstract-block p:last-child { margin-bottom: 0; }
+  .abstract-sub { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.3rem; }
+
+  .keywords { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+  .keywords strong { color: var(--ink); font-weight: 400; }
+
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  .section-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); min-width: 2rem; }
+  h2.section-title { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 1rem; font-weight: 500; margin: 1.75rem 0 0.75rem; color: var(--ink); }
+  p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .callout { margin: 2rem 0; border-left: 3px solid var(--ink); padding: 1rem 1.5rem; background: var(--paper-2); }
+  .callout p { font-size: 0.95rem; font-style: italic; margin: 0; }
+
+  /* Tables */
+  .table-wrap { margin: 2rem 0; overflow-x: auto; }
+  .table-caption { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.6rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; font-weight: 400; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--paper-2); }
+  tbody td { padding: 0.75rem 1rem; line-height: 1.5; vertical-align: top; }
+  tbody td:first-child { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .result-strong { color: #2a6a2a; font-family: var(--mono); font-size: 0.82rem; font-weight: 500; }
+  .result-warn { color: var(--accent); font-family: var(--mono); font-size: 0.82rem; }
+
+  /* Formula blocks */
+  .formula-block { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--rule); background: var(--paper-3); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.04em; line-height: 2; color: var(--ink); }
+
+  /* Finding boxes */
+  .finding-box { margin: 2rem 0; border: 2px solid var(--ink); padding: 1.5rem 1.75rem; }
+  .finding-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .finding-box p { font-size: 0.95rem; line-height: 1.75; }
+
+  /* References */
+  .references { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 2rem; }
+  .ref-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; color: #3a3530; }
+  .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); font-family: var(--mono); }
+
+  .companion-box { margin: 3rem 0; border: 1px solid var(--rule); padding: 1.25rem 1.5rem; background: var(--paper-2); }
+  .companion-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .companion-box p { font-size: 0.9rem; line-height: 1.65; }
+  .companion-box a { color: var(--accent); text-decoration: none; }
+  .companion-box a:hover { text-decoration: underline; }
+
+  footer { border-top: 1px solid var(--rule); max-width: 740px; margin: 0 auto; padding: 2rem 2rem 4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; }
+  .footer-col { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+
+  @media (max-width: 640px) { nav { padding: 1.2rem 1.5rem; } .paper { padding: 3rem 1.5rem 5rem; } footer { flex-direction: column; gap: 1rem; } .dih { grid-template-columns: 1fr; } }
+</style>
+  <link rel="canonical" href="https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "ACI SP-001 — Reserve Duration and the Disappearing Buffer",
+    "description": "Adequacy risk in a wind-dominant power system as a structural condition: reserve duration is non-robust to wind persistence, and the dispatchable cross-border buffer is being legislated away. v2.0 withdraws the v1.0 reserve-sizing result.",
+    "author": {"@type": "Organization", "name": "Aether Continuity Institute"},
+    "publisher": {"@type": "Organization", "name": "ACI", "url": "https://aethercontinuity.org"},
+    "url": "https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html",
+    "datePublished": "2026",
+    "inLanguage": "en"
+  }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ACI SP-001 — Reserve Duration and the Disappearing Buffer" />
+  <meta property="og:description" content="Adequacy risk in a wind-dominant power system as a structural condition: reserve duration is non-robust to wind persistence, and the dispatchable cross-border buffer is being legislated away. v2.0 withdraws the v1.0 reserve-sizing result." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html" />
+  <meta property="og:site_name" content="Aether Continuity Institute" />
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Report",
+    "name":"ACI SP-001 — Reserve Duration and the Disappearing Buffer",
+    "description":"Adequacy risk in a wind-dominant power system as a structural condition: reserve duration is non-robust to wind persistence, and the dispatchable cross-border buffer is being legislated away. v2.0 withdraws the v1.0 reserve-sizing result.",
+    "url":"https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html",
+    "creator":{"@type":"Organization","name":"Aether Continuity Institute","url":"https://aethercontinuity.org"},
+    "publisher":{"@type":"Organization","name":"Aether Continuity Institute"},
+    "datePublished":"2026-05-26"}
+  </script>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series"><span class="series-accent">Supporting Paper</span> &nbsp;·&nbsp; No. 001</span>
+  </div>
+  <div class="dih-right">
+    <div class="dih-meta">Year &nbsp;<strong>2026</strong><br>Version &nbsp;<strong>2.0</strong><br>Series &nbsp;<strong>SP</strong></div>
+    <div class="dih-status"><div class="dih-status-dot"></div><span class="dih-status-text">Open Working Draft</span></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-home" href="/">ACI Home</a>
+  <span class="nav-id">SP · 001 · 2026</span>
+</nav>
+
+<main class="paper">
+
+  <div class="title-block">
+    <div class="paper-label">ACI Supporting Paper No. 001 &nbsp;·&nbsp; v2.0</div>
+    <h1 class="paper-title">Reserve Duration and the Disappearing Buffer: Why Wind-Dominant Adequacy Is Structurally Non-Robust in the Finnish–Baltic System</h1>
+    <p class="paper-subtitle">Case Study: Finland &amp; the Baltic interface, 2026–2035</p>
+    <div class="citation-box">
+      Cite as: Aether Continuity Institute (ACI), Supporting Paper No. 001, v2.0, 2026.<br>
+      Available at: https://aethercontinuity.org/papers/sp-001-power-adequacy-compound-stress.html<br>
+      Cross-references: WP-001 (Duration Adequacy) · WP-008 (Allocation Bias) · DA-001 (Finland Pre-Shortage) · DA-003 (Finland Allocation Diagnostic) · SM-007 (Convergence Finding) · CN-004 (Distributed Optimisation)
+    </div>
+    <div class="domain-row">
+      <span class="domain-tag">D-1 · Duration Adequacy</span>
+      <span class="domain-tag">D-4 · Compound Stress</span>
+    </div>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--accent);background:var(--paper-3);">
+    <p style="font-style:normal;"><strong>Status note (v2.0).</strong> This version withdraws the central quantitative claim of v1.0 — that extending reserve duration from 48&nbsp;h to 72&nbsp;h eliminates P99 LOLE outcomes. That result was non-robust to its own dominant parameter (wind persistence) and was internally inconsistent with the paper's own compound-stress premise (constrained import). v2.0 does not replace it with another sufficiency claim; it states a structural condition that does not depend on any reserve being adequate. Quantitative parameters are cited from the published literature, not calibrated here. The only original empirical input is a single-zone Finnish measurement, reported with its full computation.</p>
+  </div>
+
+  <div class="abstract-block">
+    <div class="abstract-label">Abstract</div>
+    <p>Adequacy risk in a wind-dominant power system is treated here as a structural condition rather than a reserve-sizing problem. Two findings support this. First, reserve-duration adequacy is non-robust to wind persistence: at the persistence and low-wind durations established in the Northern European literature, no single reserve layer of economically plausible scale bounds the right tail of the loss-of-load distribution, and the cost of one that would is borne by no identifiable actor. Second, the historical adequacy buffer for Finland — dispatchable, weather-independent cross-border import — is being removed on a legislated schedule (Estonian oil-shale retirement) and replaced by weather-dependent generation that is not callable during the event.</p>
+    <p>The continuity gap identified in WP-001 is therefore, in this system, not closable by reserve sizing alone. The loss is not a forecasting failure; it is an unowned mandate. The paper contributes one datapoint to the convergence documented in SM-007 and one sharpening of CN-004: a buffer loss that is statutory and dated — detection delay near zero — that still converts to no present decision cost for any identifiable actor.</p>
+    <div class="keywords"><strong>Keywords:</strong> Power system adequacy · Reserve duration · Wind persistence · Dunkelflaute · Dispatchable buffer · Mandate gap · Detection delay · Finland · Estonia · Energy security</div>
+  </div>
+
+  <div class="companion-box">
+    <div class="companion-label">Relationship to ACI Series</div>
+    <p>This paper applies the duration-adequacy framework of <a href="/papers/wp-001-duration-adequacy-2.html">WP-001</a> to the Finnish–Baltic case. It does not restate the general mechanism gap (<a href="/papers/sm-007-convergence-finding.html">SM-007</a>), the energy-domain allocation bias (WP-008), the Black-Period instrument gap (DA-003), or the structural-vs-correctable framework and detection-delay variable (<a href="/papers/cn-004-distributed-optimisation.html">CN-004</a>); it cites them. Its own contributions are confined to §3 (non-robustness to persistence) and §5 (the dated, low-detection-delay buffer loss).</p>
+  </div>
+
+  <!-- §1 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 01</span><h2 class="section-title">What this version withdraws</h2></div>
+    <p>SP-001 v1.0 reported that a reserve layer of 300&nbsp;MW power and 72&nbsp;h energy budget reduced the 99th-percentile loss-of-load expectation to zero in a Monte Carlo of a wind-dominant Finnish system, where a 48&nbsp;h budget did not. The result is withdrawn for two independent reasons established during review.</p>
+    <p>The result depended on the wind-persistence coefficient ρ. The paper's own sensitivity analysis showed the 72&nbsp;h result holding near ρ&nbsp;=&nbsp;0.92 and failing catastrophically near ρ&nbsp;=&nbsp;1.0, with no simulated point between — and the empirically relevant hourly persistence of aggregate wind sits in that unsimulated interval, close to the failing end. A result that inverts across the range of its dominant parameter, evaluated at a value where it fails, is not a finding.</p>
+    <p>Independently, the result was incommensurate with the paper's own compound-stress definition. Under constrained import — a stated condition of the modelled stress — the residual supply deficit during a cold, calm period is on the order of thousands of megawatts, while the reserve power was 300&nbsp;MW. A 300&nbsp;MW layer can be the margin between adequacy and shortfall only if import remains nearly unconstrained, which contradicts the premise. The reserve-sizing result existed only in a regime that the paper's own scenario excludes.</p>
+    <p>This version does not attempt a better-calibrated sufficiency claim. It states what survives.</p>
+  </div>
+
+  <!-- §2 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 02</span><h2 class="section-title">Parameters are cited, not estimated</h2></div>
+    <p>This paper does not estimate meteorological parameters. The quantities that govern adequacy under wind dominance are established in the peer-reviewed literature, which is more authoritative than any single-zone calibration this institute could perform.</p>
+    <h3 class="subsection">2.1 Spatial and temporal structure</h3>
+    <p>Multi-day variability in European wind power is organised by large-scale weather regimes operating on a spatial scale of roughly 1000&nbsp;km and time scales exceeding five days. Blocked regimes bring high surface pressure, strongly reduced winds, and — in winter — fog and cold (Grams, Beerli, Pfenninger, Staffell &amp; Wernli, 2017). The property that matters most here: a lull is not local. It removes wind power across neighbouring countries simultaneously and coincides with the cold conditions that raise demand. Balancing this variability requires deploying wind capacity in regions of <em>contrasting</em> regime behaviour, because adjacent, synoptically similar regions rise and fall together. Solar could offset low-wind regimes locally only by expanding capacity roughly tenfold, which in Finnish winter is not a mitigation.</p>
+    <h3 class="subsection">2.2 Cross-country simultaneity</h3>
+    <p>A climatology of low-wind, low-solar events over the North and Baltic Sea areas (Li et al., 2021) quantifies the correlation that determines whether neighbours can help. Event correlation between neighbouring countries is approximately 0.3–0.4, peaking at 0.5–0.6 for closely coupled pairs such as Denmark–Sweden; simultaneous occurrence across all analysed countries is rare. Two qualifications matter for Finland and are carried through honestly to §5. First, that study reports Finland as comparatively <em>decorrelated</em> from central-European events and concludes that wide interconnection <em>reduces</em> aggregate Dunkelflaute frequency — so on the wind dimension, neighbours can help. Second, it excludes Estonia (negligible renewable capacity at the time), so the interface most material to Finnish winter adequacy is outside its frame. The adequacy concern here therefore does not rest on wind simultaneity between Finland and its neighbours; it rests on whether those neighbours retain <em>dispatchable</em> capacity to send, which §5 addresses. Almost all events longer than 24&nbsp;h fall in November, December and January.</p>
+    <h3 class="subsection">2.3 Finnish single-zone measurement (the one original input)</h3>
+    <p>This is the paper's only original empirical figure and is reported with its full computation so it can be audited independently. Source: the Finnish national hourly series (Energiateollisuus / Fingrid, ~99 % of national generation), window 2022–2025. Method: hourly wind generation normalised by contemporaneous installed wind capacity to a capacity factor; hours below a 10 % CF threshold grouped into contiguous episodes (an episode ends at the first hour above threshold). Two definitional sensitivities are stated openly: the result shifts with the installed-capacity reference used (two published Finnish-capacity series differ by ≈10–35 % in these years, moving the threshold) and with the recovery rule for splitting episodes. The capacity reference and recovery rule must be fixed and disclosed before publication.</p>
+    <p>Critically, the adequacy-relevant statistic is <em>not</em> the bare wind lull but the <em>compound</em> event — low wind co-occurring with high demand. Unconditioned, the longest low-wind episode in the sample falls in March and the second-longest in June; these are shoulder- and summer-season calms that coincide with low demand, high solar and available import, and carry no adequacy consequence. Conditioning on the adequacy-relevant regime (CF&nbsp;&lt;&nbsp;10&nbsp;% <em>and</em> demand in the upper quartile) gives: mean episode duration on the order of 8&nbsp;h, P90 ≈ 18&nbsp;h, and a longest observed episode of ≈ 83&nbsp;h (about 3.5 days, early December 2023). "Longest observed in sample" is the correct framing; it is not claimed as a universal maximum.</p>
+    <p>Two points follow. First, even the conditioned compound figures — P90 near a day, longest observed near 3.5 days — exceed the values assumed in SP-001 v1.0 (mean 3.19&nbsp;h, maximum 45&nbsp;h, P90 7&nbsp;h) by a wide margin and in the direction that made the v1.0 result appear safe; the qualitative correction is robust to every defensible choice of capacity reference and recovery rule. Second, the longest compound episode falls in deep winter, consistent with the cold-and-calm blocking regime of Grams et al. (2017). The single-zone framework remains necessary but not sufficient: it cannot represent the cross-border simultaneity of §2.2, which decides whether import is available. A remaining refinement, deferred to the published version, is to normalise by hourly rather than annual installed capacity, removing a small within-year bias that currently inflates early-year episodes.</p>
+  </div>
+
+  <!-- §3 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 03</span><h2 class="section-title">The non-robustness finding</h2></div>
+    <p>The structure is standard and is not re-derived here: aggregate wind output during blocking regimes falls and stays low for the synoptic duration of the regime, and a reserve layer with finite energy budget can span an event only if the event is shorter than the budget. The persistence of the low-wind state therefore governs whether any given reserve duration bounds the adequacy tail.</p>
+    <p>The consequence is qualitative and robust, and it is a statement about cost, not about possibility. At the low-wind durations established above — P90 on the order of a day, longest observed on the order of several days, concentrated in the cold months when demand peaks — a single reserve layer sized to span the <em>typical</em> event does not span the <em>tail</em> event, and the tail is where loss-of-load lives. A reserve large enough to span the tail can always be specified in principle; the difficulty is not impossibility. It is that the marginal cost of firming rises non-linearly with the duration to be covered, while the tail duration is set by synoptic meteorology and, on the evidence, is not shrinking into the design horizon. The honest statement is therefore not "no reserve bounds the tail" but: <em>there is no reserve duration of economically plausible scale that bounds the tail, and the cost of the one that would is borne by no identifiable actor.</em></p>
+    <p>Framed this way, §3 is not a separate technical result competing with §5; it is §5 expressed in the language of cost. The reserve-sizing question is mis-specified in the same way and for the same reason the buffer question is: the quantity that would close the gap exists, but nothing converts its future necessity into a present cost anyone holds.</p>
+    <p>A Monte Carlo realisation of this mechanism is given in Appendix&nbsp;A. It is illustrative, not probative: it shows the persistence sensitivity and the duration-threshold behaviour, and locates where a single reserve layer ceases to bound the tail. It certifies no reserve size.</p>
+  </div>
+
+  <!-- §4 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 04</span><h2 class="section-title">The buffer, historically</h2></div>
+    <p>The reason Finnish adequacy has not failed under past cold, calm periods is import. In the national hourly series, net import rises during Finnish low-wind hours (mean on the order of 1.4–2.0&nbsp;GW against a much lower all-hours mean), and only a small fraction of low-wind hours coincide with net export. Empirically, when Finland was calm, neighbours generally had surplus to send. This contradicts the constrained-import premise of SP-001 v1.0 for the period observed: the buffer was real and was usually available.</p>
+    <p>The buffer's character differs by interface, and none is a firm constant of the kind v1.0's capacity table assumed. <strong>Sweden (SE1/SE3):</strong> northern Sweden is hydro-dominated; its export capacity during a Finnish lull depends on reservoir state, not Swedish wind — a conditional, storage-limited buffer. The Saimaa drawdown of early 2026 is direct evidence of the conditionality on the Finnish side: after a multi-year dry period, Vuoksi outflow was restricted (≈ 490&nbsp;m³/s against a normal ≈ 600) and Imatra hydro output fell to 60–70 % of normal (Yle, 13 March 2026). <strong>Estonia (EE):</strong> not a wind neighbour but a dispatchable one — its historical exports to Finland during cold spells came from oil-shale plant called on price spikes, delivered via EstLink (approximately 1&nbsp;GW of HVDC transfer capacity, EstLink&nbsp;1&nbsp;+&nbsp;2), against an Estonian peak demand near 1.6&nbsp;GW.</p>
+  </div>
+
+  <!-- §5 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 05</span><h2 class="section-title">The disappearing buffer <span style="font-family:var(--mono);font-size:0.6rem;color:var(--accent);">original contribution</span></h2></div>
+    <p>The historical buffer is not stable. It is being removed on a legislated schedule, and what replaces it is structurally weaker against the event.</p>
+    <p>Estonian oil-shale generation is being phased down under national and EU-aligned transition plans: the stated target is to end oil-shale <em>electricity</em> generation by 2035, with broader oil-shale energy use declining thereafter toward 2040. The revision of earlier, nearer-term targets toward these dates has been driven in part by grid-stability concern, which is itself evidence that the dispatchable role is recognised as load-bearing even as it is retired. Its replacement is wind and solar, on a path toward a largely renewable Estonian system.</p>
+    <p>The consequence is not primarily a loss of megawatts; it is the loss of a <em>dispatchable, scarcity-independent</em> interface. The decisive property of the oil-shale buffer was not its location but its dispatchability: it was callable on demand, independent of the weather over the Baltic. A wind-and-solar replacement is not callable — by definition it is unavailable precisely when the weather suppresses it. The claim is therefore deliberately <em>not</em> a wind-correlation claim, and it does not require any particular value for the Finland–Estonia or Finland–Sweden wind correlation. It is the weaker and more robust claim that <strong>a weather-independent, dispatchable cross-border buffer is being replaced by a weather-dependent one that is not callable on demand during a scarcity hour</strong>. What disappears is not the interface but its <em>independence from the event</em>.</p>
+    <p>Honesty requires a concession that strengthens this narrower framing. The most relevant published climatology (Li et al., 2021) does <em>not</em> support a strong wind-simultaneity claim for Finland: it reports Finland as comparatively decorrelated from central-European low-wind events, and its central message is that wide interconnection <em>reduces</em> aggregate Dunkelflaute frequency (from 3–9 % for individual countries to ≈ 3.5 % pooled across eleven). On the wind dimension, neighbours can help, and a wind-correlation version of this section would be refuted by that source. The argument survives precisely because it does not rest on wind correlation; it rests on dispatchability. Interconnection helps only if a connected neighbour has <em>callable</em> capacity to send, and the retirement of Estonian oil shale removes the callable capacity while leaving the wire. Notably, Li et al. excludes Estonia and Latvia on the grounds of negligible renewable capacity — so the interface most material to Finnish winter adequacy is absent from the optimistic interconnection result, and its dispatchable character is being dismantled outside that study's frame.</p>
+    <p>The Swedish hydro interface is conditional in a different but related way: its export capacity during a Finnish lull depends on reservoir state, and Nordic reservoirs are drawn down by the same multi-year dry regimes — the Saimaa drawdown being the Finnish-side instance. This is a storage limit, not a dispatchability loss, and is stated as the weaker of the two cases.</p>
+    <p>This is where the paper makes a claim that is its own. In most instances catalogued in SM-007, the structural failure is associated with a high <em>detection delay</em> — the degradation is real but not yet visible, and the analytically critical variable in CN-004's framework is the interval between threshold crossing and recognition. The disappearing buffer is the opposite case. The loss is <strong>statutory and dated</strong>: the phase-out is written into law, the interconnector limits are published, the reservoir hydrology is measured daily, and the dispatchable-to-intermittent substitution on the Estonian side is a matter of public energy policy. Detection delay is near zero. Everyone who would need to see it can see it.</p>
+    <p>And still no mechanism converts the dated future loss into a present cost for any identifiable actor. Finnish system operation governs reserves and grid stability, not the generation mix of a neighbouring state. Estonian decarbonisation policy governs Estonian emissions, not Finnish winter adequacy. Nordic market design prices energy and capacity within its mechanisms, none of which holds a mandate over "what replaces the cross-border dispatchable buffer when it is legislated away." The replacement question falls between every mandate that touches it.</p>
+    <p>This sharpens CN-004's structural-property interpretation. If the failure persisted only where detection delay is high, it could be read as a correctable information problem. The buffer case removes that escape: detection is not the binding constraint. A loss that is legislated, dated, measured, and published still does not convert to present cost. What is missing is not visibility but ownership — a structural property of distributed mandates, not a coordination fault to be fixed with better information, here instantiated in a case where the usual confound (latency) is absent.</p>
+  </div>
+
+  <!-- §6 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 06</span><h2 class="section-title">What this paper does not argue</h2></div>
+    <p>The general structures invoked above are owned elsewhere in the corpus and are cited, not restated: the general condition that no mechanism converts future failure probability into present decision cost (<a href="/papers/sm-007-convergence-finding.html">SM-007</a>, of which this paper is one further instance); the energy-domain allocation bias whereby stability-providing infrastructure earns less political visibility than consumption-binding investment (WP-008); the Black-Period energy-requirement-versus-instrument-capacity gap (DA-003); the active early-warning signal state for Finland (DA-001); the anatomy of the mandate gap across Fingrid, TEM and system endurance (SM-007 §02); and the correctable-versus-structural question, the A/R/D regime framework, and the detection-delay variable (<a href="/papers/cn-004-distributed-optimisation.html">CN-004</a>). This paper's contribution is confined to the non-robustness of reserve-duration adequacy at literature-level persistence (§3) and the disappearing-buffer instance with near-zero detection delay (§5).</p>
+  </div>
+
+  <!-- §7 -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">§ 07</span><h2 class="section-title">Falsification</h2></div>
+    <p>The claim is structural and is falsified by any one of the following.</p>
+    <ol style="padding-left:1.4rem;">
+      <li style="margin-bottom:0.6rem;">A single reserve layer of plausible size bounds the adequacy tail at the persistence and low-wind durations established in the cited literature. (Refutes §3.)</li>
+      <li style="margin-bottom:0.6rem;">A connected neighbour retains <em>dispatchable</em> (weather-independent, callable) export capacity through the design horizon — i.e., the cross-border support that covered past Finnish scarcity is not being replaced by weather-dependent generation that may be unavailable during the event. The test is the persistence of callable capacity behind the interconnector (e.g., the actual Estonian oil-shale retirement trajectory and what firm capacity, if any, replaces it), not annual interconnection volume or wind correlation. (Refutes §5's premise.)</li>
+      <li style="margin-bottom:0.6rem;">Some identifiable actor holds a mandate under which the dated future loss of the buffer is priced into a present decision. (Refutes §5's conclusion and this paper's contribution to SM-007.)</li>
+    </ol>
+    <p>Conditions 1 and 2 are empirical and addressable with the cited literature plus interconnection and phase-out data; condition 3 is institutional and is the one that matters most. If it can be met, the problem is a coordination fault and CN-004's Interpretation&nbsp;I applies. On present evidence it cannot.</p>
+  </div>
+
+  <!-- Appendix A -->
+  <div class="section">
+    <div class="section-header"><span class="section-num">App. A</span><h2 class="section-title">Monte Carlo illustration (not a proof)</h2></div>
+    <p>The model is a vectorised hourly simulation of margin&nbsp;=&nbsp;firm dispatchable&nbsp;+&nbsp;wind&nbsp;+&nbsp;import&nbsp;−&nbsp;demand, with a reserve layer defined by power cap and energy budget, run over many annual replications. It exists solely to illustrate the §3 mechanism: how the loss-of-load tail responds as wind persistence is swept across the range spanning the literature value, and where a fixed reserve duration ceases to bound the tail. It certifies no reserve size and should not be cited as an adequacy result.</p>
+    <p>Every constant is flagged as either drawn from the cited literature or as a modelling choice of the author; none is presented as a calibrated system truth. The appendix also records the structural caveat surfaced in development: under the constrained-import condition of a genuine compound stress, the residual deficit is a large multiple of any plausible reserve power, so the duration-threshold effect is visible only in an import-available regime — precisely the regime a real Black Period excludes. That caveat is the quantitative shadow of §5: the model can only "solve" adequacy by assuming the dispatchable buffer that §5 shows is disappearing.</p>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <div class="ref-label">References</div>
+    <ul class="ref-list">
+      <li>Grams, C. M., Beerli, R., Pfenninger, S., Staffell, I., &amp; Wernli, H. (2017). Balancing Europe's wind-power output through spatial deployment informed by weather regimes. <em>Nature Climate Change</em>, 7(8), 557–562.</li>
+      <li>Li, B., Basu, S., Watson, S. J., &amp; Russchenberg, H. W. J. (2021). A brief climatology of Dunkelflaute events over and surrounding the North and Baltic Sea areas. <em>Energies</em>, 14(20), 6508.</li>
+      <li>Olauson, J., Bergkvist, M., &amp; Widén, J. (2017). Variability and predictability of wind power at aggregated scales in Europe. <em>Energy</em>, 127, 428–438.</li>
+      <li>Staffell, I., &amp; Pfenninger, S. (2018). The increasing impact of weather on electricity supply and demand. <em>Energy</em>, 145, 65–78.</li>
+      <li>Bloomfield, H. C., Brayshaw, D. J., &amp; Charlton-Perez, A. (2020). Characterising the winter meteorological drivers of the European electricity system using targeted circulation types. <em>Meteorological Applications</em>, 27(1), e1858.</li>
+      <li>Yle (2026, 13 March). Saimaan vedenkorkeus; Vuoksi outflow restriction; Imatra hydro output 60–70 % of normal. Finnish national broadcaster news report.</li>
+      <li>ACI corpus: WP-001, WP-008, DA-001, DA-003, SM-007, CN-004.</li>
+    </ul>
+  </div>
+
+  <div class="citation-box" style="margin-top:3rem">
+    <strong>Open items before publication (v2.0 draft):</strong> (1) Estonian oil-shale phase-out dates to be finalised against primary sources (Estonian NECP / ENMAK 2035 / EU Just Transition plan). (2) Finnish installed-capacity reference series to be fixed and cited with a date; current single-zone figures use one of two competing series. (3) Final single-zone figures to be recomputed with hourly (contemporaneous) capacity normalisation. The single-zone Finnish figures are the author's own computation from the national hourly series and are reproducible from the disclosed audit procedure.<br>
+    <strong>Competing interests:</strong> None declared.
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-col">Aether Continuity Institute<br>aethercontinuity.org</div>
+  <div class="footer-col">SP-001 · v2.0 · 2026<br>Open Working Draft</div>
+  <div class="footer-col">D-1 · D-4<br>Companion: WP-001 · SM-007 · CN-004</div>
+</footer>
+
+<div class="changelog" style="max-width:740px;margin:2rem auto 0;padding:0 2rem 4rem;">
+  <div style="font-family:monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a7468;margin-bottom:0.6rem;">Version History</div>
+  <div style="font-family:monospace;font-size:0.65rem;color:#7a7468;">v1.0 &middot; Jan 2026 &middot; Initial working draft</div>
+  <div style="font-family:monospace;font-size:0.65rem;color:#7a7468;">v1.1 &middot; Apr 2026 &middot; Augmented load scenario added (Fingrid 10 April 2026 datacenter queries).</div>
+  <div style="font-family:monospace;font-size:0.65rem;color:#7a7468;">v2.0 &middot; Jun 2026 &middot; Substantial rewrite. Central v1.0 reserve-sizing result (48h&rarr;72h eliminates P99 LOLE) withdrawn: non-robust to dominant parameter (wind persistence) and inconsistent with the paper's own constrained-import premise. Meteorological parameters now cited from literature rather than calibrated; Monte Carlo demoted to illustrative appendix. Original contribution narrowed to (a) non-robustness of reserve-duration adequacy and (b) the dated, low-detection-delay loss of the dispatchable cross-border buffer.</div>
+</div>
+</body>
+</html>
