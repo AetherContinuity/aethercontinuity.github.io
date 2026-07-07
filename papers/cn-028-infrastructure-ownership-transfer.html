@@ -45,12 +45,13 @@ td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
 
 <h1>CN-028 — Infrastruktuurin omistussiirtymä</h1>
 <p class="doc-id">Kuntien energiainfrastruktuurin yksityistyminen ja huoltovarmuuden katvealue<br>
-Versio 0.1 · Kesäkuu 2026 · Domainit D-1 · D-2 · D-3<br>
+Versio 0.2 · Kesäkuu 2026, korjattu 2026-07-05 · Domainit D-1 · D-2 · D-3<br>
+<span style="font-size:0.85em">Korjaus 0.2: §1/§2/§11 päivitetty — Nevel/Ardian-kauppa (2020, valtionyhtiö Vapo → PE, ei kunta → PE) tunnistettu erilliseksi kategoriaksi, ei laskettu "50+ kaupan" lukuun. §11:n Utajärvi-esimerkki korjattu: kaavoitus todennettu, myynti ei — kunta ei ole koskaan omistanut kaukolämpöverkkoaan tällä aikavälillä.</span><br>
 Perustuu: <a href="/papers/sm-014-allocation-cascades-unprotected-layer.html" style="color:var(--accent);text-decoration:none">SM-014</a> · <a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html" style="color:var(--accent);text-decoration:none">CN-007</a> · <a href="/supplements/tn-001-duration-capable-local-energy-node.html" style="color:var(--accent);text-decoration:none">TN-001</a> · <a href="/supplements/tn-022-node-capex-model.html" style="color:var(--accent);text-decoration:none">TN-022</a></p>
 
 <div class="abstract">
 <strong>Tiivistelmä</strong>
-Suomalaiset kunnat ovat myyneet sähköverkko- ja kaukolämpöinfrastruktuuriaan systemaattisesti vuodesta 2020 alkaen — tunnistettu vähintään 50 kauppaa. Ostajina ovat toimineet sekä suomalaiset alueelliset energiayhtiöt että kansainväliset PE-rahastot (Elenia, CapMan Infra, Alfa Energy). Tämä kehitys luo rakenteellisen katvealueen huoltovarmuuden ja kriittisen infrastruktuurin hallinnan kannalta: kunta, joka on myynyt kaukolämpö- tai sähköverkkonsa, menettää operatiivisen veto-oikeuden kriisitilanteessa riippumatta siitä onko fyysinen kapasiteetti olemassa. CN-028 dokumentoi ilmiön, analysoi sen kytkennän SM-014:n allokointikaskadiin ja TN-001:n solmuarkkitehtuuriin, sekä tunnistaa tarvittavat institutinaaliset korjausmekanismit.
+Suomalaiset kunnat ovat myyneet sähköverkko- ja kaukolämpöinfrastruktuuriaan systemaattisesti vuodesta 2020 alkaen — tunnistettu vähintään 50 kauppaa. Ostajina ovat toimineet sekä suomalaiset alueelliset energiayhtiöt että kansainväliset PE-rahastot (Elenia, CapMan Infra, Alfa Energy). Erillisenä, eri mekanismilla syntyneenä kategoriana: Ardianin 656 M€ Nevel-kauppa (2020, ostettu valtionyhtiö Vapolta, ei kunnalta) tuotti saman ulkomaisen PE-omistuksen yli 20 suomalaiselle kaukolämpöpaikkakunnalle (mm. Utajärvi, Sotkamo, Lieksa) — näitä ei ole laskettu mukaan "50+ kaupan" lukuun, koska kunta ei ollut myyjä. Tämä kehitys luo rakenteellisen katvealueen huoltovarmuuden ja kriittisen infrastruktuurin hallinnan kannalta: kunta, joka on myynyt kaukolämpö- tai sähköverkkonsa, menettää operatiivisen veto-oikeuden kriisitilanteessa riippumatta siitä onko fyysinen kapasiteetti olemassa. CN-028 dokumentoi ilmiön, analysoi sen kytkennän SM-014:n allokointikaskadiin ja TN-001:n solmuarkkitehtuuriin, sekä tunnistaa tarvittavat institutinaaliset korjausmekanismit.
 </div>
 
 <h2>§1 — Ilmiön laajuus</h2>
@@ -64,15 +65,16 @@ Suomalaiset kunnat ovat myyneet sähköverkko- ja kaukolämpöinfrastruktuuriaan
 <li><strong>Kaukolämpöverkot ja -liiketoiminta</strong> — ostajina sekä alueelliset suomalaiset yhtiöt (Tampereen Sähkölaitos, KSS Lämpö) että PE-rahastot (CapMan Infra Hamina ja Mikkeli, Alfa Energy Sastamala ja Äänekoski).</li>
 </ul>
 
-<h2>§2 — Kaksi eri ostajaprofiiilia</h2>
+<h2>§2 — Kolme eri ostajaprofiilia</h2>
 
 <table>
 <tr><th>Tyyppi</th><th>Esimerkkejä</th><th>Kotimaisuus</th><th>Huoltovarmuusriski</th></tr>
 <tr><td>Suomalainen alueyhtiö</td><td>Tampereen Sähkölaitos, KSS Lämpö, Porin Energia</td><td>Kotimainen</td><td>Matala — toimii saman instituutiorakenteen sisällä</td></tr>
-<tr><td>PE / kansainvälinen rahasto</td><td>Elenia (brit.), CapMan Infra, Alfa Energy</td><td>Ulkomainen omistus</td><td>Korkea — optimoi tuottoa, ei huoltovarmuutta</td></tr>
+<tr><td>PE / kansainvälinen rahasto (kunnalta)</td><td>Elenia (brit.), CapMan Infra, Alfa Energy</td><td>Ulkomainen omistus</td><td>Korkea — optimoi tuottoa, ei huoltovarmuutta</td></tr>
+<tr><td>PE / kansainvälinen rahasto (valtionyhtiöltä)</td><td>Ardian (Nevel, ent. Vapo — yli 20 paikkakuntaa, mm. Utajärvi, Sotkamo, Lieksa)</td><td>Ulkomainen omistus, alkuperä valtionyhtiö</td><td>Korkea, mutta eri mekanismi — kunta ei ollut myyjä eikä koskaan omistanut kohdetta tällä aikavälillä</td></tr>
 </table>
 
-<p>Erottelu on kriittinen: suomalainen alueyhtiö, vaikka se ei olisikaan alkuperäinen kunta, toimii suomalaisen lainsäädännön, Energiaviraston valvonnan ja kotimaisessa yhteiskuntasopimuksessa. Kansainvälinen PE-rahasto optimoi exitiä ja tuottoa — sen horisontilla ei ole paikallista kriisiä.</p>
+<p>Erottelu on kriittinen: suomalainen alueyhtiö, vaikka se ei olisikaan alkuperäinen kunta, toimii suomalaisen lainsäädännön, Energiaviraston valvonnan ja kotimaisessa yhteiskuntasopimuksessa. Kansainvälinen PE-rahasto optimoi exitiä ja tuottoa — sen horisontilla ei ole paikallista kriisiä. Kolmas kategoria (Nevel/Ardian) tuottaa saman lopputuloksen — ulkomainen PE-omistus paikallisessa kaukolämmössä — mutta eri reittiä: myyjä oli valtionyhtiö (Vapo, valtio-omisteinen 50,1%) vuonna 2020, ei kunta. Paperin §1 väittää kuntien myyneen infrastruktuuriaan; Nevel-kunnat eivät ole tätä väitettä tukevia tapauksia, vaikka niiden lopputulos näyttää samalta.</p>
 
 <h2>§3 — Katvealue: operatiivinen veto-oikeus</h2>
 
@@ -190,7 +192,7 @@ Suomalaiset kunnat ovat myyneet sähköverkko- ja kaukolämpöinfrastruktuuriaan
 
 <h3>Liike 1: Kaavoitus luo arvon</h3>
 
-<p>Kunta kaavoittaa alueita energiaintensiiville teollisuudelle — datakeskuksille, vetylaitoksille, alumiinitehtaille, biopolttoainetuotannolle. Nämä hankkeet tuovat verotuottoa, työpaikkoja ja elinvoimaa. Mutta samalla ne kasvattavat kaukolämpöverkon kysyntää ja sitä kautta sen arvoa. Simon kunta kaavoittaa Hittikan teollisuusaluetta energiaintensiiville teollisuudelle ja kehittää hukkalämmön hyödyntämistä — kaukolämpöverkon arvo kasvaa suoraan näiden päätösten seurauksena. Utajärven kunta on vastaava esimerkki: tuulivoima, aurinkovoima, akustot, datakeskukset, vetylaitokset — jokainen hanke nostaa energiainfrastruktuurin arvoa ennen myyntiä.</p>
+<p>Kunta kaavoittaa alueita energiaintensiiville teollisuudelle — datakeskuksille, vetylaitoksille, alumiinitehtaille, biopolttoainetuotannolle. Nämä hankkeet tuovat verotuottoa, työpaikkoja ja elinvoimaa. Mutta samalla ne kasvattavat kaukolämpöverkon kysyntää ja sitä kautta sen arvoa. Simon kunta kaavoittaa Hittikan teollisuusaluetta energiaintensiiville teollisuudelle ja kehittää hukkalämmön hyödyntämistä — kaukolämpöverkon arvo kasvaa suoraan näiden päätösten seurauksena. Utajärven kunta havainnollistaa kaavoituspuolen (tuulivoima, aurinkovoima, akustot, datakeskukset, vetylaitokset nostavat energiainfrastruktuurin arvoa), mutta ei myyntipuolta: Utajärven kaukolämpöverkko on Nevel Oy:n omistuksessa (Vapo → Nevel 2019 → Ardian 2020), ei koskaan ollut kunnan omistuksessa tällä aikavälillä. Utajärvi ei siis ole todennettu esimerkki kaavoitus→myynti-silmukan sulkeutumisesta — vain sen ensimmäisestä puoliskosta. Täysin todennettua, molemmat puoliskot kattavaa yksittäistapausta ei tässä versiossa ole vielä osoitettu; tämä on avoin tarkistuskohta.</p>
 
 <h3>Liike 2: Myynti monetisoi arvon</h3>
 
