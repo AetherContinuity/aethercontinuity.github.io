@@ -310,8 +310,9 @@ only "solve" adequacy by assuming the buffer that §5 shows is disappearing.
 - Grams, C. M., Beerli, R., Pfenninger, S., Staffell, I., & Wernli, H. (2017).
   Balancing Europe's wind-power output through spatial deployment informed by
   weather regimes. *Nature Climate Change*, 7(8), 557–562.
-- Li, B., et al. (2021). A Brief Climatology of Dunkelflaute Events over and
-  Surrounding the North and Baltic Sea Areas. *Energies*, 14(20), 6508.
+- Li, B., Basu, S., Watson, S. J., & Russchenberg, H. W. J. (2021). A Brief
+  Climatology of Dunkelflaute Events over and Surrounding the North and Baltic
+  Sea Areas. *Energies*, 14(20), 6508.
 - Olauson, J., & Bergkvist, M. (2016). Correlation between wind power generation
   in the European countries. *Energy*, 114, 663–670. [Background reference,
   carried over from WP-001 §8; not cited inline in this paper's body text.]
@@ -337,5 +338,7 @@ No quantitative value in this draft should be published without a confirmed sour
 The single-zone Finnish figures have now been reproduced (2026-07-07) against
 `tuntidata_2010-2025.xlsx` using published Suomen Tuulivoimayhdistys / Suomen
 uusiutuvat ry capacity figures for normalisation — see §2. Grams et al. (2017)
-and Li et al. (2021) citations remain to be verified against primary sources
-before publication.*
+and Li et al. (2021) citations verified against primary sources (2026-07-07):
+authors, journal, volume, pages, and DOI confirmed correct as cited. Still
+outstanding: the Estonian oil-shale phase-out schedule and EstLink capacity
+citation below remains bracketed and unconfirmed.*
