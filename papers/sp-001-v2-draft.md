@@ -105,17 +105,24 @@ rests on: in a wind-dominant system the binding constraint on firming capacity i
 set by the extreme-duration tail of low-generation events, not by their mean or
 typical variability. Designing to the typical event leaves the tail uncovered.
 
-**Finnish single-zone measurement (the one original input).** From the Finnish
-national hourly series (Energiateollisuus / Fingrid, 2016–2025), normalising wind
-generation by annual installed capacity and counting contiguous periods below 10 %
-capacity factor, the matched-fleet window 2022–2025 yields approximately 173 wind-
-lull episodes per year, mean duration ≈ 13 h, P90 ≈ 29 h, and a maximum of ≈ 158 h.
-This is a *single-zone wind* statistic, distinct from the stricter wind-and-solar
-Dunkelflaute definition, and is reported as such. Two points are worth stating
+**Finnish single-zone measurement (the one original input, now reproduced and
+sourced).** From the Finnish national hourly production series (2022–2025, wind
+power column), normalising each year's hourly wind output by that year's
+published cumulative installed capacity (Suomen Tuulivoimayhdistys / Suomen
+uusiutuvat ry annual statistics: 5,677 MW end-2022; 6,949 MW end-2023; 8,358 MW
+end-2024; 9,433 MW end-2025) and counting contiguous hours below 10 % capacity
+factor, the matched-fleet window 2022–2025 yields 173.5 wind-lull episodes per
+year, mean duration 13.3 h, P90 31 h, and a maximum of 159 h. Reproduced
+independently 2026-07-07; figures confirmed against the original claim within
+rounding. Note that annual mean capacity factor over the same window (23–28 %)
+rose year over year, meaning year-specific — not fleet-averaged — capacity
+normalisation is required even within this four-year window; the fleet itself
+grew by roughly 66 % (5,677 to 9,433 MW) over the period and is not, strictly,
+"matched." Two points are worth stating
 plainly. First, these durations are several times longer than the values used in
 SP-001 v1.0 (mean 3.19 h, maximum 45 h), which understated the phenomenon in every
 dimension and in the direction that made the v1.0 result appear safe. Second, the
-measured maximum (≈ 158 h, about 6.5 days) is consistent with the >5-day synoptic
+measured maximum (159 h, about 6.5 days) is consistent with the >5-day synoptic
 blocking scale of Grams et al. (2017), whereas the v1.0 maximum was not. The
 single-zone framework is necessary but not sufficient: it cannot represent the
 cross-border simultaneity of §2, which is the variable that decides whether import
@@ -316,9 +323,19 @@ only "solve" adequacy by assuming the buffer that §5 shows is disappearing.
 - Estonian oil-shale electricity phase-out schedule and EstLink capacity — [confirm
   primary sources: Estonian national energy and climate plan; TSO interconnector
   specifications].
+- Suomen Tuulivoimayhdistys / Suomen uusiutuvat ry. Annual wind power statistics
+  ("Tuulivoima Suomessa"), 31.12.2022, 31.12.2023, 31.12.2024, 31.12.2025.
+  https://suomenuusiutuvat.fi — cumulative installed capacity figures used for
+  capacity-factor normalisation in the single-zone measurement above.
+- Finnish national hourly production data, 2010–2025 (author-compiled workbook,
+  `tuntidata_2010-2025.xlsx`; wind power column used for §2's single-zone
+  measurement, reproduced 2026-07-07).
 - ACI corpus: WP-001, WP-008, DA-001, DA-003, SM-007, CN-004.
 
 *Author to verify all bracketed items against primary sources before publication.
-No quantitative value in this draft should be published without a confirmed source;
-the single-zone Finnish figures are the author's own computation from the national
-hourly series and should be reproduced from that file.*
+No quantitative value in this draft should be published without a confirmed source.
+The single-zone Finnish figures have now been reproduced (2026-07-07) against
+`tuntidata_2010-2025.xlsx` using published Suomen Tuulivoimayhdistys / Suomen
+uusiutuvat ry capacity figures for normalisation — see §2. Grams et al. (2017)
+and Li et al. (2021) citations remain to be verified against primary sources
+before publication.*
