@@ -4,16 +4,43 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>TN-022 Phase Diagram · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#141209;font-family:'DM Mono','Courier New',monospace;color:#c8b89a}
-  input[type=range]{accent-color:#8b6a30;cursor:pointer}
+:root {
+  --ink:#0e0d0b; --paper:#f5f0e8; --paper-2:#ede7d8; --paper-3:#e4dccb;
+  --accent:#8b4513; --muted:#7a7468; --rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;}
+body{background:var(--paper);font-family:var(--serif);color:var(--ink);line-height:1.7}
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
+.dih-l{display:flex;flex-direction:column;gap:.15rem;}
+.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.dih-ser span{color:var(--accent);}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
+.page{max-width:1060px;margin:0 auto;padding:2rem 2rem 4rem;}
+input[type=range]{accent-color:var(--accent);cursor:pointer}
+.tn022-panel{background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;padding:1.5rem;font-family:var(--mono);color:var(--ink)}
+.tn022-foot{font-family:var(--mono);font-size:.6rem;color:var(--muted);max-width:520px;text-align:center;line-height:1.7;margin-top:1.5rem}
+.tn022-foot a{color:var(--accent)}
 </style>
 </head>
 <body>
+<div class="dih">
+  <div class="dih-l">
+    <div class="dih-inst">Aether Continuity Institute</div>
+    <div class="dih-ser">TN-022 &middot; <span>Phase Diagram</span></div>
+  </div>
+  <div class="dih-meta">Domain&nbsp;<strong>D-1 / D-4</strong><br>Companion&nbsp;<strong>TN-001 v1.1</strong><br>June 2026</div>
+</div>
+<div class="page">
 <div id="root"></div>
+</div>
 <script>
 const { useState, useEffect, useRef } = React;
 
@@ -123,7 +150,7 @@ function PhaseDiagram() {
     ctx.fillText("PtX \u2194 CHP boundary", 0, 0); ctx.restore();
 
     // Axes
-    ctx.strokeStyle = "rgba(200,180,150,0.4)"; ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(14,13,11,0.35)"; ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(PAD.left, PAD.top);
     ctx.lineTo(PAD.left, PAD.top + innerH);
@@ -133,19 +160,19 @@ function PhaseDiagram() {
     ctx.font = "10px 'DM Mono',monospace"; ctx.textAlign = "center";
     [0, 30, 60, 90, 120, 150].forEach(p => {
       const x = PAD.left + ((p - P_MIN) / (P_MAX - P_MIN)) * innerW;
-      ctx.strokeStyle = "rgba(200,180,150,0.15)";
+      ctx.strokeStyle = "rgba(14,13,11,0.12)";
       ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + innerH + 4); ctx.stroke();
-      ctx.fillStyle = "rgba(200,180,150,0.7)"; ctx.fillText(p, x, PAD.top + innerH + 16);
+      ctx.fillStyle = "rgba(14,13,11,0.65)"; ctx.fillText(p, x, PAD.top + innerH + 16);
     });
     ctx.textAlign = "right";
     [1, 2, 4, 6, 8, 10].forEach(r => {
       const y = PAD.top + (1 - (r - R_MIN) / (R_MAX - R_MIN)) * innerH;
-      ctx.strokeStyle = "rgba(200,180,150,0.12)";
+      ctx.strokeStyle = "rgba(14,13,11,0.1)";
       ctx.beginPath(); ctx.moveTo(PAD.left - 4, y); ctx.lineTo(PAD.left + innerW, y); ctx.stroke();
-      ctx.fillStyle = "rgba(200,180,150,0.7)"; ctx.fillText(r + "\xd7", PAD.left - 8, y + 4);
+      ctx.fillStyle = "rgba(14,13,11,0.65)"; ctx.fillText(r + "\xd7", PAD.left - 8, y + 4);
     });
 
-    ctx.font = "11px 'DM Mono',monospace"; ctx.fillStyle = "rgba(200,180,150,0.9)";
+    ctx.font = "11px 'DM Mono',monospace"; ctx.fillStyle = "rgba(14,13,11,0.85)";
     ctx.textAlign = "center";
     ctx.fillText("Electricity price (\u20ac/MWh)", PAD.left + innerW / 2, H - 4);
     ctx.save(); ctx.translate(12, PAD.top + innerH / 2); ctx.rotate(-Math.PI / 2);
@@ -181,9 +208,9 @@ function PhaseDiagram() {
   },
     React.createElement("div", { style: { fontSize: "0.6rem", letterSpacing: "0.18em", color: "#4a3a20", marginBottom: "0.4rem" } },
       "TN-022 · AETHER CONTINUITY INSTITUTE · PHASE DIAGRAM"),
-    React.createElement("h1", { style: { fontSize: "1.1rem", fontWeight: 400, color: "#e0cda8", letterSpacing: "0.04em", marginBottom: "0.25rem" } },
+    React.createElement("h1", { style: { fontSize: "1.1rem", fontWeight: 400, color: "#0e0d0b", letterSpacing: "0.04em", marginBottom: "0.25rem" } },
       "Node Configuration Phase Diagram"),
-    React.createElement("p", { style: { fontSize: "0.7rem", color: "#5a4a30", marginBottom: "1.5rem", textAlign: "center", maxWidth: 520 } },
+    React.createElement("p", { style: { fontSize: "0.7rem", color: "#7a7468", marginBottom: "1.5rem", textAlign: "center", maxWidth: 520 } },
       "S-1 / S-2 / S-3 dominance by electricity price \xd7 seasonal demand ratio"),
 
     React.createElement("canvas", {
@@ -198,7 +225,7 @@ function PhaseDiagram() {
         React.createElement("div", { key: s, style: { display: "flex", alignItems: "center", gap: "0.4rem" } },
           React.createElement("div", { style: { width: 14, height: 14, borderRadius: 2, background: COLORS[s].fill, border: "1px solid rgba(255,255,255,0.2)" } }),
           React.createElement("span", { style: { fontSize: "0.7rem" } },
-            React.createElement("strong", { style: { color: "#e0cda8" } }, COLORS[s].label),
+            React.createElement("strong", { style: { color: "#0e0d0b" } }, COLORS[s].label),
             " \u2014 " + COLORS[s].name))),
       React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.4rem" } },
         React.createElement("div", { style: { width: 20, height: 2, backgroundImage: "repeating-linear-gradient(90deg,rgba(255,220,100,0.85) 0 6px,transparent 6px 10px)" } }),
@@ -206,43 +233,43 @@ function PhaseDiagram() {
 
     React.createElement("div", {
       style: { height: 44, display: "flex", alignItems: "center", gap: "2rem", padding: "0 1.5rem",
-               background: "rgba(200,180,150,0.04)", border: "1px solid rgba(200,180,150,0.1)",
+               background: "#ede7d8", border: "1px solid #c8bfad",
                borderRadius: 4, margin: "1rem 0", minWidth: 480, justifyContent: "center", flexWrap: "wrap" }
     },
       hovered ? [
         React.createElement("span", { key: "p", style: { fontSize: "0.7rem" } },
-          React.createElement("span", { style: { color: "#5a4a30" } }, "p_elec "),
-          React.createElement("strong", { style: { color: "#e0cda8" } }, hovered.p + " \u20ac/MWh")),
+          React.createElement("span", { style: { color: "#7a7468" } }, "p_elec "),
+          React.createElement("strong", { style: { color: "#0e0d0b" } }, hovered.p + " \u20ac/MWh")),
         React.createElement("span", { key: "r", style: { fontSize: "0.7rem" } },
-          React.createElement("span", { style: { color: "#5a4a30" } }, "ratio "),
-          React.createElement("strong", { style: { color: "#e0cda8" } }, hovered.r + "\xd7")),
+          React.createElement("span", { style: { color: "#7a7468" } }, "ratio "),
+          React.createElement("strong", { style: { color: "#0e0d0b" } }, hovered.r + "\xd7")),
         React.createElement("span", { key: "b", style: { fontSize: "0.7rem" } },
-          React.createElement("span", { style: { color: "#5a4a30" } }, "PtX/CHP "),
+          React.createElement("span", { style: { color: "#7a7468" } }, "PtX/CHP "),
           React.createElement("strong", { style: { color: "rgba(255,220,100,0.9)" } }, hovered.boundary + " \u20ac/MWh")),
         React.createElement("span", { key: "s", style: { fontSize: "0.7rem" } },
-          React.createElement("span", { style: { color: "#5a4a30" } }, "dominant "),
+          React.createElement("span", { style: { color: "#7a7468" } }, "dominant "),
           React.createElement("strong", { style: { color: COLORS[hovered.s].fill, filter: "brightness(1.6)" } },
             COLORS[hovered.s].label + " \u2014 " + COLORS[hovered.s].name)),
-      ] : React.createElement("span", { style: { fontSize: "0.7rem", color: "#3a2c1a" } }, "Move cursor over diagram")),
+      ] : React.createElement("span", { style: { fontSize: "0.7rem", color: "#7a7468" } }, "Move cursor over diagram")),
 
-    React.createElement("div", { style: { display: "flex", gap: "3rem", background: "rgba(200,180,150,0.04)", border: "1px solid rgba(200,180,150,0.1)", borderRadius: 4, padding: "1rem 2rem" } },
+    React.createElement("div", { style: { display: "flex", gap: "3rem", background: "#ede7d8", border: "1px solid #c8bfad", borderRadius: 4, padding: "1rem 2rem" } },
       ...[
         { label: "CO\u2082 availability", value: co2, setter: setCo2, note: co2 < 0.5 ? "S3 signal active" : "sufficient" },
         { label: "Biomass feedstock", value: biomass, setter: setBiomass, note: biomass > 0.7 ? "S-1 viable" : "limited" },
         { label: "BCI (Baseload Compatibility)", value: bci, setter: setBci, note: bci < 0.6 ? "LDR-50 poor — PEM+HP preferred" : bci < 1.0 ? "LDR-50 conditional" : "LDR-50 structurally sound" },
         { label: "Peak heat demand (MW)", value: peakMW, setter: setPeakMW, min: 30, max: 500, step: 10, note: nodeClass(peakMW).cls + " — " + nodeClass(peakMW).label + " · " + nodeClass(peakMW).capex },
-      ].map(({ label, value, setter, note }) =>
+      ].map(({ label, value, setter, note, min, max, step }) =>
         React.createElement("div", { key: label, style: { display: "flex", flexDirection: "column", gap: "0.4rem", minWidth: 180 } },
           React.createElement("div", { style: { display: "flex", justifyContent: "space-between" } },
             React.createElement("span", { style: { fontSize: "0.68rem" } }, label),
-            React.createElement("strong", { style: { fontSize: "0.68rem", color: "#e0cda8" } }, Math.round(value * 100) + "%")),
+            React.createElement("strong", { style: { fontSize: "0.68rem", color: "#0e0d0b" } }, max > 1 ? Math.round(value) + " MW" : Math.round(value * 100) + "%")),
           React.createElement("input", { type: "range", min: min || 0.1, max: max || 1, step: step || 0.05, value,
             onChange: e => setter(parseFloat(e.target.value)), style: { width: "100%" } }),
-          React.createElement("span", { style: { fontSize: "0.6rem", color: "#4a3a28" } }, note)))),
+          React.createElement("span", { style: { fontSize: "0.6rem", color: "#7a7468" } }, note)))),
 
-    React.createElement("div", { style: { marginTop: "1.5rem", fontSize: "0.6rem", color: "#3a2c1a", maxWidth: 520, textAlign: "center", lineHeight: 1.7 } },
+    React.createElement("div", { style: { marginTop: "1.5rem", fontSize: "0.6rem", color: "#7a7468", maxWidth: 520, textAlign: "center", lineHeight: 1.7 } },
       "TN-022 \xb7 ACI June 2026 \xb7 Phase boundaries indicative \u2014 derived from \u00a708 cost and duration model. ",
-      React.createElement("a", { href: "/supplements/tn-022-node-capex-model.html", style: { color: "#5a4a30" } }, "Full document \u2192")));
+      React.createElement("a", { href: "/supplements/tn-022-node-capex-model.html", style: { color: "#7a7468" } }, "Full document \u2192")));
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(PhaseDiagram));
