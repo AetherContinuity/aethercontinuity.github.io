@@ -305,10 +305,12 @@ only "solve" adequacy by assuming the buffer that §5 shows is disappearing.
   weather regimes. *Nature Climate Change*, 7(8), 557–562.
 - Li, B., et al. (2021). A Brief Climatology of Dunkelflaute Events over and
   Surrounding the North and Baltic Sea Areas. *Energies*, 14(20), 6508.
-- Olauson, J., Bergkvist, M., & Widén, J. (2017). [aggregation / variability —
-  confirm exact title and figures before citing specific values].
-- Staffell, I., & Pfenninger, S. (2018). [short-record underestimation of
-  persistent low-generation — confirm exact figures].
+- Olauson, J., & Bergkvist, M. (2016). Correlation between wind power generation
+  in the European countries. *Energy*, 114, 663–670. [Background reference,
+  carried over from WP-001 §8; not cited inline in this paper's body text.]
+- Staffell, I., & Pfenninger, S. (2018). The increasing impact of weather on
+  electricity supply and demand. *Energy*, 145, 65–78. [Background reference,
+  carried over from WP-001 §8; not cited inline in this paper's body text.]
 - Yle (2026, 13 March). Saimaan vedenkorkeus / Vuoksi outflow restriction; Imatra
   hydro output 60–70 % of normal. [Finnish national broadcaster news report.]
 - Estonian oil-shale electricity phase-out schedule and EstLink capacity — [confirm
