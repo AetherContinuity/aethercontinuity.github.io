@@ -184,17 +184,22 @@ constant of the kind v1.0's capacity table assumed.
 - **EE (Estonia).** Estonia is not a wind neighbour but a dispatchable one: its
   historical exports to Finland during cold spells came from oil-shale plant called
   on price spikes, delivered via EstLink. The interconnector is bounded at roughly
-  1000 MW combined, against an Estonian peak demand near 1.6 GW — a small system.
+  1000 MW combined, against an Estonian peak demand of 1,723 MW (all-time record,
+  5 February 2026; Elering) — a small system.
 
 ## §5 The disappearing buffer (original contribution)
 
 The historical buffer is not stable. It is being removed on a legislated schedule,
 and what replaces it is correlated with the stress.
 
-Estonian oil-shale electricity is under a statutory phase-out, with targets that
-have moved between roughly 2030 and 2035 — and the revision toward later dates has
-been driven explicitly by grid-stability concern, which is itself evidence that the
-dispatchable role is recognised as load-bearing even as it is retired. Its
+Estonian oil-shale electricity is under a stated phase-out target of 2035,
+reaffirmed consistently since the 2021 coalition agreement and repeated by the
+Ministry of Climate as recently as January 2026. The commitment's bindingness is
+itself contested: in 2024 a state-owned oil-shale operator (Viru Keemia Group)
+publicly stated no such deadline exists in current law or pending legislation,
+while the ministry maintained the target stands under the Energy Sector
+Development Plan and Climate Act. Whichever side of that dispute is right, the
+retirement is real and dated in the government's own planning documents. Its
 replacement is wind and solar, on a path toward a fully renewable Estonian system.
 The consequence is not that the buffer shrinks; it is that the buffer **inverts**.
 The claim is deliberately not that all wind correlates everywhere — that would be
@@ -321,9 +326,14 @@ only "solve" adequacy by assuming the buffer that §5 shows is disappearing.
   carried over from WP-001 §8; not cited inline in this paper's body text.]
 - Yle (2026, 13 March). Saimaan vedenkorkeus / Vuoksi outflow restriction; Imatra
   hydro output 60–70 % of normal. [Finnish national broadcaster news report.]
-- Estonian oil-shale electricity phase-out schedule and EstLink capacity — [confirm
-  primary sources: Estonian national energy and climate plan; TSO interconnector
-  specifications].
+- Elering. Electricity consumption and generation (all-time peak demand records:
+  1,723 MW, 5 February 2026; 1,599 MW, 4 January 2024; 1,591 MW, 18 February
+  2021). https://elering.ee/en/electricity-consumption-and-generation
+- Fingrid / EIB. EstLink 1 (350 MW, 2006) and EstLink 2 (650 MW, 2014) combined
+  transmission capacity, 1,000 MW. https://www.fingrid.fi/en/grid/construction/arkisto/estlink-2/
+- Estonian Ministry of Climate; ERR News (2024–2026 reporting). Oil-shale
+  electricity phase-out target (2035), and the 2024 dispute over its binding
+  status between the Ministry of Climate and Viru Keemia Group.
 - Suomen Tuulivoimayhdistys / Suomen uusiutuvat ry. Annual wind power statistics
   ("Tuulivoima Suomessa"), 31.12.2022, 31.12.2023, 31.12.2024, 31.12.2025.
   https://suomenuusiutuvat.fi — cumulative installed capacity figures used for
@@ -339,6 +349,10 @@ The single-zone Finnish figures have now been reproduced (2026-07-07) against
 `tuntidata_2010-2025.xlsx` using published Suomen Tuulivoimayhdistys / Suomen
 uusiutuvat ry capacity figures for normalisation — see §2. Grams et al. (2017)
 and Li et al. (2021) citations verified against primary sources (2026-07-07):
-authors, journal, volume, pages, and DOI confirmed correct as cited. Still
-outstanding: the Estonian oil-shale phase-out schedule and EstLink capacity
-citation below remains bracketed and unconfirmed.*
+authors, journal, volume, pages, and DOI confirmed correct as cited. Estonian
+peak demand and EstLink capacity verified and corrected (2026-07-07): peak
+demand updated from ~1.6 GW to the current record, 1,723 MW; the original
+"2030→2035, grid-stability-driven" phase-out narrative was not supported by any
+source found and has been replaced with the sourced account (consistent 2035
+target since 2021, disputed bindingness). All references in this draft are now
+confirmed.*
