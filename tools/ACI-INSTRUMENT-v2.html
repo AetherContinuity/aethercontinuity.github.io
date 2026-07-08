@@ -2094,10 +2094,13 @@ async function init() {
   }
 
   // Post-render: jos rawData on oikeaa dataa, korjaa Demo-data label → Live
+  // HUOM (2026-07-08): tama ylikirjoitti aiemmin statuksen ehdoitta, piilottaen
+  // layerErrors-taulukon (esim. ydinvoimakerroksen fallback-kaytto) nakymattomiin.
+  // Korjattu: ei ylikirjoiteta jos kerroskohtaisia virheita on.
   if (rawData.length >= 48) {
     const isReal = rawData.some(d => d.c > 5000 && d.c < 16000 && d.p > 3000);
     const sDot = document.getElementById('sDot');
-    if (isReal && sDot && sDot.className.includes('demo')) {
+    if (isReal && sDot && sDot.className.includes('demo') && !layerErrors.length) {
       setStatus('live', [
         ['Tila', 'Live (puskuri)'],
         ['Pisteet', rawData.length + ' h ✓'],
