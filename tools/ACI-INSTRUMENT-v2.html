@@ -2753,13 +2753,18 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.7.2';
+const WEM_VERSION = '2.7.5';
 const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
+// HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
+// changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
+// ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
+// olivat jo koodissa. Versio ei ollut koskaan paivittynyt vastaamaan
+// todellista tilaa. Lista jarjestetty uusin ensin (oli sekaisin).
 const WEM_CHANGES = [
+  '2.7.5: EPP v3+P — persistenssipreemio SP_cluster T₁₆₈ pohjalta. Kalibrointi 1/2016 osoitti SP 30% ei riitä Elevated-tasoon pitkissä jaksoissa. T168≥6h: +0.05, T168≥24h: +0.12.',
+  '2.7.4: NTC SE1→FI korjattu 1500→2300 MW (Aurora Line käyttöön 11/2025, lisäys +800 MW). TRR 105% → ~68% — ei saturaatio vaan korkea käyttöaste.',
   '2.7.2→2.7.3: DS 87 korjattu DS 188:ksi — ydinvoima sisältää nyt Loviisan (+~500 MW). Vaikutus: FS +6.5 pp, EPP −1.9 pp, ECI +6.2 pp. Historialliset arvot olivat konservatiivisia. Kvalitatiiviset johtopäätökset muuttumaton.',
   '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
-  '2.7.4: NTC SE1→FI korjattu 1500→2300 MW (Aurora Line käyttöön 11/2025, lisäys +800 MW). TRR 105% → ~68% — ei saturaatio vaan korkea käyttöaste.',
-  '2.7.5: EPP v3+P — persistenssipreemio SP_cluster T₁₆₈ pohjalta. Kalibrointi 1/2016 osoitti SP 30% ei riitä Elevated-tasoon pitkissä jaksoissa. T168≥6h: +0.05, T168≥24h: +0.12.',
   '2.6: EPP v4, SP_cluster, FS(p), MD_proxy, NVE hydro',
 ];
 document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
