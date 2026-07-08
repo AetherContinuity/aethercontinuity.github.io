@@ -235,7 +235,13 @@ footer a{color:var(--accent);text-decoration:none}
   &nbsp;&nbsp;RF: 1 − (kuukausisade / mediaanisade) · Referenssi: FMI Kuopio 1961–2010 (WMO)<br>
   &nbsp;&nbsp;HSP: NVE-label (low=0.70, normal=0.38, high=0.15) — pohjoismainen proxy<br>
   &nbsp;&nbsp;Kynnykset: Normal &lt;0.45 · Elevated ≥0.45 · High ≥0.65<br>
-  &nbsp;&nbsp;Katso: <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html" style="color:var(--accent)">TN-014 §04</a>
+  &nbsp;&nbsp;Katso: <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html" style="color:var(--accent)">TN-014 §04</a><br>
+  <span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): live-posture (§01) laski aiemmin EP-komponentin ilman
+  Thornthwaite-PET:tä (fallback-kaava puuttui EP:n kokonaan, painot poikkesivat
+  dokumentoidusta). Korjattu: Thornthwaite PET + 1961–2010-referenssinormaalit
+  lasketaan nyt client-puolella samasta FMI-aikasarjasta, sama kaava kuin
+  historiallisessa §05-sarjassa. Jos alle 12 kk yhtenäistä lämpötiladataa ei
+  ole saatavilla, EP käyttää neutraalia fallback-arvoa 0.30.</span>
 </div>
 
 <footer>
@@ -353,6 +359,122 @@ async function fetchFMI(){
   }catch(e){setHTML('fmi-det',`<span class="derr">FMI: ${e.message}</span>`);dot('fmi','err');return null;}
 }
 
+// ── Thornthwaite (1948) PET + EP-anomalia ────────────────────────────────────
+// Lisätty 2026-07-08: computeHEPP() ei aiemmin sisaltanyt EP-komponenttia
+// ollenkaan, vaikka dokumentoitu kaava (§08) ja historiallinen HEPP-sarja
+// (HEPP_URL, laskettu taustaprosessissa) molemmat sisaltavat sen. Tama
+// toteuttaa saman laskennan client-puolella naiden Kuopion FMI-paivadatan
+// (fmi.byDate, ulottuu 1959) pohjalta, jotta live-arvo vastaa dokumentoitua
+// nelikomponenttista kaavaa: HEPP = 0.35*SD + 0.25*EP_anomalia + 0.25*RF + 0.15*HSP
+const KUOPIO_LAT = 62.90; // Savilahti-asema, FMI 101590
+const DAYS_IN_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
+const MID_MONTH_DOY = [15,45,74,105,135,166,196,227,258,288,319,349]; // kuukauden 15./16. paiva
+
+function dayLengthHours(latDeg, dayOfYear){
+  const lat = latDeg * Math.PI/180;
+  // Coopers (1969) approksimaatio auringon deklinaatiolle
+  const decl = 0.4093 * Math.sin(2*Math.PI*(284+dayOfYear)/365);
+  const cosH = Math.max(-1, Math.min(1, -Math.tan(lat)*Math.tan(decl)));
+  return (24/Math.PI) * Math.acos(cosH);
+}
+
+// Laskee Thornthwaite-PET:n (mm/kk) 12 kuukauden lampotilasarjalle.
+// months: kalenterikuukausien numerot (1-12) samassa jarjestyksessa kuin temps.
+// Jos months puuttuu, oletetaan Jan..Dec-jarjestys (taaksepain yhteensopivuus).
+function thornthwaitePET(monthlyTemps, latDeg, months){
+  const cal = months || [1,2,3,4,5,6,7,8,9,10,11,12];
+  const posT = monthlyTemps.map(t => t>0 ? t : 0);
+  const I = posT.reduce((s,t) => s + Math.pow(t/5, 1.514), 0);
+  if (I <= 0) return monthlyTemps.map(() => 0);
+  const a = 6.75e-7*Math.pow(I,3) - 7.71e-5*Math.pow(I,2) + 1.792e-2*I + 0.49239;
+  return monthlyTemps.map((t,i) => {
+    if (t <= 0) return 0;
+    const cm = cal[i] - 1; // 0-indeksoitu kalenterikuukausi
+    const L = dayLengthHours(latDeg, MID_MONTH_DOY[cm]);
+    const N = DAYS_IN_MONTH[cm];
+    return 16 * Math.pow(10*t/I, a) * (L/12) * (N/30);
+  });
+}
+
+// Laskee kuukausikeskilampotilat fmi.byDate:sta {year: [Jan..Dec] tai null}
+function monthlyMeansFromFMI(fmi){
+  const byYearMonth = {};
+  for (const d of fmi.dates){
+    const t = fmi.byDate[d]?.tday;
+    if (t == null || t < -50) continue;
+    const [y,m] = d.split('-').map(Number);
+    const key = y+'-'+m;
+    if (!byYearMonth[key]) byYearMonth[key] = [];
+    byYearMonth[key].push(t);
+  }
+  const out = {};
+  for (const key in byYearMonth){
+    const vals = byYearMonth[key];
+    out[key] = vals.reduce((a,b)=>a+b,0)/vals.length;
+  }
+  return out; // { "1959-1": -8.2, ... }
+}
+
+// Referenssikauden (1961-2010, WMO) PET-normaali per kalenterikuukausi.
+// Laskettu kerran ja valimuistiin (kallis operaatio, 50 vuotta * Thornthwaite).
+let _epRefCache = null;
+function referencePETNormals(fmi){
+  if (_epRefCache) return _epRefCache;
+  const mm = monthlyMeansFromFMI(fmi);
+  const monthlyPETsByCalMonth = Array.from({length:12}, () => []);
+  for (let y = 1961; y <= 2010; y++){
+    const temps = [];
+    let complete = true;
+    for (let m = 1; m <= 12; m++){
+      const v = mm[y+'-'+m];
+      if (v == null){ complete = false; break; }
+      temps.push(v);
+    }
+    if (!complete) continue;
+    const pet = thornthwaitePET(temps, KUOPIO_LAT);
+    pet.forEach((p,i) => monthlyPETsByCalMonth[i].push(p));
+  }
+  const normals = monthlyPETsByCalMonth.map(arr => {
+    if (!arr.length) return null;
+    const mean = arr.reduce((a,b)=>a+b,0)/arr.length;
+    const variance = arr.reduce((s,v)=>s+(v-mean)**2,0)/arr.length;
+    return { mean, sd: Math.sqrt(variance) };
+  });
+  _epRefCache = normals;
+  return normals;
+}
+
+// EP-anomalia [0,1]: nykyisen kuukauden PET verrattuna referenssinormaaliin,
+// normalisoitu referenssikauden omalla keskihajonnalla samalle kalenterikuukaudelle.
+// +2 keskihajontaa (poikkeuksellisen korkea haihdunta) -> 1.0. Ei alle normaalin -> 0.
+function computeEPAnomaly(fmi){
+  try{
+    const mm = monthlyMeansFromFMI(fmi);
+    const lastDate = fmi.dates[fmi.dates.length-1];
+    const [ly, lm] = lastDate.split('-').map(Number);
+    // 12 kk taaksepain nykyhetkesta I:n (heat index) laskemiseksi.
+    // HUOM (korjattu): temps ei ole Jan-Dec-jarjestyksessa vaan rullaava
+    // (esim. elo->heina) - months-taulukko kertoo thornthwaitePET:lle
+    // kunkin arvon TODELLISEN kalenterikuukauden paivanpituuslaskentaa varten.
+    const temps = [], months = [];
+    for (let i = 11; i >= 0; i--){
+      let y = ly, m = lm - i;
+      while (m <= 0){ m += 12; y -= 1; }
+      const v = mm[y+'-'+m];
+      if (v == null) return null; // ei tarpeeksi dataa
+      temps.push(v);
+      months.push(m);
+    }
+    const pet = thornthwaitePET(temps, KUOPIO_LAT, months);
+    const currentPET = pet[pet.length-1];
+    const normals = referencePETNormals(fmi);
+    const normal = normals[lm-1];
+    if (!normal || normal.sd <= 0) return null;
+    const z = (currentPET - normal.mean) / normal.sd;
+    return Math.max(0, Math.min(1, (z+1)/3)); // z=-1(alempi)->0, z=2(korkea)->1, lievasti asymmetrinen
+  } catch(e){ console.warn('EP-anomalia:', e.message); return null; }
+}
+
 function computeHEPP(nve,iis,fmi){
   let sd=0.30;
   if(iis?.deficit!=null)sd=Math.max(0,Math.min(1,iis.deficit/0.90));
@@ -362,11 +484,15 @@ function computeHEPP(nve,iis,fmi){
   }
   const hsp=nve?.label==='low'?0.70:nve?.label==='high'?0.15:0.38;
   const rf=nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40;
-  return{val:+(0.40*sd+0.35*hsp+0.25*rf).toFixed(2),sd:+sd.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2)};
+  // EP-anomalia: Thornthwaite PET nykykuukaudelle vs. 1961-2010-normaali.
+  // Fallback 0.30 (neutraali) jos fmi-data ei riita laskentaan.
+  const ep = fmi ? computeEPAnomaly(fmi) : null;
+  const epVal = ep != null ? ep : 0.30;
+  return{val:+(0.35*sd+0.25*epVal+0.25*rf+0.15*hsp).toFixed(2),sd:+sd.toFixed(2),ep:+epVal.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2),epFallback:ep==null};
 }
 
-function hCol(v){return v>=0.75?'var(--sr)':v>=0.55?'var(--sy)':'var(--ink)'}
-function hReg(v){return v>=0.75?'Korkea endurance-paine':v>=0.55?'Kohonnut':v>=0.35?'Normaali alue':'Normaali'}
+function hCol(v){return v>=0.65?'var(--sr)':v>=0.45?'var(--sy)':'var(--ink)'}
+function hReg(v){return v>=0.65?'Korkea endurance-paine':v>=0.45?'Kohonnut':'Normaali'}
 
 function drawBars(id,labels,values,color){
   const el=document.getElementById(id);
