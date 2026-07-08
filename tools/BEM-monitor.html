@@ -163,10 +163,18 @@ footer a{color:var(--accent);text-decoration:none}
 BEPP v2 = (D_f^1.2 * D_s^1.0 * D_c^0.8) * (1-R)^1.5<br>
 dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
 T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
-D_s: FinBIF — liito-orava, palokärki, kalasääski<br>
-D_f: CORINE 2018 proxy (0.52)<br>
-D_c: YVA-pipeline 56.3 GW tuulivoima (0.61)<br>
-R:   SYKE suojelualueet (0.38)<br><br>
+D_s: FinBIF — liito-orava, palokärki, kalasääski · <b>live</b><br>
+D_f: CORINE 2018 proxy (0.52) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
+D_c: YVA-pipeline 56.3 GW tuulivoima (0.61) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
+R:   SYKE suojelualueet (0.38) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br><br>
+<span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tama on v0.1-prototyyppi (TN-015: "Pre-development").
+BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti, mutta vain
+D_s haetaan oikeasti live-lahteesta (FinBIF). D_f, D_c ja R ovat
+kiinnitettyja SERIES-taulukon esimerkkiarvoja, esitetty lahdemerkinnoin
+(CORINE/YVA/SYKE) vaikka niita ei haeta nailta lahteilta - proxy-worker
+tukee toistaiseksi vain FinBIF:ia ("future CORINE/EEA access", ei
+toteutettu). BEPP-kokonaisarvo alla heijastaa siis vain neljasosaa
+oikeasta live-datasta.</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>

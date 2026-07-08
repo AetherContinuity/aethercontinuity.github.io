@@ -15,7 +15,16 @@
  */
 
 const FINBIF_BASE = "https://api.laji.fi";
-const FINBIF_TOKEN = "196add350dc78ab9b05d519d274dd5ea861747592cfabb43a22828de262d9fac";
+// HUOM (2026-07-08): FINBIF_TOKEN oli aiemmin kovakoodattu suoraan tahan
+// julkiseen tiedostoon - todellinen, tarkistamaton paasytunniste julkisessa
+// GitHub-repossa. Korjattu lukemaan Cloudflare Workers -ymparistomuuttujasta
+// (wrangler secret / env binding), ei koodista. VANHA TOKEN ON YHA VUOTANUT
+// GIT-HISTORIAAN (aiemmat commitit) - se pitaa mitatoida ja korvata uudella
+// FinBIF-tililta kasin, tata ei voi tehda pelkalla koodimuutoksella.
+//
+// Kaytto (wrangler.toml tai dashboard):
+//   wrangler secret put FINBIF_TOKEN
+// Koodi lukee sen nyt env-parametrista fetch-kasittelijassa.
 
 // Rautalammin reitti default bbox
 const DEFAULT_BBOX = "26.50,62.55,27.25,63.30";
@@ -65,7 +74,7 @@ function parseYears(yearsStr) {
   return yearsStr;
 }
 
-async function fetchFinBif(path, params = {}) {
+async function fetchFinBif(path, params = {}, token) {
   const url = new URL(`${FINBIF_BASE}${path}`);
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, v);
@@ -73,7 +82,7 @@ async function fetchFinBif(path, params = {}) {
   
   const resp = await fetch(url.toString(), {
     headers: {
-      "Authorization": `Bearer ${FINBIF_TOKEN}`,
+      "Authorization": `Bearer ${token}`,
       "Accept": "application/json"
     }
   });
@@ -85,7 +94,7 @@ async function fetchFinBif(path, params = {}) {
 }
 
 // GET /finbif/observations — single species observation count
-async function handleObservations(url) {
+async function handleObservations(url, token) {
   const taxon = url.searchParams.get("taxon") || "MX.47169";
   const bbox = url.searchParams.get("bbox") || DEFAULT_BBOX;
   const years = parseYears(url.searchParams.get("years"));
@@ -96,7 +105,7 @@ async function handleObservations(url) {
     time: years,
     pageSize: 1,
     cache: "true"
-  });
+  }, token);
   
   return jsonResp({
     taxon,
@@ -108,7 +117,7 @@ async function handleObservations(url) {
 }
 
 // GET /finbif/species — all indicator species counts
-async function handleSpecies(url) {
+async function handleSpecies(url, token) {
   const bbox = url.searchParams.get("bbox") || DEFAULT_BBOX;
   const ref_years = parseYears(url.searchParams.get("ref_years") || "2000-2010");
   const cur_years = parseYears(url.searchParams.get("cur_years") || "2020-2026");
@@ -122,11 +131,11 @@ async function handleSpecies(url) {
         fetchFinBif("/warehouse/query/unit/list", {
           taxonId: taxon, coordinates: coords, time: ref_years,
           pageSize: 1, cache: "true"
-        }),
+        }, token),
         fetchFinBif("/warehouse/query/unit/list", {
           taxonId: taxon, coordinates: coords, time: cur_years,
           pageSize: 1, cache: "true"
-        })
+        }, token)
       ]);
       
       results[taxon] = {
@@ -167,7 +176,7 @@ function handleStatus() {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     
     // CORS preflight
@@ -178,6 +187,8 @@ export default {
     if (request.method !== "GET") {
       return errorResp("Method not allowed", 405);
     }
+
+    const token = env && env.FINBIF_TOKEN;
     
     const path = url.pathname.replace(/\/$/, "");
     
@@ -185,9 +196,11 @@ export default {
       if (path === "/status" || path === "") {
         return handleStatus();
       } else if (path === "/finbif/observations") {
-        return await handleObservations(url);
+        if (!token) return errorResp("FINBIF_TOKEN not configured (wrangler secret put FINBIF_TOKEN)", 500);
+        return await handleObservations(url, token);
       } else if (path === "/finbif/species") {
-        return await handleSpecies(url);
+        if (!token) return errorResp("FINBIF_TOKEN not configured (wrangler secret put FINBIF_TOKEN)", 500);
+        return await handleSpecies(url, token);
       } else {
         return errorResp(`Unknown route: ${path}`, 404);
       }
