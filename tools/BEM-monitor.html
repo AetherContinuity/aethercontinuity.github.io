@@ -164,17 +164,18 @@ BEPP v2 = (D_f^1.2 * D_s^1.0 * D_c^0.8) * (1-R)^1.5<br>
 dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
 T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
 D_s: FinBIF — liito-orava, palokärki, kalasääski · <b>live</b><br>
-D_f: CORINE 2018 proxy (0.52) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
+D_f: CORINE 2018 -ruudukko (metsäosuus) + Sentinel-2 NDVI-hajonta (aci-corine-proxy) · <b style="color:var(--sg)">live (2026-07-08 lähtien)</b><br>
 D_c: YVA-pipeline 56.3 GW tuulivoima (0.61) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
 R:   SYKE suojelualueet (0.38) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br><br>
 <span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tama on v0.1-prototyyppi (TN-015: "Pre-development").
-BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti, mutta vain
-D_s haetaan oikeasti live-lahteesta (FinBIF). D_f, D_c ja R ovat
-kiinnitettyja SERIES-taulukon esimerkkiarvoja, esitetty lahdemerkinnoin
-(CORINE/YVA/SYKE) vaikka niita ei haeta nailta lahteilta - proxy-worker
-tukee toistaiseksi vain FinBIF:ia ("future CORINE/EEA access", ei
-toteutettu). BEPP-kokonaisarvo alla heijastaa siis vain neljasosaa
-oikeasta live-datasta.</span><br><br>
+BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s ja D_f
+haetaan nyt oikeasti live-lahteista: D_s FinBIF:sta, D_f kahdesta
+riippumattomasta lahteesta (SYKE CORINE-ruudukko + Sentinel Hub
+Statistical API NDVI-hajonta, aci-corine-proxy). D_f = 0.6*(1-metsaosuus)
++ 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu approksimaatio, ei validoitu
+todellista fragmentaatiomittausta vasten. D_c ja R ovat yha kiinnitettyja
+SERIES-taulukon esimerkkiarvoja. BEPP-kokonaisarvo heijastaa siis kahta
+neljasosaa oikeasta live-datasta.</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>
@@ -228,8 +229,9 @@ function setText(id, val) {
   if (el) el.textContent = val;
 }
 
-function updateBEPP(Ds) {
+function updateBEPP(Ds, Df) {
   if (Ds != null) SERIES[2].Ds = Ds;
+  if (Df != null) SERIES[2].Df = Df;
   var vals = SERIES.map(function(s) {
     return { year: s.year, S: beppV2(s.Df, s.Ds, s.Dc, s.R) };
   });
@@ -367,38 +369,69 @@ function fetchERA5() {
     });
 }
 
-function fetchCopernicus() {
-  var url = PROXY + '/copernicus/ndvi?bbox=' + BBOX + '&date=2024-06-01/2024-09-30&cloud=20';
-  fetch(url)
-    .then(function(r) {
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    })
-    .then(function(d) {
-      var box = document.getElementById('cop-box');
-      if (!box) return;
-      if (d.scene_count > 0) {
-        box.innerHTML = 'Sentinel-2: <b>' + d.scene_count + '</b> sceneä löydetty (2024 kesä, pilvisyys ≤20%)';
-        setDot('d-cop', 'ok');
-        setText('s-cop', 'OK');
-      } else {
-        box.innerHTML = '<span style="color:var(--muted)">Copernicus: ei scenejä löydetty</span>';
-        setDot('d-cop', 'warn');
-      }
-    })
-    .catch(function(e) {
-      setDot('d-cop', 'warn');
-      var b = document.getElementById('cop-box');
-      if (b) b.innerHTML = '<span style="color:var(--muted)">Copernicus: ' + e.message + '</span>';
-    });
+// D_f (fragmentaatio) — aci-corine-proxy, kaksi ERILLISTA fetch-kutsua
+// (ei yksi /combined-kutsu) koska molemmat lahteet yhdessa Worker-
+// suorituksessa ylittivat Cloudflaren ilmaistason 50 subrequestin
+// rajan (49 CORINE-pistetta + 2 NDVI-pyyntoa = 51). Kaksi erillista
+// selaimen fetch-kutsua saa kumpikin oman 50:n budjetin.
+var CORINE_PROXY = 'https://aci-corine-proxy.ruotsalainen-marko.workers.dev';
+
+function computeCombinedDf(corine, ndvi) {
+  var forestComponent = 1 - corine.forest_fraction;
+  var result = { forest_component: forestComponent };
+  if (ndvi && ndvi.ndvi_stats) {
+    var hetero = Math.min(1, ndvi.ndvi_stats.stDev / 0.30);
+    result.heterogeneity_component = hetero;
+    result.D_f = 0.6 * forestComponent + 0.4 * hetero;
+  } else {
+    result.D_f = forestComponent; // NDVI ei saatavilla, kayta vain CORINEa
+  }
+  return result;
 }
+
+function fetchCorineDf() {
+  var fragUrl = CORINE_PROXY + '/fragmentation?bbox=' + BBOX + '&grid=7';
+  var ndviUrl = CORINE_PROXY + '/ndvi?bbox=' + BBOX + '&months=3';
+
+  Promise.allSettled([
+    fetch(fragUrl).then(function(r) { if (!r.ok) throw new Error('fragmentation HTTP ' + r.status); return r.json(); }),
+    fetch(ndviUrl).then(function(r) { if (!r.ok) throw new Error('ndvi HTTP ' + r.status); return r.json(); })
+  ]).then(function(results) {
+    var corineRes = results[0], ndviRes = results[1];
+    var box = document.getElementById('cop-box');
+
+    if (corineRes.status !== 'fulfilled') {
+      setDot('d-cop', 'warn');
+      if (box) box.innerHTML = '<span style="color:var(--muted)">CORINE: ' + corineRes.reason.message + '</span>';
+      return;
+    }
+    var corine = corineRes.value;
+    var ndvi = (ndviRes.status === 'fulfilled') ? ndviRes.value : null;
+
+    var combined = computeCombinedDf(corine, ndvi);
+    updateBEPP(null, combined.D_f);
+
+    setDot('d-cop', 'ok');
+    setText('s-cop', 'OK');
+    if (box) {
+      var msg = 'D_f live: metsä ' + (corine.forest_fraction*100).toFixed(0) + '% (CORINE, ' + corine.grid_size + ')';
+      if (combined.heterogeneity_component != null) {
+        msg += ' · NDVI hajonta ' + ndvi.ndvi_stats.stDev.toFixed(3);
+      } else {
+        msg += ' · NDVI ei saatavilla (' + (ndviRes.reason ? ndviRes.reason.message : 'tuntematon virhe') + ')';
+      }
+      box.innerHTML = msg;
+    }
+  });
+}
+
 
 function fetchAll() {
   setText('s-ts', new Date().toLocaleTimeString('fi-FI', {hour:'2-digit', minute:'2-digit'}));
   updateBEPP(null);
   fetchSpecies();
   fetchERA5();
-  fetchCopernicus();
+  fetchCorineDf();
 }
 
 fetchAll();
