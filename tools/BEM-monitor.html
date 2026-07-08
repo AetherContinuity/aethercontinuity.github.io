@@ -111,8 +111,8 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
   <div class="card">
     <div class="clbl">D_f · Fragmentaatio</div>
-    <div class="cval">0.520</div>
-    <div class="csub">Proxy · CORINE</div>
+    <div class="cval" id="df-val">0.520</div>
+    <div class="csub" id="df-sub">Proxy · CORINE</div>
   </div>
   <div class="card">
     <div class="clbl">D_c · Kum. häiriö</div>
@@ -410,6 +410,8 @@ function fetchCorineDf() {
 
     var combined = computeCombinedDf(corine, ndvi);
     updateBEPP(null, combined.D_f);
+    setText('df-val', combined.D_f.toFixed(3));
+    setText('df-sub', 'CORINE+NDVI live · ' + corine.grid_size);
 
     setDot('d-cop', 'ok');
     setText('s-cop', 'OK');
