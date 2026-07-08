@@ -1934,32 +1934,52 @@ async function init() {
     // Eilen: 48h sitten → 2h sitten (varmistetaan että data on valmis)
     const end   = new Date(now - 2   * 3.6e6);
     const start = new Date(now - 48  * 3.6e6);
-    setStatus('loading', [[label, 'haetaan eilen…']]);
     // 3min data: 48h = 960 points → size=2000 kattaa koko ikkunan
     // sortOrder=asc varmistaa oikean aikasuunnan
     const url = `${PROXY}?ds=${dsId}` +
       `&start=${encodeURIComponent(start.toISOString())}` +
       `&end=${encodeURIComponent(end.toISOString())}` +
       `&size=2000&sortOrder=asc`;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const j = await r.json();
-    // Aggregoi tuntiarvoihin (proxy palauttaa 15min tai 60min dataa)
-    const rows = (j.data||j).filter(d => d.value != null && d.value >= 0);
-    const hourMap = new Map();
-    rows.forEach(row => {
-      const d = new Date(row.startTime || row.start_time || row.timestamp || row.time);
-      if (isNaN(d)) return;
-      const key = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours());
-      if (!hourMap.has(key)) hourMap.set(key, []);
-      hourMap.get(key).push(Number(row.value));
-    });
-    return Array.from(hourMap.entries())
-      .sort((a,b) => a[0]-b[0])
-      .map(([k, vals]) => ({
-        time: new Date(k).toISOString(),
-        value: vals.reduce((s,v)=>s+v,0)/vals.length
-      }));
+
+    // Retry 429:lle exponentiaalisella backoffilla (2026-07-08: HTTP 429
+    // havaittu toistuvasti kun useita DS-hakuja tehdaan peräkkäin lyhyella
+    // valilla. Aiemmin yksi 429 = valitön epäonnistuminen koko kerrokselle,
+    // joka piiloutui virheellisesti "Live"-tilan taakse (korjattu erikseen).
+    // Nyt: 3 yritysta, odotus 1s/2s/4s ennen luovuttamista.
+    const maxAttempts = 3;
+    let lastErr = null;
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      setStatus('loading', [[label, attempt === 0 ? 'haetaan eilen…' : `haetaan eilen… (yritys ${attempt+1}/${maxAttempts})`]]);
+      try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const j = await r.json();
+        // Aggregoi tuntiarvoihin (proxy palauttaa 15min tai 60min dataa)
+        const rows = (j.data||j).filter(d => d.value != null && d.value >= 0);
+        const hourMap = new Map();
+        rows.forEach(row => {
+          const d = new Date(row.startTime || row.start_time || row.timestamp || row.time);
+          if (isNaN(d)) return;
+          const key = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours());
+          if (!hourMap.has(key)) hourMap.set(key, []);
+          hourMap.get(key).push(Number(row.value));
+        });
+        return Array.from(hourMap.entries())
+          .sort((a,b) => a[0]-b[0])
+          .map(([k, vals]) => ({
+            time: new Date(k).toISOString(),
+            value: vals.reduce((s,v)=>s+v,0)/vals.length
+          }));
+      } catch (e) {
+        lastErr = e;
+        if (e.message && e.message.includes('429') && attempt < maxAttempts - 1) {
+          await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempt)));
+          continue;
+        }
+        throw lastErr;
+      }
+    }
+    throw lastErr;
   };
 
   try { cRows = await fetchYesterday(DS.consumption, 'DS 124'); }
@@ -1974,19 +1994,19 @@ async function init() {
   }
 
   // Hae layer-data (nuclear, hydro, wind, CHP) — rate-limit välttämiseksi viiveet
-  await new Promise(r => setTimeout(r, 600));
+  await new Promise(r => setTimeout(r, 1000));
   try { nucRows = await fetchYesterday(DS.nuclear, 'DS 188'); }
   catch(e) { layerErrors.push('DS 188: ' + e.message); nucRows = null; }
 
-  await new Promise(r => setTimeout(r, 600));
+  await new Promise(r => setTimeout(r, 1000));
   try { hydRows = await fetchYesterday(DS.hydro, 'DS 191'); }
   catch(e) { layerErrors.push('DS 191: ' + e.message); hydRows = null; }
 
-  await new Promise(r => setTimeout(r, 600));
+  await new Promise(r => setTimeout(r, 1000));
   try { wndRows = await fetchYesterday(DS.wind, 'DS 181'); }
   catch(e) { layerErrors.push('DS 181: ' + e.message); wndRows = null; }
 
-  await new Promise(r => setTimeout(r, 600));
+  await new Promise(r => setTimeout(r, 1000));
   let chpDHRows = null, chpIndRows = null;
   await new Promise(r => setTimeout(r, 2000)); // 429-esto: tauko ennen DS 201
   try {
@@ -2006,7 +2026,7 @@ async function init() {
     if (el) el.textContent = `DS 201: VIRHE — ${e.message}`;
   }
 
-  await new Promise(r => setTimeout(r, 600));
+  await new Promise(r => setTimeout(r, 1000));
   await new Promise(r => setTimeout(r, 2000)); // 429-esto: tauko ennen DS 202
   try {
     chpIndRows = await fetchYesterday(DS.chpInd, 'DS 202');
