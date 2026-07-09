@@ -121,8 +121,8 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
   <div class="card">
     <div class="clbl">R · Palautuminen</div>
-    <div class="cval">0.380</div>
-    <div class="csub">Suojelualueet</div>
+    <div class="cval" id="r-val">0.380</div>
+    <div class="csub" id="r-sub">Suojelualueet</div>
   </div>
 </div>
 
@@ -166,16 +166,19 @@ T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
 D_s: FinBIF — liito-orava, palokärki, kalasääski · <b>live</b><br>
 D_f: CORINE 2018 -ruudukko (metsäosuus) + Sentinel-2 NDVI-hajonta (aci-corine-proxy) · <b style="color:var(--sg)">live (2026-07-08 lähtien)</b><br>
 D_c: YVA-pipeline 56.3 GW tuulivoima (0.61) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
-R:   SYKE suojelualueet (0.38) · <b style="color:var(--sr)">kiinteä esimerkkiarvo, ei live-dataa</b><br><br>
+R:   SYKE inspire_ps suojelualueet (Natura2000 SAC/SPA + valtion/yksityiset LSA), 3x otanta eri offseteilla · <b style="color:var(--sg)">live (2026-07-08 lähtien)</b><br><br>
 <span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tama on v0.1-prototyyppi (TN-015: "Pre-development").
-BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s ja D_f
+BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s, D_f ja R
 haetaan nyt oikeasti live-lahteista: D_s FinBIF:sta, D_f kahdesta
 riippumattomasta lahteesta (SYKE CORINE-ruudukko + Sentinel Hub
-Statistical API NDVI-hajonta, aci-corine-proxy). D_f = 0.6*(1-metsaosuus)
-+ 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu approksimaatio, ei validoitu
-todellista fragmentaatiomittausta vasten. D_c ja R ovat yha kiinnitettyja
-SERIES-taulukon esimerkkiarvoja. BEPP-kokonaisarvo heijastaa siis kahta
-neljasosaa oikeasta live-datasta.</span><br><br>
+Statistical API NDVI-hajonta), R SYKE:n suojelualue-WMS:sta (aci-corine-proxy).
+D_f = 0.6*(1-metsaosuus) + 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu
+approksimaatio, ei validoitu todellista fragmentaatiomittausta vasten.
+R = suojellun pinta-alan piste-otantaosuus, kolme erillista 7x7-ruudukkoa
+eri offseteilla (0.25/0.5/0.75) yhdistettyna otantavirheen vahentamiseksi -
+edelleen pieni otos (nykyinen alue ~2-4 osumaa/147 pistetta), tulkittava
+varoen. D_c on ainoa yha kiinnitetty SERIES-taulukon esimerkkiarvo.
+BEPP-kokonaisarvo heijastaa siis kolmea neljasosaa oikeasta live-datasta.</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>
@@ -229,9 +232,10 @@ function setText(id, val) {
   if (el) el.textContent = val;
 }
 
-function updateBEPP(Ds, Df) {
+function updateBEPP(Ds, Df, R) {
   if (Ds != null) SERIES[2].Ds = Ds;
   if (Df != null) SERIES[2].Df = Df;
+  if (R != null) SERIES[2].R = R;
   var vals = SERIES.map(function(s) {
     return { year: s.year, S: beppV2(s.Df, s.Ds, s.Dc, s.R) };
   });
@@ -427,6 +431,41 @@ function fetchCorineDf() {
   });
 }
 
+// R (palautumiskyky) — aci-corine-proxy /recovery, kolme erillista
+// kutsua eri offset-arvoilla (0.25/0.5/0.75). Yksi kutsu (49 pistetta)
+// antoi tilastollisesti epavakaan tuloksen (1-2 osumaa/49) - kolme
+// kutsua eri pisteilla kasvattaa todellisen otoskoon ~147:aan ilman
+// etta yksikaan yksittainen Worker-suoritus ylittaa Cloudflaren 50
+// subrequestin rajaa, eika vaadi SYKE:n WFS-sovellustunnistetta.
+function fetchR() {
+  var offsets = [0.25, 0.5, 0.75];
+  var calls = offsets.map(function(off) {
+    var u = CORINE_PROXY + '/recovery?bbox=' + BBOX + '&offset=' + off;
+    return fetch(u).then(function(r) { if (!r.ok) throw new Error('recovery HTTP ' + r.status); return r.json(); });
+  });
+
+  Promise.allSettled(calls).then(function(results) {
+    var totalHits = 0, totalValid = 0, okCount = 0;
+    results.forEach(function(res) {
+      if (res.status === 'fulfilled' && res.value.protected_hits != null) {
+        totalHits += res.value.protected_hits;
+        totalValid += res.value.points_valid;
+        okCount++;
+      }
+    });
+
+    if (okCount === 0) {
+      var sub = document.getElementById('r-sub');
+      if (sub) sub.innerHTML = '<span style="color:var(--muted)">R: ei yhtaan onnistunutta kutsua</span>';
+      return;
+    }
+
+    var R = totalValid > 0 ? totalHits / totalValid : 0;
+    updateBEPP(null, null, R);
+    setText('r-val', R.toFixed(3));
+    setText('r-sub', 'SYKE suojelu, ' + totalHits + '/' + totalValid + ' (' + okCount + '/3 kutsua)');
+  });
+}
 
 function fetchAll() {
   setText('s-ts', new Date().toLocaleTimeString('fi-FI', {hour:'2-digit', minute:'2-digit'}));
@@ -434,6 +473,7 @@ function fetchAll() {
   fetchSpecies();
   fetchERA5();
   fetchCorineDf();
+  fetchR();
 }
 
 fetchAll();
