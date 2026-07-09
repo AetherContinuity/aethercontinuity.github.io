@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CN-029 — Epistemic Anchoring in Cross-Session Self-Evaluation · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/cn-029-epistemic-anchoring-cross-session-self-evaluation.html"/>
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;
+  margin:1rem 0;color:#333}
+.condition{background:#f8f4ee;border:1px solid #ddd;padding:.7rem 1rem;
+  margin:.8rem 0;font-size:.9rem}
+.condition strong{font-family:var(--mono);font-size:.68rem;color:var(--accent);
+  display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.08em}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/papers/">Papers</a>
+  <a href="/">ACI</a>
+</nav>
+
+<h1>CN-029 — Epistemic Anchoring in Cross-Session Self-Evaluation</h1>
+<p class="doc-id">Concept Note · When Prior Output Becomes Authority · July 2026<br>
+Related: <a href="/papers/cn-011-instruments-designed-within-architecture.html" style="color:var(--accent);text-decoration:none">CN-011</a> ·
+<a href="/papers/cn-023-intentional-irrecoverability.html" style="color:var(--accent);text-decoration:none">CN-023</a> ·
+<a href="/papers/sm-007-convergence-finding.html" style="color:var(--accent);text-decoration:none">SM-007</a> ·
+<a href="/papers/cn-002-human-llm-cognitive-space.html" style="color:var(--accent);text-decoration:none">CN-002</a></p>
+
+<div class="abstract">
+<strong>Abstract</strong>
+An LLM instance asked to evaluate a document it wrote in a prior session is not performing self-reflection. It has no access to the reasoning that produced the earlier text; it can only retrieve that text and read it, exactly as an external reviewer would read someone else's paper. The retrieved text, however, arrives labelled as the model's own, and a self-authorship label is a plausible candidate mechanism for why it is weighed differently — though this remains a hypothesis, not yet an isolated variable. This is a distinct failure mode from self-correction, self-consistency, or ordinary anchoring bias: it proposes anchoring on a self-authorship cue rather than on evidence, and it survives naive mitigations because the mitigation step (a meta-evaluation comparing old and new judgments) is performed by the same unblinded instance that produced the second judgment.
+
+<em>Core claim: cross-session self-evaluation is literature review conducted under the false premise of memory. Whether the self-authorship label is the operative variable, or whether conversational structure, framing, or other context cues do the same work, is an open empirical question this note is designed to make testable.</em>
+</div>
+
+<h2>§ 01 — Three Adjacent Problems, One Different Problem</h2>
+
+<p>Three bodies of work bear on this question without quite reaching it. Self-correction research finds that models do not reliably fix their own errors without external, verifiable feedback — internal review alone is insufficient. Self-consistency research finds that agreement across a model's outputs is not evidence of correctness; a model can be uniformly wrong. Anchoring-bias research shows that a numeric estimate or claim placed earlier in context measurably shifts a later judgment, and that instructing the model to disregard it does not fully remove the effect.</p>
+
+<p>None of these describe the case at hand precisely. The question here is not whether the model can catch its own errors unaided, not whether its outputs agree with each other, and not whether an arbitrary prior number biases a later one. It is narrower: what happens when the object being evaluated is the model's own prior conclusion, retrieved and re-presented as history rather than as one candidate text among others.</p>
+
+<h2>§ 02 — Retrieval as Literature Review</h2>
+
+<p>A new session has no continuity with the session that produced an earlier document. When it retrieves that document — through search tools, pasted context, or summary — it encounters the text the way an external reviewer encounters someone else's paper: cold, without access to the reasoning trace that produced it.</p>
+
+<p>The candidate difference from ordinary literature review is a self-authorship label: the retrieved text is marked as <em>the model's own</em>. If that label functions as an identity cue rather than an evidentiary one, it would fit a mechanism documented outside this specific setting under both anchoring and rationalization-bias framings, where non-evidential cues (confidence markers, verbosity, source labels) measurably shift a judge model's verdict even when the underlying evidence is unchanged. But the label is not the only candidate. The structure of the surrounding conversation, instructions given alongside the retrieved text, or simply the framing of the retrieval query could produce the same shift without authorship being the operative variable at all. § 06 proposes a way to distinguish these.</p>
+
+<p class="claim">If the label is doing the work, the failure is not that the model forgets. It is that it does not forget enough — it retains just enough signal (this was mine) to grant unearned authority to a text it cannot actually verify. That "if" is the paper's open question, not its conclusion.</p>
+
+<h2>§ 03 — The Meta-Evaluation Trap</h2>
+
+<p>The obvious fix — form an independent judgment first, then compare it against the prior one — has a hidden failure point. The comparison step itself must be performed by some instance, and that instance sees both judgments simultaneously. If it concludes the earlier judgment was right, there is no way to tell whether that is genuine convergence or the same authorship cue operating one step downstream, at the point of reconciliation rather than at the point of initial judgment.</p>
+
+<p>Blinding the first pass does not blind the reconciliation. A protocol that only blinds evaluation, not adjudication between evaluations, has moved the anchoring risk rather than removed it.</p>
+
+<h2>§ 04 — Existing Partial Mechanisms</h2>
+
+<p>Two published mechanisms address adjacent versions of this problem without covering the cross-session self-authorship case directly.</p>
+
+<div class="condition">
+<strong>Evidence-lock ordering</strong>
+A causal framework for rationalization bias in LLM judges proposes locking an evidence-based score before the judge is exposed to non-evidential cues (confidence signals, framing, verbosity), then only afterward permitting ranking or preference. This is structurally the blind-then-reveal ordering the present problem requires — but it is built for single-pass judge tasks, not for a judge evaluating its own historical output across sessions.
+</div>
+
+<div class="condition">
+<strong>Identity anonymisation</strong>
+A separate inference-time protocol replaces entity identifiers with anonymous codes before analysis and compares blinded against unblinded output, to measure how much of a judgment is driven by recognising a named entity rather than by the data itself. Applied to this setting, the analogous move is withholding the fact that a retrieved document is self-authored until after an independent judgment is formed. Neither published mechanism, however, addresses the reconciliation step in § 03 — both stop at the first judgment.
+</div>
+
+<h2>§ 05 — A Protocol to Test the Hypothesis, Not Yet a Solution</h2>
+
+<p>What follows is a proposed protocol designed to make the self-authorship hypothesis testable, not a demonstrated fix. Absent the experiment in § 06, it should be read as a design for isolating the variable, not as a validated mitigation.</p>
+
+<p>The protocol needs four stages, with the reconciliation stage itself blinded:</p>
+
+<ol>
+<li><strong>Independent evaluation.</strong> A session receives only the document under review — no prior judgments, no authorship label.</li>
+<li><strong>Controlled reveal.</strong> Prior evaluations are disclosed only after the independent judgment is recorded.</li>
+<li><strong>Blinded reconciliation.</strong> Disagreements are adjudicated by a separate process that receives both judgments anonymised and without timestamps — it does not know which came first or which is "the model's own" — analogous to identity anonymisation applied one level up, to the judgments rather than to the document.</li>
+<li><strong>Attributed synthesis.</strong> Only after reconciliation is authorship and chronology restored, so the record shows what changed and why, without that history having influenced the reconciliation itself.</li>
+</ol>
+
+<p>The SM-007 history is a working case study for why stage 3 cannot be skipped: one session wrote the paper's convergence claim, a later session called the same claim methodologically circular, and a third session inherited both judgments only because a human interlocutor supplied the missing continuity by retrieving and juxtaposing them manually. No stage in that sequence was blind. The correction happened, but by chance of a well-timed question, not by protocol. The case study shows the failure mode is real; it does not by itself show that self-authorship, rather than some other feature of that particular sequence, was the cause.</p>
+
+<h2>§ 06 — Toward an Empirical Test</h2>
+
+<p>The hypothesis in § 02 is directly testable. Present a model with a prior evaluation under three conditions, holding the content of that evaluation constant: (1) attributed to no one — an anonymous prior judgment; (2) attributed to a different model; (3) attributed to the same model's own earlier session. If self-authorship is the operative variable, condition (3) should show measurably more deference — less willingness to overturn the prior judgment, more convergence toward its conclusion — than conditions (1) and (2). If the three conditions produce statistically indistinguishable behaviour, the effect described in this note is better explained by conversational structure or framing than by self-authorship specifically, and § 02 through § 05 would need revision rather than confirmation.</p>
+
+<p>This is the natural next step if the concept note is developed into an empirical article. Until that test is run, the claims above should be read as a precisely stated hypothesis and a protocol designed to isolate it — not as an established mechanism.</p>
+
+<h2>Conclusion</h2>
+
+<p>Cross-session self-evaluation is not a memory problem, and self-correction, self-consistency, and anchoring-bias research address adjacent but distinct questions. This note isolates a candidate cue — a document's status as the model's own prior output — and proposes both a mitigation design and an experiment to test whether that cue, rather than some other feature of retrieved context, is what drives the effect. Evidence-lock ordering and identity anonymisation are the closest existing published mechanisms, but both stop before the reconciliation step where the same cue could re-enter. Until reconciliation is blinded as rigorously as initial judgment — and until § 06's test confirms self-authorship is in fact the operative variable — a corpus with a single continuous human reader and a rotating series of disposable model instances will keep depending on that human to notice contradictions, which is a real mechanism, but not a designed one.</p>
+
+<p class="claim">If the hypothesis holds, the instrument will not need a longer memory. It will need a reconciliation step that cannot recognise itself.</p>
+
+<p class="claim">This document is itself subject to the mechanism it describes. A future session should not accept this analysis on the strength of a prior session having written it. It should re-derive the argument or independently dispute it — exactly as the note itself requires of any cross-session evaluation.</p>
+
+<div class="refs">
+Related documents<br>
+<a href="/papers/cn-011-instruments-designed-within-architecture.html">CN-011</a> — Instruments Designed Within Architecture (same reflexivity trap at the level of human institutional design: the designer is not immune to the pressure the instrument is meant to compensate for. CN-029 examines the analogous trap one level down, at the level of a single model's cross-session self-evaluation)<br>
+<a href="/papers/cn-023-intentional-irrecoverability.html">CN-023</a> — Intentional Irrecoverability (confidence stratification; residue vs. operational core)<br>
+<a href="/papers/sm-007-convergence-finding.html">SM-007</a> — The Convergence Finding (case study: contested claim, unblinded reconciliation)<br>
+<a href="/papers/cn-002-human-llm-cognitive-space.html">CN-002</a> — Human–LLM Cognitive Space (dialogic instrument model; the human as continuity mechanism)
+</div>
+
+</body>
+</html>
