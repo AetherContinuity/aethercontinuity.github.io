@@ -85,9 +85,11 @@ footer a{color:var(--accent);text-decoration:none}
     <div class="hlbl">Hydrological Endurance Pressure Proxy · vertailu §05 aikasarjaan</div>
     <div class="hregime" id="hregime" style="font-size:.82rem;font-weight:600"></div>
     <div class="hdesc" id="hdesc" style="font-size:.75rem"></div>
-    <div class="hcomp" style="font-size:.58rem">SD <b id="hsd">—</b> · HSP <b id="hhsp">—</b> · RF <b id="hrf">—</b></div>
+    <div class="hcomp" style="font-size:.58rem">SD <b id="hsd">—</b> · EP <b id="hep">—</b> · HSP <b id="hhsp">—</b> · RF <b id="hrf">—</b></div>
   </div>
 </div>
+
+<div id="hCompAlert" style="display:none;background:#3a1a10;border:2px solid var(--sr);border-radius:6px;padding:0.7rem 1rem;margin-bottom:16px;font-family:var(--mono);font-size:0.75rem;color:#f0d0c0"></div>
 
 <div class="cards" style="margin-bottom:20px">
   <div class="card">
@@ -655,7 +657,35 @@ async function fetchAll(){
   setText('hval',h.val.toFixed(2));document.getElementById('hval').style.color=col;
   setText('hregime',hReg(h.val));document.getElementById('hregime').style.color=col;
   document.getElementById('hbadge').style.borderColor=col;
-  setText('hsd',h.sd);setText('hhsp',h.hsp);setText('hrf',h.rf);
+  setText('hsd',h.sd);setText('hep',h.ep);setText('hhsp',h.hsp);setText('hrf',h.rf);
+
+  // Komponenttikohtainen halytys - riippumaton HEPP-kokonaisluokasta.
+  // Sama periaate kuin BEM/WEM Monitoreissa (2026-07-08). HEM:lla ei
+  // ole aiemmin ollut MITAAN per-komponentti-kynnysta - SD/EP/HSP/RF
+  // nayttiin pelkkina lukuina ilman varia tai luokkaa, ja EP ei
+  // nakynyt UI:ssa OLLENKAAN vaikka se laskettiin. Kayttaa samaa
+  // 0.25/0.50/0.75-asteikkoa kuin BEM/WEM YHTENAISYYDEN vuoksi - tama
+  // ON OMA PAATOKSENI HEM:lle tanaan, ei aiemmin dokumentoitu kynnys.
+  const hAlerts = [];
+  function hCheck(name, val) {
+    if (val == null) return;
+    if (val >= 0.75) hAlerts.push(name + ' hyvin korkea (' + val.toFixed(2) + ')');
+    else if (val >= 0.50) hAlerts.push(name + ' korkea (' + val.toFixed(2) + ')');
+  }
+  hCheck('SD', h.sd);
+  hCheck('EP', h.ep);
+  hCheck('HSP', h.hsp);
+  hCheck('RF', h.rf);
+  const hAlertBox = document.getElementById('hCompAlert');
+  if (hAlertBox) {
+    if (hAlerts.length > 0) {
+      hAlertBox.style.display = 'block';
+      hAlertBox.innerHTML = '<b>⚠ Komponenttikohtainen hälytys</b> (riippumaton HEPP-kokonaisluokasta, oma kynnys ei TN-014-standardi): ' + hAlerts.join(' · ');
+    } else {
+      hAlertBox.style.display = 'none';
+    }
+  }
+
   setText('hdesc',(nve?`NVE täyttöaste ${nve.pct}% (hist.med ~58%). `:'')+
     (iis?.wl?`Iisvesi ${iis.wl.toFixed(2)} m NN, vajaus ${iis.deficit} m normaalista. `:'')+
     (fmi?.temp!=null?`Kuopio ${fmi.temp.toFixed(1)} °C.`:''));
