@@ -103,6 +103,8 @@ footer a{color:var(--accent);text-decoration:none}
   <div class="tband bp"       id="t-bp">BP-like &gt;0.75</div>
 </div>
 
+<div id="comp-alert" style="display:none;background:#3a1a10;border:2px solid var(--sr);border-radius:6px;padding:0.8rem 1rem;margin-bottom:1rem;font-family:var(--mono);font-size:0.8rem;color:#f0d0c0"></div>
+
 <div class="cards">
   <div class="card">
     <div class="clbl">D_s · Lajistressi</div>
@@ -288,6 +290,47 @@ function updateBEPP(Ds, Df, R) {
   if (trEl) {
     trEl.textContent = dSdt > 0 ? 'heikkeneminen' : 'elpyminen';
     trEl.style.color = dSdt > 0 ? 'var(--sr)' : 'var(--sg)';
+  }
+  checkComponentAlerts();
+}
+
+// Komponenttikohtainen hälytys — ei odota BEPP-kokonaisarvon luokkaa.
+// Havainto 2026-07-08: BEPP=0.115 (Normal) piilotti etta R=0.027 on
+// karkeasti tulkittuna kriittisen matala JA etta kaava (1-R)^1.5 on
+// lahes tunteeton R:lle kun R on lahella nollaa (0.973^1.5=0.960) -
+// yksittainen huono komponentti ei nay kokonaisarvossa. Tama tarkistaa
+// jokaisen komponentin ERIKSEEN omalla kynnyksellaan riippumatta mita
+// yhdistetty BEPP nayttaa.
+//
+// HUOM: R:lle ei ole TN-015:ssa dokumentoitua omaa kynnysjarjestelmaa
+// (D_s/D_f/D_c:lla on, korkea=huono). Kaytan tassa samoja lukuarvoja
+// KAANTEISESTI (korkea R = hyva) - tama on oma paatokseni tanaan, ei
+// TN-015:n maarittely, merkitty selvasti sellaiseksi.
+function checkComponentAlerts() {
+  var s = SERIES[2];
+  var alerts = [];
+
+  function checkHighBad(name, val) {
+    if (val > 0.75) alerts.push(name + ' BP-like (' + val.toFixed(3) + ')');
+    else if (val > 0.50) alerts.push(name + ' Critical (' + val.toFixed(3) + ')');
+  }
+  function checkLowBad(name, val) {
+    // Kaanteinen asteikko R:lle, oma paatos - ks. kommentti ylla.
+    if (val < 0.25) alerts.push(name + ' matala (' + val.toFixed(3) + ') — oma tulkinta, ei TN-015-standardi');
+  }
+
+  checkHighBad('D_s', s.Ds);
+  checkHighBad('D_f', s.Df);
+  checkHighBad('D_c', s.Dc);
+  checkLowBad('R', s.R);
+
+  var box = document.getElementById('comp-alert');
+  if (!box) return;
+  if (alerts.length > 0) {
+    box.style.display = 'block';
+    box.innerHTML = '<b>⚠ Komponenttikohtainen hälytys</b> (riippumaton BEPP-kokonaisluokasta): ' + alerts.join(' · ');
+  } else {
+    box.style.display = 'none';
   }
 }
 
