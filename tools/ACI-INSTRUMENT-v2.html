@@ -386,6 +386,13 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div class="alert-body">EPP välillä 0.50–0.75. Stressipersistenssi ja tuontiriippuvuus koholla. Suositus: seuraa DA-001 varhaisvaroituslogiikan mukaisesti (concern trending toward danger). Viite: WP-008 (jatkuvan kuorman allokaatio).</div>
       </div>
     </div>
+    <div class="alert-blk danger" id="alertComp">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">Komponenttikohtainen hälytys (riippumaton EPP-kokonaisluokasta)</div>
+        <div class="alert-body" id="alertCompBody">—</div>
+      </div>
+    </div>
 
     <!-- Threshold zones -->
     <div class="zone-blk">
@@ -1407,6 +1414,40 @@ function renderPosture(m, spot) {
   // Alerts
   document.getElementById('alertBP').className = 'alert-blk danger' + (w168.epp >= 0.75 ? ' on' : '');
   document.getElementById('alertEl').className  = 'alert-blk warn'  + (w168.epp >= 0.50 && w168.epp < 0.75 ? ' on' : '');
+
+  // Komponenttikohtainen halytys - riippumaton EPP-kokonaisarvosta.
+  // Sama periaate kuin BEM Monitorissa (2026-07-08, lisatty myohemmin
+  // samana paivana): koska EPP on FS/SP/WR/DP_t:n LINEAARINEN summa,
+  // yksi kriittinen komponentti voi peittya kolmen normaalin alle jos
+  // katsoja lukee vain ylareunan EPP-luvun eika vierita S02:n
+  // taulukkoon. Nayttaa erillisen hälytyksen jos yksikin komponentti
+  // on omalla asteikollaan Elevated/BP-like.
+  const compAlerts = [];
+  if (w168.fs != null) {
+    const fsCls = classify(1 - w168.fs); // FS kaannetty - korkea FS = hyva
+    if (fsCls.label === 'Elevated' || fsCls.label === 'BP-like') compAlerts.push('FS ' + fsCls.label + ' (' + fmt.pct(w168.fs) + ')');
+  }
+  if (w168.wr != null) {
+    const wrCls = classify(w168.wr);
+    if (wrCls.label === 'Elevated' || wrCls.label === 'BP-like') compAlerts.push('WR ' + wrCls.label + ' (' + fmt.pct(w168.wr) + ')');
+  }
+  const dpVal = w168.dp_t ?? w168.dp_s;
+  if (dpVal != null) {
+    const dpCls = classify(dpVal);
+    if (dpCls.label === 'Elevated' || dpCls.label === 'BP-like') compAlerts.push('DP ' + dpCls.label + ' (' + fmt.pct(dpVal) + ')');
+  }
+  if (w168.sp != null) {
+    const spCls = spLabel(w168.sp);
+    if (spCls.label === 'Elevated' || spCls.label === 'BP-like') compAlerts.push('SP ' + spCls.label + ' (' + fmt.pct(w168.sp) + ')');
+  }
+  const alertCompEl = document.getElementById('alertComp');
+  if (alertCompEl) {
+    alertCompEl.className = 'alert-blk danger' + (compAlerts.length > 0 ? ' on' : '');
+    const bodyEl = document.getElementById('alertCompBody');
+    if (bodyEl) bodyEl.textContent = compAlerts.length > 0
+      ? compAlerts.join(' · ') + '. Kokonais-EPP on lineaarinen summa - se voi keskiarvoistaa tämän näkymättömiin. Tarkista §02:n taulukko.'
+      : '—';
+  }
 }
 
 // ── Render §02 Metrics table ──────────────────────────────────────────────────
