@@ -1613,6 +1613,18 @@ function renderLayerComp(m) {
   if (chpEl && w24?.avgChp != null) {
     chpEl.innerHTML = Math.round(w24.avgChp).toLocaleString('fi-FI') + chpLabel;
   }
+  // KORJATTU 2026-07-12: paivita debug-summa oikealla W24-lopputuloksella.
+  // Aiemmin dbgSum.textContent kirjoitettiin ainoastaan ENNEN buildW168:aa
+  // (ks. rivi ~2122), kiinteana "odottaa laskentaa" -placeholderina jota
+  // ei koskaan paivitetty jalkikateen - debug-paneeli nayti aina saman
+  // vaarän tekstin riippumatta siita etta laskenta oli jo valmistunut.
+  const dbgSumEl = document.getElementById('chpDebugSum');
+  if (dbgSumEl && w24?.avgChp != null) {
+    const statusTxt = w24.chpEstimated
+      ? `WEM näyttää: ${Math.round(w24.avgChp)} MW (ARVIO - raaka DS201+202 ylitti CHP_MAX-rajan tai dataa puuttui, käytetty kuukausikeskiarvoa)`
+      : `WEM näyttää: ${Math.round(w24.avgChp)} MW (raaka DS201+202-keskiarvo, W24-ikkuna)`;
+    dbgSumEl.textContent = dbgSumEl.textContent.split(' · WEM näyttää:')[0] + ' · ' + statusTxt;
+  }
   const solEl = document.getElementById('lcSol');
   if (solEl) solEl.textContent = w24?.avgSol != null ? Math.round(w24.avgSol).toLocaleString('fi-FI') : '—';
   const batEl = document.getElementById('lcBat');
@@ -2119,7 +2131,7 @@ async function init() {
       const n202 = chpIndRows?.length ?? 0;
       const a201 = n201 ? chpDHRows.reduce((s,r)=>s+r.value,0)/n201 : 0;
       const a202 = n202 ? chpIndRows.reduce((s,r)=>s+r.value,0)/n202 : 0;
-      dbgSum.textContent = `Yhteensä: ${(a201+a202).toFixed(0)} MW (201: ${a201.toFixed(0)} + 202: ${a202.toFixed(0)}) · WEM näyttää: odottaa laskentaa`;
+      dbgSum.textContent = `Yhteensä (${n201}h "eilinen"-ikkuna, EI sama kuin W24): ${(a201+a202).toFixed(0)} MW (201: ${a201.toFixed(0)} + 202: ${a202.toFixed(0)}) · WEM näyttää: odottaa laskentaa`;
     }
     rawData = buildW168(liveData);
     lastFetch = new Date();;
