@@ -1613,17 +1613,39 @@ function renderLayerComp(m) {
   if (chpEl && w24?.avgChp != null) {
     chpEl.innerHTML = Math.round(w24.avgChp).toLocaleString('fi-FI') + chpLabel;
   }
-  // KORJATTU 2026-07-12: paivita debug-summa oikealla W24-lopputuloksella.
-  // Aiemmin dbgSum.textContent kirjoitettiin ainoastaan ENNEN buildW168:aa
-  // (ks. rivi ~2122), kiinteana "odottaa laskentaa" -placeholderina jota
-  // ei koskaan paivitetty jalkikateen - debug-paneeli nayti aina saman
-  // vaarän tekstin riippumatta siita etta laskenta oli jo valmistunut.
+  // KORJATTU 2026-07-12 (toinen iteraatio): edellinen korjaus vain paivitti
+  // debug-tekstin oikealla LOPPUTULOKSELLA, mutta ei palauttanut panelin
+  // alkuperaista DIAGNOSTISTA tarkoitusta - ristiinvalidointia kahdella
+  // RIIPPUMATTOMALLA laskentareitilla SAMAA ikkunaa vasten. Alkuperainen
+  // debug-summa laski koko fetchYesterday()-haun (~47h), eri ikkuna kuin
+  // W24 (24h) - nama eivat voineet koskaan validoida toisiaan, vain
+  // nayttaa kaksi eri lukua vierekkain.
+  //
+  // Tama versio laskee OMAN, riippumattoman keskiarvon suoraan
+  // rawData.slice(-24):n (sama W24-ikkuna kuin calcWindow kayttaa)
+  // d.chp-arvoista - eri koodipolku kuin calcWindow/avgChp, mutta
+  // TASMALLEEN sama 24 tunnin ikkuna. Jos ne eroavat, ero paljastaa
+  // oikean laskentavirheen (esim. CHP_MAX-fallback-logiikassa tai
+  // hetkelinjauksessa), ei vain ikkunan pituuseroa.
   const dbgSumEl = document.getElementById('chpDebugSum');
-  if (dbgSumEl && w24?.avgChp != null) {
-    const statusTxt = w24.chpEstimated
-      ? `WEM näyttää: ${Math.round(w24.avgChp)} MW (ARVIO - raaka DS201+202 ylitti CHP_MAX-rajan tai dataa puuttui, käytetty kuukausikeskiarvoa)`
-      : `WEM näyttää: ${Math.round(w24.avgChp)} MW (raaka DS201+202-keskiarvo, W24-ikkuna)`;
-    dbgSumEl.textContent = dbgSumEl.textContent.split(' · WEM näyttää:')[0] + ' · ' + statusTxt;
+  if (dbgSumEl && rawData?.length >= 24) {
+    const last24 = rawData.slice(-24);
+    const chpVals = last24.filter(d => d.chp != null).map(d => d.chp);
+    if (chpVals.length > 0) {
+      const independentAvg = chpVals.reduce((s,v)=>s+v,0) / chpVals.length;
+      const official = w24?.avgChp;
+      const diff = official != null ? Math.abs(independentAvg - official) : null;
+      const matchTxt = official == null
+        ? 'virallista W24-arvoa ei saatavilla vertailuun'
+        : w24.chpEstimated
+          ? `virallinen arvo on kuukausiarvio (${Math.round(official)} MW) - CHP_MAX ylittyi tai dataa puuttui, ei suoraan vertailukelpoinen`
+          : diff < 5
+            ? `TÄSMÄÄ (ero ${diff.toFixed(1)} MW) - laskentaketju vahvistettu riippumattomasti`
+            : `EI TÄSMÄÄ (ero ${diff.toFixed(1)} MW) - MAHDOLLINEN LASKENTAVIRHE, tarkista calcWindow`;
+      dbgSumEl.textContent = `Riippumaton W24-uudelleenlaskenta (${chpVals.length}/24 pistettä, sama ikkuna kuin viralinen): ${independentAvg.toFixed(0)} MW · ${matchTxt}`;
+    } else {
+      dbgSumEl.textContent = 'Riippumaton W24-uudelleenlaskenta: ei chp-dataa viimeisessä 24h:ssa';
+    }
   }
   const solEl = document.getElementById('lcSol');
   if (solEl) solEl.textContent = w24?.avgSol != null ? Math.round(w24.avgSol).toLocaleString('fi-FI') : '—';
@@ -2124,15 +2146,6 @@ async function init() {
     ]);
   } else {
     const liveData = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, tempMap);
-    // Update debug sum
-    const dbgSum = document.getElementById('chpDebugSum');
-    if (dbgSum) {
-      const n201 = chpDHRows?.length ?? 0;
-      const n202 = chpIndRows?.length ?? 0;
-      const a201 = n201 ? chpDHRows.reduce((s,r)=>s+r.value,0)/n201 : 0;
-      const a202 = n202 ? chpIndRows.reduce((s,r)=>s+r.value,0)/n202 : 0;
-      dbgSum.textContent = `Yhteensä (${n201}h "eilinen"-ikkuna, EI sama kuin W24): ${(a201+a202).toFixed(0)} MW (201: ${a201.toFixed(0)} + 202: ${a202.toFixed(0)}) · WEM näyttää: odottaa laskentaa`;
-    }
     rawData = buildW168(liveData);
     lastFetch = new Date();;
     const layerCount = rawData.filter(d => d.nuc != null).length;
