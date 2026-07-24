@@ -800,10 +800,11 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
 
       <!-- Nordic-WR (v0, karkea data-nayttoi ilman visualisointia) -->
       <div class="v4-card">
-        <div class="v4-card-title">Nordic-WR v0 — FI vs. SE1 tuulivoima (KOKEELLINEN)</div>
+        <div class="v4-card-title">Nordic-WR v0 — FI vs. SE1 tuulivoima, keskiarvot (KOKEELLINEN)</div>
         <div class="v4-card-value" id="v4NordicWRLabel">—</div>
-        <div class="v4-card-sub">FI: <span id="v4WindFI">—</span> MW &nbsp;·&nbsp; SE1: <span id="v4WindSE1">—</span> MW</div>
-        <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /wind-generation · EI VIELA osa EPP-laskentaa</div>
+        <div class="v4-card-sub">FI (W24/W72/W168): <span id="v4WindFI">—</span> MW</div>
+        <div class="v4-card-sub">SE1 (W24/W72/W168): <span id="v4WindSE1">—</span> MW</div>
+        <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /wind-generation, 168h haku · keskiarvot samasta sarjasta · EI VIELA osa EPP-laskentaa</div>
       </div>
     </div>
 
@@ -982,35 +983,64 @@ async function fetchHydroRF() {
 }
 
 // Nordic-WR v0 — KOKEELLINEN, karkea data-nayto ilman visualisointia tai
-// EPP-integraatiota. Ensimmainen askel: hae FI:n ja SE1:n tuulivoiman
-// viimeisin tunnettu arvo ja nayta vierekkain. EI VIELA laajennettu
-// kaikkiin 12 Pohjoismaiden tarjousalueeseen - tarkoituksella pieni
-// ensimmainen pala, ks. entsoe-integration-plan.md.
+// EPP-integraatiota. Hakee 168h-ikkunan KERRAN per tarjousalue ja laskee
+// W24/W72/W168-keskiarvot samasta sarjasta (sama konventio kuin WEM:n
+// omassa §02-taulukossa), ei kolmea erillista API-kutsua. EI VIELA
+// laajennettu kaikkiin 12 Pohjoismaiden tarjousalueeseen - tarkoituksella
+// pieni ensimmainen pala, ks. entsoe-integration-plan.md.
+function resolutionMinutesFromString(resolution) {
+  const m = /^PT(\d+)M$/.exec(resolution || '');
+  return m ? Number(m[1]) : 15; // oletus 15min jos tuntematon
+}
+
+function windowAverages(points, resolutionMinutes) {
+  const perHour = 60 / resolutionMinutes;
+  const n24 = Math.round(24 * perHour);
+  const n72 = Math.round(72 * perHour);
+  function avg(slice) {
+    const vals = slice.map(p => p.quantity).filter(v => v != null);
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }
+  return {
+    w24: avg(points.slice(-n24)),
+    w72: avg(points.slice(-n72)),
+    w168: avg(points),
+  };
+}
+
 async function fetchNordicWR() {
   const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
   const now = new Date();
   const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
-  const periodStart = new Date(now.getTime() - 24 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 168 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
 
-  async function latestWind(bzn) {
+  async function windAverages(bzn) {
     const url = ENTSOE_PROXY + '/wind-generation?bzn=' + bzn + '&periodStart=' + periodStart + '&periodEnd=' + periodEnd;
     const r = await fetch(url);
     if (!r.ok) throw new Error(bzn + ' HTTP ' + r.status);
     const d = await r.json();
     const series = d.series && d.series[0];
     if (!series || !series.points || !series.points.length) throw new Error(bzn + ': ei sarjaa');
-    const last = series.points[series.points.length - 1];
-    return last.quantity;
+    const resMin = resolutionMinutesFromString(series.points[0].resolution);
+    return windowAverages(series.points, resMin);
+  }
+
+  function fmt(avgs) {
+    const f = v => v != null ? v.toFixed(0) : '—';
+    return f(avgs.w24) + ' / ' + f(avgs.w72) + ' / ' + f(avgs.w168);
   }
 
   try {
-    const [fi, se1] = await Promise.all([latestWind('FI'), latestWind('SE1')]);
+    const [fi, se1] = await Promise.all([windAverages('FI'), windAverages('SE1')]);
     const fiEl = document.getElementById('v4WindFI');
     const se1El = document.getElementById('v4WindSE1');
     const labelEl = document.getElementById('v4NordicWRLabel');
-    if (fiEl) fiEl.textContent = fi.toFixed(0);
-    if (se1El) se1El.textContent = se1.toFixed(0);
-    if (labelEl) labelEl.textContent = (fi + se1).toFixed(0) + ' MW yht.';
+    if (fiEl) fiEl.textContent = fmt(fi);
+    if (se1El) se1El.textContent = fmt(se1);
+    if (labelEl && fi.w24 != null && se1.w24 != null) {
+      labelEl.textContent = (fi.w24 + se1.w24).toFixed(0) + ' MW (W24 yht.)';
+    }
   } catch(e) {
     const labelEl = document.getElementById('v4NordicWRLabel');
     if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
