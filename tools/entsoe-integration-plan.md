@@ -184,6 +184,6 @@ tarjousalueella tai ajanjaksolla jossa tuulituotanto pysyisi vakiona.
 
 ## Jäljellä (ei vielä testattu)
 
-- `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — LIVE-TESTATTU 2026-07-24, paljasti ja korjasi kriittisen harvan-pistekoodauksen bugin (ks. yllä). Ei vielä uudelleentestattu korjauksen jälkeen.
+- `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — **KORJAUS VAHVISTETTU 2026-07-24**: uudelleentestattu deployn jälkeen, FI_to_SE1 JA SE1_to_FI molemmat palauttavat nyt oikein 96/96 pistettä. FI_to_SE1:n harva piikki (positiot 39-41) säilyi täsmälleen ennallaan, muut positiot täyttyivät oikein nollalla. SE1_to_FI:ssä nähtiin sama mekanismi toisin päin (positiot 40-41 täyttyivät perityllä arvolla 0 ennen position 42 uutta arvoa). Molemmat suunnat, seka harva etta tiheä koodaus samassa vastauksessa, vahvistettu toimiviksi.
 - `/installed-capacity` (A68, vuositason kapasiteetti) — ei vielä live-testattu
 - WEM:n oma frontend-integraatio (Nordic-WR-komponentti) — ei vielä aloitettu, odottaa että kaikki kolme reittiä on ensin vahvistettu toimiviksi
