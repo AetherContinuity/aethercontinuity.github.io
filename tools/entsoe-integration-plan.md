@@ -150,7 +150,14 @@ toimi sellaisenaan.
 muotoon `{"#text": "...", "@_codingScheme": "A01"}`, ei pelkäksi
 merkkijonoksi — huomioitava jos näitä kenttiä joskus luetaan suoraan.
 
-## Tila 2026-07-24 — /wind-generation LIVE JA TOIMII
+## Tila 2026-07-24 — KAIKKI KOLME REITTIÄ VAHVISTETTU TOIMIVIKSI
+
+Kaikki kolme reittiä (`/wind-generation`, `/cross-border-flow`,
+`/installed-capacity`) on nyt live-testattu ja toimivat. Matkalla
+löytyi ja korjattiin kaksi todellista bugia (harvan pistekoodauksen
+täyttö, SE1:n puuttuva 14.1.A-raportointi tarjousalueella) — kumpikaan
+ei olisi paljastunut ilman askel-kerrallaan-testausta jokaiselle
+reitille erikseen.
 
 - Rekisteröinti: TEHTY
 - API-pääsypyyntö (sähköposti): HYVÄKSYTTY
@@ -185,5 +192,5 @@ tarjousalueella tai ajanjaksolla jossa tuulituotanto pysyisi vakiona.
 ## Jäljellä (ei vielä testattu)
 
 - `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — **KORJAUS VAHVISTETTU 2026-07-24**: uudelleentestattu deployn jälkeen, FI_to_SE1 JA SE1_to_FI molemmat palauttavat nyt oikein 96/96 pistettä. FI_to_SE1:n harva piikki (positiot 39-41) säilyi täsmälleen ennallaan, muut positiot täyttyivät oikein nollalla. SE1_to_FI:ssä nähtiin sama mekanismi toisin päin (positiot 40-41 täyttyivät perityllä arvolla 0 ennen position 42 uutta arvoa). Molemmat suunnat, seka harva etta tiheä koodaus samassa vastauksessa, vahvistettu toimiviksi.
-- `/installed-capacity` (A68, vuositason kapasiteetti) — ei vielä live-testattu
+- `/installed-capacity` (A68, vuositason kapasiteetti) — **VAHVISTETTU TOIMIVAKSI 2026-07-24**, mutta VAATI korjauksen: SE1 (tarjousalue) palautti 'No matching data' JOKAISELLE yhdistelmälle (2025/2026, B19-suodatinilla ja ilman) — juurisyy löytyi: Ruotsi raportoi tämän artiklan vain KOKO MAAN tasolla (`bzn=SE`, EIC `10YSE-1--------K`), ei yksittäisille tarjousalueille (SE1-4). Lisätty SE-koodi, testattu ja vahvistettu toimivaksi — palautti realistiset arvot (ydinvoima 6900 MW, tuulivoima 18000 MW, vesivoima 16400 MW, täsmäävät tunnettuun todellisuuteen). Sivuhavainto: resoluutio tälle artiklalle on `"P1Y"` (ei `PT<n>M`) — `resolutionToMinutes` ei tunnista tätä muotoa, mutta yhden pisteen sarjoissa tämä ei aiheuttanut ongelmaa (fallback-logiikka toimi). Jos joskus kysytään monivuotista P1Y-sarjaa, `resolutionToMinutes` pitää laajentaa tunnistamaan myös `P<n>Y`.
 - WEM:n oma frontend-integraatio (Nordic-WR-komponentti) — ei vielä aloitettu, odottaa että kaikki kolme reittiä on ensin vahvistettu toimiviksi
