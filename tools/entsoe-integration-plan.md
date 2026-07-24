@@ -127,39 +127,43 @@ Kaksi eri ENTSO-E-datalähdettä löytyi tähän tarpeeseen, EI vielä tasa-arvo
 
 ## Askel 3: Koodi kirjoitettu (2026-07-24) — validoitu esimerkki-XML:ää vastaan, ei live-APIa
 
-`aci-entsoe-proxy` (uusi repo, ei vielä luotu GitHubiin — token ei riittänyt
-uuden repon luontiin, koodi toimitettu käyttäjälle tiedostoina) sisältää
-kolme reittiä: `/wind-generation` (A75+A16), `/cross-border-flow` (A11,
+`aci-entsoe-proxy` — repo luotu (https://github.com/AetherContinuity/aci-entsoe-proxy),
+koodi pushattu, Cloudflaren natiivi Git-integraatio deployasi Workerin
+automaattisesti pushin yhteydessä (ei erillistä `wrangler deploy` -tarvetta).
+Kolme reittiä: `/wind-generation` (A75+A16), `/cross-border-flow` (A11,
 molemmat suunnat automaattisesti), `/installed-capacity` (A68).
 
-**Validoitu paikallisesti:** kaksi ydinjäsennysrakennetta (GL_MarketDocument
-ja Publication_MarketDocument, molemmat fast-xml-parser:lla) testattu
-ENTSO-E:n OMAA dokumentaation esimerkki-XML:ää vastaan — molemmat läpäisivät.
+**Validoitu paikallisesti ENNEN live-testiä:** kaksi ydinjäsennysrakennetta
+(GL_MarketDocument ja Publication_MarketDocument, molemmat fast-xml-parser:lla)
+testattu ENTSO-E:n OMAA dokumentaation esimerkki-XML:ää vastaan — molemmat läpäisivät.
 
-**EI VIELÄ validoitu:** `MktPSRType.psrType`-rakenne (käytetään tuotanto-
-tyyppikohtaisessa suodatuksessa /wind-generation ja /installed-capacity
--reiteillä) — ei löytynyt oikeaa esimerkkiä tälle tarkalle kentälle
-ENTSO-E:n dokumentaatiosta. Jos näiden kahden reitin parsinta epäonnistuu
-live-datalla, tämä on todennäköisin syy — tarkista `MktPSRType`-polku
-oikeasta XML-vastauksesta ja korjaa tarvittaessa.
+**LIVE-TESTI ONNISTUI 2026-07-24:** `/wind-generation?bzn=SE1&periodStart=2026-07-23T00:00:00Z&periodEnd=2026-07-24T00:00:00Z`
+palautti oikean datan ENSIMMÄISELLÄ yrityksellä — `MktPSRType.psrType`
+("B19", Wind Onshore) tunnistui oikein, 96 pistettä 15 min resoluutiolla
+(= tasan 24h), arvot realistisia (n. 25–1660 MW SE1:n tuulelle,
+vuorokausivaihtelu näkyy selvästi). Aiempi epävarmuus tästä rakenteesta
+(ks. alla, historiallinen) osoittautui turhaksi varovaisuudeksi — koodi
+toimi sellaisenaan.
 
-**Sivuhavainto testauksesta:** attribuutilliset kentät (esim.
+**Sivuhavainto testauksesta (paikallinen, ennen live-testiä):** attribuutilliset kentät (esim.
 `in_Domain.mRID codingScheme="A01"`) jäsentyvät fast-xml-parser:lla
 muotoon `{"#text": "...", "@_codingScheme": "A01"}`, ei pelkäksi
 merkkijonoksi — huomioitava jos näitä kenttiä joskus luetaan suoraan.
 
-## Rajaus
+## Tila 2026-07-24 — /wind-generation LIVE JA TOIMII
 
-Tama dokumentti on SUUNNITELMA, ei toteutus. Tila 2026-07-24:
-- Rekisterointi: TEHTY
-- API-pääsypyyntö (sähköposti): LÄHETETTY, odotetaan ~3 arkipäivää
-- DocumentType/processType-koodit: VARMISTETTU virallisesta lähteestä (A11, A75+A16, A69)
+- Rekisteröinti: TEHTY
+- API-pääsypyyntö (sähköposti): HYVÄKSYTTY
+- DocumentType/processType-koodit: VARMISTETTU virallisesta lähteestä (A11, A75+A16, A69, A68)
 - EIC-aluekoodit: VARMISTETTU virallisesta listasta (kaikki Pohjoismaiden BZN)
-- XML-jäsentimen valinta: EI VIELÄ tehty
-- Worker-arkkitehtuuri (uusi vs. laajennus): EI VIELÄ päätetty
-- Itse koodi: EI VIELÄ kirjoitettu
-- Security Token: SAATU 2026-07-24 — ainoa este poistunut
+- XML-jäsentimen valinta: TEHTY (fast-xml-parser)
+- Worker-arkkitehtuuri: TEHTY (uusi repo, aci-entsoe-proxy)
+- Itse koodi: KIRJOITETTU JA DEPLOYATTU (Cloudflare-GitHub-integraatio)
+- Security Token: SAATU JA ASETETTU (Cloudflare Dashboard → Variables and Secrets)
+- **`/wind-generation`: LIVE-TESTATTU, TOIMII TÄYSIN** — SE1 tuulivoima, 96 pistettä/24h, MktPSRType.psrType tunnistui oikein ensimmäisellä yrityksellä
 
-Ainoa jäljellä oleva este ennen koodauksen aloittamista on Security
-Tokenin saapuminen. Kaikki muu tekninen valmistelu (mitä kutsua, millä
-parametreilla, mistä EIC-koodit) on nyt tehty valmiiksi odotusaikana.
+## Jäljellä (ei vielä testattu)
+
+- `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — ei vielä live-testattu
+- `/installed-capacity` (A68, vuositason kapasiteetti) — ei vielä live-testattu
+- WEM:n oma frontend-integraatio (Nordic-WR-komponentti) — ei vielä aloitettu, odottaa että kaikki kolme reittiä on ensin vahvistettu toimiviksi
