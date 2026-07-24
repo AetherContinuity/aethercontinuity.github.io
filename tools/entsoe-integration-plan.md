@@ -16,7 +16,18 @@ tehda RIIPPUMATTA siita milloin itse koodia aletaan kirjoittaa.
 
 ## Askel 1: Rekisterointi (tee ENSIN, odottaessa muu suunnittelu jatkuu)
 
-1. Rekisteroidy: https://transparency.entsoe.eu (tavallinen tili)
+**Tila 2026-07-24 (vahvistettu kayttajan omalla tarkistuksella):** Transparency
+Platform -tili ON JO olemassa, mutta RESTful API -pääsyä EI OLE VIELA pyydetty
+(Account Settings ei näytä "Web Api Security Token" -kenttää). Tili ja
+API-pääsy OVAT KAKSI ERI ASIAA ENTSO-E:n omassa prosessissa - pelkkä tili
+ei riitä.
+
+**SEURAAVA KONKREETTINEN ASKEL (ei viela tehty):** lahetä sähköposti
+`transparency@entsoe.eu`, otsikolla "Restful API access", runkoon
+rekisteröinnissa käytetty sähköpostiosoite. Tämän jälkeen ~3 arkipäivän
+odotus ennen kuin token voidaan generoida.
+
+1. Rekisteroidy: https://transparency.entsoe.eu (tavallinen tili) — TEHTY
 2. Lahetä sahkoposti osoitteeseen transparency@entsoe.eu:
    - Otsikko: "Restful API access"
    - Viestiin: sama sahkopostiosoite jolla rekisteroidyit
