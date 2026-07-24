@@ -135,7 +135,7 @@ Tama dokumentti on SUUNNITELMA, ei toteutus. Tila 2026-07-24:
 - XML-jäsentimen valinta: EI VIELÄ tehty
 - Worker-arkkitehtuuri (uusi vs. laajennus): EI VIELÄ päätetty
 - Itse koodi: EI VIELÄ kirjoitettu
-- Security Token: EI VIELÄ saatu (odottaa hyväksyntää)
+- Security Token: SAATU 2026-07-24 — ainoa este poistunut
 
 Ainoa jäljellä oleva este ennen koodauksen aloittamista on Security
 Tokenin saapuminen. Kaikki muu tekninen valmistelu (mitä kutsua, millä
