@@ -804,6 +804,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
         <div class="v4-card-value" id="v4NordicWRLabel">—</div>
         <div class="v4-card-sub">FI (W24/W72/W168): <span id="v4WindFI">—</span> MW</div>
         <div class="v4-card-sub">SE1 (W24/W72/W168): <span id="v4WindSE1">—</span> MW</div>
+        <div class="v4-card-sub" id="v4NordicWRInterp" style="font-weight:600;">—</div>
         <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /wind-generation, 168h haku · keskiarvot samasta sarjasta · EI VIELA osa EPP-laskentaa</div>
       </div>
     </div>
@@ -1009,6 +1010,32 @@ function windowAverages(points, resolutionMinutes) {
   };
 }
 
+// Paikallinen vs. laaja-alainen tuulikato: verrataan kunkin alueen W24-
+// keskiarvoa SEN OMAAN W168-perustasoon (ei absoluuttista kynnysta eika
+// asennettua kapasiteettia tarvita - tama valttaa SE1:n oman asennetun
+// kapasiteetin puuttumisen, ks. entsoe-integration-plan.md: vain SE
+// [koko maa] on validoitu, ei SE1 erikseen). Jos MOLEMMAT alueet ovat
+// samanaikaisesti selvasti oman viikkoperustasonsa alla, kyse on
+// todennakoisemmin laaja-alaisesta ilmiosta; jos vain toinen, paikallisesta.
+// KOKEELLINEN kynnysarvo (0.5) - ei validoitu historiallista Dunkelflaute-
+// tapausta vasten, vain jarkeva ensimmainen arvaus.
+function classifyWindLull(fi, se1, threshold = 0.5) {
+  const fiRatio = fi.w168 ? fi.w24 / fi.w168 : null;
+  const se1Ratio = se1.w168 ? se1.w24 / se1.w168 : null;
+  if (fiRatio == null || se1Ratio == null) return { label: 'Ei riittävästi dataa tulkintaan', fiRatio, se1Ratio };
+
+  const fiLow = fiRatio < threshold;
+  const se1Low = se1Ratio < threshold;
+
+  let label;
+  if (fiLow && se1Low) label = '⚠ LAAJA-ALAINEN: FI+SE1 molemmat oman W168-perustasonsa alla';
+  else if (fiLow) label = 'PAIKALLINEN: vain Suomi oman perustasonsa alla (SE1 normaali)';
+  else if (se1Low) label = 'PAIKALLINEN: vain SE1 oman perustasonsa alla (FI normaali)';
+  else label = 'Ei tuulikatoa — molemmat lähellä tai yli omaa W168-perustasoaan';
+
+  return { label, fiRatio, se1Ratio };
+}
+
 async function fetchNordicWR() {
   const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
   const now = new Date();
@@ -1041,6 +1068,9 @@ async function fetchNordicWR() {
     if (labelEl && fi.w24 != null && se1.w24 != null) {
       labelEl.textContent = (fi.w24 + se1.w24).toFixed(0) + ' MW (W24 yht.)';
     }
+    const interp = classifyWindLull(fi, se1);
+    const interpEl = document.getElementById('v4NordicWRInterp');
+    if (interpEl) interpEl.textContent = interp.label;
   } catch(e) {
     const labelEl = document.getElementById('v4NordicWRLabel');
     if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
