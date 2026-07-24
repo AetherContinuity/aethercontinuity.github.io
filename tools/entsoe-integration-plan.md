@@ -14,49 +14,63 @@ edes voidaan generoida. Tama TARKOITTAA etta rekisteroinnin
 ALOITTAMINEN on oma, aikasidonnainen ensimmainen askel joka kannattaa
 tehda RIIPPUMATTA siita milloin itse koodia aletaan kirjoittaa.
 
-## Askel 1: Rekisterointi (tee ENSIN, odottaessa muu suunnittelu jatkuu)
+## Askel 1: Rekisterointi (TEHTY, odotetaan hyväksyntää)
 
-**Tila 2026-07-24 (vahvistettu kayttajan omalla tarkistuksella):** Transparency
-Platform -tili ON JO olemassa, mutta RESTful API -pääsyä EI OLE VIELA pyydetty
-(Account Settings ei näytä "Web Api Security Token" -kenttää). Tili ja
-API-pääsy OVAT KAKSI ERI ASIAA ENTSO-E:n omassa prosessissa - pelkkä tili
-ei riitä.
+**Tila 2026-07-24, päivitetty:** Transparency Platform -tili olemassa, JA
+RESTful API access -pyyntö LÄHETETTY sähköpostilla transparency@entsoe.eu
+(otsikko "Restful API access"). ~3 arkipäivän hyväksyntäodotus KÄYNNISSÄ.
+Askel 2 (alla) tehdään odotuksen aikana, jotta koodaus voi alkaa heti
+tokenin saavuttua ilman lisäviivettä.
 
-**SEURAAVA KONKREETTINEN ASKEL (ei viela tehty):** lahetä sähköposti
-`transparency@entsoe.eu`, otsikolla "Restful API access", runkoon
-rekisteröinnissa käytetty sähköpostiosoite. Tämän jälkeen ~3 arkipäivän
-odotus ennen kuin token voidaan generoida.
+1. Rekisteroidy: https://transparency.entsoe.eu — TEHTY
+2. Lähetä sähköposti transparency@entsoe.eu, otsikko "Restful API access" — TEHTY
+3. Odota ~3 arkipäivää hyväksyntää — KÄYNNISSÄ
+4. Kun hyväksytty: kirjaudu, Account Settings -> generoi "Web Api Security Token" — EI VIELÄ
 
-1. Rekisteroidy: https://transparency.entsoe.eu (tavallinen tili) — TEHTY
-2. Lahetä sahkoposti osoitteeseen transparency@entsoe.eu:
-   - Otsikko: "Restful API access"
-   - Viestiin: sama sahkopostiosoite jolla rekisteroidyit
-3. Odota ~3 arkipaivaa hyvaksyntaa
-4. Kun hyvaksytty: kirjaudu, Account Settings -> generoi "Web Api
-   Security Token"
-5. Tallenna token samalla tavalla kuin Copernicus-secretit
-   (wrangler secret put ENTSOE_SECURITY_TOKEN uudessa/laajennetussa
-   Workerissa)
+## Askel 2: Tarkat rajapintaparametrit — VARMISTETTU 2026-07-24
 
-## Askel 2: Tarkat rajapintaparametrit (selvitettava ENNEN koodausta)
+Lähteet: ENTSO-E Transparency Platform Restful API Implementation Guide
+(transparency.entsoe.eu) + Zendesk-ohjeet (DocumentType-lista,
+EIC-aluekoodilista, molemmat päivitetty 2025).
 
-ENTSO-E:n API vaatii TASMALLISET `documentType`/`processType`-koodit
-JA EIC-muotoiset aluekoodit (esim. `BZN|SE2` - sama muoto joka nakyy
-kayttajan omassa referenssikuvassa). Alla ALUSTAVA lista - VAATII
-VARMISTUKSEN Implementation Guidesta ennen koodausta, ei arvattava:
+### DocumentType-koodit (varmistettu virallisesta listasta)
 
-| Kaytto | Todennakoinen documentType/processType | Tila |
-|---|---|---|
-| Cross-Border Physical Flows (FI<->SE1, SE1<->NO4 jne.) | Todennakoisesti A11 (Aggregated Energy Data Report -tyyppinen) - TARKISTETTAVA | Ei varmistettu |
-| Actual Generation per Type (tuulivoima per tarjousalue) | A75 (Actual generation per type) + A16 (Realised) - loydetty ENTSO-E:n omasta esimerkista | Kohtalaisen varma, mutta testattava |
-| Day-ahead tuuli/aurinko-ennuste | A69 (Wind and solar forecast) - TARKISTETTAVA | Ei varmistettu |
+| Käyttö | documentType | processType | Huom |
+|---|---|---|---|
+| Cross-Border Physical Flows (artikla 12.1.G) | **A11** (Aggregated energy data report) | ei vaadita | Mandatory: DocumentType, In_Domain, Out_Domain, TimeInterval. HUOM: API palauttaa VAIN yhden suunnan per pyyntö — molempien suuntien saamiseksi in_Domain/out_Domain on vaihdettava ja tehtävä KAKSI pyyntöä |
+| Actual Generation per Type (tuulivoima per tarjousalue) | **A75** (Actual generation per type) | **A16** (Realised) | Vastaa käyttäjän kuvan "tuulivoima per BZN" -tarvetta |
+| Wind and Solar Forecast (day-ahead) | **A69** (Wind and solar forecast) | — | 72h-ennusteen Nordic-laajennukseen jos halutaan myöhemmin |
 
-**EIC-koodit relevanteille alueille** (BZN-muodossa, kuten kayttajan
-kuvassa): BZN|FI, BZN|SE1, BZN|SE2, BZN|SE3, BZN|SE4, BZN|NO1,
-BZN|NO2, BZN|NO3, BZN|NO4, BZN|NO5, BZN|DK1, BZN|DK2 - TASMALLISET
-numeromuotoiset EIC-koodit (esim. `10YFI-1--------U` Suomelle)
-LOYDETTAVA ENTSO-E:n omasta aluekoodilistasta ennen ensimmaista
-API-kutsua, EI arvattava.
+### EIC-aluekoodit — Pohjoismaiden tarjousalueet (varmistettu, ei arvattu)
+
+| Tarjousalue | EIC-koodi |
+|---|---|
+| BZN\|FI | `10YFI-1--------U` |
+| BZN\|SE1 | `10Y1001A1001A44P` |
+| BZN\|SE2 | `10Y1001A1001A45N` |
+| BZN\|SE3 | `10Y1001A1001A46L` |
+| BZN\|SE4 | `10Y1001A1001A47J` |
+| BZN\|NO1 | `10YNO-1--------2` |
+| BZN\|NO2 | `10YNO-2--------T` |
+| BZN\|NO3 | `10YNO-3--------J` |
+| BZN\|NO4 | `10YNO-4--------9` |
+| BZN\|NO5 | `10Y1001A1001A48H` |
+| BZN\|DK1 | `10YDK-1--------W` |
+| BZN\|DK2 | `10YDK-2--------M` |
+
+### Esimerkkikutsu (GET, ei vielä ajettu — token puuttuu)
+
+```
+https://web-api.tp.entsoe.eu/api?securityToken=TOKEN&documentType=A11&in_Domain=10YFI-1--------U&out_Domain=10Y1001A1001A44P&periodStart=202607230000&periodEnd=202607240000
+```
+(FI<-SE1-suunta, 24h ikkuna — SE1->FI-suunnan saamiseksi in_Domain/out_Domain vaihdetaan)
+
+### Rajoitteet varmistettu samalla kertaa
+
+- **Vastausmuoto: XML** (GL_MarketDocument / Publication_MarketDocument, IEC-skeemat) — vahvistettu esimerkkivastauksista
+- **Rate limit: 400 pyyntöä/min per IP+token**, ylitys -> 10 min esto (HTTP 429)
+- **Aikaväli max 1 vuosi** per pyyntö (Standard Data View -tyyppisille kyselyille)
+- **Yksi pyyntö = yksi suunta** rajaylityksille (Cross-Border Physical Flows) — Nordic-WR-komponentti tarvitsisi 2 pyyntöä per rajapari (FI<->SE1 molempiin suuntiin) jos molemmat suunnat halutaan
 
 ## Askel 3: Tekninen toteutus (uusi asia taman koodikannan sisalla)
 
@@ -95,9 +109,16 @@ Ei suositusta viela - paatettava ennen koodausta.
 
 ## Rajaus
 
-Tama dokumentti on SUUNNITELMA, ei toteutus. Yksikaan askel (rekisterointi,
-EIC-koodien varmistus, XML-jasentimen valinta, Worker-arkkitehtuuri)
-ei ole viela tehty. Kayttajan oma huomio (2026-07-24): "Enso E data
-rajapinta vaatinee taas avaimet" - vahvistettu ENTSO-E:n oman
-dokumentaation kautta: KYLLA, mutta EI itsepalveluna kuten Copernicus -
-manuaalinen sahkopostihyvaksynta ~3 arkipaivan viiveella.
+Tama dokumentti on SUUNNITELMA, ei toteutus. Tila 2026-07-24:
+- Rekisterointi: TEHTY
+- API-pääsypyyntö (sähköposti): LÄHETETTY, odotetaan ~3 arkipäivää
+- DocumentType/processType-koodit: VARMISTETTU virallisesta lähteestä (A11, A75+A16, A69)
+- EIC-aluekoodit: VARMISTETTU virallisesta listasta (kaikki Pohjoismaiden BZN)
+- XML-jäsentimen valinta: EI VIELÄ tehty
+- Worker-arkkitehtuuri (uusi vs. laajennus): EI VIELÄ päätetty
+- Itse koodi: EI VIELÄ kirjoitettu
+- Security Token: EI VIELÄ saatu (odottaa hyväksyntää)
+
+Ainoa jäljellä oleva este ennen koodauksen aloittamista on Security
+Tokenin saapuminen. Kaikki muu tekninen valmistelu (mitä kutsua, millä
+parametreilla, mistä EIC-koodit) on nyt tehty valmiiksi odotusaikana.
