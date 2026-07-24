@@ -125,6 +125,29 @@ Kaksi eri ENTSO-E-datalähdettä löytyi tähän tarpeeseen, EI vielä tasa-arvo
 2. SE1:n oma teollinen kuorma (Stegra/HYBRIT) suoraan nakyviin ennen
    TRR:n kiristymista
 
+## Askel 3: Koodi kirjoitettu (2026-07-24) — validoitu esimerkki-XML:ää vastaan, ei live-APIa
+
+`aci-entsoe-proxy` (uusi repo, ei vielä luotu GitHubiin — token ei riittänyt
+uuden repon luontiin, koodi toimitettu käyttäjälle tiedostoina) sisältää
+kolme reittiä: `/wind-generation` (A75+A16), `/cross-border-flow` (A11,
+molemmat suunnat automaattisesti), `/installed-capacity` (A68).
+
+**Validoitu paikallisesti:** kaksi ydinjäsennysrakennetta (GL_MarketDocument
+ja Publication_MarketDocument, molemmat fast-xml-parser:lla) testattu
+ENTSO-E:n OMAA dokumentaation esimerkki-XML:ää vastaan — molemmat läpäisivät.
+
+**EI VIELÄ validoitu:** `MktPSRType.psrType`-rakenne (käytetään tuotanto-
+tyyppikohtaisessa suodatuksessa /wind-generation ja /installed-capacity
+-reiteillä) — ei löytynyt oikeaa esimerkkiä tälle tarkalle kentälle
+ENTSO-E:n dokumentaatiosta. Jos näiden kahden reitin parsinta epäonnistuu
+live-datalla, tämä on todennäköisin syy — tarkista `MktPSRType`-polku
+oikeasta XML-vastauksesta ja korjaa tarvittaessa.
+
+**Sivuhavainto testauksesta:** attribuutilliset kentät (esim.
+`in_Domain.mRID codingScheme="A01"`) jäsentyvät fast-xml-parser:lla
+muotoon `{"#text": "...", "@_codingScheme": "A01"}`, ei pelkäksi
+merkkijonoksi — huomioitava jos näitä kenttiä joskus luetaan suoraan.
+
 ## Rajaus
 
 Tama dokumentti on SUUNNITELMA, ei toteutus. Tila 2026-07-24:
