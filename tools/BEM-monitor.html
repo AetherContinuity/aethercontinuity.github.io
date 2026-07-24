@@ -168,6 +168,26 @@ main{padding:0 26px}
 
 .note{font-size:.82rem;color:var(--muted);font-style:italic;margin:8px 0}
 
+/* ---------- NDVI satellite image ---------- */
+.ndvi-shot{
+  display:grid;grid-template-columns:1fr 200px;gap:0;border:1px solid var(--peat);
+  margin-bottom:14px;background:var(--peat);
+}
+@media(max-width:600px){.ndvi-shot{grid-template-columns:1fr}}
+.ndvi-img-wrap{position:relative;background:#0f0e0a;min-height:200px;display:flex;align-items:center;justify-content:center}
+.ndvi-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.ndvi-fallback{
+  display:none;color:var(--muted);font-family:var(--mono);font-size:.68rem;text-align:center;padding:20px;
+}
+.ndvi-img-wrap img.err{display:none}
+.ndvi-img-wrap img.err + .ndvi-fallback{display:block}
+.ndvi-legend{background:var(--birch2);padding:16px 16px}
+.ndvi-legend-title{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+.ndvi-ramp{display:flex;height:14px;margin-bottom:5px}
+.ndvi-ramp span{flex:1}
+.ndvi-ramp-lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.56rem;color:var(--muted);margin-bottom:14px}
+.ndvi-note{font-size:.68rem;font-family:var(--mono);color:var(--muted);line-height:1.6}
+
 footer{
   border-top:1px solid var(--line);margin-top:54px;padding:16px 26px 0;
   font-family:var(--mono);font-size:.64rem;color:var(--muted);line-height:2.1;
@@ -295,6 +315,24 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 <div class="shdr"><span class="snum">§ 03</span><span class="stit">ERA5 ilmastodata + Copernicus</span></div>
 <div class="dbox" id="era5-box">Haetaan ERA5-dataa…</div>
 <div class="dbox" id="cop-box">Haetaan Copernicus-dataa…</div>
+
+<div class="ndvi-shot">
+  <div class="ndvi-img-wrap">
+    <img id="ndvi-img" alt="Sentinel-2 NDVI-kuva, Rautalammin reitti" />
+    <div id="ndvi-img-fallback" class="ndvi-fallback">Satelliittikuva ei latautunut</div>
+  </div>
+  <div class="ndvi-legend">
+    <div class="ndvi-legend-title">NDVI — kasvillisuuden tiheys</div>
+    <div class="ndvi-ramp">
+      <span style="background:#8c5a3c"></span><span style="background:#cc3c2d"></span>
+      <span style="background:#e09637"></span><span style="background:#dcc846"></span>
+      <span style="background:#96be46"></span><span style="background:#469638"></span>
+      <span style="background:#1e6428"></span>
+    </div>
+    <div class="ndvi-ramp-lbl"><span>paljas / kuivunut</span><span>tiheä metsä</span></div>
+    <p class="ndvi-note">Sentinel-2, viimeiset 3 kk, pilvipeite &lt;40 % · Sentinel Hub Process API · vesi merkitty läpinäkyvänä siniharmaana</p>
+  </div>
+</div>
 
 <div class="shdr"><span class="snum">§ 04</span><span class="stit">Metodologia</span></div>
 <div class="dbox">
@@ -660,6 +698,15 @@ function initScopeMap() {
   map.fitBounds(bounds, {padding: [18, 18]});
 }
 
+function fetchNDVIImage() {
+  var img = document.getElementById('ndvi-img');
+  if (!img) return;
+  var url = CORINE_PROXY + '/ndvi-image?bbox=' + BBOX + '&months=3&w=480&h=350';
+  img.onerror = function() { img.classList.add('err'); };
+  img.onload  = function() { img.classList.remove('err'); };
+  img.src = url;
+}
+
 function fetchAll() {
   setText('s-ts', new Date().toLocaleTimeString('fi-FI', {hour:'2-digit', minute:'2-digit'}));
   updateBEPP(null);
@@ -667,6 +714,7 @@ function fetchAll() {
   fetchERA5();
   fetchCorineDf();
   fetchR();
+  fetchNDVIImage();
 }
 
 initScopeMap();
