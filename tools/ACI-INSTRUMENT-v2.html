@@ -762,6 +762,20 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
     <div class="shdr"><span class="snum">&sect; 11</span><span class="stit">EPP v4 — Regiimitunnistus · SP_cluster · FS(p) · MD_proxy</span></div>
     <p class="snote">EPP v4 lisää kolme rakenteellista indikaattoria jotka erottavat drift-regiimiä jump-regiimistä (WP-015). SP_cluster kuvaa stressijaksojen pituusjakaumaa — pitkät klusterit viittaavat jump-regiimiin. T₁₆₈ = pisimmän yksittäisen stressijakson pituus 168h ikkunassa (tuntia). FS(p) skaalaa vesivoimakomponentin NVE:n viikottaisella Norjan reservoaaritäyttöasteella. MD_proxy arvioi spot-markkinan syvyyttä hinnan volatiliteetin perusteella. Nämä ovat kokeellisia indikaattoreita — kehitystarve tunnistettu WP-015 §9:ssä. SP_cluster ja FS(p) ovat operationaalisia. MD_proxy lasketaan import-gapin (kulutus−tuotanto) volatiliteetista W168-ikkunassa — ei tarvita erillistä spot-hintadatalähdettä. NVE Magasinstatistikk haetaan proxyn kautta (aci-nve-proxy). hydro_RF skaalaa vesivoimakomponentin Norjan täyttöasteen mukaan.</p>
 
+    <div class="struct-warn" style="border-left-color:var(--sg);">
+      <div style="color:var(--sg);font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;flex-shrink:0;">◆</div>
+      <div>
+        <strong>Arkkitehtuurinen virstanpylväs 2026-07 — Fingrid-keskeisestä instrumentista alueelliseksi observatorioksi:</strong> Nordic-WR v0:n käyttöönotto (ENTSO-E Transparency Platform) merkitsee laadullista muutosta WEM:n omassa arkkitehtuurissa. Aiemmin kaikki ydinmittarit (EPP, ECI, SP, FS) perustuivat yksinomaan Suomen järjestelmään (Fingrid Open Data). Nyt datapipeline erottelee kansallisen ja alueellisen tason:
+        <ul style="margin:.5rem 0 .5rem 1.2rem;padding:0;">
+          <li><strong>Fingrid Open Data</strong> → Suomen EPP, §12 Transmission, ECI/SP/FS (kansallinen taso, muuttumaton ydin)</li>
+          <li><strong>ENTSO-E Transparency Platform</strong> → Nordic-WR, rajasiirrot, Pohjoismaiden tuulivoima, tulevat Nordic-indikaattorit (alueellinen konteksti, uusi 2026-07)</li>
+          <li><strong>Open-Meteo</strong> → lämpötilamalli (DP_t)</li>
+          <li><strong>NVE Magasinstatistikk</strong> → hydro_RF (FS(p))</li>
+        </ul>
+        Tämä mahdollistaa kolme asiaa joita puhtaasti Fingrid-pohjainen malli ei voinut: (1) erottaa onko matala tuuli paikallinen suomalainen ilmiö vai koko Pohjolan Dunkelflaute (Nordic-WR), (2) havaita SE1:n kasvava teollinen kuorma (Stegra/HYBRIT) SUORAAN ennen kuin se näkyy Suomen tuontimarginaalin kiristymisenä, (3) validoida WEM:n omia tuloksia kahdella riippumattomalla lähteellä rinnakkain (ks. Nordic-WR v0:n oma FI-Fingrid vs. FI-ENTSO-E-ristiintarkistus, ero ~4,5%). Seuraavat kehitysaskeleet (esim. Nordic ECI, Nordic Endurance Pressure) ovat nyt luonteeltaan pääosin analytiikkaa olemassa olevan datapohjan päällä, ei uusia rajapintoja — datalähdepohja (Fingrid + ENTSO-E + Open-Meteo + NVE) kattaa jo sekä Suomen että laajemman pohjoismaisen järjestelmän keskeiset rakenteelliset tekijät.
+      </div>
+    </div>
+
     <div class="v4-grid">
       <!-- SP_cluster -->
       <div class="v4-card">
