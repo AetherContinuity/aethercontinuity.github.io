@@ -797,6 +797,14 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
         <div class="v4-card-sub">Hintavolatiliteetti (CV): <span id="v4MDCV">—</span></div>
         <div class="v4-card-sub">Gap ka: <span id="v4MDPrice">—</span> &nbsp;·&nbsp; n=<span id="v4MDn">—</span>h</div>
       </div>
+
+      <!-- Nordic-WR (v0, karkea data-nayttoi ilman visualisointia) -->
+      <div class="v4-card">
+        <div class="v4-card-title">Nordic-WR v0 — FI vs. SE1 tuulivoima (KOKEELLINEN)</div>
+        <div class="v4-card-value" id="v4NordicWRLabel">—</div>
+        <div class="v4-card-sub">FI: <span id="v4WindFI">—</span> MW &nbsp;·&nbsp; SE1: <span id="v4WindSE1">—</span> MW</div>
+        <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /wind-generation · EI VIELA osa EPP-laskentaa</div>
+      </div>
     </div>
 
     <div class="snote" style="margin-top:.75rem;">
@@ -970,6 +978,43 @@ async function fetchHydroRF() {
     hydroRF = 1.0;
     hydroRFLabel = 'NVE ei saatavilla';
     hydroRFWeek = null;
+  }
+}
+
+// Nordic-WR v0 — KOKEELLINEN, karkea data-nayto ilman visualisointia tai
+// EPP-integraatiota. Ensimmainen askel: hae FI:n ja SE1:n tuulivoiman
+// viimeisin tunnettu arvo ja nayta vierekkain. EI VIELA laajennettu
+// kaikkiin 12 Pohjoismaiden tarjousalueeseen - tarkoituksella pieni
+// ensimmainen pala, ks. entsoe-integration-plan.md.
+async function fetchNordicWR() {
+  const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+  const now = new Date();
+  const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 24 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+
+  async function latestWind(bzn) {
+    const url = ENTSOE_PROXY + '/wind-generation?bzn=' + bzn + '&periodStart=' + periodStart + '&periodEnd=' + periodEnd;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(bzn + ' HTTP ' + r.status);
+    const d = await r.json();
+    const series = d.series && d.series[0];
+    if (!series || !series.points || !series.points.length) throw new Error(bzn + ': ei sarjaa');
+    const last = series.points[series.points.length - 1];
+    return last.quantity;
+  }
+
+  try {
+    const [fi, se1] = await Promise.all([latestWind('FI'), latestWind('SE1')]);
+    const fiEl = document.getElementById('v4WindFI');
+    const se1El = document.getElementById('v4WindSE1');
+    const labelEl = document.getElementById('v4NordicWRLabel');
+    if (fiEl) fiEl.textContent = fi.toFixed(0);
+    if (se1El) se1El.textContent = se1.toFixed(0);
+    if (labelEl) labelEl.textContent = (fi + se1).toFixed(0) + ' MW yht.';
+  } catch(e) {
+    const labelEl = document.getElementById('v4NordicWRLabel');
+    if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
+    console.warn('Nordic-WR v0:', e.message);
   }
 }
 
@@ -2254,6 +2299,8 @@ async function init() {
     fetchHydroRF().then(() => {
       renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
     });
+    // Nordic-WR v0 — kokeellinen, ei viela osa EPP-renderointia
+    fetchNordicWR();
     // §12 Transmission & Endurance Layer — viive rate-limiting välttämiseksi
     setTimeout(() => renderS12(rawData), 15000);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
