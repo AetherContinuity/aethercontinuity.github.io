@@ -162,8 +162,28 @@ merkkijonoksi — huomioitava jos näitä kenttiä joskus luetaan suoraan.
 - Security Token: SAATU JA ASETETTU (Cloudflare Dashboard → Variables and Secrets)
 - **`/wind-generation`: LIVE-TESTATTU, TOIMII TÄYSIN** — SE1 tuulivoima, 96 pistettä/24h, MktPSRType.psrType tunnistui oikein ensimmäisellä yrityksellä
 
+## Kriittinen korjaus 2026-07-24 — ENTSO-E:n harva pistekoodaus
+
+`/cross-border-flow?from=FI&to=SE1` -live-testi paljasti todellisen bugin:
+ENTSO-E jättää KOKONAAN POIS Point-elementtejä XML:stä kun arvo ei muutu
+edellisestä (ei vain jätä quantity-kenttää tyhjäksi olemassa olevasta
+Point-elementistä — koko elementti puuttuu). FI→SE1-virtaus pysyi 0:ssa
+suurimman osan 24h-ikkunasta, ja vastaus sisälsi vain positiot 1, 39–42 —
+loput 91 puuttuivat kokonaan. Alkuperäinen `flattenPeriod` iteroi vain
+XML:ssa olevien pisteiden yli, joten väliin jäävät positiot katosivat
+tulosjoukosta kokonaan (5 pistettä 96:n sijaan) sen sijaan että ne
+täyttyisivät viimeisimmällä tunnetulla arvolla.
+
+**Korjattu ja validoitu** paikallisella testillä (simuloitu tarkalleen
+todellinen harva vastaus + täysi 96 pisteen sarja regressiotestinä,
+molemmat läpäisivät). Sama korjaus vaikuttaa myös `/wind-generation` ja
+`/installed-capacity` -reitteihin — `/wind-generation`:n aiempi onnistunut
+testi sattui saamaan täyden 96 pisteen sarjan SE1:n tuulelle eikä siksi
+paljastanut bugia, mutta sama koodipolku olisi voinut epäonnistua toisella
+tarjousalueella tai ajanjaksolla jossa tuulituotanto pysyisi vakiona.
+
 ## Jäljellä (ei vielä testattu)
 
-- `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — ei vielä live-testattu
+- `/cross-border-flow` (A11, kaksoiskutsu-logiikka) — LIVE-TESTATTU 2026-07-24, paljasti ja korjasi kriittisen harvan-pistekoodauksen bugin (ks. yllä). Ei vielä uudelleentestattu korjauksen jälkeen.
 - `/installed-capacity` (A68, vuositason kapasiteetti) — ei vielä live-testattu
 - WEM:n oma frontend-integraatio (Nordic-WR-komponentti) — ei vielä aloitettu, odottaa että kaikki kolme reittiä on ensin vahvistettu toimiviksi
