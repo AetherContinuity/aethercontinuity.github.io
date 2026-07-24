@@ -100,7 +100,25 @@ Kaksi vaihtoehtoa, EI viela paatetty:
 
 Ei suositusta viela - paatettava ennen koodausta.
 
-## Mita tama konkreettisesti toisi WEM:iin (jo dokumentoitu §07:ssa)
+## Askel 2b: Rakenteilla/suunniteltu tuotantokapasiteetti — käyttäjän oma lisäehdotus 2026-07-24
+
+Kaksi eri ENTSO-E-datalähdettä löytyi tähän tarpeeseen, EI vielä tasa-arvoisen varmasti dokumentoituna:
+
+**1. Installed Capacity per Production Type [artikla 14.1.A] — VARMISTETTU, käyttökelpoinen jo nyt**
+- `documentType=A68`, `in_Domain=<BZN EIC>`, PsrType valinnainen (B19=Wind Onshore, B18=Wind Offshore)
+- Palauttaa VUOSITTAISEN asennetun kapasiteetin tuotantotyypeittäin per tarjousalue
+- Käyttökelpoisuus: perättäisten vuosien vertailu näyttää KASVUN (esim. jos SE1:n tuulivoiman asennettu kapasiteetti kasvaa vuodesta toiseen, se näkyy suoraan tässä sarjassa) — EPÄSUORA mutta luotettava tapa nähdä äskettäin valmistunut kapasiteetti
+- EI kerro yksittäisistä RAKENTEILLA olevista hankkeista, vain vuositason koontisumman
+
+**2. "Production and Generation Units" -master data (yksittäiset laitokset, tila "existing"/"planned") — EI VIELÄ VARMISTETTU**
+- Löytyi viite (Zendesk-artikkeli, bot-suojauksen takana, ei saatu haettua suoraan): "Information about production units & generation units (existing and planned) with an installed generation capacity equaling to or exceeding..."
+- Tämä VAIKUTTAISI olevan täsmälleen se mitä alunperin kysyit — yksittäiset laitokset MERKITTYNÄ tilalla joka erottelee olemassa olevat suunnitelluista
+- MUTTA: tämä näyttää olevan eri datamuoto (`Configuration_MarketDocument`, "ProductionAndGenerationUnits" massaeristys File Libraryn kautta) kuin yksinkertainen RESTful GET-kysely muiden datalähteiden tapaan — TARKKAA parametrilistaa (documentType/businessType tälle nimenomaiselle näkymälle) EI SAATU VARMISTETTUA bot-suojauksen takia
+- **Rehellinen rajaus:** tätä EI pidä merkitä käyttökelpoiseksi ennen kuin joko (a) Zendesk-sivu saadaan auki kirjautuneena käyttäjänä, tai (b) token saapuu ja tätä voidaan kokeilla suoraan API:sta, tai (c) File Library -osion oma dokumentaatio käydään läpi tarkemmin
+
+**Suositus:** aloita Nordic-WR-toteutus artiklalla 14.1.A (varmistettu, riittää näyttämään kapasiteetin KASVUN vuositasolla) — palataan yksittäisten "planned"-laitosten tarkempaan dataan tarvittaessa myöhemmin, kun token on saatu ja voidaan kokeilla suoraan.
+
+
 
 1. Nordic-laajuinen Dunkelflaute-tarkistus (WR-komponentin rinnalle,
    ei tilalle) - tuulivoima kaikilta Pohjoismaiden tarjousalueilta
