@@ -221,15 +221,14 @@ const DS = [
   {id:86,  name:"Siirto ← Ruotsi",       unit:"MWh/h", use:"I-3 import SE"},
   {id:187, name:"Siirto Estlink",        unit:"MWh/h", use:"I-3 Baltic corridor"},
   {id:1,   name:"FCR-N reservi",         unit:"MW",    use:"Stability reference"},
-  // HUOM 2026-07: DS 336 palauttaa johdonmukaisesti tasan 0 €/MWh. Fingridin
-  // oma UKK (data.fingrid.fi/faq) sanoo SUORAAN etta Fingrid EI VOI julkaista
-  // tuntihintaa avoimessa datassaan, koska hintatieto ei ole Fingridin omistamaa -
-  // hintatiedot ovat ENTSO-E:n Transparency Platformilla tai NordPoolilla.
-  // Tama viittaa vahvasti siihen etta DS 336 EI OLE oikea/olemassa oleva
-  // hintadatasetti - se on todennakoisesti VAARA ID. EI korvattu arvatulla
-  // ID:lla - jos hintadataa halutaan, se tulisi hakea ENTSO-E:n proxysta
-  // (aci-entsoe-proxy), ei Fingrid-proxysta.
-  {id:336, name:"Spot-hinta FI",         unit:"€/MWh", use:"EHR / I-2 price"},
+  // HUOM 2026-07-26: DS 336 ('Spot-hinta FI') POISTETTU listalta. Fingrid
+  // EI VOI julkaista tuntihintaa avoimessa datassaan - oma UKK
+  // (data.fingrid.fi/faq) vahvistaa etta hintatieto ei ole Fingridin
+  // omistamaa, se on ENTSO-E:n Transparency Platformilla/NordPoolilla.
+  // DS 336 palautti johdonmukaisesti tasan 0 - todennakoisesti vaara/
+  // olematon ID. EHR lasketaan nyt (2026-07-26 alkaen) ENTSO-E:n oikeasta
+  // A44-day-ahead-hinnasta (fetchEntsoePrice(), ks. alempana) - ei enaa
+  // Fingrid-proxyn kautta.
 ];
 
 const IND = [
@@ -294,6 +293,30 @@ async function testProxy() {
   }
 }
 
+let entsoePrice = null; // ENTSO-E:sta haettu oikea spot-hinta, korvaa rikkinaisen DS 336:n
+
+async function fetchEntsoePrice() {
+  const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+  const now = new Date();
+  const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 24 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+  try {
+    const url = `${ENTSOE_PROXY}/day-ahead-price?bzn=FI&periodStart=${periodStart}&periodEnd=${periodEnd}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const allPoints = (d.series || []).flatMap(s => s.points || []);
+    const withValue = allPoints.filter(p => p.quantity != null);
+    if (!withValue.length) throw new Error('Ei hintapisteita');
+    const last = withValue[withValue.length - 1];
+    entsoePrice = last.quantity;
+    addLog('ok', `ENTSO-E spot-hinta FI: ${entsoePrice} EUR/MWh (korvaa DS 336:n)`);
+  } catch(e) {
+    entsoePrice = null;
+    addLog('err', `ENTSO-E-hintahaku epäonnistui: ${e.message} — EHR jää laskematta`);
+  }
+}
+
 async function fetchAll() {
   status('<span class="spin"></span>Haetaan Fingrid dataa proxyn kautta…', 'info');
   addLog('info', `Fetch — ${DS.length} datasettiä proxyn kautta`);
@@ -323,6 +346,8 @@ async function fetchAll() {
     }
     await sleep(2100); // Fingrid: max 1 pyyntö / 2s per API-avain (data.fingrid.fi/en/instructions) - 1500ms oli liian nopea, aiheutti 429:n JOKA ikiselle pyynnölle DS 193:n jalkeen
   }
+
+  await fetchEntsoePrice(); // korvaa DS 336:n (Fingrid ei julkaise hintaa)
 
   computeIndicators();
   status(`Valmis — ${ok} onnistui, ${fail} epäonnistui.`, ok > 0 ? 'ok' : 'err');
@@ -358,11 +383,13 @@ function computeIndicators() {
   const expSE = g(87)||0, impSE = g(86)||0, expEE = g(187)||0;
   const net = (expSE + expEE) - impSE;
   setInd('i3', (net >= 0 ? '+' : '') + net.toFixed(0) + ' MWh/h', net < 0 ? 'warn' : 'ok');
-  const spot = g(336);
-  if (spot) {
+  const spot = entsoePrice; // KORJATTU 2026-07-26: DS 336 (Fingrid) aina 0, korvattu ENTSO-E:n oikealla A44-hinnalla
+  if (spot != null) {
     const allIn = spot / 10 + 8.0;
     const ehr = ((22000 * allIn / 100) / 35000 * 100).toFixed(2);
     setInd('ehr', ehr + '%', ehr > 10 ? 'crit' : ehr > 7 ? 'warn' : 'ok');
+  } else {
+    setInd('ehr', 'ENTSO-E ei saatavilla', 'pnd');
   }
   setInd('i1', 'syötä DC MW', 'pnd');
   setInd('i2', 'syötä tariff', 'pnd');
