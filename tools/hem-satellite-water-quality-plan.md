@@ -202,12 +202,31 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
 2. ~~Toteuta ja live-testaa `/mndwi` + `/mndwi-image`~~ — TEHTY
 3. ~~Toteuta ja live-testaa `/ndci` + `/ndci-image`~~ — TEHTY
 4. Sameus jätetään yhä avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
-5. Rakenna aikasarja (kuukausittainen historia useamman vuoden yli, ei vain
-   nykyhetki) ennen kuin näitä yritetään tulkita mielekkäästi
+5. **Rakenna 10 vuoden takautuva aikasarja (2015–2026) — käyttäjän oma,
+   metodologisesti tarkennettu suunnitelma 2026-07-26, EI VIELÄ TOTEUTETTU:**
+   - Sentinel-2-aineisto saatavilla vuodesta 2015 — käytä KESÄKAUDEN
+     (touko–syyskuu) mediaania/keskiarvoa per vuosi, EI yksittäistä
+     kuvaa — vähentää pilvien/satunnaissateiden kohinaa
+   - Rakenna taulukko: Vuosi | HEPP (kesä) | MNDWI | NDCI | Huomio
+   - **Kehys:** 1959–2014 = pitkä hydrologinen vertailu (pelkkä HEPP,
+     ei satelliittia); 2015–2026 = "luonnollinen validointijakso" jossa
+     HEPP ja satelliitti ovat RINNAKKAIN — tässä ikkunassa voidaan
+     oikeasti testata heijastuvatko HEM:n hydrologiset muutokset myös
+     satelliittihavainnoissa
+   - **Hypoteesi testattavaksi:** korkean HEPP:n vuosina MNDWI pienenisi
+     (vähemmän vettä) ja NDCI kasvaisi (enemmän klorofylliä, veden
+     ollessa lämpimämpää/vähempää) — jos tämä korrelaatio näkyy
+     aineistossa, se olisi huomattavasti vahvempi näyttö kuin yksittäinen
+     mittauspiste
+   - **Tekninen huomio toteutusta varten:** tämä vaatisi ~10-20
+     Statistical API -kutsua (yksi per vuosi per indeksi, tai
+     mahdollisesti harvempi jos API tukee usean vuoden aggregointia
+     yhdessä kutsussa — EI VIELÄ selvitetty kumpi on mahdollista/
+     järkevämpää) — EI toteutettu 2026-07-26 istunnossa, tietoisesti
+     jätetty seuraavaan kertaan
 6. Vasta aikasarjan jälkeen: integrointi HEM:n käyttöliittymään omana
    §05 "Aquatic Status" -osiona (ks. BEM-E-rakenne yllä), A/B/C-kypsyys-
    merkinnät näkyvissä käyttäjälle asti
-   integroidaan HEM:n omaan käyttöliittymään
 
 ## Viitteet
 
