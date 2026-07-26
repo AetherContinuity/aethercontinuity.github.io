@@ -119,7 +119,7 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="gauge">
   <div class="gval" id="gval">— m NN</div>
   <div class="gbar"><div class="gfill" id="gfill" style="width:0%"></div></div>
-  <div class="glbls"><span>MNW 97.45</span><span id="gpct">—</span><span>MHW 98.46</span></div>
+  <div class="glbls"><span>MNW 97.45</span><span id="gpct">—</span><span>MHW 98.01</span></div>
 </div>
 <div class="dbox" id="iis-det">Ladataan…</div>
 
@@ -256,7 +256,15 @@ footer a{color:var(--accent);text-decoration:none}
 <script>
 const PROXY='https://aci-nve-proxy.ruotsalainen-marko.workers.dev';
 const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endurance-monitor/main/data/cache';
-const NORM=98.01,MNW=97.45,MHW=98.46; // NORM=1910-2025 keskimääräinen vuotuinen maksimi (WSFS)
+// KORJATTU 2026-07-26: alkuperainen MHW=98.46 oli VAARIN NIMETTY - se on
+// Iisveden KAIKKIEN AIKOJEN ENNATYSKORKEUS (mitattu 10.6.1988, fi.wikipedia.org/
+// wiki/Iisvesi), EI "Mean High Water" (keskimaarainen ylavesi). Todellinen
+// MHW = 98.01 m, joka oli jo kayttosaa 'NORM'-nimella (keskimaarainen
+// vuotuinen kevathuippu - tama ON tekninen MHW-maaritelma). Skaala korjattu
+// kayttamaan oikeaa MHW:ta (98.01) taytymisprosentin ylarajana ennatyksen
+// (98.46) sijaan - tama muuttaa nayteyn prosenttiluvun MERKITTAVASTI
+// (kapeampi, oikea vali 97.45-98.01 vs. aiempi virheellinen 97.45-98.46).
+const NORM=98.01,MNW=97.45,MHW=98.01,RECORD_HIGH=98.46; // MHW=NORM=1910-2025 keskimääräinen vuotuinen maksimi (todellinen MHW, WSFS) · RECORD_HIGH=kaikkien aikojen ennätys 10.6.1988
 const HEPP_URL=RAW+'/hepp_monthly.json';
 const BANDS_URL=RAW+'/fmi_bands.json';
 
@@ -324,7 +332,8 @@ async function fetchIisvesi(){
     setHTML('iis-det',`${fcSvg}
       Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> · ka 1910–2025: ${NORM} m · vajaus <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
       Kesäennuste: VI 97.47 → VII 97.41 → VIII 97.36 m · 2027 huippu ka 97.92 m<br>
-      MNW: ${MNW} m · MHW: ${MHW} m · pienin vuosimaksimi: 97.36 m (1942)<br>
+      MNW: ${MNW} m · MHW: ${MHW} m (keskim. keväthuippu) · Ennätys: ${RECORD_HIGH} m (10.6.1988)<br>
+      Ennätysalin (vuosimaksimin joukossa pienin): 97.36 m (1942)<br>
       <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300</span>`);
     dot('iis',deficit>0.5?'warn':'ok');
     return{wl,deficit};
