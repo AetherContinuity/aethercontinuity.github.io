@@ -150,7 +150,21 @@ toimi sellaisenaan.
 muotoon `{"#text": "...", "@_codingScheme": "A01"}`, ei pelkäksi
 merkkijonoksi — huomioitava jos näitä kenttiä joskus luetaan suoraan.
 
-## Tila 2026-07-24 — KAIKKI KOLME REITTIÄ VAHVISTETTU TOIMIVIKSI
+## Tila 2026-07-26 — KAIKKI NELJÄ REITTIÄ VAHVISTETTU TOIMIVIKSI
+
+Neljäs reitti (`/day-ahead-price`, A44) lisätty ja live-testattu 2026-07-26.
+Matkalla löytyi ja korjattiin toinen todellinen bugi: hintadokumentit
+käyttävät XML-kenttää `price.amount`, eivät `quantity`-kenttää jota
+kaikki kolme muuta (MW-pohjaista) reittiä käyttävät — `flattenPeriod`
+korjattu tunnistamaan molemmat. Live-data näyttää uskottavia kesän
+alhaisia hintoja (0–15 EUR/MWh, tyypillinen kuvio: lähellä nollaa
+yöllä, piikki illalla).
+
+**Tämä reitti korvaa myös DA-003-työkalun rikkinäisen Fingrid DS 336:n**
+("Spot-hinta FI", joka aina palautti 0, koska Fingrid ei julkaise
+hintatietoa avoimessa datassaan ollenkaan).
+
+## Aiempi tila (historiallinen, säilytetty)
 
 Kaikki kolme reittiä (`/wind-generation`, `/cross-border-flow`,
 `/installed-capacity`) on nyt live-testattu ja toimivat. Matkalla
