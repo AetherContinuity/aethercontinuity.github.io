@@ -115,6 +115,12 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="shdr"><span class="snum">§ 01</span><span class="stit">NVE Norja — Magasinstatistikk</span></div>
 <div class="dbox" id="nve-det">Ladataan…</div>
 
+<div class="shdr"><span class="snum">§ 01b</span><span class="stit">Pohjoismainen vesivarantovertailu — NO / SE / FI (KOKEELLINEN)</span></div>
+<div class="dbox" id="nordic-res-det">Ladataan ENTSO-E-dataa…</div>
+<p style="font-size:.75rem;color:var(--muted);font-style:italic;margin:6px 0 0">
+  Lähde: aci-entsoe-proxy /reservoir-filling (A72, viikoittainen). Norja ristiintarkistettu NVE:tä vastaan (§01, ~0,3% ero). Ruotsin kapasiteetti (30,7 TWh) on ENTSO-E:n oma ilmoitus (Iyer et al., ScienceDirect). Suomen kapasiteetti (5,5 TWh) on HEIKOMPI, akateeminen arvio (ScienceDirect, ei suoraa ENTSO-E-viittausta) — tulkittava varoen.
+</p>
+
 <div class="shdr"><span class="snum">§ 02</span><span class="stit">Iisvesi WSFS — Vedenkorkeus (Rautalammin reitti, säännöstelemätön)</span></div>
 <div class="gauge">
   <div class="gval" id="gval">— m NN</div>
@@ -272,6 +278,53 @@ function dot(id,s){const e=document.getElementById('d-'+id);if(e)e.className='do
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
 function setHTML(id,v){const e=document.getElementById(id);if(e)e.innerHTML=v}
 
+// Pohjoismainen vesivarantovertailu (NO/SE/FI) - KOKEELLINEN, lisatty 2026-07-26.
+// Kapasiteetit: NO haetaan dynaamisesti NVE-proxysta (d.capacity_twh, jo
+// kaytossa §01:ssa - sama luku, ei paallekkaista hakua). SE=30.7 TWh
+// (ENTSO-E:n oma ilmoitus, Iyer et al. ScienceDirect - VAHVA lahde).
+// FI=5.5 TWh (akateeminen arvio, ScienceDirect - HEIKOMPI lahde, ei
+// suoraa ENTSO-E-viittausta - merkitty selvasti UI:ssa).
+const ENTSOE_PROXY='https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+const SE_CAPACITY_TWH=30.7, FI_CAPACITY_TWH=5.5;
+
+async function fetchNordicReservoirs(nveCapacityTwh){
+  const now=new Date();
+  const periodEnd=now.toISOString().slice(0,13)+':00:00Z';
+  const periodStart=new Date(now.getTime()-21*24*3600*1000).toISOString().slice(0,13)+':00:00Z';
+
+  async function latest(bzn){
+    const url=`${ENTSOE_PROXY}/reservoir-filling?bzn=${bzn}&periodStart=${periodStart}&periodEnd=${periodEnd}`;
+    const r=await fetch(url);
+    if(!r.ok) throw new Error(bzn+' HTTP '+r.status);
+    const d=await r.json();
+    const allPoints=(d.series||[]).flatMap(s=>s.points||[]).filter(p=>p.quantity!=null);
+    if(!allPoints.length) throw new Error(bzn+': ei pisteita');
+    const last=allPoints[allPoints.length-1];
+    return last.quantity/1e6; // MWh -> TWh
+  }
+
+  try{
+    const[no,se,fi]=await Promise.all([latest('NO'),latest('SE'),latest('FI')]);
+    const rows=[
+      {label:'Norja',content:no,capacity:nveCapacityTwh,src:'NVE (ristiintarkistettu)'},
+      {label:'Ruotsi',content:se,capacity:SE_CAPACITY_TWH,src:'ENTSO-E oma ilmoitus'},
+      {label:'Suomi',content:fi,capacity:FI_CAPACITY_TWH,src:'akateeminen arvio'},
+    ];
+    let html='';
+    for(const row of rows){
+      const pct=row.capacity?(row.content/row.capacity*100):null;
+      html+=`${row.label}: <b>${row.content.toFixed(2)} TWh</b>`+
+        (pct!=null?` / ${row.capacity} TWh = <b>${pct.toFixed(1)}%</b>`:'')+
+        ` <span style="color:var(--muted);font-size:.7em">(${row.src})</span><br>`;
+    }
+    setHTML('nordic-res-det',html);
+    dot('nordic-res','ok');
+  }catch(e){
+    setHTML('nordic-res-det',`<span class="derr">Pohjoismainen vertailu: ${e.message}</span>`);
+    dot('nordic-res','err');
+  }
+}
+
 async function fetchNVE(){
   try{
     const d=await(await fetch(PROXY+'/')).json();
@@ -283,7 +336,7 @@ async function fetchNVE(){
       Kapasiteetti: ${d.capacity_twh??'—'} TWh · Sisältö: ${d.content_twh??'—'} TWh (hist.med ${d.median_pct??'—'}%)<br>
       ${d.week??''} · hydro_RF: ${rf.toFixed(3)}`);
     dot('nve','ok');
-    return{pct,rf,label:lbl};
+    return{pct,rf,label:lbl,capacityTwh:d.capacity_twh};
   }catch(e){setHTML('nve-det',`<span class="derr">NVE: ${e.message}</span>`);dot('nve','err');return null;}
 }
 
@@ -660,6 +713,7 @@ async function fetchMuonio() {
 async function fetchAll(){
   setText('s-ts','…');
   const[nve,iis,fmi]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI()]);
+  fetchNordicReservoirs(nve?.capacityTwh);
   fetchMuonio();
   const h=computeHEPP(nve,iis,fmi);
   const col=hCol(h.val);
