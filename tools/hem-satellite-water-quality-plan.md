@@ -1,8 +1,10 @@
-# HEM × Satelliittipohjainen vedenlaadun seuranta — suunnitelma
+# BEM-E (Aquatic Extension) × HEM — satelliittipohjaisen vedenlaadun seurannan suunnitelma
 
 **Tila:** SUUNNITELTU, EI VIELÄ TOTEUTETTU. Käyttäjän oma ehdotus 2026-07-26:
 yhdistää HEM:n hydrologinen HEPP-indeksi Copernicus/Sentinel-2-pohjaisiin
-ekologisiin havaintoihin (levät, sameus, rantakasvillisuus, rantaviiva).
+ekologisiin havaintoihin (levät, sameus, rantakasvillisuus, rantaviiva) —
+muodollistettu 2026-07-26 nimellä **BEM-E (Aquatic Extension)**, oma
+erillinen laajennus BEM:n maaekosysteemin BEPP:stä, ei sulautettuna siihen.
 
 ## Tausta ja rajaus
 
@@ -18,6 +20,65 @@ Pintaveden lämpötila (jonka käyttäjä myös mainitsi) VAATISI lämpöinfrapu
 anturin — Sentinel-2:lla EI OLE termistä kanavaa. Tarvittaisiin Landsat
 8/9 (TIRS) tai Sentinel-3 (SLSTR), eri satelliitti kuin alla käytetty.
 EI kuulu tämän suunnitelman piiriin, merkitty mahdolliseksi jatkotyöksi.
+
+## Nimeäminen ja rakenne: BEM-E (Aquatic Extension) — käyttäjän oma ehdotus 2026-07-26
+
+Vahvistettu nimeämisrakenne katsauksesta BEM v0.1:een: uudet vesistöindeksit
+muodostavat oman, ERILLISEN laajennuksensa — **BEM-E (Aquatic Extension)**
+— ei sulaudu suoraan maaekosysteemin BEPP-kaavaan (D_f/D_s/D_c/R).
+
+**Ydinperiaate, joka on TÄRKEÄMPI kuin mikään yksittäinen kaava:** näitä
+indeksejä EI SEKOITETA BEPP-kaavaan ennen kuin niiden yhteys hydrologiseen/
+ekologiseen stressiin on validoitu. Ne pysyvät omina, itsenäisinä
+mittareinaan siihen asti — sama kurinalaisuus jota on sovellettu läpi
+tämän koko työn (esim. ei oletettu ENTSO-E:n dataseteille oikeita
+kenttänimiä, ei oletettu DS-ID:iden olevan oikein ilman varmistusta).
+
+### Kypsyysluokitus (A/B/C) — muodollistettu käyttäjän ehdottamasta taulukosta
+
+| Muuttuja | Lähde | Luokka | Peruste |
+|---|---|---|---|
+| **MNDWI** | Sentinel-2 | **A — vakiintunut** | Xu 2006, useampi riippumaton lähde vahvistaa vakaammaksi kuin perinteinen NDWI |
+| **NDCI** | Sentinel-2 | **B — kokeellinen** | Mishra & Mishra 2012, mutta virallinen dokumentaatio (Digital Earth Africa) itse merkitsee sen "kokeelliseksi Sentinel-2:lle" |
+| **Sameus** | Sentinel-2 | **C — ei vielä validoitu** | Ei löytynyt vakiintunutta, laajasti hyväksyttyä kaavaa — vain yksi heikko akateeminen lähde |
+
+Tämä kolmiportainen luokitus (A/B/C) tulisi näkyä myös lopullisessa
+käyttöliittymässä, ei vain sisäisenä dokumentaationa — käyttäjän ei pidä
+joutua arvaamaan kumpaan hän voi luottaa enemmän.
+
+### Ehdotettu §05 "Aquatic Status" -osio (BEM-raportin rakenteeseen)
+
+Käyttäjän oma ehdotus rakenteeksi, kun BEM-E joskus toteutetaan:
+
+```
+§05 Aquatic Status
+  MNDWI: vesipinta-alan muutos                    [A]
+  NDCI:  klorofylli-/leväsignaali                 [B]
+  HEPP:  hydrologinen paine (HEM:sta)
+  ————————————————————————————————
+  Yhdistetty tulkinta (EI yhdistetty KAAVA)
+```
+
+"Yhdistetty tulkinta" tarkoittaa RINNAKKAISNÄYTTÖÄ ja sanallista havaintoa
+(esim. "pitkä matalan veden jakso + nouseva NDCI-trendi samalla ajanjaksolla"),
+EI matemaattista yhdistämistä yhdeksi indeksiksi — se askel vaatisi oman,
+myöhemmän validointivaiheensa.
+
+## Instrumenttiperheen kokonaiskehys (käyttäjän oma havainto 2026-07-26)
+
+Katsauksesta nousi esiin kehys joka on syytä kirjata talteen: ACI-
+instrumenttiperhe alkaa muistuttaa **ympäristön tilannekuvajärjestelmää**,
+ei yksittäisiä irrallisia mittareita:
+
+- **WEM** — energiaresilienssi (Endurance Pressure Proxy)
+- **HEM** — hydrologinen tila (Hydrological Endurance Pressure Proxy)
+- **BEM** — maaekosysteemin tila (Biodiversity Endurance Pressure Proxy)
+- **BEM-E** (suunniteltu) — vesiekosysteemin tila, neljäs näkökulma
+
+Rautalammin reitin pilottialueen rajaus (riittävän hallittava kokonaisuus,
+ei liian suuri) mahdollistaa nimenomaan HEM:n ja BEM:n yhteyden näkemisen
+samalla alueella — tämä on ollut tarkoituksellinen valinta, ei sattumaa,
+ja BEM-E vahvistaisi tätä samaa periaatetta edelleen yhdellä lisäulottuvuudella.
 
 ## Indeksit ja niiden VARMISTETUT kaavat (2026-07-26)
 
