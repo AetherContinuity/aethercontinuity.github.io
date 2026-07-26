@@ -206,8 +206,16 @@
 <script>
 const DS = [
   {id:193, name:"Sähkön kulutus",        unit:"MWh/h", use:"I-4 base consumption"},
-  {id:74,  name:"Ydinvoima",             unit:"MWh/h", use:"I-4 dispatchable (nuclear)"},
-  {id:75,  name:"Vesivoima",             unit:"MWh/h", use:"I-4 dispatchable (hydro)"},
+  // KORJATTU 2026-07-26: DS 74 ja DS 75 olivat VAARAT ID:t. Fingridin oma
+  // dataset-kuvaus vahvistaa: DS 74 = "Electricity production in Finland"
+  // (KOKO MAAN kokonaistuotanto, EI ydinvoima - selittaa aiemman 9788 MW
+  // -lukeman, joka on ~2.5x oikeaa ydinvoimakapasiteettia 4364 MW).
+  // DS 75 = "Wind power generation" (TUULIVOIMA, EI vesivoima - paallekkain
+  // DS 181:n kanssa joka ON jo oikein merkitty tuulivoimaksi). Oikeat ID:t
+  // (188=ydin, 191=hydro) varmistettu samat kuin WEM:n oma, jo validoitu
+  // kaytto koko taman session ajan.
+  {id:188, name:"Ydinvoima",             unit:"MWh/h", use:"I-4 dispatchable (nuclear)"},
+  {id:191, name:"Vesivoima",             unit:"MWh/h", use:"I-4 dispatchable (hydro)"},
   {id:181, name:"Tuulivoima",            unit:"MWh/h", use:"Black Period stress"},
   {id:87,  name:"Siirto → Ruotsi",       unit:"MWh/h", use:"I-3 export SE"},
   // HUOM 2026-07: DS 86 epaonnistuu johdonmukaisesti "Ei dataa" (ei rate-limit-virhe).
@@ -375,7 +383,7 @@ async function fetchJsonWithRetry(url, ds, attempts = 3) {
 
 function computeIndicators() {
   const g = id => fetched[id]?.value;
-  const cons = g(193), nuc = g(74)||0, hyd = g(75)||0;
+  const cons = g(193), nuc = g(188)||0, hyd = g(191)||0;
   if (cons && cons > 0) {
     const h = ((nuc + hyd) / cons * 168).toFixed(1);
     setInd('i4', h + ' h', h < 72 ? 'crit' : h < 120 ? 'warn' : 'ok');
