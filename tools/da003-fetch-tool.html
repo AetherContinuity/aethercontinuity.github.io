@@ -217,17 +217,15 @@ const DS = [
   {id:188, name:"Ydinvoima",             unit:"MWh/h", use:"I-4 dispatchable (nuclear)"},
   {id:191, name:"Vesivoima",             unit:"MWh/h", use:"I-4 dispatchable (hydro)"},
   {id:181, name:"Tuulivoima",            unit:"MWh/h", use:"Black Period stress"},
-  {id:87,  name:"Siirto → Ruotsi",       unit:"MWh/h", use:"I-3 export SE"},
-  // HUOM 2026-07: DS 86 epaonnistuu johdonmukaisesti "Ei dataa" (ei rate-limit-virhe).
-  // Fingridin oma dataset-kuvaus DS 87:lle ("Sähkönsiirto Suomen ja Pohjois-Ruotsin
-  // välillä") sanoo etta se ON JO kaksisuuntainen - positiivinen = FI->SE1,
-  // negatiivinen = SE1->FI (data.fingrid.fi/datasets/87). On siis mahdollista
-  // etta DS 86 EI OLE oikea/olemassa oleva erillinen "tuonti"-datasetti, vaan
-  // DS 87 kattaa jo molemmat suunnat etumerkilla. EI VARMISTETTU mika DS 86
-  // tarkalleen on - ei korvattu arvatulla ID:lla, tarvitsee kayttajan oman
-  // tarkistuksen data.fingrid.fi:sta ennen korjausta.
-  {id:86,  name:"Siirto ← Ruotsi",       unit:"MWh/h", use:"I-3 import SE"},
-  {id:187, name:"Siirto Estlink",        unit:"MWh/h", use:"I-3 Baltic corridor"},
+  // HUOM 2026-07-26: DS 87 ('Siirto -> Ruotsi'), DS 86 ('Siirto <- Ruotsi')
+  // ja DS 187 ('Siirto Estlink') POISTETTU listalta kokonaan. DS 86
+  // epaonnistui johdonmukaisesti "Ei dataa". DS 187 osoittautui riippumatonta
+  // ENTSO-E-dataa vasten ~450x liian pieneksi (2.2 MW vs ~1000 MW). DS 87
+  // itsessaan olisi ehka ollut kaytettavissa (Fingridin oma kuvaus: se ON
+  // kaksisuuntainen, positiivinen=FI->SE1), mutta koska I-3 tarvitsi
+  // MOLEMMAT rajat, ja EE-puoli oli jo korvattava, koko I-3 lasketaan nyt
+  // yhtenaisesti ENTSO-E:sta (fetchEntsoeTransfers()) - puhtaampi ratkaisu
+  // kuin sekoittaa kahta eri lahdetta samaan indikaattoriin.
   {id:1,   name:"FCR-N reservi",         unit:"MW",    use:"Stability reference"},
   // HUOM 2026-07-26: DS 336 ('Spot-hinta FI') POISTETTU listalta. Fingrid
   // EI VOI julkaista tuntihintaa avoimessa datassaan - oma UKK
@@ -303,6 +301,45 @@ async function testProxy() {
 
 let entsoePrice = null; // ENTSO-E:sta haettu oikea spot-hinta, korvaa rikkinaisen DS 336:n
 
+let entsoeTransferSE = null; // netto FI<->SE1, ENTSO-E:sta (korvaa epaluotettavan DS 86/87-parin)
+let entsoeTransferEE = null; // netto FI<->EE, ENTSO-E:sta (korvaa DS 187:n)
+
+async function fetchEntsoeTransfers() {
+  const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+  const now = new Date();
+  const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 24 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+
+  async function netFlow(to) {
+    const url = `${ENTSOE_PROXY}/cross-border-flow?from=FI&to=${to}&periodStart=${periodStart}&periodEnd=${periodEnd}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const toFi = (d[`FI_to_${to}`]?.series || []).flatMap(s => s.points || []).filter(p => p.quantity != null);
+    const fromFi = (d[`${to}_to_FI`]?.series || []).flatMap(s => s.points || []).filter(p => p.quantity != null);
+    if (!toFi.length && !fromFi.length) throw new Error('Ei dataa kummassakaan suunnassa');
+    const lastExport = toFi.length ? toFi[toFi.length - 1].quantity : 0;
+    const lastImport = fromFi.length ? fromFi[fromFi.length - 1].quantity : 0;
+    return lastExport - lastImport; // positiivinen = nettovienti FI:sta
+  }
+
+  try {
+    entsoeTransferSE = await netFlow('SE1');
+    addLog('ok', `ENTSO-E netto FI<->SE1: ${entsoeTransferSE.toFixed(1)} MW (korvaa DS 86/87)`);
+  } catch(e) {
+    entsoeTransferSE = null;
+    addLog('err', `ENTSO-E FI-SE1-haku epäonnistui: ${e.message}`);
+  }
+
+  try {
+    entsoeTransferEE = await netFlow('EE');
+    addLog('ok', `ENTSO-E netto FI<->EE: ${entsoeTransferEE.toFixed(1)} MW (korvaa DS 187)`);
+  } catch(e) {
+    entsoeTransferEE = null;
+    addLog('err', `ENTSO-E FI-EE-haku epäonnistui: ${e.message}`);
+  }
+}
+
 async function fetchEntsoePrice() {
   const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
   const now = new Date();
@@ -355,6 +392,7 @@ async function fetchAll() {
     await sleep(2100); // Fingrid: max 1 pyyntö / 2s per API-avain (data.fingrid.fi/en/instructions) - 1500ms oli liian nopea, aiheutti 429:n JOKA ikiselle pyynnölle DS 193:n jalkeen
   }
 
+  await fetchEntsoeTransfers(); // korvaa DS 86/87/187 (epaluotettava trio)
   await fetchEntsoePrice(); // korvaa DS 336:n (Fingrid ei julkaise hintaa)
 
   computeIndicators();
@@ -388,9 +426,17 @@ function computeIndicators() {
     const h = ((nuc + hyd) / cons * 168).toFixed(1);
     setInd('i4', h + ' h', h < 72 ? 'crit' : h < 120 ? 'warn' : 'ok');
   }
-  const expSE = g(87)||0, impSE = g(86)||0, expEE = g(187)||0;
-  const net = (expSE + expEE) - impSE;
-  setInd('i3', (net >= 0 ? '+' : '') + net.toFixed(0) + ' MWh/h', net < 0 ? 'warn' : 'ok');
+  // KORJATTU 2026-07-26: DS 86 ('Siirto <- Ruotsi') epaonnistui aina 'Ei
+  // dataa', ja DS 187 ('Siirto Estlink') osoittautui ~450x liian pieneksi
+  // ENTSO-E:n riippumattomaan, validoituun cross-border-flow-dataan
+  // verrattuna (2.2 MW vs ~1000 MW) - molemmat todennakoisesti vaaria
+  // ID:ita. Koko I-3 lasketaan nyt ENTSO-E:sta (fetchEntsoeTransfers()).
+  if (entsoeTransferSE != null && entsoeTransferEE != null) {
+    const net = entsoeTransferSE + entsoeTransferEE;
+    setInd('i3', (net >= 0 ? '+' : '') + net.toFixed(0) + ' MW', net < 0 ? 'warn' : 'ok');
+  } else {
+    setInd('i3', 'ENTSO-E ei saatavilla', 'pnd');
+  }
   const spot = entsoePrice; // KORJATTU 2026-07-26: DS 336 (Fingrid) aina 0, korvattu ENTSO-E:n oikealla A44-hinnalla
   if (spot != null) {
     const allIn = spot / 10 + 8.0;
