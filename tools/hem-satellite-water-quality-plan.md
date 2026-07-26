@@ -104,13 +104,34 @@ Varmistettu (en.wikipedia.org/wiki/Iisvesi):
 - Mitat: 42,2 km pitkä (luode-kaakko), 15,0 km leveä, pinta-ala 164,5 km²
 - Kolme allasta: Iisvesi, Virmasvesi, Rasvanki
 
-**Alustava bbox (EI VIELÄ visuaalisesti tarkistettu):**
-`26.667,62.567,27.067,62.967` (n. ±22km keskipisteestä joka suuntaan,
-kattaa koko kolmen altaan kompleksin marginaalilla)
+**Bbox VISUAALISESTI VAHVISTETTU 2026-07-26:** `26.167,62.567,27.067,63.467`
 
-Tarkkuus tulisi varmistaa samalla tavalla kuin BEM:n NDVI-kuvan kanssa —
-renderöimällä ensin visuaalinen Process API -kuva ja tarkistamalla
-peittääkö bbox koko järven ilman liikaa ympäröivää maata.
+Prosessi (kolme iteraatiota, /mndwi-image-reittiä käyttäen):
+1. Alkuperäinen arvio (`26.667,62.567,27.067,62.967`, symmetrinen keskipisteen
+   ympäri) osoittautui leikkaavan järven luoteispäätä — reuna-analyysi
+   (ohjelmallinen värilaskenta kuvan reunapikseleista) paljasti vettä
+   ylä- (16%) ja vasemmalla reunalla (16%), viitaten etta jarvi jatkuu
+   bbox:in ulkopuolelle pohjoiseen/länteen.
+2. Ensimmäinen korjaus (+0,15° länteen ja pohjoiseen) EI RIITTÄNYT -
+   vasen reuna itse asiassa PAHENI (16%→40%), paljastaen etta jarven
+   luodesuuntainen paa ulottuu paljon kauemmas kuin arvattu.
+3. Aggressiivisempi korjaus (+0,35° länteen ja pohjoiseen alkuperäisesta)
+   tuotti hyvan tuloksen: vasen reuna 40%→4%, ylareuna 16%→11%.
+   Kayttajan oma silmamaarainen arvio: "Nyt nakyy kylla jo reilusti
+   vesistoja."
+
+Jäljelle jäävä pieni huomio: alareunalla nakyy jonkin verran vetta (16%),
+todennakoisesti NAAPURIJARVI (esim. Niinivesi, joka tunnetusti sijaitsee
+lahella samalla vedenpinnan tasolla) - EI valttamatta sama jarvi
+leikkautuneena, alue on yleisesti jarvirikas. Ei vaadi lisakorjausta
+taman kayttotarkoituksen (Iisvesi-Virmasvesi-Rasvanki-kompleksin yleinen
+seuranta) kannalta.
+
+**Menetelma jatkoa varten:** ohjelmallinen reuna-analyysi (laske vesivarien
+osuus kuvan jokaisella neljalla reunalla erikseen) osoittautui nopeammaksi
+ja tarkemmaksi tavaksi arvioida bbox:in riittavyytta kuin pelkka silmamaarainen
+tarkastelu - suositellaan samaa menetelmaa jos bbox:eja saadetaan
+tulevaisuudessa muille jarville.
 
 ## Arkkitehtuuriehdotus
 
@@ -156,9 +177,15 @@ olettaa sitä.
 Tämä on SUUNNITELMA, ei toteutus. Mitään reittiä ei ole vielä kirjoitettu
 eikä testattu. Seuraavat askeleet järjestyksessä:
 
-1. Vahvista bbox visuaalisesti (Process API -testikuva, sama menetelmä
-   kuin BEM:n NDVI-kuvan kanssa)
-2. Toteuta `/lake-mndwi` ENSIN (vahvin kaava, selkein tulkinta)
+Tila 2026-07-26: askeleet 1-2 TEHTY osittain (MNDWI-koodi kirjoitettu ja
+bbox vahvistettu, MUTTA itse MNDWI-arvoja/tilastoja ei ole viela
+live-testattu - vain kuvan VISUAALINEN sijainti on vahvistettu). Seuraavat
+askeleet järjestyksessä:
+
+1. ~~Vahvista bbox visuaalisesti~~ — TEHTY, `26.167,62.567,27.067,63.467`
+2. ~~Toteuta `/mndwi` ja `/mndwi-image`~~ — KOODI KIRJOITETTU JA PUSHATTU,
+   `/mndwi-image` visuaalisesti vahvistettu, MUTTA `/mndwi` (numeerinen
+   tilasto) EI VIELA live-testattu tallla bbox:illa
 3. Toteuta `/lake-ndci` toisena, merkiten selvästi "kokeellinen Sentinel-2:lle"
 4. Sameus jätetään avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
 5. Vasta kaikkien läpi käytyä testausta (sama kuri kuin ENTSO-E-integraatiossa:
