@@ -177,19 +177,36 @@ olettaa sitä.
 Tämä on SUUNNITELMA, ei toteutus. Mitään reittiä ei ole vielä kirjoitettu
 eikä testattu. Seuraavat askeleet järjestyksessä:
 
-Tila 2026-07-26: askeleet 1-2 TEHTY osittain (MNDWI-koodi kirjoitettu ja
-bbox vahvistettu, MUTTA itse MNDWI-arvoja/tilastoja ei ole viela
-live-testattu - vain kuvan VISUAALINEN sijainti on vahvistettu). Seuraavat
-askeleet järjestyksessä:
+## Tila 2026-07-26, päivitetty — MNDWI ja NDCI molemmat live-testattu
+
+- **MNDWI [A]:** live-testattu, mean=-0.284, stDev=0.438, sampleCount=36000,
+  noDataCount=291 (~0.8%, hyvä kattavuus). Bbox `26.167,62.567,27.067,63.467`.
+- **NDCI [B]:** live-testattu, mean=-0.111, stDev=0.415, sampleCount=36000,
+  noDataCount=28043 (~78%, koska maskattu vain vesipikseleihin — kelvollisia
+  vesipikseleitä ~22%, täsmää hyvin MNDWI:n omaan vesiosuusarvioon samalla
+  bbox:illa). Negatiivinen keskiarvo on SUUNTA-ANTAVASTI linjassa Iisveden
+  tunnetun ekologisen profiilin kanssa (SYKE: "kirkasvetinen järvi", hyvä
+  ekologinen tila, matala klorofylli odotettavissa) — EI vielä riittävä
+  näyttö, vain yksi piste ajassa, ei aikasarja.
+- **Sameus [C]:** EI TOTEUTETTU, tarkoituksella jätetty avoimeksi kunnes
+  parempi vakiintunut kaava löytyy.
+
+**Molemmat toteutetut indeksit toimivat teknisesti ja tuottavat suunnaltaan
+uskottavia arvoja, mutta kumpikin on toistaiseksi vain YKSI mittauspiste —
+todellinen arvo BEM-E:lle syntyy vasta pitkästä aikasarjasta (kuten HEPP:n
+oma 1959-2026-sarja), ei yksittäisestä luvusta.**
+
+## Seuraavat askeleet (kun palataan tähän)
 
 1. ~~Vahvista bbox visuaalisesti~~ — TEHTY, `26.167,62.567,27.067,63.467`
-2. ~~Toteuta `/mndwi` ja `/mndwi-image`~~ — KOODI KIRJOITETTU JA PUSHATTU,
-   `/mndwi-image` visuaalisesti vahvistettu, MUTTA `/mndwi` (numeerinen
-   tilasto) EI VIELA live-testattu tallla bbox:illa
-3. Toteuta `/lake-ndci` toisena, merkiten selvästi "kokeellinen Sentinel-2:lle"
-4. Sameus jätetään avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
-5. Vasta kaikkien läpi käytyä testausta (sama kuri kuin ENTSO-E-integraatiossa:
-   validoi ensin paikallisesti tunnettua rakennetta vastaan, sitten live-data)
+2. ~~Toteuta ja live-testaa `/mndwi` + `/mndwi-image`~~ — TEHTY
+3. ~~Toteuta ja live-testaa `/ndci` + `/ndci-image`~~ — TEHTY
+4. Sameus jätetään yhä avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
+5. Rakenna aikasarja (kuukausittainen historia useamman vuoden yli, ei vain
+   nykyhetki) ennen kuin näitä yritetään tulkita mielekkäästi
+6. Vasta aikasarjan jälkeen: integrointi HEM:n käyttöliittymään omana
+   §05 "Aquatic Status" -osiona (ks. BEM-E-rakenne yllä), A/B/C-kypsyys-
+   merkinnät näkyvissä käyttäjälle asti
    integroidaan HEM:n omaan käyttöliittymään
 
 ## Viitteet
