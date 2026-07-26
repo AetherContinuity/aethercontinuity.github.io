@@ -210,9 +210,25 @@ const DS = [
   {id:75,  name:"Vesivoima",             unit:"MWh/h", use:"I-4 dispatchable (hydro)"},
   {id:181, name:"Tuulivoima",            unit:"MWh/h", use:"Black Period stress"},
   {id:87,  name:"Siirto → Ruotsi",       unit:"MWh/h", use:"I-3 export SE"},
+  // HUOM 2026-07: DS 86 epaonnistuu johdonmukaisesti "Ei dataa" (ei rate-limit-virhe).
+  // Fingridin oma dataset-kuvaus DS 87:lle ("Sähkönsiirto Suomen ja Pohjois-Ruotsin
+  // välillä") sanoo etta se ON JO kaksisuuntainen - positiivinen = FI->SE1,
+  // negatiivinen = SE1->FI (data.fingrid.fi/datasets/87). On siis mahdollista
+  // etta DS 86 EI OLE oikea/olemassa oleva erillinen "tuonti"-datasetti, vaan
+  // DS 87 kattaa jo molemmat suunnat etumerkilla. EI VARMISTETTU mika DS 86
+  // tarkalleen on - ei korvattu arvatulla ID:lla, tarvitsee kayttajan oman
+  // tarkistuksen data.fingrid.fi:sta ennen korjausta.
   {id:86,  name:"Siirto ← Ruotsi",       unit:"MWh/h", use:"I-3 import SE"},
   {id:187, name:"Siirto Estlink",        unit:"MWh/h", use:"I-3 Baltic corridor"},
   {id:1,   name:"FCR-N reservi",         unit:"MW",    use:"Stability reference"},
+  // HUOM 2026-07: DS 336 palauttaa johdonmukaisesti tasan 0 €/MWh. Fingridin
+  // oma UKK (data.fingrid.fi/faq) sanoo SUORAAN etta Fingrid EI VOI julkaista
+  // tuntihintaa avoimessa datassaan, koska hintatieto ei ole Fingridin omistamaa -
+  // hintatiedot ovat ENTSO-E:n Transparency Platformilla tai NordPoolilla.
+  // Tama viittaa vahvasti siihen etta DS 336 EI OLE oikea/olemassa oleva
+  // hintadatasetti - se on todennakoisesti VAARA ID. EI korvattu arvatulla
+  // ID:lla - jos hintadataa halutaan, se tulisi hakea ENTSO-E:n proxysta
+  // (aci-entsoe-proxy), ei Fingrid-proxysta.
   {id:336, name:"Spot-hinta FI",         unit:"€/MWh", use:"EHR / I-2 price"},
 ];
 
@@ -305,7 +321,7 @@ async function fetchAll() {
       addLog('err', `DS ${ds.id} epäonnistui: ${e.message}`);
       fail++;
     }
-    await sleep(1500);
+    await sleep(2100); // Fingrid: max 1 pyyntö / 2s per API-avain (data.fingrid.fi/en/instructions) - 1500ms oli liian nopea, aiheutti 429:n JOKA ikiselle pyynnölle DS 193:n jalkeen
   }
 
   computeIndicators();
