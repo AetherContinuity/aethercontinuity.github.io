@@ -149,17 +149,20 @@ toteutustapaa:
    Process API visuaaliseksi kuvaksi HEM:n käyttöliittymään (kuten BEM:n
    NDVI-kuva).
 
-## Ehdotetut uudet reitit (EI VIELÄ TOTEUTETTU)
+## Toteutetut reitit (alkuperäiset suunnitellut nimet vs. lopulliset)
 
-Samaan `aci-corine-proxy`-repoon:
+`aci-corine-proxy`-repossa. Lopulliset nimet lyhyempiä kuin alunperin
+kaavailtu (`/lake-ndci` → `/ndci` jne.) — päätetty toteutusvaiheessa,
+ei erikseen dokumentoitu tuolloin.
 
-- `/lake-ndci?bbox=...&months=3` — NDCI-tilasto (keskiarvo/hajonta) järven
-  vesipikseleille. VAATISI vesimaskin (esim. MNDWI>0-suodatin evalscriptin
-  sisällä) jotta rantametsä/pellot eivät vääristä lukemaa.
-- `/lake-mndwi?bbox=...&months=3` — rantaviivan/vesipinta-alan tilasto,
-  vertailukelpoinen vuodesta toiseen.
-- `/lake-ndci-image?bbox=...` — renderöity kuva (kuten BEM:n NDVI-kuva),
-  väriliukuma vihreä→keltainen→punainen (matala→korkea klorofylli).
+- `/ndci?bbox=...&months=3` — NDCI-tilasto (keskiarvo/hajonta), maskattu
+  VAIN vesipikseleihin (SCL==6) — TEHTY JA LIVE-TESTATTU 2026-07-26
+- `/mndwi?bbox=...&months=3` — rantaviivan/vesipinta-alan tilasto — TEHTY
+  JA LIVE-TESTATTU 2026-07-26
+- `/ndci-image?bbox=...` ja `/mndwi-image?bbox=...` — renderöidyt kuvat
+  — TEHTY, `/mndwi-image` käytetty myös bbox:in visuaaliseen vahvistukseen
+- `/lake-timeseries?bbox=...&startYear=...&endYear=...` — takautuva
+  aikasarja — TEHTY, EI SAATU TOIMIMAAN (ks. tilapäivitys alempana)
 
 ## Miksi tämä yhdistäisi HEM:n ja BEM:n mielekkäästi
 
@@ -171,11 +174,6 @@ stressitekijän kohtaaminen samassa paikassa). Pitkän matalan veden jakso
 leviämistä tai leväkukintojen riskiä myöhemmin kesällä — tämä olisi
 ensimmäinen konkreettinen tapa TESTATA tätä yhteyttä data vasten, ei vain
 olettaa sitä.
-
-## Rajaus ja seuraavat askeleet
-
-Tämä on SUUNNITELMA, ei toteutus. Mitään reittiä ei ole vielä kirjoitettu
-eikä testattu. Seuraavat askeleet järjestyksessä:
 
 ## Tila 2026-07-26, päivitetty — MNDWI ja NDCI molemmat live-testattu
 
@@ -248,10 +246,12 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
      Iisveden koordinaateilla GetFeatureInfo-kyselyllä — jää avoimeksi
      vaihtoehtoiseksi poluksi jos oma Sentinel Hub -integraatio ei
      etene.
-6. Vasta aikasarjan jälkeen (tai `/mndwi`/`/ndci`:n ajankohtaisten
-   lukemien perusteella suoraan): integrointi HEM:n käyttöliittymään omana
-   §05 "Aquatic Status" -osiona (ks. BEM-E-rakenne yllä), A/B/C-kypsyys-
-   merkinnät näkyvissä käyttäjälle asti
+6. ~~Integrointi HEM:n käyttöliittymään omana Aquatic Status -osiona~~ —
+   TEHTY 2026-07-27, §09 (ei §05, koska §05 oli jo varattu HEPP-
+   aikasarjalle HEM:ssä). Live-testattu ja vahvistettu toimivaksi:
+   MNDWI/NDCI/HEPP näkyvät rinnakkain, A/B-kypsyysmerkinnät näkyvissä
+   käyttäjälle asti, "yhdistetty tulkinta" pelkkänä sanallisena
+   varovaisuushuomautuksena (ei matemaattista yhdistämistä).
 
 ## Viitteet
 
