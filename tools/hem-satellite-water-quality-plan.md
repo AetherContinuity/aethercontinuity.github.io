@@ -202,14 +202,26 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
 2. ~~Toteuta ja live-testaa `/mndwi` + `/mndwi-image`~~ — TEHTY
 3. ~~Toteuta ja live-testaa `/ndci` + `/ndci-image`~~ — TEHTY
 4. Sameus jätetään yhä avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
-5. **Rakenna 10 vuoden takautuva aikasarja (2015–2026) — käyttäjän oma,
-   metodologisesti tarkennettu suunnitelma 2026-07-26, EI VIELÄ TOTEUTETTU:**
-   - Sentinel-2-aineisto saatavilla vuodesta 2015 — käytä KESÄKAUDEN
-     (touko–syyskuu) mediaania/keskiarvoa per vuosi, EI yksittäistä
-     kuvaa — vähentää pilvien/satunnaissateiden kohinaa
-   - Rakenna taulukko: Vuosi | HEPP (kesä) | MNDWI | NDCI | Huomio
-   - **Kehys:** 1959–2014 = pitkä hydrologinen vertailu (pelkkä HEPP,
-     ei satelliittia); 2015–2026 = "luonnollinen validointijakso" jossa
+5. **Rakenna takautuva aikasarja — käyttäjän oma, metodologisesti
+   tarkennettu suunnitelma 2026-07-26, TOTEUTETTU 2026-07-27, YKSI
+   VUOSI TESTATTU (2016, epäonnistui — ks. korjaus alla):**
+   - **KORJATTU IKKUNA: 2018–2025** (8 vuotta, ei alunperin ehdotettu
+     10). Live-testi (2016) paljasti "data":[] kaikille kutsuille -
+     varmistettu virallisesta lähteestä (sentinels.copernicus.eu):
+     "L2A production is now systematic over Europe... started in May
+     2017." Vuosi 2016 on ENNEN L2A-tuotteiden systemaattista tuotantoa
+     Euroopan yllä - ei koodivirhe, aito datan saatavuusraja. 2017
+     jätetty myös pois turvamarginaalina (siirtymävuosi, tuotanto
+     alkoi vasta toukokuussa).
+   - Käytä KESÄKAUDEN (touko–syyskuu) mediaania/keskiarvoa per vuosi,
+     EI yksittäistä kuvaa — vähentää pilvien/satunnaissateiden kohinaa
+   - Rakenne toteutettu: `/lake-timeseries?bbox=...&startYear=2018&endYear=2025`,
+     yksi Statistical API -kutsu per vuosi per indeksi (16 kutsua
+     8 vuodelle × 2 indeksille) - VARMISTETTU etta Statistical API:n
+     oma aggregationInterval ei tue usean vuoden aggregointia yhdessä
+     kutsussa (yksinkertainen jaksotus alkaen timeRange.from:sta)
+   - **Kehys:** 1959–2017 = pitkä hydrologinen vertailu (pelkkä HEPP,
+     ei satelliittia); 2018–2025 = "luonnollinen validointijakso" jossa
      HEPP ja satelliitti ovat RINNAKKAIN — tässä ikkunassa voidaan
      oikeasti testata heijastuvatko HEM:n hydrologiset muutokset myös
      satelliittihavainnoissa
@@ -218,12 +230,10 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
      ollessa lämpimämpää/vähempää) — jos tämä korrelaatio näkyy
      aineistossa, se olisi huomattavasti vahvempi näyttö kuin yksittäinen
      mittauspiste
-   - **Tekninen huomio toteutusta varten:** tämä vaatisi ~10-20
-     Statistical API -kutsua (yksi per vuosi per indeksi, tai
-     mahdollisesti harvempi jos API tukee usean vuoden aggregointia
-     yhdessä kutsussa — EI VIELÄ selvitetty kumpi on mahdollista/
-     järkevämpää) — EI toteutettu 2026-07-26 istunnossa, tietoisesti
-     jätetty seuraavaan kertaan
+   - **EI VIELÄ TESTATTU 2018-2025-ikkunalla** — 2016-testi paljasti
+     ongelman ennen kuin täyttä ikkunaa ehdittiin ajaa. Seuraava askel:
+     testaa `startYear=2018&endYear=2018` ensin (yksi vuosi), sitten
+     koko 2018-2025-väli.
 6. Vasta aikasarjan jälkeen: integrointi HEM:n käyttöliittymään omana
    §05 "Aquatic Status" -osiona (ks. BEM-E-rakenne yllä), A/B/C-kypsyys-
    merkinnät näkyvissä käyttäjälle asti
