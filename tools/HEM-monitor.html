@@ -252,6 +252,12 @@ footer a{color:var(--accent);text-decoration:none}
   ole saatavilla, EP käyttää neutraalia fallback-arvoa 0.30.</span>
 </div>
 
+<div class="shdr"><span class="snum">§ 09</span><span class="stit">Aquatic Status — BEM-E (Aquatic Extension) · KOKEELLINEN</span></div>
+<div class="dbox" id="bem-e-det">Ladataan Sentinel-2-dataa (aci-corine-proxy)…</div>
+<p style="font-size:.75rem;color:var(--muted);font-style:italic;margin:6px 0 0">
+  BEM-E on oma, erillinen laajennus BEM:n maaekosysteemin BEPP:stä — EI sulautettu HEPP:iin ennen kuin yhteys on validoitu pitkällä aikasarjalla (ks. <a href="https://aethercontinuity.org/tools/hem-satellite-water-quality-plan.md" style="color:var(--accent)">suunnitelma</a>). Nykytila (3kk keskiarvo), ei aikasarja. MNDWI [A-luokka, vakiintunut, Xu 2006] · NDCI [B-luokka, KOKEELLINEN Sentinel-2:lle, Mishra &amp; Mishra 2012] · Lähde: Sentinel Hub Statistical API (Copernicus Data Space Ecosystem), sama Iisvesi-Virmasvesi-Rasvanki-bbox kuin §02.
+</p>
+
 <footer>
   <a href="https://aethercontinuity.org/tools/">WEM</a> ·
   <a href="https://github.com/AetherContinuity/hydrological-endurance-monitor">HEM GitHub</a> ·
@@ -322,6 +328,45 @@ async function fetchNordicReservoirs(nveCapacityTwh){
   }catch(e){
     setHTML('nordic-res-det',`<span class="derr">Pohjoismainen vertailu: ${e.message}</span>`);
     dot('nordic-res','err');
+  }
+}
+
+// BEM-E (Aquatic Extension) - KOKEELLINEN, lisatty 2026-07-27. Hakee
+// MNDWI [A-luokka] ja NDCI [B-luokka] nykytilan (3kk keskiarvo) samalle
+// Iisvesi-Virmasvesi-Rasvanki-bbox:ille kuin §02. EI aikasarjaa (ks.
+// hem-satellite-water-quality-plan.md - /lake-timeseries ei viela toimi,
+// syy tuntematon). Yhdistetty tulkinta on SANALLINEN havainto, EI
+// matemaattinen yhdistaminen HEPP:iin - BEM-E pysyy omana, erillisena
+// mittarinaan kunnes yhteys on validoitu pitkalla aikasarjalla.
+const CORINE_PROXY='https://aci-corine-proxy.ruotsalainen-marko.workers.dev';
+const IISVESI_BBOX='26.167,62.567,27.067,63.467';
+
+async function fetchBemE(hepp){
+  try{
+    const[mndwiRes,ndciRes]=await Promise.all([
+      fetch(`${CORINE_PROXY}/mndwi?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
+      fetch(`${CORINE_PROXY}/ndci?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
+    ]);
+
+    const mndwi=mndwiRes.mndwi_stats;
+    const ndci=ndciRes.ndci_stats;
+    if(!mndwi||!ndci) throw new Error('Tilastorakenne puuttuu jommastakummasta vastauksesta');
+
+    let html=`MNDWI: <b>${mndwi.mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(hajonta ${mndwi.stDev.toFixed(3)}, n=${mndwi.sampleCount-mndwi.noDataCount}/${mndwi.sampleCount}) [A]</span><br>`;
+    html+=`NDCI: <b>${ndci.mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(hajonta ${ndci.stDev.toFixed(3)}, vesipikseleitä ${ndci.sampleCount-ndci.noDataCount}/${ndci.sampleCount}) [B]</span><br>`;
+    if(hepp!=null) html+=`HEPP (rinnakkainen, EI yhdistetty kaavaan): <b>${hepp.toFixed(2)}</b><br>`;
+
+    // Sanallinen tulkinta - EI matemaattinen yhdistaminen. Vain karkea,
+    // varovainen huomio jos molemmat viittaavat samaan suuntaan.
+    const ndciWaterFrac=(ndci.sampleCount-ndci.noDataCount)/ndci.sampleCount;
+    if(ndciWaterFrac<0.05){
+      html+=`<span style="color:var(--muted);font-size:.85em">Huom: vesipikseleitä hyvin vähän (${(ndciWaterFrac*100).toFixed(0)}%) - NDCI-tulkinta epävarma tällä ajanjaksolla.</span>`;
+    } else {
+      html+=`<span style="color:var(--muted);font-size:.85em">Yksi 3kk-mittauspiste - ei vielä aikasarjaa, ei riittävä trendin arviointiin.</span>`;
+    }
+    setHTML('bem-e-det',html);
+  }catch(e){
+    setHTML('bem-e-det',`<span class="derr">BEM-E: ${e.message}</span>`);
   }
 }
 
@@ -721,6 +766,7 @@ async function fetchAll(){
   setText('hregime',hReg(h.val));document.getElementById('hregime').style.color=col;
   document.getElementById('hbadge').style.borderColor=col;
   setText('hsd',h.sd);setText('hep',h.ep);setText('hhsp',h.hsp);setText('hrf',h.rf);
+  fetchBemE(h.val);
 
   // Komponenttikohtainen halytys - riippumaton HEPP-kokonaisluokasta.
   // Sama periaate kuin BEM/WEM Monitoreissa (2026-07-08). HEM:lla ei
