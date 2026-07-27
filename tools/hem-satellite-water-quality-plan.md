@@ -202,39 +202,54 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
 2. ~~Toteuta ja live-testaa `/mndwi` + `/mndwi-image`~~ — TEHTY
 3. ~~Toteuta ja live-testaa `/ndci` + `/ndci-image`~~ — TEHTY
 4. Sameus jätetään yhä avoimeksi — ei toteuteta ennen kuin parempi kaava löytyy
-5. **Rakenna takautuva aikasarja — käyttäjän oma, metodologisesti
-   tarkennettu suunnitelma 2026-07-26, TOTEUTETTU 2026-07-27, YKSI
-   VUOSI TESTATTU (2016, epäonnistui — ks. korjaus alla):**
-   - **KORJATTU IKKUNA: 2018–2025** (8 vuotta, ei alunperin ehdotettu
-     10). Live-testi (2016) paljasti "data":[] kaikille kutsuille -
-     varmistettu virallisesta lähteestä (sentinels.copernicus.eu):
-     "L2A production is now systematic over Europe... started in May
-     2017." Vuosi 2016 on ENNEN L2A-tuotteiden systemaattista tuotantoa
-     Euroopan yllä - ei koodivirhe, aito datan saatavuusraja. 2017
-     jätetty myös pois turvamarginaalina (siirtymävuosi, tuotanto
-     alkoi vasta toukokuussa).
-   - Käytä KESÄKAUDEN (touko–syyskuu) mediaania/keskiarvoa per vuosi,
-     EI yksittäistä kuvaa — vähentää pilvien/satunnaissateiden kohinaa
-   - Rakenne toteutettu: `/lake-timeseries?bbox=...&startYear=2018&endYear=2025`,
-     yksi Statistical API -kutsu per vuosi per indeksi (16 kutsua
-     8 vuodelle × 2 indeksille) - VARMISTETTU etta Statistical API:n
-     oma aggregationInterval ei tue usean vuoden aggregointia yhdessä
-     kutsussa (yksinkertainen jaksotus alkaen timeRange.from:sta)
-   - **Kehys:** 1959–2017 = pitkä hydrologinen vertailu (pelkkä HEPP,
-     ei satelliittia); 2018–2025 = "luonnollinen validointijakso" jossa
-     HEPP ja satelliitti ovat RINNAKKAIN — tässä ikkunassa voidaan
-     oikeasti testata heijastuvatko HEM:n hydrologiset muutokset myös
-     satelliittihavainnoissa
-   - **Hypoteesi testattavaksi:** korkean HEPP:n vuosina MNDWI pienenisi
-     (vähemmän vettä) ja NDCI kasvaisi (enemmän klorofylliä, veden
-     ollessa lämpimämpää/vähempää) — jos tämä korrelaatio näkyy
-     aineistossa, se olisi huomattavasti vahvempi näyttö kuin yksittäinen
-     mittauspiste
-   - **EI VIELÄ TESTATTU 2018-2025-ikkunalla** — 2016-testi paljasti
-     ongelman ennen kuin täyttä ikkunaa ehdittiin ajaa. Seuraava askel:
-     testaa `startYear=2018&endYear=2018` ensin (yksi vuosi), sitten
-     koko 2018-2025-väli.
-6. Vasta aikasarjan jälkeen: integrointi HEM:n käyttöliittymään omana
+5. **Takautuva aikasarja (`/lake-timeseries`) — RAKENNETTU, MUTTA EI SAATU
+   TOIMIMAAN 2026-07-27. Syy jäi lopulta TUNNISTAMATTA.**
+   - Käyttäjän oma metodologisesti tarkennettu suunnitelma (kesäkauden
+     touko–syyskuu-keskiarvo per vuosi yksittäisen kuvan sijaan,
+     kehys 1959–2017 pitkä HEPP-vertailu vs. 2018–2025 "luonnollinen
+     validointijakso" satelliitin kanssa rinnakkain) — idea itsessään
+     pysyy hyvänä ja metodologisesti perusteltuna, vain TOTEUTUS
+     epäonnistui.
+   - **Systemaattinen vianetsintä, kolme hypoteesia testattu, kaikki
+     kumottu:**
+     1. L2A-tuotannon systemaattinen alku (toukokuu 2017) — testattiin
+        vuotta 2016, sai "data":[]. Siirrettiin ikkuna 2018-2025:een.
+     2. Vuosi 2018 EI TOIMINUT MYÖSKÄÄN — sama "data":[] tulos, kumosi
+        hypoteesin #1 kokonaan.
+     3. Aikavälin pituus (153pv vs. toimivan /mndwi:n ~90pv) — testattiin
+        lyhyempää 61pv ikkunaa (debugEndDay-parametrilla) samalle
+        vuodelle 2018 — EDELLEEN "data":[]. Kumosi myös tämän hypoteesin.
+     4. Arkiston "syvyys"/ikä — testattiin vuotta 2024 (lähellä
+        nykyhetkeä, mutta yhä historiallinen) — EDELLEEN sama tulos.
+        Kumosi myös tämän.
+   - **Yhteinen tekijä joka EI vielä ole täysin tutkittu:** kaikki
+     epäonnistuneet kutsut käyttivät KIINTEITÄ, ETUKÄTEEN LASKETTUJA
+     päivämääriä (esim. `"2018-05-01T00:00:00Z"`), kun taas KAIKKI
+     toimivat kutsut (`/mndwi`, `/ndci`) käyttivät `now.toISOString()`-
+     suhteellista väliä ("nyt - X kuukautta"). Tätä EI ehditty testata
+     erikseen ennen kuin päätettiin siirtyä pois tästä ongelmasta.
+   - **PÄÄTÖS 2026-07-27 (käyttäjän oma, käytännöllinen linjaus):**
+     ei jatketa tämän debuggaamista juuri nyt. `/mndwi` ja `/ndci`
+     (ajankohtainen "nyt"-tilanne) toimivat molemmat täydellisesti ja
+     riittävät BEM-E:n ensimmäiselle, käyttökelpoiselle versiolle.
+     Takautuva aikasarja jää AVOIMEKSI jatkokehitykseksi paremmalla
+     ajalla — koodi (`runStatsForRange`, `handleLakeTimeseries`) on
+     valmiina repossa jos joku myöhemmin haluaa jatkaa vianetsintää,
+     esim. kokeilemalla `now.toISOString()`-tyylistä suhteellista
+     aikaväliä kiinteiden päivämäärien sijaan seuraavaksi hypoteesiksi.
+   - **SYKE:n oma vaihtoehto tutkittu osittain:** `tarkka.syke.fi` /
+     `geoserver2.ymparisto.fi` WMS-palvelu tarjoaa kansallisesti
+     kalibroidun (C2RCC-malli) näkösyvyys-/vedenlaatudataa Suomen
+     järville vuodesta 2016. Löydettiin ETTÄ palvelun oma
+     `COPERNICUS_CMEMS_EO_HIROC_CHL` (klorofylli) -kerros KATTAA VAIN
+     Itämeren rannikkoalueen (59,1–60,8°N) — EI Iisveden aluetta
+     (62,77°N). Alkuperäistä näkösyvyyskerrosta (`EO_HR_WQ_S2_SDT`,
+     joka nimenomaan mainitsee "Suomen järvet") EI ehditty testata
+     Iisveden koordinaateilla GetFeatureInfo-kyselyllä — jää avoimeksi
+     vaihtoehtoiseksi poluksi jos oma Sentinel Hub -integraatio ei
+     etene.
+6. Vasta aikasarjan jälkeen (tai `/mndwi`/`/ndci`:n ajankohtaisten
+   lukemien perusteella suoraan): integrointi HEM:n käyttöliittymään omana
    §05 "Aquatic Status" -osiona (ks. BEM-E-rakenne yllä), A/B/C-kypsyys-
    merkinnät näkyvissä käyttäjälle asti
 
