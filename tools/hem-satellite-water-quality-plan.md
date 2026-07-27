@@ -256,11 +256,47 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
      Sentinel Hub/Copernicus-palvelun oma, dokumentoimaton
      käyttäytyminen — ei enää ratkaistavissa pelkällä oman koodin
      muokkauksella tai lisäarvailulla ilman suoraa yhteydenottoa
-     palveluntarjoajaan. **Debuggaus lopetettu tähän, ei jatketa
-     enempää tässä vaiheessa.** Koodi (`runStatsForRange`,
+     palveluntarjoajaan. Koodi (`runStatsForRange`,
      `handleLakeTimeseries`, debug-parametrit `debugStartDay`/
      `debugEndDay`/`debugMaxCloud`) jää repoon valmiiksi jos joku
      myöhemmin (esim. Sentinel Hubin oman tuen kanssa) haluaa jatkaa.
+
+   - **LÄPIMURTO 2026-07-27, myöhemmin samana päivänä — todiste että
+     data ON OLEMASSA, ongelma on todistetusti Statistical API:ssa
+     itsessään:** Käyttäjän oma tuore tutkimus (Sentinel Hubin
+     dokumentaatio Catalog API:sta + raportoidusta Statistical API:n
+     epävakaudesta ja LTA-arkistokäytännöstä) johti kahteen uuteen
+     testiin: (1) täsmälleen saman pyynnön uudelleenyritys — antoi
+     saman tuloksen, sulki pois satunnaisen epävakauden; (2) **uusi
+     `/catalog-check`-reitti** (STAC-pohjainen Catalog API, eri ja
+     yksinkertaisempi rajapinta kuin Statistical API) samalle
+     bbox:ille/aikavälille — **PALAUTTI 20 SKENEÄ** (ja sivutus kertoi
+     lisää olevan olemassa), pilvipeite vaihdellen 0–100 %. Esimerkiksi
+     28.9.2025 löytyi NELJÄ kuvaa pilvipeitteellä 0–2 %.
+   - **Uusi rakenteellinen havainto:** kuvien ID:t paljastivat että
+     bbox ulottuu NELJÄN eri Sentinel-2-kuvalaatan (T35VMK, T35VNK,
+     T35VML, T35VNL) yli — Iisvesi sijaitsee kahden laatan risteyskohdassa.
+     Tämä on todennäköisin rakenteellinen tekijä joka erottaa tämän
+     bbox:in yksinkertaisemmista tapauksista, joissa mosaikointi
+     ei tarvitsisi yhdistää useampaa laattaa.
+   - **Deployaus itsessään paljastui myös ongelmalliseksi tämän
+     debuggauksen aikana:** Cloudflare-buildhistoria näytti saman
+     vanhan commitin (`67282d5`) toistuvan kuudesti kymmenen
+     viimeisimmän buildin joukossa, "hautaen" uudemmat commitit
+     — käyttäjä painoi vahingossa toistuvasti väärää/vanhaa
+     redeploy-nappia. Korjattu käyttämällä oikean, uusimman commitin
+     omaa "View build" -linkkiä.
+   - **TARKENNETTU LOPPUPÄÄTELMÄ:** `/lake-timeseries`:n oma
+     `"data":[]`-vastaus on siis TODISTETUSTI VIRHEELLINEN/harhaanjohtava,
+     ei totuudenmukainen kuvaus datan puutteesta. Tämä EI ole enää
+     ratkaisematon mysteeri periaatteessa — se on kapeutunut
+     todistetuksi Sentinel Hub/Copernicus-alustan omaksi bugiksi
+     (todennäköisesti liittyen usean kuvalaatan mosaikointiin
+     Statistical API:n tilastoaggregoinnissa historiallisille
+     aikaväleille), josta meillä on nyt konkreettinen, dokumentoitu
+     näyttö (bbox, päivämäärät, evalscript, scene-lista) jonka voisi
+     toimittaa suoraan Sentinel Hubin/Copernicus-tuelle jos asiaa
+     joskus halutaan viedä eteenpäin sitä kautta.
    - **SYKE:n oma vaihtoehto tutkittu osittain:** `tarkka.syke.fi` /
      `geoserver2.ymparisto.fi` WMS-palvelu tarjoaa kansallisesti
      kalibroidun (C2RCC-malli) näkösyvyys-/vedenlaatudataa Suomen
