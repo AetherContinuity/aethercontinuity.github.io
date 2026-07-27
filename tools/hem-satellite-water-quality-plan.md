@@ -235,6 +235,32 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
      valmiina repossa jos joku myöhemmin haluaa jatkaa vianetsintää,
      esim. kokeilemalla `now.toISOString()`-tyylistä suhteellista
      aikaväliä kiinteiden päivämäärien sijaan seuraavaksi hypoteesiksi.
+     **PÄIVITYS 2026-07-27: TESTATTU, EI KORJANNUT.** toISOString()
+     tuotti oikein millisekunnit sisältävän muodon (vahvistettu
+     paikallisesti), mutta live-testi epäonnistui identtisesti.
+   - **LISÄTESTIT 2026-07-27, KAIKKI KUMOTTU:**
+     6. Millisekuntimuoto (`now.toISOString()` vs. käsin rakennettu
+        päivämäärä) — kumottu, kts. yllä.
+     7. Pilvipeite — käyttäjän oma, fysikaalisesti täysin oikea
+        huomio (Sentinel-2:n ylilennot ovat diskreettejä tapahtumia,
+        data vain jos pilvipeite ei liiallinen). Testattiin
+        `maxCloudCoverage=100` (suodatin kokonaan pois) koko 153pv
+        kesäikkunalle — EDELLEEN `"data":[]`. Kumosi myös pilvipeitteen
+        yksinään riittävänä selityksenä.
+   - **LOPULLINEN PÄÄTÖS 2026-07-27 (käyttäjän oma, suoraviivainen
+     linjaus — "nyt täytyy nostaa tassut pystyyn ja myöntää tappio"):**
+     seitsemän hyvin perusteltua, järjestelmällisesti testattua
+     hypoteesia on kumottu. Pyyntörunko on rivi riviltä identtinen
+     toimivan `/mndwi`/`/ndci`-koodipolun kanssa lukuun ottamatta itse
+     päivämääräarvoja. Jäljellä oleva selitys on todennäköisesti
+     Sentinel Hub/Copernicus-palvelun oma, dokumentoimaton
+     käyttäytyminen — ei enää ratkaistavissa pelkällä oman koodin
+     muokkauksella tai lisäarvailulla ilman suoraa yhteydenottoa
+     palveluntarjoajaan. **Debuggaus lopetettu tähän, ei jatketa
+     enempää tässä vaiheessa.** Koodi (`runStatsForRange`,
+     `handleLakeTimeseries`, debug-parametrit `debugStartDay`/
+     `debugEndDay`/`debugMaxCloud`) jää repoon valmiiksi jos joku
+     myöhemmin (esim. Sentinel Hubin oman tuen kanssa) haluaa jatkaa.
    - **SYKE:n oma vaihtoehto tutkittu osittain:** `tarkka.syke.fi` /
      `geoserver2.ymparisto.fi` WMS-palvelu tarjoaa kansallisesti
      kalibroidun (C2RCC-malli) näkösyvyys-/vedenlaatudataa Suomen
@@ -244,8 +270,8 @@ oma 1959-2026-sarja), ei yksittäisestä luvusta.**
      (62,77°N). Alkuperäistä näkösyvyyskerrosta (`EO_HR_WQ_S2_SDT`,
      joka nimenomaan mainitsee "Suomen järvet") EI ehditty testata
      Iisveden koordinaateilla GetFeatureInfo-kyselyllä — jää avoimeksi
-     vaihtoehtoiseksi poluksi jos oma Sentinel Hub -integraatio ei
-     etene.
+     vaihtoehtoiseksi poluksi jos takautuvaa aikasarjaa joskus
+     halutaan jatkaa tästä eri suunnasta.
 6. ~~Integrointi HEM:n käyttöliittymään omana Aquatic Status -osiona~~ —
    TEHTY 2026-07-27, §09 (ei §05, koska §05 oli jo varattu HEPP-
    aikasarjalle HEM:ssä). Live-testattu ja vahvistettu toimivaksi:
