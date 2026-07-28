@@ -1,16 +1,17 @@
 // ============================================================
-// Iisvesi-Virmasvesi-Rasvanki — MNDWI + NDCI kesakauden aikasarja
+// Karttulanlahti (kalanviljelyallas + vastaanottava lahti) — MNDWI + NDCI
+// kesakauden aikasarja
 // Google Earth Engine (GEE) JavaScript, code.earthengine.google.com
 //
-// Vastaa aci-corine-proxy:n /lake-timeseries-yritysta, mutta kayttaen
-// GEE:n omaa, kypsaa usean kuvalaatan mosaikointia - joka on
-// todennakoisesti se puuttuva pala joka esti oman Sentinel Hub
-// -integraatiomme toimimasta historiallisille paivamaarille.
-//
-// Bbox sama kuin HEM:n omassa §02:ssa ja aci-corine-proxyssa.
+// PIENENNETTY BBOX 2026-07-28: alkuperainen Iisvesi-koko bbox
+// (26.167,62.567,27.067,63.467, ~45km x 100km) osoittautui liian
+// raskaaksi reduceRegion-laskennalle GEE:n Code Editorissa (pallo
+// pyori pitkaan). Kayttajan oma ehdotus: 4x4 km riittaa, keskitettyna
+// Karttulanlahden/kalanviljelyaltaan koordinaattiin (62.87688N, 26.98725E,
+// muunnettu asteesta 62 52'36.77"N 26 59'14.09"E).
 // ============================================================
 
-var bbox = ee.Geometry.Rectangle([26.167, 62.567, 27.067, 63.467]);
+var bbox = ee.Geometry.Rectangle([26.94773, 62.85886, 27.02677, 62.89490]);
 
 // Sentinel-2 Surface Reflectance Harmonized - GEE:n oma, valmiiksi
 // ilmakehakorjattu kokoelma (vastaa Sentinel-2 L2A:ta)
@@ -80,8 +81,8 @@ var resultsFC = ee.FeatureCollection(yearlyStats);
 print('Iisvesi kesakauden MNDWI/NDCI 2018-2025', resultsFC);
 
 // Kartta silmamaaraiseen tarkistukseen etta bbox osuu oikein
-Map.centerObject(bbox, 9);
-Map.addLayer(bbox, {color: 'red'}, 'Iisvesi bbox');
+Map.centerObject(bbox, 14);
+Map.addLayer(bbox, {color: 'red'}, 'Karttulanlahti bbox (4x4km)');
 
 // Yksittainen tuore MNDWI-kuva visuaaliseksi tarkistukseksi
 var recent = s2.filterDate('2025-07-01', '2025-09-30')
