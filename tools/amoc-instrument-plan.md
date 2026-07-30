@@ -56,14 +56,30 @@ perusrakenne on osoittautunut hyödylliseksi.
   menetetty kalastusvaurion vuoksi - dokumentoitu läpinäkyvästi
   README:ssä, sama avoimuus kuin WEM:n omat datarajoitukset.
 
-### 2. Sentinel-6 geostrofinen virtausindikaattori
-- **Lähde:** NOAA Laboratory for Satellite Altimetry (LSA), Sea Level
-  Anomaly (SLA) -tuote, 0.25° ruudukko
+### 2. Sentinel-6 geostrofinen virtausindikaattori — VAHVISTETTU 2026-07-30
+- **Lähde:** NOAA CoastWatch ERDDAP, dataset ID `noaacwBLENDEDsshDaily`
+  ("Sea Surface Height Anomalies, Altimetry (S-3A/B,CryoSat2,Jason-2/3,
+  SARAL), Near Real-Time, Global 0.25°, 2017-present, Daily")
 - **Päivitystahti:** päivittäin, 3-5h viive (lähes reaaliaikainen)
-- **Sisältö:** merenpinnan korkeuspoikkeama + siitä johdetut
-  geostrofiset virtaukset
-- **EI VIELÄ tarkistettu:** tarkka API-osoite/formaatti NOAA CoastWatch
-  -palvelusta, vaatiiko rekisteröintiä
+- **Sisältö:** merenpinnan korkeuspoikkeama (sla, metreinä) 0,25°
+  ruudukossa (720x1440 pistettä globaalisti)
+- **API-tyyppi: ERDDAP/griddap** - standardoitu, hyvin dokumentoitu
+  OPeNDAP-pohjainen rajapinta. **EI KIRJAUTUMISTA** - `web_fetch`
+  haki koko dataset-infosivun (.html) taydellisena, mukaan lukien
+  koko metadata-attribuuttirakenteen, ilman minkaanlaista estetta.
+- **Kyselymuoto** (dokumentoitu esimerkki):
+  `https://coastwatch.noaa.gov/erddap/griddap/noaacwBLENDEDsshDaily.
+  csv?sla[(AIKA)][(LEVEYSASTE)][(PITUUSASTE)]`
+- **EI VIELA testattu:** itse arvokysely (vain info-sivu/metadata
+  vahvistettu) - oma web_fetch-tyokaluni vaatii etta tarkka URL
+  (mukaan lukien omat kyselyparametrit) on jo esiintynyt haussa, joten
+  en voinut testata juuri tata kyselya suoraan. Tama EI ole NOAA:n
+  palvelun rajoitus, vain oman tyokaluni oma rajoite - todennakoisesti
+  toimisi suoraan selaimessa tai tulevassa Cloudflare Worker -proxyssa
+  (sama arkkitehtuuri kuin muut ACI-proxyt).
+- **Selvä parannus RAPID:iin verrattuna:** talla on TAYDELLINEN,
+  standardoitu, itse-dokumentoiva API-rakenne alusta asti - ei
+  tarvetta arvata tiedostopolkuja tai etsia vaihtoehtoisia reitteja.
 
 ### 3. Pohjois-Atlantin meriveden lämpötila-anomalia (SST)
 - **Lähde:** ei vielä tarkennettu - useita vaihtoehtoja (NOAA OISST,
