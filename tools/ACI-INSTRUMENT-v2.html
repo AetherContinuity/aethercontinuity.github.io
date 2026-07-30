@@ -1236,7 +1236,26 @@ async function fetchPriceWindChart() {
       .filter(d => d.price != null && d.wind != null)
       .sort((a, b) => a.time - b.time);
 
-    if (statusEl) statusEl.textContent = merged.length + ' yhdistettya pistetta (' + pricePoints.length + ' hinta / ' + windPoints.length + ' tuuli)';
+    // Pearsonin korrelaatiokerroin hinnan ja tuulen valilla (kayttajan
+    // oma huomio 2026-07-30: "taitaa hinta korreloida tuulivoiman
+    // mukaan" - lasketaan tasmallisesti silmamaaraisen vaikutelman
+    // sijaan). Odotettu suunta: NEGATIIVINEN (enemman tuulta -> matalampi
+    // hinta) - Pohjoismaisen markkinan perusmekanismi.
+    function pearsonCorrelation(pairs) {
+      const n = pairs.length;
+      const xs = pairs.map(p => p[0]), ys = pairs.map(p => p[1]);
+      const mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+      let cov=0, vx=0, vy=0;
+      for (let i=0;i<n;i++){ const dx=xs[i]-mx, dy=ys[i]-my; cov+=dx*dy; vx+=dx*dx; vy+=dy*dy; }
+      return cov / Math.sqrt(vx*vy);
+    }
+    const corr = pearsonCorrelation(merged.map(d => [d.price, d.wind]));
+    const corrLabel = corr < -0.5 ? 'vahva negatiivinen (odotettu suunta)' :
+                       corr < -0.2 ? 'kohtalainen negatiivinen' :
+                       corr < 0.2  ? 'heikko/ei selvaa yhteytta' :
+                       'positiivinen (poikkeaa odotetusta)';
+
+    if (statusEl) statusEl.textContent = merged.length + ' yhdistettya pistetta (' + pricePoints.length + ' hinta / ' + windPoints.length + ' tuuli) · Pearson r = ' + corr.toFixed(3) + ' (' + corrLabel + ')';
     drawPriceWindChart(merged);
   } catch(e) {
     if (statusEl) statusEl.textContent = 'virhe: ' + e.message;
