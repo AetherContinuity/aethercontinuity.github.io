@@ -1208,11 +1208,31 @@ async function fetchPriceWindChart() {
       throw new Error('Toinen tai molemmat sarjat tyhjia (hinta n=' + pricePoints.length + ', tuuli n=' + windPoints.length + ')');
     }
 
-    // Kohdistetaan periodStart-aikaleiman mukaan (molemmat 15min, saman
-    // ikkunan) - kaytetaan Map:ia nopeaan hakuun, ei oleteta samaa jarjestysta.
-    const windByTime = new Map(windPoints.map(p => [p.periodStart, p.quantity]));
+    // TOINEN KORJAUS 2026-07-30 (edellinen flatMap-korjaus ei riittanyt):
+    // periodStart TOISTUU SAMANA koko sarjalohkon ajan (esim. 96 pistetta
+    // yhdella paivalla jakavat saman "2026-07-22T22:00Z" -leiman) - se EI
+    // ole yksilollinen per-piste-aikaleima vaan lohkon oma alkuhetki.
+    // Hinnan ja tuulen lohkot voivat alkaa eri tuntikohdista (esim. hinta
+    // aina T22:00Z paivarajalla, tuuli milloin tahansa T09:00Z, T01:00Z...),
+    // joten periodStart-merkkijonon suora vertailu ei koskaan tasmaa -
+    // tama selittaa "0 yhdistettya pistetta" taydellisesti. Korjaus:
+    // lasketaan jokaiselle pisteelle OIKEA absoluuttinen aika
+    // periodStart + (position-1) * resoluutio, ja kaytetaan TATA avaimena.
+    function resolutionMs(resStr) {
+      const m = /PT(\d+)M/.exec(resStr || 'PT15M');
+      return (m ? parseInt(m[1], 10) : 15) * 60000;
+    }
+    function absoluteTime(p) {
+      const blockStart = new Date(p.periodStart).getTime();
+      return blockStart + (p.position - 1) * resolutionMs(p.resolution);
+    }
+
+    const windByTime = new Map(windPoints.map(p => [absoluteTime(p), p.quantity]));
     const merged = pricePoints
-      .map(p => ({ time: new Date(p.periodStart), price: p.quantity, wind: windByTime.get(p.periodStart) }))
+      .map(p => {
+        const t = absoluteTime(p);
+        return { time: new Date(t), price: p.quantity, wind: windByTime.get(t) };
+      })
       .filter(d => d.price != null && d.wind != null)
       .sort((a, b) => a.time - b.time);
 
