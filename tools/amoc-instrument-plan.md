@@ -134,6 +134,34 @@ perusrakenne on osoittautunut hyödylliseksi.
   tiedostorakenne/formaatti - vain paasy vahvistettu, ei tarkkaa
   kyselymuotoa.
 
+**PÄIVITYS 2026-07-30 (myöhemmin samana päivänä) — TOTEUTETTU, VAIHTOEHTOISELLA SUUREELLA:**
+
+Foorumilta löytyi kiistaton vahvistus etta PODAAC:n GRACE-data vaatii
+AIDON kirjautumisen — jopa kayttaja jolla oli oma, toimiva Earthdata-
+tunnus (.netrc-tiedosto, selainkaytto toimi) epaonnistui ohjelmallisessa
+lataamisessa (HTTP 200 mutta sisalto oli "ei paasyoikeutta" -HTML).
+TU Dresdenin oma NetCDF-ruudukko (~36 Mt) taas vaatisi erillisen
+NetCDF-jasentajan, ei sovi suoraan Cloudflare Workerin fetch()+text()
+-malliin.
+
+**LÖYDETTY JA TOTEUTETTU AVOIN VAIHTOEHTO:** DMI:n Polar Portal
+(`download.dmi.dk/Research_Projects/polarportal/PP_GSMB/GSMB.txt`) —
+täysin avoin, ei kirjautumista, PÄIVITTÄIN päivittyvä tekstitiedosto.
+Vahvistettu web_fetch:illä 2026-07-30: sisälsi dataa 2025-09-01 asti
+2026-05-17 saakka (julkaisuhetkellä), muoto YYYYMMDD SMB(Gt/d) SMBacc(Gt).
+
+**TÄRKEÄ ERO:** tämä on PINTAmassatase (SMB, HARMONIE-AROME-malli:
+sadanta miinus sulaminen) — EI GRACE:n oma KOKONAISmassatase (joka
+sisältäisi myös jäätiköiden kalvamisen/discharge-komponentin). Eri,
+mutta läheisesti liittyvä suure — SMB on nopeampi/herkempi signaali
+lyhyen aikavälin sulamistapahtumille, kun taas GRACE:n kokonaistase
+kuvaa koko jäätikön massataseen hitaammin mutta kattavammin.
+
+**TOTEUTETTU:** `/greenland-smb`-reitti aci-amoc-proxyssa, jäsentää
+koko sarjan regex-suodatuksella, palauttaa sekä koko historian että
+viimeisimmän arvon erikseen. Testattu paikallisella yksikkötestillä
+(synteettinen näyte, 3/3 riviä jäsentyi oikein) ennen julkaisua.
+
 ## Tunnistettu tekninen kysymys — RATKENNUT 2026-07-30
 
 **PÄIVITYS 2026-07-30 (myöhemmin samana päivänä):** Testattiin
