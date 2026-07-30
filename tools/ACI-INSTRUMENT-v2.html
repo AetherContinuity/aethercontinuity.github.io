@@ -1088,10 +1088,18 @@ async function fetchNordicWR() {
     const r = await fetch(url);
     if (!r.ok) throw new Error(bzn + ' HTTP ' + r.status);
     const d = await r.json();
-    const series = d.series && d.series[0];
-    if (!series || !series.points || !series.points.length) throw new Error(bzn + ': ei sarjaa');
-    const resMin = resolutionMinutesFromString(series.points[0].resolution);
-    return windowAverages(series.points, resMin);
+    // KORJATTU 2026-07-30: alkuperainen koodi otti VAIN d.series[0],
+    // hylaten mahdolliset muut sarjalohkot (ENTSO-E:n A75-vastaus voi
+    // sisaltaa useita erillisia TimeSeries-lohkoja, havaittu raw_series_
+    // count:14 yhdella live-testilla). Tama vaikutti myos Nordic-WR:n
+    // omiin W24/W72/W168-keskiarvoihin, ei vain uuteen hinta/tuuli-
+    // kaavioon. Kerataan KAIKKI sarjat, jarjestetaan periodStart:in
+    // mukaan (windowAverages:n slice(-n24) olettaa aikajarjestyksen).
+    const allPoints = (d.series || []).flatMap(s => s.points || []);
+    if (!allPoints.length) throw new Error(bzn + ': ei sarjaa');
+    allPoints.sort((a, b) => new Date(a.periodStart) - new Date(b.periodStart));
+    const resMin = resolutionMinutesFromString(allPoints[0].resolution);
+    return windowAverages(allPoints, resMin);
   }
 
   function fmt(avgs) {
@@ -1185,8 +1193,16 @@ async function fetchPriceWindChart() {
     ]);
 
     const pricePoints = (priceRes.series || []).flatMap(s => s.points || []);
-    const windSeries = windRes.series && windRes.series[0];
-    const windPoints = windSeries ? windSeries.points || [] : [];
+    // KORJATTU 2026-07-30: alkuperainen koodi otti VAIN windRes.series[0],
+    // hylaten loput sarjalohkot. ENTSO-E:n oma A75-vastaus voi sisaltaa
+    // useita erillisia TimeSeries-lohkoja (havaittu: raw_series_count:14
+    // yhdella live-testilla), kukin omalla position-numeroinnillaan joka
+    // alkaa uudestaan yhdesta - VAIN series[0]:n lukeminen aiheutti
+    // "0 yhdistettya pistetta" -virheen koska luettu murto-osa oli eri
+    // ajanjaksolta kuin hinta. Sama flatMap-kuvio kuin hinnalla jo kaytti
+    // korjaa taman - jokaisen pisteen oma periodStart on jo oikein laskettu
+    // proxyn puolella per lohko, ei tarvita muuta korjausta.
+    const windPoints = (windRes.series || []).flatMap(s => s.points || []);
 
     if (!pricePoints.length || !windPoints.length) {
       throw new Error('Toinen tai molemmat sarjat tyhjia (hinta n=' + pricePoints.length + ', tuuli n=' + windPoints.length + ')');
