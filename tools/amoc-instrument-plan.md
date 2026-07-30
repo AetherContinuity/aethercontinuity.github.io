@@ -81,11 +81,33 @@ perusrakenne on osoittautunut hyödylliseksi.
   standardoitu, itse-dokumentoiva API-rakenne alusta asti - ei
   tarvetta arvata tiedostopolkuja tai etsia vaihtoehtoisia reitteja.
 
-### 3. Pohjois-Atlantin meriveden lämpötila-anomalia (SST)
-- **Lähde:** ei vielä tarkennettu - useita vaihtoehtoja (NOAA OISST,
-  ERSST) ovat laajasti käytettyjä ja hyvin dokumentoituja
-- Tunnettu proksi: subpolaarisen "kylmän läiskän" (cold blob)
-  jäähtymissignaali toimii yhtenä AMOC:n omana "sormenjälkenä"
+### 3. Pohjois-Atlantin meriveden lämpötila-anomalia (SST) — LÄHDE LÖYDETTY 2026-07-30
+- **Perustuote:** NOAA OISST v2.1 - vakiintunut, laajasti käytetty
+  standardi. 0,25° ruudukko, päivittäinen, saatavilla 1981-nykyhetki.
+  Referenssi-ilmasto: 1991-2020 (nykyinen WMO:n 30v normaalijakso).
+- **API-lähde (sama ERDDAP-kuvio kuin Sentinel-6/SLA):**
+  `oceanwatch.pifsc.noaa.gov/erddap/griddap/CRW_sst_anom_v1_0.html`
+  (Coral Reef Watch -tuote, mutta **globaali kattavuus** -89,975°...
+  89,975° - soveltuu siis myos Pohjois-Atlantin subpolaariseen
+  alueeseen vaikka ensisijainen kayttotarkoitus on koralliriuttojen
+  seuranta)
+- **Vaihtoehtoinen, alueellisesti rajattu ERDDAP-lahde** (EI sovellu
+  suoraan, vain merkitty vertailuksi): `cwcgom.aoml.noaa.gov/erddap/
+  griddap/miamiSSTAnomaly.html` - rajattu Karibian/Meksikonlahden
+  alueelle (7-38°N, -110...-56°W), ei kata Pohjois-Atlantin
+  subpolaarista aluetta.
+- **Ei-API-vaihtoehto, hyva visuaalinen ristiintarkistus:**
+  climatereanalyzer.org tarjoaa jo valmiin, interaktiivisen OISST-
+  anomaliakayran tietyille alueille (esim. Pohjois-Atlantti) - ei
+  raaka-API mutta hyva silmamaarainen vahvistus jos tarkkaa
+  API-arvoa on vaikea tulkita.
+- **Ei viela testattu itse arvokysely** - sama rajoitus kuin
+  Sentinel-6/SLA:n kanssa (web_fetch vaatii tarkan URL:in jo
+  hakutuloksissa).
+- **Miksi tämä on relevantti AMOC:lle:** subpolaarisen "kylmän läiskän"
+  (cold blob) jäähtymissignaali Pohjois-Atlantissa toimii yhtenä
+  AMOC:n omana "sormenjälkenä" - juuri se alue johon tämä indikaattori
+  kohdistettaisiin.
 
 ### 4. Grönlannin makean veden indikaattori
 - **Lähde:** GRACE (2002-2017) + GRACE-FO (2018-nyk.) -satelliitti-
