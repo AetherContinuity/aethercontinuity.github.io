@@ -109,16 +109,30 @@ perusrakenne on osoittautunut hyödylliseksi.
   AMOC:n omana "sormenjälkenä" - juuri se alue johon tämä indikaattori
   kohdistettaisiin.
 
-### 4. Grönlannin makean veden indikaattori
-- **Lähde:** GRACE (2002-2017) + GRACE-FO (2018-nyk.) -satelliitti-
+### 4. Grönlannin makean veden indikaattori — REITTI VAHVISTETTU 2026-07-30
+- **Perusta:** GRACE (2002-2017) + GRACE-FO (2018-nyk.) -satelliitti-
   gravimetria, jäämassan muutos
-- **Pääsy:** NASA JPL PODAAC (DOI: 10.5067/GFL20-MJ061) TAI ESA:n
-  Climate Change Initiative (DTU Space -tuote)
+- **TÄRKEÄ HAVAINTO:** NASA JPL PODAAC:n omat GRACE-datasetit
+  VAATIVAT AIDOSTI NASA Earthdata Login -kirjautumisen ("Protected
+  buckets... users must log in to Earthdata Login") - tämä on ERI
+  tilanne kuin RAPID:n pelkkä käyttöliittymäkohteliaisuus. PODAAC-
+  reitti EI siis sovellu suoraan.
+- **VAHVISTETTU, EI-KIRJAUTUMISTA-VAATIVA VAIHTOEHTO:** ESA:n Climate
+  Change Initiative -sivu (climate.esa.int/en/projects/ice-sheets-
+  greenland/data) latautui `web_fetch`:illa täysin onnistuneesti, ei
+  kirjautumista. Sivu osoittaa SUORAAN kahteen avoimeen latauspisteeseen
+  juuri oikealle Gravimetric Mass Balance (GMB) -tuotteelle:
+  - `data1.geo.tu-dresden.de/gis_gmb/` (TU Dresden, suora portaali)
+  - `products.esa-icesheets-cci.org/products/downloadlist/GMB/` (ESA:n
+    oma latauslista)
 - **Tuore luku (NOAA Arctic Report Card 2025):** massatase -129±50 Gt
   (2003-2024 keskiarvo -219±16 Gt/v)
 - **Mekanismi AMOC:iin (ei vain korrelaatio):** sulamisvesi makeuttaa
   Labradorinmerta → heikentää Labradorinmeren veden (LSW) muodostumista
   → LSW on keskeinen AMOC:n syvän paluuvirtauksen komponentti
+- **Ei viela testattu:** itse TU Dresden- tai ESA-portaalin oma
+  tiedostorakenne/formaatti - vain paasy vahvistettu, ei tarkkaa
+  kyselymuotoa.
 
 ## Tunnistettu tekninen kysymys — RATKENNUT 2026-07-30
 
@@ -214,12 +228,29 @@ Kolme vaihtoehtoa selvitettäväksi ennen koodausta:
 
 ## Seuraavat askeleet järjestyksessä
 
-1. Testaa AMOCatlas-kirjaston `read.rapid()` - toimiiko ilman
-   sähköpostirekisteröintiä
-2. Selvitä NOAA:n Sentinel-6/SLA-datan tarkka API-osoite
-3. Valitse SST-anomalialähde (todennäköisesti NOAA OISST, laajimmin
-   käytetty ja hyvin dokumentoitu)
-4. Vahvista GRACE/GRACE-FO-datan tarkka hakumuoto (PODAAC vs. ESA CCI)
-5. Vasta kaikkien neljän lähteen vahvistuttua: rakenna ensimmäinen
-   yksinkertainen näyttö (ei vielä yhdistelmäindeksi) - yksi kortti
-   per indikaattori, samaan tapaan kuin WEM:n §11:n kokeelliset kortit
+1. ~~Testaa AMOCatlas-kirjaston `read.rapid()`~~ — TEHTY 2026-07-30:
+   `web_fetch` (eri työkalu kuin bash) haki README:n täysin onnistuneesti
+   ilman kirjautumista. RAPID:n oma "email-lomake" on käyttöliittymä-
+   käytäntö, ei tekninen este.
+2. ~~Selvitä NOAA:n Sentinel-6/SLA-datan tarkka API-osoite~~ — TEHTY:
+   NOAA CoastWatch ERDDAP (`noaacwBLENDEDsshDaily`), ei kirjautumista,
+   koko metadata vahvistettu.
+3. ~~Valitse SST-anomalialähde~~ — TEHTY: NOAA OISST v2.1, saatavilla
+   samasta ERDDAP-kuviosta (`CRW_sst_anom_v1_0`, globaali kattavuus).
+4. ~~Vahvista GRACE/GRACE-FO-datan tarkka hakumuoto~~ — TEHTY: PODAAC
+   vaatii aidosti Earthdata-kirjautumisen, mutta ESA CCI → TU Dresden
+   -reitti (`data1.geo.tu-dresden.de/gis_gmb/`) ei vaadi kirjautumista.
+
+**Kaikki neljä lähdettä nyt tunnistettu, pääsy vahvistettu vähintään
+info-/portaalitasolla.** Yksikään ei vaadi kirjautumista lopullisessa,
+valitussa reitissä (RAPID suoraan, kaksi ERDDAP-lähdettä, ESA/TU Dresden
+Grönlannille PODAAC:n sijaan).
+
+5. Testaa jokaisen lähteen oma TARKKA arvokysely (ei vain info-sivu) -
+   vaatii joko käyttäjän oman selaimen testin, tai tulevan Cloudflare
+   Worker -proxyn (samat rakenne kuin muut ACI-proxyt), koska
+   web_fetch-tyokaluni oma rajoitus (vaatii URL:in jo hakutuloksissa)
+   estää omien, tarkkojen kyselyparametrien testaamisen suoraan
+6. Vasta tämän jälkeen: ensimmäinen yksinkertainen näyttö, yksi kortti
+   per indikaattori (ei vielä yhdistelmäindeksi), samaan tapaan kuin
+   WEM:n §11:n kokeelliset kortit
