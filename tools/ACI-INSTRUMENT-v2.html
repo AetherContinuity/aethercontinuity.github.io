@@ -930,8 +930,8 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
         <button class="s12-log-clear" onclick="s12ClearLog()">Tyhjennä</button>
       </div>
       <table class="s12-log-table">
-        <thead><tr><th>Aika</th><th>TRR</th><th>SE1 MW</th><th>Shortage</th><th>Taajuus Hz</th><th>CEB MWh</th><th>Tuuli ka/min</th><th>Tuulikato h</th></tr></thead>
-        <tbody id="s12LogBody"><tr><td colspan="6" style="color:var(--muted)">Ei vielä dataa — odota ensimmäistä hakua</td></tr></tbody>
+        <thead><tr><th>Aika</th><th>TRR</th><th>SE1 MW</th><th>Shortage</th><th>Taajuus Hz</th><th>CEB MWh</th><th>Tuuli ka/min</th><th>Tuulikato h</th><th>Hinta (W168 ka)</th></tr></thead>
+        <tbody id="s12LogBody"><tr><td colspan="7" style="color:var(--muted)">Ei vielä dataa — odota ensimmäistä hakua</td></tr></tbody>
       </table>
     </div>
 
@@ -1107,6 +1107,11 @@ async function fetchNordicWR() {
 // live-haku-periaate kuin Nordic-WR, ei pysyva varasto). Sama
 // laskentakaava (keskiarvo/mediaani/min/max) kuin kuukausittaisessa
 // Tripwire-tarkistuksessa, vain lyhyempi ikkuna (168h vs. kuukausi).
+// Jaettu muuttuja: fetchWeekPrice tallettaa tuloksensa tahan, jotta
+// §12:n loki voi lukea saman arvon ilman uutta hakua (2026-07-29,
+// kayttajan oma pyynto lisata viikkohinta lokiin).
+let lastWeekPriceMean = null;
+
 async function fetchWeekPrice() {
   const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
   const now = new Date();
@@ -1137,6 +1142,7 @@ async function fetchWeekPrice() {
     if (labelEl) labelEl.textContent = mean.toFixed(2) + ' €/MWh (n=' + n + ')';
     if (medianEl) medianEl.textContent = median.toFixed(2) + ' €/MWh';
     if (minMaxEl) minMaxEl.textContent = min.toFixed(2) + ' / ' + max.toFixed(2) + ' €/MWh';
+    lastWeekPriceMean = mean;
   } catch(e) {
     const labelEl = document.getElementById('v4WeekPriceLabel');
     if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
@@ -3084,7 +3090,7 @@ function s12SaveLog(entry) {
 function s12RenderLog(log) {
   const tbody = document.getElementById('s12LogBody');
   if (!tbody) return;
-  if (!log.length) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Ei dataa</td></tr>'; return; }
+  if (!log.length) { tbody.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Ei dataa</td></tr>'; return; }
   tbody.innerHTML = log.map(r => `<tr>
     <td>${r.t}</td>
     <td>${r.trr != null ? r.trr+'%' : '—'}</td>
@@ -3094,6 +3100,7 @@ function s12RenderLog(log) {
     <td>${r.ceb != null ? r.ceb.toLocaleString('fi')+' MWh' : '—'}</td>
     <td>${r.windAvg != null ? r.windAvg+'/'+r.windMin+' MW' : '—'}</td>
     <td>${r.windLowH != null ? r.windLowH+' h' : '—'}</td>
+    <td>${r.price != null ? r.price.toFixed(2)+' €/MWh' : '—'}</td>
   </tr>`).join('');
 }
 function s12ClearLog() {
@@ -3118,7 +3125,7 @@ async function renderS12(rawData) {
   s12SetProgress(0, 6, '§12 käynnistyy — odota 15s…');
   s12RenderLog(s12LoadLog()); // näytä aiemmat lokit heti
   // §12: käytetään rawData:ta + Fingrid proxy
-  const logEntry = { t: new Date().toLocaleString('fi'), trr:null, se1:null, shortage:null, freq:null, ceb:null };
+  const logEntry = { t: new Date().toLocaleString('fi'), trr:null, se1:null, shortage:null, freq:null, ceb:null, price: lastWeekPriceMean };
   try {
     // Energia-alijäämä 72h — laskennallinen rawData:sta (ei vaadi uutta proxyä)
     if (rawData && rawData.length >= 72) {
