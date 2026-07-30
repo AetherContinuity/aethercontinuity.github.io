@@ -393,6 +393,13 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div class="alert-body" id="alertCompBody">—</div>
       </div>
     </div>
+    <div class="alert-blk" id="alertSummer" style="background:var(--bg-n,#eef2fa);border-color:#a8c0c4;border-left-color:var(--sg,#2d6b3a);">
+      <div class="alert-dot" style="background:var(--sg,#2d6b3a);"></div>
+      <div>
+        <div class="alert-title" style="color:var(--sg,#2d6b3a);">Kesäkauden huomautus</div>
+        <div class="alert-body">Yllä oleva BP-like/Elevated-lukema on todennäköisesti kesän kysyntäprofiilin (esim. helle, ilmastointikuorma) heijastumaa — EI talven Dunkelflaute-tyyppistä riskiä, jota tämä instrumentti on ensisijaisesti suunniteltu mittaamaan. DP_t-malli on kalibroitu talven huippukulutukselle (katto 13 500 MW, ks. §07); kesän lämpötilapiikit voivat laukaista saman komponentin eri, lievemmästä syystä. Tarkista aina sään suunta (kylmä vs. kuuma) ennen tulkintaa.</div>
+      </div>
+    </div>
 
     <!-- Threshold zones -->
     <div class="zone-blk">
@@ -1630,6 +1637,18 @@ function renderPosture(m, spot) {
     if (bodyEl) bodyEl.textContent = compAlerts.length > 0
       ? compAlerts.join(' · ') + '. Kokonais-EPP on lineaarinen summa - se voi keskiarvoistaa tämän näkymättömiin. Tarkista §02:n taulukko.'
       : '—';
+  }
+
+  // Kesakauden huomautus (2026-07-29, kayttajan oma pyynto): jos kalenteri-
+  // kuukausi on touko-syyskuu JA jokin BP-like/Elevated-halytys on aktiivinen,
+  // muistutetaan etta talvikalibroitu DP_t-malli reagoi myos kesahelteeseen,
+  // ei vain Dunkelflaute-tyyppiseen talviriskiin.
+  const currentMonth = new Date().getMonth() + 1; // 1-12
+  const isSummer = currentMonth >= 5 && currentMonth <= 9;
+  const anyAlertActive = (w168.epp >= 0.50) || compAlerts.length > 0;
+  const summerEl = document.getElementById('alertSummer');
+  if (summerEl) {
+    summerEl.className = 'alert-blk' + (isSummer && anyAlertActive ? ' on' : '');
   }
 }
 
