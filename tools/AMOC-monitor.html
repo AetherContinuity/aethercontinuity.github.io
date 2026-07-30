@@ -93,10 +93,10 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </div>
 
     <div class="card" id="cardSLA">
-      <div class="card-title">Merenpinnan korkeuspoikkeama (SLA)</div>
+      <div class="card-title">Itä–länsi-korkeusero (kokeellinen, ei RAPID:n tarkka menetelmä)</div>
       <div class="card-value" id="slaValue">—</div>
       <div class="card-sub" id="slaSub">Ladataan…</div>
-      <div class="card-huom">NOAA ERDDAP, keski-Atlantti (26.5°N, 50°W). Geostrofiset virtaukset johdettavissa gradientista — ei vielä laskettu.</div>
+      <div class="card-huom">NOAA ERDDAP, 26.5°N: länsipiste ~75°W, itäpiste ~15°W. Approksimoi RAPID:n omaa länsi+sisäosa+itä-menetelmää karkeasti. Yhden päivän arvo on todennäköisesti enemmän mesoskaalapyörteiden kohinaa kuin AMOC-signaalia — tarvitaan 30–60 vrk liukuva keskiarvo ennen tulkintaa.</div>
     </div>
 
     <div class="card" id="cardSST">
@@ -155,13 +155,11 @@ async function fetchRapid() {
 async function fetchSLA() {
   try {
     const date = new Date(Date.now() - 3*24*3600*1000).toISOString().slice(0,10);
-    const r = await fetch(`${PROXY}/sla?lat=26.5&lon=-50&date=${date}`);
+    const r = await fetch(`${PROXY}/sla-gradient?lat=26.5&lonWest=-75&lonEast=-15&date=${date}`);
     const d = await r.json();
     if (d.error) throw new Error(d.error);
-    const lines = d.raaka_csv.trim().split('\n');
-    const last = lines[lines.length - 1].split(',');
-    const sla = parseFloat(last[3]);
-    setCard('slaValue', 'slaSub', `${sla.toFixed(3)} m`, `${last[0].slice(0,10)} · ${last[1]}°N, ${last[2]}°E`);
+    const sign = d.korkeusero_m >= 0 ? '+' : '';
+    setCard('slaValue', 'slaSub', `${sign}${d.korkeusero_m.toFixed(3)} m`, `${date} · länsi ${d.lansipiste.sla.toFixed(3)} m, itä ${d.itapiste.sla.toFixed(3)} m`);
     return true;
   } catch (e) {
     setCard('slaValue', 'slaSub', 'virhe', e.message);
