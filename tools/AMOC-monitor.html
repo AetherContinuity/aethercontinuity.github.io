@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMOC Endurance/Continuity Monitor · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0c1620; --paper:#eef3f4; --paper-2:#e2ebec; --paper-3:#d4e1e3;
+  --accent:#1c5f6e; --muted:#5f7478; --rule:#b9cdd0;
+  --serif:'EB Garamond',Georgia,serif; --mono:'DM Mono','Courier New',monospace;
+  --sg:#2d6b3a; --sy:#7a6010; --so:#8b3a10; --sr:#8b1010;
+  --bg-g:#eef6f0; --bg-y:#faf6e8; --bg-o:#faf0e8; --bg-r:#faf0f0;
+  --cn:#1c5f6e; --bg-n:#e6f0f2;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;}
+
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.25rem 2rem 1.1rem;max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;}
+.dih-l{display:flex;flex-direction:column;gap:.15rem;}
+.dih-inst{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.dih-ser{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.dih-ser span{color:var(--accent);}
+.dih-meta{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-align:right;line-height:1.9;}
+
+.page{max-width:1060px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+.shdr{display:flex;align-items:baseline;gap:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--rule);margin-bottom:1.25rem;}
+.snum{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--accent);flex-shrink:0;}
+.stit{font-size:1.1rem;font-weight:500;}
+.snote{font-size:.875rem;font-style:italic;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+
+.status-bar{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--paper-2);border:1px solid var(--rule);margin-bottom:2rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.status-dot.live{background:var(--sg);animation:pulse 2.5s infinite;}
+.status-dot.loading{background:var(--sy);animation:blink 1s infinite;}
+.status-dot.error{background:var(--sr);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-bottom:2rem;}
+@media(max-width:720px){.card-grid{grid-template-columns:1fr;}}
+.card{border:1px solid var(--rule);background:var(--paper-2);padding:1.1rem 1.3rem;}
+.card-title{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--accent);margin-bottom:.5rem;text-transform:uppercase;}
+.card-value{font-family:var(--mono);font-size:1.7rem;font-weight:500;margin-bottom:.3rem;}
+.card-sub{font-size:.82rem;color:var(--muted);margin-bottom:.15rem;}
+.card-huom{font-size:.75rem;color:var(--muted);font-style:italic;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--rule);}
+
+.snote a{color:var(--accent);}
+
+footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);border-top:1px solid var(--rule);text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="dih">
+  <div class="dih-l">
+    <div class="dih-inst">Aether Continuity Institute · ACI</div>
+    <div class="dih-ser">AMOC <span>Endurance / Continuity</span> Monitor</div>
+  </div>
+  <div class="dih-meta">Instrumentti · elokuu 2026<br>v0.1 · ensimmäinen näyttö</div>
+</div>
+
+<div class="page">
+
+  <div class="status-bar">
+    <span class="status-dot loading" id="statusDot"></span>
+    <span id="statusText">Ladataan…</span>
+    <span style="margin-left:auto">Lähde: aci-amoc-proxy</span>
+  </div>
+
+  <div class="shdr"><span class="snum">§ 00</span><span class="stit">Instrumentin skooppi</span></div>
+  <p class="snote">
+    AMOC (Atlantic Meridional Overturning Circulation) -instrumentti seuraa neljää riippumatonta
+    indikaattoria rinnakkain — sama periaate kuin WEM:ssä (useita datalähteitä, ristiinvalidointi,
+    ei yhtä yhdistelmäindeksiä ennen kuin osien käyttäytyminen on ymmärretty). Toisin kuin WEM,
+    AMOC:n havaintoverkko on kansainvälinen alusta alkaen, ja epävarmuudet ovat rakenteellisesti
+    suurempia — lyhyemmät aikasarjat, epäsuorat proksit, tutkijaryhmien erimielisyys kynnyksen
+    läheisyydestä. Suunnitelma: <a href="https://aethercontinuity.org/tools/amoc-instrument-plan.md">amoc-instrument-plan.md</a>
+  </p>
+
+  <div class="shdr"><span class="snum">§ 01</span><span class="stit">Neljä indikaattoria</span></div>
+
+  <div class="card-grid">
+    <div class="card" id="cardRapid">
+      <div class="card-title">RAPID — 26.5°N MOC-kuljetus</div>
+      <div class="card-value" id="rapidValue">—</div>
+      <div class="card-sub" id="rapidSub">Ladataan…</div>
+      <div class="card-huom">Viitetilastot 2004–2024. Ei vielä live-arvoa — datatiedoston tarkka URL ei ole vielä varmistettu.</div>
+    </div>
+
+    <div class="card" id="cardSLA">
+      <div class="card-title">Merenpinnan korkeuspoikkeama (SLA)</div>
+      <div class="card-value" id="slaValue">—</div>
+      <div class="card-sub" id="slaSub">Ladataan…</div>
+      <div class="card-huom">NOAA ERDDAP, keski-Atlantti (26.5°N, 50°W). Geostrofiset virtaukset johdettavissa gradientista — ei vielä laskettu.</div>
+    </div>
+
+    <div class="card" id="cardSST">
+      <div class="card-title">Pohjois-Atlantin SST-anomalia</div>
+      <div class="card-value" id="sstValue">—</div>
+      <div class="card-sub" id="sstSub">Ladataan…</div>
+      <div class="card-huom">Subpolaarinen alue (60°N, 30°W). Negatiivinen anomalia = "kylmä läiskä", yksi AMOC-heikkenemisen sormenjäljistä.</div>
+    </div>
+
+    <div class="card" id="cardGreenland">
+      <div class="card-title">Grönlannin pintamassatase</div>
+      <div class="card-value" id="greenlandValue">—</div>
+      <div class="card-sub" id="greenlandSub">Ladataan…</div>
+      <div class="card-huom">DMI Polar Portal. Pintamassatase (sadanta−sulaminen), EI GRACE:n kokonaistase (ei sisällä jäätiköiden kalvamista).</div>
+    </div>
+  </div>
+
+  <div class="shdr"><span class="snum">§ 02</span><span class="stit">Rajaukset</span></div>
+  <p class="snote">
+    Tämä on ensimmäinen, tarkoituksella yksinkertainen versio — neljä itsenäistä korttia,
+    ei yhdistelmäindeksiä. RAPID-kortti näyttää vain viitetilastot (ei live-arvoa) koska
+    itse datatiedoston tarkkaa osoitetta ei ole vielä varmistettu. Grönlanti-kortti mittaa
+    eri suuretta (pintamassatase) kuin alun perin tavoiteltu GRACE-kokonaismassatase, koska
+    PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Nämä rajaukset on dokumentoitu
+    täydellisesti suunnitelmadokumentissa.
+  </p>
+
+</div>
+
+<footer>
+  Aether Continuity Institute · aethercontinuity.org · Ei virallinen hälytysjärjestelmä
+</footer>
+
+<script>
+const PROXY = 'https://aci-amoc-proxy.ruotsalainen-marko.workers.dev';
+
+function setCard(valueId, subId, value, sub) {
+  document.getElementById(valueId).textContent = value;
+  document.getElementById(subId).textContent = sub;
+}
+
+async function fetchRapid() {
+  try {
+    const r = await fetch(`${PROXY}/rapid-info`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    const s = d.tunnetut_tilastot_2004_2024;
+    setCard('rapidValue', 'rapidSub', `${s.moc_sv} Sv`, `Keskiarvo 2004–2024 (referenssi, ei live)`);
+    return true;
+  } catch (e) {
+    setCard('rapidValue', 'rapidSub', 'virhe', e.message);
+    return false;
+  }
+}
+
+async function fetchSLA() {
+  try {
+    const date = new Date(Date.now() - 3*24*3600*1000).toISOString().slice(0,10);
+    const r = await fetch(`${PROXY}/sla?lat=26.5&lon=-50&date=${date}`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    const lines = d.raaka_csv.trim().split('\n');
+    const last = lines[lines.length - 1].split(',');
+    const sla = parseFloat(last[3]);
+    setCard('slaValue', 'slaSub', `${sla.toFixed(3)} m`, `${last[0].slice(0,10)} · ${last[1]}°N, ${last[2]}°E`);
+    return true;
+  } catch (e) {
+    setCard('slaValue', 'slaSub', 'virhe', e.message);
+    return false;
+  }
+}
+
+async function fetchSST() {
+  try {
+    const date = new Date(Date.now() - 3*24*3600*1000).toISOString().slice(0,10);
+    const r = await fetch(`${PROXY}/sst-anomaly?lat=60&lon=-30&date=${date}`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    const lines = d.raaka_csv.trim().split('\n');
+    const last = lines[lines.length - 1].split(',');
+    const anom = parseFloat(last[3]);
+    const sign = anom < 0 ? '(kylmä läiskä -signaali)' : '(ei kylmää läiskää tässä pisteessä/hetkessä)';
+    setCard('sstValue', 'sstSub', `${anom >= 0 ? '+' : ''}${anom.toFixed(2)} °C`, `${last[0].slice(0,10)} · ${sign}`);
+    return true;
+  } catch (e) {
+    setCard('sstValue', 'sstSub', 'virhe', e.message);
+    return false;
+  }
+}
+
+async function fetchGreenland() {
+  try {
+    const r = await fetch(`${PROXY}/greenland-smb`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    const latest = d.viimeisin;
+    const sign = latest.smb_gt_per_day < 0 ? 'sulamiskausi' : 'kertymiskausi';
+    setCard('greenlandValue', 'greenlandSub', `${latest.smb_gt_per_day.toFixed(2)} Gt/vrk`, `${latest.date} · kumulatiivinen ${latest.smb_acc_gt.toFixed(1)} Gt (${sign})`);
+    return true;
+  } catch (e) {
+    setCard('greenlandValue', 'greenlandSub', 'virhe', e.message);
+    return false;
+  }
+}
+
+async function loadAll() {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot loading';
+  text.textContent = 'Ladataan neljää lähdettä…';
+
+  const results = await Promise.all([fetchRapid(), fetchSLA(), fetchSST(), fetchGreenland()]);
+  const okCount = results.filter(Boolean).length;
+
+  if (okCount === 4) {
+    dot.className = 'status-dot live';
+    text.textContent = 'Kaikki 4 lähdettä ladattu onnistuneesti';
+  } else {
+    dot.className = 'status-dot error';
+    text.textContent = `${okCount}/4 lähdettä ladattu — tarkista kortit joissa lukee "virhe"`;
+  }
+}
+
+loadAll();
+</script>
+
+</body>
+</html>
