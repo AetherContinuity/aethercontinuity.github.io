@@ -847,6 +847,16 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
       <span class="v4-card-regime v4-regime-jump">Jump</span> T₁₆₈ ≥ 72h — pitkä yhtenäinen stressijakso, jump-regiimin indikaattori
       &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 124+192 (import-gap CV) · WP-015 §9
     </div>
+
+    <div class="shdr" style="margin-top:1.5rem;"><span class="snum">§ 11b</span><span class="stit">Hinta vs. tuulituotanto (W168) — KOKEELLINEN</span></div>
+    <p class="snote">Havainnollistaa hintasignaalin ja tuulituotannon yhteyttä samalla aikajanalla — kaksoisasteikko (hinta vasemmalla, tuuli oikealla). Käyttäjän oma pyyntö 2026-07-29: "hauska nähdä käytännössä miten hintasignaali ohjaa markkinaa ja tuotantoa." Live-haku, ei tallennusta. Lähde: aci-entsoe-proxy /day-ahead-price + /wind-generation, FI, 168h.</p>
+    <div id="priceWindStatus" style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem;">Ladataan…</div>
+    <div class="chart-wrap" style="height:220px;"><svg id="chPriceWind" style="width:100%;height:100%;"></svg></div>
+    <div class="snote" style="margin-top:.5rem;font-size:.72rem;">
+      <span style="color:#8b4513;">▬</span> Hinta (€/MWh, vasen asteikko) &nbsp;·&nbsp;
+      <span style="color:#2d6b3a;">▬</span> Tuulivoima (MW, oikea asteikko) &nbsp;·&nbsp;
+      Ensimmäinen versio: vain hinta+tuuli. Muu tuotanto (ydin/hydro/CHP) rinnalle jos tämä osoittautuu hyödylliseksi.
+    </div>
   </div>
 
 
@@ -1156,6 +1166,109 @@ async function fetchWeekPrice() {
     console.warn('Viikkohinta v0:', e.message);
   }
 }
+
+// §11b Hinta vs. tuulituotanto (2026-07-29, kayttajan oma pyynto).
+// Hakee raakasarjat (ei vain keskiarvot) hinnalle ja tuulelle samalta
+// 168h ikkunalta, kohdistaa ne position-kentan mukaan (molemmat
+// 15min-resoluutiota, samat aikaleimat), piirtaa kaksoisasteikko-SVG:n.
+async function fetchPriceWindChart() {
+  const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+  const now = new Date();
+  const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 168 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+  const statusEl = document.getElementById('priceWindStatus');
+
+  try {
+    const [priceRes, windRes] = await Promise.all([
+      fetch(ENTSOE_PROXY + '/day-ahead-price?bzn=FI&periodStart=' + periodStart + '&periodEnd=' + periodEnd).then(r => r.json()),
+      fetch(ENTSOE_PROXY + '/wind-generation?bzn=FI&periodStart=' + periodStart + '&periodEnd=' + periodEnd).then(r => r.json()),
+    ]);
+
+    const pricePoints = (priceRes.series || []).flatMap(s => s.points || []);
+    const windSeries = windRes.series && windRes.series[0];
+    const windPoints = windSeries ? windSeries.points || [] : [];
+
+    if (!pricePoints.length || !windPoints.length) {
+      throw new Error('Toinen tai molemmat sarjat tyhjia (hinta n=' + pricePoints.length + ', tuuli n=' + windPoints.length + ')');
+    }
+
+    // Kohdistetaan periodStart-aikaleiman mukaan (molemmat 15min, saman
+    // ikkunan) - kaytetaan Map:ia nopeaan hakuun, ei oleteta samaa jarjestysta.
+    const windByTime = new Map(windPoints.map(p => [p.periodStart, p.quantity]));
+    const merged = pricePoints
+      .map(p => ({ time: new Date(p.periodStart), price: p.quantity, wind: windByTime.get(p.periodStart) }))
+      .filter(d => d.price != null && d.wind != null)
+      .sort((a, b) => a.time - b.time);
+
+    if (statusEl) statusEl.textContent = merged.length + ' yhdistettya pistetta (' + pricePoints.length + ' hinta / ' + windPoints.length + ' tuuli)';
+    drawPriceWindChart(merged);
+  } catch(e) {
+    if (statusEl) statusEl.textContent = 'virhe: ' + e.message;
+    console.warn('Hinta vs. tuuli -kaavio:', e.message);
+  }
+}
+
+function drawPriceWindChart(data) {
+  const svg = document.getElementById('chPriceWind');
+  if (!svg) return;
+  const W = svg.parentElement.clientWidth || 800;
+  const H = svg.parentElement.clientHeight || 220;
+  const pad = { t: 12, b: 28, l: 56, r: 56 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  if (!data.length) { svg.innerHTML = ''; return; }
+
+  const prices = data.map(d => d.price);
+  const winds = data.map(d => d.wind);
+  const pMin = Math.min(0, Math.min(...prices)) * 1.05;
+  const pMax = Math.max(...prices) * 1.1;
+  const wMin = 0;
+  const wMax = Math.max(...winds) * 1.1;
+
+  const n = data.length;
+  const xS = i => pad.l + (i / Math.max(1, n - 1)) * cW;
+  const yP = v => pad.t + cH - ((v - pMin) / (pMax - pMin)) * cH;
+  const yW = v => pad.t + cH - ((v - wMin) / (wMax - wMin)) * cH;
+
+  const xInterval = Math.max(1, Math.floor(n / 7));
+  const xTicks = [];
+  data.forEach((d, i) => {
+    if (i % (xInterval * 4) === 0) {
+      xTicks.push({ i, label: d.time.toLocaleDateString('fi-FI', { weekday: 'short', day: 'numeric' }) });
+    }
+  });
+
+  let h = '';
+  // Y-ticks vasen (hinta)
+  const pSteps = 4;
+  for (let s = 0; s <= pSteps; s++) {
+    const v = pMin + (pMax - pMin) * s / pSteps;
+    h += `<line x1="${pad.l}" y1="${yP(v).toFixed(1)}" x2="${pad.l+cW}" y2="${yP(v).toFixed(1)}" stroke="#c8bfad" stroke-width=".5" opacity=".5"/>`;
+    h += `<text x="${pad.l-5}" y="${(yP(v)+3.5).toFixed(1)}" text-anchor="end" font-family="DM Mono" font-size="8" fill="#8b4513">${v.toFixed(0)}</text>`;
+  }
+  // Y-ticks oikea (tuuli)
+  for (let s = 0; s <= pSteps; s++) {
+    const v = wMin + (wMax - wMin) * s / pSteps;
+    h += `<text x="${pad.l+cW+5}" y="${(yW(v)+3.5).toFixed(1)}" text-anchor="start" font-family="DM Mono" font-size="8" fill="#2d6b3a">${v.toFixed(0)}</text>`;
+  }
+
+  const pricePath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yP(d.price).toFixed(1)}`).join(' ');
+  h += `<path d="${pricePath}" fill="none" stroke="#8b4513" stroke-width="1.5"/>`;
+  const windPath = data.map((d, i) => `${i===0?'M':'L'}${xS(i).toFixed(1)},${yW(d.wind).toFixed(1)}`).join(' ');
+  h += `<path d="${windPath}" fill="none" stroke="#2d6b3a" stroke-width="1.5"/>`;
+
+  xTicks.forEach(t => {
+    h += `<line x1="${xS(t.i).toFixed(1)}" y1="${pad.t}" x2="${xS(t.i).toFixed(1)}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width=".5" opacity=".4"/>`;
+    h += `<text x="${xS(t.i).toFixed(1)}" y="${H-6}" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#7a7468">${t.label}</text>`;
+  });
+
+  h += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+cH}" stroke="#8b4513" stroke-width="1"/>`;
+  h += `<line x1="${pad.l+cW}" y1="${pad.t}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#2d6b3a" stroke-width="1"/>`;
+  h += `<line x1="${pad.l}" y1="${pad.t+cH}" x2="${pad.l+cW}" y2="${pad.t+cH}" stroke="#c8bfad" stroke-width="1"/>`;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = h;
+}
+
 
 // CHP sähköteho kuukausikeskiarvot (kaukolämpö + teollisuus yhteensä, MW)
 // Lähde: Fingrid tilastot 2022-2024 keskiarvo
@@ -2453,6 +2566,7 @@ async function init() {
     // Nordic-WR v0 — kokeellinen, ei viela osa EPP-renderointia
     fetchNordicWR();
     fetchWeekPrice();
+    fetchPriceWindChart();
     // §12 Transmission & Endurance Layer — viive rate-limiting välttämiseksi
     setTimeout(() => renderS12(rawData), 15000);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
