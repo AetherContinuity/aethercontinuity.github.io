@@ -132,6 +132,27 @@ saattaa olla JavaScript-renderoity nappi jota web_fetch ei tavoita
 suoraan. Tama on nyt ainoa jaljella oleva aukko: tarkka data-tiedoston
 URL.
 
+## Scoping-päätös 2026-07-30 — live-automaatio ei ole kriittinen tälle projektille
+
+Käyttäjän oma huomio: "voimme oikeastaan elää osittain ilman live
+dataakin." Tämä on käytännössä oikea linjaus, ei vain kompromissi:
+
+**AMOC eroaa rakenteellisesti WEM:stä juuri tässä.** Sähkön hinta
+muuttuu tunneittain — live-haku oli WEM:lle aidosti arvokas. RAPID:n
+oma data itsessään päivittyy VAIN KERRAN VUODESSA (uusi julkaisu,
+esim. v2023.1 → v2024.1a). Live-automaatio ei siis koskaan olisi ollut
+yhtä kriittinen tälle projektille — vuosittainen, käsin tehty päivitys
+(sama periaate kuin Tripwire-kalenterin sääntelyosio) on täysin
+riittävä, ei kompromissi.
+
+**Tästä seuraa:** sen tarkan latauslinkin metsästämistä ei tarvitse
+jatkaa kiireellisenä - "Integrated transports" -sivun omat, jo
+löydetyt tilastot (17.1±4.4 Sv jne.) riittävät sellaisenaan
+ensimmäiseksi, käsin päivitettäväksi referenssipisteeksi. Tarkka
+data-tiedosto olisi tarpeen vasta jos/kun halutaan laskea oma,
+tarkempi indeksi raakadatasta - ei valttamaton ensimmaiselle,
+yksinkertaiselle versiolle.
+
 Alkuperäinen 2026-07-30 aamun tulos (403, epäluotettava) säilytetty
 alla historiallisena kirjauksena:
 
