@@ -86,11 +86,24 @@ perusrakenne on osoittautunut hyödylliseksi.
 
 RAPID:n oma sähköpostivaatimus on ainoa neljästä lähteestä joka ei
 sovi suoraan WEM-tyyppiseen "live-haku joka lataus" -arkkitehtuuriin.
+
+**Testattu 2026-07-30:** `pip install amocatlas` + `read.rapid()`
+palautti `403 Forbidden` osoitteesta rapid.ac.uk/sites/default/files/
+rapid_data/moc_transports.nc. **TULOS ON EPÄLUOTETTAVA** - Claude-
+assistentin oma bash-tyokaluymparisto sallii verkkoyhteydet vain
+ennalta maaratylle domain-listalle (GitHub, PyPI/npm-rekisterit jne.),
+eika rapid.ac.uk ole talla listalla. 403 saattaa siis tulla OMASTA
+egress-proxysta, ei RAPID:n palvelimelta itseltaan. Tama pitaisi
+testata uudestaan taysin rajoittamattomasta ymparistosta (esim.
+kayttajan oma tietokone) ennen johtopaatoksia siita vaatiiko RAPID
+oikeasti sahkopostirekisterointia ohjelmallista API-kaytto ajatellen.
+
 Kolme vaihtoehtoa selvitettäväksi ennen koodausta:
-1. Kokeile AMOCatlas-kirjastoa - ehkä se käyttää jotain muuta,
-   avointa peilipalvelinta datalle
-2. Rekisteröidy itse, tarkista tuleeko sen jälkeen suora, uudelleen-
-   käytettävä latauslinkki (samaan tapaan kuin Copernicus-tunnukset)
+1. Testaa AMOCatlas rajoittamattomasta ymparistosta (kayttajan oma
+   kone) - ratkeaako 403 silloin
+2. Rekisteröidy itse rapid.ac.uk:hon, tarkista tuleeko sen jälkeen
+   suora, uudelleenkäytettävä latauslinkki (samaan tapaan kuin
+   Copernicus-tunnukset)
 3. Jos kumpikaan ei toimi: harkitse harvempaa päivitystahtia (esim.
    kuukausittainen käsin päivitys, kuten Tripwire-kalenterin
    sääntelyosio) sen sijaan että vaadittaisiin live-haku joka lataus
