@@ -104,11 +104,33 @@ tällä menetelmällä. Seuraava askel: hae tarkka, ajantasainen data-
 tiedoston URL (versionumero saattaa muuttua julkaisujen valilla, ks.
 README:n oma versiohistoria) ja testaa sama menetelma sille.
 
-**Mahdollinen vaihtoehtoinen polku löytyi (ei vielä testattu):**
-`rapid.ac.uk/rapidmoc/rapid_data/transports.php` - vanhempi URL-
-rakenne joka löytyi RAPID:n oman "History"-sivun kautta, saattaa
-tarjota suoran pääsyn data-tiedostoihin eri polulla kuin data-download-
-sivun oma email-lomake.
+**Mahdollinen vaihtoehtoinen polku löytyi ja testattu (2026-07-30):**
+`rapid.ac.uk/rapidmoc/rapid_data/transports.php` ohjautui uudelleen
+`about-us/history`-sivulle (vanha URL, ei enää voimassa Drupal-
+paivityksen jalkeen) — EI itsessaan johtanut dataan, mutta paljasti
+sivuston nykyisen navigaatiorakenteen.
+
+**Löytyi ja testattu onnistuneesti: `rapid.ac.uk/data/integrated-
+transports`** — sivu vahvistaa datan olemassaolon ja antaa TUOREET,
+VIRALLISET tilastot suoraan HTML:sta (ei vain PDF:sta):
+
+| Komponentti | Keskiarvo ± keskihajonta (Sv) |
+|---|---|
+| Gulf Stream (Florida Straits) | 31,8 ± 3,4 |
+| Ekman | 3,8 ± 3,4 |
+| Yläkeskiokeaani | −18,4 ± 3,4 |
+| **MOC (kokonaiskiertokuljetus)** | **17,1 ± 4,4** |
+| UNADW (ylempi syvä paluuvirtaus) | −12,1 ± 2,5 |
+| LNADW (alempi syvä paluuvirtaus) | −5,8 ± 2,8 |
+
+Syvän paluuvirtauksen (UNADW+LNADW) korrelaatio MOC:n kanssa: **R=-0,9902**
+(lahes taydellinen kaanteinen yhteys, fysikaalisesti odotettu).
+
+Sivu mainitsee datan olevan saatavilla NetCDF/Matlab/ASCII-muodossa,
+mutta **itse latauslinkkia ei loytynyt tekstimuotoisesta hausta** -
+saattaa olla JavaScript-renderoity nappi jota web_fetch ei tavoita
+suoraan. Tama on nyt ainoa jaljella oleva aukko: tarkka data-tiedoston
+URL.
 
 Alkuperäinen 2026-07-30 aamun tulos (403, epäluotettava) säilytetty
 alla historiallisena kirjauksena:
