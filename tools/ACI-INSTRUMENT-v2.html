@@ -823,6 +823,14 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
         <div class="v4-card-sub" id="v4NordicWRInterp" style="font-weight:600;">—</div>
         <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /wind-generation, 168h haku · keskiarvot samasta sarjasta · EI VIELA osa EPP-laskentaa</div>
       </div>
+
+      <!-- Viikkohinta (v0, live-haku ENTSO-E:sta, ei tallennusta) -->
+      <div class="v4-card">
+        <div class="v4-card-title">FI Day-ahead-hinta — viikon keskiarvo (KOKEELLINEN)</div>
+        <div class="v4-card-value" id="v4WeekPriceLabel">—</div>
+        <div class="v4-card-sub">Mediaani: <span id="v4WeekPriceMedian">—</span> &nbsp;·&nbsp; min/max: <span id="v4WeekPriceMinMax">—</span></div>
+        <div class="v4-card-sub" style="color:var(--muted);font-size:.62rem;">Lähde: aci-entsoe-proxy /day-ahead-price, 168h haku · live joka lataus, ei tallenneta · EI VIELA osa EPP-laskentaa</div>
+      </div>
     </div>
 
     <div class="snote" style="margin-top:.75rem;">
@@ -1091,6 +1099,48 @@ async function fetchNordicWR() {
     const labelEl = document.getElementById('v4NordicWRLabel');
     if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
     console.warn('Nordic-WR v0:', e.message);
+  }
+}
+
+// Viikon (168h) day-ahead-hinnan keskiarvo - live-haku joka lataus,
+// EI tallenneta mihinkaan (kayttajan oma pyynto 2026-07-29: sama
+// live-haku-periaate kuin Nordic-WR, ei pysyva varasto). Sama
+// laskentakaava (keskiarvo/mediaani/min/max) kuin kuukausittaisessa
+// Tripwire-tarkistuksessa, vain lyhyempi ikkuna (168h vs. kuukausi).
+async function fetchWeekPrice() {
+  const ENTSOE_PROXY = 'https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev';
+  const now = new Date();
+  const periodEnd = now.toISOString().slice(0, 13) + ':00:00Z';
+  const periodStart = new Date(now.getTime() - 168 * 3600 * 1000).toISOString().slice(0, 13) + ':00:00Z';
+
+  try {
+    const url = ENTSOE_PROXY + '/day-ahead-price?bzn=FI&periodStart=' + periodStart + '&periodEnd=' + periodEnd;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const values = (d.series || [])
+      .flatMap(s => s.points || [])
+      .map(p => p.quantity)
+      .filter(v => v != null && !Number.isNaN(v));
+
+    if (!values.length) throw new Error('ei hintapisteita (data:[] tai tyhja series)');
+
+    const sorted = [...values].sort((a, b) => a - b);
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    const n = values.length;
+    const median = n % 2 === 0 ? (sorted[n/2 - 1] + sorted[n/2]) / 2 : sorted[(n-1)/2];
+    const min = sorted[0], max = sorted[n - 1];
+
+    const labelEl = document.getElementById('v4WeekPriceLabel');
+    const medianEl = document.getElementById('v4WeekPriceMedian');
+    const minMaxEl = document.getElementById('v4WeekPriceMinMax');
+    if (labelEl) labelEl.textContent = mean.toFixed(2) + ' €/MWh (n=' + n + ')';
+    if (medianEl) medianEl.textContent = median.toFixed(2) + ' €/MWh';
+    if (minMaxEl) minMaxEl.textContent = min.toFixed(2) + ' / ' + max.toFixed(2) + ' €/MWh';
+  } catch(e) {
+    const labelEl = document.getElementById('v4WeekPriceLabel');
+    if (labelEl) labelEl.textContent = 'virhe: ' + e.message;
+    console.warn('Viikkohinta v0:', e.message);
   }
 }
 
@@ -2377,6 +2427,7 @@ async function init() {
     });
     // Nordic-WR v0 — kokeellinen, ei viela osa EPP-renderointia
     fetchNordicWR();
+    fetchWeekPrice();
     // §12 Transmission & Endurance Layer — viive rate-limiting välttämiseksi
     setTimeout(() => renderS12(rawData), 15000);
   } catch(e) { console.warn('EPP v4 render:', e.message); }
