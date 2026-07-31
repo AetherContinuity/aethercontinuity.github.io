@@ -757,3 +757,76 @@ sailytetty ennallaan omana kayttotarkoituksenaan.
 
 **Seuraava askel:** ajaa gmb↔rapid_moc samalla menetelmalla - nyt
 kun aikaikkunat aidosti paallekkain, tama on viela testaamaton pari.
+
+## TULOS 2026-07-31 — GMB vs RAPID_MOC, toinen huolellisesti hylatty hypoteesi
+
+Nyt kun aikaikkunat aidosti paallekkain (GEUS/PROMICE ulottuu
+RAPID:n koko ajalle), testi ajettiin: N=396, lag-1-autokorrelaatiot
+0.846/0.982 (molemmat korkeita), Neff≈40 (taydella ACF:lla).
+
+**Lag=0: r=-0.138.** Paras loydetty: **lag=-27, r=-0.254, p≈0.106,
+BH q≈0.615** - EI merkitseva edes ilman korjausta (p>0.05), saati
+BH-korjauksen jalkeen. Sama kuri kuin aiemmin: paras-lag-tulos ei
+ylitulkittu vaikka se olisi voinut nayttaa "kiinnostavalta" ilman
+tilastollista tarkistusta.
+
+**Fysikaalinen tulkinta (kayttajan oma, hyvin perusteltu huomio):**
+Gronlannin kokonaismassatase on vain YKSI monista samanaikaisista
+AMOC:iin vaikuttavista tekijoista (Labradorinmeren konvektio,
+Irmingerinmeren prosessit, NAO, tuulikentta, pintalampotila,
+suolaisuus, arktinen makean veden vienti, monivuotiset merivarastot).
+Ei ollut odotettavaa etta yhden muuttujan GMB selittaisi merkittavan
+osan RAPID:n vaihtelusta yksinaan - negatiivinen tulos on siis
+fysikaalisesti johdonmukainen, ei yllattava.
+
+## METODOLOGINEN KEHYS 2026-07-31 — kaksi validointityyppia
+
+Kayttajan oma, tarkea kasitteellinen erottelu joka muuttaa /compare-
+moottorin luonnetta pelkasta korrelaatiolaskurista systemaattiseksi
+hypoteesien falsifiointityokaluksi:
+
+**Suora validointi** - kysyy: *"nakyyko yhteys datassa?"*
+Esimerkkeja: SLA↔RAPID (hylatty), GMB↔RAPID (hylatty), SST↔RAPID
+(HYVAKSYTTY, r=0.525 lag-11:lla, BH 21/61 merkitseva)
+
+**Mekanistinen validointi** - kysyy: *"onko olemassa uskottava
+fysikaalinen valiketju?"*
+Esimerkkeja kayttajan omin sanoin:
+- NAO → tuulikentta → Ekman → RAPID_EK
+- GMB → makea vesi → suolaisuus → syvaveden muodostus → RAPID_MOC
+
+**Nailla kahdella ei pida sekoittaa toisiaan.** Suora validointi voi
+epaonnistua (kuten GMB↔RAPID_MOC juuri teki) vaikka mekanistinen
+ketju olisi periaatteessa uskottava - koska valiaskeleet (esim.
+suolaisuuden muutos, syvaveden muodostuksen viive) eivat nay suoraan
+kahden paateen valisessa korrelaatiossa jos matkalla on useita
+muita, kilpailevia vaikuttavia tekijoita.
+
+### Vakiintunut prosessi uusille prokseille (kayttajan oma, kirjattu suoraan)
+
+1. Lisataan uusi fetch_*-moduuli
+2. Verrataan RAPIDiin
+3. Lasketaan Pearson, Spearman, Neff ja lag-spektri
+4. Korjataan monivertailu (BH)
+5. Hyvaksytaan tai hylataan proksi datan perusteella
+
+Kayttajan oma yhteenveto: *"Vertailumoottori nayttaa nyt saavuttaneen
+pisteen, jossa sita voi kayttaa yleisena hypoteesien
+falsifiointityokaluna, ei vain korrelaatiolaskurina... paljon
+vahvempi tutkimusasetelma kuin instrumentti, joka etsii vain
+vahvistusta ennakko-oletuksille."*
+
+### Tilannekatsaus kaikista suoran validoinnin tuloksista tahan mennessa
+
+| Pari | Tulos | BH-merkitsevia |
+|---|---|---|
+| SLA ↔ RAPID_UMO | Hylatty | 0/61 |
+| SLA ↔ NAO | Hylatty | 0/61 |
+| NAO ↔ RAPID_MOC | Hylatty | 0/61 |
+| GMB ↔ RAPID_MOC | Hylatty | 0/61 |
+| **SST ↔ RAPID_MOC** | **Hyvaksytty** | **21/61** |
+
+Nelja hylattya, yksi hyvaksytty - tama suhde itsessaan on terveellinen
+muistutus siita etta useimmat intuitiiviset proksihypoteesit eivat
+kestä huolellista tilastollista testausta, ja se on juuri niin kuin
+pitaakin olla jarjestelmassa joka aidosti falsifioi, ei vain vahvista.
