@@ -354,3 +354,76 @@ voivat erehtyä instrumentin omasta systemaattisesta virheestä, ja
 myöhemmin. Vahvistaa entisestään harrastelijaystävän alkuperäistä
 periaatetta: yksinkertaista ensin, ymmärrä käyttäytyminen huolellisesti,
 älä luota yhteen "lopulliseen" tulokseen ilman ristiinvalidointia.
+
+## KORJAUS 2026-07-30 (myöhemmin samana päivänä) — kausikorjaus oli väärä lähtöoletus
+
+**Alkuperäinen ykkösprioriteetti (kausikorjattu anomalia, `/sla-gradient-
+anomaly`) rakennettiin väärälle oletukselle.** Oletimme että itä-länsi-
+gradientti noudattaa kiinteää, kalenteriin sidottua vuosisykliä (kahden
+vuoden datan perusteella: helmi-huhtikuu huippu, elo-syyskuu pohja).
+
+**Kolme lisävuosiparia (2019-2020, 2020-2021, ja yritys 2015-2016 joka
+epäonnistui puuttuvan datan vuoksi) paljasti että jokainen vuosipari
+näyttää TÄYSIN ERI vaiheen:**
+
+| Vuosipari | Pohja | Huippu |
+|---|---|---|
+| 2024-2026 | heinä-elokuu | tammi-huhtikuu |
+| 2020-2021 | helmi-maalis + heinä | huhti-touko |
+| 2019-2020 | syyskuu + kesäkuu | marraskuu |
+
+Ei kahta samanlaista. Käyttäjän oma varovaisuus ("ei tehdä johtopäätöksiä
+vielä, mitä muut ovat havainneet") johti kirjallisuushakuun joka
+selitti tämän täydellisesti.
+
+### Tieteellinen selitys löytyi - tämä on tunnettu ilmiö, ei virhe meidän datassamme
+
+**Frajka-Williams (2015), alkuperäinen SLA→UMO-proksimenetelmä jota
+approksimoimme:** koko menetelmä perustuu **läntisen reunan SLA:n
+VUOSIENVÄLISEEN (interannual) vaihteluun**, ei kausivaihteluun -
+selittää yli 90% MOC:n vuosienvälisestä vaihtelusta.
+
+**RAPID:n oma virallinen 20 vuoden yhteenveto:** "MOC vaihtelee paivien
+ja vuosikymmenen valisilla aikaskaaloilla" - "odottamattomia vaihteluita
+joka ikisella mitatulla aikaskaalalla", mukaan lukien suuri notkahdus
+2010-2011. Jopa ammattilaiset yllattyivat 20 vuoden datalla.
+
+**Mekanismi tasmaa suoraan omaan pituusastevalintaamme:** "Vuosienvaliset
+vaihtelut havaitaan lantisessa altaassa (70-80W)... yhdenmukaisia
+lanteen etenevien Rossby-aaltojen kanssa" (Elipot ym., Kanzow ym. 2009) -
+sama alue (75W) jota kaytimme lansipisteena.
+
+**Kausivaihtelu on olemassa mutta ALISTEINEN, ei hallitseva:** tuore
+katsaus (2025) listaa kolme paallekkaista, eri aikaskaalan ilmiota:
+kausivaihtelu (Chidichimo ym. 2010, Kanzow ym. 2010), vuosienvalinen
+vaihtelu (McCarthy ym. 2012, Roberts ym. 2013), ja mesoskaala (Evans
+ym. 2022). Kun vuosienvalinen (Rossby-aalto-) signaali on voimakkaampi,
+kausisykli hukkuu sen alle eika nay puhtaana vuodesta toiseen.
+
+### Johtopäätös ja korjaus
+
+**Kolme keskenaan erilaista vuosiparia EI ole virhe menetelmassamme -
+se on tasmalleen se ilmio jonka ammattioseanografit ovat dokumentoineet
+samasta muuttujasta samalla leveysasteella.** Alkuperainen kausikorjaus-
+oletus (kiintea kuukausittainen klimatologia) on siis todennakoisesti
+HARHAANJOHTAVA, ei vain karkea - se voi luoda keinotekoisen "anomalian"
+pelkastaan siksi etta kunkin vuoden oma, kalenterista riippumaton vaihe
+sattuu eroamaan kahden aiemman vuoden keskiarvosta.
+
+**Kaytannon seuraus `/sla-gradient-anomaly`-reitille:** tama reitti
+sailytetaan koodissa (arvokas oppimiskokemus + validi lahtokohta
+jatkotyolle), mutta sen tulkintaa pitaa korjata - anomalia kuvaa eroa
+KAHDEN VUODEN otokseen, ei mitaan vakiintunutta normaalia. Oikeampi
+lahestymistapa vaatisi todennakoisesti joko (a) paljon pidemman
+aikasarjan (vuosikymmenia) jotta kausi- ja vuosienvalinen komponentti
+voitaisiin erottaa tilastollisesti, tai (b) suoraan RAPID:n oman UMO-
+aikasarjan kayttoa (kun sen tarkka datatiedosto joskus loytyy) sen
+sijaan etta yritettaisiin approksimoida sita karkealla kahden pisteen
+SLA-erolla.
+
+**Tama on hyva, konkreettinen esimerkki koko AMOC-projektin omasta
+opista:** yksinkertaisen instrumentin rakentaminen paljasti nopeasti
+ettei "yksinkertaista ensin" tarkoita "oletukset ovat aina oikeita
+ensin" - se tarkoittaa etta virheelliset oletukset paljastuvat
+nopeammin ja halvemmalla kun rakennetaan pienesta alkaen, ei
+paallikoita monimutkaisen yhdistelmaindeksin taakse.
