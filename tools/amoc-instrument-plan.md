@@ -506,3 +506,41 @@ tasmalleen) ennen julkaisua.
   saatavilla samalta ajalta
 - Selvittaa saako RAPID:n tuoreempaa versiota (v2024.1a paattyy maalis
   2024 - reilut 2 vuotta vanhaa dataa jo nyt)
+
+## ARKKITEHTUURIREFAKTOROINTI 2026-07-31 — yleinen /compare-moottori
+
+Kayttajan oma arkkitehtuuriehdotus: sen sijaan etta jokainen uusi
+sarjavertailu (SLA/NAO, SLA/RAPID, SST/RAPID, SMB/RAPID, NAO/RAPID...)
+vaatisi oman, kertakayttoisen reittinsa, rakennettiin yleinen
+`/compare?series_a=X&series_b=Y`-moottori jota mika tahansa
+rekisteroity sarjapari voi kayttaa ilman uutta koodia.
+
+**SERIES_PROVIDERS-rekisteri:** sla (ita-lansi-gradientti), nao (CPC),
+sst (SST-anomalia), smb (Gronlannin SMB) - kaikki toimivia. rapid on
+tarkoituksellinen stub joka heittaa selkean virheen (NetCDF-parsinta
+ei onnistu suoraan Cloudflare Workerin fetch()+text()-mallilla).
+
+**Kehitysjarjestys (kayttajan oma ehdotus, noudatettu):**
+1. Pearson + lag +-30vrk + yhteiset paivamaarat (tehty aiemmin)
+2. Spearman + effective N (Neff) - TEHTY TASSA PAIVITYKSESSA
+3. Taysi CCF-kayra - jo osittain (lag_spectrum.full_scan)
+4. RAPID mukaan kun sen aikasarja on julkaistu proxyssa - EI VIELA
+
+**Vaihe 2 yksityiskohdat:**
+- Spearmanin rho: tunnistaa monotonisen (ei valttamatta lineaarisen)
+  yhteyden. Testattu: kuutiofunktio antoi rho=1.0 vs Pearson 0.928.
+- Effective N (Neff): Bretherton ym. 1999 -tyylinen approksimaatio,
+  Neff=N*(1-r1x*r1y)/(1+r1x*r1y). Peruste (kayttajan oma huomio): seka
+  NAO etta SLA ovat ajallisesti autokorreloituneita (Rossby-aallot
+  etenevat hitaasti) - tavallinen Pearsonin p-arvo raa'alla N:lla olisi
+  liian optimistinen. Testattu: vahva autokorrelaatio (r1~0.87) pudotti
+  Neff:n 200:sta 28.5:een; valkoinen kohina piti Neff:n lahella N:aa.
+- p-arvo lasketaan nyt Neff:lla, ei raa'alla havaintomaaralla.
+
+**Kayttajan oma perustelu kirjattu suoraan:** *"Silloin sama koodi
+palvelee myohemmin myos muita ACI-instrumentteja."* ja *"Nain
+instrumentti kasvaa hallitusti ilman etta siihen lisataan liian
+paljon monimutkaisuutta kerralla."*
+
+Vanha `/compare/nao-sla` sailytetty koodissa taaksepain-yhteensopi-
+vuuden vuoksi, merkitty vanhentuneeksi `/status`-vastauksessa.
