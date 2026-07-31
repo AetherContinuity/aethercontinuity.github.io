@@ -713,3 +713,47 @@ Gronlanti-SMB, RAPID-viitetilastot) pysyvat validina, itsenaisina
 indikaattoreina - vain SLA-gradientin rooli "karkeana RAPID-
 approksimaationa" on nyt kumottu tilastollisesti perustellusti, ei
 vain epailty.
+
+## MERKITTAVA POSITIIVINEN LOYDOS 2026-07-31 — SST korreloi RAPID:n kanssa
+
+Systemaattinen kierros muita sarjapareja /compare-moottorilla paljasti
+ensimmaisen aidosti positiivisen, FDR-korjauksen kestavan tuloksen
+koko projektissa.
+
+**SST ↔ RAPID_MOC** (date=2024-03-22, days=365):
+- lag=0: r=0.392, p=0.019 (jo merkitseva ilman korjaustakin)
+- lag=-11 (paras): r=0.525, p=0.0007
+- **BH-korjaus: 21/61 viivetta pysyy merkitsevana (lagit -21...-1)**
+
+Tama on laadullisesti eri tulos kuin SLA- ja NAO-testit: 21 PERAKKAISTA
+viivetta muodostavat yhtenaisen klusterin, ei yksittaista eristettya
+piikkia - tama on juuri se rakenteellinen ero jota pidetaan aidon
+signaalin merkkina kohinan sijaan. Suunta on fysikaalisesti mielekas:
+SST-anomalia edeltaa MOC-arvoa ~11 vrk:lla - pintalampotilan poikkeama
+toimisi varhaisena merkkina tulevasta AMOC-muutoksesta.
+
+**NAO ↔ RAPID_MOC:** BH 0/61 merkitseva, vahvistaen etta NAO ei nayta
+suoraa yhteytta RAPID:n oikeaan MOC-arvoon (samansuuntainen tulos kuin
+SLA-NAO-testissa).
+
+## KORJAUS 2026-07-31 — SMB-RAPID-aikaikkunaongelma ratkaistu, uusi gmb-sarja
+
+Alkuperainen SMB↔RAPID-vertailu palautti "0 paallekkaista paivamaaraa" -
+virheen. Tama EI ollut vaara kyselyparametri: DMI:n GSMB.txt kattaa
+vain nykyisen sulamiskauden (~2025-09 alkaen), ei ulotu RAPID:n
+historialliselle ajalle (2004-2024) lainkaan - aito rakenteellinen
+aikaikkunoiden paallekkaisyyden puute.
+
+**Loydetty parempi, pidempi lahde:** GEUS/PROMICE-massatase (Mankoff
+ym. 2021), thredds.geus.dk/MassBalance/MB_cumulative.csv. Paivittainen,
+1986-nykyhetki - ulottuu RAPID:n koko ajalle. Lisaksi tama on
+KOKONAISMASSATASE (sisaltaa jaatikoiden kalvamisen/discharge), ei
+vain DMI:n pintamassatase - tasmalleen se suure jota alunperin
+tavoiteltiin (ks. HEM/BEM-E:n oma GRACE-keskustelu paljon aiemmin).
+
+Rekisteroity uutena 'gmb'-sarjana (paivittainen ero kumulatiivisesta
+tasosta, testattu paikallisesti). Vanha 'smb' (DMI, nykyinen kausi)
+sailytetty ennallaan omana kayttotarkoituksenaan.
+
+**Seuraava askel:** ajaa gmb↔rapid_moc samalla menetelmalla - nyt
+kun aikaikkunat aidosti paallekkain, tama on viela testaamaton pari.
