@@ -1038,3 +1038,59 @@ viive poikkeaa aiemmista tutkimuksista ja vaatii lisavalidointia.**
 Taman vuoksi tulosta ei pideta viela lopullisesti validoituna, vaan
 se edellyttaa riippumatonta vahvistusta uudemmalla RAPID-aineistolla
 tai toisella havaintosarjalla.
+
+## § 01f — Suodatustestin rajoite (31.7.2026)
+
+SST ↔ RAPID_MOC -parin validointia syvennettiin liukuvan keskiarvon
+suodatuksella (30, 60 ja 90 vrk) - kayttajan oma ehdotus mekanistisen
+validoinnin Vaihe 1:na.
+
+**Suodatuksen vaikutus.** Kun liukuvan keskiarvon pituutta kasvatettiin
+(30 -> 60 -> 90 vrk), korrelaatio SST-anomalioiden ja RAPID MOC:n
+valilla voimistui (r≈0.76 -> 0.87 -> 0.92) ja optimaalinen viive
+sailyi johdonmukaisesti noin -11 vuorokaudessa. Viiveen pysyvyys
+viittaa siihen, ettei havaittu yhteys ole pelkastaan korkeataajuisen
+kohinan seurausta.
+
+| Suodatus | Pearson r | Neff | Huomio |
+|---|---|---|---|
+| Ei suod. | 0.525 | 24.2 | Vertailukohta |
+| 30 vrk | 0.762 | 10.4 | Neff puolittuu |
+| 60 vrk | 0.872 | 7.8 | Vain ~8 itsenaista jaksoa |
+| 90 vrk | 0.921 | 6.6 | Vain ~6-7 itsenaista jaksoa |
+
+**Metodologinen rajoite.** Samalla suodatus kasvatti sarjojen
+autokorrelaatiota erittain voimakkaasti (lag-1 ≈ 1), jolloin
+havaintojen tehollinen maara (Neff) pieneni noin 10:sta alle 7:aan.
+Tama on odotettu seuraus pitkista paallekkaisista liukuvista
+keskiarvoista eika analyysivirhe - 90 vrk:n ikkuna limittyy 89/90-
+osaltaan vierekaisen paivan kanssa. Se kuitenkin tarkoittaa, etta
+suodatetut korrelaatiot perustuvat hyvin pieneen maaraan riippumattomia
+havaintoja.
+
+**Johtopaatos.** Tulosta ei tule tulkita siten, etta 90 vuorokauden
+suodatus "todistaisi" vahvemman fysikaalisen yhteyden. Luotettavampi
+tulkinta on, etta analyysi osoittaa stabiilin noin 11 vuorokauden
+viiverakenteen, mutta kaytettavissa oleva yhden vuoden aineisto on
+liian lyhyt vahvistamaan kuukausimittakaavan yhteytta tilastollisesti
+riippumattomien havaintojen perusteella. Hypoteesi vaatii vahvistuksen
+usean vuoden aineistolla tai vaihtoehtoisesti menetelmilla, jotka
+mallintavat autokorrelaation suoraan (esim. ARIMA- tai Monte Carlo
+-surrogaattitestit).
+
+**Kayttajan oma, erityisen kiinnostava huomio:** paras viive pysyy
+tasmalleen -11 vuorokaudessa kaikilla kolmella suodatustasolla. Tama
+on metodologisesti vahvempi havainto kuin pelkka korrelaatiokertoimen
+kasvu, koska juuri korrelaation suuruus on herkempi suodatuksen
+aiheuttamille vaikutuksille, kun taas viiveen pysyvyys voi heijastaa
+aidompaa dynamiikkaa. Tamakin kannattaa kuitenkin nahda toistaiseksi
+hypoteesia tukevana havaintona, ei viela naytto syy-seuraussuhteesta.
+
+### Seuraava askel: koko 2004-2024 RAPID-datan kaytto
+
+Kayttajan oma suositus: koska RAPID-dataa on 20 vuotta (josta vain
+yksi vuosi oli tarkastelussa), laajenna suodatustesti kattamaan koko
+aikasarjan. Jos signaali on aito, korrelaatio sailyy ja Neff on
+riittava (esim. >30) paljon suuremmalla raa'alla N:lla. Vaihtoehtoinen
+menetelma: kuukausikeskiarvot ilman liukuvia ikkunoita (ei limittymista,
+Neff vastaisi todellisia vapausasteita paremmin).
