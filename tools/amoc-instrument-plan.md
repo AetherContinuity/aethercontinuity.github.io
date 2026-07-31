@@ -830,3 +830,69 @@ Nelja hylattya, yksi hyvaksytty - tama suhde itsessaan on terveellinen
 muistutus siita etta useimmat intuitiiviset proksihypoteesit eivat
 kestä huolellista tilastollista testausta, ja se on juuri niin kuin
 pitaakin olla jarjestelmassa joka aidosti falsifioi, ei vain vahvista.
+
+## TULOS 2026-07-31 — NAO vs RAPID_EK: lupaava mutta vahvistamaton yhteys
+
+Mekanistisen validoinnin ensimmainen testi (kayttajan oma prioriteetti:
+NAO -> tuulikentta -> Ekman -> RAPID_EK, suorin odotettu mekanismi).
+
+**Validointitulos:** NAO-RAPID_EK-vertailu tuotti tahan mennessa
+vahvimman havaitun yhteyden (paras r≈0.41, lag +1 vrk), ja huipun
+sijainti vastaa odotettua fysikaalista mekanismia. Yhteys ei kuitenkaan
+sailynyt tilastollisesti merkitsevana 61 viiveen Benjamini-Hochberg-
+korjauksen jalkeen (q≈0.078). Tulos luokitellaan lupaavaksi mutta
+viela vahvistamattomaksi, ja se ansaitsee jatkotutkimuksia pidemmilla
+aikasarjoilla tai ennalta maaritellyilla viivehypoteeseilla.
+
+**Perustelut (kayttajan omat, kirjattu tarkasti):**
+- Kohtalainen korrelaatio (r≈0.41) on selvasti suurempi kuin aiemmissa
+  hylatyissa vertailuissa (SLA-UMO, SLA-NAO, NAO-MOC, GMB-MOC)
+- Huippu sijaitsee lagilla +1 vrk, EI hakualueen reunalla (toisin kuin
+  SLA-testeissa) - paremmin linjassa odotetun mekanismin kanssa
+- Yksittainen testi (lag=0, p=0.004) on merkitseva, mutta 61 viiveen
+  monivertailukorjauksen jalkeen tulos ei ylita ennalta asetettua
+  kynnysta
+- BH q≈0.078 on lahella, mutta EI ALLE, 0.05:ta
+
+**Tarkea metodologinen huomio kayttajalta, kirjattu suoraan:** jos
+tulevissa analyyseissa paatetaan ENNALTA (ennen datan katsomista) etta
+testataan vain esim. viiveet -3...+3 vrk (koska fysiikka antaa siihen
+perusteen), kyse ei enaa ole 61 vaihtoehdon jalkikateisesta seulonnasta.
+Talloin tilastollinen asetelma muuttuu ja naytto voitaisiin arvioida
+eri tavalla (vahemman ankaralla monivertailukorjauksella, koska
+hypoteesi olisi ennalta rajattu, ei jalkikateen valittu parhaan
+tuloksen perusteella).
+
+## KOLMILUOKKAINEN VALIDOINTIKEHYS (kayttajan oma ehdotus, korvaa binaarisen hyvaksytty/hylatty)
+
+Kayttajan oma, tarkeampi jaottelu: pelkka "hylatty/hyvaksytty" ei
+riita kuvaamaan tuloksia tarkasti. Kolme luokkaa:
+
+1. **Validoitu yhteys** - nayttö on vahva ja lapaisee ennalta
+   maaritellyt kriteerit (nyt: vain SST-RAPID_MOC)
+2. **Lupaava mutta vahvistamaton yhteys** - fysikaalisesti uskottava
+   ja datassa nakyva signaali, mutta naytto ei viela tayta asetettua
+   tilastollista kynnysta (nyt: NAO-RAPID_EK)
+3. **Ei nayttoa yhteydesta** - aineisto ei tue hypoteesia talla
+   analyysilla (nyt: SLA-UMO, SLA-NAO, NAO-MOC, GMB-MOC)
+
+**Tarkea kielenkaytollinen huomio kayttajalta:** valtetaan ilmaisua
+"melkein merkitseva" - tilastollisesti tulos on joko asetetun
+kriteerin mukaan merkitseva tai ei ole. Sen sijaan kuvataan naytto
+asteittain (kolme luokkaa ylla).
+
+### Paivitetty tilannekatsaus kaikista tuloksista
+
+| Pari | Paras r | Lag | BH q (huipulla) | Luokka |
+|---|---|---|---|---|
+| SLA ↔ RAPID_UMO | 0.359 | -30 (reunalla) | ~1.0 | Ei nayttoa |
+| SLA ↔ NAO | 0.286 | +12 | ~1.0 | Ei nayttoa |
+| NAO ↔ RAPID_MOC | -0.252 | -16 | ~0.94 | Ei nayttoa |
+| GMB ↔ RAPID_MOC | -0.254 | -27 | ~0.61 | Ei nayttoa |
+| **NAO ↔ RAPID_EK** | **0.415** | **+1** | **~0.078** | **Lupaava, vahvistamaton** |
+| **SST ↔ RAPID_MOC** | **0.525** | **-11** | **<0.05 (21/61)** | **Validoitu** |
+
+**Jatkoaskel merkitty:** ennalta rajattu viivehypoteesi (esim. vain
+-3...+3 vrk NAO-EK:lle, perustuen tunnettuun tuulipakotteen nopeuteen)
+voisi antaa tilastollisesti vahvemman testin kuin nykyinen 61 viiveen
+jalkikateinen seulonta - ei viela toteutettu.
