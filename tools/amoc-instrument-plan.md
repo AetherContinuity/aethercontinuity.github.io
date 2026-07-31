@@ -868,8 +868,10 @@ tuloksen perusteella).
 Kayttajan oma, tarkeampi jaottelu: pelkka "hylatty/hyvaksytty" ei
 riita kuvaamaan tuloksia tarkasti. Kolme luokkaa:
 
-1. **Validoitu yhteys** - nayttö on vahva ja lapaisee ennalta
-   maaritellyt kriteerit (nyt: vain SST-RAPID_MOC)
+1. **Validoitu tassa aineistossa** - nayttö on vahva ja lapaisee
+   ennalta maaritellyt kriteerit TASSA nimenomaisessa datassa; EI
+   sama asia kuin lopullisesti vahvistettu luonnonilmio (nyt: vain
+   SST-RAPID_MOC)
 2. **Lupaava mutta vahvistamaton yhteys** - fysikaalisesti uskottava
    ja datassa nakyva signaali, mutta naytto ei viela tayta asetettua
    tilastollista kynnysta (nyt: NAO-RAPID_EK)
@@ -881,6 +883,14 @@ riita kuvaamaan tuloksia tarkasti. Kolme luokkaa:
 kriteerin mukaan merkitseva tai ei ole. Sen sijaan kuvataan naytto
 asteittain (kolme luokkaa ylla).
 
+**PAIVITYS 2026-07-31:** "Validoitu"-luokan nimi tarkennettu muotoon
+"Validoitu tassa aineistossa" kayttajan huomiosta - pelkka "Validoitu"
+voisi tulkita liian yleispateva vaitteeksi, vaikka rinnalla oleva teksti
+jo mainitsee etta 11 vrk:n viive poikkeaa kirjallisuudesta, RAPID
+paattyy maalis 2024:aan, ja lisavalidointia tarvitaan. Nama kolme
+seikkaa yhdessa viittaavat vahvaan mutta ei viela lopullisesti
+vahvistettuun loydokseen.
+
 ### Paivitetty tilannekatsaus kaikista tuloksista
 
 | Pari | Paras r | Lag | BH q (huipulla) | Luokka |
@@ -890,7 +900,7 @@ asteittain (kolme luokkaa ylla).
 | NAO ↔ RAPID_MOC | -0.252 | -16 | ~0.94 | Ei nayttoa |
 | GMB ↔ RAPID_MOC | -0.254 | -27 | ~0.61 | Ei nayttoa |
 | **NAO ↔ RAPID_EK** | **0.415** | **+1** | **~0.078** | **Lupaava, vahvistamaton** |
-| **SST ↔ RAPID_MOC** | **0.525** | **-11** | **<0.05 (21/61)** | **Validoitu** |
+| **SST ↔ RAPID_MOC** | **0.525** | **-11** | **<0.05 (21/61)** | **Validoitu tassa aineistossa** |
 
 **Jatkoaskel merkitty:** ennalta rajattu viivehypoteesi (esim. vain
 -3...+3 vrk NAO-EK:lle, perustuen tunnettuun tuulipakotteen nopeuteen)
