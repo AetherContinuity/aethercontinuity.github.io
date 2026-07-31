@@ -989,3 +989,42 @@ jotain validoiduksi ilman etta vaihe 3 on aidosti tapahtunut.
 on metodologisesti vahva, koska dokumentaatio kertoo avoimesti myos
 siita, mita instrumentti ei viela tieda. Juuri se lisaa sen
 uskottavuutta."*
+
+## VERTAILU AIEMPAAN KIRJALLISUUTEEN (2026-07-31)
+
+Kayttajan oma ehdotus: verrataan omia tuloksia julkaistuun tutkimukseen
+samoista yhteyksista. Tama on kirjattu tarkoituksella varovaisesti -
+ei "vahvistettu" vaan asteittain, samaan tapaan kuin kolmiluokkainen
+validointikehys yleisemminkin.
+
+**NAO ↔ RAPID Ekman (EK).** Oma analyysi loysi voimakkaimman yhteyden
+noin +1 vuorokauden viiveella. Tama on linjassa julkaistun kirjallisuuden
+kanssa, jossa NAO:n tuulipakotteen on osoitettu vaikuttavan Ekman-
+kuljetukseen nopeasti, paivien aikaskaalassa. Moat ym. (2016) kuvaavat
+26.5°N RAPID-havaintojen perusteella juuri tallaisen nopean tuulivasteen
+(5 vrk aikaskaala), ja Khatri ym. (2022) erottavat nopean Ekman-
+valitteisen vasteen hitaasta, useiden vuosien mittaisesta AMOC-
+vasteesta. Tama tukee sita, etta lyhyen aikavalin analyysissa juuri
+EK-komponentista voidaan odottaa loytyvan yhteys, kun taas koko MOC:n
+muutokset eivat viela nay. **Luokitus: yhteensopiva julkaistun
+kirjallisuuden kanssa.**
+
+**SST ↔ RAPID MOC.** Oma analyysi tuotti voimakkaimman yhteyden noin
+11 vuorokauden viiveella. Julkaistussa kirjallisuudessa vastaavia
+yhteyksia on raportoitu tyypillisesti noin kuukauden tai useiden
+kuukausien aikaskaaloilla (esim. Yan ym. 2015: 1 kk johtava SST,
+SST-SLP-vaihekovarianssi 4-11 kk:n aikaskaaloilla). Taman vuoksi oma
+tulos on toistaiseksi kirjallisuuden kanssa vain OSITTAIN yhtenevä:
+yhteyden olemassaolo on johdonmukainen, mutta havaittu viive on
+selvasti lyhyempi kuin useimmissa aiemmissa tutkimuksissa. Syy voi
+liittya aineistojen eroihin, aluevalintaan, suodatukseen, tai siihen
+etta lyhytaikainen ja pidempiaikainen SST-vaihtelu kuvaavat osittain
+eri fysikaalisia prosesseja. Yksi tukeva yksityiskohta: sama
+kirjallisuus (Yan ym. 2015) toteaa korrelaation olevan vahvin
+nimenomaan UMO-komponentin kanssa - tasmalleen se suure jota oma
+SLA-gradienttimme yritti (epaonnistuneesti) approksimoida aiemmin.
+**Luokitus: osittain yhteensopiva kirjallisuuden kanssa; havaittu
+viive poikkeaa aiemmista tutkimuksista ja vaatii lisavalidointia.**
+Taman vuoksi tulosta ei pideta viela lopullisesti validoituna, vaan
+se edellyttaa riippumatonta vahvistusta uudemmalla RAPID-aineistolla
+tai toisella havaintosarjalla.
