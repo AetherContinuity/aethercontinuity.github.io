@@ -590,3 +590,44 @@ instrumentissa saattaa olla systemaattisesti liian optimistinen
 autokorrelaation vuoksi - juuri se ongelma jonka Neff-korjaus oli
 tarkoitettu estamaan, mutta joka ehti vaikuttaa tulkintaan ennen
 korjauksen lisaamista.
+
+## PARANNUKSET 2026-07-31 — tekniset huomiot /compare-moottoriin
+
+Kayttaja antoi Python/FastAPI-referenssitoteutuksen ja viisi teknista
+parannusehdotusta. Koodi itsessaan ei ole suoraan kaytettavissa (oma
+pinomme on JS/Cloudflare Workers), mutta menetelmat siirrettiin
+suoraan. Kolme toteutettu heti, kaksi merkitty jatkoa varten.
+
+**Toteutettu:**
+
+1. **Taysi ACF-pohjainen Neff** (Pyper & Peterman 1998, alkuperainen
+   menetelma) korvasi aiemman lag-1-approksimaation:
+   `Neff = N/(1+2*sum_{k=1}^{m} rho_x(k)*rho_y(k))`, katkaisuraja
+   m=min(N/5,30). Testattu paikallisesti seka erillisella skriptilla
+   etta suoraan tiedostosta poimitulla koodilla (AR(1)-data, N=300,
+   antoi Neff=73.1).
+
+2. **Metadata-objekti** (SERIES_METADATA-rekisteri): jokaiselle
+   sarjalle lahde+yksikko palautetaan vastauksen `metadata`-kentassa.
+
+3. **Monivertailuhuomautus:** `lag_spectrum.n_lags_tested` + oma
+   huomautus etta paras lag on valittu N testatusta viiveesta EIKA
+   ole viela korjattu monivertailulle - tama on TUNNISTETTU mutta
+   EI VIELA KORJATTU rajoite.
+
+**Ei viela toteutettu (kayttajan omat ehdotukset, jatkoa varten):**
+
+- Luottamusrajat (95%) lag-spektrille - auttaisi arvioimaan onko
+  esim. +12 vrk:n huippu aidosti erottuva vai kohinaa
+- Taysi Benjamini-Hochberg (FDR) -korjaus 61 samanaikaiselle testille
+  (nyt vain huomautus, ei varsinaista korjausta)
+- TimeSeries-luokka-abstraktio (Pythonissa hyodyllisempi rakenteellinen
+  parannus; JS:n oma provider-funktio + metadata-rekisteri -yhdistelma
+  saavuttaa suurelta osin saman hyodyn ilman luokkia)
+
+**Kayttajan oma arviointi arkkitehtuurista, kirjattu suoraan:**
+*"Tama alkaa nayttaa jo paljon enemman ACI:n yhteiselta analyysi-
+moottorilta kuin yksittaiselta AMOC-apiohjelmalta... uusi instrumentti
+tarkoittaa kaytannossa vain uuden fetch_*()-funktion lisaamista, kun
+taas kaikki tilastollinen analyysi... voidaan kayttaa sellaisenaan
+uudelleen."*
