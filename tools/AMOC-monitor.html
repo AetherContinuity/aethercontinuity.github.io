@@ -207,6 +207,51 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </p>
   </div>
 
+  <div class="shdr"><span class="snum">§ 01c</span><span class="stit">Suoran validoinnin tulostaulukko</span></div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p style="font-size:.82rem;margin-bottom:.8rem;">
+      Kaikki tähän mennessä testatut parit <code>/compare</code>-työkalulla, RAPID:n oikeaa dataa vasten
+      (2004–2024). "Suora validointi" kysyy vain: näkyykö yhteys datassa — ei ota kantaa fysikaaliseen
+      mekanismiin.
+    </p>
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+      <tr style="border-bottom:1px solid var(--rule)">
+        <th style="text-align:left;padding:5px 6px">Pari</th>
+        <th style="text-align:right;padding:5px 6px">Paras r</th>
+        <th style="text-align:right;padding:5px 6px">Paras lag</th>
+        <th style="text-align:right;padding:5px 6px">BH-merkitseviä</th>
+        <th style="text-align:left;padding:5px 6px">Tulos</th>
+      </tr>
+      <tr><td style="padding:5px 6px">SLA ↔ RAPID_UMO</td><td style="text-align:right;padding:5px 6px">0,359</td><td style="text-align:right;padding:5px 6px">−30 (reunalla)</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
+      <tr><td style="padding:5px 6px">SLA ↔ NAO</td><td style="text-align:right;padding:5px 6px">0,286</td><td style="text-align:right;padding:5px 6px">+12</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
+      <tr><td style="padding:5px 6px">NAO ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">—</td><td style="text-align:right;padding:5px 6px">−16</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
+      <tr><td style="padding:5px 6px">GMB ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,254</td><td style="text-align:right;padding:5px 6px">−27</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
+      <tr style="background:var(--bg-g)"><td style="padding:5px 6px"><strong>SST ↔ RAPID_MOC</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,525</strong></td><td style="text-align:right;padding:5px 6px"><strong>−11</strong></td><td style="text-align:right;padding:5px 6px"><strong>21/61</strong></td><td style="padding:5px 6px;color:var(--sg)"><strong>Hyväksytty</strong></td></tr>
+    </table>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.7rem;margin-bottom:0;">
+      Neljä hylättyä, yksi hyväksytty. Tämä suhde on terveellinen — useimmat intuitiiviset
+      proksihypoteesit eivät kestä huolellista tilastollista testausta, ja juuri niin pitäisi
+      olla järjestelmässä joka aidosti falsifioi, ei vain etsi vahvistusta.
+    </p>
+  </div>
+
+  <div class="shdr"><span class="snum">§ 01d</span><span class="stit">SST ↔ RAPID: lag-spektri (ainoa hyväksytty pari)</span></div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p style="font-size:.82rem;margin-bottom:.6rem;">
+      Pearsonin r jokaiselle testatulle viiveelle (−30…+30 vrk). Vihreä alue = BH-korjauksen
+      jälkeen tilastollisesti merkitsevä. Negatiivinen lag tarkoittaa: SST edeltää RAPID:n
+      MOC-arvoa.
+    </p>
+    <div id="lagChartContainer" style="min-height:180px;display:flex;align-items:center;justify-content:center;">
+      <span id="lagChartStatus" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">Ladataan lag-spektriä…</span>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.6rem;margin-bottom:0;">
+      Huippu lag=−11:llä (r≈0,525) — pintalämpötilan poikkeama edeltäisi AMOC-muutosta
+      noin 11 vuorokaudella, fysikaalisesti mielekäs suunta. 21 peräkkäistä merkitsevää
+      viivettä (ei yksittäinen piikki) tukee aidon signaalin tulkintaa kohinan sijaan.
+    </p>
+  </div>
+
   <div class="shdr"><span class="snum">§ 02</span><span class="stit">Rajaukset</span></div>
   <p class="snote">
     Tämä on ensimmäinen, tarkoituksella yksinkertainen versio — neljä itsenäistä korttia,
@@ -295,14 +340,73 @@ async function fetchGreenland() {
   }
 }
 
+async function fetchLagSpectrum() {
+  const statusEl = document.getElementById('lagChartStatus');
+  const containerEl = document.getElementById('lagChartContainer');
+  try {
+    const r = await fetch(`${PROXY}/compare?series_a=sst&series_b=rapid_moc&date=2024-03-22&days=365`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    const scan = d.lag_spectrum.full_scan; // [{lag, r, n, p_value, bh_q_value}, ...]
+    const sigLags = new Set(d.fdr_correction.significant_lags);
+    const peakLag = d.lag_spectrum.peak_at_lag;
+
+    const w = 640, h = 180, padL = 34, padR = 10, padT = 10, padB = 24;
+    const plotW = w - padL - padR, plotH = h - padT - padB;
+    const minLag = Math.min(...scan.map(p => p.lag)), maxLag = Math.max(...scan.map(p => p.lag));
+    const rVals = scan.map(p => p.r);
+    const yMin = Math.min(-0.3, Math.min(...rVals)), yMax = Math.max(0.3, Math.max(...rVals));
+
+    const xOf = (lag) => padL + (lag - minLag) / (maxLag - minLag) * plotW;
+    const yOf = (rv) => padT + (1 - (rv - yMin) / (yMax - yMin)) * plotH;
+    const yZero = yOf(0);
+
+    let significantRects = '';
+    let inRun = false, runStart = null;
+    scan.forEach((p, i) => {
+      const isSig = sigLags.has(p.lag);
+      if (isSig && !inRun) { runStart = p.lag; inRun = true; }
+      if ((!isSig || i === scan.length - 1) && inRun) {
+        const runEnd = isSig ? p.lag : scan[i-1].lag;
+        significantRects += `<rect x="${xOf(runStart) - 3}" y="${padT}" width="${xOf(runEnd) - xOf(runStart) + 6}" height="${plotH}" fill="var(--bg-g)" opacity="0.7"/>`;
+        inRun = false;
+      }
+    });
+
+    const pathD = scan.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xOf(p.lag).toFixed(1)} ${yOf(p.r).toFixed(1)}`).join(' ');
+    const peakPoint = scan.find(p => p.lag === peakLag);
+
+    const svg = `
+      <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;max-width:640px;">
+        ${significantRects}
+        <line x1="${padL}" y1="${yZero}" x2="${w-padR}" y2="${yZero}" stroke="var(--rule)" stroke-width="1"/>
+        <line x1="${xOf(0)}" y1="${padT}" x2="${xOf(0)}" y2="${h-padB}" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2,2"/>
+        <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+        <circle cx="${xOf(peakLag)}" cy="${yOf(peakPoint.r)}" r="3.5" fill="var(--sg)"/>
+        <text x="${xOf(peakLag)}" y="${yOf(peakPoint.r) - 8}" font-family="var(--mono)" font-size="9" fill="var(--sg)" text-anchor="middle">lag=${peakLag}, r=${peakPoint.r.toFixed(3)}</text>
+        <text x="${padL}" y="${h-6}" font-family="var(--mono)" font-size="8" fill="var(--muted)">${minLag}</text>
+        <text x="${xOf(0)}" y="${h-6}" font-family="var(--mono)" font-size="8" fill="var(--muted)" text-anchor="middle">0 vrk</text>
+        <text x="${w-padR}" y="${h-6}" font-family="var(--mono)" font-size="8" fill="var(--muted)" text-anchor="end">+${maxLag}</text>
+        <text x="${padL-4}" y="${yOf(yMax)+3}" font-family="var(--mono)" font-size="8" fill="var(--muted)" text-anchor="end">${yMax.toFixed(1)}</text>
+        <text x="${padL-4}" y="${yZero+3}" font-family="var(--mono)" font-size="8" fill="var(--muted)" text-anchor="end">0</text>
+        <text x="${padL-4}" y="${yOf(yMin)+3}" font-family="var(--mono)" font-size="8" fill="var(--muted)" text-anchor="end">${yMin.toFixed(1)}</text>
+      </svg>
+    `;
+    containerEl.innerHTML = svg;
+  } catch (e) {
+    statusEl.textContent = `Lag-spektrin lataus epäonnistui: ${e.message}`;
+  }
+}
+
 async function loadAll() {
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
   dot.className = 'status-dot loading';
   text.textContent = 'Ladataan neljää lähdettä…';
 
-  const results = await Promise.all([fetchRapid(), fetchSLA(), fetchSST(), fetchGreenland()]);
-  const okCount = results.filter(Boolean).length;
+  const results = await Promise.all([fetchRapid(), fetchSLA(), fetchSST(), fetchGreenland(), fetchLagSpectrum()]);
+  const okCount = results.slice(0, 4).filter(Boolean).length;
 
   if (okCount === 4) {
     dot.className = 'status-dot live';
