@@ -123,10 +123,10 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </p>
     <p style="font-size:.85rem;margin-bottom:.7rem;">
       <strong>Itä–länsi-korkeusero:</strong> karkea, kokeellinen approksimaatio RAPID:n omasta
-      menetelmästä. <em>Suora validointitesti (31.7.2026, ks. §01b) osoitti ettei tämä korreloi
-      tilastollisesti merkitsevästi RAPID:n oman UMO-arvon kanssa</em> — ei millään testatulla
-      viiveellä, täydellä monivertailukorjauksella tarkistettuna. Näytetään yhä vertailun vuoksi,
-      mutta EI toimi luotettavana AMOC-korvikkeena.
+      menetelmästä. <em>Suora validointitesti (31.7.2026, ks. §01b): ei havaittu tilastollisesti
+      merkitsevää korrelaatiota RAPID:n UMO-komponentin kanssa testatussa aineistossa</em> — ei
+      millään testatulla viiveellä, täydellä monivertailukorjauksella tarkistettuna. Näytetään
+      yhä vertailun vuoksi, mutta ei validoitunut luotettavaksi AMOC-proksiksi tässä testissä.
     </p>
     <p style="font-size:.85rem;margin-bottom:.7rem;">
       <strong>SST-anomalia:</strong> etsii subpolaarista "kylmää läiskää" — yhtä tunnetuista
@@ -150,10 +150,10 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </div>
 
     <div class="card" id="cardSLA">
-      <div class="card-title">Itä–länsi-korkeuseron anomalia (ei toimi luotettavana AMOC-korvikkeena — ks. §01b)</div>
+      <div class="card-title">Itä–länsi-korkeuseron anomalia (ei validoitunut AMOC-proksiksi — ks. §01b)</div>
       <div class="card-value" id="slaValue">—</div>
       <div class="card-sub" id="slaSub">Ladataan…</div>
-      <div class="card-huom">NOAA ERDDAP, 26.5°N: länsipiste ~75°W, itäpiste ~15°W. Karkea approksimaatio RAPID:n omasta menetelmästä. <strong>Lopullinen validointitesti (31.7.2026):</strong> ei tilastollisesti merkitsevää korrelaatiota RAPID:n oman UMO-arvon kanssa millään testatulla viiveellä, täydellä monivertailukorjauksella (Benjamini-Hochberg) tarkistettuna. Matkalla löydettiin myös ettei signaalilla ole kiinteää kausisykliä, vaan sitä hallitsee vuosienvälinen (Rossby-aalto-) vaihtelu. Näytetty arvo on informatiivinen, ei validoitu AMOC-indikaattori.</div>
+      <div class="card-huom">NOAA ERDDAP, 26.5°N: länsipiste ~75°W, itäpiste ~15°W. Karkea approksimaatio RAPID:n omasta menetelmästä. <strong>Lopullinen validointitesti (31.7.2026):</strong> ei havaittu tilastollisesti merkitsevää korrelaatiota RAPID:n UMO-komponentin kanssa testatussa aineistossa, millään testatulla viiveellä, täydellä monivertailukorjauksella (Benjamini-Hochberg) tarkistettuna. Matkalla löydettiin myös ettei signaalilla ole kiinteää kausisykliä, vaan sitä hallitsee vuosienvälinen (Rossby-aalto-) vaihtelu. Näytetty arvo on informatiivinen, ei validoitunut luotettavaksi AMOC-proksiksi tässä testissä.</div>
     </div>
 
     <div class="card" id="cardSST">
@@ -194,11 +194,16 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       yli tavallisen kynnyksen ilman mitään korjaustakaan.
     </p>
     <p style="font-size:.8rem;color:var(--muted);margin-bottom:0;">
-      Johtopäätös: oma karkea kahden pisteen SLA-approksimaatio ei ole tilastollisesti
-      perusteltu RAPID-korvike. Testi ja koko menetelmä (Pearson, Spearman, effective N,
-      lag-spektri, FDR-korjaus) on toistettavissa kenelle tahansa sarjaparille
+      Johtopäätös: oma karkea kahden pisteen SLA-approksimaatio ei validoitunut tilastollisesti
+      luotettavaksi RAPID-proksiksi tässä testissä. Testi ja koko menetelmä (Pearson, Spearman,
+      effective N, lag-spektri, FDR-korjaus) on toistettavissa kenelle tahansa sarjaparille
       <a href="https://aci-amoc-proxy.ruotsalainen-marko.workers.dev/status">yleisen vertailutyökalun</a>
       kautta. Täysi tulos ja menetelmän kehityshistoria: <a href="https://aethercontinuity.org/tools/amoc-instrument-plan.md">amoc-instrument-plan.md</a>.
+    </p>
+    <p style="font-size:.78rem;color:var(--muted);font-style:italic;margin-top:.6rem;margin-bottom:0;border-top:1px solid var(--rule);padding-top:.6rem;">
+      Negatiivinen validointitulos on pysyvä osa instrumentin dokumentaatiota. Proksia ei
+      poisteta näkyvistä, vaan se säilytetään esimerkkinä testatusta mutta validoitumattomasta
+      indikaattorista.
     </p>
   </div>
 
@@ -208,8 +213,8 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     ei yhdistelmäindeksiä. RAPID-kortti näyttää yhä vain viitetilastot (ei live-arvoa) —
     virallinen data ei ole päivittynyt maaliskuun 2024 jälkeen. Grönlanti-kortti mittaa
     eri suuretta (pintamassatase) kuin alun perin tavoiteltu GRACE-kokonaismassatase, koska
-    PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Itä–länsi-gradientti on osoitettu
-    (§01b) tilastollisesti epäluotettavaksi AMOC-korvikkeeksi — säilytetty näytöllä
+    PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Itä–länsi-gradientti ei validoitunut
+    (§01b) luotettavaksi AMOC-proksiksi tässä validointitestissä — säilytetty näytöllä
     läpinäkyvyyden ja opetusarvon vuoksi, ei koska sitä suositellaan tulkittavaksi
     AMOC-signaalina. Nämä rajaukset on dokumentoitu täydellisesti suunnitelmadokumentissa.
   </p>
