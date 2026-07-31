@@ -669,3 +669,47 @@ todennakoisesti samaa pientä luokkaa (~20-30) kuin SLA-vs-NAO-testissa
 - mika tekisi aiemmasta "merkitsevasta" r=0.339-loydoksesta todennakoisesti
 EI-merkitsevan Neff-korjatulla p-arvolla. Tama testi on viela ajamatta -
 seuraava luonnollinen askel.
+
+## TESTI AJETTU 2026-07-31 — SLA vs RAPID_UMO, lopullinen tulos
+
+Testi ajettiin: `series_a=sla&series_b=rapid_umo&date=2024-03-22&days=365`.
+
+**Tulos:** lag=0: r=-0.013 (kaytannossa nolla). "Paras" lag=-30 (HUOM:
+osui haun AARIREUNAAN, ei aitoon sisaiseen huippuun - metodologinen
+varoitus, ei aito loydos): r=0.359, p=0.070 - EI merkitseva talla-
+kaan. Effective N=24.2, sama pieni luokka kuin SLA-vs-NAO-testissa.
+
+### Taysi Benjamini-Hochberg FDR-korjaus toteutettu ja ajettu
+
+Kayttajan oma ehdotus: koska 61 viivetta testataan samanaikaisesti,
+"paras loydetty r" on altis satunnaiselle ylikorostumiselle. BH-menetelma
+(1995) toteutettiin taydellisesti.
+
+**VAKAVA BUGI LOYTYI JA KORJATTU ENNEN JULKAISUA:** alkuperainen
+toteutus kaytti `array.slice(0, maxSignificantRank)` jossa arvo saattoi
+olla -1 - mutta JS:ssa `slice(0,-1)` tarkoittaa "kaikki paitsi viimeinen",
+EI tyhjaa taulukkoa. Tama olisi tuottanut vaaria positiivisia lahes
+kaikissa "ei mitaan merkitseva" -tapauksissa. Loytyi ja korjattiin
+paikallisella testauksella (BH:n oma 1995-paperin klassinen esimerkki +
+kaksi synteettista aariitapausta) ennen kuin virhe paatyi tuotantoon.
+
+**BH-korjauksen lopputulos SLA-vs-RAPID_UMO-datalla: 0/61 viivetta
+merkitseva.** Pienin yksittainen p-arvo koko spektrissa oli 0.070 -
+jo yli tavallisen 0.05-kynnyksen ilman mitaan korjaustakaan, joten BH
+(joka on vielapa tiukempi) ei tietenkaan loytanyt mitaan.
+
+### LOPULLINEN JOHTOPAATOS koko validointiketjulle
+
+Oma karkea kahden pisteen SLA-gradienttiapproksimaatio EI ole
+tilastollisesti perusteltu korvike RAPID:n omalle UMO-mittaukselle,
+millaan testatulla viiveella, taydella FDR-korjauksella tarkistettuna.
+Alkuperainen, innostunut r=0.339-loydos (raaka N, ennen Neff:ia)
+osoittautui lopulta paikkansapitamattomaksi kun samaa kysymysta
+testattiin oikealla menetelmalla ja toisen vuoden datalla.
+
+**Tama on hyva, rehellinen paatepiste taman spesifin validointi-
+kysymyksen kohdalla.** AMOC-instrumentin muut kolme korttia (SST,
+Gronlanti-SMB, RAPID-viitetilastot) pysyvat validina, itsenaisina
+indikaattoreina - vain SLA-gradientin rooli "karkeana RAPID-
+approksimaationa" on nyt kumottu tilastollisesti perustellusti, ei
+vain epailty.
