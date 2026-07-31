@@ -896,3 +896,50 @@ asteittain (kolme luokkaa ylla).
 -3...+3 vrk NAO-EK:lle, perustuen tunnettuun tuulipakotteen nopeuteen)
 voisi antaa tilastollisesti vahvemman testin kuin nykyinen 61 viiveen
 jalkikateinen seulonta - ei viela toteutettu.
+
+## TULOS 2026-07-31 — NAO-RAPID_EK kapealla ikkunalla (±3 vrk), tarkka metodologinen kirjaus
+
+Testattiin suppealla, fysiikkaan perustuvalla ikkunalla (maxLag=3):
+6/7 viivetta pysyi merkitsevana BH-korjauksen jalkeen (kaikki paitsi
+-3, q=0.060). Itse korrelaatioarvot eivat muuttuneet (r~0.40-0.42) -
+vain tilastollinen viitekehys (7 testia 61:n sijaan) muuttui.
+
+**Kayttajan oma, tarkka metodologinen kirjaus (sanatarkasti):**
+
+*"NAO ↔ RAPID_EK: Alkuperainen laaja viiveskannaus (-30...+30 vrk)
+tunnisti korrelaatiohuipun noin +1 vrk:n kohdalla, mutta tulos ei
+sailynyt merkitsevana koko 61 viiveen monivertailukorjauksen jalkeen.
+Taman jalkeen tehtiin fysiikkaan perustuva tarkastelu suppeassa ±3
+vrk:n ikkunassa, joka vastaa odotettua Ekman-vasteen aikaskaalaa.
+Tassa rajatussa analyysissa useat viiveet olivat merkitsevia. Koska
+suppea ikkuna maariteltiin vasta alkuperaisen laajan analyysin
+jalkeen, tulosta pidetaan hypoteesia tukevana mutta riippumattomassa
+aineistossa vahvistettavana, ei lopullisena validointina."*
+
+**Tarkea kielenkaytollinen huomio:** ei kayteta ilmaisua "osittain
+tuettu" - se voisi antaa vaikutelman etta naytto on vahvempi kuin se
+tilastollisesti on. Sen sijaan kuvataan tarkasti mita tehtiin: kaksi
+erillista, peratysta vaihetta jotka EI PIDA sekoittaa:
+
+1. **Eksploratiivinen analyysi** (61 viivetta) - hypoteesin muodostaminen
+2. **Hypoteesia tukeva kohdennettu analyysi** (±3 vrk) - lisanaytto,
+   mutta ei viela riippumaton vahvistus
+
+**Seuraava askel eksplisiittisesti kirjattu:** testata sama ±3 vrk:n
+hypoteesi UUDELLA aineistolla tai myohemmin kertyvalla datalla,
+jolloin analyysi olisi aidosti ennalta maaritelty (ei jalkikateen
+kapennettu nyt kaytetysta samasta datasta).
+
+**Kayttajan oma kokoava huomio:** *"Sen sijaan etta 'pelastettaisiin'
+tulos muuttamalla analyysia huomaamatta, dokumentoidaan avoimesti,
+miksi suppea analyysi tehtiin ja miten se vaikuttaa tulkintaan. Se
+tekee johtopaatoksesta uskottavamman, vaikka se onkin varovaisempi."*
+
+### Paivitetty luokitus NAO-RAPID_EK:lle
+
+Ei enaa pelkkaa "lupaava, vahvistamaton" vaan tarkempi kuvaus: hypoteesia
+tukeva tulos KAHDESSA PERAKKAISESSA analyysivaiheessa (eksploratiivinen
++ kohdennettu), mutta viela ilman riippumatonta, aidosti ennalta
+maariteltya vahvistusta uudella datalla. Ei nostettu "Validoitu"-
+luokkaan SST:n rinnalle, koska metodologinen ero (jalkikateen
+kapennettu ikkuna vs. aidosti ennalta maaritelty) on aito ja tarkea.
