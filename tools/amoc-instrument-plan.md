@@ -427,3 +427,82 @@ ettei "yksinkertaista ensin" tarkoita "oletukset ovat aina oikeita
 ensin" - se tarkoittaa etta virheelliset oletukset paljastuvat
 nopeammin ja halvemmalla kun rakennetaan pienesta alkaen, ei
 paallikoita monimutkaisen yhdistelmaindeksin taakse.
+
+## MERKITTAVA KEHITYS 2026-07-31 — kayttaja lataisi oikean RAPID-datan + suora validointi
+
+Kayttaja rekisteroityi itse rapid.ac.uk:hon ja latasi todellisen
+`moc_transports.nc`-tiedoston (NetCDF/HDF5, v2024.1a, DOI 10.5285/
+48d0bf43-0598-ceb2-e063-7086abc062f1) suoraan aci-repo:on
+(`tools/moc_transports.nc`). Tama ratkaisee lopullisesti sen alusta
+asti tunnistetun aukon (RAPID:n oma datatiedosto ei ollut viela
+loydetty/parsittu).
+
+**Tiedoston sisalto (parsittu netCDF4-kirjastolla):** 14 599 pistetta,
+12h resoluutio, 2.4.2004 - 22.3.2024 (viimeinen kelvollinen paiva,
+20 puuttuvaa pistetta lopussa). Sisaltaa KAIKKI komponentit: Florida-
+salmi (Golfvirta), Ekman, ylakeskiokeaanin kuljetus (UMO - tasmalleen
+se suure jota oma SLA-gradienttimme approksimoi), syvat kerrokset,
+ja taydellinen MOC. Kokonaistilastot (ka 16.98 Sv MOC) tasmaavat
+hyvin aiemmin RAPID:n omalta nettisivulta loydettyihin (17.1 Sv) -
+hyva ristiinvalidointi.
+
+### Suora validointitesti — oma approksimaatio vs. oikea data
+
+Tama mahdollisti jotain arvokkainta koko projektissa: VERRATA omaa
+karkeaa ita-lansi-SLA-gradienttiamme OIKEAAN RAPID UMO/MOC-arvoon
+samoilta paivilta (2020-2021-ajalta, jolta meilla oli jo gradienttidataa).
+
+**Ensimmainen otos (27 pistetta, kasin poimittu):** r=0.056 (UMO),
+r=0.014 (MOC) - kaytannossa NOLLA korrelaatio.
+
+**Koko sarja (365 pistetta):** r=0.177 (UMO), r=0.120 (MOC) - heikko
+mutta ei enaa olematon. Osoittaa etta pieni otos oli harhaanjohtava.
+
+**Viivekorrelaatio (lag -20...+20 vrk):** loysi selvan parannuksen
+positiivisella viiveella:
+- lag 0: r=0.177
+- lag +5: r=0.277
+- lag +10: r=0.339 (paras)
+- lag +20: r=0.317
+
+Etumerkki sailyi oikeana koko viivealueella (ei kaantynyt), tukien
+etta kyseessa on aito, joskin heikko, signaali - ei pelkkaa kohinaa.
+
+**Fysikaalinen tulkinta:** +10 vrk:n paras viive on linjassa Rossby-
+aaltojen etenemisajan kanssa - lansipisteemme (75W) havaitsee saman
+signaalin ennen kuin se ehtii vaikuttaa RAPID:n koko altaan kattavaan
+UMO-integraaliin.
+
+**Johtopaatos:** oma approksimaatiomme mittaa jotain aidosti, mutta
+HEIKOSTI liittyvaa RAPID:n omaan UMO-signaaliin - ei riittava korvike,
+mutta ei myoskaan taysin merkityksetov. Tama on rehellinen, kohtalainen
+tulos - ei vahva validointi, ei taysi epaonnistuminen.
+
+### Uusi, yleistetty tyokalu: /compare/nao-sla
+
+Kayttajan oma, yksityiskohtainen ehdotus paransi alkuperaista yhden-
+Pearson-luvun NAO-vertailua merkittavasti:
+1. Lag-skannaus -30...+30 vrk (saadettavissa), palauttaa seka lag=0
+   etta parhaan |r|:n loytaneen viiveen
+2. Lapinakyvat pistemaarat (sla_points/nao_points/matched_points)
+   AINA nakyvissa ennen korrelaatiota
+3. P-arvo (normaalijakauma-approksimaatio, tarkka kun n>100)
+
+Kayttajan oma perustelu, kirjattu suoraan: *"ACI:n instrumenttifilosofia
+- hypoteesia ei oleteta oikeaksi, vaan sille rakennetaan oma mitattava
+testi. Jos korrelaatiota ei loydy, sekin on arvokas tulos."*
+
+Kaikki kolme osaa (lag-logiikka, p-arvo, rakenne) testattu paikallisesti
+synteettisella datalla (tunnettu 5 vrk syy-seuraussuhde loytyi
+tasmalleen) ennen julkaisua.
+
+### Seuraavat mahdolliset askeleet (ei viela toteutettu)
+
+- Muuntaa koko moc_transports.nc JSON/CSV-muotoon ja tarjota se omana
+  reittinaan proxyssa (nyt vain paikallisesti analysoitu, ei viela
+  palvelimella)
+- Ajaa /compare/nao-sla suoraan RAPID:n omaa UMO-sarjaa vastaan (ei
+  vain oman gradienttimme), koska nyt meilla on molemmat oikeasti
+  saatavilla samalta ajalta
+- Selvittaa saako RAPID:n tuoreempaa versiota (v2024.1a paattyy maalis
+  2024 - reilut 2 vuotta vanhaa dataa jo nyt)
