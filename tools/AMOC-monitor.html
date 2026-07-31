@@ -212,26 +212,36 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     <p style="font-size:.82rem;margin-bottom:.8rem;">
       Kaikki tähän mennessä testatut parit <code>/compare</code>-työkalulla, RAPID:n oikeaa dataa vasten
       (2004–2024). "Suora validointi" kysyy vain: näkyykö yhteys datassa — ei ota kantaa fysikaaliseen
-      mekanismiin.
+      mekanismiin. Tulokset luokiteltu kolmeen kategoriaan (ei binäärisesti hyväksytty/hylätty) — katso
+      selitys taulukon alla.
     </p>
     <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
       <tr style="border-bottom:1px solid var(--rule)">
         <th style="text-align:left;padding:5px 6px">Pari</th>
         <th style="text-align:right;padding:5px 6px">Paras r</th>
         <th style="text-align:right;padding:5px 6px">Paras lag</th>
-        <th style="text-align:right;padding:5px 6px">BH-merkitseviä</th>
-        <th style="text-align:left;padding:5px 6px">Tulos</th>
+        <th style="text-align:right;padding:5px 6px">BH q (huipulla)</th>
+        <th style="text-align:left;padding:5px 6px">Luokka</th>
       </tr>
-      <tr><td style="padding:5px 6px">SLA ↔ RAPID_UMO</td><td style="text-align:right;padding:5px 6px">0,359</td><td style="text-align:right;padding:5px 6px">−30 (reunalla)</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
-      <tr><td style="padding:5px 6px">SLA ↔ NAO</td><td style="text-align:right;padding:5px 6px">0,286</td><td style="text-align:right;padding:5px 6px">+12</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
-      <tr><td style="padding:5px 6px">NAO ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">—</td><td style="text-align:right;padding:5px 6px">−16</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
-      <tr><td style="padding:5px 6px">GMB ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,254</td><td style="text-align:right;padding:5px 6px">−27</td><td style="text-align:right;padding:5px 6px">0/61</td><td style="padding:5px 6px;color:var(--sr)">Hylätty</td></tr>
-      <tr style="background:var(--bg-g)"><td style="padding:5px 6px"><strong>SST ↔ RAPID_MOC</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,525</strong></td><td style="text-align:right;padding:5px 6px"><strong>−11</strong></td><td style="text-align:right;padding:5px 6px"><strong>21/61</strong></td><td style="padding:5px 6px;color:var(--sg)"><strong>Hyväksytty</strong></td></tr>
+      <tr><td style="padding:5px 6px">SLA ↔ RAPID_UMO</td><td style="text-align:right;padding:5px 6px">0,359</td><td style="text-align:right;padding:5px 6px">−30 (reunalla)</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">SLA ↔ NAO</td><td style="text-align:right;padding:5px 6px">0,286</td><td style="text-align:right;padding:5px 6px">+12</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">NAO ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,252</td><td style="text-align:right;padding:5px 6px">−16</td><td style="text-align:right;padding:5px 6px">~0,94</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">GMB ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,254</td><td style="text-align:right;padding:5px 6px">−27</td><td style="text-align:right;padding:5px 6px">~0,61</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr style="background:var(--bg-y)"><td style="padding:5px 6px"><strong>NAO ↔ RAPID_EK</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,415</strong></td><td style="text-align:right;padding:5px 6px"><strong>+1</strong></td><td style="text-align:right;padding:5px 6px"><strong>~0,078</strong></td><td style="padding:5px 6px;color:var(--sy)"><strong>Lupaava, vahvistamaton</strong></td></tr>
+      <tr style="background:var(--bg-g)"><td style="padding:5px 6px"><strong>SST ↔ RAPID_MOC</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,525</strong></td><td style="text-align:right;padding:5px 6px"><strong>−11</strong></td><td style="text-align:right;padding:5px 6px"><strong>&lt;0,05 (21/61)</strong></td><td style="padding:5px 6px;color:var(--sg)"><strong>Validoitu</strong></td></tr>
     </table>
-    <p style="font-size:.78rem;color:var(--muted);margin-top:.7rem;margin-bottom:0;">
-      Neljä hylättyä, yksi hyväksytty. Tämä suhde on terveellinen — useimmat intuitiiviset
-      proksihypoteesit eivät kestä huolellista tilastollista testausta, ja juuri niin pitäisi
-      olla järjestelmässä joka aidosti falsifioi, ei vain etsi vahvistusta.
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.7rem;margin-bottom:.5rem;">
+      <strong>Kolme luokkaa</strong> (ei "melkein merkitsevä" — tilastollinen tulos on joko asetetun
+      kriteerin mukaan merkitsevä tai ei ole): <strong>Validoitu yhteys</strong> — näyttö vahva, läpäisee
+      ennalta määritellyt kriteerit. <strong>Lupaava mutta vahvistamaton</strong> — fysikaalisesti
+      uskottava ja datassa näkyvä signaali, mutta ei täytä asetettua tilastollista kynnystä.
+      <strong>Ei näyttöä yhteydestä</strong> — aineisto ei tue hypoteesia tällä analyysillä.
+    </p>
+    <p style="font-size:.78rem;color:var(--muted);margin-bottom:0;">
+      Yksi validoitu, yksi lupaava, neljä ilman näyttöä. NAO↔RAPID_EK:n huippu (+1 vrk) on
+      fysikaalisesti mielekäs (ei hakualueen reunalla) — ennalta rajattu viivehypoteesi (esim.
+      vain −3…+3 vrk) voisi antaa tilastollisesti vahvemman testin kuin nykyinen 61 viiveen
+      jälkikäteinen seulonta.
     </p>
   </div>
 
