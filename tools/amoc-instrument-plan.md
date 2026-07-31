@@ -282,3 +282,75 @@ Grönlannille PODAAC:n sijaan).
 6. Vasta tämän jälkeen: ensimmäinen yksinkertainen näyttö, yksi kortti
    per indikaattori (ei vielä yhdistelmäindeksi), samaan tapaan kuin
    WEM:n §11:n kokeelliset kortit
+
+## v0.1 rakennettu ja testattu — havainnot 2026-07-30
+
+Ensimmäinen visuaalinen näyttö (`AMOC-monitor.html`) rakennettu ja
+kaikki neljä korttia toimivat elävällä datalla. Kaksi merkittävää
+löydöstä matkalla:
+
+### 1. Itä-länsi-gradientin suunnitteluvirhe ja korjaus
+
+Käyttäjän (ja hänen harrastelijaystävänsä) fysikaalinen kritiikki:
+yhden pisteen SLA EI VOI tuottaa geostrofista gradienttia (gradientti
+on määritelmällisesti kahden pisteen erotus). Korjattu lisäämällä
+`/sla-gradient` (länsi ~75°W, itä ~15°W, 26.5°N, approksimoi RAPID:n
+omaa länsi+sisäosa+itä-menetelmää karkeasti) ja `/sla-gradient-mean`
+(30/365 vrk liukuva keskiarvo).
+
+**Kvantitatiivinen tarkistus:** yhden päivän gradientti (-0,048 m)
+vastaisi ~0,8 m/s nopeutta jos koko vesipatsas liikkuisi - epärealistisen
+korkea RAPID:n omaan ~0,1-0,3 m/s tasoon verrattuna, vahvistaen että
+yksittäinen päivä on mesoskaalakohinan dominoima.
+
+**Kausivaihtelu löytyi, ei kohinaa:** kahden vuoden data (2024-2025,
+2025-2026) paljasti johdonmukaisen, toistuvan vuosisyklin - syvä
+negatiivinen pohja kesällä (-0,17...-0,28 m, heinä-elokuu), voimakas
+positiivinen huippu talvella/keväällä (+0,20...+0,26 m, tammi-huhtikuu).
+Amplitudi lähes identtinen molempina vuosina. Mekanismi: steerinen
+(lämpölaajenemis-) merenpinnan kausivaihtelu, hyvin dokumentoitu
+ilmiö (Hochet ym. 2024, Scientific Reports: jopa 20 cm amplitudi
+paikoin Pohjois-Atlantilla). Käänteinen vaihe verrattuna yksinkertaiseen
+"lämpenee kesällä" -odotukseen selittyy advektio-pintavuo-tasapainolla
+(sama tutkimus: advektio, ei paikallinen lämmitys, hallitsee vaihetta
+jopa 50 %:ssa valtamerta).
+
+### 2. Golfvirta vs. AMOC - aktiivinen tieteellinen kiista, ei yksiselitteinen
+
+Käyttäjän oma kysymys ("Golfvirta heikkenee") johti tärkeään
+täsmennykseen: Golfvirta (tuulen ajama, subtrooppisen pyörteen
+läntinen reunavirtaus) EI ole sama asia kuin AMOC (termohaliininen,
+koko altaan syvyyssuuntainen kierto) - RAPID:n omat luvut osoittavat
+tämän suoraan (Golfvirta/Florida-salmi 31,8 Sv vs. AMOC:n nettokuljetus
+17,1 Sv, erotus kiertää takaisin pyörteen sisällä).
+
+**Neljä historiallisesti ristiriitaista arviota (Wikipedia, koottu
+2026-07-30):**
+- NASA 2010: Golfvirta voimistunut vuodesta 1993
+- 2015-tutkimus: heikentynyt 15-20% viimeisten 200 vuoden aikana
+- Potsdam 2018: AMOC hidastunut 15% 1900-luvun puolivalin jalkeen,
+  synnyttäen "lämpökuplan" New Yorkin/Mainen edustalle
+- 2023 (Piecuch/WHOI): "vedenpitävä" 4% heikkeneminen 40 vuodessa,
+  99% varmuus
+
+**Tuorein korjaus (2024-2025, Volkov ym., NOAA AOML/Nature
+Communications):** löysi että Florida-salmen kaapelimittauksissa oli
+korjaamaton systemaattinen virhe (Maan geomagneettisen kentän hidas
+muutos vääristi jännitemittauksesta johdettua kuljetusarvoa). Korjauksen
+jälkeen Florida-virta osoittautui VAKAAKSI koko 40 vuoden ajalta, ei
+heikkeneväksi - ja tämä vähensi myös AMOC:n oman heikkenemistrendin
+26.5°N:ssä noin 40%, tehden siitä "vain marginaalisesti merkitsevän."
+
+**Wikipedia huomauttaa suoraan:** media on toistuvasti sekoittanut
+AMOC:n ja Golfvirran ja uutisoinut virheellisesti Golfvirran
+pysähtymisestä. AMOC:n pysähtymistä pidetään epätodennäköisenä tällä
+vuosisadalla (vaatisi 3-5°C lämpenemisen, nykytoimilla ennustettu 2,4°C).
+
+**Opetus omalle projektillemme:** tämä on täsmälleen se ilmiö jota
+olemme itse kohdanneet (väärä muuttujanimi, väärä pisteen valinta,
+oletettu mekanismi joka osoittautui vääräksi) - ammattilaistutkijatkin
+voivat erehtyä instrumentin omasta systemaattisesta virheestä, ja
+"vedenpitäväksi" kuvattu tulos voi silti osoittautua vääräksi
+myöhemmin. Vahvistaa entisestään harrastelijaystävän alkuperäistä
+periaatetta: yksinkertaista ensin, ymmärrä käyttäytyminen huolellisesti,
+älä luota yhteen "lopulliseen" tulokseen ilman ristiinvalidointia.
