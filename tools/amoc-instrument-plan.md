@@ -943,3 +943,49 @@ tukeva tulos KAHDESSA PERAKKAISESSA analyysivaiheessa (eksploratiivinen
 maariteltya vahvistusta uudella datalla. Ei nostettu "Validoitu"-
 luokkaan SST:n rinnalle, koska metodologinen ero (jalkikateen
 kapennettu ikkuna vs. aidosti ennalta maaritelty) on aito ja tarkea.
+
+## KOLMIVAIHEINEN VALIDOINTIKEHYS (kayttajan oma kokoava kirjaus, 2026-07-31)
+
+Taman kierroksen tarkein saavutus ei ollut yksittainen korrelaatiotulos
+vaan se, etta dokumentaatio erottaa nyt selvasti kolme vaihetta:
+
+1. **Eksploratiivinen analyysi** - etsitaan, loytyyko datasta
+   ylipaataan kiinnostavia ilmioita (esim. 61 viiveen laaja skannaus)
+2. **Kohdennettu analyysi** - testataan fysiikkaan perustuvaa,
+   rajattua hypoteesia (esim. ±3 vrk NAO-RAPID_EK:lle)
+3. **Riippumaton vahvistus** - sama ENNALTA MAARITELTY testi tehdaan
+   UUDELLA aineistolla - TAMA VAIHE PUUTTUU VIELA yhdellakaan
+   tahan mennessa testatulla parilla, mukaan lukien SST-RAPID_MOC
+
+### Tarkea rajoite kirjattu etukateen - "maalitolppien siirtelyn" estamiseksi
+
+Koska RAPID-aineisto paattyy maaliskuuhun 2024, todellinen riippumaton
+vahvistus EI VALTTAMATTA TULE MAHDOLLISEKSI VIELA PITKAAN AIKAAN.
+Nykyinen luokitus (myos SST:n "Validoitu") pitaa sailyttaa varovaisena
+kunnes jompikumpi toteutuu:
+
+- RAPID:n seuraava virallinen data-paivitys (uusi versio pidemmalla
+  aikasarjalla), TAI
+- vaihtoehtoinen, riippumaton havaintosarja joka mittaa samaa prosessia
+
+Tama on kirjattu tarkoituksella nakyvasti ETUKATEEN, jotta
+tulevaisuudessa ei voida hiljaa "siirtaa maalitolppia" ja julistaa
+jotain validoiduksi ilman etta vaihe 3 on aidosti tapahtunut.
+
+## VERSIOHISTORIA - AMOC-monitorin kehityskaari
+
+- **v0.1** (30.7.2026): rakennettiin instrumentti ja datavirrat (nelja
+  korttia: RAPID-viite, SLA-gradientti, SST-anomalia, Gronlanti-SMB)
+- **v0.2** (31.7.2026): validoitiin prokseja systemaattisesti /compare-
+  moottorilla, mukaan lukien negatiivisten tulosten hyvaksyminen
+  (SLA-UMO, SLA-NAO, NAO-MOC, GMB-MOC hylatty; SST-MOC validoitu
+  vaiheen 1-2 osalta; NAO-EK lupaava mutta ei viela vahvistettu)
+- **Seuraava vaihe** (ei viela alkanut): riippumattomat vahvistukset
+  (vaihe 3) niille hypoteeseille jotka jaivat lupaaviksi mutta ei viela
+  lopullisesti osoitetuiksi - odottaa RAPID-paivitysta tai
+  vaihtoehtoista datalahdetta
+
+**Kayttajan oma loppuarvio, kirjattu suoraan:** *"Tallainen etenemistapa
+on metodologisesti vahva, koska dokumentaatio kertoo avoimesti myos
+siita, mita instrumentti ei viela tieda. Juuri se lisaa sen
+uskottavuutta."*
