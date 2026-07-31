@@ -631,3 +631,41 @@ moottorilta kuin yksittaiselta AMOC-apiohjelmalta... uusi instrumentti
 tarkoittaa kaytannossa vain uuden fetch_*()-funktion lisaamista, kun
 taas kaikki tilastollinen analyysi... voidaan kayttaa sellaisenaan
 uudelleen."*
+
+## VAIHE 4 TOTEUTETTU 2026-07-31 — RAPID mukaan /compare-moottoriin
+
+Kayttajan aiemmin lataama `moc_transports.nc` (BODC, v2024.1a) muun-
+nettiin Python/netCDF4-kirjastolla kompaktiksi paivittaiseksi JSON:iksi
+(7290 paivaa, 2004-04-07...2024-03-22, paivakeskiarvot 12h-resoluutiosta)
+ja julkaistiin staattisena tiedostona `aethercontinuity.org/tools/
+rapid_daily.json` (460 KB).
+
+**Tekninen ratkaisu:** Cloudflare Worker EI parsi alkuperaista NetCDF/
+HDF5-binaarimuotoa - se hakee sen sijaan jo-esikasitellyn JSON:in
+tavallisella `fetch()+json()`-kutsulla `aethercontinuity.org`:ista.
+
+**Nelja uutta sarjaa rekisteroity:** `rapid_moc` (kokonaiskuljetus),
+`rapid_umo` (ylakeskiokeaanin kuljetus - TASMALLEEN se suure jota oma
+SLA-gradienttimme approksimoi), `rapid_gs` (Florida-salmi/Golfvirta),
+`rapid_ek` (Ekman). Kaikki merkitty selvasti ei-live-dataksi (paattyy
+maalis 2024) metadatassa.
+
+### Seuraava askel — kriittinen jatkotesti odottaa
+
+Tama mahdollistaa sen aiemmin tunnistetun, tarkeimman jatkotestin:
+toistaa alkuperainen SLA-vs-UMO-validointitesti (r=0.339 lag+10:lla,
+laskettu RAA'ALLA N=365:lla ENNEN Neff-korjauksen olemassaoloa) nyt
+taydella Neff-korjauksella saman yleisen `/compare`-moottorin kautta:
+
+```
+GET /compare?series_a=sla&series_b=rapid_umo&date=2024-03-22&days=365
+```
+
+Odotettu lopputulos (kirjattu jo aiemmin epailyksena): koska SLA:n oma
+autokorrelaatio on vahvistetusti aarimmaisen korkea (~0.95), ja RAPID:n
+UMO on fysikaalisesti hidas suure jolla on todennakoisesti samankaltainen
+tai voimakkaampi autokorrelaatio, taman testin oma effective N olisi
+todennakoisesti samaa pientä luokkaa (~20-30) kuin SLA-vs-NAO-testissa
+- mika tekisi aiemmasta "merkitsevasta" r=0.339-loydoksesta todennakoisesti
+EI-merkitsevan Neff-korjatulla p-arvolla. Tama testi on viela ajamatta -
+seuraava luonnollinen askel.
