@@ -544,3 +544,49 @@ paljon monimutkaisuutta kerralla."*
 
 Vanha `/compare/nao-sla` sailytetty koodissa taaksepain-yhteensopi-
 vuuden vuoksi, merkitty vanhentuneeksi `/status`-vastauksessa.
+
+## TULOS 2026-07-31 — SLA vs NAO, Neff paljasti kriittisen ongelman
+
+Ensimmainen oikea testi uudella `/compare`-moottorilla (sla vs nao,
+365 vrk, 367 paallekkaista pistetta):
+
+**Raaka N=367, mutta effective N=17.8** - lag-1-autokorrelaatio oli
+0.952/0.953 molemmilla sarjoilla (aarimmaisen korkea). Tama tarkoittaa
+etta 367 paivittaisesta havainnosta on tosiasiassa vain ~18 aidosti
+itsenaista havaintoa.
+
+**Lopputulos: EI tilastollisesti merkitseva yhteys.** lag=0: r=0.184,
+p=0.457. Paras lag=+12: r=0.286, mutta p=0.236 - EI merkitseva
+tamakaan, vaikka korrelaatio nayttaisi suuremmalta raa'an N:n kanssa
+laskettuna.
+
+### KRIITTINEN JATKOKYSYMYS — aiempi RAPID-UMO-tulos vaatii uudelleenarviointia
+
+Aiemmin (ks. yllaoleva "Suora validointitesti") raportoimme oman SLA-
+gradienttimme ja OIKEAN RAPID UMO:n valilla r=0.339 lag+10:lla,
+kuvattuna innostuneesti tilastollisesti merkitsevaksi. **Tama laskettiin
+RAA'ALLA N=365:lla, ennen kuin Neff-korjaus oli edes olemassa
+koodissa.**
+
+Koska SLA-gradientin oma autokorrelaatio on nyt vahvistetusti
+aarimmaisen korkea (0.95) ja RAPID:n UMO on fysikaalisesti hidas,
+todennakoisesti samankaltaisesti tai voimakkaammin autokorreloitunut
+suure, **UMO-tuloksen oma Neff olisi todennakoisesti yhta pieni**
+(~15-20 luokkaa) - mika tarkoittaisi etta se aiempi "merkitseva"
+loydos oli todennakoisesti LIIAN OPTIMISTINEN.
+
+**MERKITTY SEURAAVAKSI ASKELEEKSI:** kun RAPID-sarja saadaan joskus
+kaytettavaksi taman saman `/compare`-moottorin kautta (Vaihe 4), toista
+alkuperainen SLA-vs-UMO-testi ja laske sen oma Neff ja Neff-korjattu
+p-arvo uudestaan. Todennakoinen lopputulos: aiempi "kohtalainen mutta
+lupaava" tulkinta pitaisi todennakoisesti laskea "ei tilastollisesti
+merkitseva talla otoskoolla" -tasolle, samaan tapaan kuin NAO-tulos
+juuri osoitti.
+
+**Tama on tarkea, itsekriittinen oppimiskokemus koko projektille:**
+Neff-korjauksen lisaaminen (kayttajan oma ehdotus) paljasti etta
+useampi aiempi, raa'alla N:lla laskettu "loytos" tassa AMOC-
+instrumentissa saattaa olla systemaattisesti liian optimistinen
+autokorrelaation vuoksi - juuri se ongelma jonka Neff-korjaus oli
+tarkoitettu estamaan, mutta joka ehti vaikuttaa tulkintaan ennen
+korjauksen lisaamista.
