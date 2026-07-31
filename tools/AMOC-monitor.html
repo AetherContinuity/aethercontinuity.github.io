@@ -61,7 +61,7 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     <div class="dih-inst">Aether Continuity Institute · ACI</div>
     <div class="dih-ser">AMOC <span>Endurance / Continuity</span> Monitor</div>
   </div>
-  <div class="dih-meta">Instrumentti · elokuu 2026<br>v0.1 · ensimmäinen näyttö</div>
+  <div class="dih-meta">Instrumentti · heinäkuu 2026<br>v0.2 · validointitestattu</div>
 </div>
 
 <div class="page">
@@ -116,17 +116,17 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
   <div class="shdr"><span class="snum">§ 00c</span><span class="stit">Mitä kukin kortti oikeasti mittaa</span></div>
   <div class="card" style="margin-bottom:2rem;">
     <p style="font-size:.85rem;margin-bottom:.7rem;">
-      <strong>RAPID:</strong> ainoa suora AMOC-mittaus näistä neljästä — mutta kortti näyttää
-      toistaiseksi vain 2004–2024 viitekeskiarvon, ei elävää arvoa (datatiedoston tarkka
-      osoite ei ole vielä varmistettu).
+      <strong>RAPID:</strong> ainoa suora AMOC-mittaus näistä neljästä. Kortti näyttää 2004–2024
+      viitekeskiarvon (ei live — uusin virallinen data ulottuu maaliskuuhun 2024). Historiallinen
+      päiväaikasarja (2004–2024, neljä komponenttia) on nyt käytettävissä <code>/compare</code>-työkalun
+      kautta, ks. §01b.
     </p>
     <p style="font-size:.85rem;margin-bottom:.7rem;">
       <strong>Itä–länsi-korkeusero:</strong> karkea, kokeellinen approksimaatio RAPID:n omasta
-      menetelmästä. <em>Tärkeä havainto (heinäkuu 2026):</em> tämä osoittautui hallitsevan
-      vahvan, toistuvan <strong>vuosittaisen kausivaihtelun</strong> (pohja kesällä, huippu
-      talvella/keväällä, sama molempina tarkasteltuina vuosina) — todennäköisesti
-      lämpölaajenemiseen liittyvä ilmiö, ei AMOC-signaali. Tulkitse siis kausivaihtelun
-      läpi, ei sitä vasten.
+      menetelmästä. <em>Suora validointitesti (31.7.2026, ks. §01b) osoitti ettei tämä korreloi
+      tilastollisesti merkitsevästi RAPID:n oman UMO-arvon kanssa</em> — ei millään testatulla
+      viiveellä, täydellä monivertailukorjauksella tarkistettuna. Näytetään yhä vertailun vuoksi,
+      mutta EI toimi luotettavana AMOC-korvikkeena.
     </p>
     <p style="font-size:.85rem;margin-bottom:.7rem;">
       <strong>SST-anomalia:</strong> etsii subpolaarista "kylmää läiskää" — yhtä tunnetuista
@@ -146,14 +146,14 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       <div class="card-title">RAPID — 26.5°N MOC-kuljetus</div>
       <div class="card-value" id="rapidValue">—</div>
       <div class="card-sub" id="rapidSub">Ladataan…</div>
-      <div class="card-huom">Viitetilastot 2004–2024. Ei vielä live-arvoa — datatiedoston tarkka URL ei ole vielä varmistettu.</div>
+      <div class="card-huom">Viitetilastot 2004–2024 (ei live). Historiallinen aikasarja käytettävissä <code>/compare</code>-työkalun kautta, ks. §01b.</div>
     </div>
 
     <div class="card" id="cardSLA">
-      <div class="card-title">Itä–länsi-korkeuseron anomalia (kausikorjaus osoittautui vääräksi oletukseksi)</div>
+      <div class="card-title">Itä–länsi-korkeuseron anomalia (ei toimi luotettavana AMOC-korvikkeena — ks. §01b)</div>
       <div class="card-value" id="slaValue">—</div>
       <div class="card-sub" id="slaSub">Ladataan…</div>
-      <div class="card-huom">NOAA ERDDAP, 26.5°N: länsipiste ~75°W, itäpiste ~15°W. <strong>Korjaus 30.7.2026:</strong> kaksi vuotta näytti toistuvalta vuosisyklilta, mutta kolme lisävuosiparia (2019–2020, 2020–2021) paljasti täysin eri vaiheen jokaisena vuonna — ei kiinteää kausisykliä. Kirjallisuus (Frajka-Williams 2015, RAPID:n oma 20v yhteenveto) vahvistaa: tämä signaali on <strong>vuosienvälisen (Rossby-aalto-) vaihtelun</strong> hallitsema, ei kausivaihtelun — tunnettu ilmiö, ei virhe datassamme. Näytetty anomalia kuvaa siis eroa vain kahden vuoden otokseen, ei vakiintunutta normaalia. Tulkitse varovasti.</div>
+      <div class="card-huom">NOAA ERDDAP, 26.5°N: länsipiste ~75°W, itäpiste ~15°W. Karkea approksimaatio RAPID:n omasta menetelmästä. <strong>Lopullinen validointitesti (31.7.2026):</strong> ei tilastollisesti merkitsevää korrelaatiota RAPID:n oman UMO-arvon kanssa millään testatulla viiveellä, täydellä monivertailukorjauksella (Benjamini-Hochberg) tarkistettuna. Matkalla löydettiin myös ettei signaalilla ole kiinteää kausisykliä, vaan sitä hallitsee vuosienvälinen (Rossby-aalto-) vaihtelu. Näytetty arvo on informatiivinen, ei validoitu AMOC-indikaattori.</div>
     </div>
 
     <div class="card" id="cardSST">
@@ -171,14 +171,47 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </div>
   </div>
 
+  <div class="shdr"><span class="snum">§ 01b</span><span class="stit">Validointitesti — korreloiko itä-länsi-gradientti oikean RAPID-datan kanssa?</span></div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p style="font-size:.85rem;margin-bottom:.7rem;">
+      Kesäkuun 2026 lopulla saatiin käyttöön RAPID:n oma, oikea aikasarja (UMO-komponentti,
+      2004–2024). Tämä mahdollisti suoran testin: approksimoiko oma karkea itä–länsi-SLA-
+      gradienttimme todella samaa suuretta jota se on koko ajan yrittänyt approksimoida?
+    </p>
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem;margin:.7rem 0">
+      <tr style="border-bottom:1px solid var(--rule)">
+        <th style="text-align:left;padding:4px 6px">Viive</th>
+        <th style="text-align:right;padding:4px 6px">Pearson r</th>
+        <th style="text-align:right;padding:4px 6px">Effective N</th>
+        <th style="text-align:right;padding:4px 6px">p-arvo</th>
+      </tr>
+      <tr><td style="padding:4px 6px">0 vrk (samanaikainen)</td><td style="text-align:right;padding:4px 6px">−0,013</td><td style="text-align:right;padding:4px 6px">24,2</td><td style="text-align:right;padding:4px 6px">0,95</td></tr>
+      <tr><td style="padding:4px 6px">−30 vrk ("paras", haun reunalla)</td><td style="text-align:right;padding:4px 6px">0,359</td><td style="text-align:right;padding:4px 6px">24,2</td><td style="text-align:right;padding:4px 6px">0,070</td></tr>
+    </table>
+    <p style="font-size:.85rem;margin-bottom:.7rem;">
+      <strong>Benjamini-Hochberg-monivertailukorjaus (61 testattua viivettä, α=0,05): 0/61
+      viivettä merkitsevä.</strong> Pienin yksittäinen p-arvo koko spektrissä (0,070) oli jo
+      yli tavallisen kynnyksen ilman mitään korjaustakaan.
+    </p>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:0;">
+      Johtopäätös: oma karkea kahden pisteen SLA-approksimaatio ei ole tilastollisesti
+      perusteltu RAPID-korvike. Testi ja koko menetelmä (Pearson, Spearman, effective N,
+      lag-spektri, FDR-korjaus) on toistettavissa kenelle tahansa sarjaparille
+      <a href="https://aci-amoc-proxy.ruotsalainen-marko.workers.dev/status">yleisen vertailutyökalun</a>
+      kautta. Täysi tulos ja menetelmän kehityshistoria: <a href="https://aethercontinuity.org/tools/amoc-instrument-plan.md">amoc-instrument-plan.md</a>.
+    </p>
+  </div>
+
   <div class="shdr"><span class="snum">§ 02</span><span class="stit">Rajaukset</span></div>
   <p class="snote">
     Tämä on ensimmäinen, tarkoituksella yksinkertainen versio — neljä itsenäistä korttia,
-    ei yhdistelmäindeksiä. RAPID-kortti näyttää vain viitetilastot (ei live-arvoa) koska
-    itse datatiedoston tarkkaa osoitetta ei ole vielä varmistettu. Grönlanti-kortti mittaa
+    ei yhdistelmäindeksiä. RAPID-kortti näyttää yhä vain viitetilastot (ei live-arvoa) —
+    virallinen data ei ole päivittynyt maaliskuun 2024 jälkeen. Grönlanti-kortti mittaa
     eri suuretta (pintamassatase) kuin alun perin tavoiteltu GRACE-kokonaismassatase, koska
-    PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Nämä rajaukset on dokumentoitu
-    täydellisesti suunnitelmadokumentissa.
+    PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Itä–länsi-gradientti on osoitettu
+    (§01b) tilastollisesti epäluotettavaksi AMOC-korvikkeeksi — säilytetty näytöllä
+    läpinäkyvyyden ja opetusarvon vuoksi, ei koska sitä suositellaan tulkittavaksi
+    AMOC-signaalina. Nämä rajaukset on dokumentoitu täydellisesti suunnitelmadokumentissa.
   </p>
 
 </div>
