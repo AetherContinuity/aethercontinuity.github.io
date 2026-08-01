@@ -164,10 +164,14 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </div>
 
     <div class="card" id="cardGreenland">
-      <div class="card-title">Grönlannin pintamassatase</div>
+      <div class="card-title">Grönlannin massatase</div>
       <div class="card-value" id="greenlandValue">—</div>
       <div class="card-sub" id="greenlandSub">Ladataan…</div>
-      <div class="card-huom">DMI Polar Portal. Pintamassatase (sadanta−sulaminen), EI GRACE:n kokonaistase (ei sisällä jäätiköiden kalvamista).</div>
+      <div style="border-top:1px solid var(--rule);margin-top:.5rem;padding-top:.5rem;">
+        <div class="card-value" id="greenlandGmbValue" style="font-size:1.15rem;">—</div>
+        <div class="card-sub" id="greenlandGmbSub">Ladataan…</div>
+      </div>
+      <div class="card-huom">Ylempi: DMI (pintamassatase, sadanta−sulaminen, vain nykyinen sulamiskausi). Alempi: GEUS/PROMICE (kokonaismassatase, sisältää jäätiköiden kalvamisen, 1986–nykyhetki) — eri suureita, ei suoraan vertailukelpoisia keskenään.</div>
     </div>
   </div>
 
@@ -409,6 +413,7 @@ async function fetchSST() {
 }
 
 async function fetchGreenland() {
+  let okSMB = false;
   try {
     const r = await fetch(`${PROXY}/greenland-smb`);
     const d = await r.json();
@@ -416,9 +421,20 @@ async function fetchGreenland() {
     const latest = d.viimeisin;
     const sign = latest.smb_gt_per_day < 0 ? 'sulamiskausi' : 'kertymiskausi';
     setCard('greenlandValue', 'greenlandSub', `${latest.smb_gt_per_day.toFixed(2)} Gt/vrk`, `${latest.date} · kumulatiivinen ${latest.smb_acc_gt.toFixed(1)} Gt (${sign})`);
-    return true;
+    okSMB = true;
   } catch (e) {
     setCard('greenlandValue', 'greenlandSub', 'virhe', e.message);
+  }
+  try {
+    const r = await fetch(`${PROXY}/greenland-gmb`);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    const latest = d.viimeisin;
+    const sign = latest.daily_rate_gt < 0 ? '−' : '+';
+    setCard('greenlandGmbValue', 'greenlandGmbSub', `${latest.cumulative_gt.toFixed(0)} Gt (kok.)`, `${latest.date} · ${sign}${Math.abs(latest.daily_rate_gt).toFixed(2)} Gt/vrk`);
+    return okSMB;
+  } catch (e) {
+    setCard('greenlandGmbValue', 'greenlandGmbSub', 'virhe', e.message);
     return false;
   }
 }
