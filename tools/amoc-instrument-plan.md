@@ -1094,3 +1094,56 @@ aikasarjan. Jos signaali on aito, korrelaatio sailyy ja Neff on
 riittava (esim. >30) paljon suuremmalla raa'alla N:lla. Vaihtoehtoinen
 menetelma: kuukausikeskiarvot ilman liukuvia ikkunoita (ei limittymista,
 Neff vastaisi todellisia vapausasteita paremmin).
+
+## TEKNINEN LAPIMURTO 2026-08-01 — Cloudflare Cache API osoittautui alipyyntoongelman syyksi
+
+Kayttajan pitka, systemaattinen vianetsinta (502->503->502, palojen
+pienennys 21->3->1, kuukausittainen naytteenotto, monthStep-saato
+6->12) paljasti lopulta etta itse **Cache API -kaare** (`cachedFetch`,
+lisatty aiemmin valimuistia varten) oli subrequest-rajan ylityksen
+todellinen syy - vaikka Cloudflaren oma dokumentaatio nimenomaisesti
+sanoo etta `cache.match()` "never sends a subrequest to the origin."
+
+**Diagnoosi:** dryRun-tila vahvisti laskennan taysin oikeaksi (20
+ankkuripistetta, ~21 arvioitu alipyyntomaara - selvasti alle ilmaisen
+tason 50:n rajan) mutta oikea haku epaonnistui silti. Vaihdettaessa
+`cachedFetch` takaisin plain `fetch()`:iin (poistaen Cache API -kaare
+kokonaan) ongelma katosi valittomasti.
+
+**Johtopaatos:** joko Cache API:n kaytannon toiminta poikkeaa dokumen-
+toidusta tassa nimenomaisessa tilanteessa (esim. `cache.put()` yhdessa
+streamatun Response bodyn klonauksen kanssa saattaa aiheuttaa jotain
+ylimaaraista), tai kyseessa on jokin muu, hienovarainen vuorovaikutus.
+Valimuisti poistettu toistaiseksi taman /compare-polun ERDDAP-hausta -
+merkitty jatkokehitykseksi rakentaa se takaisin turvallisemmalla
+tavalla (esim. KV-storage Cache API:n sijaan).
+
+## TULOS 2026-08-01 — SST vs RAPID_MOC, kiintea -11 vrk viive, 20 vuotta (yksi piste/vuosi)
+
+Ensimmainen onnistunut pitkan aikavalin testi: **r=0.069, p=0.77,
+Neff=20** - kaytannossa ei mitaan yhteytta.
+
+### Kriittinen metodologinen huomio - tama EI kumoa alkuperaista loytoa suoraan
+
+Tama testi ottaa VAIN YHDEN pisteen per vuosi (aina huhtikuun
+puolivalissa) 20 vuodelta - eri kysymys kuin alkuperainen (yhden
+vuoden PAIVATASON data, kaikki vuodenajat mukana).
+
+**Mahdollinen selitys:** jos alkuperainen r≈0.5-loydos johtui siita
+etta seka SST etta RAPID_MOC noudattavat omaa VUODENAIKAISSYKLIAAN
+jotka sattuvat kohtaamaan ~11 paivan viiveella (molemmat sarjat
+"liikkuvat yhdessa" lapi vuodenaikojen yhden vuoden sisalla) - tama
+nakyisi vahvana korrelaationa paivatason datassa, mutta HAVIAISI
+TAYSIN kun otetaan vain yksi piste per vuosi samalta kalenteriajalta,
+koska jaljelle jaisi vain vuosien valinen vaihtelu, ei kausivaihtelu.
+
+**Tama olisi sama ansa kuin SLA-gradientilla aiemmin:** vuosienvalinen
+(Rossby-aalto-tyyppinen) vaihtelu tai kausivaihtelu naamioituneena
+toisena ilmiona.
+
+**Oikea seuraava testi ei olisi tama (1 piste/vuosi)** - vaan paivatason
+analyysin TOISTAMINEN usealle eri vuodelle ERIKSEEN (esim. 2010, 2015,
+2020 kukin oma 365 paivan ikkunansa), katsoen loytyyko sama ~11 vrk:n
+huippu jokaisesta vuodesta erikseen, vai oliko se sattumanvarainen
+vain siina yhdessa 2023-2024-vuodessa jota alunperin tutkittiin. Tama
+on merkitty seuraavaksi askeleeksi, ei viela toteutettu.
