@@ -1147,3 +1147,43 @@ analyysin TOISTAMINEN usealle eri vuodelle ERIKSEEN (esim. 2010, 2015,
 huippu jokaisesta vuodesta erikseen, vai oliko se sattumanvarainen
 vain siina yhdessa 2023-2024-vuodessa jota alunperin tutkittiin. Tama
 on merkitty seuraavaksi askeleeksi, ei viela toteutettu.
+
+## KONTEKSTI 2026-08-01 — ilmakehan CO2/metaani, ei toteutettu datasarjana
+
+Kayttajan kysymys: miten ilmakehan CO2/CH4-pitoisuudet liittyvat
+AMOC:iin. Kayttajan oma paatos: ei rakenneta datapipelinea talle,
+vain mainitaan kontekstina.
+
+**CO2 -> AMOC on paaasiallinen, kausaalisesti todennettu suunta.**
+Kim ym. (2021, npj Climate) kaytti Convergent Cross Mapping -menetelmaa
+(kausaalisuuden tunnistus dynaamisten jarjestelmien teoriasta) OIKEALLE
+havaintodatalle, ei vain malleille: nouseva CO2 vaikuttaa Pohjois-
+Atlantin lampovoihin ja sadantaan, heikentaen AMOC:ia - arvioitu
+3.7±1.0 Sv 1854-2016, suurempi kuin mallien oma arvio (1.4±1.4 Sv).
+Mekanismi kulkee juuri LAMPOVOIDEN (SST - ainoa validoitu loytomme)
+ja SADANNAN (makea vesi - GMB-testimme) kautta - sama kaksi valikatta
+jotka olemme jo testanneet erikseen, vain ei suoraan CO2:ta itseaan.
+
+**Aikaskaalaongelma tekee suorasta testauksesta epakaytannollista:**
+mallitutkimukset osoittavat AMOC:n tasapainottuvan CO2-pakotteeseen
+VUOSISATOJEN-VUOSITUHANSIEN aikaskaalalla (2xCO2: ~2000v, 8xCO2:
+>10000v). Tama on sama rakenteellinen ongelma kuin SST-suodatustestissa
+- meidan 1-20 vuoden ikkunamme ei voisi koskaan tavoittaa tata
+nimenomaista, hidasta pakotereittia suoraan, vaikka se olisi todellinen.
+
+**Metaani:** heikommin suoraan testattu nykydatalla - vahvin naytto
+paleoklimatologiasta (jaaydinnaytteet, CH4-piikit Dansgaard-Oeschger
+-tapahtumissa, jaakausiaikaskaalaa, ei nykyhetken vuosikymmenia).
+
+**Takaisinkytkenta (AMOC -> CO2):** olemassa, mutta suunta/voimakkuus
+epavarma (meren/maan hiilikierron kautta). Kiinnostava sivuhavainto:
+heikentynyt AMOC voi pitkittaa alueellista kuivuutta (Valimeri) VAIKKA
+CO2-paastoja vahennettaisiin - osoittaen etta valtameren oma hitaus
+voi tehda ilmastovaikutuksista osittain palautumattomia lahivuosi-
+kymmenina.
+
+**Paatos:** ei lisata CO2/CH4-sarjaa /compare-tyokaluun (esim. NOAA
+Mauna Loa) - aikaskaalaongelma tekisi testista todennakoisesti
+tuloksettoman samalla tavalla kuin muut lyhyen aikavalin testimme,
+eika lisaarvoa katsottu riittavaksi oikeuttamaan uutta datapipelinea.
+Mainittu vain kontekstina taman dokumentin sivuhuomautuksena.
