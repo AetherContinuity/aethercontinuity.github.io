@@ -1129,27 +1129,33 @@ Kayttajan oma, tarkempi kritiikki: *"Luonnonilmio ei kayttaydy
 kalenteripaivien mukaan."* Tama on oikea, terävampi huomio kuin
 alkuperainen selityksemme.
 
-**Miksi alkuperainen selitys ei riittanyt:** jos -11 vrk:n viive on
-todellinen, JATKUVA fysikaalinen prosessi (ei sidottu tiettyyn
-vuodenaikaan), sen pitaisi olla havaittavissa MISTA TAHANSA vuoden
-kohdasta - ei vain yhdesta mielivaltaisesta kalenteripisteesta
-(huhtikuun 15.) toistettuna. Jos SST todella vaikuttaisi MOC:iin 11
-paivan viiveella ymparivuotisesti, vuosien valinen vaihtelu SST:ssa
-(huhtikuun 4. paiva) pitaisi silti ennustaa vuosien valista vaihtelua
-MOC:ssa (huhtikuun 15. paiva) - riippumatta siita etta testataan vain
-yhta kalenteripistetta. "Kausivaihtelun yhteensattuma" -selitys ei
-oikeastaan kumoa tata logiikkaa.
+### KORJAUS 2026-08-01 (toinen kierros): oma aiempi korjauskin oli liian vahva
 
-**Tarkempi tulkinta:** valitsemalla "huhtikuun 15." joka vuosi, EMME
-TESTANNEET LUONNONILMIOTA SEN OMILLA EHDOILLA - testasimme
-mielivaltaista, kalenteriin sidottua leikkausta lapi 20 vuoden. Jos
-tama yksi leikkauspiste sattuu osumaan kohtaan jossa vuosien valinen
-kohina hallitsee (riippumatta siita onko fysikaalinen mekanismi
-todellinen), tulos (r≈0) ei kerro mitaan mekanismin todellisuudesta -
-se kertoo vain etta TAMA YKSI MIELIVALTAINEN PAIVA ei ollut
-informatiivinen.
+Kayttajan tarkennys omaan aiempaan korjaukseeni: yllaoleva vaite
+("jos -11 vrk on todellinen, JATKUVA fysikaalinen prosessi... sen
+pitaisi nakya mista tahansa vuoden kohdasta") on ITSESSAAN liian vahva
+vaite. Luonnossa monet prosessit ovat kausiriippuvaisia - SST:n ja
+RAPID:n valinen kytkenta voi hyvinkin vaihdella vuodenaikojen mukaan,
+eika oletus "pitaisi nakya ymparivuotisesti" ole perusteltu ilman
+lisanaytto.
 
-**Oikea seuraava testi:** ei "sama kalenteripaiva eri vuosilta" - vaan
+**Korjattu, tarkempi muotoilu (kayttajan oma, kirjattu sanatarkasti):**
+
+*"Miksi tulos ei kumoa alkuperaista loytoa: Sama kalenteripaiva eri
+vuosilta ei ole riippumaton testi alkuperaiselle hypoteesille. Jos
+SST-RAPID-yhteys on vuodenaikaan sidottu tai vaihtelee vuosittain,
+yksittaisen kalenteripaivan vertaaminen 20 vuoden yli voi havittaa
+signaalin kokonaan. Tulos (r≈0) osoittaa vain, ettei juuri tama
+kalenterileikkaus sisaltanyt havaittavaa yhteytta. Se ei yksin
+vahvista eika kumoa alkuperaista -11 vuorokauden viivehavaintoa.
+Luontevampi jatkotesti on toistaa koko 61 viiveen analyysi useille
+toisistaan riippumattomille vuosille tai pidemmille ajanjaksoille ja
+arvioida, toistuuko sama viive johdonmukaisesti."*
+
+**Ero aiempaan:** ei enaa vaiteta etta ilmion "pitaisi nakya mista
+tahansa vuoden kohdasta" - sen sijaan selitetaan miksi KAYTETTY TESTI
+ei valttamatta ole herkka havaitsemaan kyseista ilmiota, jattaen
+auki mahdollisuuden etta yhteys on aidosti kausiriippuvainen.
 KOKO 61 VIIVEEN PAIVATASON SKANNAUS TOISTETTUNA USEALLE ERI,
 RIIPPUMATTOMALLE VUODELLE ERIKSEEN (esim. 2010, 2015, 2020, kukin oma
 taysi 365 paivan ikkunansa). Jos -11 vrk:n huippu loytyy johdonmukai-
