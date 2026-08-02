@@ -1243,3 +1243,28 @@ luotettavuusongelmia - ei suoria, riidattomia ikkunoita menneisyyteen.
 Tama instrumentti ei siis pysty tallla hetkella vastaamaan
 kysymykseen AMOC:n vuosikymmenten aikaskaalan kayttaytymisesta millaan
 tallla hetkella kaytettavissa olevalla tyokalulla tai datalahteella.
+
+## KONTEKSTI 2026-08-01 — albedo-takaisinkytkenta Gronlannin jaamassaan, ei toteutettu datasarjana
+
+Kayttajan huomio: jos peruskallio paljastuu, albedo muuttuu
+huomattavasti, kiihdyttaen tasapainon muutosta. Ei kirjattu
+datapipelinena, vain kontekstina.
+
+**Nykytila (2026):** hallitseva mekanismi ei viela ole laajamittainen
+peruskallion paljastuminen, vaan LUMIRAJAN SIIRTYMINEN paljastaen
+tumman PALJAAN JAAN (ei kalliota) lumen alta. Van As ym. (Science
+Advances): 2001-2017 tama selitti 53% nettoauringonsateilyn
+vaihtelusta sulamisvyohykkeella, vahvisti sulamista 5x verrattuna
+muihin tummentaviin prosesseihin (levat, hydrologinen lika).
+Vahvistuu edelleen koska jaatikko litistyy korkeammilla korkeuksilla
+lampenevassa ilmastossa. Varsinainen kallio (albedo ~0.1-0.2) olisi
+viela tummempi kuin paljas jaa (~0.3-0.4) - tapahtuu jo reunoilla,
+ei viela laajamittaisesti keskiosissa.
+
+**Vastakkainen, hidastava mekanismi:** peruskallion ISOSTAATTINEN
+KOHOAMINEN jaamassan vahentyessa - negatiivinen takaisinkytkenta,
+noin 1/3 jaan paksuuden muutoksesta ~3000 vuoden aikaskaalalla.
+
+Ei lisatty uutta datasarjaa - mainittu vain kontekstina taman
+dokumentin sivuhuomautuksena, samaan tapaan kuin CO2/CH4-konteksti
+edella.
