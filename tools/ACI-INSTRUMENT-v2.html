@@ -3278,9 +3278,26 @@ function renderStructural() {
   // Scenario matrix
   const tbody = document.getElementById('structScenBody');
   tbody.innerHTML = '';
-  SCENARIOS.forEach(scen => {
+  // LISATTY 2026-08-01 (kayttajan pyynto, "aja se"): suora, ehdoton
+  // lokitus JOKA renderStructural()-kutsulla (ei vaadi ?fsdebug=1,
+  // koska kayttaja huomautti etta nollassa ajettu diagnostiikka ei
+  // nayta bugia - bugi aktivoituu vain slider!=0:lla, ja tama
+  // lokitus toimii SILLOIN kun se aktivoituu). Vertaa baseline.fs
+  // (calcWindow suoraan) ja SCENARIOS[0]:n oma m.fs (calcWindowScenario
+  // literaaleilla 0,0 - PITAISI olla identtinen mutta kayttaja loysi
+  // etta ei ole kun dcLoad!=0).
+  console.log('[WEM Nykytila-FS-vertailu]', {
+    dcLoad_nyt: dcLoad, chpDelta_nyt: chpDelta,
+    baseline_fs_calcWindow_suoraan: baseline.fs,
+    scenarios0_dc: SCENARIOS[0].dc, scenarios0_chp: SCENARIOS[0].chp,
+  });
+  SCENARIOS.forEach((scen, idx) => {
     const m = calcWindowScenario(slice, scen.dc, scen.chp);
     if (!m) return;
+    if (idx === 0) {
+      console.log('[WEM Nykytila-FS-vertailu] SCENARIOS[0] (Nykytila) oma m.fs:', m.fs,
+        '| ero baseline.fs:aan:', (m.fs - baseline.fs), '(pitaisi olla 0)');
+    }
     const pc = classify(m.epp);
     const delta = m.epp - baseline.epp;
     // KORJATTU 2026-08-01 (kayttajan havainto 3): v4:aa EI luokitella
