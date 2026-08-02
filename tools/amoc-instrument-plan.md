@@ -1274,3 +1274,44 @@ noin 1/3 jaan paksuuden muutoksesta ~3000 vuoden aikaskaalalla.
 Ei lisatty uutta datasarjaa - mainittu vain kontekstina taman
 dokumentin sivuhuomautuksena, samaan tapaan kuin CO2/CH4-konteksti
 edella.
+
+## PAATTAVA METODOLOGINEN KEHYS 2026-08-01 — mylly, vilja, resepti
+
+Keskustelun paatteeksi syntyi vertaus joka tiivistaa taman koko
+projektin keskeisen opetuksen. Kayttajan oma, kolmiosainen jaottelu
+(oma alkuperainen kaksiosainen vertaukseni + kayttajan lisaama
+kolmas kategoria):
+
+1. **Myllyongelma** - laskenta-, ohjelmisto- tai infrastruktuurirajoite.
+   Ratkeaa paremmalla tyokalulla, optimoinnilla tai enemman lasken-
+   tateholla. Esimerkki tasta projektista: Cache API -bugi
+   (subrequest-raja), ERDDAP:n pitka-aikavali-502-ongelma - molemmat
+   ratkesivat koodilla/arkkitehtuurilla.
+
+2. **Viljaongelma** - dataa ei yksinkertaisesti ole olemassa. Ratkeaa
+   vain ajan myota tai korvaamalla puuttuva tieto epasuoralla
+   aineistolla. Esimerkki: RAPID:n 20 vuoden raja dekadien valiseen
+   vertailuun - mikaan mylly ei loihdi lisaa vuosia tyhjasta, vain
+   aika tai epasuorat rekonstruktiot (joilla oma epavarmuutensa) auttavat.
+
+3. **Reseptiongelma** - data on olemassa, mutta alkuperainen hypoteesi
+   ei kuvaa todellisuutta. Talloin parempi mylly eika enempaa viljaa
+   auta. Esimerkki: SLA↔RAPID_UMO - oikea RAPID-aikasarja, kunnollinen
+   analyysimenetelma (Pearson/Spearman/Neff/BH-korjaus), asianmukaisesti
+   tehdyt tilastolliset testit - ja tulos silti negatiivinen. Ongelma
+   ei ollut laskennassa eika datan maarassa, vaan siina ettei kahden
+   pisteen SLA-gradientti toiminut haluttuna RAPID-proksina tassa
+   aineistossa.
+
+**Yleistettava periaate (kayttajan oma muotoilu):** *"Ensin kysy: onko
+kyse myllyongelmasta, viljaongelmasta vai reseptiongelmasta? Vasta
+sitten kannattaa paattaa, rakennetaanko isompi mylly, odotetaanko
+lisaa viljaa vai kirjoitetaanko resepti uusiksi."*
+
+Tama on yleistettavissa paljon taman yhden AMOC-projektin ulkopuolellekin:
+moni tutkimushanke hukkaa aikaa kasvattamalla "myllya" vaikka ongelma
+onkin datan rajallisuudessa tai itse hypoteesissa. Taman projektin oma
+vahvuus oli valmius hyvaksya myos kolmas vaihtoehto (SLA:n hylkaaminen,
+GMB:n hylkaaminen, NAO-MOC:n hylkaaminen) kun validointi ei tukenut
+alkuperaista oletusta - tama on tutkimusmetodologisesti arvokas
+lopputulos, ei epaonnistuminen.
