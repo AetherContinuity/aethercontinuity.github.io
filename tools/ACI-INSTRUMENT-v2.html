@@ -624,22 +624,20 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <th>Periodi</th><th>Tapahtuma</th>
       <th class="rh">EPP</th><th class="rh">Luokka</th>
       <th class="rh">ECI</th><th class="rh">SP</th><th class="rh">DC</th>
-      <th class="rh">Pisteet</th><th class="rh">Signaali</th>
+      <th class="rh">Pisteet</th>
     </tr></thead><tbody id="btBody">
-      <tr><td colspan="9" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
+      <tr><td colspan="8" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
     </tbody></table></div>
     <div class="bt-sig" id="btSig" style="display:none;">
-      <div class="bt-sig-card"><div class="bt-sig-lbl">Recall</div><div class="bt-sig-val bt-tp" id="btRecall">—</div><div class="bt-sig-sub">TP / (TP+FN)<br>Stressiperiodien tunnistus</div></div>
-      <div class="bt-sig-card"><div class="bt-sig-lbl">Precision</div><div class="bt-sig-val" id="btPrec">—</div><div class="bt-sig-sub">TP / (TP+FP)<br>Flagausten oikeellisuus</div></div>
-      <div class="bt-sig-card"><div class="bt-sig-lbl">F1-score</div><div class="bt-sig-val" id="btF1">—</div><div class="bt-sig-sub">2·P·R / (P+R)<br>Tasapainotettu metriikka</div></div>
+      <div class="bt-sig-card" style="opacity:.5;">
+        <div class="bt-sig-lbl">Recall / Precision / F1</div>
+        <div class="bt-sig-val" style="font-size:1rem;color:var(--muted);">POISTETTU 2026-08-01</div>
+        <div class="bt-sig-sub">Poistettu kokonaan, ei vain piilotettu (ks. §07 Rakenteellinen rajoite 3). Stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa. Palautetaan kun fyysinen kriteeri (DS 336, tehoreservi, ERAA LOLE) on kaytossa.</div>
+      </div>
       <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub">2022-01 → 2024-12<br>OL3-vaikutus ECI:hin</div></div>
     </div>
     <div id="btF1Warn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin:.4rem 0;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;">
-      ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä silloin. Nama Recall/Precision/F1-luvut mittaavat siis osittain vaaraa asiaa (hintaohjattua kysyntajoustoa, ei endurance-vajetta) ja ovat suuntaa antavia, eivat rigoreja validointeja (ks. Rakenteellinen rajoite 3 alla).
-    </div>
-    <div class="bt-annot">
-      TP (True Positive) = EPP ≥ 0.50 &amp; tunnettu stressiperiodi &nbsp;·&nbsp; FN (False Negative) = EPP &lt; 0.50 &amp; tunnettu stressi &nbsp;·&nbsp; FP (False Positive) = EPP ≥ 0.50 &amp; ei tunnettua stressiä &nbsp;·&nbsp; TN (True Negative) = EPP &lt; 0.50 &amp; ei stressiä<br>
-      Stressikriteerit: energiakriisi 2022-Q3–Q4 (NordPool FI &gt;200 €/MWh) · 2023-Q1 (jälkikriisi, hinnat &gt;100 €/MWh) · muut periodit = ei tunnettua makrostressiä
+      ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa, joten TP/FP/FN/TN-luokittelu ja Recall/Precision/F1 on poistettu kokonaan (ei vain nakymasta) kunnes kriteeri korvataan fyysisella mittarilla (esim. DS 336 shortage status, tehoreservin aktivoinnit, tai ERAA:n LOLE-tunnit).
     </div>
   </div>
 
@@ -3058,10 +3056,13 @@ function drawBTTimeline(results) {
     // EPP dot
     if (yEPP != null) {
       const pc = classify(r.epp);
-      const sig = r.stress !== null ? (r.stress && r.epp >= EPP_STRESS_THRESHOLD ? '✓' : r.stress && r.epp < EPP_STRESS_THRESHOLD ? '✗' : '') : '';
+      // KORJATTU 2026-08-01: poistettu ✓/✗-signaalimerkinta - kaytti
+      // samaa vaaraa (hintapohjaista) stressikriteeria kuin poistettu
+      // TP/FN/FP-taulukko. Punainen tausta (ylla) merkitsee VAIN etta
+      // periodilla oli tunnettu makrotapahtuma, ei etta EPP "osui" tai
+      // "epaonnistui" siina.
       h += `<circle cx="${x.toFixed(1)}" cy="${yEPP.toFixed(1)}" r="5" fill="${pc.color}" stroke="var(--paper)" stroke-width="1.5"/>`;
       h += `<text x="${x.toFixed(1)}" y="${(yEPP - 10).toFixed(1)}" text-anchor="middle" font-family="DM Mono" font-size="8.5" fill="${pc.color}" font-weight="500">${r.epp.toFixed(2)}</text>`;
-      if (sig) h += `<text x="${x.toFixed(1)}" y="${(yEPP - 20).toFixed(1)}" text-anchor="middle" font-size="10" fill="${sig === '✓' ? '#2d6b3a' : '#8b1010'}">${sig}</text>`;
     }
     // ECI dot
     if (r.eci != null) {
@@ -3093,19 +3094,6 @@ function renderBTTable(results) {
 
   results.forEach(r => {
     const pc = r.epp != null ? classify(r.epp) : null;
-    const flagged = r.epp != null && r.epp >= EPP_STRESS_THRESHOLD;
-
-    // Signal classification
-    let sigClass = '', sigLabel = '—';
-    if (r.stress !== null && r.epp != null) {
-      if (r.stress && flagged)    { sigClass = 'bt-tp'; sigLabel = 'TP'; }
-      else if (r.stress && !flagged) { sigClass = 'bt-fn'; sigLabel = 'FN'; }
-      else if (!r.stress && flagged) { sigClass = 'bt-fp'; sigLabel = 'FP'; }
-      else                           { sigClass = 'bt-tn'; sigLabel = 'TN'; }
-    } else if (r.stress === null) {
-      sigLabel = '—';
-    }
-
     const stressDot = r.stress === true ? '#8b1010' : r.stress === false ? '#c8bfad' : '#7a7468';
 
     tbody.insertAdjacentHTML('beforeend', `<tr>
@@ -3120,26 +3108,20 @@ function renderBTTable(results) {
       <td class="rh">${r.sp != null ? (r.sp * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.dc != null ? (r.dc * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh" style="color:${r.pts != null && r.pts < 20 ? 'var(--so)' : 'var(--muted)'};" title="Datan laatu: ${r.dataQuality ?? '—'}">${r.pts ?? '—'} <span style="font-size:.5rem;">${r.dataQuality ? '('+r.dataQuality+')' : ''}</span></td>
-      <td class="rh ${sigClass}" style="font-weight:500;">${sigLabel}</td>
     </tr>`);
   });
 }
 
+// KORJATTU 2026-08-01 (kayttajan paatos): TP/FN/FP/TN-luokittelu ja
+// Recall/Precision/F1 POISTETTU KOKONAAN, ei vain piilotettu. Syy:
+// stressikriteeri (NordPool >200 EUR/MWh) mittasi vaaraa asiaa -
+// hintakriisia, ei kapasiteettikriisia. Kayttajan oma sanamuoto:
+// "Historiallinen data ei korjaa labelointia - se korjaa hajonnan...
+// se on korjattavissa vain vaihtamalla kriteeri fyysiseksi." Palautetaan
+// kun fyysinen kriteeri (DS 336 shortage status, tehoreservin
+// aktivoinnit, tai ERAA:n LOLE-tunnit) on kaytossa - eri projekti kuin
+// tuntidatan haku.
 function renderBTSignal(results) {
-  const known = results.filter(r => r.stress !== null && r.epp != null);
-  const TP = known.filter(r => r.stress && r.epp >= EPP_STRESS_THRESHOLD).length;
-  const FN = known.filter(r => r.stress && r.epp < EPP_STRESS_THRESHOLD).length;
-  const FP = known.filter(r => !r.stress && r.epp >= EPP_STRESS_THRESHOLD).length;
-
-  const recall    = TP + FN > 0 ? TP / (TP + FN) : 0;
-  const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
-  const f1        = recall + precision > 0 ? 2 * precision * recall / (precision + recall) : 0;
-
-  document.getElementById('btRecall').textContent = (recall * 100).toFixed(0) + ' %';
-  document.getElementById('btRecall').style.color = recall >= 0.7 ? '#2d6b3a' : recall >= 0.5 ? '#7a6010' : '#8b1010';
-  document.getElementById('btPrec').textContent = (precision * 100).toFixed(0) + ' %';
-  document.getElementById('btF1').textContent = f1.toFixed(2);
-
   // ECI delta: first non-null vs last non-null
   const eciSeries = results.filter(r => r.eci != null);
   if (eciSeries.length >= 2) {
@@ -3301,7 +3283,12 @@ function renderStructural() {
     if (!m) return;
     const pc = classify(m.epp);
     const delta = m.epp - baseline.epp;
-    const pcV4 = m.eppV4 != null ? classify(m.eppV4) : null;
+    // KORJATTU 2026-08-01 (kayttajan havainto 3): v4:aa EI luokitella
+    // v3:n kynnyksilla (0.25/0.50/0.75, kalibroitu laskuripohjaiselle
+    // SP:lle) - SP_depth on eri asteikko, ja v3:n luokat sovellettuna
+    // v4:aan tekevat siita systemaattisesti rauhoittavamman nayttavan
+    // ilman etta mikaan fysiikassa muuttui. Nayta v4 PELKKANA NUMERONA,
+    // neutraalilla varilla, kunnes kalibrointidataa on kertynyt.
     tbody.insertAdjacentHTML('beforeend', `<tr>
       <td style="font-size:.8rem;">${scen.label}</td>
       <td class="rh">${scen.dc > 0 ? '+'+scen.dc.toLocaleString('fi-FI') : '0'}</td>
@@ -3311,7 +3298,7 @@ function renderStructural() {
       <td class="rh">${m.fs != null ? (m.fs*100).toFixed(1)+'%' : '—'}</td>
       <td class="rh">${(m.sp*100).toFixed(1)}%</td>
       <td class="rh" style="color:var(--accent);">${m.spDepth != null ? (m.spDepth*100).toFixed(1)+'%' : '—'}</td>
-      <td class="rh" style="color:${pcV4?pcV4.color:'var(--muted)'};font-weight:500;">${m.eppV4 != null ? m.eppV4.toFixed(3) : '—'}</td>
+      <td class="rh" style="color:var(--muted);font-weight:500;">${m.eppV4 != null ? m.eppV4.toFixed(3) : '—'}</td>
       <td class="rh">${m.dp_t != null ? (m.dp_t*100).toFixed(1)+'%' : (m.dp_s*100).toFixed(1)+'%'}</td>
       <td class="rh" style="color:${delta>0.05?'#8b1010':delta>0.02?'#8b3a10':'var(--muted)'};">${delta>=0?'+':''}${(delta*100).toFixed(1)} pp</td>
     </tr>`);
