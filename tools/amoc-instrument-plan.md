@@ -1123,29 +1123,40 @@ tavalla (esim. KV-storage Cache API:n sijaan).
 Ensimmainen onnistunut pitkan aikavalin testi: **r=0.069, p=0.77,
 Neff=20** - kaytannossa ei mitaan yhteytta.
 
-### Kriittinen metodologinen huomio - tama EI kumoa alkuperaista loytoa suoraan
+### KORJAUS 2026-08-01: alkuperainen "kausivaihtelun yhteensattuma" -selitys oli liian kevyt
 
-Tama testi ottaa VAIN YHDEN pisteen per vuosi (aina huhtikuun
-puolivalissa) 20 vuodelta - eri kysymys kuin alkuperainen (yhden
-vuoden PAIVATASON data, kaikki vuodenajat mukana).
+Kayttajan oma, tarkempi kritiikki: *"Luonnonilmio ei kayttaydy
+kalenteripaivien mukaan."* Tama on oikea, terävampi huomio kuin
+alkuperainen selityksemme.
 
-**Mahdollinen selitys:** jos alkuperainen r≈0.5-loydos johtui siita
-etta seka SST etta RAPID_MOC noudattavat omaa VUODENAIKAISSYKLIAAN
-jotka sattuvat kohtaamaan ~11 paivan viiveella (molemmat sarjat
-"liikkuvat yhdessa" lapi vuodenaikojen yhden vuoden sisalla) - tama
-nakyisi vahvana korrelaationa paivatason datassa, mutta HAVIAISI
-TAYSIN kun otetaan vain yksi piste per vuosi samalta kalenteriajalta,
-koska jaljelle jaisi vain vuosien valinen vaihtelu, ei kausivaihtelu.
+**Miksi alkuperainen selitys ei riittanyt:** jos -11 vrk:n viive on
+todellinen, JATKUVA fysikaalinen prosessi (ei sidottu tiettyyn
+vuodenaikaan), sen pitaisi olla havaittavissa MISTA TAHANSA vuoden
+kohdasta - ei vain yhdesta mielivaltaisesta kalenteripisteesta
+(huhtikuun 15.) toistettuna. Jos SST todella vaikuttaisi MOC:iin 11
+paivan viiveella ymparivuotisesti, vuosien valinen vaihtelu SST:ssa
+(huhtikuun 4. paiva) pitaisi silti ennustaa vuosien valista vaihtelua
+MOC:ssa (huhtikuun 15. paiva) - riippumatta siita etta testataan vain
+yhta kalenteripistetta. "Kausivaihtelun yhteensattuma" -selitys ei
+oikeastaan kumoa tata logiikkaa.
 
-**Tama olisi sama ansa kuin SLA-gradientilla aiemmin:** vuosienvalinen
-(Rossby-aalto-tyyppinen) vaihtelu tai kausivaihtelu naamioituneena
-toisena ilmiona.
+**Tarkempi tulkinta:** valitsemalla "huhtikuun 15." joka vuosi, EMME
+TESTANNEET LUONNONILMIOTA SEN OMILLA EHDOILLA - testasimme
+mielivaltaista, kalenteriin sidottua leikkausta lapi 20 vuoden. Jos
+tama yksi leikkauspiste sattuu osumaan kohtaan jossa vuosien valinen
+kohina hallitsee (riippumatta siita onko fysikaalinen mekanismi
+todellinen), tulos (r≈0) ei kerro mitaan mekanismin todellisuudesta -
+se kertoo vain etta TAMA YKSI MIELIVALTAINEN PAIVA ei ollut
+informatiivinen.
 
-**Oikea seuraava testi ei olisi tama (1 piste/vuosi)** - vaan paivatason
-analyysin TOISTAMINEN usealle eri vuodelle ERIKSEEN (esim. 2010, 2015,
-2020 kukin oma 365 paivan ikkunansa), katsoen loytyyko sama ~11 vrk:n
-huippu jokaisesta vuodesta erikseen, vai oliko se sattumanvarainen
-vain siina yhdessa 2023-2024-vuodessa jota alunperin tutkittiin. Tama
+**Oikea seuraava testi:** ei "sama kalenteripaiva eri vuosilta" - vaan
+KOKO 61 VIIVEEN PAIVATASON SKANNAUS TOISTETTUNA USEALLE ERI,
+RIIPPUMATTOMALLE VUODELLE ERIKSEEN (esim. 2010, 2015, 2020, kukin oma
+taysi 365 paivan ikkunansa). Jos -11 vrk:n huippu loytyy johdonmukai-
+sesti jokaisesta naista riippumatta mihin vuodenaikaan tai vuoteen
+data osuu, se olisi aito, kalenterista riippumaton signaali. Tama
+testaisi ilmiota sen OMILLA ehdoilla, ei meidan kalenterimme ehdoilla.
+Ei viela toteutettu.
 on merkitty seuraavaksi askeleeksi, ei viela toteutettu.
 
 ## KONTEKSTI 2026-08-01 — ilmakehan CO2/metaani, ei toteutettu datasarjana
