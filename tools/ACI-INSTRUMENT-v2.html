@@ -323,6 +323,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <span class="epp-badge-txt" id="eppTxt">—</span>
         </div>
         <div class="epp-sub" id="eppSub">W168 · v3+T+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈)</div>
+        <div id="eppSatWarn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin-top:.3rem;padding:.3rem .5rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;"></div>
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -632,6 +633,9 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="bt-sig-card"><div class="bt-sig-lbl">Precision</div><div class="bt-sig-val" id="btPrec">—</div><div class="bt-sig-sub">TP / (TP+FP)<br>Flagausten oikeellisuus</div></div>
       <div class="bt-sig-card"><div class="bt-sig-lbl">F1-score</div><div class="bt-sig-val" id="btF1">—</div><div class="bt-sig-sub">2·P·R / (P+R)<br>Tasapainotettu metriikka</div></div>
       <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub">2022-01 → 2024-12<br>OL3-vaikutus ECI:hin</div></div>
+    </div>
+    <div id="btF1Warn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin:.4rem 0;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;">
+      ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä silloin. Nama Recall/Precision/F1-luvut mittaavat siis osittain vaaraa asiaa (hintaohjattua kysyntajoustoa, ei endurance-vajetta) ja ovat suuntaa antavia, eivat rigoreja validointeja (ks. Rakenteellinen rajoite 3 alla).
     </div>
     <div class="bt-annot">
       TP (True Positive) = EPP ≥ 0.50 &amp; tunnettu stressiperiodi &nbsp;·&nbsp; FN (False Negative) = EPP &lt; 0.50 &amp; tunnettu stressi &nbsp;·&nbsp; FP (False Positive) = EPP ≥ 0.50 &amp; ei tunnettua stressiä &nbsp;·&nbsp; TN (True Negative) = EPP &lt; 0.50 &amp; ei stressiä<br>
@@ -1603,9 +1607,18 @@ function calcWindow(slice) {
     // FS(p): hydroRF skaalaa vesivoimakomponentin luotettavuuden mukaan
     hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0;
     const avgHydAdj = avgHyd * hydRF;
-    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj)/avgC) : null;
+    // KORJATTU 2026-08-01 (kayttajan havainto 2): CHP puuttui aiemmin
+    // taysin FS:sta, vaikka §10:n oma teesi kasittelee CHP-elakkeen
+    // uhkaa firm-kapasiteetille. CHP on aidosti saatavuudeltaan luotettavaa
+    // (saa/kuormariippumaton), samaan tapaan kuin ydin/vesivoima, joten
+    // se kuuluu FS:n osoittajaan. Ilman tata skaalattu CHP-arvo paatyi
+    // vain eciSemi:iin (informatiivinen sivusuure) eika koskaan itse
+    // EPP-kaavaan - CHP-skenaariot (§10) eivat siis voineet koskaan
+    // vaikuttaa EPP:hen, tarkistettu ja vahvistettu ennen korjausta.
+    const avgChpFS = avgChp ?? 0;
+    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj+avgChpFS)/avgC) : null;
     // Tallenna myös nominaali FS vertailua varten
-    fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
+    fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd+avgChpFS)/avgC) : null;
     // WR: tuulivoiman osuus — variabiliteettiriski
     wr = (avgWnd!=null && avgPl>0) ? Math.min(1, avgWnd/avgPl) : null;
     if (fs != null && wr != null) eppMode = 'v3';
@@ -1638,10 +1651,27 @@ function calcWindow(slice) {
   const _chpRawVal = _chpRaw.length ? _chpRaw.reduce((s,d)=>s+d.chp,0)/_chpRaw.length : 0;
   const chpEstimated = _chpRaw.length < Math.min(6, Math.max(1, n*0.25)) || _chpRawVal > 2000;
 
+  // LISATTY 2026-08-01 (kayttajan havainto 3): DP_t ja SP molemmat
+  // leikkautuvat [0,1]-valille Math.min/max:lla. Kun jokin komponentti
+  // on TASAN katossa (esim. dp_t=1.00 tai sp=1.00), se lakkaa
+  // erottelemasta eri voimakkaita tilanteita toisistaan - kolme eri
+  // ikkunaa (W24/W72/W168) voivat kaikki nayttaa saman leikatun arvon
+  // vaikka taustalla oleva todellisuus vaihtelisi paljonkin. Merkitaan
+  // tama nakyvasti sen sijaan etta annetaan EPP:n nayttaa taydelta
+  // luvulta ilman varoitusta - kayttajan oma ehdotus: "EPP ei ole
+  // laskettavissa vaan komponentit esitetaan erikseen."
+  const SATURATION_EPS = 0.001;
+  const satComponents = [];
+  if (dp_used != null && dp_used >= 1 - SATURATION_EPS) satComponents.push('DP_t');
+  if (sp >= 1 - SATURATION_EPS) satComponents.push('SP');
+  if (fs != null && fs <= SATURATION_EPS) satComponents.push('FS (=0)');
+  const saturated = satComponents.length > 0;
+
   return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp,
            eppMode: eppFull, stressH, chpEstimated, n, modalMonth, baselineC,
            avgTemp, avgTempHki, avgTempKuo, avgTempRov, tempSpread, avgCexpected,
            eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp, spCluster,
+           saturated, satComponents,
            avgSol: (typeof avgSol !== 'undefined' ? avgSol : null),
            avgBat: (typeof avgBat !== 'undefined' ? avgBat : null),
            avgOth: (typeof avgOth !== 'undefined' ? avgOth : null),
@@ -1729,6 +1759,22 @@ function renderPosture(m, spot) {
   document.getElementById('eppDot').style.background = p.color;
   document.getElementById('eppTxt').textContent = p.label;
   document.getElementById('eppTxt').style.color = p.color;
+
+  // LISATTY 2026-08-01 (kayttajan havainto 3): nayta varoitus jos jokin
+  // EPP:n komponentti on saturoitunut (DP_t tai SP katossa, tai FS=0) -
+  // talloin EPP-luku ei erottele eri voimakkuustasoja, ja tulkinnassa
+  // pitaa olla varovainen. "Disclaimer ei ole korjaus" - siksi varoitus
+  // nakyy suoraan EPP-luvun vieressa, ei vain erillisessa rajoitelistassa.
+  const satWarnEl = document.getElementById('eppSatWarn');
+  if (satWarnEl) {
+    if (w168.saturated) {
+      satWarnEl.style.display = 'block';
+      satWarnEl.textContent = '⚠ Saturoitunut: ' + w168.satComponents.join(', ') +
+        ' katossa/pohjassa tallla ikkunalla — EPP ei tallla hetkella erottele voimakkuustasoja luotettavasti, tulkitse komponentit erikseen.';
+    } else {
+      satWarnEl.style.display = 'none';
+    }
+  }
 
   const now = new Date();
   document.getElementById('pgTs').textContent = now.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
@@ -2989,6 +3035,8 @@ function renderBTSignal(results) {
   }
 
   document.getElementById('btSig').style.display = 'grid';
+  const btF1WarnEl = document.getElementById('btF1Warn');
+  if (btF1WarnEl) btF1WarnEl.style.display = 'block';
 }
 
 let btResults = [];
@@ -3064,13 +3112,27 @@ let chpDelta = 0;    // %, CHP-kapasiteettimuutos
 // Laske EPP skenaariolle: DC-lisäkuorma + CHP-muutos
 function calcWindowScenario(slice, dcMW, chpPct) {
   if (!slice.length) return null;
-  // Muokataan datapisteitä: lisätään DC-kuorma kulutukseen, skaalataan CHP
-  const modified = slice.map(d => ({
-    ...d,
-    c: d.c + dcMW,
-    gap: (d.c + dcMW) - d.p,
-    chp: d.chp != null ? d.chp * (1 + chpPct / 100) : null,
-  }));
+  // KORJATTU 2026-08-01 (kayttajan havainto 2, toinen osa): alkuperainen
+  // versio skaalasi VAIN d.chp-kentan, mutta ei koskaan d.p:ta (koko-
+  // naistuotanto) - koska calcWindow:n oma gap/SP-laskenta kayttaa
+  // suoraan d.p:ta (ei laske sita uudestaan komponenteista), CHP-muutos
+  // ei nakynyt SP:ssa lainkaan, ei vain silloin kun SP sattui olemaan
+  // katossa. Lasketaan nyt CHP:n muutos (chpDelta) ja lisataan se my.s
+  // d.p:hen, jotta seka FS (kts. yllaoleva korjaus) etta SP/gap
+  // reagoivat CHP-skenaarioon johdonmukaisesti.
+  const modified = slice.map(d => {
+    const chpOld = d.chp ?? 0;
+    const chpNew = d.chp != null ? d.chp * (1 + chpPct / 100) : d.chp;
+    const chpDelta = (chpNew ?? 0) - chpOld;
+    const pNew = d.p + chpDelta;
+    return {
+      ...d,
+      c: d.c + dcMW,
+      p: pNew,
+      gap: (d.c + dcMW) - pNew,
+      chp: chpNew,
+    };
+  });
   return calcWindow(modified);
 }
 
@@ -3316,11 +3378,18 @@ async function renderS12(rawData) {
   const logEntry = { t: new Date().toLocaleString('fi'), trr:null, se1:null, shortage:null, freq:null, ceb:null, price: lastWeekPriceMean };
   try {
     // Energia-alijäämä 72h — laskennallinen rawData:sta (ei vaadi uutta proxyä)
+    // KORJATTU 2026-08-01: alkuperainen koodi kaytti d.consumption/d.production
+    // -kenttia joita EI OLE OLEMASSA datapisteessa - nama olivat vain
+    // DS.consumption/DS.production -vakioiden nimia (Fingrid API:n dataset-ID:t),
+    // ei koskaan kentta d:lla. Tama teki gap:sta AINA 0 (undefined||0 - undefined||0),
+    // joten CEB ei koskaan tuottanut nollasta poikkeavaa arvoa - "kuollut mittari"
+    // (kayttajan oma havainto, tarkistettu ja vahvistettu ennen korjausta).
+    // Oikea kulutus/tuotanto-pari on d.c/d.p, sama kuin avgGap:ssa (rivi ~1500).
     if (rawData && rawData.length >= 72) {
       const slice72 = rawData.slice(-72);
       let cumDeficit = 0;
       slice72.forEach(d => {
-        const gap = (d.consumption || 0) - (d.production || 0);
+        const gap = (d.c || 0) - (d.p || 0);
         if (gap > 0) cumDeficit += gap;
       });
       logEntry.ceb = Math.round(cumDeficit);
