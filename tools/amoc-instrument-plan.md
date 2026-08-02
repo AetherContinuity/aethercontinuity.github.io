@@ -1198,3 +1198,48 @@ Mauna Loa) - aikaskaalaongelma tekisi testista todennakoisesti
 tuloksettoman samalla tavalla kuin muut lyhyen aikavalin testimme,
 eika lisaarvoa katsottu riittavaksi oikeuttamaan uutta datapipelinea.
 Mainittu vain kontekstina taman dokumentin sivuhuomautuksena.
+
+## RAJOITE 2026-08-01 — dekadien valinen vertailu ei ole mahdollinen tallla instrumentilla
+
+Kayttajan oma huomio: ilmio etenee hitaasti, tarkastelua pitaisi tehda
+vertaamalla vuosikymmenten tilastoja paivätason viivekorrelaation
+sijaan.
+
+**Tarkistettu suoraan RAPID:n omasta datasta:** koko aikasarja kattaa
+tasmalleen 20,0 vuotta (2004-04-02 - 2024-03-27) - TASMALLEEN kaksi
+dekadia. Tama ei riita minkaanlaiseen tilastollisesti mielekkaaseen
+dekadien valiseen korrelaatioon tai trendianalyysiin - tarvittaisiin
+vahintaan 5-10 riippumatonta dekadia (50-100+ vuotta).
+
+**Kuvaileva vertailu (ei tilastollinen testi, vain kaksi lukua):**
+- 2004-2014: MOC ka=17.18 Sv, stdev=4.66
+- 2014-2024: MOC ka=16.77 Sv, stdev=4.12
+- Muutos: -0.4 Sv - pieni murto-osa luonnollisesta vaihtelusta
+
+**Vaihtoehto - Kim ym. (2021) / Caesar ym. (2018) SST-pohjainen
+rekonstruktio 1854/1870-nykyhetki:** menetelma laskee SST-indeksin
+(subpolaarisen pyorteen keskilampotila miinus globaali keskiarvo,
+"lampenemisreika"/"kylma laiska" -kuvio), kalibroi taman CMIP-
+ilmastomalleja vasten, ja soveltaa kalibroitua suhdetta pitkaan
+SST-havaintosarjaan (HadISST) rekonstruoidakseen AMOC:n voimakkuuden
+ajalta ennen RAPID:ia. Tulos: ~3±1 Sv heikkeneminen 1900-luvun
+puolivalista.
+
+**Mutta tamakin menetelma on itsessaan kiistanalainen:** tuore
+CMIP6-mallivertailu (2025) osoitti etta SPG-sormenjalki "ei seuraa
+AMOC-vaihtelua johdonmukaisesti" luonnollisen vaihtelun simulaatioissa -
+oletettu tiukka kytkenta ei pida johdonmukaisesti paikkaansa. Toinen
+tutkimus (2024) lisaa etta sormenjalki muuttuu vahemman luotettavaksi
+voimakkaamman lampenemisen oloissa.
+
+### LOPULLINEN JOHTOPAATOS
+
+**Dataa ei ole saatavilla tarpeeksi pitkalta aikavalilta ilmion
+arviointiin nailla valineilla.** RAPID:n oma suora mittaus (20v) on
+liian lyhyt dekadien valiseen vertailuun. Vaihtoehtoiset, pidemmat
+SST-pohjaiset rekonstruktiot ovat olemassa, mutta ne ovat itsessaan
+mallikalibroituja prokseja joilla on tuoreesti dokumentoituja, avoimia
+luotettavuusongelmia - ei suoria, riidattomia ikkunoita menneisyyteen.
+Tama instrumentti ei siis pysty tallla hetkella vastaamaan
+kysymykseen AMOC:n vuosikymmenten aikaskaalan kayttaytymisesta millaan
+tallla hetkella kaytettavissa olevalla tyokalulla tai datalahteella.
