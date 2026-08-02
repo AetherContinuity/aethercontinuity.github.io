@@ -785,7 +785,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
           <li><strong>Open-Meteo</strong> → lämpötilamalli (DP_t)</li>
           <li><strong>NVE Magasinstatistikk</strong> → hydro_RF (FS(p))</li>
         </ul>
-        Tämä mahdollistaa kolme asiaa joita puhtaasti Fingrid-pohjainen malli ei voinut: (1) erottaa onko matala tuuli paikallinen suomalainen ilmiö vai koko Pohjolan Dunkelflaute (Nordic-WR), (2) havaita SE1:n kasvava teollinen kuorma (Stegra/HYBRIT) SUORAAN ennen kuin se näkyy Suomen tuontimarginaalin kiristymisenä, (3) validoida WEM:n omia tuloksia kahdella riippumattomalla lähteellä rinnakkain (ks. Nordic-WR v0:n oma FI-Fingrid vs. FI-ENTSO-E-ristiintarkistus, ero ~4,5%). Seuraavat kehitysaskeleet (esim. Nordic ECI, Nordic Endurance Pressure) ovat nyt luonteeltaan pääosin analytiikkaa olemassa olevan datapohjan päällä, ei uusia rajapintoja — datalähdepohja (Fingrid + ENTSO-E + Open-Meteo + NVE) kattaa jo sekä Suomen että laajemman pohjoismaisen järjestelmän keskeiset rakenteelliset tekijät.
+        Tämä mahdollistaa kolme asiaa joita puhtaasti Fingrid-pohjainen malli ei voinut: (1) erottaa onko matala tuuli paikallinen suomalainen ilmiö vai koko Pohjolan Dunkelflaute (Nordic-WR), (2) havaita SE1:n kasvava teollinen kuorma (Stegra/HYBRIT) SUORAAN ennen kuin se näkyy Suomen tuontimarginaalin kiristymisenä, (3) <strong>PYRKIÄ</strong> validoimaan WEM:n omia tuloksia kahdella riippumattomalla lähteellä rinnakkain — <strong>KORJATTU 2026-08-01 (käyttäjän oma live-havainto):</strong> FI-Fingrid vs. FI-ENTSO-E-ristiintarkistus EI ANNA VAKIOSUHDETTA ikkunoiden yli (W24 +3,7%, W72 +76%, W168 +96% — ei ~4,5% kuten aiemmin väitettiin yhtenä lukuna). Suhteen kasvu ikkunan pidentyessä viittaa MTU-eroon (vartti vs. tunti), pistemäärän vs. aikaleiman mukaiseen ikkunointiin, ja/tai UTC/EEST-aikavyöhyke-eroon (kesällä 3h) — ei pelkkään aggregaattimääritelmän eroon. Ristiintarkistus ei toistaiseksi ole luotettava missään ikkunassa paitsi ehkä W24:ssä; korjaus (UTC-ankkurointi, tuntiresamplaus, aikaleimadedupointi) ei ole vielä toteutettu.</strong> Seuraavat kehitysaskeleet (esim. Nordic ECI, Nordic Endurance Pressure) ovat nyt luonteeltaan pääosin analytiikkaa olemassa olevan datapohjan päällä, ei uusia rajapintoja — datalähdepohja (Fingrid + ENTSO-E + Open-Meteo + NVE) kattaa jo sekä Suomen että laajemman pohjoismaisen järjestelmän keskeiset rakenteelliset tekijät.
       </div>
     </div>
 
@@ -1607,18 +1607,27 @@ function calcWindow(slice) {
     // FS(p): hydroRF skaalaa vesivoimakomponentin luotettavuuden mukaan
     hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0;
     const avgHydAdj = avgHyd * hydRF;
-    // KORJATTU 2026-08-01 (kayttajan havainto 2): CHP puuttui aiemmin
-    // taysin FS:sta, vaikka §10:n oma teesi kasittelee CHP-elakkeen
-    // uhkaa firm-kapasiteetille. CHP on aidosti saatavuudeltaan luotettavaa
-    // (saa/kuormariippumaton), samaan tapaan kuin ydin/vesivoima, joten
-    // se kuuluu FS:n osoittajaan. Ilman tata skaalattu CHP-arvo paatyi
-    // vain eciSemi:iin (informatiivinen sivusuure) eika koskaan itse
-    // EPP-kaavaan - CHP-skenaariot (§10) eivat siis voineet koskaan
-    // vaikuttaa EPP:hen, tarkistettu ja vahvistettu ennen korjausta.
-    const avgChpFS = avgChp ?? 0;
-    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj+avgChpFS)/avgC) : null;
+    // KORJATTU 2026-08-01, PERUTTU SAMANA PAIVANA kayttajan jatkoanalyysin
+    // jalkeen: CHP lisattiin ensin tahan (FS:n osoittajaan), mutta tama
+    // aiheutti kaksi ei-toivottua seurausta jotka kayttaja loysi live-
+    // ajosta: (1) §02:n oma teksti kuvaa FS:n yha "(ydin+vesivoima)/
+    // kulutus"-kaavana, ja §03 luokittelee CHP:n SEMI-vakaaksi, ei
+    // firmiksi - CHP:n lisaaminen FS:aan tekisi nimesta harhaanjohtavan
+    // (pitaisi olla FS_semi). (2) Backtest kutsuu calcWindow:ia SUORAAN
+    // (ei calcWindowScenario:a), joten FS:n maaritelman muutos muutti
+    // hiljaa JULKAISTUJA historia-arvoja ilman versiointia (esim.
+    // 2024-12 pudotti Tight->Normal-luokkaan).
+    //
+    // Palautettu alkuperaiseen (nuc+hydAdj vain). CHP:n vaikutus EPP:hen
+    // tulee nyt YKSINOMAAN calcWindowScenario:n tuotantosumma-polun kautta
+    // (chpDelta lisataan d.p:hen, mika muuttaa gap:ia ja siten SP:ta) -
+    // tama riittaa yksinaan tekemaan CHP-skenaariot (§10) EPP-herkiksi
+    // ilman etta FS:n oma, vakiintunut maaritelma tai backtest-historia
+    // muuttuu. Testattu paikallisesti: SP-polku yksinaan riittaa
+    // erottamaan CHP -30% ja CHP -40% -skenaariot toisistaan.
+    fs = avgC > 0 ? Math.min(1, (avgNuc+avgHydAdj)/avgC) : null;
     // Tallenna myös nominaali FS vertailua varten
-    fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd+avgChpFS)/avgC) : null;
+    fsNominal = avgC > 0 ? Math.min(1, (avgNuc+avgHyd)/avgC) : null;
     // WR: tuulivoiman osuus — variabiliteettiriski
     wr = (avgWnd!=null && avgPl>0) ? Math.min(1, avgWnd/avgPl) : null;
     if (fs != null && wr != null) eppMode = 'v3';
@@ -3394,12 +3403,16 @@ async function renderS12(rawData) {
       });
       logEntry.ceb = Math.round(cumDeficit);
       document.getElementById('s12CEB').textContent = Math.round(cumDeficit).toLocaleString('fi') + ' MWh';
-      const st = s12Status(cumDeficit, [5000, 15000, 30000],
-        ['Normal','Tight','Elevated','Critical'],
-        ['s12-normal','s12-tight','s12-elevated','s12-critical']);
+      // KORJATTU 2026-08-01 (kayttajan sivuhuomio): CEB-korjauksen jalkeen
+      // mittari on tuottanut nollasta poikkeavan arvon vasta kerran, eika
+      // datalogissa ole vertailupohjaa - Normal/Tight/Elevated/Critical
+      // -kynnykset (5000/15000/30000 MWh) OLIVAT KALIBROIMATTOMIA jo
+      // ennen taman mittarin omaa korjaustakin. Nayta raaka MWh-arvo,
+      // mutta ala vaita kategorista tasoa ennen kuin vahintaan yksi
+      // talvijakso vertailudataa on kertynyt.
       const lbl = document.getElementById('s12CEBlabel');
-      lbl.textContent = st.label;
-      lbl.className = 's12-status ' + st.cls;
+      lbl.textContent = 'Ei kalibroitu — odottaa vertailudataa';
+      lbl.className = 's12-status s12-normal';
     }
 
     // Reaaliaikaiset DS:t transmission-proxystä — try/catch per mittari
