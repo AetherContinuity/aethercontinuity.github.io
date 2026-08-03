@@ -754,7 +754,7 @@ SE1-vientimarginaali ei ole staattinen: Aurora Line lisäsi SE1→FI fyysistä s
 
 Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
       <li><strong>Käsitteiden suhde — Black Period vs. Dunkelflaute:</strong> "Black Period" (WP-001) on WEM:n oma, järjestelmätason analyyttinen konstruktio: 168 tunnin ikkuna jossa endurance-marginaalit ovat kriittisen ohuet, mitattuna EPP:llä. "Dunkelflaute" on kansainvälisesti vakiintunut, meteorologis-energeettinen termi sille fyysiselle säätilalle (samanaikainen matala tuuli- ja aurinkotuotanto, usein kylmällä säällä) joka tyypillisimmin laukaisee Black Period -tyyppisen tilan. Ne eivät ole synonyymejä: Dunkelflaute on yksi — todennäköisin — Black Periodin syy, mutta Black Period voisi periaatteessa syntyä myös muista syistä (esim. laaja tuotantovajaus ilman tuulikatoa). WEM:n WR-komponentti (WindRisk) on lähin suora Dunkelflaute-indikaattori instrumentissa.</li>
-      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Paloittain lineaarinen kulutus-lämpötilamalli, katto 13 500 MW — kalibroitu 2010-luvun tyypilliseen huippukulutukseen. Fingridin historiallinen maksimi ~15 200 MW (tammikuu 2016). Malli aliarvioi äärimmäisten pakkasjaksojen kysyntää noin 11%.. Alle −5°C hidastuu 180 MW/°C (lämmitys lähestyy kyllästystä). Ei huomioi sääolosuhteiden (tuulisuus, kosteus) lisävaikutusta. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
+      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Paloittain lineaarinen kulutus-lämpötilamalli, katto 13 500 MW — kalibroitu 2010-luvun tyypilliseen huippukulutukseen. Fingridin historiallinen maksimi ~15 200 MW (tammikuu 2016). <strong>KORJATTU 2026-08 (mitattu 8 backtest-periodista):</strong> alkuperäinen 350 MW/°C -kulmakerroin saturoi katon jo −0,6 °C:ssa — kaikki 5 havaittua talviperiodia (−1…−5 °C) olivat jo saturoituneita, jolloin DP_t ei erotellut lievää ja ankaraa pakkasta lainkaan. Uudelleenkalibroitu: 200 MW/°C väliltä 18…−5 °C, 76 MW/°C alle −5 °C — katto saavutetaan nyt vasta n. −30 °C:ssa, aidosti äärimmäisessä kylmässä. Ei huomioi sääolosuhteiden (tuulisuus, kosteus) lisävaikutusta. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
       <li><strong>Rakenteellinen rajoite 2 — Fingridin oma tuotantomuotojaottelu on suuntaa-antava:</strong> Fingrid ilmoittaa itse (fingrid.fi/sahkomarkkinat/sahkojarjestelman-tila), että reaaliaikamitatun tuotannon jaottelu tuotantomuodoittain (mukaan lukien DS 201/202) perustuu Energiaviraston voimalaitosrekisteriin ja tehdään laitoksen <em>pääasiallisen</em> tuotantomuodon mukaan — "lukemat ovat suuntaa-antavia". Mittaamaton tuotanto (mukaan lukien nopean häiriöreservin varavoimalaitokset) sisältyy kokonaan kohtaan "muu tuotanto", ei erottele tuotantomuotoa. WEM:n DS 201/202 -pohjainen CHP-laskenta (ks. §03 debug-paneeli) on siis sisäisesti oikein laskettu sille datalle jota Fingrid tarjoaa, mutta itse lähdedatan tuotantomuotojaottelu ei ole tarkka mittaus — se on hyväksytty epätarkkuus Fingridin oman ilmoituksen mukaan, ei WEM:n oma approksimaatiovirhe.</li>
       <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
       <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
@@ -1350,10 +1350,24 @@ const MONTHLY_BASELINE = {
 const SEASONAL_SIGMA = 1800; // MW — tyypillinen kuukausinsisäinen vaihteluväli / 2
 
 // Lämpötilamalli: Suomen kulutus-lämpötilarelatio
-// C_expected(T) = 7000 + max(0, 18−T)×350 MW/°C (lämmityskausi)
+// KORJATTU 2026-08: C_expected(T) = 7000 + max(0, 18−T)×200 MW/°C (18..-5°C)
+//                + lisää (-5-T)×76 MW/°C (alle -5°C, katto n. -30°C:ssa)
 //                + max(0, T−22)×60 MW/°C (jäähdytys, pieni)
 const TEMP_HEAT_BASE   = 18;   // °C — lämmitysrajan lähtöpiste
-const TEMP_HEAT_SLOPE  = 350;  // MW per °C alle lähtöpisteen
+// KORJATTU 2026-08 (kayttajan DP_t-tutkimus, mitattu 8 backtest-
+// periodista): alkuperainen 350 MW/°C sai avgCexpected:n saturoitumaan
+// TEMP_CEILINGiin jo -0.57°C:ssa (18 - 6500/350) - AARIMMAISEN
+// aikaisin, koska 23 asteen vali (18..-5°C) yksinaan vaati 8050 MW,
+// enemman kuin koko 6500 MW:n budjetti (7000->13500) ennen -5°C:n
+// taitepistetta edes. Vahvistettu: KAIKKI 5 havaittua talviperiodia
+// (-1..-5°C) olivat jo saturoituneita, jolloin DP_t ei erotellut
+// lievaa ja ankaraa pakkasta lainkaan. Uudelleenkalibroitu niin etta
+// katto saavutetaan vasta n. -30°C:ssa (aidosti aarimmainen, ei
+// tavallinen talvipakkanen) - testattu paikallisesti etta -1..-5°C
+// antaa nyt jarkevia, ei-saturoituneita arvoja (10800-11600 MW,
+// lahella havaittuja todellisia kulutuslukemia 10486-11274 MW).
+const TEMP_HEAT_SLOPE  = 200;  // MW per °C valilla 18°C..-5°C (oli 350)
+const TEMP_HEAT_SLOPE2 = 76;   // MW per °C alle -5°C (uusi, korvaa kovakoodatun 180:n) - katto n. -30°C:ssa
 const TEMP_COOL_BASE   = 22;   // °C — jäähdytysraja
 const TEMP_COOL_SLOPE  = 60;   // MW per °C yli jäähdytysrajan
 const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
@@ -1403,14 +1417,16 @@ async function fetchSeries(dsId, hours, size, retries = 3) {
 
 function expectedConsumption(tempC) {
   // Paloittain lineaarinen — katto 13 500 MW (Suomen realistinen huippukulutus)
-  // ≥ 18°C: ei lämmitystä | -5°C..18°C: 350 MW/°C | < -5°C: 180 MW/°C (kyllästyy)
+  // KORJATTU 2026-08: ≥18°C: ei lämmitystä | -5°C..18°C: 200 MW/°C (oli 350,
+  // liian jyrkkä - saturoi jo -0.6°C:ssa) | < -5°C: 76 MW/°C (oli kovakoodattu
+  // 180) - katto saavutetaan nyt n. -30°C:ssa, ei heti pakkasen alkaessa.
   let heating;
   if (tempC >= TEMP_HEAT_BASE) {
     heating = 0;
   } else if (tempC >= -5) {
     heating = (TEMP_HEAT_BASE - tempC) * TEMP_HEAT_SLOPE;
   } else {
-    heating = (TEMP_HEAT_BASE + 5) * TEMP_HEAT_SLOPE + (-5 - tempC) * 180;
+    heating = (TEMP_HEAT_BASE + 5) * TEMP_HEAT_SLOPE + (-5 - tempC) * TEMP_HEAT_SLOPE2;
   }
   const cooling = Math.max(0, tempC - TEMP_COOL_BASE) * TEMP_COOL_SLOPE;
   return Math.min(TEMP_CEILING, TEMP_BASE_LOAD + heating + cooling);
@@ -1958,7 +1974,7 @@ function renderMetrics(m) {
 
   const metrics = [
     { id:'A · DP', name:'Demand Pressure — lämpötilakorjattu (DP_t) / kausikorjattu (DP_s)',
-      desc:'DP_t: todellinen kulutus vs. C_exp(T) — paloittain lineaarinen, katto 13 500 MW. ≥18°C: 0, −5..18°C: 350 MW/°C, <−5°C: 180 MW/°C. Fallback: DP_s (kuukausibaseline).',
+      desc:'DP_t: todellinen kulutus vs. C_exp(T) — paloittain lineaarinen, katto 13 500 MW. ≥18°C: 0, −5..18°C: 200 MW/°C, <−5°C: 76 MW/°C (katto n. -30°C:ssa; korjattu 2026-08, oli 350/180 - saturoi liian aikaisin). Fallback: DP_s (kuukausibaseline).',
       vals:[w24?.dp_t ?? w24?.dp_s, w72?.dp_t ?? w72?.dp_s, w168?.dp_t ?? w168?.dp_s], weight:'0.20', fmt: v => fmt.pct(v),
     },
     { id:'B · FS', name:'FirmShare — firm capacity coverage',
