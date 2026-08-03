@@ -3311,7 +3311,7 @@ async function runBacktest() {
         epp: eppFinal, eci: m.eci, sp: m.sp, dc: m.dc,
         dp: m.dp, nir: m.nir, pts: data.length,
         dataQuality, avgNuc: m.avgNuc, avgChp: m.avgChp, avgP: m.avgP,
-        dp_t: m.dp_t, dp_t_raw: m.dp_t_raw, avgTemp: m.avgTemp, avgCexpected: m.avgCexpected,
+        dp_t: m.dp_t, dp_t_raw: m.dp_t_raw, avgC: m.avgC, avgTemp: m.avgTemp, avgCexpected: m.avgCexpected,
         error: null,
       });
     } catch (e) {
@@ -3352,15 +3352,46 @@ async function runBacktest() {
     if (withDp.length > 0) {
       const vals = withDp.map(r => r.dp_t_raw);
       const min = Math.min(...vals), max = Math.max(...vals);
+      // KORJATTU 2026-08 (kayttajan mittauksen jalkeen): pelkka raakojen
+      // min/max-vaihteluvali ei erota LATTIAAN (dp_t_raw<<0, actual<<
+      // saturoitunut avgCexpected) juuttumista KATTOON (dp_t_raw>1,
+      // actual>avgCexpected) juuttumisesta - nama ovat eri ongelmia,
+      // eri korjaus. Tarkistetaan sen sijaan onko avgCexpected
+      // PINNATTUNA TEMP_CEILING:iin (13500) USEALLA ERI lampotilalla -
+      // tama on suora todiste etta REFERENSSI (C_exp-malli) saturoituu
+      // liian helposti, ei etta dp_t:n oma [0,1]-leikkaus olisi ongelma.
+      const withTemp = withDp.filter(r => r.avgTemp != null && r.avgCexpected != null);
+      const pinnedAtCeiling = withTemp.filter(r => Math.abs(r.avgCexpected - 13500) < 1);
+      const pinnedTemps = pinnedAtCeiling.map(r => r.avgTemp);
+      const floorClamped = withDp.filter(r => r.dp_t_raw < 0).length;
+      const ceilClamped = withDp.filter(r => r.dp_t_raw > 1).length;
+
       dpRawPanel.style.display = 'block';
-      dpRawPanel.textContent = 'DP_t RAAKA-ARVO (ennen [0,1]-kattoa) — KAIKKI PERIODIT:\n\n' +
+      let text = 'DP_t RAAKA-ARVO (ennen [0,1]-kattoa) — KAIKKI PERIODIT:\n\n' +
         withDp.map(r => `${r.id}: raaka=${r.dp_t_raw.toFixed(3)}  (katolla=${r.dp_t.toFixed(3)})  `
-          + `avgC=${Math.round(r.avgC)}  avgCexp=${r.avgCexpected!=null?Math.round(r.avgCexpected):'—'}  `
+          + `avgC=${r.avgC!=null?Math.round(r.avgC):'—'}  avgCexp=${r.avgCexpected!=null?Math.round(r.avgCexpected):'—'}  `
           + `avgTemp=${r.avgTemp!=null?r.avgTemp.toFixed(1)+'°C':'—'}`).join('\n')
         + `\n\nVaihteluväli: ${min.toFixed(3)} .. ${max.toFixed(3)}\n`
-        + (max - min > 0.3
-            ? '→ Raaka vaihtelee merkittävästi: KATTO tuhoaa aitoa signaalia. Korjaus = uudelleenskaalaus/log-muunnos.'
-            : '→ Raaka pysyy lähes vakiona: REFERENSSI (TEMP_SIGMA/C_exp) on väärin kalibroitu, ei kattovika.');
+        + `Lattiaan (raaka<0) juuttuneita: ${floorClamped}/${withDp.length}\n`
+        + `Kattoon (raaka>1) juuttuneita: ${ceilClamped}/${withDp.length}\n`;
+
+      if (pinnedAtCeiling.length >= 2) {
+        const tMin = Math.min(...pinnedTemps).toFixed(1);
+        const tMax = Math.max(...pinnedTemps).toFixed(1);
+        text += `\n→ LÖYDÖS: avgCexpected on PINNATTUNA 13500 MW:aan `
+          + `${pinnedAtCeiling.length}/${withTemp.length} periodissa, lämpötiloilla ${tMin}..${tMax}°C. `
+          + `Malli saturoituu jo n. -0.6°C:ssa (18 - 6500/350) - EI vasta äärikylmässä. `
+          + `Referenssi ei erottele lievää ja ankaraa pakkasta toisistaan koko lämmityskauden ajan. `
+          + `Tämä selittää lattiaan juuttumisen (${floorClamped} periodia), EI dp_t:n oma [0,1]-katto. `
+          + `Korjaus: C_exp(T)-mallin oma katto/kulmapiste on väärin kalibroitu, ei TEMP_SIGMA.`;
+      } else if (max - min > 0.3) {
+        text += '\n→ Raaka vaihtelee merkittävästi ilman selvää avgCexpected-pinnausta: '
+          + 'tarkista TEMP_SIGMA-skaalaus erikseen.';
+      } else {
+        text += '\n→ Raaka pysyy lähes vakiona eikä avgCexpected ole pinnattuna: '
+          + 'tarkista TEMP_SIGMA-kalibrointi.';
+      }
+      dpRawPanel.textContent = text;
     } else {
       dpRawPanel.style.display = 'none';
     }
