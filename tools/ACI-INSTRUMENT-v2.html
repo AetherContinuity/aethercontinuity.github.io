@@ -3631,8 +3631,15 @@ async function renderS12(rawData) {
               const mfrrEl = document.getElementById('s12mFRR');
               const mfrrLbl = document.getElementById('s12mFRRlabel');
               if (mfrrEl) {
-                if (freqDev < -0.05) { mfrrEl.textContent = '↑ ylös'; mfrrLbl.textContent = 'Taajuus matala → säätö ylös'; mfrrLbl.className = 's12-status s12-elevated'; }
-                else if (freqDev > 0.05) { mfrrEl.textContent = '↓ alas'; mfrrLbl.textContent = 'Taajuus korkea → säätö alas'; mfrrLbl.className = 's12-status s12-tight'; }
+                // KORJATTU 2026-08-01 (kayttajan sivuhuomio, sama laji kuin
+                // CEB:n kalibroimaton kynnys): alkuperainen 0.05 Hz -kynnys
+                // laukaisi suuntamerkinnan normaalin kayttoalueen (49.9-50.1 Hz)
+                // SISALTA - esim. 50.061 Hz nayttaisi "saatosignaalin" vaikka
+                // sama arvo luokitellaan alla olevalla rivilla oikein
+                // "Stable":ksi (0.1 Hz -kynnys). Yhtenaistetty samaan kynnykseen.
+                const MFRR_THRESHOLD = 0.1;
+                if (freqDev < -MFRR_THRESHOLD) { mfrrEl.textContent = '↑ ylös'; mfrrLbl.textContent = 'Taajuus matala → säätö ylös'; mfrrLbl.className = 's12-status s12-elevated'; }
+                else if (freqDev > MFRR_THRESHOLD) { mfrrEl.textContent = '↓ alas'; mfrrLbl.textContent = 'Taajuus korkea → säätö alas'; mfrrLbl.className = 's12-status s12-tight'; }
                 else { mfrrEl.textContent = '○ neutr'; mfrrLbl.textContent = 'Taajuus vakaa (±' + Math.abs(freqDev).toFixed(3) + ' Hz)'; mfrrLbl.className = 's12-status s12-normal'; }
               }
               const dev = Math.abs((row.value||50) - 50.0);
