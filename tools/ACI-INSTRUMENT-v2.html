@@ -3289,6 +3289,8 @@ function renderStructural() {
   console.log('[WEM Nykytila-FS-vertailu]', {
     dcLoad_nyt: dcLoad, chpDelta_nyt: chpDelta,
     baseline_fs_calcWindow_suoraan: baseline.fs,
+    baseline_avgC: baseline.avgC, baseline_avgNuc: baseline.avgNuc, baseline_avgHyd: baseline.avgHyd,
+    baseline_avgP: baseline.avgP,
     scenarios0_dc: SCENARIOS[0].dc, scenarios0_chp: SCENARIOS[0].chp,
   });
   SCENARIOS.forEach((scen, idx) => {
@@ -3296,7 +3298,12 @@ function renderStructural() {
     if (!m) return;
     if (idx === 0) {
       console.log('[WEM Nykytila-FS-vertailu] SCENARIOS[0] (Nykytila) oma m.fs:', m.fs,
-        '| ero baseline.fs:aan:', (m.fs - baseline.fs), '(pitaisi olla 0)');
+        '| ero baseline.fs:aan:', (m.fs - baseline.fs), '(pitaisi olla 0)',
+        '| m.avgC:', m.avgC, '(baseline.avgC:', baseline.avgC, ', ero:', m.avgC-baseline.avgC, ')',
+        '| m.avgNuc:', m.avgNuc, '(baseline.avgNuc:', baseline.avgNuc, ', ero:', m.avgNuc-baseline.avgNuc, ')',
+        '| m.avgHyd:', m.avgHyd, '(baseline.avgHyd:', baseline.avgHyd, ', ero:', m.avgHyd-baseline.avgHyd, ')',
+        '| m.avgP:', m.avgP, '(baseline.avgP:', baseline.avgP, ')',
+        '| hydroRF_global:', hydroRF);
     }
     const pc = classify(m.epp);
     const delta = m.epp - baseline.epp;
