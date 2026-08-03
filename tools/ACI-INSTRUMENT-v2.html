@@ -2667,11 +2667,29 @@ async function init() {
     lastFetch = new Date();;
     const layerCount = rawData.filter(d => d.nuc != null).length;
     const tempCount = rawData.filter(d => d.temp != null).length;
+    let tempDiag = '';
+    if (tempCount > 0 && tempCount < rawData.length) {
+      const withTemp = rawData.filter(d => d.temp != null);
+      const withoutTemp = rawData.filter(d => d.temp == null);
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      console.log('[WEM lämpötila-diagnostiikka]', {
+        rawData_koko_aikavali: [rawData[0].time.toISOString(), rawData[rawData.length-1].time.toISOString()],
+        temp_loytyi_aikavalilla: [withTemp[0].time.toISOString(), withTemp[withTemp.length-1].time.toISOString()],
+        temp_puuttuu_aikavalilla: withoutTemp.length ? [withoutTemp[0].time.toISOString(), withoutTemp[withoutTemp.length-1].time.toISOString()] : null,
+        selaimen_oma_aikavyohyke: tz,
+        tempCount, rawDataLength: rawData.length,
+      });
+      // Nakyvasti: milloin temp LOPPUU (varhaisin puuttuva) - kertoo
+      // kuinka pitkalle taaksepain kattaa, mika on todennakoisin syy
+      // (Open-Meteo past_days-rajaus vs. Fingrid-ikkuna) osittaiselle
+      // kattavuudelle.
+      tempDiag = ` [${withTemp[0].time.toISOString().slice(0,13)}h..${withTemp[withTemp.length-1].time.toISOString().slice(0,13)}h, selain: ${tz}]`;
+    }
     const statusItems = [
       ['Tila', 'Live'],
       ['Pisteet', rawData.length + ' h'],
       ['Layerit', layerCount > 0 ? layerCount + ' h' : 'ei saatavilla', layerCount === 0],
-      ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' : 'ei saatavilla', tempCount === 0],
+      ['Lämpötila', tempCount > 0 ? tempCount + ' h (HKI/KUO/ROV)' + tempDiag : 'ei saatavilla', tempCount === 0],
       ['Päivitetty', lastFetch.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })],
     ];
     if (errors.length) statusItems.push(['Huom', errors.join(', '), true]);
