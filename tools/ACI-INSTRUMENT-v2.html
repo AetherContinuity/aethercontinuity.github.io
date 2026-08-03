@@ -2756,6 +2756,21 @@ async function init() {
       const mUpdated = computeAll(rawData);
       renderMetrics(mUpdated);
       renderStructural();
+      // LISATTY 2026-08-01: tarkka tarkistus - onko hydroRF ja
+      // mUpdated.w168.hydRF sama juuri TASSA hetkessa, ennen renderV4:aa?
+      console.log('[WEM HYDRORF-JALJITYS] ennen renderV4:aa: hydroRF(globaali)=', hydroRF,
+        '| mUpdated.w168.hydRF=', mUpdated?.w168?.hydRF,
+        '| mUpdated.w168.fsNominal=', mUpdated?.w168?.fsNominal,
+        '| mUpdated.w168.fs=', mUpdated?.w168?.fs);
+      const fsDiagEl = document.getElementById('fsDiagPanel');
+      if (fsDiagEl) {
+        fsDiagEl.textContent += `\n\n--- HYDRORF-JALJITYS (juuri ennen renderV4-kutsua) ---\n`
+          + `hydroRF (globaali muuttuja) = ${hydroRF}\n`
+          + `mUpdated.w168.hydRF (calcWindow:n paluuarvo) = ${mUpdated?.w168?.hydRF}\n`
+          + `mUpdated.w168.fsNominal = ${mUpdated?.w168?.fsNominal != null ? (mUpdated.w168.fsNominal*100).toFixed(2)+'%' : '—'}\n`
+          + `mUpdated.w168.fs = ${mUpdated?.w168?.fs != null ? (mUpdated.w168.fs*100).toFixed(2)+'%' : '—'}`;
+        fsDiagEl.style.display = 'block';
+      }
       renderV4(mUpdated ? mUpdated.w168 : null, rawData.slice(-168));
       // KEVYT REGRESSIOVAROITUS (kayttajan pyynto): vertaa §02:n (mUpdated.w168.fs)
       // ja §10:n (renderStructural:n oma calcWindow(rawData.slice(-168)).fs)
