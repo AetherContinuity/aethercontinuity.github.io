@@ -3589,11 +3589,19 @@ async function renderS12(rawData) {
         if (p1Avg != null) {
           document.getElementById('s12P1').textContent = p1Avg.toFixed(0) + ' MW';
           const p1pct = p1Avg / 4000;
-          const st = s12Status(p1pct, [0.5,0.75,0.90],
+          // KORJATTU 2026-08-01 (kayttajan sivuhuomio): p1pct on
+          // ETUMERKILLINEN (positiivinen=pohjoinen->etelä, negatiivinen=
+          // etelä->pohjoinen), mutta s12Status vertaa sita nouseviin
+          // kynnyksiin (0.5/0.75/0.90) SELLAISENAAN - voimakas etelä->
+          // pohjoinen-siirto (esim. -1053 MW = -26%) luokittuu aina
+          // "Normal":ksi koska negatiivinen luku on aina alle 0.5,
+          // riippumatta suuruudesta. Kaytetaan itseisarvoa luokitteluun,
+          // sailytetaan etumerkki nayttoteksissa.
+          const st = s12Status(Math.abs(p1pct), [0.5,0.75,0.90],
             ['Normal','Tight','High','Saturated'],
             ['s12-normal','s12-tight','s12-elevated','s12-critical']);
           const lbl = document.getElementById('s12P1label');
-          lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW)';
+          lbl.textContent = st.label + ' (' + (p1pct*100).toFixed(0) + '% of ~4000 MW' + (p1pct < 0 ? ', etelä→pohjoinen' : ', pohjoinen→etelä') + ')';
           s12SetProgress(2, 6, '§12 — P1 siirto ladattu (2/5)');
           lbl.className = 's12-status ' + st.cls;
         }
