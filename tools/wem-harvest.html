@@ -54,51 +54,61 @@ function log(msg, cls) {
 async function fetchOne(dsId, startISO, hours = 168) {
   const from = new Date(startISO);
   const to = new Date(from.getTime() + hours * 3.6e6);
-  const baseUrl = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=300`;
   const maxRetries = 4;
-  let allRows = [];
-  let page = 1;
-  // KORJATTU: alkuperainen versio haki vain YHDEN sivun (size=300).
-  // Kulutus (DS 124) on tuntiresoluutiota (168 pistetta = koko viikko
-  // mahtuu yhdelle sivulle), mutta MUUT datasetit (tuotanto, ydin,
-  // hydro, tuuli, CHP) ovat 3 MINUUTIN resoluutiota - 168h vaatii
-  // ~3360 pistetta = ~12 sivua. Seurataan nyt pagination.nextPage:ta
-  // kunnes koko pyydetty aikavali on katettu.
-  while (true) {
-    const url = `${baseUrl}&page=${page}`;
-    let rows = null, pagination = null;
+
+  async function fetchRange(rFrom, rTo, label) {
+    const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(rFrom.toISOString())}&end=${encodeURIComponent(rTo.toISOString())}&size=300`;
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const r = await fetch(url);
         if (r.status === 429) {
           const wait = 5000 * Math.pow(2, attempt);
-          log(`  DS ${dsId} sivu ${page}: HTTP 429, odotetaan ${wait/1000}s (${attempt+1}/${maxRetries})`, 'err');
+          log(`  DS ${dsId} ${label}: HTTP 429, odotetaan ${wait/1000}s`, 'err');
           await new Promise(res => setTimeout(res, wait));
           continue;
         }
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const j = await r.json();
-        rows = (j.data || []).filter(d => d.value != null);
-        pagination = j.pagination || null;
-        break;
+        return (j.data || j).filter(d => d.value != null);
       } catch (e) {
         if (attempt < maxRetries) {
-          const wait = 3000 * (attempt + 1);
-          log(`  DS ${dsId} sivu ${page}: ${e.message}, uusi yritys ${wait/1000}s kuluttua`, 'err');
-          await new Promise(res => setTimeout(res, wait));
+          await new Promise(res => setTimeout(res, 3000 * (attempt + 1)));
         } else {
-          log(`  DS ${dsId} sivu ${page}: LOPULLINEN EPÄONNISTUMINEN — ${e.message}`, 'err');
-          return allRows.length ? allRows : null;
+          log(`  DS ${dsId} ${label}: EPÄONNISTUI — ${e.message}`, 'err');
+          return null;
         }
       }
     }
-    if (rows === null) return allRows.length ? allRows : null;
-    allRows = allRows.concat(rows);
-    if (!pagination || !pagination.nextPage || page >= 15) break; // turvaraja 15 sivua
-    page = pagination.nextPage;
-    await new Promise(res => setTimeout(res, 1500)); // viive sivujen valilla
+    return null;
   }
-  return allRows.length ? allRows : null;
+
+  // KORJATTU (toinen kierros): DS.consumption (124) on tuntiresoluutiota
+  // - alkuperainen yhden kyselyn testi toimi jo taydellisesti (168/168).
+  // Ei paloitella tata turhaan. MUUT datasetit ovat 3min-resoluutiota
+  // (vahvistettu kayttajan ensimmaisesta hausta) - naille paloitellaan
+  // aikavali 12h lohkoihin ja kaytetaan VARMASTI TOIMIVAA start/end-
+  // mekanismia (ei arvattua sivutusparametria, joka ei toiminut).
+  if (dsId === DS.consumption) {
+    return await fetchRange(from, to, 'koko 168h');
+  }
+
+  const chunkHours = 12;
+  const numChunks = Math.ceil(hours / chunkHours);
+  let allRows = [];
+  for (let c = 0; c < numChunks; c++) {
+    const chunkFrom = new Date(from.getTime() + c * chunkHours * 3.6e6);
+    const chunkTo = new Date(Math.min(chunkFrom.getTime() + chunkHours * 3.6e6, to.getTime()));
+    if (chunkFrom >= to) break;
+    const rows = await fetchRange(chunkFrom, chunkTo, `lohko ${c+1}/${numChunks}`);
+    if (rows) allRows = allRows.concat(rows);
+    if (c < numChunks - 1) await new Promise(res => setTimeout(res, 1000));
+  }
+  const seen = new Set();
+  const dedup = [];
+  for (const row of allRows) {
+    if (!seen.has(row.startTime)) { seen.add(row.startTime); dedup.push(row); }
+  }
+  return dedup.length ? dedup : null;
 }
 
 async function startHarvest() {
