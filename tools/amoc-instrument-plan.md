@@ -1315,3 +1315,44 @@ vahvuus oli valmius hyvaksya myos kolmas vaihtoehto (SLA:n hylkaaminen,
 GMB:n hylkaaminen, NAO-MOC:n hylkaaminen) kun validointi ei tukenut
 alkuperaista oletusta - tama on tutkimusmetodologisesti arvokas
 lopputulos, ei epaonnistuminen.
+
+## ULKOPUOLINEN VERTAILU 2026-08 — ACI AMOC vs. RAPID/OSNAP/SAMBA/CMIP6/Hadley
+
+Kollegan (toisen AI-tyokalun) tuottama vertailudokumentti ACI:n AMOC-
+instrumentista suhteessa vakiintuneisiin jarjestelmiin. Yhteenveto-
+pisteet: tieteellinen luotettavuus 8/10, ajantasaisuus 4/10 (heikoin),
+kayttettavyyden selkeys 9/10, kustannustehokkuus 10/10.
+
+**Yksi suora ristiriita oman paatoksemme kanssa:** dokumentti ehdottaa
+"poista SLA-gradientti nakyvista tai lisaa selkea varoitus" - mutta
+teimme jo TAMAN PAATOKSEN TIETOISESTI painvastoin (ks. §01b/§02 ylla):
+SLA sailytetaan nakyvilla LAPINAKYVYYDEN ja OPETUSARVON vuoksi, selkealla
+"Ei nayttoa"-luokituksella, nimenomaan ESIMERKKINA testatusta mutta
+validoitumattomasta indikaattorista - ei koska sita suositeltaisiin
+tulkittavaksi AMOC-signaalina. Ulkopuolinen arvio ei tuntenut tata
+paatosta/perustelua, arvioi vain lopputuleman ("hylatty mutta nakyvilla")
+pintapuolisesti.
+
+**Hyodyllisia, mahdollisesti toteutuskelpoisia ehdotuksia:**
+- OSNAP-datan lisays 5. indikaattoriksi (subpolaarinen AMOC, 2014->,
+  taydentaisi RAPIDia) - vaatisi uuden proxy-integraation, ei triviaali
+  mutta konkreettinen
+- CMIP6-ennusteiden rinnakkainen nayttaminen samassa nakymassa (esim.
+  havaittu -1.0 Sv/vuosisata vs. SSP5-8.5:n -34..-45% 2100) - puhdas
+  kontekstualisointi, ei vaadi uutta dataa, vain esitysta
+
+**Ei prioriteetti talla erilla (laajuuden ulkopuolella / vaatisi
+merkittavaa uutta tyota):**
+- SAMBA-integraatio (etelainen AMOC, 34.5°S) - eri fysiikka, eri
+  projektin laajuus kuin talla hetkella tavoiteltu pohjoisen Atlantin
+  26.5°N-keskeinen tarkastelu
+- Argo-poijudata - kokonaan uusi datalahde, ei nykyisen proxy-
+  arkkitehtuurin laajennus
+- Tipping point -indikaattorit (Gronlannin makeavesi-kynnys, SST-
+  gradientti-kynnys) - vaatisi oman validointityon, ei vain lisays
+  olemassa olevaan
+
+**Jo tunnettu, ei uusi tieto:** "Ei live-dataa" on instrumentin oma,
+dokumentoitu rajoitus (RAPID ei paivity maaliskuun 2024 jalkeen,
+§02/§07 kirjattu tama jo aiemmin) - ulkopuolinen arvio vahvistaa tama
+saman havainnon riippumattomasti, ei paljasta mitaan uutta.
