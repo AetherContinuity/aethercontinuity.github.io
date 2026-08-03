@@ -3036,7 +3036,7 @@ async function fetchHistorical(dsId, startISO, hours = 168) {
 // jo olemassa olevaa DP_s-fallbackia (dokumentoitu §07:ssa: "Kun
 // lampotiladata ei ole saatavilla, kaytetaan DP_s-fallbackia").
 async function fetchRealHistoricalPeriod(startISO) {
-  const delay = () => new Promise(r => setTimeout(r, 400));
+  const delay = () => new Promise(r => setTimeout(r, 1200)); // KASVATETTU 2026-08-01: 400ms saattoi olla liian nopea Fingridin rate-limitille kun 7 periodia hakevat samoja kriittisia datasetteja (124/192) toistuvasti
   const failed = [];
   // KORJATTU 2026-08-01 (kayttajan testi paljasti etta KAIKKI 7 periodia
   // putosivat varmuuskopioon): alkuperainen versio kaatoi KOKO haun jos
@@ -3092,7 +3092,7 @@ async function fetchPeriodData(period) {
     console.warn(`[WEM] Oikea historiadata epaonnistui periodille ${period.id}: ${e.message} - kaytetaan rekonstruoitua varmuuskopiota`);
     // VARAPOLKU: sisaanrakennettu baseline (synteettinen rekonstruktio)
     if (BT_BASELINES[period.id]) {
-      return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: `rekons. (varmuuskopio - syy: ${e.message.slice(0,60)})` };
+      return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: `rekons. (varmuuskopio - syy: ${e.message.slice(0,150)})` };
     }
     throw new Error('oikea data ja baseline molemmat epäonnistuivat/puuttuvat: ' + e.message);
   }
@@ -3255,7 +3255,7 @@ async function runBacktest() {
     try {
       const { data, dataQuality: dq } = await fetchPeriodData(p);
       // Pieni viive periodien valilla — 7 datasettia jo haettu sisaisesti omalla viiveellaan
-      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 300));
+      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 800)); // kasvatettu 300->800ms
 
       if (data.length < 3) throw new Error(`vain ${data.length} datapistettä`);
       const isReal = dq.startsWith('oikea');
