@@ -3008,24 +3008,63 @@ async function fetchHistorical(dsId, startISO, hours = 168) {
   return rows;
 }
 
+// LISATTY 2026-08-01 (kayttajan paatos "Kokeillaan" -> "Kyllä"): korvaa
+// synteettinen rekonstruktio (generateFromBaseline) OIKEALLA Fingrid-
+// historiadatalla ensisijaisena polkuna. Kayttajan oma havainto joka
+// motivoi taman: "SP-arvo ei ole tammikuun 2022 ominaisuus, se on
+// ominaisuus kohinan amplitudista jonka valitsimme" - tama poistaa
+// koko sen ongelman kayttamalla OIKEITA tuntiarvoja rekonstruoinnin
+// sijaan.
+//
+// Testattu ensin yhdella kyselylla (DS 124, 2022-01-10...17) ennen
+// taman koko toteutuksen kirjoittamista: 168/168 pistetta palautui
+// yhdella hakukerralla, arvot realistisia (yo ~9-9.5k MW, paivahuiput
+// 11-13.5k MW tammikuulle 2022) - vahvisti etta lahestymistapa on
+// kevyt (168h per kysely, EI sama "liian pitka aikavali" -ongelma
+// kuin AMOC:n ERDDAP-haussa) ennen isompaan tyohon ryhtymista.
+//
+// 7 datasettia per periodi (kulutus, tuotanto, ydin, hydro, tuuli,
+// CHP kaukolampo, CHP teollisuus) x 7 periodia = 49 kyselya - HUOM:
+// tama EI ole sama alipyyntoraja kuin AMOC:ssa, koska jokainen kysely
+// on OMA, erillinen selaimen HTTP-pyynto omaan Fingrid-proxy-Workeriin
+// (ei server-puolen alipyyntoja YHDEN Worker-kutsun sisalla) - Cloud-
+// flaren 50 alipyynnon raja koskee vain jalkimmaista tapausta.
+//
+// Lampotilaa ei haeta historiallisesti (eri, erillinen Open-Meteo-
+// arkistorajapinta) - temp jaa null:ksi, jolloin calcWindow kayttaa
+// jo olemassa olevaa DP_s-fallbackia (dokumentoitu §07:ssa: "Kun
+// lampotiladata ei ole saatavilla, kaytetaan DP_s-fallbackia").
+async function fetchRealHistoricalPeriod(startISO) {
+  const delay = () => new Promise(r => setTimeout(r, 400));
+  const cRows   = await fetchHistorical(DS.consumption, startISO); await delay();
+  const pRows   = await fetchHistorical(DS.production,  startISO); await delay();
+  const nucRows = await fetchHistorical(DS.nuclear,     startISO); await delay();
+  const hydRows = await fetchHistorical(DS.hydro,       startISO); await delay();
+  const wndRows = await fetchHistorical(DS.wind,        startISO); await delay();
+  const chpDHRows  = await fetchHistorical(DS.chpDH,  startISO); await delay();
+  const chpIndRows = await fetchHistorical(DS.chpInd, startISO);
+  const merged = mergeData(cRows, pRows, nucRows, hydRows, wndRows, chpDHRows, chpIndRows, null);
+  if (merged.length < 100) throw new Error(`vain ${merged.length}/168 pistetta - liian vahan`);
+  return merged;
+}
+
 async function fetchPeriodData(period) {
   if (period.start === null) {
     const cur = rawData.slice(-168);
-    return cur.length > 0 ? cur : generateSynthetic(168);
+    return { data: cur.length > 0 ? cur : generateSynthetic(168), dataQuality: 'live' };
   }
-  // Käytä sisäänrakennettua baselinia — luotettava, ei proxy-riippuvuutta
-  if (BT_BASELINES[period.id]) {
-    return generateFromBaseline(BT_BASELINES[period.id], period.start);
-  }
-  // Fallback: proxy (voi epäonnistua rate-limitin takia)
+  // ENSISIJAINEN: oikea Fingrid-historiadata
   try {
-    const cRows = await fetchHistorical(DS.consumption, period.start);
-    await new Promise(r => setTimeout(r, 2000));
-    const pRows = await fetchHistorical(DS.production, period.start);
-    return mergeData(cRows, pRows, null, null, null, null, null);
+    const real = await fetchRealHistoricalPeriod(period.start);
+    return { data: real, dataQuality: 'oikea historia' };
   } catch(e) {
-    throw new Error('proxy + baseline molemmat epäonnistuivat: ' + e.message);
+    console.warn(`[WEM] Oikea historiadata epaonnistui periodille ${period.id}: ${e.message} - kaytetaan rekonstruoitua varmuuskopiota`);
   }
+  // VARAPOLKU: sisaanrakennettu baseline (synteettinen rekonstruktio)
+  if (BT_BASELINES[period.id]) {
+    return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: 'rekons. (varmuuskopio)' };
+  }
+  throw new Error('oikea data ja baseline molemmat epäonnistuivat/puuttuvat');
 }
 
 function drawBTTimeline(results) {
@@ -3177,29 +3216,32 @@ async function runBacktest() {
 
   for (let i = 0; i < BT_PERIODS.length; i++) {
     const p = BT_PERIODS[i];
-    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label} (${BT_BASELINES[p.id] ? 'rekonstruoitu' : p.id === 'current' ? 'live' : 'proxy'})…`;
+    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label} (haetaan oikeaa historiadataa…)`;
     prog.style.color = 'var(--sy)';
 
     await new Promise(r => setTimeout(r, 200)); // allow UI update
 
     try {
-      const data = await fetchPeriodData(p);
-      // Pieni viive — useimmat haut ovat paikallisia baselini-generointeja
-      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 200));
+      const { data, dataQuality: dq } = await fetchPeriodData(p);
+      // Pieni viive periodien valilla — 7 datasettia jo haettu sisaisesti omalla viiveellaan
+      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 300));
 
       if (data.length < 3) throw new Error(`vain ${data.length} datapistettä`);
-      const dataQuality = BT_BASELINES[p.id] ? 'rekons.' :
-        p.id === 'current' ? 'live' :
-        data.length >= 100 ? '1h' : data.length >= 20 ? '~12h' : `~${Math.round(168/data.length)}h`;
+      const dataQuality = p.id === 'current' ? 'live' :
+        dq === 'oikea historia' ? 'oikea (1h)' : 'rekons. (varmuuskopio)';
       const m = calcWindow(data.slice(0, 168));
       if (!m) throw new Error('ei dataa');
 
-      // Kalibroitu t168-override backtestiin: jos baseline sisältää t168-estimaatin,
-      // käytetään sitä persistenssipreemion laskentaan (synteettinen data ei tuota
-      // luotettavaa klusterijakaumaa historiallisille periodeille)
+      // KORJATTU 2026-08-01: t168-kalibrointiylikirjoitus koski AIEMMIN
+      // AINA BT_BASELINES-periodeja, koska synteettinen data ei tuottanut
+      // luotettavaa klusterijakaumaa. Nyt kun oikea data on ensisijainen
+      // (dq === 'oikea historia'), spCluster lasketaan OIKEISTA
+      // stressijaksoista - ei tarvita/pidä ylikirjoittaa kalibroidulla
+      // arvolla. Ylikirjoitus tehdaan enaa VAIN jos jouduttiin
+      // varapolulle (synteettinen rekonstruktio).
       const baseline = BT_BASELINES[p.id];
       let eppFinal = m.epp;
-      if (baseline?.t168 != null && m.spCluster != null) {
+      if (dq !== 'oikea historia' && baseline?.t168 != null && m.spCluster != null) {
         const t168cal = baseline.t168;
         const prem = t168cal >= 24 ? 0.12 : t168cal >= 6 ? 0.05 : 0.0;
         const premSynth = m.spCluster.t168 >= 24 ? 0.12 : m.spCluster.t168 >= 6 ? 0.05 : 0.0;
