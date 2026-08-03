@@ -691,7 +691,6 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
     <!-- Skenaario EPP-kortit -->
     <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">EPP W168 — skenaariovertailu (PROJEKTIO, ei live-havainto lukuun ottamatta "Nykytila"-korttia)</div>
-    <div id="fsDiagPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div class="struct-epp-row">
       <div class="struct-epp-card baseline">
         <div class="struct-epp-lbl">Nykytila — LIVE-HAVAINTO</div>
@@ -2756,29 +2755,15 @@ async function init() {
       const mUpdated = computeAll(rawData);
       renderMetrics(mUpdated);
       renderStructural();
-      // LISATTY 2026-08-01: tarkka tarkistus - onko hydroRF ja
-      // mUpdated.w168.hydRF sama juuri TASSA hetkessa, ennen renderV4:aa?
-      console.log('[WEM HYDRORF-JALJITYS] ennen renderV4:aa: hydroRF(globaali)=', hydroRF,
-        '| mUpdated.w168.hydRF=', mUpdated?.w168?.hydRF,
-        '| mUpdated.w168.fsNominal=', mUpdated?.w168?.fsNominal,
-        '| mUpdated.w168.fs=', mUpdated?.w168?.fs);
-      const fsDiagEl = document.getElementById('fsDiagPanel');
-      if (fsDiagEl) {
-        fsDiagEl.textContent += `\n\n--- HYDRORF-JALJITYS (juuri ennen renderV4-kutsua) ---\n`
-          + `hydroRF (globaali muuttuja) = ${hydroRF}\n`
-          + `mUpdated.w168.hydRF (calcWindow:n paluuarvo) = ${mUpdated?.w168?.hydRF}\n`
-          + `mUpdated.w168.fsNominal = ${mUpdated?.w168?.fsNominal != null ? (mUpdated.w168.fsNominal*100).toFixed(2)+'%' : '—'}\n`
-          + `mUpdated.w168.fs = ${mUpdated?.w168?.fs != null ? (mUpdated.w168.fs*100).toFixed(2)+'%' : '—'}`;
-        fsDiagEl.style.display = 'block';
-      }
       renderV4(mUpdated ? mUpdated.w168 : null, rawData.slice(-168));
       // KEVYT REGRESSIOVAROITUS (kayttajan pyynto): vertaa §02:n (mUpdated.w168.fs)
       // ja §10:n (renderStructural:n oma calcWindow(rawData.slice(-168)).fs)
       // FS-arvoja suoraan - naiden PITAA olla identtiset, koska molemmat
-      // kayttavat samaa calcWindow-kaavaa samalla datalla. Jos joku
-      // tuleva muutos rikkoo synkronoinnin uudestaan (esim. lisaa
-      // kolmannen paikan joka lukee globaalia tilaa eri hetkella),
-      // tama loytaa sen valittomasti konsolista.
+      // kayttavat samaa calcWindow-kaavaa samalla datalla. Vahvistettu
+      // korjatuksi 2026-08-01 (kayttajan tuore sivulataus: §02=§10=§11=
+      // 75.9%/75.93%, hydroRF=1.065 kaikissa). Jos joku tuleva muutos
+      // rikkoo synkronoinnin uudestaan, tama loytaa sen valittomasti
+      // konsolista.
       const checkFs = calcWindow(rawData.slice(-168)).fs;
       if (mUpdated?.w168?.fs != null && checkFs != null && Math.abs(mUpdated.w168.fs - checkFs) > 0.001) {
         console.warn('[WEM REGRESSIO] §02 ja §10 FS eroavat taas!', 'computeAll.fs=', mUpdated.w168.fs, 'suora calcWindow.fs=', checkFs);
@@ -3322,47 +3307,9 @@ function renderStructural() {
   // Scenario matrix
   const tbody = document.getElementById('structScenBody');
   tbody.innerHTML = '';
-  // LISATTY 2026-08-01 (kayttajan pyynto, "aja se"): suora, ehdoton
-  // lokitus JOKA renderStructural()-kutsulla (ei vaadi ?fsdebug=1,
-  // koska kayttaja huomautti etta nollassa ajettu diagnostiikka ei
-  // nayta bugia - bugi aktivoituu vain slider!=0:lla, ja tama
-  // lokitus toimii SILLOIN kun se aktivoituu). Vertaa baseline.fs
-  // (calcWindow suoraan) ja SCENARIOS[0]:n oma m.fs (calcWindowScenario
-  // literaaleilla 0,0 - PITAISI olla identtinen mutta kayttaja loysi
-  // etta ei ole kun dcLoad!=0).
-  console.log('[WEM Nykytila-FS-vertailu]', {
-    dcLoad_nyt: dcLoad, chpDelta_nyt: chpDelta,
-    baseline_fs_calcWindow_suoraan: baseline.fs,
-    baseline_avgC: baseline.avgC, baseline_avgNuc: baseline.avgNuc, baseline_avgHyd: baseline.avgHyd,
-    baseline_avgP: baseline.avgP,
-    scenarios0_dc: SCENARIOS[0].dc, scenarios0_chp: SCENARIOS[0].chp,
-  });
-  // LISATTY 2026-08-01: sama diagnostiikka NAKYVANA TEKSTINA sivulla,
-  // ei vain konsolissa - kayttajalla ei ole F12-nappainta puhelimessa.
-  const fsDiag = document.getElementById('fsDiagPanel');
-  let fsDiagText = `FS-DIAGNOSTIIKKA (dcLoad=${dcLoad}, chpDelta=${chpDelta})\n`;
-  fsDiagText += `baseline.fs (§02, calcWindow suoraan) = ${(baseline.fs*100).toFixed(2)}%\n`;
-  fsDiagText += `baseline: avgC=${baseline.avgC?.toFixed(1)} avgNuc=${baseline.avgNuc?.toFixed(1)} avgHyd=${baseline.avgHyd?.toFixed(1)} avgP=${baseline.avgP?.toFixed(1)}\n`;
-  fsDiagText += `hydroRF (globaali) = ${hydroRF}\n`;
   SCENARIOS.forEach((scen, idx) => {
     const m = calcWindowScenario(slice, scen.dc, scen.chp);
     if (!m) return;
-    if (idx === 0) {
-      console.log('[WEM Nykytila-FS-vertailu] SCENARIOS[0] (Nykytila) oma m.fs:', m.fs,
-        '| ero baseline.fs:aan:', (m.fs - baseline.fs), '(pitaisi olla 0)',
-        '| m.avgC:', m.avgC, '(baseline.avgC:', baseline.avgC, ', ero:', m.avgC-baseline.avgC, ')',
-        '| m.avgNuc:', m.avgNuc, '(baseline.avgNuc:', baseline.avgNuc, ', ero:', m.avgNuc-baseline.avgNuc, ')',
-        '| m.avgHyd:', m.avgHyd, '(baseline.avgHyd:', baseline.avgHyd, ', ero:', m.avgHyd-baseline.avgHyd, ')',
-        '| m.avgP:', m.avgP, '(baseline.avgP:', baseline.avgP, ')',
-        '| hydroRF_global:', hydroRF);
-      fsDiagText += `\nSCENARIOS[0] "Nykytila" (§10, calcWindowScenario(slice,0,0)):\n`;
-      fsDiagText += `  m.fs = ${(m.fs*100).toFixed(2)}%  |  ERO baseline.fs:aan = ${((m.fs-baseline.fs)*100).toFixed(2)} pp (pitäisi olla 0.00)\n`;
-      fsDiagText += `  avgC=${m.avgC?.toFixed(1)} (ero: ${(m.avgC-baseline.avgC).toFixed(2)})\n`;
-      fsDiagText += `  avgNuc=${m.avgNuc?.toFixed(1)} (ero: ${(m.avgNuc-baseline.avgNuc).toFixed(2)})\n`;
-      fsDiagText += `  avgHyd=${m.avgHyd?.toFixed(1)} (ero: ${(m.avgHyd-baseline.avgHyd).toFixed(2)})\n`;
-      fsDiagText += `  avgP=${m.avgP?.toFixed(1)}\n`;
-      fsDiagText += `  scenarios0.dc=${SCENARIOS[0].dc}, scenarios0.chp=${SCENARIOS[0].chp} (pitäisi olla 0, 0)`;
-    }
     const pc = classify(m.epp);
     const delta = m.epp - baseline.epp;
     // KORJATTU 2026-08-01 (kayttajan havainto 3): v4:aa EI luokitella
@@ -3385,11 +3332,6 @@ function renderStructural() {
       <td class="rh" style="color:${delta>0.05?'#8b1010':delta>0.02?'#8b3a10':'var(--muted)'};">${delta>=0?'+':''}${(delta*100).toFixed(1)} pp</td>
     </tr>`);
   });
-
-  if (fsDiag) {
-    fsDiag.style.display = 'block';
-    fsDiag.textContent = fsDiagText;
-  }
 }
 
 // Render CHP trend from backtest results
