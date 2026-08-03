@@ -3001,12 +3001,30 @@ async function fetchHistorical(dsId, startISO, hours = 168) {
   const from = new Date(startISO);
   const to   = new Date(from.getTime() + hours * 3.6e6);
   const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=300`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
-  const j = await r.json();
-  const rows = (j.data || j).filter(d => d.value != null);
-  if (!rows.length) throw new Error(`DS ${dsId} empty`);
-  return rows;
+  // LISATTY 2026-08-01 (kayttajan testi vahvisti toistuvan HTTP 429:n
+  // DS 192:lle KAIKISSA 7 periodissa, VAIKKA staattista viivetta
+  // kasvatettiin 400ms->1200ms): pelkka viive EI riita - 429 vaatii
+  // AITOA uudelleenyritysta eksponentiaalisella backoffilla, ei vain
+  // "yrita hitaammin etukateen". 3 yritysta: 3s, 6s, 12s odotus ennen
+  // luovuttamista.
+  const maxRetries = 3;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const r = await fetch(url);
+    if (r.status === 429) {
+      if (attempt < maxRetries) {
+        const wait = 3000 * Math.pow(2, attempt); // 3s, 6s, 12s
+        console.warn(`[WEM] DS ${dsId} HTTP 429 - uudelleenyritys ${attempt+1}/${maxRetries} ${wait}ms kuluttua`);
+        await new Promise(res => setTimeout(res, wait));
+        continue;
+      }
+      throw new Error(`DS ${dsId} HTTP 429 (rate limit, ${maxRetries} uudelleenyritysta loppuivat)`);
+    }
+    if (!r.ok) throw new Error(`DS ${dsId} HTTP ${r.status}`);
+    const j = await r.json();
+    const rows = (j.data || j).filter(d => d.value != null);
+    if (!rows.length) throw new Error(`DS ${dsId} empty`);
+    return rows;
+  }
 }
 
 // LISATTY 2026-08-01 (kayttajan paatos "Kokeillaan" -> "Kyllä"): korvaa
