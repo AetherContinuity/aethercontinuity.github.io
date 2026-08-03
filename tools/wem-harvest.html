@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>WEM — historiadatan kertahaku</h1>
-<p>Tämä työkalu hakee 7 historiallista periodia × 7 datasettiä (49 kyselyä) <strong>hitaasti ja varovasti</strong>, yksi kerrallaan, pitkillä viiveillä ja uudelleenyrityksillä. Tarkoitettu ajettavaksi <strong>kerran</strong>, hyvällä verkkoyhteydellä. Tuloksena saat JSON-tiedoston joka liitetään WEM:iin staattisena datana — ei enää live-hakuja WEM:n omalta sivulta.</p>
+<p>Tämä työkalu hakee 7 historiallista periodia × 7 datasettiä <strong>hitaasti ja varovasti</strong>, yksi kerrallaan, pitkillä viiveillä ja uudelleenyrityksillä. <strong>KORJATTU:</strong> kulutus on tuntiresoluutiota (168 pistettä/periodi), mutta muut kuusi datasettiä (tuotanto, ydin, hydro, tuuli, CHP×2) ovat 3 minuutin resoluutiota — täysi 168h vaatii ~12 sivua per datasetti. Tämä <strong>pidentää hakua huomattavasti</strong> (arvio 20–40 minuuttia). Tarkoitettu ajettavaksi <strong>kerran</strong>, hyvällä verkkoyhteydellä, näytön pysyessä auki koko ajan. Tuloksena saat JSON-tiedoston joka liitetään WEM:iin staattisena datana — ei enää live-hakuja WEM:n omalta sivulta.</p>
 <button id="startBtn" onclick="startHarvest()">▶ Aloita haku (kestää useita minuutteja)</button>
 <div id="status">Ei aloitettu</div>
 <div id="log"></div>
@@ -54,34 +54,51 @@ function log(msg, cls) {
 async function fetchOne(dsId, startISO, hours = 168) {
   const from = new Date(startISO);
   const to = new Date(from.getTime() + hours * 3.6e6);
-  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=300`;
+  const baseUrl = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(from.toISOString())}&end=${encodeURIComponent(to.toISOString())}&size=300`;
   const maxRetries = 4;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const r = await fetch(url);
-      if (r.status === 429) {
-        const wait = 5000 * Math.pow(2, attempt);
-        log(`  DS ${dsId}: HTTP 429, odotetaan ${wait/1000}s (yritys ${attempt+1}/${maxRetries})`, 'err');
-        await new Promise(res => setTimeout(res, wait));
-        continue;
-      }
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const j = await r.json();
-      const rows = (j.data || j).filter(d => d.value != null);
-      if (!rows.length) throw new Error('tyhjä vastaus');
-      return rows;
-    } catch (e) {
-      if (attempt < maxRetries) {
-        const wait = 3000 * (attempt + 1);
-        log(`  DS ${dsId}: ${e.message}, uusi yritys ${wait/1000}s kuluttua (${attempt+1}/${maxRetries})`, 'err');
-        await new Promise(res => setTimeout(res, wait));
-      } else {
-        log(`  DS ${dsId}: LOPULLINEN EPÄONNISTUMINEN — ${e.message}`, 'err');
-        return null;
+  let allRows = [];
+  let page = 1;
+  // KORJATTU: alkuperainen versio haki vain YHDEN sivun (size=300).
+  // Kulutus (DS 124) on tuntiresoluutiota (168 pistetta = koko viikko
+  // mahtuu yhdelle sivulle), mutta MUUT datasetit (tuotanto, ydin,
+  // hydro, tuuli, CHP) ovat 3 MINUUTIN resoluutiota - 168h vaatii
+  // ~3360 pistetta = ~12 sivua. Seurataan nyt pagination.nextPage:ta
+  // kunnes koko pyydetty aikavali on katettu.
+  while (true) {
+    const url = `${baseUrl}&page=${page}`;
+    let rows = null, pagination = null;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const r = await fetch(url);
+        if (r.status === 429) {
+          const wait = 5000 * Math.pow(2, attempt);
+          log(`  DS ${dsId} sivu ${page}: HTTP 429, odotetaan ${wait/1000}s (${attempt+1}/${maxRetries})`, 'err');
+          await new Promise(res => setTimeout(res, wait));
+          continue;
+        }
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const j = await r.json();
+        rows = (j.data || []).filter(d => d.value != null);
+        pagination = j.pagination || null;
+        break;
+      } catch (e) {
+        if (attempt < maxRetries) {
+          const wait = 3000 * (attempt + 1);
+          log(`  DS ${dsId} sivu ${page}: ${e.message}, uusi yritys ${wait/1000}s kuluttua`, 'err');
+          await new Promise(res => setTimeout(res, wait));
+        } else {
+          log(`  DS ${dsId} sivu ${page}: LOPULLINEN EPÄONNISTUMINEN — ${e.message}`, 'err');
+          return allRows.length ? allRows : null;
+        }
       }
     }
+    if (rows === null) return allRows.length ? allRows : null;
+    allRows = allRows.concat(rows);
+    if (!pagination || !pagination.nextPage || page >= 15) break; // turvaraja 15 sivua
+    page = pagination.nextPage;
+    await new Promise(res => setTimeout(res, 1500)); // viive sivujen valilla
   }
-  return null;
+  return allRows.length ? allRows : null;
 }
 
 async function startHarvest() {
@@ -107,6 +124,12 @@ async function startHarvest() {
       // Kohtelias viive datasettien välillä
       await new Promise(res => setTimeout(res, 2000));
     }
+    // Näytä osittainen tulos jokaisen periodin jälkeen (ei katoa jos jotain keskeytyy)
+    const partialJson = JSON.stringify(result, null, 0);
+    document.getElementById('resultText').value = partialJson;
+    document.getElementById('resultBox').style.display = 'block';
+    log(`  (osittainen tulos päivitetty, ${(partialJson.length/1024).toFixed(0)} KB tähän mennessä)`);
+
     // Pidempi viive periodien välillä
     if (pi < PERIODS.length - 1) {
       log(`  (odotetaan 5s ennen seuraavaa periodia...)`);
