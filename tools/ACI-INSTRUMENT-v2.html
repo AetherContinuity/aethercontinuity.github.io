@@ -691,6 +691,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
     <!-- Skenaario EPP-kortit -->
     <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">EPP W168 — skenaariovertailu (PROJEKTIO, ei live-havainto lukuun ottamatta "Nykytila"-korttia)</div>
+    <div id="fsDiagPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div class="struct-epp-row">
       <div class="struct-epp-card baseline">
         <div class="struct-epp-lbl">Nykytila — LIVE-HAVAINTO</div>
@@ -3293,6 +3294,13 @@ function renderStructural() {
     baseline_avgP: baseline.avgP,
     scenarios0_dc: SCENARIOS[0].dc, scenarios0_chp: SCENARIOS[0].chp,
   });
+  // LISATTY 2026-08-01: sama diagnostiikka NAKYVANA TEKSTINA sivulla,
+  // ei vain konsolissa - kayttajalla ei ole F12-nappainta puhelimessa.
+  const fsDiag = document.getElementById('fsDiagPanel');
+  let fsDiagText = `FS-DIAGNOSTIIKKA (dcLoad=${dcLoad}, chpDelta=${chpDelta})\n`;
+  fsDiagText += `baseline.fs (§02, calcWindow suoraan) = ${(baseline.fs*100).toFixed(2)}%\n`;
+  fsDiagText += `baseline: avgC=${baseline.avgC?.toFixed(1)} avgNuc=${baseline.avgNuc?.toFixed(1)} avgHyd=${baseline.avgHyd?.toFixed(1)} avgP=${baseline.avgP?.toFixed(1)}\n`;
+  fsDiagText += `hydroRF (globaali) = ${hydroRF}\n`;
   SCENARIOS.forEach((scen, idx) => {
     const m = calcWindowScenario(slice, scen.dc, scen.chp);
     if (!m) return;
@@ -3304,6 +3312,13 @@ function renderStructural() {
         '| m.avgHyd:', m.avgHyd, '(baseline.avgHyd:', baseline.avgHyd, ', ero:', m.avgHyd-baseline.avgHyd, ')',
         '| m.avgP:', m.avgP, '(baseline.avgP:', baseline.avgP, ')',
         '| hydroRF_global:', hydroRF);
+      fsDiagText += `\nSCENARIOS[0] "Nykytila" (§10, calcWindowScenario(slice,0,0)):\n`;
+      fsDiagText += `  m.fs = ${(m.fs*100).toFixed(2)}%  |  ERO baseline.fs:aan = ${((m.fs-baseline.fs)*100).toFixed(2)} pp (pitäisi olla 0.00)\n`;
+      fsDiagText += `  avgC=${m.avgC?.toFixed(1)} (ero: ${(m.avgC-baseline.avgC).toFixed(2)})\n`;
+      fsDiagText += `  avgNuc=${m.avgNuc?.toFixed(1)} (ero: ${(m.avgNuc-baseline.avgNuc).toFixed(2)})\n`;
+      fsDiagText += `  avgHyd=${m.avgHyd?.toFixed(1)} (ero: ${(m.avgHyd-baseline.avgHyd).toFixed(2)})\n`;
+      fsDiagText += `  avgP=${m.avgP?.toFixed(1)}\n`;
+      fsDiagText += `  scenarios0.dc=${SCENARIOS[0].dc}, scenarios0.chp=${SCENARIOS[0].chp} (pitäisi olla 0, 0)`;
     }
     const pc = classify(m.epp);
     const delta = m.epp - baseline.epp;
@@ -3327,6 +3342,11 @@ function renderStructural() {
       <td class="rh" style="color:${delta>0.05?'#8b1010':delta>0.02?'#8b3a10':'var(--muted)'};">${delta>=0?'+':''}${(delta*100).toFixed(1)} pp</td>
     </tr>`);
   });
+
+  if (fsDiag) {
+    fsDiag.style.display = 'block';
+    fsDiag.textContent = fsDiagText;
+  }
 }
 
 // Render CHP trend from backtest results
