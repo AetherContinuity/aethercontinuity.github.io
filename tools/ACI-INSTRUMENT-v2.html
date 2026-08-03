@@ -2738,8 +2738,36 @@ async function init() {
     // MD_proxy: spot-hinnat rawData:sta jos saatavilla (spotPrice-kenttä)
     renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
     // Hae NVE hydro_RF ja päivitä §11 kun valmis
+    // KORJATTU 2026-08-01 (kayttajan lopullinen loydos): tama callback
+    // paivitti aiemmin VAIN §11:n (renderV4), vaikka globaali hydroRF-
+    // muuttuja vaikuttaa myos calcWindow:n omaan FS-laskentaan (rivi
+    // ~1628: hydRF = typeof hydroRF !== 'undefined' ? hydroRF : 1.0).
+    // §02 (renderMetrics, computeAll:n kautta) renderoityi jo AIKAISEMMIN
+    // TASSA funktiossa (rivi ~2663), ENNEN kuin NVE-haku oli valmis -
+    // eli hydroRF oli silloin viela oletusarvossaan 1.0. Koska mitaan ei
+    // koskaan renderoinut §02:ta UUDESTAAN, se jai pysyvasti nayttamaan
+    // hydroRF=1.0-pohjaista FS-arvoa (esim. 73.9%), vaikka renderStructural()
+    // (§10, laukeaa liukurin kosketuksesta) ajaisi TASMALLEEN saman
+    // calcWindow-kaavan myohemmin, siihen mennessa jo paivittyneella
+    // hydroRF=1.065:lla (esim. 75.9%) - juuri se pysyva ~2pp ero jonka
+    // kayttaja loysi. Korjattu renderoimaan MOLEMMAT (§02 ja §10)
+    // uudestaan kun NVE-data saapuu, jotta ne pysyvat synkronissa.
     fetchHydroRF().then(() => {
-      renderV4(m4 ? m4.w168 : null, rawData.slice(-168));
+      const mUpdated = computeAll(rawData);
+      renderMetrics(mUpdated);
+      renderStructural();
+      renderV4(mUpdated ? mUpdated.w168 : null, rawData.slice(-168));
+      // KEVYT REGRESSIOVAROITUS (kayttajan pyynto): vertaa §02:n (mUpdated.w168.fs)
+      // ja §10:n (renderStructural:n oma calcWindow(rawData.slice(-168)).fs)
+      // FS-arvoja suoraan - naiden PITAA olla identtiset, koska molemmat
+      // kayttavat samaa calcWindow-kaavaa samalla datalla. Jos joku
+      // tuleva muutos rikkoo synkronoinnin uudestaan (esim. lisaa
+      // kolmannen paikan joka lukee globaalia tilaa eri hetkella),
+      // tama loytaa sen valittomasti konsolista.
+      const checkFs = calcWindow(rawData.slice(-168)).fs;
+      if (mUpdated?.w168?.fs != null && checkFs != null && Math.abs(mUpdated.w168.fs - checkFs) > 0.001) {
+        console.warn('[WEM REGRESSIO] §02 ja §10 FS eroavat taas!', 'computeAll.fs=', mUpdated.w168.fs, 'suora calcWindow.fs=', checkFs);
+      }
     });
     // Nordic-WR v0 — kokeellinen, ei viela osa EPP-renderointia
     fetchNordicWR();
