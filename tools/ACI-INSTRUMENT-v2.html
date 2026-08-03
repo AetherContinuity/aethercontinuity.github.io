@@ -620,6 +620,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div class="bt-progress" id="btProgress">8 periodita · DS 124 + DS 192 · ~20 s</div>
     </div>
     <div id="btDataQualityPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
+    <div id="btDPRawPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div class="bt-timeline-wrap"><svg id="chBT" style="width:100%;height:100%;"><text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#c8bfad">Aja backtest nähdäksesi aikajana</text></svg></div>
     <div id="btTableWrap"><table class="bt-table"><thead><tr>
       <th>Periodi</th><th>Tapahtuma</th>
@@ -1575,7 +1576,7 @@ function calcWindow(slice) {
   // Lämpötilakorjattu kysyntäpaine
   const tSlice = slice.filter(d => d.temp != null);
   let avgTemp=null, avgTempHki=null, avgTempKuo=null, avgTempRov=null;
-  let tempSpread=null, dp_t=null, avgCexpected=null;
+  let tempSpread=null, dp_t=null, avgCexpected=null, dp_t_raw=null;
   if (tSlice.length >= Math.min(6, n * 0.3)) {
     avgTemp    = tSlice.reduce((s,d)=>s+d.temp,0) / tSlice.length;
     const hkiS = tSlice.filter(d=>d.tempHki!=null);
@@ -1588,7 +1589,14 @@ function calcWindow(slice) {
     if (avgTempHki != null && avgTempRov != null)
       tempSpread = avgTempHki - avgTempRov; // positiivinen = pohjoinen kylmempi
     avgCexpected = expectedConsumption(avgTemp);
-    dp_t = Math.min(1, Math.max(0, (avgC - avgCexpected) / TEMP_SIGMA));
+    // LISATTY 2026-08 (kayttajan pyynto): tallennetaan RAAKA, katosta
+    // riippumaton DP_t ennen Math.min/max-leikkausta. DP_t=1.0 kaikissa
+    // ikkunoissa/skenaarioissa oli havaittu - talla selvitetaan onko
+    // raaka arvo aidosti vaihteleva (katto tuhoaa signaalia, korjaus =
+    // uudelleenskaalaus) vai lahella 1.0:aa jo ilman kattoakin
+    // (referenssi/TEMP_SIGMA vaara, ei kattovika).
+    dp_t_raw = (avgC - avgCexpected) / TEMP_SIGMA;
+    dp_t = Math.min(1, Math.max(0, dp_t_raw));
   }
 
   // Layer metrics
@@ -1744,7 +1752,7 @@ function calcWindow(slice) {
   if (fs != null && fs <= SATURATION_EPS) satComponents.push('FS (=0)');
   const saturated = satComponents.length > 0;
 
-  return { avgC, avgP, avgGap, dp, dp_s, dp_t, dc, nir, sp, epp, spDepth, eppV4,
+  return { avgC, avgP, avgGap, dp, dp_s, dp_t, dp_t_raw, dc, nir, sp, epp, spDepth, eppV4,
            eppMode: eppFull, stressH, chpEstimated, n, modalMonth, baselineC,
            avgTemp, avgTempHki, avgTempKuo, avgTempRov, tempSpread, avgCexpected,
            eci, eciSemi, fs, wr, avgNuc, avgHyd, avgWnd, avgChp, spCluster,
@@ -3303,6 +3311,7 @@ async function runBacktest() {
         epp: eppFinal, eci: m.eci, sp: m.sp, dc: m.dc,
         dp: m.dp, nir: m.nir, pts: data.length,
         dataQuality, avgNuc: m.avgNuc, avgChp: m.avgChp, avgP: m.avgP,
+        dp_t: m.dp_t, dp_t_raw: m.dp_t_raw, avgTemp: m.avgTemp, avgCexpected: m.avgCexpected,
         error: null,
       });
     } catch (e) {
@@ -3329,6 +3338,31 @@ async function runBacktest() {
         issues.map(r => `${r.id}: ${r.dataQuality}`).join('\n\n');
     } else {
       dqPanel.style.display = 'none';
+    }
+  }
+
+  // LISATTY 2026-08 (kayttajan pyynto): raaka DP_t (ennen [0,1]-kattoa)
+  // KAIKILLE periodeille - selvittaa onko katto tuhonnut aitoa
+  // vaihtelua (raaka esim. 1.4-3.8, korjaus=uudelleenskaalaus) vai
+  // onko referenssi vaara (raaka ~1.00-1.05 kaikkialla, korjaus=
+  // TEMP_SIGMA/C_exp-kalibrointi, ei kattoa).
+  const dpRawPanel = document.getElementById('btDPRawPanel');
+  if (dpRawPanel) {
+    const withDp = results.filter(r => r.dp_t_raw != null);
+    if (withDp.length > 0) {
+      const vals = withDp.map(r => r.dp_t_raw);
+      const min = Math.min(...vals), max = Math.max(...vals);
+      dpRawPanel.style.display = 'block';
+      dpRawPanel.textContent = 'DP_t RAAKA-ARVO (ennen [0,1]-kattoa) — KAIKKI PERIODIT:\n\n' +
+        withDp.map(r => `${r.id}: raaka=${r.dp_t_raw.toFixed(3)}  (katolla=${r.dp_t.toFixed(3)})  `
+          + `avgC=${Math.round(r.avgC)}  avgCexp=${r.avgCexpected!=null?Math.round(r.avgCexpected):'—'}  `
+          + `avgTemp=${r.avgTemp!=null?r.avgTemp.toFixed(1)+'°C':'—'}`).join('\n')
+        + `\n\nVaihteluväli: ${min.toFixed(3)} .. ${max.toFixed(3)}\n`
+        + (max - min > 0.3
+            ? '→ Raaka vaihtelee merkittävästi: KATTO tuhoaa aitoa signaalia. Korjaus = uudelleenskaalaus/log-muunnos.'
+            : '→ Raaka pysyy lähes vakiona: REFERENSSI (TEMP_SIGMA/C_exp) on väärin kalibroitu, ei kattovika.');
+    } else {
+      dpRawPanel.style.display = 'none';
     }
   }
 
