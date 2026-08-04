@@ -2,159 +2,237 @@
 <html lang="fi">
 <head>
 <meta charset="UTF-8">
-<title>WEM — historiadatan haku (erillinen työkalu)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WEM — historiadatan haku (pysyvä, yksi periodi kerrallaan)</title>
 <style>
-  body { font-family: -apple-system, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; background: #faf8f3; color: #2a2a2a; }
-  h1 { font-size: 1.2rem; }
-  button { font-size: 1rem; padding: .6rem 1.2rem; margin: .5rem 0; cursor: pointer; }
-  #log { font-family: monospace; font-size: .8rem; white-space: pre-wrap; background: #1a1a1a; color: #d0d0d0; padding: 1rem; border-radius: 4px; max-height: 400px; overflow-y: auto; }
-  #status { font-weight: bold; margin: .5rem 0; }
-  .ok { color: #2d6b3a; }
-  .err { color: #8b1010; }
-  textarea { width: 100%; height: 200px; font-family: monospace; font-size: .7rem; margin-top: 1rem; }
+  body { font-family: -apple-system, sans-serif; max-width: 700px; margin: 1rem auto; padding: 0 1rem; background: #faf8f3; color: #2a2a2a; }
+  h1 { font-size: 1.1rem; }
+  button { font-size: 1rem; padding: .7rem 1.2rem; margin: .3rem 0; cursor: pointer; width: 100%; }
+  button:disabled { opacity: .5; }
+  .period-row { display: flex; align-items: center; justify-content: space-between; padding: .6rem; margin: .3rem 0; border-radius: 4px; border: 1px solid #ddd; }
+  .period-row.done { background: #e8f5e9; border-color: #2d6b3a; }
+  .period-row.pending { background: #fff; }
+  .period-id { font-weight: bold; }
+  .period-status { font-size: .8rem; color: #666; }
+  #log { font-family: monospace; font-size: .75rem; white-space: pre-wrap; background: #1a1a1a; color: #d0d0d0; padding: .8rem; border-radius: 4px; max-height: 250px; overflow-y: auto; margin-top: 1rem; }
+  .err { color: #ff8080; }
+  .ok { color: #80ff80; }
+  #exportBox { display: none; margin-top: 1rem; }
+  textarea { width: 100%; height: 150px; font-family: monospace; font-size: .65rem; }
+  .warn-box { background: #fff3cd; border: 1px solid #d4a017; padding: .6rem; border-radius: 4px; font-size: .85rem; margin-bottom: 1rem; }
 </style>
 </head>
 <body>
-<h1>WEM — historiadatan kertahaku</h1>
-<p>Tämä työkalu hakee 7 historiallista periodia × 7 datasettiä <strong>hitaasti ja varovasti</strong>, yksi kerrallaan, pitkillä viiveillä ja uudelleenyrityksillä. <strong>KORJATTU:</strong> kulutus on tuntiresoluutiota (168 pistettä/periodi), mutta muut kuusi datasettiä (tuotanto, ydin, hydro, tuuli, CHP×2) ovat 3 minuutin resoluutiota — täysi 168h vaatii ~12 sivua per datasetti. Tämä <strong>pidentää hakua huomattavasti</strong> (arvio 20–40 minuuttia). Tarkoitettu ajettavaksi <strong>kerran</strong>, hyvällä verkkoyhteydellä, näytön pysyessä auki koko ajan. Tuloksena saat JSON-tiedoston joka liitetään WEM:iin staattisena datana — ei enää live-hakuja WEM:n omalta sivulta.</p>
-<button id="startBtn" onclick="startHarvest()">▶ Aloita haku (kestää useita minuutteja)</button>
-<div id="status">Ei aloitettu</div>
-<div id="log"></div>
-<div id="resultBox" style="display:none;">
-  <h2>Valmis!</h2>
-  <p>Kopioi alla oleva JSON ja lähetä se Claudelle, tai lataa tiedostona.</p>
-  <button onclick="downloadResult()">⬇ Lataa JSON-tiedostona</button>
-  <button onclick="copyResult()">📋 Kopioi leikepöydälle</button>
+<h1>WEM — historiadatan haku</h1>
+<div class="warn-box">
+  Jokainen periodi tallentuu <strong>pysyvästi tähän selaimeen</strong> (localStorage) välittömästi kun se onnistuu.
+  Voit sulkea sivun ja palata myöhemmin — edistys ei katoa. Hae periodit <strong>yksi kerrallaan</strong>,
+  odottaen kunkin valmistumista (~1 min/periodi).
+</div>
+
+<div id="periodList"></div>
+
+<div id="exportBox">
+  <h2>✓ Kaikki periodit valmiit</h2>
+  <button onclick="downloadResult()">⬇ Lataa täysi JSON-tiedosto</button>
   <textarea id="resultText" readonly></textarea>
 </div>
+
+<div id="log"></div>
 
 <script>
 const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
 const DS = { consumption:124, production:192, nuclear:188, hydro:191, wind:181, chpDH:201, chpInd:202 };
 const PERIODS = [
-  { id:'2022-01', start:'2022-01-10T00:00:00Z' },
-  { id:'2022-08', start:'2022-08-05T00:00:00Z' },
-  { id:'2022-11', start:'2022-11-10T00:00:00Z' },
-  { id:'2023-01', start:'2023-01-10T00:00:00Z' },
-  { id:'2023-07', start:'2023-07-05T00:00:00Z' },
-  { id:'2024-01', start:'2024-01-10T00:00:00Z' },
-  { id:'2024-12', start:'2024-12-05T00:00:00Z' },
+  { id:'2022-01', label:'Talvibaseline — ennen energiakriisiä',  start:'2022-01-10T00:00:00Z' },
+  { id:'2022-08', label:'Energiakriisi käynnistyy',               start:'2022-08-05T00:00:00Z' },
+  { id:'2022-11', label:'Kriisikärki — hintahuippu',               start:'2022-11-10T00:00:00Z' },
+  { id:'2023-01', label:'Jälkikriisi — hinnat laskevat hitaasti',  start:'2023-01-10T00:00:00Z' },
+  { id:'2023-07', label:'Kesäbaseline — matala kulutus',           start:'2023-07-05T00:00:00Z' },
+  { id:'2024-01', label:'OL3 kaupallisessa käytössä',              start:'2024-01-10T00:00:00Z' },
+  { id:'2024-12', label:'Ensimmäinen täysi OL3-talvi',             start:'2024-12-05T00:00:00Z' },
 ];
+const HOURS = 168;
+const STORAGE_PREFIX = 'wem_harvest_';
 
-const logEl = document.getElementById('log');
-const statusEl = document.getElementById('status');
 function log(msg, cls) {
+  const el = document.getElementById('log');
   const line = document.createElement('div');
   if (cls) line.className = cls;
   line.textContent = msg;
-  logEl.appendChild(line);
-  logEl.scrollTop = logEl.scrollHeight;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
 }
 
-async function fetchOne(dsId, startISO, hours = 168) {
-  const from = new Date(startISO);
-  const to = new Date(from.getTime() + hours * 3.6e6);
-  const maxRetries = 4;
+// --- Tallennus / lataus localStorageen ---
+function getSaved(periodId) {
+  try {
+    const raw = localStorage.getItem(STORAGE_PREFIX + periodId);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+function savePeriod(periodId, data) {
+  localStorage.setItem(STORAGE_PREFIX + periodId, JSON.stringify(data));
+}
 
-  async function fetchRange(rFrom, rTo, label) {
-    const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(rFrom.toISOString())}&end=${encodeURIComponent(rTo.toISOString())}&size=300`;
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const r = await fetch(url);
-        if (r.status === 429) {
-          const wait = 5000 * Math.pow(2, attempt);
-          log(`  DS ${dsId} ${label}: HTTP 429, odotetaan ${wait/1000}s`, 'err');
-          await new Promise(res => setTimeout(res, wait));
-          continue;
-        }
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const j = await r.json();
-        return (j.data || j).filter(d => d.value != null);
-      } catch (e) {
-        if (attempt < maxRetries) {
-          await new Promise(res => setTimeout(res, 3000 * (attempt + 1)));
-        } else {
-          log(`  DS ${dsId} ${label}: EPÄONNISTUI — ${e.message}`, 'err');
-          return null;
-        }
+// --- Fetch-logiikka (sama, todistetusti toimiva paloittelu) ---
+async function fetchRange(dsId, rFrom, rTo, label, maxRetries=3) {
+  const url = `${PROXY}?ds=${dsId}&start=${encodeURIComponent(rFrom.toISOString())}&end=${encodeURIComponent(rTo.toISOString())}&size=300`;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const r = await fetch(url);
+      if (r.status === 429) {
+        const wait = 3000 * Math.pow(2, attempt);
+        log(`  DS ${dsId} ${label}: HTTP 429, odotetaan ${wait/1000}s`, 'err');
+        await new Promise(res => setTimeout(res, wait));
+        continue;
+      }
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const j = await r.json();
+      return (j.data || j).filter(d => d.value != null);
+    } catch(e) {
+      if (attempt < maxRetries) {
+        await new Promise(res => setTimeout(res, 2000 * (attempt+1)));
+      } else {
+        log(`  DS ${dsId} ${label}: EPÄONNISTUI — ${e.message}`, 'err');
+        return null;
       }
     }
-    return null;
   }
+  return null;
+}
 
-  // KORJATTU (toinen kierros): DS.consumption (124) on tuntiresoluutiota
-  // - alkuperainen yhden kyselyn testi toimi jo taydellisesti (168/168).
-  // Ei paloitella tata turhaan. MUUT datasetit ovat 3min-resoluutiota
-  // (vahvistettu kayttajan ensimmaisesta hausta) - naille paloitellaan
-  // aikavali 12h lohkoihin ja kaytetaan VARMASTI TOIMIVAA start/end-
-  // mekanismia (ei arvattua sivutusparametria, joka ei toiminut).
+async function fetchOneDataset(dsId, startISO, hours) {
+  const from = new Date(startISO);
+  const to = new Date(from.getTime() + hours * 3.6e6);
   if (dsId === DS.consumption) {
-    return await fetchRange(from, to, 'koko 168h');
+    return await fetchRange(dsId, from, to, 'koko 168h');
   }
-
   const chunkHours = 12;
   const numChunks = Math.ceil(hours / chunkHours);
   let allRows = [];
   for (let c = 0; c < numChunks; c++) {
-    const chunkFrom = new Date(from.getTime() + c * chunkHours * 3.6e6);
-    const chunkTo = new Date(Math.min(chunkFrom.getTime() + chunkHours * 3.6e6, to.getTime()));
-    if (chunkFrom >= to) break;
-    const rows = await fetchRange(chunkFrom, chunkTo, `lohko ${c+1}/${numChunks}`);
+    const cFrom = new Date(from.getTime() + c*chunkHours*3.6e6);
+    const cTo = new Date(Math.min(cFrom.getTime()+chunkHours*3.6e6, to.getTime()));
+    if (cFrom >= to) break;
+    const rows = await fetchRange(dsId, cFrom, cTo, `lohko ${c+1}/${numChunks}`);
     if (rows) allRows = allRows.concat(rows);
-    if (c < numChunks - 1) await new Promise(res => setTimeout(res, 1000));
+    if (c < numChunks-1) await new Promise(res => setTimeout(res, 250));
   }
-  const seen = new Set();
-  const dedup = [];
-  for (const row of allRows) {
-    if (!seen.has(row.startTime)) { seen.add(row.startTime); dedup.push(row); }
-  }
+  const seen = new Set(); const dedup = [];
+  for (const row of allRows) { if (!seen.has(row.startTime)) { seen.add(row.startTime); dedup.push(row); } }
   return dedup.length ? dedup : null;
 }
 
-async function startHarvest() {
-  document.getElementById('startBtn').disabled = true;
-  const result = {};
-  const dsList = Object.entries(DS);
-
-  for (let pi = 0; pi < PERIODS.length; pi++) {
-    const period = PERIODS[pi];
-    statusEl.textContent = `Periodi ${pi+1}/${PERIODS.length}: ${period.id}`;
-    log(`\n=== ${period.id} (${period.start}) ===`);
-    result[period.id] = { start: period.start, datasets: {} };
-
-    for (const [name, dsId] of dsList) {
-      log(`  Haetaan ${name} (DS ${dsId})...`);
-      const rows = await fetchOne(dsId, period.start);
-      if (rows) {
-        log(`  ✓ ${name}: ${rows.length} pistettä`, 'ok');
-        result[period.id].datasets[name] = rows;
-      } else {
-        result[period.id].datasets[name] = null;
-      }
-      // Kohtelias viive datasettien välillä
-      await new Promise(res => setTimeout(res, 2000));
-    }
-    // Näytä osittainen tulos jokaisen periodin jälkeen (ei katoa jos jotain keskeytyy)
-    const partialJson = JSON.stringify(result, null, 0);
-    document.getElementById('resultText').value = partialJson;
-    document.getElementById('resultBox').style.display = 'block';
-    log(`  (osittainen tulos päivitetty, ${(partialJson.length/1024).toFixed(0)} KB tähän mennessä)`);
-
-    // Pidempi viive periodien välillä
-    if (pi < PERIODS.length - 1) {
-      log(`  (odotetaan 5s ennen seuraavaa periodia...)`);
-      await new Promise(res => setTimeout(res, 5000));
+function mergeByHour(datasetRows, periodStartISO, hours) {
+  const valueByHour = {};
+  for (const [name, rows] of Object.entries(datasetRows)) {
+    if (!rows) continue;
+    for (const r of rows) {
+      const dt = new Date(r.startTime);
+      const hourKey = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours()).toISOString();
+      // Käytetään UTC-tunnin avainta suoraan aikaleimasta merkkijonona (valtetaan aikavyohyke-ongelmat)
+      const utcHourKey = r.startTime.slice(0,13); // "YYYY-MM-DDTHH"
+      (valueByHour[utcHourKey] ??= {})[name] ??= [];
+      valueByHour[utcHourKey][name].push(r.value);
     }
   }
+  const merged = [];
+  const start = new Date(periodStartISO);
+  for (let h = 0; h < hours; h++) {
+    const hourDt = new Date(start.getTime() + h*3.6e6);
+    const key = hourDt.toISOString().slice(0,13);
+    const vals = valueByHour[key] || {};
+    const row = { timestamp: hourDt.toISOString().slice(0,19)+'.000Z' };
+    for (const name of Object.keys(DS)) {
+      const v = vals[name];
+      row[name] = v && v.length ? v.reduce((a,b)=>a+b,0)/v.length : null;
+    }
+    merged.push(row);
+  }
+  return merged;
+}
 
-  statusEl.textContent = '✓ VALMIS — kaikki periodit käsitelty';
-  statusEl.className = 'ok';
-  log('\n=== KAIKKI VALMIS ===');
+async function fetchPeriod(period) {
+  log(`\n=== ${period.id} (${period.label}) ===`);
+  const datasetRows = {};
+  const coverage = {};
+  for (const [name, dsId] of Object.entries(DS)) {
+    log(`  ${name} (DS ${dsId})...`);
+    const rows = await fetchOneDataset(dsId, period.start, HOURS);
+    datasetRows[name] = rows;
+    if (rows) {
+      const hourSet = new Set(rows.map(r => r.startTime.slice(0,13)));
+      coverage[name] = `${hourSet.size}/${HOURS}`;
+      log(`  ✓ ${name}: ${hourSet.size}/${HOURS} tuntia`, 'ok');
+    } else {
+      coverage[name] = `0/${HOURS}`;
+    }
+    await new Promise(res => setTimeout(res, 500));
+  }
+  const merged = mergeByHour(datasetRows, period.start, HOURS);
+  const result = {
+    id: period.id, label: period.label, start: period.start,
+    fetched_at: new Date().toISOString(),
+    coverage, data: merged,
+  };
+  savePeriod(period.id, result);
+  log(`  TALLENNETTU pysyvästi (localStorage).`, 'ok');
+  return result;
+}
 
-  const jsonStr = JSON.stringify(result, null, 0);
-  document.getElementById('resultText').value = jsonStr;
-  document.getElementById('resultBox').style.display = 'block';
-  log(`JSON-koko: ${(jsonStr.length/1024).toFixed(1)} KB`);
+function renderPeriodList() {
+  const el = document.getElementById('periodList');
+  el.innerHTML = '';
+  let allDone = true;
+  for (const period of PERIODS) {
+    const saved = getSaved(period.id);
+    const row = document.createElement('div');
+    row.className = 'period-row ' + (saved ? 'done' : 'pending');
+    const info = document.createElement('div');
+    info.innerHTML = `<div class="period-id">${period.id}</div><div class="period-status">${saved ? '✓ Valmis (' + new Date(saved.fetched_at).toLocaleString('fi-FI') + ')' : period.label}</div>`;
+    row.appendChild(info);
+    if (!saved) {
+      allDone = false;
+      const btn = document.createElement('button');
+      btn.style.width = 'auto';
+      btn.textContent = '▶ Hae';
+      btn.onclick = () => runOne(period);
+      row.appendChild(btn);
+    } else {
+      const btn = document.createElement('button');
+      btn.style.width = 'auto';
+      btn.textContent = '↻ Hae uudelleen';
+      btn.style.fontSize = '.7rem';
+      btn.onclick = () => runOne(period);
+      row.appendChild(btn);
+    }
+    el.appendChild(row);
+  }
+  document.getElementById('exportBox').style.display = allDone ? 'block' : 'none';
+  if (allDone) buildExport();
+}
+
+let running = false;
+async function runOne(period) {
+  if (running) { log('Odota edellisen haun valmistumista.', 'err'); return; }
+  running = true;
+  try {
+    await fetchPeriod(period);
+  } catch(e) {
+    log('VIRHE: ' + e.message, 'err');
+  }
+  running = false;
+  renderPeriodList();
+}
+
+function buildExport() {
+  const result = { fetched_at: new Date().toISOString(), source: PROXY, periods: {} };
+  for (const period of PERIODS) {
+    const saved = getSaved(period.id);
+    if (saved) result.periods[period.id] = saved;
+  }
+  document.getElementById('resultText').value = JSON.stringify(result);
 }
 
 function downloadResult() {
@@ -162,17 +240,11 @@ function downloadResult() {
   const blob = new Blob([text], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'wem_backtest_historical.json';
+  a.href = url; a.download = 'wem_backtest_historical_final.json';
   a.click();
 }
 
-function copyResult() {
-  const ta = document.getElementById('resultText');
-  ta.select();
-  document.execCommand('copy');
-  alert('Kopioitu leikepöydälle');
-}
+renderPeriodList();
 </script>
 </body>
 </html>
