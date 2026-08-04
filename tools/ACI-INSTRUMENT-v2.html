@@ -649,12 +649,6 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <button class="btn-bt" id="btnBT" onclick="runBacktest()">&#9654;&nbsp; Aja backtest</button>
       <div class="bt-progress" id="btProgress">8 periodita · DS 124 + DS 192 · ~20 s</div>
     </div>
-    <div class="bt-controls" style="margin-top:.4rem;">
-      <button class="btn-bt" id="btnTestOne" onclick="testOnePeriod()" style="background:var(--sy,#7a6010);">&#9654;&nbsp; Testaa yksi periodi (2022-01)</button>
-      <div class="bt-progress" id="testOneProgress">Nopea testi — arvio ~1 min, pidä näyttö auki koko ajan</div>
-    </div>
-    <div id="testOnePanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
-    <div id="btDataQualityPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div id="btDPRawPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div class="bt-timeline-wrap"><svg id="chBT" style="width:100%;height:100%;"><text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#c8bfad">Aja backtest nähdäksesi aikajana</text></svg></div>
     <div id="btTableWrap"><table class="bt-table"><thead><tr>
@@ -796,6 +790,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
       <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
       <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
+      <li><strong>Backtest käyttää synteettistä rekonstruktiota tietoisesti, ei väliaikaisena varapolkuna:</strong> useiden istuntojen ja kymmenien tuntien yritysten jälkeen (verkkoasetukset, erillinen hakutyökalu, Fingridin oma avoin data -latauslomake — kaikki kohtasivat aitoja, dokumentoituja esteitä: resoluutioerot 3 min vs. tunti vs. 15 min 13.6.2023 jälkeen, proxyn sivutusparametrin arvaamattomuus, mobiiliselaimen tausta-ajastimen hidastus pitkien hakujen aikana, Fingridin dataset-ID:iden muuttuminen) päätettiin luopua oikean historiadatan hakuyrityksestä tällä hetkellä. Backtest-periodit 2022–2024 käyttävät sisäänrakennettuja kuukausikeskiarvoja + synteettistä tuntiprofiilia — tämä on nyt ensisijainen ja ainoa polku, ei väliaikainen. Hakulogiikka (fetchHistorical, fetchRealHistoricalPeriod) on säilytetty koodissa testattuna mutta kutsumattomana, jos päätös joskus muuttuu.</li>
       <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
       <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS(p):ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
       <br><br><strong>Loviisan vuosihuollot (lisätty 2026-07-29, käyttäjän oma huomio):</strong> Fortumin Loviisan voimalaitoksen kaksi yksikköä (LO1 ~507 MW, LO2 ~507 MW, yhteensä ~1000 MW) puuttuivat aiemmin tästä listasta kokonaan, vaikka ne ovat yhtä lailla osa firm-kapasiteettia. Fortumin oman julkisen aikataulun mukaan (fortum.com, haettu 2026-07-29): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10. Sama periaate kuin Olkiluodolla: yksi yksikkö kerrallaan, ei koskaan samanaikaisesti. Ajoittuu johdonmukaisesti elo-lokakuulle — eri ikkuna kuin OL3:n marraskuu, joten yhdessä nämä kattavat laajemman osan syksystä kuin pelkkä Olkiluoto antaisi ymmärtää. Rauhoittava rakenteellinen huomio: kaikki osuvat elo-lokakuulle, ei tammi-helmikuun varsinaiselle talvihuipulle — sama logiikka kuin OL1:n kevät/OL3:n syksy-erottelussa. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus).</li>
@@ -3210,19 +3205,28 @@ async function fetchPeriodData(period) {
     const cur = rawData.slice(-168);
     return { data: cur.length > 0 ? cur : generateSynthetic(168), dataQuality: 'live' };
   }
-  // ENSISIJAINEN: oikea Fingrid-historiadata
-  try {
-    const { merged, failed } = await fetchRealHistoricalPeriod(period.start);
-    const dq = failed.length > 0 ? `oikea (osittainen: ${failed.join('; ')})` : 'oikea historia';
-    return { data: merged, dataQuality: dq };
-  } catch(e) {
-    console.warn(`[WEM] Oikea historiadata epaonnistui periodille ${period.id}: ${e.message} - kaytetaan rekonstruoitua varmuuskopiota`);
-    // VARAPOLKU: sisaanrakennettu baseline (synteettinen rekonstruktio)
-    if (BT_BASELINES[period.id]) {
-      return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: `rekons. (varmuuskopio - syy: ${e.message.slice(0,150)})` };
-    }
-    throw new Error('oikea data ja baseline molemmat epäonnistuivat/puuttuvat: ' + e.message);
+  // PAATOS 2026-08 (kayttajan eksplisiittinen paatos usean istunnon ja
+  // kymmenien tuntien yrittamisen jalkeen): oikean Fingrid-historiadatan
+  // hakuyrityksesta LUOVUTAAN historiallisille periodeille kokonaan.
+  // Syyt kirjattu tyhjentavasti: resoluutioerot (3min vs tunti, ja
+  // tuntikin muuttui 15min:ksi 13.6.2023 jalkeen), proxyn sivutus-
+  // parametrin arvaamattomuus, rate limiting, mobiiliselaimen tausta-
+  // ajastimen hidastus pitkien hakujen aikana (5h -> 3/8 periodia),
+  // ja Fingridin oman avoimen datan latauslomakkeen dataset-ID-
+  // sekaannus (samannimisia datasetteja eri ID:illa, DS 201 ei enaa
+  // loydy numerolla). Jokainen aidosti korjattava - mutta yhdessa
+  // liikaa aikaa vaativia suhteessa hyotyyn TALLA HETKELLA.
+  //
+  // fetchRealHistoricalPeriod() ja fetchHistorical() SAILYTETTY
+  // koodissa (toimivat, testattu paikallisesti mock-palvelinta vasten)
+  // - EI kutsuta enaa taalta, mutta valmiina jos paatos muuttuu
+  // tulevaisuudessa (esim. jos joku saa Fingridin CSV-latauksen
+  // toimimaan ja haluaa syottaa sen kasin, tai jos verkkoasetukset
+  // joskus toimivat).
+  if (BT_BASELINES[period.id]) {
+    return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: 'rekons.' };
   }
+  throw new Error('baseline puuttuu periodille ' + period.id);
 }
 
 function drawBTTimeline(results) {
@@ -3365,41 +3369,7 @@ function renderBTSignal(results) {
 
 let btResults = [];
 
-// LISATTY 2026-08 (kayttajan pyynto): 5 tunnin epaonnistuneen 8-periodin
-// ajon jalkeen - todennakoinen syy oli mobiiliselaimen tausta-ajastimen
-// hidastus (puhelin nukkui/sovellus taustalle pitkan ajon aikana), ei
-// itse hakulogiikka (joka on jo testattu toimivaksi mock-palvelinta
-// vasten). Tama funktio hakee VAIN YHDEN periodin (168h x 7 datasettia,
-// samalla korjatulla paloittelulogiikalla kuin runBacktest) ja mittaa
-// kuluneen ajan nakyvasti - antaa nopean (~1 min), hallittavan tavan
-// testata onko ongelma ratkennut ilman tuntien odotusta.
-async function testOnePeriod() {
-  const btn = document.getElementById('btnTestOne');
-  const prog = document.getElementById('testOneProgress');
-  const panel = document.getElementById('testOnePanel');
-  btn.disabled = true;
-  panel.style.display = 'block';
-  const testPeriod = BT_PERIODS.find(p => p.id === '2022-01');
-  const startTime = Date.now();
-  prog.textContent = 'Haetaan 2022-01... (pidä näyttö auki)';
-  panel.textContent = `Aloitettu: ${new Date().toLocaleTimeString('fi-FI')}\nPeriodi: 2022-01 (${testPeriod.start})\n`;
 
-  try {
-    const { merged, failed } = await fetchRealHistoricalPeriod(testPeriod.start);
-    const elapsedS = ((Date.now() - startTime) / 1000).toFixed(1);
-    prog.textContent = `Valmis ${elapsedS}s`;
-    panel.textContent += `\nVALMIS ${elapsedS}s kuluttua.\n`
-      + `Pisteitä: ${merged.length}/168\n`
-      + (failed.length ? `Epäonnistuneet datasetit: ${failed.join('; ')}\n` : 'Kaikki 7 datasettiä onnistuivat.\n')
-      + `\nEnsimmäinen piste: ${JSON.stringify(merged[0])}\n`
-      + `Viimeinen piste: ${JSON.stringify(merged[merged.length-1])}`;
-  } catch (e) {
-    const elapsedS = ((Date.now() - startTime) / 1000).toFixed(1);
-    prog.textContent = `Epäonnistui ${elapsedS}s kuluttua`;
-    panel.textContent += `\nEPÄONNISTUI ${elapsedS}s kuluttua: ${e.message}`;
-  }
-  btn.disabled = false;
-}
 
 async function runBacktest() {
   const btn = document.getElementById('btnBT');
@@ -3463,20 +3433,12 @@ async function runBacktest() {
 
   // LISATTY 2026-08-01: kayttajan test paljasti etta KAIKKI periodit
   // putosivat varmuuskopioon oikean historiadatan sijaan. Koska
-  // kayttaja on puhelimella (ei title-attribuutin hoveria), nayta
-  // taydet epaonnistumissyyt suoraan nakyvana tekstina, ei vain
-  // lyhennettyna taulukon sisalla.
-  const dqPanel = document.getElementById('btDataQualityPanel');
-  if (dqPanel) {
-    const issues = results.filter(r => r.dataQuality && !r.dataQuality.startsWith('oikea historia') && r.dataQuality !== 'live');
-    if (issues.length > 0) {
-      dqPanel.style.display = 'block';
-      dqPanel.textContent = 'DATAN LAATU — HAVAINNOT:\n\n' +
-        issues.map(r => `${r.id}: ${r.dataQuality}`).join('\n\n');
-    } else {
-      dqPanel.style.display = 'none';
-    }
-  }
+  // PAATOS 2026-08: koska synteettinen rekonstruktio on nyt AINA
+  // tarkoituksellinen tila (ei varapolku epaonnistuneelle haulle),
+  // taman paneelin alkuperainen "DATAN LAATU - HAVAINNOT" -kehys
+  // (joka nayttaisi "rekons." kaikille periodeille kuin virheena)
+  // ei ole enaa tarkka. Poistettu - "Pisteet"-sarake taulukossa
+  // riittaa kertomaan tilan.
 
   // LISATTY 2026-08 (kayttajan pyynto): raaka DP_t (ennen [0,1]-kattoa)
   // KAIKILLE periodeille - selvittaa onko katto tuhonnut aitoa
@@ -3702,7 +3664,6 @@ function onCHPSlider(val) {
 // Expose to global scope (called from HTML onclick)
 window.init        = init;
 window.runBacktest = runBacktest;
-window.testOnePeriod = testOnePeriod;
 window.onDCSlider  = onDCSlider;
 window.onCHPSlider = onCHPSlider;
 window.setChartWindow = setChartWindow;
