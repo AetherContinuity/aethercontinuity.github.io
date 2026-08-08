@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SM-016 — Kasvu-koodattu pääoma · ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-016-kasvu-koodattu-paaoma.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a1a;--paper:#fafaf8;--accent:#8b2500;--muted:#666;--rule:#ddd;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.85;max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.6rem;margin-bottom:2.5rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+h1{font-size:1.6rem;font-weight:400;margin-bottom:.3rem}
+.doc-id{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:1.5rem}
+.abstract{background:#f3f0ea;border-left:3px solid var(--accent);
+  padding:.9rem 1.1rem;margin:1.5rem 0;font-size:.92rem;line-height:1.7}
+.abstract strong{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:.4rem;color:var(--accent)}
+h2{font-size:1rem;font-weight:600;margin:2.2rem 0 .6rem;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+h3{font-size:.95rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin-bottom:.85rem}
+ul,ol{margin:.4rem 0 .85rem 1.4rem}
+li{margin-bottom:.3rem}
+.claim{font-style:italic;border-left:2px solid var(--rule);padding-left:.9rem;
+  margin:1rem 0;color:#333}
+.loop-step{background:#f8f5f0;border-left:3px solid #c8960c;
+  padding:.6rem 1rem;margin:.5rem 0;font-size:.9rem}
+.loop-step strong{font-family:var(--mono);font-size:.65rem;color:var(--accent);
+  display:inline-block;min-width:2rem}
+.case{background:#f8f5f0;border-left:3px solid var(--accent);
+  padding:.7rem 1rem;margin:.7rem 0;font-size:.88rem}
+.case strong.title{font-family:var(--mono);font-size:.72rem;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.3rem}
+.weak{background:#f0f0f0;border-left:3px solid #999;
+  padding:.7rem 1rem;margin:.7rem 0;font-size:.88rem}
+.weak strong.title{font-family:var(--mono);font-size:.72rem;color:#666;
+  text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.3rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+th{background:#f0ece4;text-align:left;padding:.4rem .6rem;
+  font-family:var(--mono);font-size:.7rem;border-bottom:2px solid var(--rule)}
+td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
+.refs{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  border-top:1px solid var(--rule);margin-top:2.5rem;padding-top:.8rem;line-height:2}
+.refs a{color:var(--accent);text-decoration:none}
+.nav-footer{background:#f3f0ea;border-top:1px solid var(--rule);margin-top:3rem;
+  padding:1.2rem 1.5rem;font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:2.2}
+.nav-footer a{color:var(--accent);text-decoration:none}
+.nav-footer strong{color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<nav><a href="/papers/">Papers</a><a href="/">ACI</a></nav>
+
+<h1>SM-016 — Kasvu-koodattu pääoma</h1>
+<p class="doc-id">Miksi H-4b:n mekanismi näkyy voimakkaammin infrastruktuurin ylimitoituksessa kuin sen ratkaisumekanismeissa<br>
+Versio 0.1 · Elokuu 2026<br>
+Perustuu: <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a> · <a href="/papers/sm-015-political-feedback-loop.html" style="color:var(--accent);text-decoration:none">SM-015</a> · WEM DP_t-kalibrointityö (2026-08)</p>
+
+<div class="abstract">
+<strong>Tiivistelmä</strong>
+SM-016 lähti liikkeelle vapaamuotoisesta visiosta suomalaisesta, väestöltään pienemmästä, automatisoidusta ja hajautetun energian yhteiskunnasta vuonna 2100. Ensimmäinen menetelmällinen havainto oli että tällaisen vision arvottaminen numeerisesti (esim. "90 % vs. 20 %" -vertailutaulukko) kodifioi preferenssin mittaukseksi — tarkalleen se virhe jota WEM:n oma EPP-indeksi teki DP_t:n saturoituessa. Korjattu kysymys ei ole "onko väestön väheneminen hyvä asia" vaan H-4b:n oma muoto: mikä tekee sopeutumisen ensimmäisestä askeleesta rationaalisen päätöksentekijälle jonka on maksettava kustannus nyt ja joka saa hyödyn vasta myöhemmin, tai ei ollenkaan. Kahdeksan tapaustutkimusta kustannus-nyt-puolelta (Itärata, Länsirata, Suomi-rata, Helsinki Garden/Suvilahti, kuntien tilakanta, kauppakeskukset, toimistotilat, datakeskukset) osoittavat mekanismin toimivan johdonmukaisesti ja mitattavasti. Kolme testattua kompensaatiomekanismia hyöty-myöhemmin-puolelta (robotisointi, AI-substituutio, kuntaliitokset) eivät osoita vastaavaa näyttöä — yksi on suoraan falsifioitu, yksi kääntynyt negatiiviseksi, yksi jää testaamattomaksi hypoteesiksi. Löydös ei ole "visio on väärä" vaan täsmällisempi: sopeutumismekanismit joita visio olettaa toimivan eivät toistaiseksi näy Suomen datassa, samaan aikaan kun vanhaan kasvumalliin sitoutuneen pääoman kustannukset ovat mitattavia ja kasvavia.
+</div>
+
+<div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.7rem 1rem;margin:1.5rem 0;font-size:.88rem">
+<strong style="font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500;display:block;margin-bottom:.4rem">Menetelmällinen huomio: kuinka tämä paperi syntyi</strong>
+<p style="margin:0">Lähtökohta oli visio, ei hypoteesi. Visio arvotettiin ensin numeerisesti kahdeksalla mittarilla, joista kaikki osuivat 80–100 %:iin suositulle mallille ja 0–30 %:iin vertailumallille. Tämä tunnistettiin virheeksi: se ei ollut mittaus, se oli preferenssi numeroina. Korjaus ei ollut vision hylkääminen, vaan sen asemointi hypoteesiksi ja kysymyksen kääntäminen H-4b:n muotoon. Tämä paperi dokumentoi sekä löydökset että sen, että hakua on tehty molempiin suuntiin samalla intensiteetillä — mukaan lukien kolme yritystä löytää tukea alkuperäiselle visiolle, joista kaikki kolme raportoidaan rehellisesti, myös kun tulos ei tukenut hypoteesia.</p>
+</div>
+
+<h2>§1 — H-4b tässä domainissa</h2>
+
+<p>ACI:n keskeinen diagnostinen teesi (H-4b): mikään mekanismi ei muunna tulevaisuuden epäonnistumistodennäköisyyttä nykyiseksi päätöskustannukseksi tunnistettavalle toimijalle. Tässä domainissa mekanismi jakautuu kahdeksi erilliseksi, eri yksiköissä mitattavaksi ketjuksi — ja niiden pitäminen erillisinä on tarkoituksellinen menetelmävalinta (§4).</p>
+
+<div class="claim">Ketju A: väestöura → kysyntäura → infrastruktuuriepäsuhta → sopeutumiskustannus<br>
+Ketju B: automaatio + hajautettu energia + infrastruktuurin sopeutus → tarvittava ihmistyö ↓</div>
+
+<p>Ketju A:n kustannus lankeaa <em>nyt</em>, näkyvästi, tunnistettavalle paikalliselle päättäjälle (kunnanvaltuusto, hankeyhtiön hallitus, ministeriö). Ketju B:n hyöty toteutuisi <em>myöhemmin</em>, hajautetusti, ei kenenkään tietyn toimijan tilille kirjattuna. Tämä epäsymmetria — ei väestökehitys itsessään — on H-4b:n ydin tässä domainissa.</p>
+
+<h2>§2 — Kustannus nyt: kahdeksan tapausta</h2>
+
+<p>Kahdeksan tapausta on käyty läpi samalla tarkkuudella: virallinen kustannusarvio, virallinen hyötyperustelu, ja saatavilla oleva riippumaton tai omakin jälkikäteisarvio. Järjestys heikoimmasta vahvimpaan H-4b-osumaan.</p>
+
+<div class="case">
+<strong class="title">Suomi-rata (Helsinki–Tampere–Oulu) — nyanssoitu, aito kysyntä</strong>
+4–5,5 mrd €. Palvelee Suomen vilkkainta ratayhteyttä (puolet väestöstä, yli puolet työpaikoista vaikutusalueella). Matka-aikahyöty 15–32 min riippuen linjauksesta. Rahoitusmalli avoin — hankeyhtiö itse: "rasitetaan mahdollisimman vähän julkista taloutta." Ei selvää ylimitoitusta, mittakaavavalinta (5,5 vs. 4 mrd) ja rahoitus kiistanalaisia.
+</div>
+
+<div class="case">
+<strong class="title">Länsirata (Helsinki–Turku) — nyanssoitu, kasvu-koodattu perustelu</strong>
+3,7 mrd €. Työllisyyshyöty (Turun kauppakorkeakoulun tutkimus, hallituksen tilaama): ~1300 pendelöijää, ~11 M€/v palkkasumma — pieni suhteessa investointiin. Nykyinen rata näyttää aitoa, voimakasta kasvua (Salo +17 %/v) — mutta virallinen oma ennuste ("20 % vuoteen 2030 ja 2050 mennessä") osoittaa kasvun saturoituvan, ristiriidassa toteutuneen kasvun kanssa. Reitti mahdollistaa kaavoitusta (Vihti, Lohja) jota ei olisi ilman rataa — kysyntää jonka hanke itse luo. Halvempi, erillinen kapasiteettihanke (Leppävaara–Kauklahti lisäraiteet) etenee rinnalla.
+</div>
+
+<div class="case">
+<strong class="title">Itärata (Helsinki–Kouvola–Itä-Suomi) — suora osuma</strong>
+1,6–3,0 mrd €. Matka-aikahyöty 13–15 min. <strong>Valtioneuvoston oma teettämä selvitys: hyöty-kustannussuhde 0,13–0,15</strong>, hanke todettu eksplisiittisesti "yhteiskuntataloudellisesti kannattamattomaksi." Yleissuunnitteluvaihe käynnistyi maaliskuussa 2026 siitä huolimatta. Hankeyhtiön toimitusjohtaja: "kun rata toimii ja täyttää liikkumisen tarpeet, kukaan ei kaipaa menneisyyteen" — perustelu ei viittaa omaan kannattamattomuuslöydökseen.
+</div>
+
+<div class="case">
+<strong class="title">Helsinki Garden / Suvilahti Areena — hallinnan kaappaus</strong>
+35 M€ valtiontuki Helsinki Gardenille. Projektiyhtiön hallituksen puheenjohtaja (entinen asuntoministeri Jan Vapaavuori) epäillään vaikuttaneen tukipäätökseen itse — oppositio vaati pääministeriltä selvitystä. Vapaavuori itse 2019: ilman asuntoja "hankkeen talousyhtälö on mahdoton"; 2026, asunnot poistettu suunnitelmasta, sama henkilö kuvaa supistettua hanketta "rahoituskelpoisemmaksi." Perustelu ei ennustanut lopputulosta, se sopeutui siihen jälkikäteen. Rinnalla kolmas kilpaileva areenahanke (Vantaan Suvilahti, 170–270 M€) osin läpinäkymättömällä ulkomaisella rahoituksella samalla pienellä metropolialueella.
+</div>
+
+<div class="case">
+<strong class="title">Kuntien tilakanta — akuutti, tunnistettu, ratkaisematta</strong>
+~7 milj. m² ja 5000+ rakennusta jäi kuntien omistukseen 2023 sote-uudistuksen seurauksena, osa muuttuu virallisesti tarpeettomaksi juuri 2026 siirtymäkauden päättyessä. Kuntien rakennusinvestointien osuus kokonaisinvestoinneista <em>kasvoi</em> 39 %:sta (2005) 47 %:iin (2021) — väärä suunta väestön vanhetessa. Yli 80 % kuntalaisista huolissaan tyhjien kiinteistöjen kustannuksista abstraktilla tasolla; konkreettinen purkupäätös kohtaa systemaattista vastustusta koska "kiinteistöistä luopuminen rinnastetaan itse palvelun lopettamiseen." Rakennukset kuluttavat 38 % Suomen kokonaisenergiankulutuksesta.
+</div>
+
+<div class="case">
+<strong class="title">Kauppakeskukset — mennyt virhe, jäänne</strong>
+2008: viranomainen (ympäristöministeriö) itse totesi 165 suunnitteilla olevaa kauppakeskusta "rajusti ylimitoitetuiksi" (yli 5 milj. m², kolmasosa silloisesta liiketilakannasta). Uudisrakentaminen on sittemmin hiipunut merkittävästi — kanta on historiallinen jäänne, ei aktiivinen ylirakentaminen juuri nyt.
+</div>
+
+<div class="case">
+<strong class="title">Toimistotilat — akuutti, kasvava, vähiten tunnistettu</strong>
+Pääkaupunkiseudun toimistojen vajaakäyttöaste 18,2 % (2025 H2) — ennätys, nousee tasaisesti vuodesta 2020 (12,3 %). Kansainvälisesti poikkeuksellinen: Tukholma/Dublin ~15 %, muu Eurooppa 5–10 %. Ei liity väestönlaskuun suoraan (etätyö, ylitarjonta) mutta samaa "rakennettu kapasiteetti ei vastaa käyttöä" -ilmiötä.
+</div>
+
+<div class="case">
+<strong class="title">Datakeskukset — mitattu rakentamis/pysyvä-epäsuhta</strong>
+12 mrd € ilmoitettuja investointeja, potentiaali &gt;30 mrd €. FDCA/EK/Ramboll-selvitys: rakentamisvaihe ~44 000 htv vuoteen 2030, pysyvä operatiivinen vaihe ~9 900 htv/v — suhde ~4,4:1. Yhteisövero rakenteellisesti pieni (hyperscale-toimijat verottavat Irlannin kautta). Konkreettinen vertailu: yksi datakeskus (Kouvolan seutu) työllistää yli 400 — sama verran kuin sen tontilla aiemmin toiminut paperitehdas (450). Verkon kustannuskysymys ("kuka maksaa verkon päivitykset") eksplisiittisesti auki. Suora linkki WEM:n DP_t/FS-komponentteihin: litteä, lämpötilariippumaton kuorma, pysyvä paine, hyöty ajallisesti keskittynyt rakentamisvaiheeseen.
+</div>
+
+<h2>§3 — Hyöty myöhemmin: kolme testattua kompensaatiomekanismia</h2>
+
+<p>Kolme konkreettista kandidaattia Ketju B:lle on haettu samalla intensiteetillä ja samalla halulla löytää vahvistavaa näyttöä kuin Ketju A:n tapauksissa. Yksikään ei tue vielä visiota.</p>
+
+<div class="weak">
+<strong class="title">Robotisointi — kääntynyt negatiiviseksi</strong>
+Suomen sijoitus robottitiheydessä (robotit/10 000 teollisuustyöntekijää) pudonnut 6. (2007) → 21. (2023). Tanska ja Ruotsi kaksinkertaiset Suomeen nähden, samankaltaisesta teollisuusrakenteesta huolimatta. Trendi on nyt negatiivinen, ei vain matala: 2024 investoinnit laskivat, 2025–26 ei nousua. Kriittinen löydös: "tilanne on Euroopan surkein, vaikka työvoimaa on hyvin tarjolla" — kumoaa suoraan vision oletetun mekanismin (työvoimapula → automaatio). Alhainen robotisointi ei näytä johtuvan väestöpaineesta vaan siitä riippumattomista tekijöistä (pienet sarjat, alihankinnan siirto ulkomaille).
+</div>
+
+<div class="weak">
+<strong class="title">AI-substituutio valkokaulustyössä — testaamaton hypoteesi</strong>
+Uskottava mekanismi globaalissa keskustelussa, mutta ei suomalaista mittausdataa toistaiseksi. Merkitty eksplisiittisesti hypoteesiksi, ei havainnoksi — samalla kurilla kuin robotisointi-mekanismi olisi pitänyt merkitä ennen kuin data kumosi sen.
+</div>
+
+<div class="weak">
+<strong class="title">Kuntaliitokset — suoraan falsifioitu</strong>
+Vertailuryhmällinen tutkimus (Vartiainen, kaltaistetut liittymättömät verrokkikunnat): kuntaliitokset eivät tehneet kunnista houkuttelevampia asukkaille, työpaikoille eikä yrityksille. Tutkijan oma johtopäätös: "yhteiskunnan kannalta hyvin kyseenalaista, tuottavatko liitokset lisäarvoa." Mittakaava myös pienempi kuin oletettu — 78 liitosta 2007–2025, hidas ja asteittainen, ei kertaluonteinen sote-uudistuksen kaltainen vapautuma. Kuntaliiton oma meta-arviointi: hyödyt näkyvät vasta vuosien kuluttua, jos ollenkaan; vertailu metodisesti vaikeaa.
+</div>
+
+<h2>§4 — Miksi ketjuja ei summata yhdeksi indeksiksi</h2>
+
+<p>Tämä on tarkoituksellinen menetelmävalinta, ei puute. WEM:n oma EPP-indeksi teki juuri tämän virheen: pakotti FS%, SP%, DP_t:n ja WR:n yhteen lineaariseen summaan painokertoimilla. Kun DP_t saturoitui (2026-08 WEM-korjaustyö), koko indeksi lakkasi kertomasta mitään luotettavaa — yksi komponentti peitti muut.</p>
+
+<p>Ketju A (mitattu euroina, henkilötyövuosina, neliömetreinä, hyöty-kustannussuhteina) ja Ketju B (mitattu robottitiheytenä, henkilötyövuosina eri kontekstissa) eivät ole yhteismitallisia. Jos ne pakotettaisiin yhteen lukuun, tulos olisi täsmälleen se "90 %/20 %" -taulukko jonka hylkäsimme lähtökohtana: näennäinen täsmällisyys joka piilottaa sen että osa luvuista on mittausta ja osa preferenssiä.</p>
+
+<p>Ketjut pidetään rinnakkaisina, ei-summattuina aikasarjoina. Jos data joskus osoittaa että Ketju B alkaa kompensoida Ketju A:ta jollain aikahorisontilla, se näkyy kahden käyrän lähentymisenä — ei yhden indeksin nousuna tai laskuna.</p>
+
+<h2>§5 — Alkuperäinen visio uudelleen asemoituna</h2>
+
+<p>Visio — vähemmän ihmisiä, enemmän automaatiota, hajautettu energia, luonnon palautuminen — on hypoteesi sopeutumisurasta, ei ennuste eikä politiikkasuositus. SM-016:n oma löydös ei ole "visio on väärä." Löydös on vaatimattomampi ja täsmällisempi:</p>
+
+<div class="claim">Niistä sopeutumismekanismeista jotka visio olettaa toimivan, yksikään konkreettisesti testattu ei toistaiseksi näy Suomen datassa mitattavana ilmiönä — samaan aikaan kun vanhaan kasvumalliin sitoutuneen pääoman ja ylläpitovelvoitteiden kustannukset ovat mitattavia ja kasvavia kahdeksassa riippumattomassa tapauksessa.</div>
+
+<p>Tämä ero — kustannuspuolen vahva empiirinen tuki vs. kompensaatiopuolen toistuva puute — on itsessään H-4b:n ennustama tulos: mekanismi joka siirtäisi tulevan hyödyn nykyiseksi päätökseksi on rakenteellisesti heikompi kuin mekanismi joka siirtää nykyisen kustannuksen tulevaisuuteen.</p>
+
+<h2>§6 — Avoimet kysymykset seuraavaa versiota varten</h2>
+
+<ul>
+<li>Hajautetun energian vaikutus tarvittavaan ylläpitohenkilöstöön sähköverkossa — suoraan WEM:n aihepiiriin linkittyvä, ei vielä haettu.</li>
+<li>Falsifioiva testi Ketju A:lle: onko olemassa yksikin suomalainen suurhanke viimeisen 20 vuoden ajalta joka on <em>peruutettu tai supistettu nimenomaan</em> päivitetyn väestöennusteen perusteella, ei rahoitussyistä? Jos ei löydy yhtään, se on itsessään mitattava havainto.</li>
+<li>Etädiagnostiikka/etähoiva harvaan asutuilla alueilla — ei vielä haettu, mahdollinen neljäs kompensaatiokandidaatti.</li>
+<li>Kuinka suuri osa kunnan tilakannasta (7 milj. m²) selittyy nimenomaan sote-uudistuksella erillään muista syistä (kuntaliitokset, väestökato) — tarkka dekomponointi puuttuu.</li>
+</ul>
+
+<div class="refs">
+<strong>Viitteet ja lähteet (haettu 2026-08-08–09)</strong>
+Väylävirasto/Suomi-rata Oy linjausselvitykset · Itärata Oy pääsuuntaselvitys ja valtioneuvoston h/k-selvitys · Länsirata Oy/BCG vaikutusselvitys, Turun kauppakorkeakoulun työllisyystutkimus · TEM Yritystukineuvottelukunnan lausunto (Garden Helsinki) · Wikipedia: Garden Helsinki, Espoo–Salo-oikorata · Senaatti-kiinteistöt: kuntien tilakanta · Kuntaliitto: kuntaliitokset ja meta-arviointi · Vartiainen: kuntaliitosten elinkeinovaikutukset · Automaatioväylä: robotiikkatilastot 2023–2026 · Yaskawa/Valkama 2026 · Suomen Pankki (Kokkinen, Jalasjoki & Obstbaum 2025) · FDCA/EK/Ramboll datakeskusselvitys · Barona datakeskusten työllisyysvaikutukset · Helsingin Seudun Suunnat: toimitilatilastot · Catella markkinakatsaus 2026
+</div>
+
+<div class="nav-footer">
+<strong>ACI — Aether Continuity Institute</strong>
+<a href="/papers/">← Kaikki paperit</a>
+<a href="/">Etusivu</a>
+</div>
+
+</body>
+</html>
