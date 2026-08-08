@@ -60,7 +60,7 @@ td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
 
 <h1>SM-016 — Kasvu-koodattu pääoma</h1>
 <p class="doc-id">Miksi H-4b:n mekanismi näkyy voimakkaammin infrastruktuurin ylimitoituksessa kuin sen ratkaisumekanismeissa<br>
-Versio 0.4 · Elokuu 2026 · Korjaus 0.4 (kollegan tarkastus): CMC:n määritelmä tiukennettu — kahdeksasta tapauksesta kuusi (hintapiikki/toimistotilat siirretty uuteen DCI-kategoriaan, §3); ASC:n kuntaliitos-tapaus uudelleenluokiteltu (kasvuhypoteesi falsifioitu ≠ ASC falsifioitu); lähteetön suhdeluku poistettu; VOS poistettu Kemiönsaaren erottavista tekijöistä (vakio ei selitä varianssia); otantavinouma-rajoitus lisätty eksplisiittisesti (§7); ristiviitteet korjattu<br>
+Versio 0.5 · Elokuu 2026 · Korjaus 0.5: torjuttu kollegan yritys määritellä ASC uudelleen jälkikäteen (työvoiman uudelleensijoittuminen olisi laskenut voitoksi molemmissa mahdollisissa tuloksissa) — jaettu sen sijaan kahdeksi erilliseksi, molemmat itsenäisesti falsifioitaviksi alahypoteeseiksi (ASC-reduktio, ASC-uudelleensijoittuminen)<br>
 Perustuu: <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a> · <a href="/papers/sm-015-political-feedback-loop.html" style="color:var(--accent);text-decoration:none">SM-015</a> · WEM DP_t-kalibrointityö (2026-08)</p>
 
 <div class="abstract">
@@ -162,8 +162,14 @@ Vertailuryhmällinen tutkimus (Vartiainen, kaltaistetut liittymättömät verrok
 </div>
 
 <div class="weak">
-<strong class="title">Hajautetun energian vaikutus ylläpitohenkilöstöön — tunnistettu, ei testattu</strong>
-Kollegan esittämä hypoteesi (v0.2): keskitetty voimalaitos vs. tuhannet paikalliset aurinko+akku+lämpövarasto-järjestelmät kasvattavat valvontapisteiden määrää eksponentiaalisesti — todennäköinen lopputulos ei ole ylläpitohenkilöstön väheneminen vaan sen luonteen muutos (keskitetyt laitosteknikot → hajautetut kiertävät moniosaajat). <strong>Korjaus v0.4:</strong> aiempi versio esitti tälle testattavan suhdeluvun ("yksi teknikko per 500 asukasta") jolla ei ollut lähdettä — poistettu. Se oli lähteetön, havainnollistavaksi tarkoitettu luku esitettynä mittaustuloksen asussa, juuri se surface determinism -virhe jota DASC-metodologiatyö on dokumentoinut yleisenä riskinä. Datalähde on tunnistettu (Energiaviraston vuosittaiset "Sähköverkkoliiketoiminnan kehitys" -raportit 2021–2023) mutta ei vielä läpikäyty. Merkitty eksplisiittisesti testattavissa olevaksi mutta testaamattomaksi.
+<strong class="title">Hajautetun energian vaikutus ylläpitohenkilöstöön — kaksi erillistä, ei toisiaan pelastavaa alahypoteesia (korjattu v0.5)</strong>
+Kollegan esittämä hypoteesi (v0.2): keskitetty voimalaitos vs. tuhannet paikalliset aurinko+akku+lämpövarasto-järjestelmät kasvattavat valvontapisteiden määrää eksponentiaalisesti — todennäköinen lopputulos ei ole ylläpitohenkilöstön väheneminen vaan sen luonteen muutos. <strong>Korjaus v0.4:</strong> aiempi versio esitti tälle testattavan suhdeluvun ("yksi teknikko per 500 asukasta") jolla ei ollut lähdettä — poistettu, surface determinism -virhe.<br><br>
+<strong>Korjaus v0.5:</strong> kollegan yritys tulkita mahdollinen työvoimatarpeen kasvu ASC:n uudeksi, laajennetuksi muodoksi (ei vastakohdaksi) hylätty sellaisenaan — se olisi määritellyt ASC:n uudelleen jälkikäteen niin että molemmat mahdolliset tulokset (työvoima vähenee TAI siirtyy) laskisivat visiolle voitoksi, jolloin väitteellä ei olisi enää empiiristä epäonnistumisehtoa. Sen sijaan kaksi erillistä, molemmat itsenäisesti kaatumiskykyistä alahypoteesia:
+<ol style="margin-top:.4rem">
+<li><strong>ASC-reduktio</strong> (alkuperäinen, §1:n oma määritelmä): tarvittava ihmistyö vähenee kokonaisuutena hajautuksen myötä. Epäonnistuu jos kokonaishenkilötyövuodet eivät laske.</li>
+<li><strong>ASC-uudelleensijoittuminen</strong> (uusi, ei korvaava): työ siirtyy maantieteellisesti CMC:n kustannuskeskittymien (väestökatoalueet) mukaan, riippumatta kokonaismäärästä. Epäonnistuu jos hajautettujen järjestelmien huoltajat rekrytoidaan/asuvat kasvukeskuksissa ja matkustavat ulos (ei paikallista työllisyyttä), tai jos erikoisosaamisvaatimus tarkoittaa tarvittava henkilömäärä on joka tapauksessa pienempi kuin alueen väestökato — jolloin uudelleensijoittuminenkaan ei kompensoi CMC:tä paikallisesti.</li>
+</ol>
+Molemmat testataan samasta datasta (Energiaviraston vuosittaiset "Sähköverkkoliiketoiminnan kehitys" -raportit 2021–2023, ei vielä läpikäyty) — kumpikaan ei pelasta toista jos toinen epäonnistuu. Neljä looginen lopputulos etukäteen kirjattuna: (a) molemmat onnistuvat, (b) vain reduktio, (c) vain uudelleensijoittuminen, (d) molemmat epäonnistuvat — kaikki neljä ovat hyväksyttäviä, informatiivisia tuloksia.
 </div>
 
 <h2>§5 — Miksi ketjuja ei summata yhdeksi indeksiksi</h2>
