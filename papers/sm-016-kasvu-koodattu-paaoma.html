@@ -60,12 +60,12 @@ td{padding:.35rem .6rem;border-bottom:1px solid #eee;vertical-align:top}
 
 <h1>SM-016 — Kasvu-koodattu pääoma</h1>
 <p class="doc-id">Miksi H-4b:n mekanismi näkyy voimakkaammin infrastruktuurin ylimitoituksessa kuin sen ratkaisumekanismeissa<br>
-Versio 0.1 · Elokuu 2026<br>
+Versio 0.2 · Elokuu 2026 · Korjaus 0.2: Ketju A/B nimetty (CMC/ASC), kysymys uudelleensuunnattu väestöstä pääoman ajoitukseen, energiaylläpito-hypoteesi lisätty (testattavissa, ei testattu), §6 duress-vs-visio-kierros lisätty, alkuperäisen vision toiveikkuus palautettu §7:ään<br>
 Perustuu: <a href="/papers/sm-013-social-contract-calibration.html" style="color:var(--accent);text-decoration:none">SM-013</a> · <a href="/papers/sm-015-political-feedback-loop.html" style="color:var(--accent);text-decoration:none">SM-015</a> · WEM DP_t-kalibrointityö (2026-08)</p>
 
 <div class="abstract">
 <strong>Tiivistelmä</strong>
-SM-016 lähti liikkeelle vapaamuotoisesta visiosta suomalaisesta, väestöltään pienemmästä, automatisoidusta ja hajautetun energian yhteiskunnasta vuonna 2100. Ensimmäinen menetelmällinen havainto oli että tällaisen vision arvottaminen numeerisesti (esim. "90 % vs. 20 %" -vertailutaulukko) kodifioi preferenssin mittaukseksi — tarkalleen se virhe jota WEM:n oma EPP-indeksi teki DP_t:n saturoituessa. Korjattu kysymys ei ole "onko väestön väheneminen hyvä asia" vaan H-4b:n oma muoto: mikä tekee sopeutumisen ensimmäisestä askeleesta rationaalisen päätöksentekijälle jonka on maksettava kustannus nyt ja joka saa hyödyn vasta myöhemmin, tai ei ollenkaan. Kahdeksan tapaustutkimusta kustannus-nyt-puolelta (Itärata, Länsirata, Suomi-rata, Helsinki Garden/Suvilahti, kuntien tilakanta, kauppakeskukset, toimistotilat, datakeskukset) osoittavat mekanismin toimivan johdonmukaisesti ja mitattavasti. Kolme testattua kompensaatiomekanismia hyöty-myöhemmin-puolelta (robotisointi, AI-substituutio, kuntaliitokset) eivät osoita vastaavaa näyttöä — yksi on suoraan falsifioitu, yksi kääntynyt negatiiviseksi, yksi jää testaamattomaksi hypoteesiksi. Löydös ei ole "visio on väärä" vaan täsmällisempi: sopeutumismekanismit joita visio olettaa toimivan eivät toistaiseksi näy Suomen datassa, samaan aikaan kun vanhaan kasvumalliin sitoutuneen pääoman kustannukset ovat mitattavia ja kasvavia.
+SM-016 lähti liikkeelle vapaamuotoisesta visiosta suomalaisesta, väestöltään pienemmästä, automatisoidusta ja hajautetun energian yhteiskunnasta vuonna 2100. Ensimmäinen menetelmällinen havainto oli että tällaisen vision arvottaminen numeerisesti (esim. "90 % vs. 20 %" -vertailutaulukko) kodifioi preferenssin mittaukseksi — tarkalleen se virhe jota WEM:n oma EPP-indeksi teki DP_t:n saturoituessa. Korjattu kysymys ei ole "onko väestön väheneminen hyvä asia" vaan täsmällisempi: miksi järjestelmä investoi nykyhetkessä pääomaan jonka käyttöasteen riski kasvaa demografisen ennusteen myötä? Kahdeksan tapaustutkimusta kapasiteetti-epäsuhta-ketjulta (CMC, ks. §4) osoittavat mekanismin toimivan johdonmukaisesti ja mitattavasti. Kolme testattua kompensaatiomekanismia sopeutumis-substituutio-ketjulta (ASC) eivät osoita vastaavaa näyttöä — yksi on suoraan falsifioitu, yksi kääntynyt negatiiviseksi, yksi jää testaamattomaksi hypoteesiksi, ja yksi neljäs (hajautetun energian ylläpitovaikutus) on tunnistettu mutta ei vielä testattu. Löydös ei ole "visio on väärä" vaan täsmällisempi: sopeutumismekanismit joita visio olettaa toimivan eivät toistaiseksi näy Suomen datassa laajasti, vaikka nimetty poikkeus (Kemiönsaari, "älykäs sopeutuminen") osoittaa ennakoivan sopeutumisen olevan mahdollista, ei vain toivottavaa.
 </div>
 
 <div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.7rem 1rem;margin:1.5rem 0;font-size:.88rem">
@@ -73,16 +73,16 @@ SM-016 lähti liikkeelle vapaamuotoisesta visiosta suomalaisesta, väestöltää
 <p style="margin:0">Lähtökohta oli visio, ei hypoteesi. Visio arvotettiin ensin numeerisesti kahdeksalla mittarilla, joista kaikki osuivat 80–100 %:iin suositulle mallille ja 0–30 %:iin vertailumallille. Tämä tunnistettiin virheeksi: se ei ollut mittaus, se oli preferenssi numeroina. Korjaus ei ollut vision hylkääminen, vaan sen asemointi hypoteesiksi ja kysymyksen kääntäminen H-4b:n muotoon. Tämä paperi dokumentoi sekä löydökset että sen, että hakua on tehty molempiin suuntiin samalla intensiteetillä — mukaan lukien kolme yritystä löytää tukea alkuperäiselle visiolle, joista kaikki kolme raportoidaan rehellisesti, myös kun tulos ei tukenut hypoteesia.</p>
 </div>
 
-<h2>§1 — H-4b tässä domainissa</h2>
+<h2>§1 — H-4b tässä domainissa: CMC ja ASC</h2>
 
-<p>ACI:n keskeinen diagnostinen teesi (H-4b): mikään mekanismi ei muunna tulevaisuuden epäonnistumistodennäköisyyttä nykyiseksi päätöskustannukseksi tunnistettavalle toimijalle. Tässä domainissa mekanismi jakautuu kahdeksi erilliseksi, eri yksiköissä mitattavaksi ketjuksi — ja niiden pitäminen erillisinä on tarkoituksellinen menetelmävalinta (§4).</p>
+<p>ACI:n keskeinen diagnostinen teesi (H-4b): mikään mekanismi ei muunna tulevaisuuden epäonnistumistodennäköisyyttä nykyiseksi päätöskustannukseksi tunnistettavalle toimijalle. Tässä domainissa mekanismi jakautuu kahdeksi erilliseksi, eri yksiköissä mitattavaksi ketjuksi. Nimetään ne (kollegan ehdotus, otettu käyttöön v0.2:ssa) niin että ne irtautuvat väestökeskustelusta terminologisesti, ei vain rakenteellisesti:</p>
 
-<div class="claim">Ketju A: väestöura → kysyntäura → infrastruktuuriepäsuhta → sopeutumiskustannus<br>
-Ketju B: automaatio + hajautettu energia + infrastruktuurin sopeutus → tarvittava ihmistyö ↓</div>
+<div class="claim"><strong>CMC — Capacity Mismatch Chain:</strong> väestöura → kysyntäura → infrastruktuuriepäsuhta → sopeutumiskustannus<br>
+<strong>ASC — Adaptation Substitution Chain:</strong> automaatio + hajautettu energia + infrastruktuurin sopeutus → tarvittava ihmistyö ↓</div>
 
-<p>Ketju A:n kustannus lankeaa <em>nyt</em>, näkyvästi, tunnistettavalle paikalliselle päättäjälle (kunnanvaltuusto, hankeyhtiön hallitus, ministeriö). Ketju B:n hyöty toteutuisi <em>myöhemmin</em>, hajautetusti, ei kenenkään tietyn toimijan tilille kirjattuna. Tämä epäsymmetria — ei väestökehitys itsessään — on H-4b:n ydin tässä domainissa.</p>
+<p>CMC:n kustannus lankeaa <em>nyt</em>, näkyvästi, tunnistettavalle paikalliselle päättäjälle (kunnanvaltuusto, hankeyhtiön hallitus, ministeriö). ASC:n hyöty toteutuisi <em>myöhemmin</em>, hajautetusti, ei kenenkään tietyn toimijan tilille kirjattuna. Tämä epäsymmetria — ei väestökehitys itsessään — on H-4b:n ydin tässä domainissa. Terävämpi, korjattu kysymys (v0.2): <strong>miksi järjestelmä investoi nykyhetkessä pääomaan jonka käyttöasteen riski kasvaa demografisen ennusteen myötä?</strong> Tämä siirtää huomion väestöstä pääoman aikarakenteeseen — ja sopii otsikkoon ("kasvu-koodattu pääoma") paremmin kuin alkuperäinen väestökysymys.</p>
 
-<h2>§2 — Kustannus nyt: kahdeksan tapausta</h2>
+<h2>§2 — CMC: kahdeksan tapausta</h2>
 
 <p>Kahdeksan tapausta on käyty läpi samalla tarkkuudella: virallinen kustannusarvio, virallinen hyötyperustelu, ja saatavilla oleva riippumaton tai omakin jälkikäteisarvio. Järjestys heikoimmasta vahvimpaan H-4b-osumaan.</p>
 
@@ -126,9 +126,9 @@ Pääkaupunkiseudun toimistojen vajaakäyttöaste 18,2 % (2025 H2) — ennätys,
 12 mrd € ilmoitettuja investointeja, potentiaali &gt;30 mrd €. FDCA/EK/Ramboll-selvitys: rakentamisvaihe ~44 000 htv vuoteen 2030, pysyvä operatiivinen vaihe ~9 900 htv/v — suhde ~4,4:1. Yhteisövero rakenteellisesti pieni (hyperscale-toimijat verottavat Irlannin kautta). Konkreettinen vertailu: yksi datakeskus (Kouvolan seutu) työllistää yli 400 — sama verran kuin sen tontilla aiemmin toiminut paperitehdas (450). Verkon kustannuskysymys ("kuka maksaa verkon päivitykset") eksplisiittisesti auki. Suora linkki WEM:n DP_t/FS-komponentteihin: litteä, lämpötilariippumaton kuorma, pysyvä paine, hyöty ajallisesti keskittynyt rakentamisvaiheeseen.
 </div>
 
-<h2>§3 — Hyöty myöhemmin: kolme testattua kompensaatiomekanismia</h2>
+<h2>§3 — ASC: kolme testattua ja yksi tunnistettu kompensaatiomekanismi</h2>
 
-<p>Kolme konkreettista kandidaattia Ketju B:lle on haettu samalla intensiteetillä ja samalla halulla löytää vahvistavaa näyttöä kuin Ketju A:n tapauksissa. Yksikään ei tue vielä visiota.</p>
+<p>Kolme konkreettista kandidaattia on haettu samalla intensiteetillä ja samalla halulla löytää vahvistavaa näyttöä kuin CMC:n tapauksissa. Yksikään ei tue vielä visiota. Neljäs kandidaatti on tunnistettu mutta ei testattu — merkitty eksplisiittisesti sellaiseksi, ei annettu ratsastaa kahden ensimmäisen mukana empiirisesti todistettuna (kollegan huomio v0.2:een).</p>
 
 <div class="weak">
 <strong class="title">Robotisointi — kääntynyt negatiiviseksi</strong>
@@ -145,34 +145,65 @@ Uskottava mekanismi globaalissa keskustelussa, mutta ei suomalaista mittausdataa
 Vertailuryhmällinen tutkimus (Vartiainen, kaltaistetut liittymättömät verrokkikunnat): kuntaliitokset eivät tehneet kunnista houkuttelevampia asukkaille, työpaikoille eikä yrityksille. Tutkijan oma johtopäätös: "yhteiskunnan kannalta hyvin kyseenalaista, tuottavatko liitokset lisäarvoa." Mittakaava myös pienempi kuin oletettu — 78 liitosta 2007–2025, hidas ja asteittainen, ei kertaluonteinen sote-uudistuksen kaltainen vapautuma. Kuntaliiton oma meta-arviointi: hyödyt näkyvät vasta vuosien kuluttua, jos ollenkaan; vertailu metodisesti vaikeaa.
 </div>
 
+<div class="weak">
+<strong class="title">Hajautetun energian vaikutus ylläpitohenkilöstöön — tunnistettu, ei testattu</strong>
+Kollegan esittämä hypoteesi (v0.2): keskitetty voimalaitos vs. tuhannet paikalliset aurinko+akku+lämpövarasto-järjestelmät kasvattavat valvontapisteiden määrää eksponentiaalisesti — todennäköinen lopputulos ei ole ylläpitohenkilöstön väheneminen vaan sen luonteen muutos (keskitetyt laitosteknikot → hajautetut kiertävät moniosaajat, esim. testattava suhdeluku "yksi kiertävä teknikko per 500 asukasta"). Datalähde on tunnistettu (Energiaviraston vuosittaiset "Sähköverkkoliiketoiminnan kehitys" -raportit 2021–2023) mutta ei vielä läpikäyty. Merkitty eksplisiittisesti testattavissa olevaksi mutta testaamattomaksi — ei saa ratsastaa robotisoinnin ja kuntaliitosten mukana empiirisesti todistettuna, kuten alkuperäisessä otsikossa/visiossa ("automaatio + AI + hajautettu energia") implisiittisesti tapahtui.
+</div>
+
 <h2>§4 — Miksi ketjuja ei summata yhdeksi indeksiksi</h2>
 
 <p>Tämä on tarkoituksellinen menetelmävalinta, ei puute. WEM:n oma EPP-indeksi teki juuri tämän virheen: pakotti FS%, SP%, DP_t:n ja WR:n yhteen lineaariseen summaan painokertoimilla. Kun DP_t saturoitui (2026-08 WEM-korjaustyö), koko indeksi lakkasi kertomasta mitään luotettavaa — yksi komponentti peitti muut.</p>
 
-<p>Ketju A (mitattu euroina, henkilötyövuosina, neliömetreinä, hyöty-kustannussuhteina) ja Ketju B (mitattu robottitiheytenä, henkilötyövuosina eri kontekstissa) eivät ole yhteismitallisia. Jos ne pakotettaisiin yhteen lukuun, tulos olisi täsmälleen se "90 %/20 %" -taulukko jonka hylkäsimme lähtökohtana: näennäinen täsmällisyys joka piilottaa sen että osa luvuista on mittausta ja osa preferenssiä.</p>
+<p>CMC (mitattu euroina, henkilötyövuosina, neliömetreinä, hyöty-kustannussuhteina) ja ASC (mitattu robottitiheytenä, henkilötyövuosina eri kontekstissa) eivät ole yhteismitallisia. Jos ne pakotettaisiin yhteen lukuun, tulos olisi täsmälleen se "90 %/20 %" -taulukko jonka hylkäsimme lähtökohtana: näennäinen täsmällisyys joka piilottaa sen että osa luvuista on mittausta ja osa preferenssiä.</p>
 
-<p>Ketjut pidetään rinnakkaisina, ei-summattuina aikasarjoina. Jos data joskus osoittaa että Ketju B alkaa kompensoida Ketju A:ta jollain aikahorisontilla, se näkyy kahden käyrän lähentymisenä — ei yhden indeksin nousuna tai laskuna.</p>
+<p>Ketjut pidetään rinnakkaisina, ei-summattuina aikasarjoina. Kolme mahdollista tulosta jos seurantaa jatketaan (kollegan muotoilu, v0.2): <strong>CMC kasvaa, ASC ei liiku</strong> (nykytila) · <strong>CMC kasvaa, ASC alkaa myöhemmin pienentyä</strong> (sopeutuminen käynnistyy viiveellä) · <strong>ASC kasvaa, mutta väärässä kohdassa järjestelmää eikä kompensoi CMC:tä</strong> (viimeinen olisi erityisen tärkeä havainto — kompensaatio syntyy, mutta ei siellä missä kustannus on).</p>
 
-<h2>§5 — Alkuperäinen visio uudelleen asemoituna</h2>
+<h2>§5 — Duress-kierros: tapahtuuko sopeutuminen ennakoivasti vai pakon edessä?</h2>
+
+<p>Kollegan esittämä kysymys: koska ASC ei toistaiseksi käynnisty, ainoa rationaalinen toimija nykyhetkessä on se joka lykkää ylläpitokustannuksia. Tämä on H-4b:n puhdas ennuste — mutta onko olemassa vastanäyttöä, ennakoivaa sopeutumista joka tapahtuu <em>ennen</em> fyysistä tai taloudellista pakkoa?</p>
+
+<p>Haku tuotti nyanssoidun, ei täysin karun vastauksen.</p>
+
+<div class="case">
+<strong class="title">Vastalöydös: "älykäs sopeutuminen" on nimetty, tutkittu käsite</strong>
+Käsite (smart shrinking/decline/adaptation) juontuu Itä-Saksan supistuvien kaupunkien tutkimuksesta. VM/Kuntaliitto ovat tuottaneet siitä policy briefejä ja järjestävät webinaarisarjan 2026. <strong>Kemiönsaaren kunta mainitaan nimeltä</strong> esimerkkinä joka on selvittänyt kouluverkkoaan "tulevaisuuden tarpeita silmällä pitäen" — ei vasta kriisin pakottamana. Tämä on todiste että ennakoiva, visio-ohjautuva sopeutuminen on <em>mahdollista</em>, ei vain teoreettista.
+</div>
+
+<div class="weak">
+<strong class="title">Mutta Kuntaliiton oma asiantuntija vahvistaa duress-kuvion normiksi</strong>
+Suora lainaus (Kahila, Kuntaliitto 2025): <strong>"Useimmat kunnat rakentavat tulevaisuuttaan kasvun varaan. Sopeutuminen jää usein toissijaiseksi ja näkyy lähinnä palveluverkon karsimisena."</strong> Tämä on Kuntaliiton oman asiantuntijan tunnustus siitä että reaktiivinen karsinta on normi, ennakoiva sopeutuminen nimetty mutta marginaalinen poikkeus. Kuntaliiton oma laskelma: ~1,5 mrd € "<em>teoreettista</em> sopeuttamispotentiaalia" alle 18-vuotiaiden palveluissa vuoteen 2040 — sana "teoreettinen" merkitsee tämän eksplisiittisesti realisoitumattomaksi mahdollisuudeksi, ei saavutetuksi tulokseksi. Opetushallinnon oma ennuste: kouluverkko voi supistua 60–70 % joillain alueilla (Pohjanmaa, Satakunta, Kainuu, Etelä-Savo) vuoteen 2040 — ennuste siitä mitä <em>tulee tapahtumaan</em> demografian pakosta, ei suunnitelma siitä mitä ennakoivasti tehdään.
+</div>
+
+<p>Synteesi: ei yksiselitteinen "ei mitään ennakoivaa ole olemassa" — mutta valtaosa näytöstä, mukaan lukien Kuntaliiton oma ääni, vahvistaa reaktiivisen karsinnan normiksi ja ennakoivan sopeutumisen nimetyksi mutta marginaaliseksi poikkeukseksi. Tämä on kolmas riippumaton vahvistus samalle epäsymmetriselle kuviolle: kustannus-nyt-mekanismit ovat rakenteellisesti vahvempia kuin hyöty-myöhemmin-mekanismit — myös silloin kun kysytään suoraan onko poikkeuksia.</p>
+
+<h2>§6 — Alkuperäinen visio uudelleen asemoituna</h2>
 
 <p>Visio — vähemmän ihmisiä, enemmän automaatiota, hajautettu energia, luonnon palautuminen — on hypoteesi sopeutumisurasta, ei ennuste eikä politiikkasuositus. SM-016:n oma löydös ei ole "visio on väärä." Löydös on vaatimattomampi ja täsmällisempi:</p>
 
-<div class="claim">Niistä sopeutumismekanismeista jotka visio olettaa toimivan, yksikään konkreettisesti testattu ei toistaiseksi näy Suomen datassa mitattavana ilmiönä — samaan aikaan kun vanhaan kasvumalliin sitoutuneen pääoman ja ylläpitovelvoitteiden kustannukset ovat mitattavia ja kasvavia kahdeksassa riippumattomassa tapauksessa.</div>
+<div class="claim">Niistä ASC-mekanismeista jotka visio olettaa toimivan, yksikään konkreettisesti testattu ei toistaiseksi näy Suomen datassa laajana ilmiönä — samaan aikaan kun CMC:n kustannukset ovat mitattavia ja kasvavia kahdeksassa riippumattomassa tapauksessa, ja reaktiivinen (ei ennakoiva) sopeutuminen vahvistuu normiksi myös silloin kun vastanäyttöä haetaan suoraan.</div>
 
-<p>Tämä ero — kustannuspuolen vahva empiirinen tuki vs. kompensaatiopuolen toistuva puute — on itsessään H-4b:n ennustama tulos: mekanismi joka siirtäisi tulevan hyödyn nykyiseksi päätökseksi on rakenteellisesti heikompi kuin mekanismi joka siirtää nykyisen kustannuksen tulevaisuuteen.</p>
+<p>Tämä ero — CMC:n vahva empiirinen tuki vs. ASC:n toistuva puute — on itsessään H-4b:n ennustama tulos: mekanismi joka siirtäisi tulevan hyödyn nykyiseksi päätökseksi on rakenteellisesti heikompi kuin mekanismi joka siirtää nykyisen kustannuksen tulevaisuuteen.</p>
 
-<h2>§6 — Avoimet kysymykset seuraavaa versiota varten</h2>
+<h2>§7 — Miksi lähtökohdan toiveikkuus ei ole hylätty</h2>
+
+<p>Kahdeksan CMC-tapausta ja kolme falsifioitua/heikkoa ASC-kandidaattia voisivat lukea puhtaan pessimistisenä johtopäätöksenä. Se olisi väärä lukutapa, ja Kemiönsaari (§5) on syy siihen — ei retorinen lohtu, vaan aineiston oma, nimetty poikkeus.</p>
+
+<p>Alkuperäinen visio oli houkutteleva juuri siksi ettei se vaadi teknologista läpimurtoa — vain suunnanmuutosta jota välineet jo tukevat. SM-016 ei ole kumonnut tätä väitettä. Se on osoittanut että <em>suunnanmuutos ei tapahdu itsestään demografisen paineen seurauksena</em> — se vaatii saman tason tietoista, ennakoivaa päätöksentekoa jota Kemiönsaari harjoitti kouluverkkonsa kanssa, mutta jota "useimmat kunnat" (Kuntaliiton oma sanamuoto) eivät tee.</p>
+
+<p>Tämä on itse asiassa toiveikkaampi lopputulos kuin "mekanismi puuttuu kokonaan": jos ennakoiva sopeutuminen on mahdollista yhdessä kunnassa yhdellä palveluverkolla, kysymys ei ole kyvystä vaan yleistymisestä. SM-016:n jatko ei siis ole vain lisää tapaustutkimuksia CMC:n puolelle — se on sen selvittäminen mikä erottaa Kemiönsaaren kaltaiset poikkeukset "useimmista kunnista", ja voisiko se ero olla toistettavissa. Se on eri, kovempi, mutta myös toiveikkaampi kysymys kuin alkuperäinen "onko väestön väheneminen hyvä asia" — ja se pitää vision hengen elossa siirtämättä sitä pois testattavuudesta.</p>
+
+<h2>§8 — Avoimet kysymykset seuraavaa versiota varten</h2>
 
 <ul>
-<li>Hajautetun energian vaikutus tarvittavaan ylläpitohenkilöstöön sähköverkossa — suoraan WEM:n aihepiiriin linkittyvä, ei vielä haettu.</li>
-<li>Falsifioiva testi Ketju A:lle: onko olemassa yksikin suomalainen suurhanke viimeisen 20 vuoden ajalta joka on <em>peruutettu tai supistettu nimenomaan</em> päivitetyn väestöennusteen perusteella, ei rahoitussyistä? Jos ei löydy yhtään, se on itsessään mitattava havainto.</li>
-<li>Etädiagnostiikka/etähoiva harvaan asutuilla alueilla — ei vielä haettu, mahdollinen neljäs kompensaatiokandidaatti.</li>
+<li><strong>Mikä erottaa Kemiönsaaren "useimmista kunnista"?</strong> (uusi, §7:stä nouseva kysymys) — resurssit, johtajuus, koon vaikutus, vai jokin muu tekijä joka voisi olla toistettavissa muualle?</li>
+<li>Hajautetun energian vaikutus tarvittavaan ylläpitohenkilöstöön — datalähde tunnistettu (Energiaviraston vuosiraportit 2021–2023, ks. §3), ei vielä läpikäyty.</li>
+<li>Etädiagnostiikka/etähoiva harvaan asutuilla alueilla — ei vielä haettu, mahdollinen viides ASC-kandidaatti.</li>
 <li>Kuinka suuri osa kunnan tilakannasta (7 milj. m²) selittyy nimenomaan sote-uudistuksella erillään muista syistä (kuntaliitokset, väestökato) — tarkka dekomponointi puuttuu.</li>
 </ul>
 
 <div class="refs">
 <strong>Viitteet ja lähteet (haettu 2026-08-08–09)</strong>
-Väylävirasto/Suomi-rata Oy linjausselvitykset · Itärata Oy pääsuuntaselvitys ja valtioneuvoston h/k-selvitys · Länsirata Oy/BCG vaikutusselvitys, Turun kauppakorkeakoulun työllisyystutkimus · TEM Yritystukineuvottelukunnan lausunto (Garden Helsinki) · Wikipedia: Garden Helsinki, Espoo–Salo-oikorata · Senaatti-kiinteistöt: kuntien tilakanta · Kuntaliitto: kuntaliitokset ja meta-arviointi · Vartiainen: kuntaliitosten elinkeinovaikutukset · Automaatioväylä: robotiikkatilastot 2023–2026 · Yaskawa/Valkama 2026 · Suomen Pankki (Kokkinen, Jalasjoki & Obstbaum 2025) · FDCA/EK/Ramboll datakeskusselvitys · Barona datakeskusten työllisyysvaikutukset · Helsingin Seudun Suunnat: toimitilatilastot · Catella markkinakatsaus 2026
+Väylävirasto/Suomi-rata Oy linjausselvitykset · Itärata Oy pääsuuntaselvitys ja valtioneuvoston h/k-selvitys · Länsirata Oy/BCG vaikutusselvitys, Turun kauppakorkeakoulun työllisyystutkimus · TEM Yritystukineuvottelukunnan lausunto (Garden Helsinki) · Wikipedia: Garden Helsinki, Espoo–Salo-oikorata · Senaatti-kiinteistöt: kuntien tilakanta · Kuntaliitto: kuntaliitokset, meta-arviointi, älykäs sopeutuminen (Kahila 2025) · Vartiainen: kuntaliitosten elinkeinovaikutukset · Automaatioväylä: robotiikkatilastot 2023–2026 · Yaskawa/Valkama 2026 · Suomen Pankki (Kokkinen, Jalasjoki & Obstbaum 2025) · FDCA/EK/Ramboll datakeskusselvitys · Barona datakeskusten työllisyysvaikutukset · Helsingin Seudun Suunnat: toimitilatilastot · Catella markkinakatsaus 2026 · Opetushallitus: Peruskoulut ja lukiot 2011–2040 · Valtioneuvosto: Mitä on älykäs sopeutuminen? (Kemiönsaari-viittaus) · Energiavirasto: Sähköverkkoliiketoiminnan kehitys -vuosiraportit 2021–2023 (tunnistettu, ei läpikäyty)
 </div>
 
 <div class="nav-footer">
