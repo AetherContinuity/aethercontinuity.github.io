@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN-030 — Vaihtuva raideleveys ja huckepack-terminaalit · ACI</title>
+<meta name="description" content="Tekninen perusolettamus on tarkastettu ja tuettu. Talousmalli ei ole. Tämä nootti erottaa ne toisistaan eksplisiittisesti, eikä anna kummankaan lainata toisen uskottavuutta.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: "← "; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.series-accent { color: var(--accent); }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; display: block; }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+h2 { font-size: 1.1rem; font-weight: 500; margin: 2.5rem 0 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+.finding { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--ink); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.finding-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.unverified { background: var(--paper-3); border: 1px dashed var(--rule); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.unverified-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+th { text-align: left; padding: 0.4rem 0.6rem; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--rule); color: var(--muted); }
+td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.footer-note { font-size: 0.88rem; font-style: italic; color: var(--muted); margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+</style>
+  <link rel="canonical" href="https://aethercontinuity.org/papers/cn-030-variable-gauge-huckepack-network.html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "CN-030 — Vaihtuva raideleveys ja huckepack-terminaalit · ACI",
+    "description": "Tekninen perusolettamus on tarkastettu ja tuettu. Talousmalli ei ole. Tämä nootti erottaa ne toisistaan eksplisiittisesti.",
+    "author": {"@type": "Organization", "name": "Aether Continuity Institute"},
+    "publisher": {"@type": "Organization", "name": "ACI", "url": "https://aethercontinuity.org"},
+    "url": "https://aethercontinuity.org/papers/cn-030-variable-gauge-huckepack-network.html",
+    "datePublished": "2026-08-09",
+    "inLanguage": "fi"
+  }
+  </script>
+  <meta property="og:title" content="CN-030 — Vaihtuva raideleveys ja huckepack-terminaalit · ACI" />
+  <meta property="og:description" content="Tekninen perusolettamus on tarkastettu ja tuettu. Talousmalli ei ole." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aethercontinuity.org/papers/cn-030-variable-gauge-huckepack-network.html" />
+  <meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+
+<nav>
+  <a href="/papers/" class="nav-home">Paperit</a>
+  <span class="nav-id">CN-030 · Concept Note</span>
+</nav>
+
+<div class="dih">
+  <div>
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Concept Note · <span class="series-accent">CN-030</span></div>
+  </div>
+  <div class="dih-meta">
+    <strong>Päiväys</strong>2026-08-09
+    <strong>Kieli</strong>Suomi
+    <strong>Viittaa</strong>WP-020 · CN-008
+    <strong>Status</strong>Tarkastettu ydin + avoin lista
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="paper-label">CN-030 · Concept Note · Rautatielogistiikka</div>
+  <h1 class="paper-title">Vaihtuva raideleveys ja huckepack-terminaalit</h1>
+  <p class="paper-subtitle">Tekninen perusolettamus on tarkastettu ja tuettu. Talousmalli ei ole. Tämä nootti pitää ne erillään tarkoituksella.</p>
+
+  <p>Idea: kalustopooli varustettuna vaihtuvalla raideleveydellä (1 524 mm ↔ 1 435 mm) mahdollistaisi huckepack-liikenteen Suomen ja Manner-Euroopan rataverkkojen välillä ilman kuorman uudelleenkäsittelyä rajalla. Idea syntyi keskustelussa Perämeren logistiikasta (WP-020) ja on tarkoituksella pidetty erillään siitä — se ei ole vielä osa WP-020:tä, koska sen oma evidenssipohja ei ole samalla tasolla.</p>
+
+  <p>Tämä nootti tekee yhden asian: erottaa mitä on oikeasti tarkastettu siitä mitä ei ole, näkyvästi molemmat.</p>
+
+  <h2>Tarkastettu ja tuettu</h2>
+
+  <div class="finding">
+    <div class="finding-label">Tornion vaihtolaite on olemassa oleva, dokumentoitu asennus</div>
+    <p>Tornioon asennettiin raideleveyden vaihtolaite vuonna 1999, Rafil Typ V -järjestelmä (Saksa, Radsatzfabrik Ilsenburg). Haaparannan puolella ollut vastaava Talgo-RD-laite on poistettu — syyksi on dokumentoitu talven jäänpoistotarve. Tämä on paikallinen, todennäköisesti investointi- ja liikennemääräperusteinen päätös, ei todiste että vaihtuva raideleveys ei toimisi Pohjolan talvessa (ks. seuraava kohta).</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-label">Kylmän ilmaston vaihtuva raideleveys on todistetusti toimiva teknologia muualla</div>
+    <p>Puolan SUW 2000 -järjestelmä on ollut jatkuvassa käytössä Puolan ja Liettuan rajalla vuodesta 2000 — yli 20 vuotta, verrattavissa olevassa talvi-ilmastossa. Kenttätestit (1998 alkaen) osoittivat vähäistä kulumista ja projisoivat yli 500 000 km:n käyttöiän. Uudempi Talgo-tyyppinen vaihtolaite rakennettiin Brestiin (Belarus/Puola) 2016. Rafil Typ V ja SUW 2000 ovat teknisesti yhteentoimivia (UIC-vertailu). Haaparannan yksittäinen poisto ei siis yleisty koko teknologialuokan epäonnistumiseksi.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-label">Energiamarkkinan rakenteellinen muutos on todellinen ja vakava</div>
+    <p>Hormuzin salmi on ollut suljettuna maaliskuusta 2026 lähtien (Iranin julistus, vastatoimena Israelin/Yhdysvaltain hyökkäykselle). Brent-öljy on käynyt yli 120 dollarissa; Moody's luokittelee tilanteen rakenteelliseksi energiahäiriöksi, ei ohimeneväksi shokiksi. EU:n energiantuonnin lisäkustannus on arvioitu ~15–20 mrd €/viikko. Tämä nostaa dieselriippuvaisen maantiekuljetuksen suhteellista kustannusta verrattuna sähkövetoiseen rautatieliikenteeseen — suunta on oikea, mutta vaikutuksen suuruutta ei ole laskettu sisään mihinkään tämän konseptin lukuun.</p>
+  </div>
+
+  <h2>Ei tarkastettu — eksplisiittisesti auki</h2>
+
+  <p>Seuraavat esiintyivät keskustelussa täsmällisinä lukuina (esim. 300 vaunua, 280 000 €/vaunu, 8 vrk kierto, DSCR 0,74–1,30) ilman että niiden pohjalähteitä on todennettu riippumattomasti. Ne eivät kuulu tähän noottiin lukuina — vain avoimina kysymyksinä.</p>
+
+  <table>
+    <thead><tr><th>Kysymys</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Tornion Rafil-laitteen nykyinen käyttökunto (2026)</td><td>Ei tarkastettu</td></tr>
+      <tr><td>Vaunun CAPEX, tavanomainen P400 vs. vaihtuvatelillinen</td><td>Ei tarkastettu — ainoa löydetty viite oli tavanomaiseen vaunuun</td></tr>
+      <tr><td>Kierrosaika, kalustotarve, käyttöaste</td><td>Ei tarkastettu — herkin muuttuja, ei todennettu</td></tr>
+      <tr><td>Tornion vaihdon vältetty kustannus (€/ylitys)</td><td>Ei tarkastettu — mallinnettu, ei mitattu</td></tr>
+      <tr><td>Suomi–Ruotsi–Eurooppa-tavaravirtojen suuntabalanssi (tyhjäpaluu)</td><td>Ei haettu ollenkaan</td></tr>
+      <tr><td>EU-rahoituskelpoisuus (CEF/Horizon/EIB) tälle konseptille erikseen</td><td>Ei tarkastettu</td></tr>
+      <tr><td>25 t akselipainon tekninen mahdollisuus</td><td>Ei tarkastettu</td></tr>
+    </tbody>
+  </table>
+
+  <div class="unverified">
+    <div class="unverified-label">Metodologinen huomautus</div>
+    <p>Yksi aiempi versio tästä konseptista tuotettiin 12 tiedoston "due diligence -pakettina" jossa jokainen luku oli merkitty PLAUSIBLE/ASSUMPTION/MODELLED — mutta merkinnät olivat sisäisiä, ei riippumattoman lähteen vahvistamia. Paketin oma malli antoi tulokseksi DSCR 0,74 (alle lainakelpoisuuden) ja NPV −116 M€ perusskenaariolla. Tätä ei sisällytetty tähän noottiin: itse tuotettu epävarmuusmerkintä ei ole samaa kuin todennettu tosiasia, eikä negatiivinen tulos itsessään ole vielä syy hylätä konseptia — se on syy tarkistaa syöttötiedot ennen kuin lukuja käytetään mihinkään.</p>
+  </div>
+
+  <h2>Mitä tarvittaisiin seuraavaksi</h2>
+
+  <p>Tekninen perusta (Tornion laite, kylmän ilmaston teknologia) on riittävän tuettu jotta konsepti kannattaa pitää elossa. Taloudellinen perusta ei ole, ja sitä ei pidä esittää olevan ennen kuin edellä listatut avoimet kysymykset on käyty läpi — erityisesti kierrosaika ja tavaravirran suuntabalanssi, koska molemmat vaikuttavat suoraan siihen kannattaako koko konsepti ollenkaan.</p>
+
+  <p>Tämä ei ole hankesuositus. Se on ydin joka kesti tarkistuksen, erotettuna kaikesta mikä ei kestänyt vielä.</p>
+
+  <p class="footer-note">Laajempi konteksti: <a href="/papers/wp-020-perameri-logistics-energy-ecosystem.html">WP-020 — Perämeri Logistics-Energy Ecosystem</a> · <a href="/papers/cn-008-perameri-logistiikka-energiaekosysteemi.html">CN-008</a></p>
+
+</div>
+</body>
+</html>
