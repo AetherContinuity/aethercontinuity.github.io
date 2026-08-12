@@ -2517,44 +2517,36 @@ function buildW168(liveData) {
   const W = 168;
   if (!liveData.length) return generateSynthetic(W);
 
-  const avgC = liveData.reduce((s,d)=>s+d.c,0)/liveData.length;
-  const refBase = MONTHLY_BASELINE[now.getMonth()+1] || 9000;
-  const scalC = avgC / refBase;
-
   const liveMap = new Map(liveData.map(d => [snapHour(d.time), d]));
 
+  // KORJATTU 2026-08-12 (kayttajan toinen loydos samana paivana): aiempi
+  // versio taytti puuttuvat tunnit KEKSITYLLA datalla (kiintea nuc=3300,
+  // satunnainen wnd, jaannoslaskettu hyd). Tama tuotti kaksi perakkaista
+  // ongelmaa: (1) alkuperainen kaava (c-nuc-chp-wnd-200) antoi AINA
+  // tasan 200 MW:n gapin - rakenteellisesti mahdoton olla stressitunti,
+  // painsi SP:ta keinotekoisesti alas; (2) sen jalkeen lisatty vesivoiman
+  // 3200 MW yläraja KAANSI virheen: kun jaannos ylitti katon, ylite
+  // siirtyi gappiin, ja gap saattoi nyt ylittaa stressikynnyksen (480 MW
+  // ~9000 MW kulutuksella) - katto alkoi VALMISTAA stressitunteja joita
+  // ei oikeasti ollut. Molemmat olivat sama virhe eri suunnassa: keksitty
+  // data keksi myos keksityn stressisignaalin, oli se korkea tai matala.
+  //
+  // OIKEA KORJAUS: ei tayteta puuttuvaa tuntia MITAAN arvolla - jatetaan
+  // se pois taulukosta kokonaan. calcWindow() jakaa jo slice.length:lla
+  // (ei kiinteallä 168:lla), joten n pienenee oikein kun aitoa dataa on
+  // vahemman - tama on sama periaate jota lSlice (layer-metriikat) ja
+  // tSlice (lampotila) kayttavat jo. Puuttuva tunti nakyy nyt puuttuvana
+  // pistemaarana (§01:n "Datapisteet: X/168"), ei vaarana lukuna.
   const result = [];
   for (let i = W-1; i >= 0; i--) {
     const t = new Date(now.getTime() - i*3.6e6);
     const key = snapHour(t);
     if (liveMap.has(key)) {
       result.push(liveMap.get(key));
-    } else {
-      const month = t.getMonth()+1;
-      const base = MONTHLY_BASELINE[month] || 9000;
-      const h = t.getUTCHours(), dow = t.getUTCDay();
-      const diurnal = Math.sin(((h-7)/24)*2*Math.PI)*1100;
-      const c = Math.max(0, base*scalC + diurnal*(dow===0||dow===6?0.85:1));
-      const nuc = 3300; // fallback kun live layer-data ei saatavilla (DS 188: OL+Loviisa, OL1 huolto → ~3300)
-      const coldF = Math.max(0, Math.cos((month-1)/12*2*Math.PI)*0.5+0.3);
-      const chp = Math.max(400, 1700*coldF + (c-base*scalC)*0.15);
-      const wnd = Math.max(0, 900+(Math.random()-0.5)*400);
-      // KORJATTU 2026-08-12 (kayttajan raportoima bugi): jaannoslaskelmalla
-      // (c - nuc - chp - wnd - 200) ei ollut ylarajaa, vain alaraja (300).
-      // Kun synteettinen tuuliarvo sattui matalaksi, jaannos kasvoi yli
-      // Suomen asennetun vesivoimakapasiteetin (~3200 MW) - havaittu W168-
-      // keskiarvona 3503 MW. TARKENNUS samana paivana: alkuperainen syy
-      // oli etta fetchYesterday haki vain 48h (n. 120/168 tuntia oli
-      // synteettista) - se on nyt korjattu hakemaan koko 168h sivutuksella
-      // (kayttaja todensi etta proxy palauttaa taman, ei 48h-rajoitusta).
-      // Tama ylaraja jaa silti voimaan turvaverkkona niille harvoille
-      // tunneille joille aitoa dataa ei silti saada (proxyvirhe, katko).
-      const hyd = Math.min(3200, Math.max(300, c - nuc - chp - wnd - 200));
-      const p = nuc + hyd + chp + wnd;
-      result.push({time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
-                   temp:null, tempHki:null, tempKuo:null, tempRov:null});
     }
+    // else: ei tyontoa - puuttuva tunti jaa pois, ei keksita.
   }
+  if (!result.length) return generateSynthetic(W);
   return result;
 }
 
