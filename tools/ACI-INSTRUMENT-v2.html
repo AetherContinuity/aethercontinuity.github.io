@@ -2543,11 +2543,12 @@ function buildW168(liveData) {
       // (c - nuc - chp - wnd - 200) ei ollut ylarajaa, vain alaraja (300).
       // Kun synteettinen tuuliarvo sattui matalaksi, jaannos kasvoi yli
       // Suomen asennetun vesivoimakapasiteetin (~3200 MW) - havaittu W168-
-      // keskiarvona 3503 MW. Tama ei ollut kausiartefakti: se toistuu aina
-      // kun ikkuna ulottuu yli fetchYesterday():n ~48h oikean datan (n. 120
-      // tuntia 168:sta on tata synteettista jaannosarvoa), ja se vaaristi
-      // myos FS:aa ja ECI:ta ylospain samassa ikkunassa (keinotekoinen
-      // vesivoima nostaa "vakaan" kapasiteetin osuutta).
+      // keskiarvona 3503 MW. TARKENNUS samana paivana: alkuperainen syy
+      // oli etta fetchYesterday haki vain 48h (n. 120/168 tuntia oli
+      // synteettista) - se on nyt korjattu hakemaan koko 168h sivutuksella
+      // (kayttaja todensi etta proxy palauttaa taman, ei 48h-rajoitusta).
+      // Tama ylaraja jaa silti voimaan turvaverkkona niille harvoille
+      // tunneille joille aitoa dataa ei silti saada (proxyvirhe, katko).
       const hyd = Math.min(3200, Math.max(300, c - nuc - chp - wnd - 200));
       const p = nuc + hyd + chp + wnd;
       result.push({time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
@@ -2572,58 +2573,74 @@ async function init() {
   let cRows, pRows, nucRows = null, hydRows = null, wndRows = null, spotVal = null;
   const errors = [], layerErrors = [];
 
-  // Hae eilinen päivä — historiallinen data on luotettavaa, ei rate-limit ongelmia
+  // Hae 168h ikkuna — proxy palauttaa taman kokonaisuudessaan (todennettu
+  // kayttajan diagnostiikalla 2026-08-12: 168h-kysely DS 191:lle palautti
+  // 3287 pistetta 3min-resoluutiolla, sivutettuna kahdelle sivulle
+  // pagination.total/lastPage/nextPage-kentin mukaan - EI 48h-katkaisua).
+  // KORJATTU 2026-08-12: aiempi versio haki vain 48h ("eilinen paiva"),
+  // mika pakotti buildW168:n taydentamaan loput ~120/168 tuntia synteetti-
+  // sella jaannoslaskelmalla (ks. buildW168:n oma kommentti vesivoiman
+  // ylarajasta). Se oli oireenhoitoa - tama on oikea korjaus: haetaan
+  // koko 168h ja seurataan sivutusta, jolloin synteettista dataa tarvitaan
+  // enaa vain aidoissa datapuutteissa (proxyvirhe, Fingrid-katko), ei
+  // rakenteellisesti joka kerta.
   const fetchYesterday = async (dsId, label) => {
     const now = new Date();
-    // Eilen: 48h sitten → 2h sitten (varmistetaan että data on valmis)
     const end   = new Date(now - 2   * 3.6e6);
-    const start = new Date(now - 48  * 3.6e6);
-    // 3min data: 48h = 960 points → size=2000 kattaa koko ikkunan
-    // sortOrder=asc varmistaa oikean aikasuunnan
-    const url = `${PROXY}?ds=${dsId}` +
-      `&start=${encodeURIComponent(start.toISOString())}` +
-      `&end=${encodeURIComponent(end.toISOString())}` +
-      `&size=2000&sortOrder=asc`;
+    const start = new Date(now - 168 * 3.6e6);
 
-    // Retry 429:lle exponentiaalisella backoffilla (2026-07-08: HTTP 429
-    // havaittu toistuvasti kun useita DS-hakuja tehdaan peräkkäin lyhyella
-    // valilla. Aiemmin yksi 429 = valitön epäonnistuminen koko kerrokselle,
-    // joka piiloutui virheellisesti "Live"-tilan taakse (korjattu erikseen).
-    // Nyt: 3 yritysta, odotus 1s/2s/4s ennen luovuttamista.
-    const maxAttempts = 3;
-    let lastErr = null;
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      setStatus('loading', [[label, attempt === 0 ? 'haetaan eilen…' : `haetaan eilen… (yritys ${attempt+1}/${maxAttempts})`]]);
-      try {
-        const r = await fetch(url);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const j = await r.json();
-        // Aggregoi tuntiarvoihin (proxy palauttaa 15min tai 60min dataa)
-        const rows = (j.data||j).filter(d => d.value != null && d.value >= 0);
-        const hourMap = new Map();
-        rows.forEach(row => {
-          const d = new Date(row.startTime || row.start_time || row.timestamp || row.time);
-          if (isNaN(d)) return;
-          const key = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours());
-          if (!hourMap.has(key)) hourMap.set(key, []);
-          hourMap.get(key).push(Number(row.value));
-        });
-        return Array.from(hourMap.entries())
-          .sort((a,b) => a[0]-b[0])
-          .map(([k, vals]) => ({
-            time: new Date(k).toISOString(),
-            value: vals.reduce((s,v)=>s+v,0)/vals.length
-          }));
-      } catch (e) {
-        lastErr = e;
-        if (e.message && e.message.includes('429') && attempt < maxAttempts - 1) {
-          await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempt)));
-          continue;
+    const fetchPage = async (page) => {
+      const url = `${PROXY}?ds=${dsId}` +
+        `&start=${encodeURIComponent(start.toISOString())}` +
+        `&end=${encodeURIComponent(end.toISOString())}` +
+        `&size=2000&sortOrder=asc` + (page > 1 ? `&page=${page}` : '');
+      const maxAttempts = 3;
+      let lastErr = null;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        setStatus('loading', [[label, `haetaan 168h (sivu ${page})` + (attempt === 0 ? '…' : ` (yritys ${attempt+1}/${maxAttempts})`)]]);
+        try {
+          const r = await fetch(url);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return await r.json();
+        } catch (e) {
+          lastErr = e;
+          if (e.message && e.message.includes('429') && attempt < maxAttempts - 1) {
+            await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempt)));
+            continue;
+          }
+          throw lastErr;
         }
-        throw lastErr;
       }
+      throw lastErr;
+    };
+
+    let allRows = [];
+    let page = 1;
+    let guard = 0; // varmistus ettei silmukka voi juuttua loputtomiin
+    while (page != null && guard < 6) {
+      const j = await fetchPage(page);
+      const rows = (j.data||j).filter(d => d.value != null && d.value >= 0);
+      allRows = allRows.concat(rows);
+      page = j.pagination ? j.pagination.nextPage : null;
+      guard++;
+      if (page != null) await new Promise(r => setTimeout(r, 400)); // pieni viive sivujen valilla
     }
-    throw lastErr;
+
+    // Aggregoi tuntiarvoihin (proxy palauttaa 3min/15min/60min dataa)
+    const hourMap = new Map();
+    allRows.forEach(row => {
+      const d = new Date(row.startTime || row.start_time || row.timestamp || row.time);
+      if (isNaN(d)) return;
+      const key = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours());
+      if (!hourMap.has(key)) hourMap.set(key, []);
+      hourMap.get(key).push(Number(row.value));
+    });
+    return Array.from(hourMap.entries())
+      .sort((a,b) => a[0]-b[0])
+      .map(([k, vals]) => ({
+        time: new Date(k).toISOString(),
+        value: vals.reduce((s,v)=>s+v,0)/vals.length
+      }));
   };
 
   try { cRows = await fetchYesterday(DS.consumption, 'DS 124'); }
