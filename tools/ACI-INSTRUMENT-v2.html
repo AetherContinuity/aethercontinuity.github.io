@@ -2539,7 +2539,16 @@ function buildW168(liveData) {
       const coldF = Math.max(0, Math.cos((month-1)/12*2*Math.PI)*0.5+0.3);
       const chp = Math.max(400, 1700*coldF + (c-base*scalC)*0.15);
       const wnd = Math.max(0, 900+(Math.random()-0.5)*400);
-      const hyd = Math.max(300, c - nuc - chp - wnd - 200);
+      // KORJATTU 2026-08-12 (kayttajan raportoima bugi): jaannoslaskelmalla
+      // (c - nuc - chp - wnd - 200) ei ollut ylarajaa, vain alaraja (300).
+      // Kun synteettinen tuuliarvo sattui matalaksi, jaannos kasvoi yli
+      // Suomen asennetun vesivoimakapasiteetin (~3200 MW) - havaittu W168-
+      // keskiarvona 3503 MW. Tama ei ollut kausiartefakti: se toistuu aina
+      // kun ikkuna ulottuu yli fetchYesterday():n ~48h oikean datan (n. 120
+      // tuntia 168:sta on tata synteettista jaannosarvoa), ja se vaaristi
+      // myos FS:aa ja ECI:ta ylospain samassa ikkunassa (keinotekoinen
+      // vesivoima nostaa "vakaan" kapasiteetin osuutta).
+      const hyd = Math.min(3200, Math.max(300, c - nuc - chp - wnd - 200));
       const p = nuc + hyd + chp + wnd;
       result.push({time:t, c, p, gap:c-p, nuc, hyd, wnd, chp,
                    temp:null, tempHki:null, tempKuo:null, tempRov:null});
