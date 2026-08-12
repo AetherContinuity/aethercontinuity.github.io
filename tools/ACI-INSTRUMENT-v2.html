@@ -3855,7 +3855,7 @@ async function renderS12(rawData) {
           drawS12Chart((j.data||[]).slice(0,96).reverse());
           s12SetProgress(1, 6, '§12 — SE1 siirto ladattu (1/5)');
           document.getElementById('s12ChartNote').textContent =
-            'n=' + vals.length + ' · ka ' + se1Avg.toFixed(0) + ' MW · NTC ~' + ntcApprox + ' MW';
+            'n=' + vals.length + ' · ka ' + Math.abs(se1Avg).toFixed(0) + ' MW · NTC ~' + ntcApprox + ' MW';
         }
       }
     } catch(e) {
