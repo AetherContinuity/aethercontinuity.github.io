@@ -2581,19 +2581,32 @@ async function init() {
     const end   = new Date(now - 2   * 3.6e6);
     const start = new Date(now - 168 * 3.6e6);
 
-    const fetchPage = async (page) => {
+    // KORJATTU 2026-08-13 (kayttajan kontrolloitu testi): proxy palauttaa
+    // aina vain "sivun 1" (max. 2000 pistetta/pyynto, 3min-resoluutiolla
+    // ~100h) riippumatta page= tai from=-parametrista - molemmat
+    // ohitetaan hiljaa, currentPage pysyy 1:ssa. Tama on Cloudflare
+    // Workerin oma puute (ei while(nextPage)-silmykkaa workerin
+    // sisalla); sen korjaaminen vaatisi paasyn workerin lahdekoodiin ja
+    // sen deploamiseen, jota ei ole tassa ymparistossa. Kayttajan
+    // loytama kiertotie ei vaadi deploymenttia: sortOrder muuttaa MITKA
+    // 2000 pistetta palautuvat, vaikka currentPage ei liiku - asc antaa
+    // ikkunan VANHEMMAN puoliskon, desc UUDEMMAN. Nama menevat paallekkain
+    // n. 32h keskella (2x100h - 168h), joten kaksi hakua yhdessa kattaa
+    // koko 168h. Paallekkaiset aikaleimat dedupoidaan alla Map:lla.
+    const fetchOrder = async (order) => {
       const url = `${PROXY}?ds=${dsId}` +
         `&start=${encodeURIComponent(start.toISOString())}` +
         `&end=${encodeURIComponent(end.toISOString())}` +
-        `&size=2000&sortOrder=asc` + (page > 1 ? `&page=${page}` : '');
+        `&size=2000&sortOrder=${order}`;
       const maxAttempts = 3;
       let lastErr = null;
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        setStatus('loading', [[label, `haetaan 168h (sivu ${page})` + (attempt === 0 ? '…' : ` (yritys ${attempt+1}/${maxAttempts})`)]]);
+        setStatus('loading', [[label, `haetaan 168h (${order})` + (attempt === 0 ? '…' : ` (yritys ${attempt+1}/${maxAttempts})`)]]);
         try {
           const r = await fetch(url);
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return await r.json();
+          const j = await r.json();
+          return (j.data||j).filter(d => d.value != null && d.value >= 0);
         } catch (e) {
           lastErr = e;
           if (e.message && e.message.includes('429') && attempt < maxAttempts - 1) {
@@ -2606,17 +2619,19 @@ async function init() {
       throw lastErr;
     };
 
-    let allRows = [];
-    let page = 1;
-    let guard = 0; // varmistus ettei silmukka voi juuttua loputtomiin
-    while (page != null && guard < 6) {
-      const j = await fetchPage(page);
-      const rows = (j.data||j).filter(d => d.value != null && d.value >= 0);
-      allRows = allRows.concat(rows);
-      page = j.pagination ? j.pagination.nextPage : null;
-      guard++;
-      if (page != null) await new Promise(r => setTimeout(r, 400)); // pieni viive sivujen valilla
-    }
+    const [oldHalf, newHalf] = await Promise.all([
+      fetchOrder('asc'),
+      fetchOrder('desc')
+    ]);
+
+    // Dedupoi 3min-tason aikaleimalla (Map: myohempi kirjoitus voittaa,
+    // mutta paallekkaisella alueella arvot ovat identtisia joka tapauksessa)
+    const byTimestamp = new Map();
+    [...oldHalf, ...newHalf].forEach(row => {
+      const key = row.startTime || row.start_time || row.timestamp || row.time;
+      if (key) byTimestamp.set(key, row);
+    });
+    const allRows = Array.from(byTimestamp.values());
 
     // Aggregoi tuntiarvoihin (proxy palauttaa 3min/15min/60min dataa)
     const hourMap = new Map();
