@@ -4028,11 +4028,32 @@ async function renderS12(rawData) {
       const wr = await fetch(wUrl);
       if (wr.ok) {
         const wj = await wr.json();
-        const vals = (wj.data||[]).map(d => d.value).filter(v => v != null);
+        const rawRows = (wj.data||[]).filter(d => d.value != null);
+        const vals = rawRows.map(d => d.value);
         if (vals.length) {
+          // KORJATTU 2026-08-13 (kayttajan huomio): "lowH" nimesi pisteiden
+          // MAARAN suoraan tunneiksi ilman resoluutiotarkistusta. n=287
+          // 72h:n ikkunassa osuu lahes tasan 15min-resoluutioon (72h x 4 =
+          // 288), ei tuntiresoluutioon (odotettu n~72). Aiempi "41 h" olisi
+          // siis todellisuudessa ~41 pistetta = ~10,25 h jos resoluutio on
+          // 15min - nelinkertainen yliarvio. Sen sijaan etta oletetaan
+          // 15min, resoluutio lasketaan suoraan datan omista aikaleimoista
+          // (startTime/endTime-erotus ensimmaiselta pisteelta), samaan
+          // tapaan kuin ENTSO-E-puolen resolutionMinutesFromString tekee.
+          let stepMin = 60; // varovainen oletus jos aikaleimoja ei loydy
+          if (rawRows.length >= 2 && rawRows[0].startTime) {
+            const t0 = new Date(rawRows[0].startTime);
+            const t1 = new Date(rawRows[1].startTime);
+            const diffMin = Math.round((t1 - t0) / 60000);
+            if (diffMin > 0 && diffMin <= 180) stepMin = diffMin;
+          } else if (rawRows[0] && rawRows[0].startTime && rawRows[0].endTime) {
+            const diffMin = Math.round((new Date(rawRows[0].endTime) - new Date(rawRows[0].startTime)) / 60000);
+            if (diffMin > 0 && diffMin <= 180) stepMin = diffMin;
+          }
           const avg72 = vals.reduce((a,b)=>a+b,0)/vals.length;
           const min72 = Math.min(...vals);
-          const lowH  = vals.filter(v => v < 500).length;
+          const lowPts = vals.filter(v => v < 500).length;
+          const lowH   = lowPts * (stepMin / 60); // pisteet -> oikeat tunnit
           const wfEl  = document.getElementById('s12WindFcst');
           const wlEl  = document.getElementById('s12WindFcstLabel');
           const wrEl  = document.getElementById('s12WindRisk');
@@ -4042,10 +4063,10 @@ async function renderS12(rawData) {
             const wst = s12Status(avg72,[2000,4000,6000],
               ['Matala','Kohtalainen','Hyvä','Erinomainen'],
               ['s12-critical','s12-elevated','s12-tight','s12-normal']);
-            wlEl.textContent = wst.label + ' · n=' + vals.length;
+            wlEl.textContent = wst.label + ' · n=' + vals.length + ' (' + stepMin + 'min)';
             wlEl.className = 's12-status ' + wst.cls;
           }
-          if (wrEl) wrEl.textContent = lowH + ' h';
+          if (wrEl) wrEl.textContent = lowH.toFixed(1) + ' h (' + lowPts + ' pistettä × ' + stepMin + 'min)';
           if (wrlEl) {
             const rst = s12Status(lowH,[6,18,36],
               ['Matala','Kohtalainen','Korkea','Kriittinen'],
@@ -4055,7 +4076,8 @@ async function renderS12(rawData) {
           }
           logEntry.windAvg = avg72.toFixed(0);
           logEntry.windMin = min72.toFixed(0);
-          logEntry.windLowH = lowH;
+          logEntry.windLowH = lowH.toFixed(1);
+          logEntry.windStepMin = stepMin;
         }
       }
     } catch(e) {
