@@ -1443,11 +1443,39 @@ const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
 // malli nakisi jo NYT sen ilmion jota se vaittaa projisoivansa vasta
 // tulevaisuuteen.
 //
-// TESTATTAVISSA OLEVA ENNUSTE: jos kesan selittamaton jaannos on
-// KASVANUT 2022 -> 2023 -> 2026 (ei vain vaihdellut satunnaisesti),
-// se on todiste rakenteellisesta kuormasta, ei kalibrointikohinasta.
-// Backtestissa on jo kolme kesaperiodia (2022-08, 2023-07, nykyinen) -
-// riittava maara ensimmaiseen tarkistukseen. EI VIELA AJETTU.
+// METODOLOGINEN VARAUS 2026-08-13 (kayttajan kriittinen huomio, korvaa
+// alla olleen virheellisen kasvutestin): "kasvoiko jaannos 2022->2023
+// ->2026" EI ole suoraan testattavissa nykyisella backtest-datalla,
+// kahdesta riippumattomasta syysta.
+//
+// (1) VERTAILUKELVOTTOMUUS: 2022-08 ja 2023-07 -periodit ovat
+// REKONSTRUOITUJA (dataQuality='rekons.', generateFromBaseline() -
+// kuukausikeskiarvo + synteettinen tuntiprofiili), kun taas "nykyinen"
+// on LIVE-mitattua tuntidataa (168/165 h todellisia pisteita, ks.
+// buildW168-korjaus ylempana taman illan aikana). Rekonstruktio ja
+// mittaus eivat ole suoraan vertailukelpoisia keskenaan - naennainen
+// kasvu voisi olla pelkka ero menetelmassa, ei todellista kuormaa.
+//
+// (2) VAARA KUUKAUSIPARI: havaittu jarjestys (2022-08: 0,845 >
+// 2023-07: 0,284) on EI-monotoninen - jos kyse olisi aidosta
+// kasvutrendista, 2023 pitaisi olla 2022:n ylapuolella, ei alapuolella.
+// Todennakoisin selitys: heinakuu ja elokuu eivat ole vertailukelpoisia
+// - Suomen teollisuuden kesaseisokit ajoittuvat tyypillisesti heinakuuhun,
+// mika laskee heinakuun kulutusta riippumatta mistaan rakenteellisesta
+// trendista.
+//
+// OIKEA TESTI (ei viela toteutettu): SAMA KALENTERIKUUKAUSI eri
+// vuosilta, mieluiten kaikki LIVE-dataa (ei rekonstruktiota). Nykyinen
+// backtestin periodivalinta ei tue tata suoraan - vaatii joko uusia
+// backtest-periodeja tai oikean historiadatan hakemista samalta
+// kuukaudelta eri vuosilta.
+//
+// TAMA EI OLE ESTE, VAAN SEURAAVA TEHTAVA, JOLLA ON KAKSI ETUA: (a)
+// antaa backtestille ensimmaisen kayttotarkoituksen joka ei ole EPP:n
+// validointi, (b) antaa syyn palata §07:n aiemmin hylattyyn polkuun
+// (oikean historiadatan hakeminen) - talta illalta tiedetaan etta
+// alkuperainen este oli 2000 pisteen katko proxyn vastauksessa (ks.
+// fetchYesterday-korjaus ylempana), EI mikaan perustavampi rajoite.
 //
 // SEURAAVA ASKEL (ei toteutettu talla kertaa): jakaa DP_t kahdeksi
 // erilliseksi termiksi - DP_weather (saariippuvainen, voi olla
@@ -1473,21 +1501,26 @@ const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
 // muu teollisuuden/palvelujen pohjakuorma, tilastollinen/mallinnuksellinen
 // jaannos. Naita ei ole eroteltu tassa datassa.
 //
-// KOOSTUMUS ON TARKEAMPI KUIN MW-LUKU WEM:n OMAN TARKOITUKSEN
-// KANNALTA (endurance, ei hetkellinen teho): jatkokysymys ei ole vain
-// "onko jaannos kasvanut" vaan "mika osa siita on joustavaa ja mika
-// jatkuvaa". Sahkoautojen lataus ja osa sahkokattiloista voidaan
-// siirtaa pois stressitunneilta; datakeskus tai elektrolyysi
-// muodostaa toisenlaisen, ei-siirrettavan endurance-kuorman. Kaksi
-// MW-maaraltaan identtista jaannosta voivat merkita hyvin eri asiaa
-// jarjestelman stressinsietokyvylle riippuen tasta jakaumasta.
+// KORJATTU LAHESTYMISTAPA 2026-08-13 (kayttajan huomio, korvaa alla
+// olleen 3-luokkajaottelun): jaannoksesta (yksi luku) EI VOI paatella
+// koostumusta suoraan. Erottelu vaatii joko (a) PROFIILIANALYYSIA -
+// vuorokausivaihtelu erottaa komponentit ilman etta tarvitsee tietaa
+// mista ne koostuvat: lataus ja sahkokattilat vaihtelevat vuoro-
+// kaudenajan mukaan, datakeskus/elektrolyysi ei (littea 24/7-profiili)
+// - tai (b) ulkoista tietoa verkkoliittymista. Profiilianalyysi on
+// tehtavissa SAMASTA datasta jo kaytossa, eika vaadi ulkoisia
+// tietolahteita. Litteaa komponenttia vastaan vaihtelevaa ei tarvitse
+// nimeta erottaakseen ne toisistaan - ja littea komponentti on juuri
+// se mika on endurance-relevanttia WEM:n oman tarkoituksen kannalta.
+// Tama on tasmallisempi ensimmainen askel kuin suora 3-luokkajaottelu.
 //
-// EHDOTETTU ANALYYSIKETJU (ei toteutettu): Summer Residual Load ->
-// Structural Load (kasvutesti 2022->2023->2026, ks. ylla) -> Flexible
-// / Semi-flexible / Continuous -jaottelu -> vasta tamän jalkeen
-// vertailu §10:n DC-skenaarioon (+1500 MW). Tama olisi huomattavasti
-// vahvempi analyysi kuin pelkka toteamus "kesalla kulutus on 1550 MW
-// suurempi" - se vastaisi kysymykseen mita se tarkoittaa jarjestelmalle,
+// EHDOTETTU ANALYYSIKETJU (ei toteutettu, taman aamun tyo): Summer
+// Residual Load -> Structural Load (oikea kasvutesti: sama kalenteri-
+// kuukausi, live-data, ks. ylla) -> Profiilianalyysi (littea vs.
+// vaihteleva komponentti vuorokausidatasta) -> vasta talloin vertailu
+// §10:n DC-skenaarioon (+1500 MW). Tama olisi huomattavasti vahvempi
+// analyysi kuin pelkka toteamus "kesalla kulutus on 1550 MW suurempi"
+// - se vastaisi kysymykseen mita se tarkoittaa jarjestelmalle, ei
 // ei vain kuinka suuri se on.
 const TEMP_SIGMA       = 900;  // MW — tyypillinen hajonta suhteessa ennusteeseen
 const TEMP_CEILING     = 13500; // MW — Suomen huippukulutuksen katto C_exp-mallissa
