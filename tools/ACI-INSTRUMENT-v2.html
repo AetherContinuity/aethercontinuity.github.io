@@ -1414,6 +1414,50 @@ const TEMP_HEAT_SLOPE2 = 76;   // MW per °C alle -5°C (uusi, korvaa kovakoodat
 const TEMP_COOL_BASE   = 22;   // °C — jäähdytysraja
 const TEMP_COOL_SLOPE  = 60;   // MW per °C yli jäähdytysrajan
 const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
+// AVOIN TUTKIMUSKYSYMYS 2026-08-13 (kayttajan analyysi, ei viela
+// toteutettu): TEMP_BASE_LOAD (ja koko C_exp(T)-malli) olettaa etta
+// >=18°C tarkoittaa nollaa lisakulutusta lampotilan yli. Backtest
+// osoittaa etta tama on vaarin: kesaperiodit ovat SYSTEMAATTISESTI
+// POSITIIVISIA DP_t-raakalukuina, eivat nollassa (2022-08: +0,845;
+// 2023-07: +0,284; nykyinen: +1,729; kaikki 16-17°C:ssa). Jos malli
+// olisi oikein kalibroitu, raaka olisi ~0 kesalla.
+//
+// TARKEA EROTTELU: kesa EI ole DP_structural-kalibrointi-ikkuna (sen
+// puhdas mittauspiste) - se PALJASTAA rakenteellisen komponentin
+// olemassaolon. DP_weather itsessaan on todennakoisesti LIEVASTI
+// NEGATIIVINEN kesalla (mukava saa, ei lammitys- eika viilennystarvetta),
+// mutta koska havaittu raaka on silti positiivinen, DP_structural:n
+// taytyy olla positiivinen JA suurempi kuin raaka-arvo yksinaan
+// nayttaa (koska se kompensoi DP_weather:n negatiivisuuden).
+//
+// Konkreettinen luku: nykyinen backtest-periodi avgC=8964 MW,
+// avgCexp=7408 MW = 1550 MW selittamatonta kesakulutusta jota
+// lampotila ei selita. Ehdokas Suomen lampotilasta riippumattomalle
+// pohjakuormalle - nakyy puhtaimmin juuri silloin kun lammitys ei
+// peita sita.
+//
+// KIINNOSTAVA, EI VIELA TODISTETTU YHTEYS: 1550 MW on samaa suuruus-
+// luokkaa kuin §10:n oma DC-skenaario 2027 (+1500 MW, ks. rivi ~678).
+// Ei sama asia, liian aikaista vaittaa yhteytta - mutta jos osa
+// selittamattomasta kesakuormasta on jo rakennettuja datakeskuksia,
+// malli nakisi jo NYT sen ilmion jota se vaittaa projisoivansa vasta
+// tulevaisuuteen.
+//
+// TESTATTAVISSA OLEVA ENNUSTE: jos kesan selittamaton jaannos on
+// KASVANUT 2022 -> 2023 -> 2026 (ei vain vaihdellut satunnaisesti),
+// se on todiste rakenteellisesta kuormasta, ei kalibrointikohinasta.
+// Backtestissa on jo kolme kesaperiodia (2022-08, 2023-07, nykyinen) -
+// riittava maara ensimmaiseen tarkistukseen. EI VIELA AJETTU.
+//
+// SEURAAVA ASKEL (ei toteutettu talla kertaa): jakaa DP_t kahdeksi
+// erilliseksi termiksi - DP_weather (saariippuvainen, voi olla
+// negatiivinen) ja DP_structural (lampotilasta riippumaton pohja-
+// kuorma, mukaan lukien DC-kuorma). Tama ratkaisisi kaksi asiaa
+// kerralla: kalibrointi lakkaisi olemasta kompromissi kesan ja talven
+// valilla (nykyinen TEMP_HEAT_SLOPE on jo kertaalleen korjattu talven
+// saturaatio-ongelmaan, mutta ei ratkaise kesan yliarviota), ja §10:n
+// DC-skenaariologiikka lakkaisi olemasta erillinen "lisays" C_exp:hen
+// ja tulisi sen sijaan luonnollinen osa DP_structural-termia.
 const TEMP_SIGMA       = 900;  // MW — tyypillinen hajonta suhteessa ennusteeseen
 const TEMP_CEILING     = 13500; // MW — Suomen huippukulutuksen katto C_exp-mallissa
 const TEMP_API = 'https://api.open-meteo.com/v1/forecast';
