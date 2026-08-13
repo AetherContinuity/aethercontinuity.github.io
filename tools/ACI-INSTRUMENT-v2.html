@@ -2578,30 +2578,38 @@ async function init() {
   // rakenteellisesti joka kerta.
   const fetchYesterday = async (dsId, label) => {
     const now = new Date();
-    const end   = new Date(now - 2   * 3.6e6);
-    const start = new Date(now - 168 * 3.6e6);
+    const fullEnd   = new Date(now - 2   * 3.6e6);
+    const fullStart = new Date(now - 168 * 3.6e6);
+    const midpoint  = new Date(now - 85  * 3.6e6); // 168h ja 2h:n puolivali
 
     // KORJATTU 2026-08-13 (kayttajan kontrolloitu testi): proxy palauttaa
     // aina vain "sivun 1" (max. 2000 pistetta/pyynto, 3min-resoluutiolla
     // ~100h) riippumatta page= tai from=-parametrista - molemmat
-    // ohitetaan hiljaa, currentPage pysyy 1:ssa. Tama on Cloudflare
-    // Workerin oma puute (ei while(nextPage)-silmykkaa workerin
-    // sisalla); sen korjaaminen vaatisi paasyn workerin lahdekoodiin ja
-    // sen deploamiseen, jota ei ole tassa ymparistossa. Kayttajan
-    // loytama kiertotie ei vaadi deploymenttia: sortOrder muuttaa MITKA
-    // 2000 pistetta palautuvat, vaikka currentPage ei liiku - asc antaa
-    // ikkunan VANHEMMAN puoliskon, desc UUDEMMAN. Nama menevat paallekkain
-    // n. 32h keskella (2x100h - 168h), joten kaksi hakua yhdessa kattaa
-    // koko 168h. Paallekkaiset aikaleimat dedupoidaan alla Map:lla.
-    const fetchOrder = async (order) => {
+    // ohitetaan hiljaa, currentPage pysyy 1:ssa. Cloudflare Workerin oma
+    // puute (ei while(nextPage)-silmykkaa workerin sisalla); sen korjaa-
+    // minen vaatisi paasyn workerin lahdekoodiin, jota ei ole tassa
+    // ymparistossa.
+    //
+    // TARKENNUS samana paivana (kayttajan metodinen huomautus): ensimmainen
+    // kiertotie kaytti sortOrder=asc/desc:a erottamaan ikkunan puoliskot.
+    // Tama nojasi sortOrder:n semantiikkaan jota ei ole erikseen todennettu
+    // - vain start/end-parametrien toimivuus on kontrolloidusti todistettu
+    // (168h haku palautti total:3334 ~= 168h x 20 pistetta/h, tasmalleen
+    // odotetun mukaisesti). Siksi kaytetaan nyt PELKASTAAN start/end-
+    // parametreja: ikkuna jaetaan kahteen ei-paallekkaiseen 83h-osaan
+    // (168h/2 = 84h, mutta puolivali asetettu 85h:aan pienelle marginaalille
+    // jotta osat varmasti kattavat koko alueen ilman aukkoa keskella).
+    // Kumpikin osa on 83-85h x 20 pistetta/h ~= 1700-1900 pistetta,
+    // reilusti alle 2000 pisteen katon.
+    const fetchRange = async (rangeStart, rangeEnd, tag) => {
       const url = `${PROXY}?ds=${dsId}` +
-        `&start=${encodeURIComponent(start.toISOString())}` +
-        `&end=${encodeURIComponent(end.toISOString())}` +
-        `&size=2000&sortOrder=${order}`;
+        `&start=${encodeURIComponent(rangeStart.toISOString())}` +
+        `&end=${encodeURIComponent(rangeEnd.toISOString())}` +
+        `&size=2000&sortOrder=asc`;
       const maxAttempts = 3;
       let lastErr = null;
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        setStatus('loading', [[label, `haetaan 168h (${order})` + (attempt === 0 ? '…' : ` (yritys ${attempt+1}/${maxAttempts})`)]]);
+        setStatus('loading', [[label, `haetaan 168h (${tag})` + (attempt === 0 ? '…' : ` (yritys ${attempt+1}/${maxAttempts})`)]]);
         try {
           const r = await fetch(url);
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -2620,12 +2628,13 @@ async function init() {
     };
 
     const [oldHalf, newHalf] = await Promise.all([
-      fetchOrder('asc'),
-      fetchOrder('desc')
+      fetchRange(fullStart, midpoint, 'vanhempi puolisko'),
+      fetchRange(midpoint, fullEnd, 'uudempi puolisko')
     ]);
 
-    // Dedupoi 3min-tason aikaleimalla (Map: myohempi kirjoitus voittaa,
-    // mutta paallekkaisella alueella arvot ovat identtisia joka tapauksessa)
+    // Dedupoi 3min-tason aikaleimalla varmuuden vuoksi (puolivalin
+    // rajakohdassa ei pitaisi olla paallekkaisyytta, mutta Map sailoo
+    // koodin turvalliseksi jos rajat joskus muuttuvat)
     const byTimestamp = new Map();
     [...oldHalf, ...newHalf].forEach(row => {
       const key = row.startTime || row.start_time || row.timestamp || row.time;
@@ -3863,12 +3872,20 @@ async function renderS12(rawData) {
     const txBase = 'https://aci-transmission-proxy.ruotsalainen-marko.workers.dev';
 
     // SE1→FI siirto (DS 60, 15min)
+    // KORJATTU 2026-08-13 (kayttajan huomio): otsikko (rivi 984) vaitti
+    // "W72" mutta koodi haki vain 28h/size=120 - staattinen teksti ei
+    // vastannut todellista hakua. 103/112 pistetta 28h:n haulla oli siis
+    // normaali (~92%) tulos, ei kattovika (eri asia kuin Vika A, 2000
+    // pisteen katto 3min-sarjoilla). Laajennettu tasi 72h:aan jotta
+    // otsikko ja haku tasmaavat: 72h x 4 (15min/h) = 288 pistetta,
+    // reilusti alle 2000 pisteen katon - ei tarvitse asc/desc- tai
+    // start/end-kiertotieta, yksi haku riittaa.
     try {
       const now = new Date();
       const end = new Date(now - 2*3.6e6);
-      const start = new Date(now - 28*3.6e6);
+      const start = new Date(now - 72*3.6e6);
       const r = await fetch(txBase + '/?ds=60&start=' + encodeURIComponent(start.toISOString()) +
-        '&end=' + encodeURIComponent(end.toISOString()) + '&size=120');
+        '&end=' + encodeURIComponent(end.toISOString()) + '&size=300');
       if (r.ok) {
         const j = await r.json();
         const vals = (j.data||[]).map(d => d.value).filter(v => v != null);
