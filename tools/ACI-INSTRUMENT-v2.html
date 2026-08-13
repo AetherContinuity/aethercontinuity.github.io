@@ -1458,6 +1458,37 @@ const TEMP_BASE_LOAD   = 7000; // MW — peruskulutus
 // saturaatio-ongelmaan, mutta ei ratkaise kesan yliarviota), ja §10:n
 // DC-skenaariologiikka lakkaisi olemasta erillinen "lisays" C_exp:hen
 // ja tulisi sen sijaan luonnollinen osa DP_structural-termia.
+//
+// TARKENNUS 2026-08-13 (jatkokeskustelu): 1550 MW EI ole §10:n
+// DC-skenaariosliderin asettama +1500 MW - se nousi riippumattomasti
+// havaitun kesakulutuksen ja mallin lampotilaperusteisen odotuksen
+// erotuksesta. Ei siis pida kasitella DC-skenaarion artefaktina, eika
+// sliderin lukua pida kayttaa taman havainnon "selityksena" - ne ovat
+// (viela) kaksi eri lukua jotka sattuvat osumaan samaan suuruus-
+// luokkaan.
+//
+// EMME VIELA TIEDA MISTA 1550 MW KOOSTUU. Ehdokaskomponentteja:
+// lampopumput/sahkolammitys, sahkokattilat, P2X/elektrolyysi ja muu
+// jatkuva teollinen sahkokuorma, sahkoautojen lataus, datakeskukset,
+// muu teollisuuden/palvelujen pohjakuorma, tilastollinen/mallinnuksellinen
+// jaannos. Naita ei ole eroteltu tassa datassa.
+//
+// KOOSTUMUS ON TARKEAMPI KUIN MW-LUKU WEM:n OMAN TARKOITUKSEN
+// KANNALTA (endurance, ei hetkellinen teho): jatkokysymys ei ole vain
+// "onko jaannos kasvanut" vaan "mika osa siita on joustavaa ja mika
+// jatkuvaa". Sahkoautojen lataus ja osa sahkokattiloista voidaan
+// siirtaa pois stressitunneilta; datakeskus tai elektrolyysi
+// muodostaa toisenlaisen, ei-siirrettavan endurance-kuorman. Kaksi
+// MW-maaraltaan identtista jaannosta voivat merkita hyvin eri asiaa
+// jarjestelman stressinsietokyvylle riippuen tasta jakaumasta.
+//
+// EHDOTETTU ANALYYSIKETJU (ei toteutettu): Summer Residual Load ->
+// Structural Load (kasvutesti 2022->2023->2026, ks. ylla) -> Flexible
+// / Semi-flexible / Continuous -jaottelu -> vasta tamän jalkeen
+// vertailu §10:n DC-skenaarioon (+1500 MW). Tama olisi huomattavasti
+// vahvempi analyysi kuin pelkka toteamus "kesalla kulutus on 1550 MW
+// suurempi" - se vastaisi kysymykseen mita se tarkoittaa jarjestelmalle,
+// ei vain kuinka suuri se on.
 const TEMP_SIGMA       = 900;  // MW — tyypillinen hajonta suhteessa ennusteeseen
 const TEMP_CEILING     = 13500; // MW — Suomen huippukulutuksen katto C_exp-mallissa
 const TEMP_API = 'https://api.open-meteo.com/v1/forecast';
