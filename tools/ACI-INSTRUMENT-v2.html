@@ -967,7 +967,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
       <div class="s12-card">
         <div class="s12-card-title">Tuulivoima — 72h ennuste</div>
         <div class="s12-value" id="s12WindFcst">—</div>
-        <div class="s12-sub">MW · DS 246/245 · ka / min 72h</div>
+        <div class="s12-sub">MW · DS 245 (72h ennuste, 15min) · ka / min · DS 246 (24h, kerran/vrk) ei vielä haettu</div>
         <div class="s12-status s12-normal" id="s12WindFcstLabel">ladataan…</div>
       </div>
       <!-- Tuulikato-riski -->
@@ -4040,15 +4040,38 @@ async function renderS12(rawData) {
           // 15min, resoluutio lasketaan suoraan datan omista aikaleimoista
           // (startTime/endTime-erotus ensimmaiselta pisteelta), samaan
           // tapaan kuin ENTSO-E-puolen resolutionMinutesFromString tekee.
-          let stepMin = 60; // varovainen oletus jos aikaleimoja ei loydy
-          if (rawRows.length >= 2 && rawRows[0].startTime) {
-            const t0 = new Date(rawRows[0].startTime);
-            const t1 = new Date(rawRows[1].startTime);
-            const diffMin = Math.round((t1 - t0) / 60000);
-            if (diffMin > 0 && diffMin <= 180) stepMin = diffMin;
-          } else if (rawRows[0] && rawRows[0].startTime && rawRows[0].endTime) {
-            const diffMin = Math.round((new Date(rawRows[0].endTime) - new Date(rawRows[0].startTime)) / 60000);
-            if (diffMin > 0 && diffMin <= 180) stepMin = diffMin;
+          //
+          // KORJATTU 2026-08-13 (kayttajan jatkohavainto): edellinen versio
+          // tunnisti vain "startTime"-kenttanimen. Fingridin oma dataset-
+          // dokumentaatio (data.fingrid.fi/en/datasets/245) vahvistaa: DS
+          // 245 on 72h ennuste, paivitetaan 15 min valein - n=287-288 osuu
+          // tahan lahes taydellisesti (72h x 4 = 288). Jos aiempi koodi
+          // paatyi "60 min":iin, aikaleiman kenttanimi ei todennakoisesti
+          // ollut "startTime" DS 245:n vastauksessa - detektori putosi
+          // hiljaa oletusarvoon eika koskaan mitannut mitaan oikeasti.
+          // Korjattu tunnistamaan useampi mahdollinen kenttanimi, JA
+          // ristiintarkistetaan tulos tunnetulla ikkunan pituudella
+          // (72h / pisteiden maara) toisena, riippumattomana arviona -
+          // jos nama kaksi eroavat merkittavasti, kaytetaan ikkunapohjaista
+          // arviota koska se ei riipu minkaan yksittaisen kentan nimesta.
+          const getTs = (row) => row.startTime || row.start_time || row.timestamp || row.time || row.date || null;
+          let stepMin = null;
+          if (rawRows.length >= 2) {
+            const t0raw = getTs(rawRows[0]);
+            const t1raw = getTs(rawRows[1]);
+            if (t0raw && t1raw) {
+              const diffMin = Math.round((new Date(t1raw) - new Date(t0raw)) / 60000);
+              if (diffMin > 0 && diffMin <= 180) stepMin = diffMin;
+            }
+          }
+          // Riippumaton, kenttanimesta riippumaton arvio: koko pyydetty
+          // ikkuna (72h = 4320 min) jaettuna pisteiden maaralla.
+          const stepMinFromWindow = vals.length > 0 ? Math.round(4320 / vals.length) : null;
+          if (stepMin == null || (stepMinFromWindow != null && Math.abs(stepMin - stepMinFromWindow) > 5)) {
+            // Aikaleimapohjainen tunnistus puuttui tai on ristiriidassa
+            // ikkunapohjaisen arvion kanssa - luotetaan ikkunaan, koska se
+            // ei riipu mistaan kenttanimioletuksesta.
+            stepMin = stepMinFromWindow || 60;
           }
           const avg72 = vals.reduce((a,b)=>a+b,0)/vals.length;
           const min72 = Math.min(...vals);
