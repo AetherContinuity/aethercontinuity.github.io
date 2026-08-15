@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TN-023 — Kuormaprofiilin arvovaikutus: laskentaketju · ACI</title>
+<meta name="description" content="CN-031:n kertoimen 4,4 täysi laskentaketju: aineiston alkuperä, kuormaprofiilien määrittely, arvokaava, hajotelma ja herkkyystarkastelu. 8 735 tuntia ENTSO-E-dataa.">
+<style>
+:root {
+  --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
+  --accent: #8b4513; --muted: #7a7468; --rule: #c8bfad;
+  --serif: 'EB Garamond', Georgia, serif; --mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); line-height: 1.75; }
+nav { border-bottom: 1px solid var(--rule); padding: 1.4rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-home::before { content: "← "; }
+.nav-id { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.dih { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 1.5rem 2rem 1.25rem; margin: 0 auto; max-width: 740px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; }
+.dih-institute { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.dih-series { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-top: 0.2rem; }
+.series-accent { color: var(--accent); }
+.dih-meta { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: right; }
+.dih-meta strong { color: var(--ink); font-weight: 400; display: block; }
+.paper { max-width: 740px; margin: 0 auto; padding: 5rem 2rem 8rem; }
+.paper-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+h1.paper-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.paper-subtitle { font-size: 1.05rem; font-style: italic; color: var(--muted); margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+h2 { font-size: 1.1rem; font-weight: 500; margin: 2.5rem 0 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+h3 { font-size: 0.95rem; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+p { font-size: 1rem; line-height: 1.85; color: #2a2520; margin-bottom: 1rem; }
+.finding { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--ink); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.finding-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.85rem; }
+th, td { text-align: left; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-size: 0.8rem; }
+pre { background: var(--paper-3); border: 1px solid var(--rule); padding: 0.9rem 1rem; margin: 1.25rem 0; font-family: var(--mono); font-size: 0.76rem; line-height: 1.7; overflow-x: auto; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--paper-2); padding: 0.05em 0.3em; }
+.footer-note { font-size: 0.88rem; font-style: italic; color: var(--muted); margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+</style>
+  <link rel="canonical" href="https://aethercontinuity.org/supplements/tn-023-kuormaprofiilin-arvovaikutus.html" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Report",
+    "name":"TN-023 — Kuormaprofiilin arvovaikutus: laskentaketju · ACI",
+    "description":"CN-031:n kertoimen 4,4 täysi laskentaketju: aineiston alkuperä, kuormaprofiilit, arvokaava, hajotelma ja herkkyys.",
+    "url":"https://aethercontinuity.org/supplements/tn-023-kuormaprofiilin-arvovaikutus.html",
+    "creator":{"@type":"Organization","name":"Aether Continuity Institute","url":"https://aethercontinuity.org"},
+    "publisher":{"@type":"Organization","name":"Aether Continuity Institute"},
+    "datePublished":"2026-08-15","inLanguage":"fi"}
+  </script>
+  <meta property="og:title" content="TN-023 — Kuormaprofiilin arvovaikutus: laskentaketju · ACI" />
+  <meta property="og:description" content="CN-031:n kertoimen 4,4 täysi laskentaketju, 8 735 tuntia ENTSO-E-dataa." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aethercontinuity.org/supplements/tn-023-kuormaprofiilin-arvovaikutus.html" />
+  <meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+
+<nav>
+  <a href="/papers/" class="nav-home">Paperit</a>
+  <span class="nav-id">TN-023 · Technical Note</span>
+</nav>
+
+<div class="dih">
+  <div>
+    <div class="dih-institute">Aether Continuity Institute</div>
+    <div class="dih-series">Technical Note · <span class="series-accent">TN-023</span></div>
+  </div>
+  <div class="dih-meta">
+    <strong>Päiväys</strong>2026-08-15
+    <strong>Versio</strong>v1.1
+    <strong>Kieli</strong>Suomi
+    <strong>Emopaperi</strong>CN-031
+    <strong>Domain</strong>D-1
+  </div>
+</div>
+
+<div class="paper">
+
+  <div class="paper-label">TN-023 · Technical Note · Laskentaspesifikaatio</div>
+  <h1 class="paper-title">Kuormaprofiilin arvovaikutus — laskentaketju</h1>
+  <p class="paper-subtitle">CN-031:n keskeisin kvantitatiivinen tulos avattuna tunti tunnilta: aineiston alkuperä, profiilien määrittely, arvokaava, hajotelma ja herkkyys.</p>
+
+  <p>CN-031 esittää, että sama tuulivoimala tuottaa eri tilatyypeillä olennaisesti eri arvon, ja että ero on kertaluokkaa 4,4. Tämä muistio avaa laskennan siten, että se on toistettavissa raakadatasta.</p>
+
+  <h2>§01 Määrittelyt ja parametrit</h2>
+
+  <table>
+    <tr><th>Symboli</th><th>Merkitys</th><th>Arvo</th></tr>
+    <tr><td><code>P_rated</code></td><td>Voimalan nimellisteho</td><td class="num">100 kW</td></tr>
+    <tr><td><code>C_inst</code></td><td>Suomen asennettu tuulikapasiteetti (loppu 2025)</td><td class="num">9 430 MW</td></tr>
+    <tr><td><code>K_osto</code></td><td>Ostokiila: siirto + vero + marginaali</td><td class="num">41,0 €/MWh</td></tr>
+    <tr><td><code>K_myynti</code></td><td>Myyntikiila: marginaali + tuotannon verkkopalvelu</td><td class="num">4,5 €/MWh</td></tr>
+    <tr><td><code>L(t)</code></td><td>Kuorma tunnilla t</td><td class="num">kW</td></tr>
+    <tr><td><code>G(t)</code></td><td>Tuotanto tunnilla t</td><td class="num">kW</td></tr>
+    <tr><td><code>p(t)</code></td><td>Day-ahead-hinta tunnilla t</td><td class="num">€/MWh</td></tr>
+  </table>
+
+  <p><strong>Kiilat, ilman arvonlisäveroa ja sähköveroluokka II:n mukaan (maatalous):</strong></p>
+
+  <table>
+    <tr><th>Erä</th><th class="num">€/MWh</th><th>Lähde</th></tr>
+    <tr><td>Siirron energiamaksu</td><td class="num">36,3</td><td>Savon Voima yleissiirto 4,55 snt/kWh sis. alv</td></tr>
+    <tr><td>Sähkövero II + huoltovarmuusmaksu</td><td class="num">0,76</td><td>maatalouden alennettu veroluokka</td></tr>
+    <tr><td>Ostomarginaali</td><td class="num">3,9</td><td>0,49 snt/kWh sis. alv</td></tr>
+    <tr><td><strong>K_osto</strong></td><td class="num"><strong>41,0</strong></td><td></td></tr>
+    <tr><td>Myyntimarginaali</td><td class="num">3,0</td><td>oletus</td></tr>
+    <tr><td>Sähköntuotannon verkkopalvelu</td><td class="num">1,5</td><td>oletus; tuote on olemassa</td></tr>
+    <tr><td><strong>K_myynti</strong></td><td class="num"><strong>4,5</strong></td><td></td></tr>
+    <tr><td><strong>KIILA yhteensä</strong></td><td class="num"><strong>45,5</strong></td><td></td></tr>
+  </table>
+
+  <p>Kaksi viimeistä erää ovat oletuksia. Kuten §05 osoittaa, ne eivät vaikuta kertoimeen — vain absoluuttisiin arvoihin.</p>
+
+  <div class="finding">
+    <div class="finding-label">Sitova rajaus: laskenta pätee vain liittymän takana olevaan tuotantoon</div>
+    <p>Omakäytön määritelmä <code>min(L(t), G(t))</code> olettaa, että voimala on <strong>saman verkkoliittymän takana</strong> kuin kuorma. Vain silloin ostokiila 41,0 €/MWh todella vältetään.</p>
+    <p>Jos tuotanto on omalla liittymällään — peltoalueen voimala, osuuskunnan yhteinen laitos, hajautettu energiayhteisö — sähkö kulkee jakeluverkon kautta, siirtomaksu ja sähkövero maksetaan silti, eikä omakäyttöä synny mittarin mielessä. Tällöin arvo on <code>capture − K_myynti</code> riippumatta kuormaprofiilista, ja koko §05:n kerroin katoaa.</p>
+    <p><strong>Liittymäraja on siis samalla tariffiraja.</strong> Tämä on CN-031:n mittakaavajaon taloudellinen ydin: kiila on olemassa tilan sisällä ja katoaa rajan yli.</p>
+  </div>
+
+  <h2>§02 Aineiston alkuperä ja käsittely</h2>
+
+  <p>Lähde: ENTSO-E Transparency Platform, tarjousalue FI. Tuulituotanto A75/A16 psrType B19; hinta day-ahead. Haku proxyn kautta (<code>aci-entsoe-proxy</code>), parametrit <code>periodStart</code> ja <code>periodEnd</code> ISO 8601 UTC, kolmen kuukauden paloissa.</p>
+
+  <p>Proxy palauttaa yhden <code>periodStart</code>-arvon sarjaa kohti; aikaleima johdetaan kaavalla <code>periodStart + (position − 1) × resoluutio</code>. Resoluutio PT15M.</p>
+
+  <pre>VAIHE 1 · aineiston valmistelu
+tuuli   raakarivejä  35 496 -> dedup 34 940 (poistettu 556) -> tunteja 8 735
+hinta   raakarivejä  31 032 -> dedup 30 744 (poistettu 288) -> tunteja 8 759
+leikkaus (molemmat saatavilla): 8 735 tuntia
+jakso   2025-08-01 03:00 +03:00 .. 2026-07-31 01:00 +03:00
+aukkoja tuntisarjassa: 0
+CF      ka 0,2552 · mediaani 0,2155 · min 0,0000 · max 0,7930</pre>
+
+  <p>Päällekkäisyydet syntyvät hakupalojen limityksestä ja poistetaan aikaleiman perusteella. 15 minuutin data aggregoidaan tuntikeskiarvoiksi, minkä jälkeen aikavyöhyke muunnetaan Europe/Helsinki-vyöhykkeeseen. Kapasiteettikerroin <code>CF(t) = MW(t) / 9 430</code>, rajattu välille [0, 1].</p>
+
+  <h2>§03 Kuormaprofiilit</h2>
+
+  <p>Profiilit ovat <strong>synteettisiä</strong>. Ne on määritelty eksplisiittisesti alla, jotta ne voidaan korvata mitatuilla profiileilla ilman muita muutoksia laskentaan.</p>
+
+  <h3>Karjatila (80 ey)</h3>
+  <pre>L(t) = [25 + 5·cos(2π·(doy − 15)/365)] × d(t)
+d(t) = 1,20  kun tunti ∈ [5,9) ∪ [15,19)     (lypsy)
+     = 0,92  muutoin</pre>
+
+  <h3>Vihannestila</h3>
+  <pre>L(t) = 55 kW  kun 15.5.–15.9. ja tunti ∈ [6,20)   (kastelu + jäähdytys)
+     = 10 kW  muutoin                              (kylmävarasto)</pre>
+
+  <h3>Viljatila (200 ha)</h3>
+  <pre>L(t) = 53 kW  kun 25.8.–20.9.                     (kuivuri 50 + perus 3)
+     = 3 kW   muutoin                              (valaistus, korjaamo, varasto)</pre>
+
+  <table>
+    <tr><th>Tila</th><th class="num">min kW</th><th class="num">ka kW</th><th class="num">max kW</th><th class="num">MWh/a</th></tr>
+    <tr><td>Karjatila</td><td class="num">18,4</td><td class="num">25,3</td><td class="num">36,0</td><td class="num">221,4</td></tr>
+    <tr><td>Vihannestila</td><td class="num">10,0</td><td class="num">18,9</td><td class="num">55,0</td><td class="num">164,8</td></tr>
+    <tr><td>Viljatila</td><td class="num">3,0</td><td class="num">6,7</td><td class="num">53,0</td><td class="num">58,6</td></tr>
+  </table>
+
+  <h2>§04 Arvokaava</h2>
+
+  <p>Tuotanto <code>G(t) = CF(t) × 100 kW</code>. Kullakin tunnilla tuotanto jaetaan omakäyttöön ja myyntiin:</p>
+
+  <pre>U(t) = min(L(t), G(t))          omakäyttö
+S(t) = G(t) − U(t)              myyty ylijäämä
+
+              Σ U(t)·[p(t) + K_osto]  +  Σ S(t)·[p(t) − K_myynti]
+arvo (€/MWh) = ──────────────────────────────────────────────────
+                                  Σ G(t)</pre>
+
+  <p>Vältetty kustannus ei ole vakio vaan tuntikohtainen: omakäyttö välttää sen hinnan, joka samalla tunnilla olisi maksettu ostosta, eli <code>p(t) + K_osto</code>.</p>
+
+  <p>Ei varastoa, ei kysyntäjoustoa, ei siirtorajoitetta. Tunnittainen kohtaanto ilman aggregointia vuorokausi- tai kuukausitasolle — se on olennaista, koska kuukausitason kohtaanto yliarvioisi omakäyttöä merkittävästi.</p>
+
+  <h2>§05 Tulos ja hajotelma</h2>
+
+  <p>Tuotanto 222,9 MWh/a. Aikapainotettu spot-keskihinta 55,85 €/MWh. Tuulen capture-hinta koko tuotannolle 34,40 €/MWh eli 62 % aikapainotetusta. Pelkkä myynti ilman omaa kuormaa tuottaa <code>34,40 − 4,50 = 29,90 €/MWh</code>.</p>
+
+  <table>
+    <tr><th>Tila</th><th class="num">Omakäyttöaste s</th><th class="num">Arvo €/MWh</th><th class="num">Preemio</th><th class="num">s × KIILA</th></tr>
+    <tr><td>Karjatila</td><td class="num">69,0 %</td><td class="num">61,26</td><td class="num">+31,36</td><td class="num">31,36</td></tr>
+    <tr><td>Vihannestila</td><td class="num">40,9 %</td><td class="num">48,51</td><td class="num">+18,61</td><td class="num">18,61</td></tr>
+    <tr><td>Viljatila</td><td class="num">16,5 %</td><td class="num">37,38</td><td class="num">+7,48</td><td class="num">7,48</td></tr>
+    <tr><td>Pelkkä myynti</td><td class="num">0 %</td><td class="num">29,90</td><td class="num">—</td><td class="num">0</td></tr>
+  </table>
+
+  <div class="finding">
+    <div class="finding-label">Keskeinen tulos: hintatermi supistuu pois</div>
+    <p>Koska <code>Σ U(t)·p(t) + Σ S(t)·p(t) = Σ G(t)·p(t)</code>, arvo hajoaa täsmällisesti näin:</p>
+    <pre>arvo    = capture + s·K_osto − (1 − s)·K_myynti
+preemio = arvo − (capture − K_myynti) = s · KIILA</pre>
+    <p>Preemio pelkkään myyntiin nähden on siis <strong>suoraan verrannollinen omakäyttöasteeseen</strong>, ja tuntikohtainen hinta katoaa erotuksesta kokonaan. Taulukon kaksi oikeanpuoleisinta saraketta ovat identtiset — se on laskennan sisäinen tarkiste.</p>
+  </div>
+
+  <h3>Kerroin</h3>
+
+  <pre>preemioista        31,36 / 7,48   = 4,19
+omakäyttöasteista   0,690 / 0,165  = 4,19    ← sama luku</pre>
+
+  <div class="finding">
+    <div class="finding-label">Tarkennus: kerroin on preemioiden suhde, ei arvojen suhde</div>
+    <p>Lukija, joka laskee 61,26 / 37,38, saa 1,64. Se ei ole CN-031:n väite. Kerroin lasketaan <strong>omakäytöstä syntyvästä lisäarvosta</strong>, kun pelkkä myynti on molempien lattia: 29,90 €/MWh on saatavissa ilman mitään omaa kuormaa, joten se ei ole kuormaprofiilin ansiota.</p>
+  </div>
+
+  <div class="finding">
+    <div class="finding-label">Kerroin ei riipu yhdestäkään tariffioletuksesta</div>
+    <table>
+      <tr><th class="num">KIILA €/MWh</th><th class="num">Karjatila</th><th class="num">Vihannestila</th><th class="num">Viljatila</th><th class="num">Kerroin</th></tr>
+      <tr><td class="num">20,0</td><td class="num">13,80</td><td class="num">8,19</td><td class="num">3,29</td><td class="num">4,19</td></tr>
+      <tr><td class="num">30,0</td><td class="num">20,69</td><td class="num">12,28</td><td class="num">4,94</td><td class="num">4,19</td></tr>
+      <tr><td class="num">45,5</td><td class="num">31,39</td><td class="num">18,62</td><td class="num">7,49</td><td class="num">4,19</td></tr>
+      <tr><td class="num">60,0</td><td class="num">41,39</td><td class="num">24,56</td><td class="num">9,88</td><td class="num">4,19</td></tr>
+      <tr><td class="num">80,0</td><td class="num">55,19</td><td class="num">32,75</td><td class="num">13,17</td><td class="num">4,19</td></tr>
+    </table>
+    <p>Kiilan koko määrää preemion suuruuden, ei tilatyyppien suhdetta. <strong>Kerroin 4,19 on kahden mitatun omakäyttöasteen suhde eikä sisällä yhtään hinta- tai tariffioletusta.</strong> Se on tämän tuloksen vahvin mahdollinen muoto.</p>
+  </div>
+
+  <h2>§06 Havainto: omakäyttö heikentää jäännöksen capture-hintaa</h2>
+
+  <p>Myydyn ylijäämän capture-hinta on jokaisella tilatyypillä <em>alempi</em> kuin koko tuotannon capture-hinta, ja ero kasvaa omakäyttöasteen mukana:</p>
+
+  <table>
+    <tr><th>Tila</th><th class="num">Myydyn capture</th><th class="num">Koko capture</th><th class="num">Ero</th></tr>
+    <tr><td>Karjatila</td><td class="num">18,57</td><td class="num">34,40</td><td class="num">−15,83</td></tr>
+    <tr><td>Vihannestila</td><td class="num">28,90</td><td class="num">34,40</td><td class="num">−5,49</td></tr>
+    <tr><td>Viljatila</td><td class="num">32,51</td><td class="num">34,40</td><td class="num">−1,89</td></tr>
+  </table>
+
+  <p>Mekanismi: omakäyttö toteutuu tunneilla, joilla tuotanto on kuormaa pienempi — eli matalan tuulen tunneilla, joilla hinta on korkea. Ylijäämäksi jää tuulisia tunteja, joilla hinta on matala. <strong>Omakäyttö poimii arvokkaimmat tunnit ja jättää halvimmat myytäväksi.</strong></p>
+
+  <p>Käytännön seuraus: omakäyttöasteen kasvattamisen rajahyöty on pienempi kuin pelkästä <code>A</code>:n ja capture-hinnan erotuksesta laskien näyttäisi, koska sama toimenpide heikentää jäännöksen arvoa. Kaksi vaikutusta osittain kumoavat toisensa, eikä tämä näy kummastakaan tunnusluvusta yksin.</p>
+
+  <h2>§07 Herkkyys ja versiokorjaus</h2>
+
+  <p>Kertoimen herkkyys on käsitelty §05:ssä: se on nolla. Absoluuttiset arvot skaalautuvat lineaarisesti kiilan mukana, ja kiilan kaksi epävarminta erää (myyntimarginaali, tuotannon verkkopalvelumaksu) ovat yhteensä 4,5 €/MWh eli noin 10 % kiilasta.</p>
+
+  <div class="finding">
+    <div class="finding-label">Korjaus aiempaan lukuun: 4,42 → 4,19</div>
+    <p>Tämän muistion ensimmäinen versio käytti vältettynä kustannuksena vakiota 90 €/MWh ja jätti myyntipuolen tariffit huomiotta kokonaan. Vakio-oletus sekoitti hintavaikutuksen kertoimeen, koska todellinen vältetty kustannus on tuntikohtainen <code>p(t) + K_osto</code>. Molempien puolten kirjoittaminen auki poistaa hintatermin ja antaa kertoimeksi omakäyttöasteiden suhteen. Vanhat luvut 67,84 / 53,91 / 41,97 ja kerroin 4,42 korvautuvat luvuilla 61,26 / 48,51 / 37,38 ja kertoimella 4,19.</p>
+  </div>
+
+  <h2>§08 Toistaminen</h2>
+
+  <pre>1. getwind.py    hae tuulisarja 3 kk paloissa, uudelleenyritys 429-virheissä
+2. getprice.py   sama day-ahead-hinnalle
+3. audit.py      vaiheet 1-5, tulostaa kaikki tämän muistion luvut
+   riippuvuudet: python3.11+, pandas, numpy
+
+Tuotetut tiedostot:
+   audit_tuntiaineisto.csv   8 735 riviä · kuormat, CF, tuotanto, hinta
+   audit_hajotelma.csv       §05:n taulukko</pre>
+
+  <h2>§09 Rajoitteet</h2>
+
+  <p><strong>Kuormaprofiilit ovat synteettisiä.</strong> Tämä on laskennan merkittävin rajoite. Tuotanto- ja hinta-aineisto on todellista ja tarkistettavissa; kuormat ovat §03:n mukaisia oletuksia.</p>
+
+  <p><strong>Kansallinen tuulimuoto yhden kohteen sijasta.</strong> Aggregaatti on spatiaalisesti tasoitettu. Yksittäisellä voimalalla olisi enemmän nollatunteja ja enemmän täystunteja, mikä laskisi omakäyttöastetta. Esitetyt luvut ovat siis omakäytölle <em>optimistisia</em>.</p>
+
+  <p><strong>Yksi vuosi.</strong> Jakson keskimääräinen kapasiteettikerroin 0,2552 on Suomen pitkän ajan tasoa matalampi.</p>
+
+  <p><strong>Asennettu kanta kasvoi jakson aikana</strong>, joten CF on hieman aliarvioitu ja tuotanto vastaavasti.</p>
+
+  <p><strong>Ei varastoa eikä joustoa.</strong> Kumpikin nostaisi omakäyttöastetta, mutta rinnakkaislaskenta (TN-sarja, varasto ja liityntäteho) osoittaa vaikutuksen olevan pieni näillä profiileilla.</p>
+
+  <h2>§10 Revisioehto</h2>
+
+  <div class="finding">
+    <div class="finding-label">Millä havainnolla tämä muistio päivitetään</div>
+    <p>Yhden todellisen tilan mitattu sähköliittymätason tuntikulutus vuoden ajalta, verrattuna §03:n synteettiseen profiiliin samalle tilatyypille. Jos mitattu omakäyttöaste poikkeaa lasketusta enemmän kuin ±10 prosenttiyksikköä, §05:n luvut lasketaan uudelleen. Jos tilatyyppien <em>järjestys</em> muuttuu, CN-031:n keskeinen väite on kumottu ja paperi on vedettävä takaisin.</p>
+    <p>Toinen revisioehto: jos yksittäisen kohteen mitattu tuulisarja antaa olennaisesti eri omakäyttöasteen kuin kansallinen aggregaatti, §09:n toinen rajoite on kvantifioitava ja luvut korjattava alaspäin.</p>
+  </div>
+
+  <p class="footer-note">Emopaperi: <a href="/papers/cn-031-sulkeutumiskoko.html">CN-031 — Sulkeutumiskoko</a>. Liittyvät: <a href="/papers/cn-025-agricultural-forestry-exposure.html">CN-025 — The Unprotected Layer</a> · <a href="/supplements/tn-019-ppa-rigidity-math.html">TN-019 — PPA Rigidity and Price Formation</a> · <a href="/papers/wp-015-residualization-spot-markets.html">WP-015 — Residual Market Failure</a></p>
+
+</div>
+<div style="background:#f3f0ea;border-top:1px solid #ddd;margin-top:3rem;padding:1.2rem 1.5rem;font-family:'DM Mono',monospace;font-size:.7rem;color:#666;line-height:2.4">
+<strong style="color:#8b2500;letter-spacing:.08em;display:block;margin-bottom:.5rem">NAVIGATION — STATE · CAUSE · ACTION</strong>
+
+<strong>STATE — What is happening:</strong>
+<a href="/supplements/ACI_DA-001_v1_1.html" style="color:#8b2500;text-decoration:none">DA-001 — Finland Pre-Shortage 2026–2032</a> &nbsp;·&nbsp;
+<a href="/papers/cn-025-agricultural-forestry-exposure.html" style="color:#8b2500;text-decoration:none">CN-025 — Agricultural and Forestry Exposure</a><br>
+
+<strong>CAUSE — Why the system does not respond:</strong>
+<a href="/papers/cn-007-miksi-jarkevaet-asiat-eivat-etene.html" style="color:#8b2500;text-decoration:none">CN-007 — Kolmen vajeen malli</a> &nbsp;·&nbsp;
+<a href="/papers/sm-007-convergence-finding.html" style="color:#8b2500;text-decoration:none">SM-007 — Convergence Finding</a><br>
+
+<strong>ACTION — What can be built:</strong>
+<a href="/papers/cn-031-sulkeutumiskoko.html" style="color:#8b2500;text-decoration:none">CN-031 — Sulkeutumiskoko</a> &nbsp;·&nbsp;
+<a href="/supplements/tn-022-node-capex-model.html" style="color:#8b2500;text-decoration:none">TN-022 — CAPEX Model</a> &nbsp;·&nbsp;
+<a href="/tools/tn022-phase-diagram.html" style="color:#8b2500;text-decoration:none">Phase Diagram Tool</a>
+</div>
+
+</body>
+</html>
