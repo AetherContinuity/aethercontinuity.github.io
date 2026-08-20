@@ -227,7 +227,7 @@ const DRIFT={S_ENERGY:.4,R_PUBLIC:.35,E_REAL:.20,X_EXTERNAL:.15};
 const LD={S_ENERGY:-.3,R_PUBLIC:-.4,E_REAL:-.15,X_EXTERNAL:-.10};
 const LI={
   S_ENERGY:{name:'Energy System Stress',src:'<strong>Live:</strong> Fingrid DS 105 (spot €/MWh) · DS 192 (production) · DS 198 (surplus) · DS 181 (wind). Proxy: aci-fingrid-proxy.ruotsalainen-marko.workers.dev',w:'35%'},
-  R_PUBLIC:{name:'Public Finance Pressure',src:'<strong>Live:</strong> ECB Finnish 10Y government bond yield (YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y) · Kriittisen puolustuslogistiikan käyttökustannukset · Ikärakenteen menopaine (VM)',w:'30%'},
+  R_PUBLIC:{name:'Public Finance Pressure',src:'<strong>Live:</strong> ECB euroalueen 10Y valtionlainatuotto (YC/B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y — korjattu 2026-08-20, ei maakohtainen Suomen tuotto, ECB ei julkaise sellaista tätä kautta) · Kriittisen puolustuslogistiikan käyttökustannukset · Ikärakenteen menopaine (VM)',w:'30%'},
   E_REAL:{name:'Real Economy Stress',src:'<strong>Live:</strong> Fingrid DS 105 7-day spot price history — volatility + level index. Supplemented by: household energy cost exposure, payment default indices (Statistics Finland)',w:'20%'},
   X_EXTERNAL:{name:'External Environment',src:'<strong>Live:</strong> ECB EUR/USD exchange rate (EXR/D.USD.EUR.SP00.A) · Geopolitical event baseline · Baltic interconnection status · Nordic energy market coupling',w:'15%'}
 };
@@ -655,31 +655,62 @@ const PROXY = 'https://aci-fingrid-proxy.ruotsalainen-marko.workers.dev/api';
 async function fetchDS(dsId, windowMinutes=90) {
   const now=new Date(), from=new Date(now-windowMinutes*60000);
   const url=`${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=5`;
-  const r=await fetch(url);
-  if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
-  const j=await r.json();
-  const rows=(j.data||j).filter(d=>d.value!=null&&d.value!==0);
-  if(!rows.length)throw new Error(`DS ${dsId} empty`);
-  return rows[rows.length-1].value;
+  // KORJATTU 2026-08-20: kaksi bugia. (1) '!==0' suodatti pois aidosti
+  // nollan arvoisen spot-hinnan (0 EUR/MWh on todellinen markkinahinta
+  // tuulivoiman ylitarjonnan aikana Pohjoismaissa, ei puuttuvaa dataa) -
+  // poistettu, jaljella vain !=null. (2) lisatty 429-uudelleenyritys
+  // (sama periaate kuin WEM:n fetchYesterday-korjauksessa) - useampi
+  // perakkainen Fingrid-kutsu lyhyessa ajassa voi ylittaa liukuvan
+  // aikaikkunan rajan vaikka kutsujen valissa on kiintea viive.
+  const maxAttempts=3;
+  for(let attempt=0;attempt<maxAttempts;attempt++){
+    const r=await fetch(url);
+    if(r.status===429&&attempt<maxAttempts-1){
+      await new Promise(res=>setTimeout(res,1000*Math.pow(2,attempt)));
+      continue;
+    }
+    if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
+    const j=await r.json();
+    const rows=(j.data||j).filter(d=>d.value!=null);
+    if(!rows.length)throw new Error(`DS ${dsId} empty`);
+    return rows[rows.length-1].value;
+  }
+  throw new Error(`DS ${dsId} HTTP 429 (kaikki yritykset)`);
 }
 
 async function fetchDSMulti(dsId, windowDays=7, size=20) {
   const now=new Date(), from=new Date(now-windowDays*86400000);
   const url=`${PROXY}?ds=${dsId}&start=${from.toISOString()}&end=${now.toISOString()}&size=${size}`;
-  const r=await fetch(url);
-  if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
-  const j=await r.json();
-  const values=(j.data||j).filter(d=>d.value!=null&&d.value!==0).map(d=>d.value);
-  if(!values.length)throw new Error(`DS ${dsId} multi empty`);
-  return values;
+  const maxAttempts=3;
+  for(let attempt=0;attempt<maxAttempts;attempt++){
+    const r=await fetch(url);
+    if(r.status===429&&attempt<maxAttempts-1){
+      await new Promise(res=>setTimeout(res,1000*Math.pow(2,attempt)));
+      continue;
+    }
+    if(!r.ok)throw new Error(`DS ${dsId} HTTP ${r.status}`);
+    const j=await r.json();
+    const values=(j.data||j).filter(d=>d.value!=null).map(d=>d.value);
+    if(!values.length)throw new Error(`DS ${dsId} multi empty`);
+    return values;
+  }
+  throw new Error(`DS ${dsId} HTTP 429 (kaikki yritykset)`);
 }
 
 async function fetchBondYield() {
-  // ECB Finnish 10Y government bond — CORS-free
-  // Primary: yield curve series. Fallback: try alternative endpoint.
+  // ECB euroalueen 10Y valtionlainatuotto — CORS-free
+  // KORJATTU 2026-08-20: alkuperainen tunniste kaytti aluekoodia 'FI'
+  // (Suomi), mutta ECB:n YC-datavuo EI julkaise maakohtaisia tuotto-
+  // kayria - vain koko euroalueen yhteenlasketun kayran (aluekoodi
+  // 'U2', 'muuttuva koostumus'). Vahvistettu useasta riippumattomasta
+  // ECB Data Portal -sivusta: kaikki oikeat, toimivat sarjatunnisteet
+  // kayttavat 'U2':ta, ei koskaan 'FI':ta. 'FI' ei ole olemassa oleva
+  // arvo talle ulottuvuudelle, joten kysely palautti tyhjan sarjan -
+  // ei verkko- tai CORS-ongelma, vaan vaara tunniste. Mittari mittaa
+  // siis euroalueen, ei erikseen Suomen, 10-vuoden tuottoa.
   const urls=[
-    'https://data-api.ecb.europa.eu/service/data/YC/B.FI.EUR.4F.G_N_A.SV_C_YM.SR_10Y?lastNObservations=3&format=jsondata',
-    'https://data-api.ecb.europa.eu/service/data/IRS/M.FI.L.L40.CI.0.EUR.N.Z?lastNObservations=1&format=jsondata'
+    'https://data-api.ecb.europa.eu/service/data/YC/B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y?lastNObservations=3&format=jsondata',
+    'https://data-api.ecb.europa.eu/service/data/IRS/M.U2.L.L40.CI.0.EUR.N.Z?lastNObservations=1&format=jsondata'
   ];
   for(const url of urls){
     try{
@@ -783,9 +814,9 @@ async function fetchAllLive() {
     st.l.E_REAL=calcEReal(hist);
   } catch(e){errors.push(`E_REAL: ${e.message}`);}
 
-  // R_PUBLIC — ECB Finnish 10Y bond yield
+  // R_PUBLIC — ECB euroalueen 10Y bond yield (ei maakohtainen)
   try {
-    status.textContent='R_PUBLIC: ECB Finnish 10Y bond yield…';
+    status.textContent='R_PUBLIC: ECB euroalueen 10Y bond yield…';
     const bond=await fetchBondYield();results.bond=bond;
     st.l.R_PUBLIC=calcRPublic(bond);
   } catch(e){errors.push(`R_PUBLIC: ${e.message}`);}
