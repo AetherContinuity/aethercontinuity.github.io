@@ -104,11 +104,16 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       <strong>Miksi tämä on tärkeää:</strong> Golfvirran ja AMOC:n voimakkuudesta on julkaistu
       keskenään ristiriitaisia arvioita vuosikymmenten ajan (NASA 2010: voimistunut; 2015-tutkimus:
       heikentynyt 15–20 %; Potsdam 2018: AMOC hidastunut 15 %; 2023: "vedenpitävä" 4 %:n
-      heikkeneminen). Tuorein (2024–2025) analyysi löysi että osa aiemmasta "heikkenemisestä"
-      johtui itse asiassa korjaamattomasta mittalaitteen virheestä (Maan geomagneettisen kentän
-      hidas muutos vääristi kaapelimittauksia) — korjattu data osoittaa virran olleen vakaa.
-      Tämä ei tarkoita ettei AMOC voisi heikentyä — se tarkoittaa että kysymys on aidosti vaikea
-      mitata, ja jopa ammattilaistutkijat ovat erehtyneet instrumenttiensa omista virheistä.
+      heikkeneminen). Tuorein (2024–2025) analyysi (Volkov ym.) löysi että osa aiemmasta Florida-salmen
+      virtauksen "heikkenemisestä" johtui itse asiassa korjaamattomasta mittalaitteen virheestä
+      (Maan geomagneettisen kentän hidas muutos vääristi kaapelimittauksia) — korjattu data
+      osoittaa <strong>Florida-salmen virtauksen</strong>, ei AMOC:n, olleen vakaa. Tama koskee
+      siis nimenomaan sita Golfvirran/Florida-salmen mittausta joka edella eroteltiin AMOC:sta —
+      ei ole tehty vastaavaa geomagneettista korjausta RAPID:n omalle AMOC-mittaukselle tässä
+      aineistossa. Tama ei tarkoita ettei AMOC voisi heikentyä — se tarkoittaa että kysymys on
+      aidosti vaikea mitata, ja jopa ammattilaistutkijat ovat erehtyneet instrumenttiensa omista
+      virheistä yhdellä mittaussarjalla (Florida-salmi), mikä on syy suhtautua varauksella myös
+      muihin mittaussarjoihin, AMOC mukaan lukien.
       AMOC:n täydellistä pysähtymistä pidetään epätodennäköisenä tällä vuosisadalla.
     </p>
     <p style="font-size:.82rem;color:var(--muted);font-style:italic;margin-top:.8rem;margin-bottom:0;border-top:1px solid var(--rule);padding-top:.6rem;">
@@ -167,7 +172,7 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       <div class="card-title">Pohjois-Atlantin SST-anomalia</div>
       <div class="card-value" id="sstValue">—</div>
       <div class="card-sub" id="sstSub">Ladataan…</div>
-      <div class="card-huom">Subpolaarinen alue (60°N, 30°W). Negatiivinen anomalia = "kylmä läiskä", yksi AMOC-heikkenemisen sormenjäljistä.</div>
+      <div class="card-huom">Yksittäinen hilapiste (60°N, 30°W), ei subpolaarinen laatikkokeskiarvo. Negatiivinen anomalia = "kylmä läiskä", yksi AMOC-heikkenemisen sormenjäljistä. <strong>Huom (elokuu 2026):</strong> §01d:n ainoa validoitu pari (SST↔RAPID_MOC) lepää tämän yhden, kohinaisen hilapisteen varassa — subpolaarinen laatikkokeskiarvo on standardi juuri siksi että yksittäinen piste on kohinaisempi. Jos indeksi vaihdetaan laatikkokeskiarvoksi, §01d:n lag-spektri on ajettava uudelleen ennen tuloksiin viittaamista muualla.</div>
     </div>
 
     <div class="card" id="cardGreenland">
@@ -231,16 +236,25 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
         <th style="text-align:left;padding:5px 6px">Pari</th>
         <th style="text-align:right;padding:5px 6px">Paras r</th>
         <th style="text-align:right;padding:5px 6px">Paras lag</th>
+        <th style="text-align:right;padding:5px 6px">Ikkuna / Neff</th>
         <th style="text-align:right;padding:5px 6px">BH q (huipulla)</th>
         <th style="text-align:left;padding:5px 6px">Luokka</th>
       </tr>
-      <tr><td style="padding:5px 6px">SLA ↔ RAPID_UMO</td><td style="text-align:right;padding:5px 6px">0,359</td><td style="text-align:right;padding:5px 6px">−30 (reunalla)</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
-      <tr><td style="padding:5px 6px">SLA ↔ NAO</td><td style="text-align:right;padding:5px 6px">0,286</td><td style="text-align:right;padding:5px 6px">+12</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
-      <tr><td style="padding:5px 6px">NAO ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,252</td><td style="text-align:right;padding:5px 6px">−16</td><td style="text-align:right;padding:5px 6px">~0,94</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
-      <tr><td style="padding:5px 6px">GMB ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,254</td><td style="text-align:right;padding:5px 6px">−27</td><td style="text-align:right;padding:5px 6px">~0,61</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
-      <tr style="background:var(--bg-y)"><td style="padding:5px 6px"><strong>NAO ↔ RAPID_EK</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,415</strong></td><td style="text-align:right;padding:5px 6px"><strong>+1</strong></td><td style="text-align:right;padding:5px 6px"><strong>~0,078</strong></td><td style="padding:5px 6px;color:var(--sy)"><strong>Lupaava, vahvistamaton</strong></td></tr>
-      <tr style="background:var(--bg-g)"><td style="padding:5px 6px"><strong>SST ↔ RAPID_MOC</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,525</strong></td><td style="text-align:right;padding:5px 6px"><strong>−11</strong></td><td style="text-align:right;padding:5px 6px"><strong>&lt;0,05 (21/61)</strong></td><td style="padding:5px 6px;color:var(--sg)"><strong>Validoitu tässä aineistossa</strong></td></tr>
+      <tr><td style="padding:5px 6px">SLA ↔ RAPID_UMO</td><td style="text-align:right;padding:5px 6px">0,359</td><td style="text-align:right;padding:5px 6px">−30 (reunalla)</td><td style="text-align:right;padding:5px 6px">2004–2024 / 24,2</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">SLA ↔ NAO</td><td style="text-align:right;padding:5px 6px">0,286</td><td style="text-align:right;padding:5px 6px">+12</td><td style="text-align:right;padding:5px 6px">tarkistamatta</td><td style="text-align:right;padding:5px 6px">~1,0</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">NAO ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,252</td><td style="text-align:right;padding:5px 6px">−16</td><td style="text-align:right;padding:5px 6px">tarkistamatta</td><td style="text-align:right;padding:5px 6px">~0,94</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr><td style="padding:5px 6px">GMB ↔ RAPID_MOC</td><td style="text-align:right;padding:5px 6px">−0,254</td><td style="text-align:right;padding:5px 6px">−27</td><td style="text-align:right;padding:5px 6px">tarkistamatta</td><td style="text-align:right;padding:5px 6px">~0,61</td><td style="padding:5px 6px;color:var(--sr)">Ei näyttöä</td></tr>
+      <tr style="background:var(--bg-y)"><td style="padding:5px 6px"><strong>NAO ↔ RAPID_EK</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,415</strong></td><td style="text-align:right;padding:5px 6px"><strong>+1</strong></td><td style="text-align:right;padding:5px 6px">tarkistamatta</td><td style="text-align:right;padding:5px 6px"><strong>~0,078</strong></td><td style="padding:5px 6px;color:var(--sy)"><strong>Lupaava, vahvistamaton</strong></td></tr>
+      <tr style="background:var(--bg-g)"><td style="padding:5px 6px"><strong>SST ↔ RAPID_MOC</strong></td><td style="text-align:right;padding:5px 6px"><strong>0,525</strong></td><td style="text-align:right;padding:5px 6px"><strong>−11</strong></td><td style="text-align:right;padding:5px 6px"><strong>1 v. (2024) / 24,2</strong></td><td style="text-align:right;padding:5px 6px"><strong>&lt;0,05 (21/61)</strong></td><td style="padding:5px 6px;color:var(--sg)"><strong>Validoitu tässä aineistossa</strong></td></tr>
     </table>
+    <p style="font-size:.76rem;color:var(--muted);margin-top:.5rem;margin-bottom:0;font-style:italic;">
+      Korjaus (elokuu 2026): taulukon otsikko viittasi harhaanjohtavasti "RAPID:n oikeaan dataan
+      2004–2024" ilman että kunkin parin todellinen ikkuna/N/Neff näkyi rivikohtaisesti. Ainoa
+      validoitu pari (SST↔RAPID_MOC) käyttää yhtä vuotta (2024), Neff≈24,2 — ei koko 20 vuoden
+      sarjaa. Kriittinen r-arvo tällä Neff:llä (α=0,05, kaksisuuntainen) on ≈0,403; havaittu
+      r=0,525 ylittää tämän marginaalilla ~0,12, ei suurella erolla. Muiden parien ikkuna/Neff
+      ei ole tässä vielä tarkistettu ja on merkitty sellaiseksi.
+    </p>
     <p style="font-size:.78rem;color:var(--muted);margin-top:.7rem;margin-bottom:.5rem;">
       <strong>Kolme luokkaa</strong> (ei "melkein merkitsevä" — tilastollinen tulos on joko asetetun
       kriteerin mukaan merkitsevä tai ei ole): <strong>Validoitu tässä aineistossa</strong> — näyttö
@@ -273,8 +287,17 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </div>
     <p style="font-size:.78rem;color:var(--muted);margin-top:.6rem;margin-bottom:0;">
       Huippu lag=−11:llä (r≈0,525) — pintalämpötilan poikkeama edeltäisi AMOC-muutosta
-      noin 11 vuorokaudella, fysikaalisesti mielekäs suunta. 21 peräkkäistä merkitsevää
-      viivettä (ei yksittäinen piikki) tukee aidon signaalin tulkintaa kohinan sijaan.
+      noin 11 vuorokaudella, fysikaalisesti mielekäs suunta.
+      <strong>Korjattu tulkinta (elokuu 2026):</strong> "21 peräkkäistä merkitsevää viivettä"
+      esitettiin aiemmin lisänäyttönä aidosta signaalista. Tämä oli virheellinen tulkinta.
+      Vierekkäiset viiveet eivät ole riippumattomia testejä autokorreloituneessa sarjassa —
+      yksi aito (tai yksi sattumanvarainen) huippu tuottaa automaattisesti leveän merkitsevän
+      tasanteen, koska naapuriviiveiden testisuureet korreloivat keskenään. Tasanteen leveys
+      on siis suodattimen ja sarjan autokorrelaation ominaisuus, ei riippumaton lisätodiste.
+      Sama koskee 61 viiveen BH-korjausta: nimellinen testimäärä on 61, mutta riippumattomien
+      testien tehollinen määrä (autokorrelaatiorakenteen huomioiden) on karkeasti 2–3, ei 61 —
+      korjaus on siis konservatiivisempi kuin todellinen tilanne vaatisi, mutta tasanteen
+      leveys ei silti todista mitään erikseen.
     </p>
   </div>
 
@@ -320,9 +343,14 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       (lag-1 ≈ 1,0 90 vrk:n ikkunalla), jolloin tehollinen otoskoko (Neff) romahti 24:stä alle 7:ään.
       Tulosta ei tule tulkita niin, että suodatus "todistaisi" vahvemman yhteyden — se paljastaa
       pikemminkin ettei yhden vuoden aineisto riitä vahvistamaan kuukausiaskaalan hypoteesia
-      tilastollisesti riippumattomien havaintojen perusteella. Viiveen pysyvyys on rohkaiseva,
-      mutta ei vielä näyttö syy-seuraussuhteesta.
-      <span style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sy);">→ Viite pysyvä, mutta aineisto liian lyhyt vahvistamaan sitä tilastollisesti.</span>
+      tilastollisesti riippumattomien havaintojen perusteella.
+      <strong>Korjattu tulkinta (elokuu 2026):</strong> "viiveen pysyvyys on rohkaiseva" oli
+      virheellinen johtopäätös. Kun sama symmetrinen liukuva keskiarvo suodattaa molempia
+      sarjoja, se konvoloi ristikorrelaatiofunktion symmetrisellä ytimellä — huipun sijainti
+      (lag) ei matemaattisesti voi siirtyä tästä operaatiosta. Viiveen pysyminen samana on siis
+      suodatuksen matemaattinen ominaisuus, ei empiirinen havainto joka tukisi alkuperäistä
+      löydöstä. Neff:n romahdus on oikea, oleellinen havainto; viiveen pysyvyys ei ole.
+      <span style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sy);">→ Neff romahtaa (aineisto liian lyhyt), mutta viiveen pysyvyys ei ole erillinen todiste — se on suodatuksen matemaattinen ominaisuus.</span>
     </p>
   </div>
 
@@ -334,13 +362,17 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
       Tulos: <strong>r=0,069, p=0,77</strong> — käytännössä ei yhteyttä.
     </p>
     <p style="font-size:.85rem;margin-bottom:0;">
-      <strong>Miksi tulos ei kumoa alkuperäistä löydöstä:</strong> sama kalenteripäivä eri
-      vuosilta ei ole riippumaton testi alkuperäiselle hypoteesille. Jos SST↔RAPID-yhteys on
-      vuodenaikaan sidottu tai vaihtelee vuosittain, yksittäisen kalenteripäivän vertaaminen
-      20 vuoden yli voi hävittää signaalin kokonaan. Tulos (r≈0) osoittaa vain, ettei juuri
-      tämä kalenterileikkaus sisältänyt havaittavaa yhteyttä — se ei yksin vahvista eikä kumoa
-      alkuperäistä −11 vuorokauden viivehavaintoa.
-      <span style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sy);">→ Ei kumoa, mutta ei vielä vahvista — luontevampi jatkotesti on toistaa koko 61 viiveen analyysi useille toisistaan riippumattomille vuosille tai pidemmille ajanjaksoille ja arvioida, toistuuko sama viive johdonmukaisesti.</span>
+      <strong>Korjaus (elokuu 2026) — suunnitteluvirhe, ei vasta jälkikäteen havaittu tulos:</strong>
+      testi käyttää vain 20 riippumatonta havaintoa (yksi kalenteripäivä/vuosi), ja jos
+      SST↔RAPID-yhteys on vuodenaikaan sidottu tai vaihtelee vuosittain, tämä asetelma ei voi
+      erottaa aitoa yhteyttä kausi-/vuosivaihtelusta — tämä oli päateltavissa ennen testin
+      ajamista, ei vasta sen jälkeen kun tulos osoittautui nollaksi (r=0,069, p=0,77). Aiempi
+      muotoilu ("miksi tulos ei kumoa") käsitteli tätä tulosta eri tavalla kuin SLA:n negatiivista
+      validointitulosta (§01b), joka on merkitty "pysyväksi osaksi dokumentaatiota" — saman
+      tason epäsymmetrinen kohtelu ei ole perusteltua. Oikea kirjaus: tämä testi oli suunniteltu
+      tavalla joka ei kykene erottamaan hypoteeseja toisistaan riippumatta tuloksesta, ja se
+      merkitään tässä suunnitteluvirheeksi, ei validointitulokseksi kummankaan suuntaisena.
+      <span style="display:inline-block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sy);">→ Suunnitteluvirhe (N=20, kausivaikutusta ei voi erottaa), ei tulkittavissa oleva validointitulos. Luontevampi jatkotesti on toistaa koko 61 viiveen analyysi useille toisistaan riippumattomille vuosille tai pidemmille ajanjaksoille ja arvioida, toistuuko sama viive johdonmukaisesti.</span>
     </p>
   </div>
 
@@ -436,7 +468,18 @@ async function fetchGreenland() {
     if (d.error) throw new Error(d.error);
     const latest = d.viimeisin;
     const sign = latest.daily_rate_gt < 0 ? '−' : '+';
-    setCard('greenlandGmbValue', 'greenlandGmbSub', `${latest.cumulative_gt.toFixed(0)} Gt (kok.)`, `${latest.date} · ${sign}${Math.abs(latest.daily_rate_gt).toFixed(2)} Gt/vrk`);
+    // KORJAUS 2026-08-20 (kayttajan raportoima bugi): GEUS-rivin paivays
+    // havaittu 5 vrk tulevaisuudessa (25.8.2026 kun oikea paivamaara oli
+    // 20.8.2026) - pipeline-bugi tai paivamaarakentan vaara tulkinta
+    // lahteessa, ei viela juurisyyta selvitetty. Puolustava tarkistus:
+    // jos naytettava paivays on yli 1 vrk tulevaisuudessa suhteessa
+    // selaimen omaan kelloon, merkitaan se selvasti epailyttavaksi sen
+    // sijaan etta naytetaan hiljaa normaalina.
+    const shownDate = new Date(latest.date);
+    const now = new Date();
+    const daysFuture = (shownDate - now) / (24*3600*1000);
+    const dateFlag = daysFuture > 1 ? ' ⚠ PÄIVÄYS TULEVAISUUDESSA — tarkista lähde' : '';
+    setCard('greenlandGmbValue', 'greenlandGmbSub', `${latest.cumulative_gt.toFixed(0)} Gt (kok.)`, `${latest.date}${dateFlag} · ${sign}${Math.abs(latest.daily_rate_gt).toFixed(2)} Gt/vrk`);
     return okSMB;
   } catch (e) {
     setCard('greenlandGmbValue', 'greenlandGmbSub', 'virhe', e.message);
