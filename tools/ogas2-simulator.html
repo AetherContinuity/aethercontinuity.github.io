@@ -752,7 +752,17 @@ function calcSEnergy(spot, surp, prod, wind) {
 }
 
 function calcRPublic(bondYield) {
-  // Finnish 10Y bond yield % → fiscal stress
+  // KORJATTU 2026-08-20: kommentti ja lahde olivat aiemmin "Finnish 10Y
+  // bond yield" mutta data tulee nyt (korjatusti) euroalueen AAA-
+  // yhdistelmakayralta (G_N_A = vain AAA-luokitellut liikkeeseenlaskijat).
+  // AVOIN, RATKAISEMATON KYSYMYS: alla olevat kynnysarvot (2.5/3.0/3.5/
+  // 4.5 %) on todennakoisesti kalibroitu SUOMEN oman tuoton tasolle
+  // (Suomi on AA+, ei AAA - tyypillisesti korkeampi tuotto kuin AAA-
+  // yhdistelma). Sama numeroarvo voi siis nyt tarkoittaa eri stressi-
+  // tasoa kuin ennen - ei vain eri maata. Kynnysarvoja EI ole
+  // uudelleenkalibroitu tassa korjauksessa; tama on merkitty avoimeksi
+  // seurantakohteeksi, ei hiljaa ohitettu.
+  // Euroalueen AAA-yhdistelma 10Y bond yield % -> fiscal stress
   // Normal 2-3%: low stress. Rising 3-4%: medium. >4%: high. >5%: crisis.
   if(bondYield<2.5)return 28;
   if(bondYield<3.0)return 35+(bondYield-2.5)*14;
