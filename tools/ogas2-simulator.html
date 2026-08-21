@@ -752,23 +752,33 @@ function calcSEnergy(spot, surp, prod, wind) {
 }
 
 function calcRPublic(bondYield) {
-  // KORJATTU 2026-08-20: kommentti ja lahde olivat aiemmin "Finnish 10Y
-  // bond yield" mutta data tulee nyt (korjatusti) euroalueen AAA-
-  // yhdistelmakayralta (G_N_A = vain AAA-luokitellut liikkeeseenlaskijat).
-  // AVOIN, RATKAISEMATON KYSYMYS: alla olevat kynnysarvot (2.5/3.0/3.5/
-  // 4.5 %) on todennakoisesti kalibroitu SUOMEN oman tuoton tasolle
-  // (Suomi on AA+, ei AAA - tyypillisesti korkeampi tuotto kuin AAA-
-  // yhdistelma). Sama numeroarvo voi siis nyt tarkoittaa eri stressi-
-  // tasoa kuin ennen - ei vain eri maata. Kynnysarvoja EI ole
-  // uudelleenkalibroitu tassa korjauksessa; tama on merkitty avoimeksi
-  // seurantakohteeksi, ei hiljaa ohitettu.
+  // KORJATTU 2026-08-20: data tulee euroalueen AAA-yhdistelmakayralta
+  // (G_N_A = vain AAA-luokitellut liikkeeseenlaskijat, kaytannossa
+  // lahella Saksan omaa tuottoa), mutta kynnysarvot oli alunperin
+  // kalibroitu SUOMEN oman tuoton tasolle (Suomi AA+, ei AAA).
+  //
+  // KALIBROITU 2026-08-20 (kayttajan pyynnosta, ei arvattu): Suomen ja
+  // Saksan 10v korkoero on ollut kevaalla 2026 johdonmukaisesti
+  // 30-40 korkopistetta (Yle 25.5.2026, Verkkouutiset 25.5.2026,
+  // molemmat viittaavat Kuntarahoituksen paaekonomisti Timo Vesalaan;
+  // Saksan oma tuotto 3,0% toukokuussa 2026, EKP:n virallinen data,
+  // vrt. koko euroalueen KESKIARVO 3,4% joka sisaltaa heikommin
+  // luokiteltuja maita eika ole sama asia kuin AAA-yhdistelma).
+  // Kaytetty 0,35 prosenttiyksikkoa (30-40bp:n keskiarvo) - AAA-
+  // yhdistelman lukema on tyypillisesti tamanverran ALEMPI kuin
+  // Suomen oma tuotto samalla stressitasolla, joten jokaista
+  // kynnysta on siirretty ALASPAIN 0,35:lla jotta AAA-yhdistelman
+  // kynnyksen ylitys vastaa Suomen oman tuoton alkuperaista kynnysta.
+  // Korkoero itsessaan voi vaihdella ajan myota (esim. geopoliittinen
+  // riskipreemio, ks. Yle-artikkeli) - talla ei ole kiinteaa, pysyvaa
+  // arvoa, vain viimeisin havaittu vaihteluvali.
   // Euroalueen AAA-yhdistelma 10Y bond yield % -> fiscal stress
-  // Normal 2-3%: low stress. Rising 3-4%: medium. >4%: high. >5%: crisis.
-  if(bondYield<2.5)return 28;
-  if(bondYield<3.0)return 35+(bondYield-2.5)*14;
-  if(bondYield<3.5)return 42+(bondYield-3.0)*16;
-  if(bondYield<4.5)return 50+(bondYield-3.5)*12;
-  return Math.min(88,62+(bondYield-4.5)*10);
+  // (kynnykset vastaavat Suomen 2,5/3,0/3,5/4,5% - 0,35pp siirtymalla)
+  if(bondYield<2.15)return 28;
+  if(bondYield<2.65)return 35+(bondYield-2.15)*14;
+  if(bondYield<3.15)return 42+(bondYield-2.65)*16;
+  if(bondYield<4.15)return 50+(bondYield-3.15)*12;
+  return Math.min(88,62+(bondYield-4.15)*10);
 }
 
 function calcEReal(spotHistory) {
