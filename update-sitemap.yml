@@ -1,0 +1,55 @@
+name: Update Sitemap & Check Indexes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'papers/**'
+      - 'supplements/**'
+      - 'tools/**'
+      - 'fiction/**'
+      - '*.html'
+
+concurrency:
+  group: update-sitemap
+  cancel-in-progress: true
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate sitemap and check indexes
+        run: python scripts/update-site.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "AetherContinuity"
+          git config user.email "action@github.com"
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --soft origin/main
+            python scripts/update-site.py
+            git add sitemap.xml
+            if git diff --staged --quiet; then
+              echo "Ei muutoksia sitemapiin."
+              exit 0
+            fi
+            git commit -m "auto: update sitemap.xml [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Push onnistui yrityksellä $i."
+              exit 0
+            fi
+            echo "Push hylätty (yritys $i) — remote muuttui. Yritetään uudelleen."
+            sleep $((i * 3))
+          done
+          echo "::error::Sitemapin push epäonnistui viiden yrityksen jälkeen."
+          exit 1
