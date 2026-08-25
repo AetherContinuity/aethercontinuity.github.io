@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-019 — Kaksi joustoa: hintaohjautuva ja siirtoehdollinen | ACI</title>
+<meta name="description" content="Suomalainen datakeskusjoustokeskustelu mallintaa vain hintaohjautuvaa joustoa. Fingridin oman aineiston mukaan siirtoehdollinen jousto säästää 1000 johtokilometriä — ja hintaohjautuva jousto kasvattaa verkkoinvestointeja. Viiden lähteen ristiinluenta."/>
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .6rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  td.op { color: #1a6b3a; font-weight: 600; }
+  td.gap { color: var(--accent); font-weight: 600; }
+  td.open { color: var(--light); font-style: italic; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+  .formula { font-family: 'Courier New',monospace; font-size: .85rem; background: var(--tag-bg); border: 1px solid var(--rule); padding: .5rem 1rem; margin: .75rem 0; }
+</style>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-019-flexibility-axis-split.html"/>
+<meta property="og:title" content="SM-019 — Kaksi joustoa: hintaohjautuva ja siirtoehdollinen" />
+<meta property="og:description" content="Suomalainen datakeskusjoustokeskustelu mallintaa vain hintaohjautuvaa joustoa. Fingridin oman aineiston mukaan siirtoehdollinen jousto säästää 1000 johtokilometriä — ja hintaohjautuva jousto kasvattaa verkkoinvestointeja." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://aethercontinuity.org/papers/sm-019-flexibility-axis-split.html" />
+<meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-left">Aether Continuity Institute</span>
+  <span class="nav-right">
+    <a href="/">Home</a>
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Synthesis Memo · SM-019 · Domain D-1 · D-2</div>
+  <div class="doc-meta-grid">
+    <span><strong>Status</strong>Working Draft v0.1</span>
+    <span><strong>Language</strong>FI</span>
+    <span><strong>Date</strong>2026-08-25</span>
+    <span><strong>Relates to</strong>SM-017, SM-018, WP-015, DT-001, SM-011</span>
+    <span><strong>Basis</strong>Kaksi Fingridin omaa asiakirjaa, VN 2025:94, AFRY 2025, LUT 2026</span>
+    <span><strong>Method</strong>Ristiinluenta — ei omaa mallinnusta</span>
+  </div>
+  <h1 class="doc-title">Kaksi joustoa</h1>
+  <p class="doc-subtitle">Hintaohjautuva ja siirtoehdollinen jousto ovat osin vastakkaisia — ja suomalainen datakeskuskeskustelu mallintaa vain edellistä</p>
+  <p class="doc-abstract">Datakeskusten joustokyvystä on Suomessa esitetty kolme kvantitatiivista arviota: AFRY:n mallinnus VN 2025:94:ää varten, LUT:n vertaisarvioitu tekno-ekonominen tarkastelu ja valtioneuvoston oma tiekartta. Kaikki kolme mallintavat <em>hintaohjautuvaa</em> joustoa: kulutus vähenee kun sähkö on kallista. Fingridin kahdesta omasta asiakirjasta luettuna kuva on toinen. Siirtohuiput osuvat nykyään halvan sähkön tunneille, joten hintaohjautuva jousto kasvattaa verkkoinvestointitarvetta — ja samaan aikaan <em>siirtoehdollinen</em> jousto, jota tarvitaan alle prosentissa vuoden tunneista, säästäisi noin 1000 kilometriä uutta 400 kV johtoa. Nämä ovat eri suureita, eivätkä ne ole toistensa likiarvoja. Muistio ei esitä omaa mallinnusta; se lukee viisi olemassa olevaa lähdettä ristiin ja nimeää erottelun, jota yksikään niistä ei tee.</p>
+</div>
+
+<div class="paper">
+
+<div class="section">
+<span class="section-marker">§ 00</span>
+<h2>Miksi tämä muistio on olemassa</h2>
+<p>Erottelu ei ole teoreettinen. Se syntyi kahden Fingridin asiakirjan välisestä näennäisestä ristiriidasta, joka ei ratkennut kummankaan sisältä.</p>
+<p>Maksurakenneuudistuksen taustadokumentti (2.7.2026) perustelee, miksi joustava kulutus ei saa alennusta siirtomaksuista, ja sanoo suoraan että hintojen mukaan joustava kulutus kasvattaa investointitarpeita siirtoverkkoon. Sähköjärjestelmävisio 2040 (lokakuu 2025) puolestaan laskee, että joustoilla voidaan välttää noin 1000 johtokilometriä korkean kasvun skenaariossa.</p>
+<p>Sama yhtiö, kymmenen kuukauden välein, vastakkaiset johtopäätökset joustosta. Ristiriita on näennäinen: dokumentit puhuvat eri suureesta. Mutta kumpikaan ei tee erottelua eksplisiittiseksi, eikä sitä tee yksikään joustohyötyä kvantifioivista lähteistä. Tämä muistio tekee sen.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 01</span>
+<h2>Kaksi suuretta</h2>
+<table>
+<thead><tr><th style="width:20%"></th><th style="width:40%">Hintaohjautuva jousto</th><th style="width:40%">Siirtoehdollinen jousto</th></tr></thead>
+<tbody>
+<tr><td><strong>Laukaisin</strong></td><td>Sähkön markkinahinta ylittää kynnyksen</td><td>Verkon poikkileikkauksen siirto lähestyy siirtokykyä</td></tr>
+<tr><td><strong>Tase</strong></td><td>Energiamarkkina — kuluttajahinta, operaattorin sähkölasku</td><td>Verkko — vältetyt johtoinvestoinnit</td></tr>
+<tr><td><strong>Ajoitus</strong></td><td>Kalliit tunnit: vähän tuulta, kylmä, tuonti rajalla</td><td>Korkean siirron tunnit: paljon tuulta pohjoisessa, sähkö halpaa</td></tr>
+<tr><td><strong>Kesto</strong></td><td>Tunneista vuorokausiin, ajoittain pidempään</td><td>Terävä huippu, alle 1–3 % vuoden tunneista</td></tr>
+<tr><td><strong>Suunta</strong></td><td>Vähennä kulutusta kun hinta on korkea</td><td>Vähennä kulutusta etelässä (tai kasvata pohjoisessa) kun siirto on huipussa</td></tr>
+<tr><td class="gap"><strong>Osuvatko yhteen?</strong></td><td class="gap" colspan="2">Pääosin eivät. Fingridin mukaan siirtohuiput esiintyvät tavanomaisesti nykyään juuri niinä aikoina, kun sähkö on edullista ja tuotantoa sekä kulutusta on paljon. Hintaohjautuva kuluttaja siirtää kulutuksensa juuri näihin tunteihin.</td></tr>
+</tbody>
+</table>
+<p><strong>Seuraus:</strong> hintaohjautuva jousto siirtää kuormaa halvoille tunneille, ja halvat tunnit ovat siirron kannalta pahimpia. Tämä ei tee hintajoustosta hyödytöntä — sen hyöty on todellinen ja se realisoituu energiamarkkinalla. Mutta se tarkoittaa, ettei energiamarkkinalla mitattua joustohyötyä voi lukea verkkohyödyksi, eikä päinvastoin.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 02</span>
+<h2>Mitä kukin lähde tosiasiassa mallintaa</h2>
+
+<h3>AFRY (2025) — hintaohjautuva</h3>
+<p>Taustamallinnus VN 2025:94:ää varten, julkaistu afry.com. Jousto on mallinnettu hintareaktiivisuutena: datakeskusten oletetaan vähentävän kulutustaan 5–20 % kun hinta ylittää 200 EUR/MWh, enintään yhden viikon ajan. Tulos Strong development -skenaariossa (2,5 GW, 2030): 20 % joustolla vuosihinta laskee 1,6 % ja kuluttajien kokonaissähkökustannus noin 125 M€. Kuivana vuonna 4,2 % ja noin 400 M€.</p>
+<p>Verkkovaikutusta ei ole mallinnettu. Skenaariossa datakeskusten lisäkulutus kompensoidaan vastaavalla määrällä uutta maatuulivoimaa — mikä lisää nimenomaan pohjoista tuotantoa ja siten siirtotarvetta, mutta tätä ei lasketa.</p>
+
+<h3>LUT (2026) — hintaohjautuva, saarekeoletuksella</h3>
+<p><em>Techno-economic feasibility of a renewable baseload power supply for data centers</em>, Energy, elokuu 2026. Off-grid-järjestelmä: tuuli, aurinko, akku ja biokaasumoottori, ei verkkoa. Jouston arvo kvantifioituu vaatimuksen lievennyksenä: kun täyden kuorman tuntivaatimus lasketaan 8760:stä 8000:een — noin 8,7 % vuotuinen jousto — LCOE laskee 15–24 % ja varavoimatarve 1000 MW:sta 50–350 MW:iin.</p>
+<p>Hyöty on hankkeen omassa taseessa, ei kuluttajan. Verkkoa ei ole mallissa lainkaan, joten siirtovaikutus on määritelmällisesti nolla. Tekijät toteavat itse, että pienikin verkkoliitäntä vähentäisi merkittävästi varavoiman ja akun tarvetta.</p>
+
+<h3>VN 2025:94 — hintaohjautuva, ja kieltää sen kestoluokan jota se olettaa</h3>
+<p>Selvityshenkilön raportti raportoi AFRY:n normaalivuoden luvun (noin 1,5 %). Se määrittelee korkean lisäarvon datakeskuksen kolmella osa-alueella, joista kolmas on aktiivinen osallistuminen merkittävän jouston aikaansaamiseen kalleimpien hintojen ajanjaksoille — eli eksplisiittisesti hintaohjautuva jousto.</p>
+<p>Samalla raportin teksti toteaa, etteivät datakeskukset kykene päivistä viikkoihin tapahtuvaan joustoon, vaikka sen tilaama mallinnus olettaa enintään viikon mittaisia joustojaksoja. Tämä sisäinen jännite on käsitelty erikseen SM-018:ssa (havainto 4).</p>
+
+<h3>Fingrid, maksurakenne (2.7.2026) — hintaohjautuva jousto verkkokustannuksena</h3>
+<p>Perustelee, miksi joustava kulutus ei saa alennusta: joustava kuluttaja hyödyntää edullisia hintoja ja saa siitä merkittävää taloudellista hyötyä, ja koska siirtohuiput esiintyvät juuri edullisen sähkön aikaan, hintojen mukaan joustava kulutus kasvattaa investointitarpeita siirtoverkkoon.</p>
+<p>Sama dokumentti kuitenkin toteaa, että <em>mikäli pysyvä joustava liittymissopimus on vaihtoehto verkkoinvestoinnille, olisi perusteltua harkita lievennyksiä tehomaksuihin.</em> Eli: hintajousto ei ansaitse alennusta, siirtoehdollinen jousto ansaitsisi. Erottelu on siis Fingridillä olemassa — mutta se on yhden alaviitteen mittainen eikä sitä ole nimetty.</p>
+
+<h3>Fingrid, sähköjärjestelmävisio 2040 (10/2025) — siirtoehdollinen</h3>
+<p>Korkean kasvun skenaarioissa siirtotarve Keski-Suomen poikkileikkauksen yli nousee 17–18 GW:iin, noin viisinkertaiseksi nykyiseen noin 4 GW:n huippuun verrattuna. Pysyvyyskäyrän huippu on terävä: korkeimmat siirtotilanteet esiintyvät vain pienenä osuutena vuoden tunneista, mutta merkittävä osa vahvistustarpeista syntyy juuri niistä.</p>
+<p>Jos siirtokyky rajataan tasoon johon nykyisellä investointitahdilla päästäisiin ja huiput hoidetaan joustoilla, tarvittava jousto on Sähköä dataksi -skenaariossa noin 4 GW ja alle 1 % vuoden tunneista; Vedystä valtavirtaa -skenaariossa noin 5 GW ja alle 3 %. Vältetty investointi on noin 1000 johtokilometriä 400 kV verkkoa. Yksi 400 kV johto kompensointeineen vastaa noin 1 GW lisäsiirtokykyä, ja yhden johtoinvestoinnin kesto on luvituksineen 6–8 vuotta.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 03</span>
+<h2>Mitä erottelusta seuraa</h2>
+
+<div class="finding">
+  <div class="finding-label">1 — Joustohyötyä ei voi laskea yhteen</div>
+  <p>125 M€ (AFRY, kuluttajaylijäämä), 15–24 % LCOE-alenema (LUT, hankkeen tase) ja 1000 johtokilometriä (Fingrid, verkkoinvestointi) ovat kolmen eri toimijan taseissa ja kahdesta eri joustolajista. Ne eivät ole yhteenlaskettavia eivätkä toistensa vahvistuksia. Jos joustohyötyä esitetään yhtenä lukuna, on kerrottava kenen taseesta ja kumman laukaisimen mukaan.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">2 — Tukiohjelman ehto olisi kohdistunut väärään joustoon</div>
+  <p>SM-018 (havainto 2) osoittaa, että VN 2025:94:n kolmiosaisesta lisäarvomääritelmästä pudotettiin tukiohjelman ehdoista juuri joustokriteeri. Tämä muistio tarkentaa havaintoa: pudotettu kriteeri oli <em>hintaohjautuva</em> jousto. Sen kirjaaminen ehdoksi olisi ollut verkon kannalta neutraali tai lievästi haitallinen. Aukko on siis edelleen olemassa, mutta se on eri aukko kuin miltä näytti: puuttuva ehto ei ole hintajousto vaan siirtoehdollinen jousto, jota kukaan ei ole ehdottanut ehdoksi.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">3 — SM-011:n ehdotus osuu oikeaan joustolajiin</div>
+  <p>SM-011:n kiintiö- ja joustoliityntämalli on rakenteeltaan siirtoehdollinen: liityntä ehdollistetaan verkon tilanteelle, ei hinnalle. Fingrid on itse esittänyt saman konseptin (joustava kantaverkkopalvelu, kesä 2024) ja nimennyt sen esteen: nykymalli, jossa Energiavirasto voi koska tahansa perua päätöksensä pysyvän joustavan liittymissopimuksen sallimisesta, muodostaa liian suuret riskit sekä verkkoyhtiön että asiakkaan kannalta. Este on siis sääntelyssä, ja se on nimetty julkisesti.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">4 — Sijaintihinnoittelu ei korvaa siirtoehtoa</div>
+  <p>Vision herkkyystarkastelu alueellisesta tuotantotariffista: kokonaissiirtomäärä laskee ja siirtokapasiteetin ylittävien tuntien määrä vähenee hieman, mutta korkeimpiin huippuihin yksinkertaisella tariffimuutoksella ei ole juuri vaikutusta. Tariffi lyhentää siirtomatkoja ja pienentää häviöitä, mutta sitova ongelma on huipuissa. Tämä korjaa ACI:n aiempaa oletusta, jossa sijaintihinnoittelua on käsitelty puuttuvana pääratkaisuna.</p>
+</div>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 04</span>
+<h2>Mitä tämä ei osoita</h2>
+<p>Muistio ei osoita hintaohjautuvaa joustoa hyödyttömäksi. Sen hyöty energiamarkkinalla on mallinnettu kahdessa riippumattomassa lähteessä ja se on todellinen. Väite on kapeampi: se hyöty ei ole verkkohyötyä, eikä sitä pidä esittää sellaisena.</p>
+<p>Muistio ei myöskään osoita, että siirtoehdollinen jousto olisi datakeskuksille toteutettavissa. Sähköä dataksi -skenaariossa Fingrid olettaa nimenomaan, etteivät datakeskukset jousta lainkaan. Kysymys siitä, mitä laskentakuorman keskeyttäminen maksaa operaattorille, on avoin kaikissa käsitellyissä lähteissä — myös tässä.</p>
+<p>Ja erottelun jyrkkyys on tarkistettava. Väite "siirtohuiput osuvat halvoille tunneille" on Fingridin toteamus nykytilasta, ei mallinnettu jakauma. Jos tuotantorakenne muuttuu siten että hintapiikit ja siirtohuiput alkavat osua yhteen, koko erottelu heikkenee. Tämä on mitattavissa: siirtotason ja hintatason korrelaatio poikkileikkauksen yli.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 05</span>
+<h2>Seuraavat tarkistukset</h2>
+<ol>
+<li><strong>Korrelaatio siirron ja hinnan välillä.</strong> Keski-Suomen poikkileikkauksen toteutunut siirto vs. FI:n day-ahead-hinta, tuntitasolla, vähintään kahdelta vuodelta. Jos korrelaatio on negatiivinen, erottelu vahvistuu mitattuna eikä vain Fingridin toteamuksena. Aineisto on osin jo haettu (ks. SM-018-aineisto, 14 400 tuntia).</li>
+<li><strong>Operaattorin joustokustannus.</strong> Mitä laskentakuorman siirtäminen tai keskeyttäminen maksaa? Yksikään viidestä lähteestä ei vastaa. Ilman tätä lukua siirtoehdollisen jouston ehdottaminen on yksipuolista kirjanpitoa.</li>
+<li><strong>Joustavan liittymän sääntelyeste.</strong> Energiaviraston joustavia liittymiä koskeva määräys ja sen peruutettavuusehto. Fingrid nimeää tämän esteeksi; teksti on luettava.</li>
+<li><strong>Vision herkkyystarkastelujen oletukset.</strong> Tässä on nojattu raportin tekstiin; kuvien 14–17 taustaluvut on tarkistettava jos lukuja käytetään täsmällisesti.</li>
+</ol>
+</div>
+
+<div class="section">
+<span class="section-marker">References</span>
+<h2>Lähteet</h2>
+<ul class="ref-list">
+<li><strong>Fingrid</strong> — <em>Fingridin sähköjärjestelmävisio vuodelle 2040. Loppuraportti</em>, lokakuu 2025; erit. luvut 3.4 ja 5.1–5.4</li>
+<li><strong>Fingrid</strong> — <em>Kysymyksiä ja vastauksia kantaverkkopalvelumaksujen rakenneuudistuksesta</em>, taustadokumentti 2.7.2026; erit. kohdat 8 ja 9</li>
+<li><strong>AFRY Management Consulting</strong> (2025) — <em>Data center market study: Assessing the impact of data center flexibility in Finland</em>, 16.10.2025; julkaistu afry.com</li>
+<li><strong>Valtioneuvoston julkaisuja 2025:94</strong> — Mattila, V-M.: <em>Datakeskusten kansallinen tiekartta</em>, 4.11.2025</li>
+<li><strong>Salmi, J. ym.</strong> (2026) — "Techno-economic feasibility of a renewable baseload power supply for data centers", <em>Energy</em>, elokuu 2026; LUT / Ilmatieteen laitos</li>
+<li><strong>SM-018</strong> — <em>Selvityksestä instrumentiksi</em>; <strong>SM-017</strong> §&nbsp;04; <strong>SM-011</strong>; <strong>WP-015</strong>; <strong>DT-001</strong></li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
