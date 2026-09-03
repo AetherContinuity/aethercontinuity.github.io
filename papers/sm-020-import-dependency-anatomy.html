@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-020 — 753 tuntia: Suomen tuontiriippuvuuden anatomia | ACI</title>
+<meta name="description" content="17.1.–17.2.2026 Suomi oli 31 vuorokautta yhtäjaksoisesti alijäämäinen. Yhteyskohtainen purku 14 400 tunnin aineistosta: rajoite sitova 89 % ajasta hintaeron perusteella, SE1 kylläinen 66 % ajasta, vienti Viroon 94 % tunneista. v0.2: SE1:n vientimarginaalin supistuminen 2030 mennessä ja omistusrakenne allokaatiokanavana."/>
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .6rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  td.op { color: #1a6b3a; font-weight: 600; }
+  td.gap { color: var(--accent); font-weight: 600; }
+  td.open { color: var(--light); font-style: italic; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+  .formula { font-family: 'Courier New',monospace; font-size: .85rem; background: var(--tag-bg); border: 1px solid var(--rule); padding: .5rem 1rem; margin: .75rem 0; }
+
+.note{font-size:.92em;opacity:.78;}
+.tbd{font-variant:all-small-caps;letter-spacing:.04em;opacity:.7;}
+.callout{background:var(--tag-bg);border:1px solid var(--rule);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:1.25rem 0;}
+.callout p:last-child{margin-bottom:0;}
+</style>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-020-import-dependency-anatomy.html"/>
+<meta property="og:title" content="SM-020 — 753 tuntia: Suomen tuontiriippuvuuden anatomia" />
+<meta property="og:description" content="17.1.–17.2.2026 Suomi oli 31 vuorokautta yhtäjaksoisesti alijäämäinen. Yhteyskohtainen purku: SE1 kylläinen 66 % ajasta annettua kapasiteettia vasten, vienti Viroon 94 % tunneista." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://aethercontinuity.org/papers/sm-020-import-dependency-anatomy.html" />
+<meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-left">Aether Continuity Institute</span>
+  <span class="nav-right">
+    <a href="/">Home</a>
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Synthesis Memo · SM-020 · Domain D-1 · Empiirinen mittaus</div>
+  <div class="doc-meta-grid">
+    <span><strong>Status</strong>Working Draft v0.2</span>
+    <span><strong>Language</strong>FI</span>
+    <span><strong>Date</strong>2026-08-25 · v0.2 2026-09-03</span>
+    <span><strong>Aineisto</strong>Fingrid Open Data + ENTSO-E, 14&nbsp;400 h (1.1.2025–23.8.2026)</span>
+    <span><strong>Relates to</strong>WP-015, DT-001, SM-017, SM-019, WEM §&nbsp;12</span>
+    <span><strong>Toistettavuus</strong>DS 124/74/75/60/89/180/187/194/30/142 + ENTSO-E day-ahead FI/SE1/SE3/EE</span>
+  </div>
+  <h1 class="doc-title">753 tuntia</h1>
+  <p class="doc-subtitle">Suomen pisin yhtäjaksoinen tuontijakso puretaan yhteyskohtaisesti — ja se osoittaa sitovan rajoitteen olevan muualla kuin oletettiin</p>
+  <p class="doc-abstract">17.1.–17.2.2026 Suomi tuotti vähemmän sähköä kuin kulutti 753 tuntia yhtäjaksoisesti — 31 vuorokautta. Keskimääräinen nettotuonti oli 2005 MW, huippu 3423 MW, ja Suomen day-ahead-hinta keskimäärin 159 €/MWh. Tämä muistio purkaa jakson yhteyskohtaisesti ja hintaerojen kautta. Kolme tulosta: tuonti ei ollut hintaohjautunutta vaan pullonkaulan takaista, sitova rajoite oli SE3 eikä pelkkä SE1, ja Suomi vei Viroon keskimäärin 681 MW niinä samoina 31 vuorokautena. Lisäksi jakso osoitti, että kiinteä NTC-nimittäjä aliarvioi SE1-yhteyden käyttöasteen systemaattisesti — havainto joka johti WEM:n §&nbsp;12-mittarin korvaamiseen.</p>
+</div>
+
+<div class="paper">
+
+<div class="section">
+<span class="section-marker">Muutosloki</span>
+<h2>v0.2 &mdash; 3.9.2026</h2>
+<p>Alkuperäisen rakenne ja johtopäätökset (§ 01&ndash;§ 04) säilyvät muuttumattomina. v0.2 lisää kaksi pykälää, jotka vastaavat osittain § 08:n kohtaan 3 &mdash; &rdquo;vastaava purku SE1:n päästä&rdquo;.</p>
+<table>
+<thead><tr><th style="width:18%">Kohta</th><th>Muutos</th></tr></thead>
+<tbody>
+<tr><td>§ 05 (uusi)</td><td>SE1:n vientimarginaalin supistuminen 2026&ndash;2030 Svenska kraftnätin ennusteen mukaan. Kuormat taseen takana kolmannen osapuolen lähteistä varmistettuina</td></tr>
+<tr><td>§ 06 (uusi)</td><td>Omistusrakenne allokaatiokanavana. Kolmen mekanismin erottelu (PPA / osakkuusvoima / yhteinen valtio-omistus). SM-017:n F/I-luokitus</td></tr>
+<tr><td>§ 07, § 08</td><td>Entiset § 05 ja § 06, sisältö muuttumaton. § 08:n kohtaan 3 merkitty osittainen vastaus</td></tr>
+<tr><td>Lähteet</td><td>Kuusi uutta, merkitty <span class="tbd">[v0.2]</span></td></tr>
+</tbody>
+</table>
+<p class="note">Kolme v0.2:n valmistelussa avoinna ollutta lukua ratkesi, ja jokainen ratkaisu muutti sisältöä: EdgeConneXin 8 TWh osoittautui ilmoitetun 1 GW:n johdetuksi katoksi lupavaiheen hankkeelle, LKAB:n kuorma pieneni ja siirtyi yhtiön oman alaskirjauksen takia, ja ruotsalaisten kraftgrupp-rakenteiden omakustannusperiaate vahvistui operaattorin omasta kuvauksesta. Ensimmäiset kaksi pienensivät SE1:n kuormaennustetta &mdash; ks. § 05:n kalibrointihuomio.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 00</span>
+<h2>Rajaus ja menetelmä</h2>
+<p>Muistio tarkastelee <em>yhtä</em> jaksoa. Se ei ole otos eikä siitä voi laskea esiintymistiheyttä. Aineisto kattaa 14&nbsp;400 tuntia eli kaksi talvea, ja pitkien tuontijaksojen kaltaiset ilmiöt ovat harvinaisia luonteeltaan: kahden vuoden otoksessa niitä on yksi tai kaksi. Esiintymistiheyttä koskevat väitteet vaativat pidemmän sarjan, ja niitä varten on olemassa mallinnettu kirjallisuus (Aalto, PLEXOS, 35 säävuotta; LUT, 10 vuotta).</p>
+<p>Mitä yhdellä jaksolla voi tehdä, on purkaa se: mistä vaje katettiin, mikä yhteys oli rajalla, ja oliko kyse niukkuudesta vai hinnasta. Tähän kahden vuoden aineisto riittää, koska kysymys on jakson sisäinen.</p>
+<p><strong>Vajeen määritelmä.</strong> Nettotuonti = kulutus (DS 124) − kotimainen kokonaistuotanto (DS 74), tuntikeskiarvoina. Tämä ei ole niukkuuden mittari vaan taseen mittari: Suomi tuo sähköä myös silloin kun se on halpaa. Juuri siksi hintaerotarkastelu (§&nbsp;02) on tässä välttämätön eikä koriste — se erottaa taloudellisen tuonnin pullonkaulan takaisesta tuonnista.</p>
+<p><strong>Etumerkit.</strong> Fingridin konventiossa rajasiirto on positiivinen vientiin päin. Kaikki tässä muistiossa esitetyt siirtoluvut on käännetty tuonniksi Suomeen, ellei toisin mainita.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 01</span>
+<h2>Jakso konteksissaan</h2>
+<p>Koko 14&nbsp;400 tunnin aineistossa nettotuonti oli positiivinen <strong>72,1 %</strong> tunneista. Yhtäjaksoisia tuontijaksoja oli 367, joista 55 kesti vähintään kaksi vuorokautta ja 6 vähintään viikon. Pisin oli tämä.</p>
+<table>
+<thead><tr><th style="width:40%">Suure</th><th>Arvo</th></tr></thead>
+<tbody>
+<tr><td>Jakso</td><td>17.1.2026 klo 14 – 17.2.2026 klo 22 (UTC)</td></tr>
+<tr><td>Kesto</td><td><strong>753 h = 31,4 vrk</strong></td></tr>
+<tr><td>Nettotuonti keskimäärin</td><td>2005 MW</td></tr>
+<tr><td>Nettotuonti huipussaan</td><td>3423 MW</td></tr>
+<tr><td>Tuulivoima keskimäärin</td><td>1151 MW (koko aineiston keskiarvo 2362 MW)</td></tr>
+<tr><td>FI day-ahead keskimäärin</td><td>159 €/MWh (mediaani 134, huippu 614)</td></tr>
+</tbody>
+</table>
+<p>Tuulivoiman keskituotanto oli jakson aikana alle puolet koko aineiston keskiarvosta. Kyseessä oli siis pitkä vähätuulinen talvijakso — ei poikkeuksellinen sääilmiö vaan tavanomainen pohjoismainen korkeapainetalvi, jollainen toistuu.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 02</span>
+<h2>Oliko tuonti hintaohjautunutta vai pullonkaulan takaista?</h2>
+<p>Tämä on tarkistettavissa suoraan eikä vaadi kapasiteettitietoa. Jos kaksi tarjousaluetta selviää samaan hintaan, niiden välinen rajoite ei ollut sitova. Jos hinnat eroavat, se oli.</p>
+<table>
+<thead><tr><th style="width:22%">Hintaero</th><th style="width:26%">Yhteinen hinta (|ero| &lt; 0,5 €)</th><th style="width:26%">Mediaaniero</th><th>Suomi kalliimpi</th></tr></thead>
+<tbody>
+<tr class="gap"><td><strong>FI − SE1</strong></td><td><strong>11 % tunneista</strong></td><td>+23,0 €/MWh</td><td>98 %</td></tr>
+<tr><td>FI − SE3</td><td>17 % tunneista</td><td>+14,8 €/MWh</td><td>72 %</td></tr>
+<tr><td>FI − EE</td><td>63 % tunneista</td><td>−0,15 €/MWh</td><td>1 %</td></tr>
+</tbody>
+</table>
+<div class="finding">
+  <div class="finding-label">Tulos</div>
+  <p>Ruotsin suuntaan rajoite oli sitova noin 85–89 % tunneista. Suomi maksoi sähköstä keskimäärin 23 €/MWh enemmän kuin SE1 eikä saanut sitä halvemmalla, koska yhteys ei vetänyt. Tämä ei ollut halvan sähkön ostamista vaan hintapiikkien vaimentamista sillä siirtokapasiteetilla jota oli.</p>
+  <p>Viron suuntaan tilanne oli päinvastainen: hinnat olivat yhteiset 63 % tunneista ja Viro oli kalliimpi 99 %:ssa. FI ja EE muodostivat käytännössä yhden hinta-alueen.</p>
+</div>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 03</span>
+<h2>Mistä vaje katettiin — ja mikä yhteys oli rajalla</h2>
+<table>
+<thead><tr><th style="width:16%">Yhteys</th><th style="width:20%">Tuonti keskim.</th><th style="width:32%">Käyttöaste</th><th>Reagoiko hintaan?</th></tr></thead>
+<tbody>
+<tr><td><strong>SE1</strong></td><td>1738 MW</td><td><strong>91,5 %</strong> annetusta kapasiteetista (1900 MW)<br>&gt;90 %: 66 % tunneista · &gt;95 %: 39 %</td><td>Ei (korrelaatio hintaeroon +0,12)</td></tr>
+<tr><td><strong>SE3</strong></td><td>914 MW</td><td>76 % NTC:stä (1200 MW, epävarma nimittäjä)<br>&gt;85 %: 61 % tunneista, huippu 99,5 %</td><td>Kyllä (+0,37)</td></tr>
+<tr><td>EE</td><td><strong>−681 MW</strong> (vienti)</td><td>67 % vientisuuntaan</td><td>—</td></tr>
+<tr><td>NO</td><td>34 MW</td><td>34 % (NTC 100 MW)</td><td>—</td></tr>
+</tbody>
+</table>
+<p>Ruotsista yhteensä keskimäärin 2652 MW, huippu 3298 MW.</p>
+
+<div class="finding">
+  <div class="finding-label">Nimittäjä ratkaisee — ja ensimmäinen tulkintani oli väärä</div>
+  <p>Jos SE1-tuonti suhteutetaan Aurora Linen nimelliseen 2300 MW:iin, keskikäyttöaste on 75,6 % ja yli 90 %:n tunteja on yksi. Se johtaa päätelmään että yhteydessä oli väljyyttä koko jakson.</p>
+  <p>Fingridin DS 142 kuitenkin näyttää jakson ajalta annetuksi kapasiteetiksi 1900 MW. Oikealla nimittäjällä keskikäyttöaste on <strong>91,5 %</strong> ja yli 90 %:n tunteja 495 eli 66 % jaksosta. Syvimpinä 191 tuntina (nettotuonti &gt; 2500 MW) keskikäyttöaste oli 95,2 %.</p>
+  <p>Tämä selittää myös reagoimattomuuden hintaan: kylläinen yhteys ei voi reagoida. Korrelaatio +0,12 ei kerro välinpitämättömyydestä vaan siitä että yhteys oli jo rajalla. SE3:n +0,37 kertoo yhteydestä jolla oli liikkumavaraa.</p>
+  <p><em>Varaus:</em> DS 142:n suuntaa ei ole varmennettu Fingridin dokumentaatiosta, ja jakson huipputuonti 2105 MW ylitti 1900 MW:n — mikä on mahdollista päivänsisäisen kapasiteetin ja säätösähkön kautta mutta jää tarkistettavaksi. Käyttöasteluvut ovat siksi suuntaa antavia. Hintaerotulos (§&nbsp;02) ei riipu tästä lainkaan.</p>
+</div>
+
+<h3>Oliko Ruotsin sisäinen siirto sitova?</h3>
+<p>Kilpailuhypoteesi olisi, että Suomeen menevä vienti ja Ruotsin sisäinen siirto etelään kilpailevat samasta pohjoisesta ylijäämästä. Sitä ei tue tämä jakso. SE3:n ja SE1:n hintaero oli mediaanilta +0,58 €/MWh ja <strong>−1,25 €/MWh niinä 191 tuntina jolloin Suomen tuonti oli syvintä</strong>. Kun Suomi tarvitsi eniten, Ruotsin pohjoinen ja keskinen vyöhyke olivat käytännössä samassa hinnassa.</p>
+<p>Eikä SE1:n oma kulutus selitä kattoa: SE1 oli halvempi kuin Suomi 98 % tunneista, keskimäärin 49 €/MWh. Sähköä oli ja se oli halpaa; sitä ei saatu rajan yli.</p>
+<p>Fingridin näkemä Ruotsin sisäinen pohjois–etelä-siirto (DS 30) korreloi Suomen vajeen kanssa <strong>−0,81</strong>, mutta sarja kattoi vain 262 tuntia 753:sta. Tulos on suuntaa antava eikä sen varaan voi rakentaa.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 04</span>
+<h2>Suomi läpivirtausalueena</h2>
+<div class="finding">
+  <div class="finding-label">Jakson kova havainto</div>
+  <p>Suomi vei Viroon keskimäärin <strong>681 MW</strong> ja oli nettoviejä <strong>94 % tunneista</strong> — koko sen 31 vuorokauden ajan jolloin se itse oli syvimmässä alijäämässään. Niinä 308 tuntina joina Suomen oma hinta ylitti 150 €/MWh, vienti Viroon oli yhä keskimäärin 563 MW.</p>
+  <p>Rakenne oli siis: tuonti Ruotsista pullonkaulan takaisella preemiolla, vienti Viroon vielä kalliimmalla. Tämä ei ole markkinahäiriö vaan markkinan toimintaa — FI ja EE olivat samassa hinnassa 63 % tunneista, eli yhteys ei ollut sitova ja sähkö virtasi sinne missä se oli arvokkainta.</p>
+  <p>Mutta se tarkoittaa, että <strong>"Suomen riittävyys" ja "Suomeen tuotu sähkö" eivät ole sama suure.</strong> Yksikään käsitellyistä mallinnuksista — AFRY, LUT, Aalto — ei mallinna Suomea läpivirtausalueena. AFRY ja Aalto mallintavat Suomea annetulla tuontikapasiteetilla, LUT saarekkeena.</p>
+</div>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 05</span>
+<h2>SE1:n vientimarginaali supistuu — mitattu jakso ajoittui sen leveimpään hetkeen</h2>
+<p class="note"><strong>Lisätty v0.2:ssa.</strong> Tämä pykälä vastaa osittain § 08:n kohtaan 3 (&rdquo;vastaava purku SE1:n päästä&rdquo;) käyttäen Svenska kraftnätin omaa julkaistua ennustetta. Se ei ole tämän muistion oma mittaus eikä muuta § 01–§ 04:n tuloksia.</p>
+
+<p>§ 00 rajaa: yhdestä jaksosta ei voi laskea esiintymistiheyttä. Rajaus pätee. Mutta <strong>syvyyttä</strong> koskeva kysymys on lähestyttävissä toisesta suunnasta: jos SE1:n vientimarginaali supistuu rakenteellisesti, vastaavat jaksot syvenevät riippumatta siitä kuinka usein vähätuulinen korkeapainetalvi sattuu. Sää määrää ajoituksen, tase määrää syvyyden.</p>
+
+<h3>Svenska kraftnätin ennuste</h3>
+<table>
+<thead><tr><th style="width:40%">Vuosi</th><th>SE1 vuositase, TWh</th></tr></thead>
+<tbody>
+<tr><td>2026</td><td>+14</td></tr>
+<tr><td>2027</td><td>+10</td></tr>
+<tr><td>2028</td><td>+6</td></tr>
+<tr><td>2029</td><td>+2</td></tr>
+<tr><td>2030</td><td><strong>&minus;1</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<p><strong>Vuositase ei ole tuontikapasiteetin mittari.</strong> Tämä on sama päättelyvirhe, jota vastaan § 03 argumentoi. SE1 voi olla vuositaseeltaan alijäämäinen ja silti viedä Suomeen 1500 MW sinä tuntina jolloin tuulee — ja päinvastoin. Vuositase kertoo yhden asian: kuinka paljon SE1:n omaa kuormaa on tullut tuotannon eteen. Sitovuus ratkeaa tunneittain, ja sen mittari on § 02:n hintaero.</p>
+</div>
+
+<h3>Kuormat taseen takana</h3>
+<table>
+<thead><tr><th style="width:28%">Hanke</th><th style="width:18%">Arvioitu kuorma</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Stegra, Boden (vihreä teräs)</td><td>~10 TWh/a</td><td>Rakenteilla. Rahoitus varmistui 10/2026; thyssenkrupp-toimitussopimus 1/2026, toimitukset 2027 alkaen. Aikataulu uudelleenarvioinnissa</td></tr>
+<tr><td>EdgeConneX, <strong>Skellefteå</strong> (datakeskus)</td><td>enintään ~8 TWh/a</td><td>Ilmoitettu 27.2.2026: <em>enintään</em> 1 GW, &rdquo;subject to regulatory approvals&rdquo;. Tontti ostettu Lyteniltä — <strong>Northvolt Ettin entinen alue</strong>. Ei rakenteilla, ei lupia. 8 TWh on 1 GW:n johdettu katto, ei sitoumus</td></tr>
+<tr><td>LKAB + HYBRIT, Gällivare/Malmberget</td><td><strong>~5 TWh/a</strong></td><td>Demonstraatiolaitos, 600 MW. Valmis 2028, ylösajo 2029. Ympäristölupahakemus vireillä</td></tr>
+<tr><td>LKAB, Luleå (fosfori, harvinaiset maametallit)</td><td>~2 TWh/a</td><td>Teollisuuspuisto, suunnitteilla</td></tr>
+<tr><td><em>LKAB, Kiruna (rautasieni)</em></td><td><em>siirretty</em></td><td>Päätös syksyllä 2024: siirretty 2040-luvulle uusien malmiesiintymien takia. <strong>Vähentää SE1:n kuormaa</strong>, ei lisää</td></tr>
+<tr><td>SKGS-arvio, koko SE1</td><td>+37–42 TWh / 2035</td><td>Toimialajärjestön kysely, ei riippumaton ennuste</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<p><strong>Kaksi neljästä kuormasta on pienempi tai myöhempi kuin otsikkoluvut antavat ymmärtää.</strong> EdgeConneX on lupavaiheessa oleva hanke Northvoltin konkurssialueella, ja 8 TWh on ilmoitetun 1 GW:n teoreettinen katto — ei sitoumus eikä aikataulu. LKAB puolestaan <em>laski</em> omaa arviotaan: alkuperäinen vuoden 2020 suunnitelma oli noin 50 TWh vuoteen 2040, mutta Kirunan rautasienituotanto siirrettiin syksyllä 2024 2040-luvulle. Toimitusjohtaja Jan Moström arvioi lokakuussa 2025 vuoteen 2030 asti tarvittavan noin 7 TWh — Gällivaren demo 5 ja Luleån teollisuuspuisto 2 — ja totesi sen olevan hoidettavissa nykyisen sähköjärjestelmän puitteissa.</p>
+<p><strong>Tämä ei kumoa § 05:n argumenttia vaan tarkentaa sen.</strong> Svenska kraftnätin taseennuste on julkaistu 2026, eli LKAB:n alaskirjaus 2024 on siinä jo mukana. Ennuste ei siis nojaa maksimaalisiin ilmoituksiin. Se, että SE1:n tase silti kääntyy negatiiviseksi 2030, on vahvempi tulos kuin jos se nojaisi hankkeisiin joita ei ole vielä hyväksytty.</p>
+</div>
+
+<h3>Aurora Line oli kertaluonteinen</h3>
+<p>Aurora Line (käyttöön 13.11.2025) nosti SE1&ndash;FI-kapasiteetin noin 1500 MW:sta noin 2300 MW:iin. <strong>Mitattu jakso alkoi kaksi kuukautta sen jälkeen</strong> — eli marginaalin ollessa leveimmillään. Seuraava merkittävä vahvistus Ruotsissa on SE1&ndash;SE3 (+800 MW, 2029), ja se palvelee Ruotsin sisäistä pohjois&ndash;etelä-siirtoa. Svenska kraftnätin investointiohjelma 2027&ndash;2029 on 70 mrd SEK, noin 2900 km johtoa ja 40 asemaa kymmenessä vuodessa.</p>
+<p class="note"><em>Varaus:</em> § 03 testasi hypoteesin Ruotsin sisäisen siirron kilpailusta ja hylkäsi sen mitatussa jaksossa — SE1:n ja SE3:n hintaero oli mediaanilta lähellä nollaa. Tämä pykälä koskee tulevaa rakennetta, ei mitattua jaksoa, eikä kumoa tuota havaintoa.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 06</span>
+<h2>Omistusrakenne allokaatiokanavana</h2>
+<p class="note"><strong>Lisätty v0.2:ssa.</strong></p>
+
+<p>Ruotsissa <strong>sama omistaja hallitsee sekä tuottajaa että uutta kuormaa.</strong> Vattenfall ja LKAB ovat molemmat valtion omistamia, ja HYBRIT on SSAB:n, LKAB:n ja Vattenfallin yhteisyritys — sähköntuottaja on kuluttajan osakas.</p>
+
+<p>Tämä ei ole sopimusrakenne eikä osakkuusvoimamalli. Kolme mekanismia on erotettava, koska ne näyttävät samalta ja vaikuttavat eri tavoin:</p>
+
+<table>
+<thead><tr><th style="width:30%">Rakenne</th><th style="width:32%">Mitä sitoo</th><th>Vaikuttaako fyysiseen tarjontaan spotissa</th></tr></thead>
+<tbody>
+<tr><td>Rahoituksellinen PPA</td><td>hintariski</td><td><strong>Ei</strong> — tuottaja tarjoaa spotiin normaalisti, sopimus selvitetään hinnanerona</td></tr>
+<tr><td>Osakkuusvoima (kraftgrupp, Mankala)</td><td>otto-oikeus omistusosuuden mukaan</td><td>Osittain</td></tr>
+<tr><td>Yhteinen valtio-omistus</td><td>investointi- ja allokaatiopäätökset</td><td><strong>Kyllä</strong>, hallinnollisesti</td></tr>
+</tbody>
+</table>
+
+<p>Rahoituksellisen PPA:n todellinen vaikutus on kaksijakoinen ja osin päinvastainen kuin oletetaan: se on investointisignaali, joka <em>lisää</em> rakennettua kapasiteettia, ja se vähentää <em>kuluttajan</em> hintajoustoa, koska suojattu ostaja ei reagoi piikkiin. Kumpikaan ei vähennä markkinalla olevaa volyymia.</p>
+
+<h3>Osakkuusvoima on Ruotsissa vakiintunut — myös uudessa kapasiteetissa</h3>
+
+<p>Mankala on suomalainen verotuksellinen erityisrakenne, mutta <strong>funktionaalinen vastine on Ruotsissa vakiintunut ja operaattorin itsensä kuvaama.</strong> Vattenfall Forsmarkin taloudesta:</p>
+
+<div class="callout">
+<p><em>&rdquo;Forsmark får intäkter i huvudsak genom att vi säljer all vår elproduktion till våra ägare i förhållande till deras ägarandelar. Verksamheten ska i princip inte ge överskott.&rdquo;</em></p>
+</div>
+
+<p>Se on omakustannusperiaate: koko tuotanto myydään omistajille omistusosuuksien suhteessa, eikä toiminta tuota ylijäämää. Oikeudellinen kuori on eri kuin Mankalassa — kyse on tavallisesta osakeyhtiöstä ilman suomalaista verotusratkaisua — mutta mekanismi on sama.</p>
+
+<table>
+<thead><tr><th style="width:26%">Yhtiö</th><th>Omistus</th></tr></thead>
+<tbody>
+<tr><td>Forsmarks Kraftgrupp</td><td>Vattenfall 66,0 % · Mellansvensk Kraftgrupp 25,5 % (Fortum suurin omistaja) · Sydkraft Nuclear Power / Uniper 8,5 %</td></tr>
+<tr><td>Ringhals AB</td><td>Vattenfall 70,44 % · Uniper 29,56 %</td></tr>
+<tr><td>OKG (Oskarshamn)</td><td>Uniper 54,5 % · Fortum 45,5 %</td></tr>
+</tbody>
+</table>
+
+<p><strong>Malli on laajenemassa uuteen kapasiteettiin valtion johdolla.</strong> Kesäkuussa 2026 Ruotsin valtio osti 60 % Videberg Kraft AB:n osakkeista Vattenfallilta; Vattenfall säilytti 20 % ja Industrikraft — teollisuuden yhteenliittymä — sai 20 %. Rakenne on siis sama omistaja–ottaja-malli, mutta enemmistö on siirtynyt valtiolle. <span class="tbd">[T: hankkeen laajuus ja aikataulu varmistettava]</span></p>
+
+<h3>Asymmetria Suomeen</h3>
+<table>
+<thead><tr><th style="width:34%"></th><th style="width:33%">Ruotsi</th><th>Suomi</th></tr></thead>
+<tbody>
+<tr><td>Suurin tuottaja</td><td>Vattenfall, valtio 100 %</td><td>Fortum, valtio ~51 %, pörssiyhtiö</td></tr>
+<tr><td>Suurin uusi kuorma</td><td>LKAB / HYBRIT (valtio-omisteinen) ja Stegra (yksityinen)</td><td>datakeskukset, ulkomaisia yksityisiä</td></tr>
+<tr><td>Yhteinen omistaja</td><td>kyllä</td><td>ei</td></tr>
+<tr><td>Ehdolliset liittymissopimukset</td><td>valmisteltu (SvK 30.4.2026)</td><td>ei</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<p><strong>Luokitus SM-017:n kehyksessä.</strong> SE1:n oman kuorman kasvu on <strong>F</strong> (fyysinen pakko): Suomi ei voi vaikuttaa Ruotsin teollisuuspolitiikkaan. Mutta priorisointikanavan puuttuminen on <strong>I</strong> (institutionaalinen valinta) — se ei seuraa fysiikasta vaan omistusrakenteesta ja sääntelyvalinnasta.</p>
+<p>§ 04 päättyi havaintoon, että &rdquo;Suomen riittävyys&rdquo; ja &rdquo;Suomeen tuotu sähkö&rdquo; eivät ole sama suure. Tähän lisättävä: se, kuinka paljon naapurin ylijäämästä on Suomen käytettävissä, ei ole pelkkä tase- tai verkkokysymys vaan myös omistusrakenteen kysymys — ja se on <em>toisen maan</em> institutionaalinen valinta.</p>
+</div>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 07</span>
+<h2>Mitä tämä ei osoita</h2>
+<p><strong>Ei esiintymistiheyttä.</strong> Yksi jakso kahden vuoden otoksessa. Se että 753 tunnin jakso tapahtui, ei kerro kuinka usein se tapahtuu.</p>
+<p><strong>Ei niukkuutta.</strong> Nettotuonti on taseen mittari. Fingridin oma tehopulatilanne (DS 336) oli tarkastelluissa otoksissa nolla — järjestelmä ei ollut hätätilassa kertaakaan. Kyse oli hinnasta ja siirtorajoitteista, ei sähkön loppumisesta.</p>
+<p><strong>Ei syytä SE1:n katolle.</strong> Kolme selitystä on avoinna: annettu kapasiteetti oli aidosti 1900 MW käyttövarmuussyistä; DS 142 on väärä datasetti; tai tuntikeskiarvoistus vääristää vertailun. Ratkaisu vaatii Fingridin rajapintadokumentaation tai ENTSO-E:n kapasiteettiaikasarjan.</p>
+<p><strong>Ja yksi käsitteellinen varaus.</strong> Pohjoismaat siirtyivät NTC:stä flow-based-kapasiteettilaskentaan 29.10.2024. Flow-basedissa kahdenvälistä NTC:tä ei ole: SE1→FI-siirto on markkinaselvityksen lopputulos, ei syöte. Käyttöastesuhde on siksi käsitteellisesti vanhentunut mittari riippumatta siitä mikä nimittäjä siihen valitaan. Hintaero ei ole — se pätee molemmissa kehyksissä. Tämä johti WEM:n §&nbsp;12-mittarin korvaamiseen (TRR → BCI) 25.8.2026.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 08</span>
+<h2>Seuraavat askeleet</h2>
+<ol>
+<li><strong>SE1:n katon syy.</strong> Fingridin avoimen datan dokumentaatio DS 142/143:sta, tai ENTSO-E:n kapasiteettiaikasarja rajaparille. Ratkaisee §&nbsp;03:n varauksen.</li>
+<li><strong>Siirron ja hinnan korrelaatio</strong> Keski-Suomen poikkileikkauksen yli. Tämä on SM-019:n keskeisin avoin tarkistus: jos siirtohuiput todella osuvat halvoille tunneille, hintaohjautuvan ja siirtoehdollisen jouston erottelu vahvistuu mitattuna.</li>
+<li><strong>Vastaava purku SE1:n päästä.</strong> ENTSO-E antaa SE1:n ja SE2:n kulutuksen ja tuotannon. Vasta silloin voidaan sanoa, oliko pohjoinen ylijäämä pienenemässä vai oliko este pelkästään siirrossa. <em>v0.2: § 05 vastaa tähän osittain Svenska kraftnätin ennusteella — mutta vuositasolla, ei tunneittain. Tuntitason purku SE1:n päästä on yhä tekemättä, ja se on tämän listan tärkein kohta.</em></li>
+<li><strong>Jaksojen kestojakauma pidemmällä sarjalla.</strong> Kaksi talvea riittää yhden jakson purkuun, ei tiheyteen. Fingridin data ulottuu kauemmas taaksepäin.</li>
+</ol>
+</div>
+
+<div class="section">
+<span class="section-marker">References</span>
+<h2>Aineisto ja lähteet</h2>
+<ul class="ref-list">
+<li><strong>Fingrid Open Data</strong> — DS 124 (kulutus), 74 (kokonaistuotanto), 75 (tuulivoima), 60 (SE1), 89 (SE3), 180 (EE), 187 (NO), 194 (netto), 30 (Ruotsin sisäinen), 142 (annettu siirtokapasiteetti), 336 (tehopulatilanne). 15 min → tuntikeskiarvot.</li>
+<li><strong>ENTSO-E Transparency Platform</strong> — day-ahead-hinnat FI, SE1, SE3, EE (A44), 15 min → tuntikeskiarvot</li>
+<li><strong>Nordic RCC</strong> — flow-based-kapasiteettilaskennan käyttöönotto 29.10.2024 (vuorokausimarkkina)</li>
+<li><strong>Svenska kraftnät</strong> — Kortsiktig marknadsanalys 2026–2030; raportti ehdollisista liittymissopimuksista (<em>villkorade avtal</em>) 30.4.2026; investointiohjelma 2027–2029 <span class="tbd">[v0.2]</span></li>
+<li><strong>Stegra</strong> — rahoituskierros 10/2026; thyssenkrupp Materials Services -toimitussopimus 12.1.2026 <span class="tbd">[v0.2]</span></li>
+<li><strong>Vattenfall</strong> — Forsmarks Kraftgrupp, talous ja omistusrakenne; Forsmark/Ringhals 80 vuoden käyttöikäpäätös 6/2024; Videberg Kraft -omistusjärjestely 6/2026 <span class="tbd">[v0.2]</span></li>
+<li><strong>Uniper</strong> — omistusosuudet Forsmark, Ringhals, OKG <span class="tbd">[v0.2]</span></li>
+<li><strong>LKAB</strong> — ympäristölupahakemus 9/2024 (demonstraatiolaitos ~5 TWh/a ennen 2030); Jan Moströmin arvio 10/2025 (~7 TWh vuoteen 2030, Kiruna siirretty 2040-luvulle) <span class="tbd">[v0.2]</span></li>
+<li><strong>EdgeConneX / EQT</strong> — lehdistötiedote 27.2.2026, Skellefteå, enintään 1 GW, lupaprosessi kesken <span class="tbd">[v0.2]</span></li>
+<li><strong>SKGS</strong> — kysely SE1:n kysynnän kasvusta 2035 mennessä <span class="tbd">[v0.2]</span></li>
+<li><strong>WP-015</strong> — kestoriittävyys, MW≠MWh; <strong>DT-001</strong>; <strong>SM-017</strong> §&nbsp;03; <strong>SM-019</strong>; <strong>WEM</strong> §&nbsp;12 (BCI)</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
