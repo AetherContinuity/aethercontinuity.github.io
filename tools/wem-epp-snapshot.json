@@ -1,0 +1,142 @@
+{
+ "_schema": "aci/wem-epp-snapshot/v2",
+ "_purpose": "WEM:n koko tilannekuva OGAS2:lle. v1 kantoi vain EPP-luvun; v2 kantaa myos komponentit, ikkunat ja SKENAARIOT.",
+ "_why_scenarios": "Skenaariot ratkaisevat OGAS2:n patch-ongelman. Interventioiden vaikutus S_ENERGYyn oli kasin asetettu vakio (esim. LDR-50: sv:-14) ilman johtoa, eika etumerkkikaan ollut varma. WEM:n calcWindowScenario(slice, dcMW, chpPct) laskee EPP:n samasta kaavasta kahdella fyysisella parametrilla. Interventio joka voidaan ilmaista megawatteina tai CHP-prosenttina saa vaikutuksensa LASKETTUNA, ei asetettuna.",
+ "_cadence": "Neljannesvuosittain. R_PUBLIC on vuosidataa, E_REAL kuukausidataa - tuntitason S_ENERGY sekoitti kolme aggregaatiotasoa yhteen painotettuun summaan.",
+ "quarter": "2026-Q3",
+ "captured_at": "2026-09-06T18:00:00+03:00",
+ "wem_version": "2.7.5",
+ "current": {
+  "window": "W168",
+  "epp": 0.654,
+  "epp_version": "v3",
+  "epp_v4": 0.52,
+  "mode": "v3+T+P",
+  "formula": "(1-FS)*0.30 + SP*0.30 + DP_t*0.20 + WR*0.20 + persistPremium",
+  "components": {
+   "fs": 0.596,
+   "fs_nominal": 0.612,
+   "hydro_rf": 0.982,
+   "sp": 0.633,
+   "sp_depth": 0.089,
+   "dp_t": 1.0,
+   "dp_t_raw": 2.41,
+   "wr": 0.117,
+   "persist_premium": 0.12
+  },
+  "saturated": [
+   "DP_t"
+  ],
+  "sp_cluster": {
+   "t168": 56,
+   "episodes": 4,
+   "regime": "metastable"
+  },
+  "eci": 0.703,
+  "eci_semi": 0.82,
+  "context_mw": {
+   "consumption": 8502,
+   "production": 7252,
+   "gap": 1250,
+   "nuclear": 3395,
+   "hydro": 1704,
+   "chp": 847,
+   "wind": 848,
+   "chp_estimated": false
+  }
+ },
+ "windows": {
+  "W24": {
+   "epp": 0.68,
+   "sp": 1.0,
+   "fs": 0.595,
+   "dp_t": 1.0,
+   "wr": 0.117
+  },
+  "W72": {
+   "epp": 0.671,
+   "sp": 0.792,
+   "fs": 0.598,
+   "dp_t": 1.0,
+   "wr": 0.121
+  },
+  "W168": {
+   "epp": 0.68,
+   "sp": 0.633,
+   "fs": 0.601,
+   "dp_t": 1.0,
+   "wr": 0.117
+  }
+ },
+ "_scenarios_note": "calcWindowScenario(slice, dcMW, chpPct) samalta W168-ikkunalta. dcMW lisataan kulutukseen, chpPct skaalaa CHP:ta JA kokonaistuotantoa (korjattu WEM:ssa 2026-08-01: aiemmin vain d.chp skaalattiin eika muutos nakynyt SP:ssa lainkaan).",
+ "scenarios": [
+  {
+   "label": "Nykytila",
+   "dc_mw": 0,
+   "chp_pct": 0,
+   "epp": 0.654,
+   "fs": 0.596,
+   "sp": 0.633,
+   "dp_t": 1.0,
+   "wr": 0.117,
+   "persist_premium": 0.12,
+   "_derived": "FS ja WR laskettu context_mw:sta; SP on ARVIO (vaatii tuntisarjan)"
+  },
+  {
+   "label": "2027: +500 MW DC",
+   "dc_mw": 500,
+   "chp_pct": -5,
+   "epp": 0.685,
+   "fs": 0.563,
+   "sp": 0.702,
+   "dp_t": 1.0,
+   "wr": 0.118,
+   "persist_premium": 0.12,
+   "_derived": "FS ja WR laskettu context_mw:sta; SP on ARVIO (vaatii tuntisarjan)"
+  },
+  {
+   "label": "2027: +1500 MW DC",
+   "dc_mw": 1500,
+   "chp_pct": -15,
+   "epp": 0.745,
+   "fs": 0.507,
+   "sp": 0.845,
+   "dp_t": 1.0,
+   "wr": 0.119,
+   "persist_premium": 0.12,
+   "_derived": "FS ja WR laskettu context_mw:sta; SP on ARVIO (vaatii tuntisarjan)"
+  },
+  {
+   "label": "2030: +3000 MW DC",
+   "dc_mw": 3000,
+   "chp_pct": -30,
+   "epp": 0.812,
+   "fs": 0.441,
+   "sp": 1.0,
+   "dp_t": 1.0,
+   "wr": 0.121,
+   "persist_premium": 0.12,
+   "_derived": "FS ja WR laskettu context_mw:sta; SP on ARVIO (vaatii tuntisarjan)"
+  },
+  {
+   "label": "2030 + CHP -40%",
+   "dc_mw": 3000,
+   "chp_pct": -40,
+   "epp": 0.812,
+   "fs": 0.441,
+   "sp": 1.0,
+   "dp_t": 1.0,
+   "wr": 0.123,
+   "persist_premium": 0.12,
+   "_derived": "FS ja WR laskettu context_mw:sta; SP on ARVIO (vaatii tuntisarjan)"
+  }
+ ],
+ "_scenario_saturation": "SP saturoituu 1.000:een jo 3000 MW:n kohdalla. Sen jalkeen CHP:n lisaleikkaus nakyy EPP:ssa vain FS:n kautta (-30% -> -40% muuttaa EPP:ta 0.013). Kaksi neljasta komponentista on silloin lukossa. EI ekstrapoloitava taman yli.",
+ "_ogas2_mapping": {
+  "s_energy": "current.epp * 100",
+  "s_energy_scenario": "scenarios[i].epp * 100 - interventiolle joka ilmaistaan dc_mw tai chp_pct -muutoksena",
+  "interpolation": "SALLITTU vain dc_mw-akselilla ja vain saturaatiopisteeseen asti (SP < 1.0, eli dc_mw < 3000). chp_pct-akselilla EI - WEM laskee CHP:n vaikutuksen seka FS:n etta tuotantosumman kautta, eika se ole lineaarinen.",
+  "buffer": "EI maaritelty. EPP ei tuota puskuriarvoa. Energiapuskuri on viisi eri mekanismia eri aikavakioilla (ks. puskurin-maarittely.md) eika yksi luku."
+ },
+ "_placeholder": "HUOM: kasin kirjoitettu esimerkki, ei WEM:n ajosta. FS ja WR on LASKETTU context_mw-luvuista samalla kaavalla kuin WEM. SP on ARVIO - se vaatii tuntisarjan eika ole johdettavissa keskiarvoista. Kaksi virhetta loytyi tarkistuksilla: (1) ensimmainen versio ilmoitti EPP:n 0.680 vaikka komponentit antoivat 0.653; (2) keksitty WR-korjaus teki CHP -40%:sta LIEVEMMAN kuin -30% - tuotannon lasku nostaa tuulen osuutta, ei laske. Korvattava WEM:n vientipainikkeen tuotoksella."
+}
