@@ -1,6 +1,21 @@
 # WEM — korjausinventaario 11.9.2026
 
-**Ei korjauksia. Luettelo siitä mikä on hämärää ja miksi.**
+**TILA: kaikki kahdeksan kohtaa käsitelty. WEM v2.9.3.**
+
+| # | tila | missä |
+|---|---|---|
+| K1 FS sokea CHP:lle | kirjattu | §01 rajoitelohko, v2.9.2 |
+| K2 SP saturoitunut | kirjattu | §01 rajoitelohko + ulottuvuuskortti |
+| K3 DP_t vakio | kirjattu | §01 rajoitelohko |
+| K4 EPP kapeampi | kirjattu | §01 rajoitelohko |
+| K5 nimen kausilupaus | kirjattu | §14, v2.9.3 |
+| K6 chpPct-parametri | kirjattu | §10 alaviite, v2.9.3 |
+| K7 regressiomenetelmä | ei instrumenttiin | data/wem-mittaukset-2026-09.json |
+| K8 jo korjatut | — | v2.8.2–2.9.1 |
+
+**Yhtään kaavaa ei muutettu.** Kaikki kirjattiin näkyviin.
+
+---
 
 Syntyi kun 9.–11.9.2026 mitattu aineisto (säätömarkkina, tarjouskirja,
 sähkökattilat, CHP-regressio) osoitti useita instrumentin päätelmiä
