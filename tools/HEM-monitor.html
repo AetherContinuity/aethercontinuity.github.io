@@ -452,7 +452,7 @@ async function fetchIisvesi(){
       fcSvg=s;
     }
     setHTML('iis-det',`${fcSvg}
-      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)">[alustava: '+obs.observed_provisional.field+'='+obs.observed_provisional.value+']</span>':''}<br>
+      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)" title="'+obs.observed_provisional.field+'='+obs.observed_provisional.value+'">['+(obs.observed_provisional.description??'alustava arvo')+']</span>':''}<br>
       Kevään huippu ${new Date().getFullYear()}: <b>${obs?.spring_peak_m?.toFixed(2)??'—'} m</b>${obs?.spring_peak_locked?' (lukittu)':''} · norm 1910–2025: ${NORM} m · SD_kevät <b style="color:${obs?.sd_kevat>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_kevat??'—'}</b><br>
       Saman vuodenpäivän ka (${obs?.doy_ref_years??'1991-2020'}, n=${obs?.doy_ref_n_years??'—'}v): <b>${obs?.doy_avg_m?.toFixed(2)??'—'} m</b> · SD_nyt <b style="color:${obs?.sd_nyt>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_nyt??'—'}</b><br>
       Nokisenkoski-virtaama: <b>${obs?.flow_m3s??'—'} m³/s</b>${obs?.flow_date?' ('+obs.flow_date+')':''} · vuodenpäivän mediaani (n=${obs?.flow_doy_n_years??'—'}v): ${obs?.flow_doy_median_m3s??'—'} m³/s · RF_virtaama <b>${obs?.rf_flow??'—'}</b><br>
