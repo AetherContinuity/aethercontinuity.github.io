@@ -452,16 +452,17 @@ async function fetchIisvesi(){
       fcSvg=s;
     }
     setHTML('iis-det',`${fcSvg}
-      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}<br>
+      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)">[alustava: '+obs.observed_provisional.field+'='+obs.observed_provisional.value+']</span>':''}<br>
       Kevään huippu ${new Date().getFullYear()}: <b>${obs?.spring_peak_m?.toFixed(2)??'—'} m</b>${obs?.spring_peak_locked?' (lukittu)':''} · norm 1910–2025: ${NORM} m · SD_kevät <b style="color:${obs?.sd_kevat>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_kevat??'—'}</b><br>
-      Saman vuodenpäivän ${obs?.doy_avg_years||10}v ka: <b>${obs?.doy_avg_m?.toFixed(2)??'—'} m</b> · SD_nyt <b style="color:${obs?.sd_nyt>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_nyt??'—'}</b><br>
+      Saman vuodenpäivän ka (${obs?.doy_ref_years??'1991-2020'}, n=${obs?.doy_ref_n_years??'—'}v): <b>${obs?.doy_avg_m?.toFixed(2)??'—'} m</b> · SD_nyt <b style="color:${obs?.sd_nyt>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_nyt??'—'}</b><br>
+      Nokisenkoski-virtaama: <b>${obs?.flow_m3s??'—'} m³/s</b>${obs?.flow_date?' ('+obs.flow_date+')':''} · vuodenpäivän mediaani (n=${obs?.flow_doy_n_years??'—'}v): ${obs?.flow_doy_median_m3s??'—'} m³/s · RF_virtaama <b>${obs?.rf_flow??'—'}</b><br>
       WSFS-ennuste (kevathuippu, EI havainto): ${fcWl?.toFixed(2)??'—'} m NN · huippu ${((d.peak_timing??d.f14?.peak_date_mean??'—')).trim()}<br>
       Kesäennuste: VI 97.47 → VII 97.41 → VIII 97.36 m · 2027 huippu ka 97.92 m<br>
       MNW: ${MNW} m · MHW: ${MHW} m (keskim. keväthuippu) · Ennätys: ${RECORD_HIGH} m (10.6.1988)<br>
       Ennätysalin (vuosimaksimin joukossa pienin): 97.36 m (1942)<br>
-      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300${obs&&!obs.zero_point_verified?' · nollakohta (96.92 m) ei vahvistettu, ks. fetch_iisvesi.py':''}</span>`);
+      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300 · nollakohta ${obs?.zero_point_m??'—'} m NN${obs&&!obs.zero_point_verified?' (fallback, ei dynaamisesti vahvistettu ajon aikana - ks. fetch_iisvesi.py)':' (haettu VedenkTasoTieto-entiteetista ajon aikana)'}</span>`);
     dot('iis',(obs?.sd_nyt??(deficit>0.5?1:0))>0.5?'warn':'ok');
-    return{wl,deficit,sdKevat:obs?.sd_kevat??null,sdNyt:obs?.sd_nyt??null};
+    return{wl,deficit,sdKevat:obs?.sd_kevat??null,sdNyt:obs?.sd_nyt??null,rfFlow:obs?.rf_flow??null};
   }catch(e){setHTML('iis-det',`<span class="derr">Iisvesi: ${e.message}</span>`);dot('iis','err');return null;}
 }
 
@@ -624,7 +625,14 @@ function computeHEPP(nve,iis,fmi){
     if(t.length>5)sd=Math.max(0,Math.min(1,(t.reduce((a,b)=>a+b,0)/t.length-5)/20));
   }
   const hsp=nve?.label==='low'?0.70:nve?.label==='high'?0.15:0.38;
-  const rf=nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40;
+  // RF: ensisijainen Nokisenkoski-virtaama (Q / saman vuodenpäivän mediaani
+  // 1994-2025) - mittaa suoraan veden läpivirtausta, ei sadanta-proxya.
+  // KAYTTAJAN OHJE 9: EI lisata SD:n rinnalle omana komponenttinaan
+  // (saannostelemattoman jarven lasku-uoman virtaama seuraa suoraan
+  // vedenkorkeutta - sama signaali kahdesti). NVE (Norja) -fallback jos
+  // Iisveden virtaamaa ei ole (esim. Muonio-osiossa, missa Iisveden
+  // rf_flow ei sovellu).
+  const rf=iis?.rfFlow!=null?iis.rfFlow:(nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40);
   // EP-anomalia: Thornthwaite PET nykykuukaudelle vs. 1961-2010-normaali.
   // Fallback 0.30 (neutraali) jos fmi-data ei riita laskentaan.
   const ep = fmi ? computeEPAnomaly(fmi) : null;
@@ -760,10 +768,10 @@ async function fetchMuonio() {
   const el  = document.getElementById('muo-gval');
   try {
     const d = await(await fetch(RAW+'/muonio.json?t='+Date.now())).json();
-    // Sama korjaus kuin Iisvedessä (§02): d.observed jos/kun havaintoasema
-    // löytyy (ks. fetch_muonio.py-huomautus, Paikka_Id ei vielä tiedossa).
-    // Kunnes se on korjattu, arvo on ENNUSTE — merkitään selvästi, EI
-    // enää nimetä "Keväthuippu"-kentäksi ikään kuin se olisi nykyarvo.
+    // Sama korjaus kuin Iisvedessä (§02). Havaintoasema Paikka_Id 2532
+    // vahvistettu 2026-09-17 (kayttaja, suora SYKE-tarkistus). Nollakohta
+    // EI vahvistettu Muoniolle - jos VedenkTasoTieto-haku epaonnistuu ajon
+    // aikana, obs.observed_m jaa null:ksi ja alla on ennuste-varakaytto.
     const obs = d.observed || null;
     const wl = obs?.observed_m ?? d.forecast_central_m ?? d.f14?.peak_wl_mean ?? null;
     const isForecastFallback = (obs?.observed_m ?? null) == null && wl != null;
@@ -785,9 +793,11 @@ async function fetchMuonio() {
       (isForecastFallback ? 'Ennuste (kevathuippu, EI havainto)' : 'Havaittu') + ': ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
       ' · ka ' + (NORM_M.toFixed(2)) + ' m' +
       ' · Huippu ' + (d.peak_date_mean ?? d.f14?.peak_date_mean ?? '—') +
+      (obs?.sd_kevat!=null ? ' · SD_kevät ' + obs.sd_kevat : '') +
+      (obs?.sd_nyt!=null ? ' · SD_nyt ' + obs.sd_nyt + ' (ka ' + (obs.doy_avg_m??'—') + ' m, ' + (obs.doy_ref_years??'1991-2020') + ')' : '') +
       '<br>MNW: ' + MNW_M.toFixed(2) + ' m · MHW: ' + MHW_M.toFixed(2) + ' m' +
       '<br>Muonionjoki · Tornionjoen vesistöalue 67 · säännöstelemätön · WSFS q6700800y' +
-      (isForecastFallback ? '<br><span style="color:var(--muted)">Havaintoasemaa (Paikka_Id) ei vielä selvitetty — ks. fetch_muonio.py</span>' : '');
+      (isForecastFallback ? '<br><span style="color:var(--muted)">Havainto puuttuu (nollakohtaa ei saatu ajon aikana) — ks. fetch_muonio.py-loki</span>' : '');
   } catch(e) {
     if (el) el.textContent = '— m NN';
     if (det) det.innerHTML = 'Muonio: ei vielä cachessa · <a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" target="_blank" style="color:var(--accent)">WSFS Muonio</a>';
