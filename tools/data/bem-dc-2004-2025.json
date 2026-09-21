@@ -1,0 +1,1867 @@
+{
+ "dataset": "BEM D_c — kumulatiivinen häiriö, kaksi komponenttia",
+ "version": "1.0",
+ "generated": "2026-09-21",
+ "license_sources": "Metsäkeskus avoin metsätieto CC BY 4.0 · Ruokavirasto INSPIRE CC BY 4.0 · SYKE Ryhti CC BY 4.0 · Copernicus Sentinel-2 (Earth Search / AWS Open Data)",
+ "definition": {
+  "dc_recoverable": "Σ hakkuut_i × 0,86 × w(t − t_i), w(ikä) = 1 − ikä/20. Puuston korvaavat hakkuut (toteutustapa 1,4,5,6,7,8,10,15,16,18,19,21,22, tarkoitus ≠ 5). Ilmoitusvuoteen kirjattuna.",
+  "dc_permanent": "Kertymä maankäyttömuodon muutoksista (tarkoitus 5), luokat pelto + rakennettu + linjaus. Ei vähene.",
+  "recovery_T_years": 20,
+  "recovery_T_note": "[A] puuston palautuminen; metsälajiston palautuminen 60–100 v. Herkkyystarkastelu T=60 tekemättä.",
+  "clearcut_realization_coefficient": 0.86,
+  "clearcut_coefficient_note": "Mitattu 2018–2023, 4 ruutua, Sentinel-2 NDVI-trajektorin minimi, spatiaalinen nolla, toistoilmoitukset pois (9455 ha). Sovellettu koko jaksoon oletuksena.",
+  "luc_classes": {
+   "pelto": "Ruokaviraston peruslohko 2021 tai 2025 kattaa >50 % ilmoituksesta",
+   "rakennettu": "Ryhti: rakennus valmistunut tai rakentamislupa päätetty aikaisintaan vuotta ennen ilmoitusta, 30 m puskuri; 2018–2023 lisäksi Sentinel-2 paljas/rakennettu",
+   "linjaus": "2018–2023 Sentinel-2 + muoto; muina vuosina vain muoto (pitkänomainen kuvio tai ≥3 kuviota jonossa ≥1 km) — voi sisältää metsäteitä",
+   "epävarma": "ei rekisteriosumaa; 2018–2023 satelliitti: avoin kasvillisuus. Ei lasketa pysyvään → pysyvä on alaraja",
+   "toisto": ">50 % päällekkäin aiemman ilmoituksen kanssa, ei lasketa",
+   "ei_havaittu": "2018–2023: ei muutosta satelliitissa"
+  }
+ },
+ "caveats": [
+  "dc_recoverable on vertailukelpoinen vasta kun window_full = true (2023→): ilmoitusaineisto alkaa 2004.",
+  "Maa-ala on arvio (2023 kesäkomposiitin pilvettömät maapikselit).",
+  "Hakkuut kirjataan ilmoitusvuodelle; toteutus voi tapahtua 1–3 v myöhemmin.",
+  "2024–2025 hakkuiden toteutuma on odotusarvo (kerroin), ei havaittu.",
+  "Harvennukset rajattu pois (päätös 2026-09): eivät korvaa puustoa."
+ ],
+ "boxes": [
+  {
+   "id": "KUO",
+   "name": "Kuopio",
+   "bbox_epsg3067": [
+    520000,
+    6960000,
+    545000,
+    6985000
+   ],
+   "bbox_wgs84": [
+    27.3918,
+    62.7698,
+    27.8882,
+    62.9919
+   ],
+   "land_area_km2_est": 370.0,
+   "years": [
+    {
+     "year": 2004,
+     "clearcut_declared_ha": 284.1,
+     "clearcut_realized_ha": 244.3,
+     "dc_recoverable_ha": 244.3,
+     "dc_recoverable_pct_land": 0.66,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 0,
+     "dc_permanent_cum_pct_land": 0.0,
+     "uncertain_cum_ha": 1.0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2005,
+     "clearcut_declared_ha": 242.4,
+     "clearcut_realized_ha": 208.5,
+     "dc_recoverable_ha": 440.5,
+     "dc_recoverable_pct_land": 1.19,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.4,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0.3,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 0.4,
+     "dc_permanent_cum_pct_land": 0.001,
+     "uncertain_cum_ha": 1.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2006,
+     "clearcut_declared_ha": 281.2,
+     "clearcut_realized_ha": 241.9,
+     "dc_recoverable_ha": 659.8,
+     "dc_recoverable_pct_land": 1.78,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.2,
+      "rakennettu": 2,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 2.6,
+     "dc_permanent_cum_pct_land": 0.007,
+     "uncertain_cum_ha": 2.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2007,
+     "clearcut_declared_ha": 275.9,
+     "clearcut_realized_ha": 237.2,
+     "dc_recoverable_ha": 862.3,
+     "dc_recoverable_pct_land": 2.33,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 2.3,
+      "linjaus": 4.2
+     },
+     "uncertain_new_ha": 5.6,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 9.1,
+     "dc_permanent_cum_pct_land": 0.025,
+     "uncertain_cum_ha": 8.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2008,
+     "clearcut_declared_ha": 169.2,
+     "clearcut_realized_ha": 145.5,
+     "dc_recoverable_ha": 961.2,
+     "dc_recoverable_pct_land": 2.6,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.5,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 2.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 9.6,
+     "dc_permanent_cum_pct_land": 0.026,
+     "uncertain_cum_ha": 10.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2009,
+     "clearcut_declared_ha": 146.6,
+     "clearcut_realized_ha": 126.0,
+     "dc_recoverable_ha": 1033.4,
+     "dc_recoverable_pct_land": 2.79,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 9.6,
+     "dc_permanent_cum_pct_land": 0.026,
+     "uncertain_cum_ha": 10.8,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2010,
+     "clearcut_declared_ha": 252.7,
+     "clearcut_realized_ha": 217.3,
+     "dc_recoverable_ha": 1190.5,
+     "dc_recoverable_pct_land": 3.22,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.1,
+      "rakennettu": 1.8,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.7,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 11.5,
+     "dc_permanent_cum_pct_land": 0.031,
+     "uncertain_cum_ha": 12.5,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2011,
+     "clearcut_declared_ha": 296.5,
+     "clearcut_realized_ha": 255.0,
+     "dc_recoverable_ha": 1374.5,
+     "dc_recoverable_pct_land": 3.71,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.3,
+      "rakennettu": 0.4,
+      "linjaus": 1.1
+     },
+     "uncertain_new_ha": 2.7,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 13.3,
+     "dc_permanent_cum_pct_land": 0.036,
+     "uncertain_cum_ha": 15.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2012,
+     "clearcut_declared_ha": 197.4,
+     "clearcut_realized_ha": 169.7,
+     "dc_recoverable_ha": 1460.4,
+     "dc_recoverable_pct_land": 3.94,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 5.2,
+      "rakennettu": 1.7,
+      "linjaus": 0.9
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 21.1,
+     "dc_permanent_cum_pct_land": 0.057,
+     "uncertain_cum_ha": 15.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2013,
+     "clearcut_declared_ha": 307.9,
+     "clearcut_realized_ha": 264.8,
+     "dc_recoverable_ha": 1632.9,
+     "dc_recoverable_pct_land": 4.41,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.3,
+      "rakennettu": 9.1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 31.5,
+     "dc_permanent_cum_pct_land": 0.085,
+     "uncertain_cum_ha": 15.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2014,
+     "clearcut_declared_ha": 237.6,
+     "clearcut_realized_ha": 204.4,
+     "dc_recoverable_ha": 1731.8,
+     "dc_recoverable_pct_land": 4.68,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.7,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.7,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 33.2,
+     "dc_permanent_cum_pct_land": 0.09,
+     "uncertain_cum_ha": 16.9,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2015,
+     "clearcut_declared_ha": 225.2,
+     "clearcut_realized_ha": 193.7,
+     "dc_recoverable_ha": 1809.8,
+     "dc_recoverable_pct_land": 4.89,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.5,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 8.3,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 33.7,
+     "dc_permanent_cum_pct_land": 0.091,
+     "uncertain_cum_ha": 25.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2016,
+     "clearcut_declared_ha": 243.3,
+     "clearcut_realized_ha": 209.2,
+     "dc_recoverable_ha": 1893.6,
+     "dc_recoverable_pct_land": 5.11,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 5.4,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 6.5,
+     "duplicate_ha": 1.0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 39.1,
+     "dc_permanent_cum_pct_land": 0.106,
+     "uncertain_cum_ha": 31.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2017,
+     "clearcut_declared_ha": 197.5,
+     "clearcut_realized_ha": 169.9,
+     "dc_recoverable_ha": 1927.6,
+     "dc_recoverable_pct_land": 5.21,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.2,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 6.4,
+     "duplicate_ha": 5,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 40.3,
+     "dc_permanent_cum_pct_land": 0.109,
+     "uncertain_cum_ha": 38.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2018,
+     "clearcut_declared_ha": 280.1,
+     "clearcut_realized_ha": 240.9,
+     "dc_recoverable_ha": 2024.1,
+     "dc_recoverable_pct_land": 5.47,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 6.3,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 67.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 46.7,
+     "dc_permanent_cum_pct_land": 0.126,
+     "uncertain_cum_ha": 105.6,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2019,
+     "clearcut_declared_ha": 233.1,
+     "clearcut_realized_ha": 200.5,
+     "dc_recoverable_ha": 2068.2,
+     "dc_recoverable_pct_land": 5.59,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.6,
+      "rakennettu": 2.3,
+      "linjaus": 0.7
+     },
+     "uncertain_new_ha": 1.7,
+     "duplicate_ha": 0,
+     "not_detected_ha": 2.0,
+     "dc_permanent_cum_ha": 50.3,
+     "dc_permanent_cum_pct_land": 0.136,
+     "uncertain_cum_ha": 107.3,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2020,
+     "clearcut_declared_ha": 313.4,
+     "clearcut_realized_ha": 269.5,
+     "dc_recoverable_ha": 2171.3,
+     "dc_recoverable_pct_land": 5.86,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.9,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.3,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 51.1,
+     "dc_permanent_cum_pct_land": 0.138,
+     "uncertain_cum_ha": 108.6,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2021,
+     "clearcut_declared_ha": 299.2,
+     "clearcut_realized_ha": 257.3,
+     "dc_recoverable_ha": 2248.7,
+     "dc_recoverable_pct_land": 6.07,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.4,
+      "linjaus": 4.0
+     },
+     "uncertain_new_ha": 0.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 3.5,
+     "dc_permanent_cum_ha": 56.5,
+     "dc_permanent_cum_pct_land": 0.153,
+     "uncertain_cum_ha": 109.5,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2022,
+     "clearcut_declared_ha": 280.7,
+     "clearcut_realized_ha": 241.4,
+     "dc_recoverable_ha": 2297.3,
+     "dc_recoverable_pct_land": 6.2,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 7.7,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 64.2,
+     "dc_permanent_cum_pct_land": 0.173,
+     "uncertain_cum_ha": 109.5,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2023,
+     "clearcut_declared_ha": 279.7,
+     "clearcut_realized_ha": 240.5,
+     "dc_recoverable_ha": 2332.9,
+     "dc_recoverable_pct_land": 6.3,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 27.9,
+      "linjaus": 23.0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 8.1,
+     "dc_permanent_cum_ha": 115.1,
+     "dc_permanent_cum_pct_land": 0.311,
+     "uncertain_cum_ha": 109.5,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2024,
+     "clearcut_declared_ha": 325.8,
+     "clearcut_realized_ha": 280.2,
+     "dc_recoverable_ha": 2396.2,
+     "dc_recoverable_pct_land": 6.47,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 8.7,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 4.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 123.8,
+     "dc_permanent_cum_pct_land": 0.334,
+     "uncertain_cum_ha": 113.5,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2025,
+     "clearcut_declared_ha": 378.7,
+     "clearcut_realized_ha": 325.7,
+     "dc_recoverable_ha": 2503.2,
+     "dc_recoverable_pct_land": 6.76,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 17.6,
+      "linjaus": 6
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0.3,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 147.4,
+     "dc_permanent_cum_pct_land": 0.398,
+     "uncertain_cum_ha": 113.5,
+     "luc_classification": "vain rekisterit"
+    }
+   ]
+  },
+  {
+   "id": "LEP",
+   "name": "Leppävirta",
+   "bbox_epsg3067": [
+    535000,
+    6915000,
+    560000,
+    6940000
+   ],
+   "bbox_wgs84": [
+    27.6763,
+    62.3648,
+    28.1681,
+    62.5859
+   ],
+   "land_area_km2_est": 510.0,
+   "years": [
+    {
+     "year": 2004,
+     "clearcut_declared_ha": 647.2,
+     "clearcut_realized_ha": 556.6,
+     "dc_recoverable_ha": 556.6,
+     "dc_recoverable_pct_land": 1.09,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 10.1,
+      "rakennettu": 3.6,
+      "linjaus": 0.5
+     },
+     "uncertain_new_ha": 1.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 14.2,
+     "dc_permanent_cum_pct_land": 0.028,
+     "uncertain_cum_ha": 1.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2005,
+     "clearcut_declared_ha": 469.9,
+     "clearcut_realized_ha": 404.2,
+     "dc_recoverable_ha": 932.9,
+     "dc_recoverable_pct_land": 1.83,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.2,
+      "rakennettu": 0.6,
+      "linjaus": 0.2
+     },
+     "uncertain_new_ha": 2.2,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 16.2,
+     "dc_permanent_cum_pct_land": 0.032,
+     "uncertain_cum_ha": 3.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2006,
+     "clearcut_declared_ha": 771.3,
+     "clearcut_realized_ha": 663.3,
+     "dc_recoverable_ha": 1548.2,
+     "dc_recoverable_pct_land": 3.04,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.5,
+      "rakennettu": 0.5,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 8.6,
+     "duplicate_ha": 0.3,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 17.2,
+     "dc_permanent_cum_pct_land": 0.034,
+     "uncertain_cum_ha": 11.9,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2007,
+     "clearcut_declared_ha": 781.5,
+     "clearcut_realized_ha": 672.1,
+     "dc_recoverable_ha": 2139.0,
+     "dc_recoverable_pct_land": 4.2,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.3,
+      "rakennettu": 0.9,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 3.8,
+     "duplicate_ha": 0.5,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 20.4,
+     "dc_permanent_cum_pct_land": 0.04,
+     "uncertain_cum_ha": 15.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2008,
+     "clearcut_declared_ha": 521.3,
+     "clearcut_realized_ha": 448.3,
+     "dc_recoverable_ha": 2472.6,
+     "dc_recoverable_pct_land": 4.85,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.8,
+      "rakennettu": 0,
+      "linjaus": 0.5
+     },
+     "uncertain_new_ha": 11.4,
+     "duplicate_ha": 0.3,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 23.8,
+     "dc_permanent_cum_pct_land": 0.047,
+     "uncertain_cum_ha": 27.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2009,
+     "clearcut_declared_ha": 344.8,
+     "clearcut_realized_ha": 296.5,
+     "dc_recoverable_ha": 2631.9,
+     "dc_recoverable_pct_land": 5.16,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 9.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 23.8,
+     "dc_permanent_cum_pct_land": 0.047,
+     "uncertain_cum_ha": 36.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2010,
+     "clearcut_declared_ha": 642.7,
+     "clearcut_realized_ha": 552.7,
+     "dc_recoverable_ha": 3032.5,
+     "dc_recoverable_pct_land": 5.95,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 3.1,
+      "linjaus": 3.3
+     },
+     "uncertain_new_ha": 16.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 30.2,
+     "dc_permanent_cum_pct_land": 0.059,
+     "uncertain_cum_ha": 53.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2011,
+     "clearcut_declared_ha": 397.5,
+     "clearcut_realized_ha": 341.9,
+     "dc_recoverable_ha": 3194.7,
+     "dc_recoverable_pct_land": 6.27,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 4.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 30.2,
+     "dc_permanent_cum_pct_land": 0.059,
+     "uncertain_cum_ha": 57.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2012,
+     "clearcut_declared_ha": 443.1,
+     "clearcut_realized_ha": 381.1,
+     "dc_recoverable_ha": 3379.0,
+     "dc_recoverable_pct_land": 6.63,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.4,
+      "rakennettu": 1.9,
+      "linjaus": 3.0
+     },
+     "uncertain_new_ha": 5.0,
+     "duplicate_ha": 3.5,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 35.5,
+     "dc_permanent_cum_pct_land": 0.07,
+     "uncertain_cum_ha": 62.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2013,
+     "clearcut_declared_ha": 669.3,
+     "clearcut_realized_ha": 575.6,
+     "dc_recoverable_ha": 3738.7,
+     "dc_recoverable_pct_land": 7.34,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.2,
+      "rakennettu": 2.5,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 40.2,
+     "dc_permanent_cum_pct_land": 0.079,
+     "uncertain_cum_ha": 64.0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2014,
+     "clearcut_declared_ha": 496.3,
+     "clearcut_realized_ha": 426.8,
+     "dc_recoverable_ha": 3920.9,
+     "dc_recoverable_pct_land": 7.69,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 3.8,
+      "rakennettu": 0,
+      "linjaus": 32.1
+     },
+     "uncertain_new_ha": 3.2,
+     "duplicate_ha": 2.1,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 76.1,
+     "dc_permanent_cum_pct_land": 0.149,
+     "uncertain_cum_ha": 67.2,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2015,
+     "clearcut_declared_ha": 447.2,
+     "clearcut_realized_ha": 384.6,
+     "dc_recoverable_ha": 4039.6,
+     "dc_recoverable_pct_land": 7.93,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 4.0,
+      "rakennettu": 0.5,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 2.8,
+     "duplicate_ha": 2.3,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 80.6,
+     "dc_permanent_cum_pct_land": 0.158,
+     "uncertain_cum_ha": 70.0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2016,
+     "clearcut_declared_ha": 569.3,
+     "clearcut_realized_ha": 489.6,
+     "dc_recoverable_ha": 4244.1,
+     "dc_recoverable_pct_land": 8.33,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.8,
+      "linjaus": 0.9
+     },
+     "uncertain_new_ha": 1.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 83.3,
+     "dc_permanent_cum_pct_land": 0.163,
+     "uncertain_cum_ha": 71.0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2017,
+     "clearcut_declared_ha": 574.4,
+     "clearcut_realized_ha": 494.0,
+     "dc_recoverable_ha": 4428.4,
+     "dc_recoverable_pct_land": 8.69,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 5.2,
+      "rakennettu": 1.1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 2.4,
+     "duplicate_ha": 1.7,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 89.6,
+     "dc_permanent_cum_pct_land": 0.176,
+     "uncertain_cum_ha": 73.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2018,
+     "clearcut_declared_ha": 717.9,
+     "clearcut_realized_ha": 617.4,
+     "dc_recoverable_ha": 4711.4,
+     "dc_recoverable_pct_land": 9.24,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.6,
+      "rakennettu": 0,
+      "linjaus": 0.9
+     },
+     "uncertain_new_ha": 0.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 5.1,
+     "dc_permanent_cum_ha": 91.2,
+     "dc_permanent_cum_pct_land": 0.179,
+     "uncertain_cum_ha": 73.9,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2019,
+     "clearcut_declared_ha": 454.3,
+     "clearcut_realized_ha": 390.7,
+     "dc_recoverable_ha": 4736.9,
+     "dc_recoverable_pct_land": 9.29,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.2,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 7.0,
+     "dc_permanent_cum_ha": 92.3,
+     "dc_permanent_cum_pct_land": 0.181,
+     "uncertain_cum_ha": 74.4,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2020,
+     "clearcut_declared_ha": 691.4,
+     "clearcut_realized_ha": 594.6,
+     "dc_recoverable_ha": 4946.7,
+     "dc_recoverable_pct_land": 9.71,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 7.2,
+      "rakennettu": 2.1,
+      "linjaus": 1.1
+     },
+     "uncertain_new_ha": 3.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 2.1,
+     "dc_permanent_cum_ha": 102.8,
+     "dc_permanent_cum_pct_land": 0.202,
+     "uncertain_cum_ha": 77.9,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2021,
+     "clearcut_declared_ha": 684.6,
+     "clearcut_realized_ha": 588.8,
+     "dc_recoverable_ha": 5121.0,
+     "dc_recoverable_pct_land": 10.05,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 4.0,
+      "rakennettu": 1.9,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 3.3,
+     "dc_permanent_cum_ha": 108.8,
+     "dc_permanent_cum_pct_land": 0.213,
+     "uncertain_cum_ha": 77.9,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2022,
+     "clearcut_declared_ha": 626.1,
+     "clearcut_realized_ha": 538.4,
+     "dc_recoverable_ha": 5215.5,
+     "dc_recoverable_pct_land": 10.23,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 2.1,
+      "linjaus": 0.6
+     },
+     "uncertain_new_ha": 3.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0.9,
+     "dc_permanent_cum_ha": 111.5,
+     "dc_permanent_cum_pct_land": 0.219,
+     "uncertain_cum_ha": 81.8,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2023,
+     "clearcut_declared_ha": 559.6,
+     "clearcut_realized_ha": 481.3,
+     "dc_recoverable_ha": 5226.0,
+     "dc_recoverable_pct_land": 10.25,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 5.9,
+     "duplicate_ha": 3.3,
+     "not_detected_ha": 0.4,
+     "dc_permanent_cum_ha": 111.5,
+     "dc_permanent_cum_pct_land": 0.219,
+     "uncertain_cum_ha": 87.7,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2024,
+     "clearcut_declared_ha": 697.9,
+     "clearcut_realized_ha": 600.2,
+     "dc_recoverable_ha": 5331.2,
+     "dc_recoverable_pct_land": 10.46,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 5.4,
+     "duplicate_ha": 0.7,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 111.5,
+     "dc_permanent_cum_pct_land": 0.219,
+     "uncertain_cum_ha": 93.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2025,
+     "clearcut_declared_ha": 661.7,
+     "clearcut_realized_ha": 569.1,
+     "dc_recoverable_ha": 5403.2,
+     "dc_recoverable_pct_land": 10.6,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0.6
+     },
+     "uncertain_new_ha": 2.2,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 112.1,
+     "dc_permanent_cum_pct_land": 0.22,
+     "uncertain_cum_ha": 95.3,
+     "luc_classification": "vain rekisterit"
+    }
+   ]
+  },
+  {
+   "id": "TUU",
+   "name": "Tuusniemi",
+   "bbox_epsg3067": [
+    570000,
+    6955000,
+    595000,
+    6980000
+   ],
+   "bbox_wgs84": [
+    28.3689,
+    62.7188,
+    28.8717,
+    62.9374
+   ],
+   "land_area_km2_est": 465.0,
+   "years": [
+    {
+     "year": 2004,
+     "clearcut_declared_ha": 439.1,
+     "clearcut_realized_ha": 377.6,
+     "dc_recoverable_ha": 377.6,
+     "dc_recoverable_pct_land": 0.81,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 0,
+     "dc_permanent_cum_pct_land": 0.0,
+     "uncertain_cum_ha": 0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2005,
+     "clearcut_declared_ha": 483.5,
+     "clearcut_realized_ha": 415.8,
+     "dc_recoverable_ha": 774.5,
+     "dc_recoverable_pct_land": 1.67,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.2,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 3.8,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 2.2,
+     "dc_permanent_cum_pct_land": 0.005,
+     "uncertain_cum_ha": 3.8,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2006,
+     "clearcut_declared_ha": 405.1,
+     "clearcut_realized_ha": 348.4,
+     "dc_recoverable_ha": 1083.3,
+     "dc_recoverable_pct_land": 2.33,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.8,
+      "rakennettu": 1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 1,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 6.0,
+     "dc_permanent_cum_pct_land": 0.013,
+     "uncertain_cum_ha": 3.8,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2007,
+     "clearcut_declared_ha": 654.2,
+     "clearcut_realized_ha": 562.6,
+     "dc_recoverable_ha": 1588.8,
+     "dc_recoverable_pct_land": 3.42,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 6.1,
+     "dc_permanent_cum_pct_land": 0.013,
+     "uncertain_cum_ha": 4.9,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2008,
+     "clearcut_declared_ha": 348.2,
+     "clearcut_realized_ha": 299.5,
+     "dc_recoverable_ha": 1803.1,
+     "dc_recoverable_pct_land": 3.88,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 7.8,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 13.9,
+     "dc_permanent_cum_pct_land": 0.03,
+     "uncertain_cum_ha": 6.0,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2009,
+     "clearcut_declared_ha": 281.4,
+     "clearcut_realized_ha": 242.0,
+     "dc_recoverable_ha": 1944.9,
+     "dc_recoverable_pct_land": 4.18,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.3,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 14.2,
+     "dc_permanent_cum_pct_land": 0.031,
+     "uncertain_cum_ha": 6.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2010,
+     "clearcut_declared_ha": 424.5,
+     "clearcut_realized_ha": 365.1,
+     "dc_recoverable_ha": 2197.7,
+     "dc_recoverable_pct_land": 4.72,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 5.2,
+      "rakennettu": 5.4,
+      "linjaus": 0.9
+     },
+     "uncertain_new_ha": 2.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 25.7,
+     "dc_permanent_cum_pct_land": 0.055,
+     "uncertain_cum_ha": 8.9,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2011,
+     "clearcut_declared_ha": 384.5,
+     "clearcut_realized_ha": 330.7,
+     "dc_recoverable_ha": 2397.8,
+     "dc_recoverable_pct_land": 5.16,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.3,
+      "rakennettu": 0,
+      "linjaus": 2.8
+     },
+     "uncertain_new_ha": 0.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 29.7,
+     "dc_permanent_cum_pct_land": 0.064,
+     "uncertain_cum_ha": 9.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2012,
+     "clearcut_declared_ha": 539.6,
+     "clearcut_realized_ha": 464.0,
+     "dc_recoverable_ha": 2714.7,
+     "dc_recoverable_pct_land": 5.84,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.2,
+      "linjaus": 0.5
+     },
+     "uncertain_new_ha": 1.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 30.5,
+     "dc_permanent_cum_pct_land": 0.065,
+     "uncertain_cum_ha": 10.8,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2013,
+     "clearcut_declared_ha": 457.5,
+     "clearcut_realized_ha": 393.4,
+     "dc_recoverable_ha": 2937.9,
+     "dc_recoverable_pct_land": 6.32,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.2,
+      "rakennettu": 0,
+      "linjaus": 2.0
+     },
+     "uncertain_new_ha": 22.7,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 34.7,
+     "dc_permanent_cum_pct_land": 0.075,
+     "uncertain_cum_ha": 33.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2014,
+     "clearcut_declared_ha": 548.6,
+     "clearcut_realized_ha": 471.8,
+     "dc_recoverable_ha": 3219.7,
+     "dc_recoverable_pct_land": 6.92,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.8,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 7.2,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 37.5,
+     "dc_permanent_cum_pct_land": 0.081,
+     "uncertain_cum_ha": 40.6,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2015,
+     "clearcut_declared_ha": 401.6,
+     "clearcut_realized_ha": 345.4,
+     "dc_recoverable_ha": 3351.6,
+     "dc_recoverable_pct_land": 7.21,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.1,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 10.0,
+     "duplicate_ha": 0.1,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 38.5,
+     "dc_permanent_cum_pct_land": 0.083,
+     "uncertain_cum_ha": 50.6,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2016,
+     "clearcut_declared_ha": 523.4,
+     "clearcut_realized_ha": 450.1,
+     "dc_recoverable_ha": 3570.9,
+     "dc_recoverable_pct_land": 7.68,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.3,
+      "rakennettu": 0,
+      "linjaus": 0.3
+     },
+     "uncertain_new_ha": 0.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 40.1,
+     "dc_permanent_cum_pct_land": 0.086,
+     "uncertain_cum_ha": 51.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2017,
+     "clearcut_declared_ha": 491.5,
+     "clearcut_realized_ha": 422.7,
+     "dc_recoverable_ha": 3740.3,
+     "dc_recoverable_pct_land": 8.04,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 2.1,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.6,
+     "duplicate_ha": 1.4,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 42.2,
+     "dc_permanent_cum_pct_land": 0.091,
+     "uncertain_cum_ha": 52.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2018,
+     "clearcut_declared_ha": 505.3,
+     "clearcut_realized_ha": 434.6,
+     "dc_recoverable_ha": 3900.4,
+     "dc_recoverable_pct_land": 8.39,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.1,
+      "rakennettu": 0.5,
+      "linjaus": 1.2
+     },
+     "uncertain_new_ha": 19.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0.5,
+     "dc_permanent_cum_ha": 45.9,
+     "dc_permanent_cum_pct_land": 0.099,
+     "uncertain_cum_ha": 72.2,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2019,
+     "clearcut_declared_ha": 265.6,
+     "clearcut_realized_ha": 228.4,
+     "dc_recoverable_ha": 3832.7,
+     "dc_recoverable_pct_land": 8.24,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.9,
+      "rakennettu": 0,
+      "linjaus": 0.5
+     },
+     "uncertain_new_ha": 1.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 3.2,
+     "dc_permanent_cum_ha": 47.3,
+     "dc_permanent_cum_pct_land": 0.102,
+     "uncertain_cum_ha": 73.7,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2020,
+     "clearcut_declared_ha": 588.4,
+     "clearcut_realized_ha": 506.0,
+     "dc_recoverable_ha": 4031.1,
+     "dc_recoverable_pct_land": 8.67,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.8,
+      "rakennettu": 0.8,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 48.9,
+     "dc_permanent_cum_pct_land": 0.105,
+     "uncertain_cum_ha": 73.7,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2021,
+     "clearcut_declared_ha": 763.3,
+     "clearcut_realized_ha": 656.5,
+     "dc_recoverable_ha": 4354.6,
+     "dc_recoverable_pct_land": 9.36,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.6,
+      "rakennettu": 4.2,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 53.7,
+     "dc_permanent_cum_pct_land": 0.116,
+     "uncertain_cum_ha": 73.7,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2022,
+     "clearcut_declared_ha": 453.0,
+     "clearcut_realized_ha": 389.6,
+     "dc_recoverable_ha": 4378.5,
+     "dc_recoverable_pct_land": 9.41,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0.5,
+     "dc_permanent_cum_ha": 53.7,
+     "dc_permanent_cum_pct_land": 0.116,
+     "uncertain_cum_ha": 73.7,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2023,
+     "clearcut_declared_ha": 630.7,
+     "clearcut_realized_ha": 542.4,
+     "dc_recoverable_ha": 4535.7,
+     "dc_recoverable_pct_land": 9.75,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.2,
+      "linjaus": 1.7
+     },
+     "uncertain_new_ha": 8.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 1.0,
+     "dc_permanent_cum_ha": 55.6,
+     "dc_permanent_cum_pct_land": 0.12,
+     "uncertain_cum_ha": 82.2,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2024,
+     "clearcut_declared_ha": 640.3,
+     "clearcut_realized_ha": 550.7,
+     "dc_recoverable_ha": 4674.0,
+     "dc_recoverable_pct_land": 10.05,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0.7,
+      "rakennettu": 0,
+      "linjaus": 2.9
+     },
+     "uncertain_new_ha": 6.0,
+     "duplicate_ha": 4.1,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 59.2,
+     "dc_permanent_cum_pct_land": 0.127,
+     "uncertain_cum_ha": 88.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2025,
+     "clearcut_declared_ha": 461.0,
+     "clearcut_realized_ha": 396.4,
+     "dc_recoverable_ha": 4649.4,
+     "dc_recoverable_pct_land": 10.0,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 3.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 59.2,
+     "dc_permanent_cum_pct_land": 0.127,
+     "uncertain_cum_ha": 92.2,
+     "luc_classification": "vain rekisterit"
+    }
+   ]
+  },
+  {
+   "id": "SUO",
+   "name": "Suonenjoki",
+   "bbox_epsg3067": [
+    500000,
+    6925000,
+    525000,
+    6950000
+   ],
+   "bbox_wgs84": [
+    27.0,
+    62.4562,
+    27.4882,
+    62.6797
+   ],
+   "land_area_km2_est": 533.0,
+   "years": [
+    {
+     "year": 2004,
+     "clearcut_declared_ha": 663.6,
+     "clearcut_realized_ha": 570.7,
+     "dc_recoverable_ha": 570.7,
+     "dc_recoverable_pct_land": 1.07,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 5.0,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 1.3,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 5.0,
+     "dc_permanent_cum_pct_land": 0.009,
+     "uncertain_cum_ha": 1.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2005,
+     "clearcut_declared_ha": 431.6,
+     "clearcut_realized_ha": 371.1,
+     "dc_recoverable_ha": 913.3,
+     "dc_recoverable_pct_land": 1.71,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 3.7,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 0.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 8.7,
+     "dc_permanent_cum_pct_land": 0.016,
+     "uncertain_cum_ha": 1.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2006,
+     "clearcut_declared_ha": 529.6,
+     "clearcut_realized_ha": 455.5,
+     "dc_recoverable_ha": 1321.7,
+     "dc_recoverable_pct_land": 2.48,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.8,
+      "rakennettu": 4.2,
+      "linjaus": 5.5
+     },
+     "uncertain_new_ha": 3.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 21.2,
+     "dc_permanent_cum_pct_land": 0.04,
+     "uncertain_cum_ha": 4.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2007,
+     "clearcut_declared_ha": 567.9,
+     "clearcut_realized_ha": 488.4,
+     "dc_recoverable_ha": 1740.2,
+     "dc_recoverable_pct_land": 3.27,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.3,
+      "rakennettu": 0,
+      "linjaus": 9.7
+     },
+     "uncertain_new_ha": 1.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 32.2,
+     "dc_permanent_cum_pct_land": 0.06,
+     "uncertain_cum_ha": 5.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2008,
+     "clearcut_declared_ha": 469.2,
+     "clearcut_realized_ha": 403.6,
+     "dc_recoverable_ha": 2049.5,
+     "dc_recoverable_pct_land": 3.85,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 18.8,
+      "rakennettu": 0,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 11.1,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 51.0,
+     "dc_permanent_cum_pct_land": 0.096,
+     "uncertain_cum_ha": 16.5,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2009,
+     "clearcut_declared_ha": 262.2,
+     "clearcut_realized_ha": 225.5,
+     "dc_recoverable_ha": 2160.5,
+     "dc_recoverable_pct_land": 4.05,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.0,
+      "rakennettu": 0,
+      "linjaus": 0.3
+     },
+     "uncertain_new_ha": 3.8,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 53.3,
+     "dc_permanent_cum_pct_land": 0.1,
+     "uncertain_cum_ha": 20.3,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2010,
+     "clearcut_declared_ha": 562.2,
+     "clearcut_realized_ha": 483.5,
+     "dc_recoverable_ha": 2518.3,
+     "dc_recoverable_pct_land": 4.73,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0.1,
+      "rakennettu": 0.5,
+      "linjaus": 0.6
+     },
+     "uncertain_new_ha": 1.8,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 54.5,
+     "dc_permanent_cum_pct_land": 0.102,
+     "uncertain_cum_ha": 22.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2011,
+     "clearcut_declared_ha": 363.8,
+     "clearcut_realized_ha": 312.9,
+     "dc_recoverable_ha": 2681.2,
+     "dc_recoverable_pct_land": 5.03,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 61.8,
+      "rakennettu": 1.3,
+      "linjaus": 2.0
+     },
+     "uncertain_new_ha": 22.6,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 119.6,
+     "dc_permanent_cum_pct_land": 0.224,
+     "uncertain_cum_ha": 44.7,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2012,
+     "clearcut_declared_ha": 534.3,
+     "clearcut_realized_ha": 459.5,
+     "dc_recoverable_ha": 2975.2,
+     "dc_recoverable_pct_land": 5.58,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 44.9,
+      "rakennettu": 0.3,
+      "linjaus": 0.6
+     },
+     "uncertain_new_ha": 1.4,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 165.4,
+     "dc_permanent_cum_pct_land": 0.31,
+     "uncertain_cum_ha": 46.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2013,
+     "clearcut_declared_ha": 741.0,
+     "clearcut_realized_ha": 637.2,
+     "dc_recoverable_ha": 3423.9,
+     "dc_recoverable_pct_land": 6.43,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 29.2,
+      "rakennettu": 2.6,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 9.5,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 197.2,
+     "dc_permanent_cum_pct_land": 0.37,
+     "uncertain_cum_ha": 55.6,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2014,
+     "clearcut_declared_ha": 560.2,
+     "clearcut_realized_ha": 481.8,
+     "dc_recoverable_ha": 3685.2,
+     "dc_recoverable_pct_land": 6.92,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 1.7,
+      "rakennettu": 0.3,
+      "linjaus": 0
+     },
+     "uncertain_new_ha": 5.9,
+     "duplicate_ha": 1.7,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 199.2,
+     "dc_permanent_cum_pct_land": 0.374,
+     "uncertain_cum_ha": 61.5,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2015,
+     "clearcut_declared_ha": 464.1,
+     "clearcut_realized_ha": 399.1,
+     "dc_recoverable_ha": 3839.8,
+     "dc_recoverable_pct_land": 7.21,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0,
+      "linjaus": 1.0
+     },
+     "uncertain_new_ha": 37.4,
+     "duplicate_ha": 0.2,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 200.2,
+     "dc_permanent_cum_pct_land": 0.376,
+     "uncertain_cum_ha": 98.9,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2016,
+     "clearcut_declared_ha": 636.7,
+     "clearcut_realized_ha": 547.6,
+     "dc_recoverable_ha": 4123.0,
+     "dc_recoverable_pct_land": 7.74,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 15.0,
+      "rakennettu": 3.4,
+      "linjaus": 4.9
+     },
+     "uncertain_new_ha": 5.2,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 223.5,
+     "dc_permanent_cum_pct_land": 0.419,
+     "uncertain_cum_ha": 104.1,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2017,
+     "clearcut_declared_ha": 552.0,
+     "clearcut_realized_ha": 474.8,
+     "dc_recoverable_ha": 4305.9,
+     "dc_recoverable_pct_land": 8.08,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 4.0,
+      "rakennettu": 0.4,
+      "linjaus": 2.6
+     },
+     "uncertain_new_ha": 8.4,
+     "duplicate_ha": 1.5,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 230.6,
+     "dc_permanent_cum_pct_land": 0.433,
+     "uncertain_cum_ha": 112.4,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2018,
+     "clearcut_declared_ha": 702.5,
+     "clearcut_realized_ha": 604.1,
+     "dc_recoverable_ha": 4594.5,
+     "dc_recoverable_pct_land": 8.62,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 23.7,
+      "rakennettu": 10.9,
+      "linjaus": 3.3
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 2.3,
+     "dc_permanent_cum_ha": 268.5,
+     "dc_permanent_cum_pct_land": 0.504,
+     "uncertain_cum_ha": 112.4,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2019,
+     "clearcut_declared_ha": 289.8,
+     "clearcut_realized_ha": 249.2,
+     "dc_recoverable_ha": 4497.9,
+     "dc_recoverable_pct_land": 8.44,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 5.9,
+      "linjaus": 0.1
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0.2,
+     "dc_permanent_cum_ha": 274.6,
+     "dc_permanent_cum_pct_land": 0.515,
+     "uncertain_cum_ha": 112.4,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2020,
+     "clearcut_declared_ha": 440.7,
+     "clearcut_realized_ha": 379.0,
+     "dc_recoverable_ha": 4518.7,
+     "dc_recoverable_pct_land": 8.48,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 3.6,
+      "rakennettu": 0.1,
+      "linjaus": 2.0
+     },
+     "uncertain_new_ha": 0,
+     "duplicate_ha": 19.9,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 280.2,
+     "dc_permanent_cum_pct_land": 0.526,
+     "uncertain_cum_ha": 112.4,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2021,
+     "clearcut_declared_ha": 695.2,
+     "clearcut_realized_ha": 597.8,
+     "dc_recoverable_ha": 4739.4,
+     "dc_recoverable_pct_land": 8.89,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 2.6,
+      "rakennettu": 1.3,
+      "linjaus": 2.8
+     },
+     "uncertain_new_ha": 3.6,
+     "duplicate_ha": 0,
+     "not_detected_ha": 1.1,
+     "dc_permanent_cum_ha": 286.9,
+     "dc_permanent_cum_pct_land": 0.538,
+     "uncertain_cum_ha": 116.1,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2022,
+     "clearcut_declared_ha": 584.0,
+     "clearcut_realized_ha": 502.2,
+     "dc_recoverable_ha": 4834.6,
+     "dc_recoverable_pct_land": 9.07,
+     "window_full": false,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 2.1,
+      "linjaus": 1.4
+     },
+     "uncertain_new_ha": 3.7,
+     "duplicate_ha": 0.2,
+     "not_detected_ha": 1.6,
+     "dc_permanent_cum_ha": 290.4,
+     "dc_permanent_cum_pct_land": 0.545,
+     "uncertain_cum_ha": 119.8,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2023,
+     "clearcut_declared_ha": 388.1,
+     "clearcut_realized_ha": 333.8,
+     "dc_recoverable_ha": 4736.2,
+     "dc_recoverable_pct_land": 8.89,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 1.1,
+      "linjaus": 91.1
+     },
+     "uncertain_new_ha": 1.0,
+     "duplicate_ha": 0,
+     "not_detected_ha": 4.2,
+     "dc_permanent_cum_ha": 382.6,
+     "dc_permanent_cum_pct_land": 0.718,
+     "uncertain_cum_ha": 120.8,
+     "luc_classification": "rekisterit + Sentinel-2"
+    },
+    {
+     "year": 2024,
+     "clearcut_declared_ha": 560.3,
+     "clearcut_realized_ha": 481.9,
+     "dc_recoverable_ha": 4769.2,
+     "dc_recoverable_pct_land": 8.95,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 7.2,
+      "linjaus": 17.2
+     },
+     "uncertain_new_ha": 8.8,
+     "duplicate_ha": 8.5,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 406.9,
+     "dc_permanent_cum_pct_land": 0.764,
+     "uncertain_cum_ha": 129.6,
+     "luc_classification": "vain rekisterit"
+    },
+    {
+     "year": 2025,
+     "clearcut_declared_ha": 458.4,
+     "clearcut_realized_ha": 394.2,
+     "dc_recoverable_ha": 4719.0,
+     "dc_recoverable_pct_land": 8.86,
+     "window_full": true,
+     "permanent_new_ha": {
+      "pelto": 0,
+      "rakennettu": 0.1,
+      "linjaus": 1.1
+     },
+     "uncertain_new_ha": 0.9,
+     "duplicate_ha": 0,
+     "not_detected_ha": 0,
+     "dc_permanent_cum_ha": 408.2,
+     "dc_permanent_cum_pct_land": 0.766,
+     "uncertain_cum_ha": 130.5,
+     "luc_classification": "vain rekisterit"
+    }
+   ]
+  }
+ ]
+}
