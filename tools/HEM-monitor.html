@@ -395,24 +395,28 @@ const IISVESI_BBOX='26.167,62.567,27.067,63.467';
 
 async function fetchBemE(hepp){
   try{
-    const[mndwiRes,ndciRes]=await Promise.all([
+    const[mndwi,ndci]=await Promise.all([
       fetch(`${CORINE_PROXY}/mndwi?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
       fetch(`${CORINE_PROXY}/ndci?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
     ]);
+    // 2026-09-22: corine-proxy v0.9-0.9.6 vaihtoi vastausmuodon sisakkaisesta
+    // mndwi_stats/ndci_stats (Sentinel Hub raaka stats, mean/stDev/sampleCount/
+    // noDataCount) tasaiseksi (mndwi_mean/water_fraction_pct/ndci_mean/
+    // n_intervals_used/n_intervals_total, P10D-mediaani) - vanha koodi luki
+    // aina puuttuvaa mndwi_stats/ndci_stats-kenttaa.
+    if(mndwi.mndwi_mean==null||ndci.ndci_mean==null) throw new Error('mndwi_mean/ndci_mean puuttuu jommastakummasta vastauksesta');
 
-    const mndwi=mndwiRes.mndwi_stats;
-    const ndci=ndciRes.ndci_stats;
-    if(!mndwi||!ndci) throw new Error('Tilastorakenne puuttuu jommastakummasta vastauksesta');
-
-    let html=`MNDWI: <b>${mndwi.mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(hajonta ${mndwi.stDev.toFixed(3)}, n=${mndwi.sampleCount-mndwi.noDataCount}/${mndwi.sampleCount}) [A]</span><br>`;
-    html+=`NDCI: <b>${ndci.mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(hajonta ${ndci.stDev.toFixed(3)}, vesipikseleitä ${ndci.sampleCount-ndci.noDataCount}/${ndci.sampleCount}) [B]</span><br>`;
+    let html=`MNDWI: <b>${mndwi.mndwi_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(vesiosuus ${mndwi.water_fraction_pct!=null?mndwi.water_fraction_pct.toFixed(1)+'%':'—'}, ${mndwi.n_intervals_used}/${mndwi.n_intervals_total} P10D-välia) [A]</span><br>`;
+    html+=`NDCI: <b>${ndci.ndci_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(${ndci.n_intervals_used}/${ndci.n_intervals_total} P10D-välia) [B]</span><br>`;
     if(hepp!=null) html+=`HEPP (rinnakkainen, EI yhdistetty kaavaan): <b>${hepp.toFixed(2)}</b><br>`;
 
     // Sanallinen tulkinta - EI matemaattinen yhdistaminen. Vain karkea,
-    // varovainen huomio jos molemmat viittaavat samaan suuntaan.
-    const ndciWaterFrac=(ndci.sampleCount-ndci.noDataCount)/ndci.sampleCount;
-    if(ndciWaterFrac<0.05){
-      html+=`<span style="color:var(--muted);font-size:.85em">Huom: vesipikseleitä hyvin vähän (${(ndciWaterFrac*100).toFixed(0)}%) - NDCI-tulkinta epävarma tällä ajanjaksolla.</span>`;
+    // varovainen huomio jos molemmat viittaavat samaan suuntaan. NDCI:n oma
+    // vesipikselifraktio ei ole enaa vastauksessa (bbox-tila) - kaytetaan
+    // MNDWI:n water_fraction_pct:ia samasta bbox:ista/ajanjaksosta.
+    const waterFrac=mndwi.water_fraction_pct!=null?mndwi.water_fraction_pct/100:null;
+    if(waterFrac!=null && waterFrac<0.05){
+      html+=`<span style="color:var(--muted);font-size:.85em">Huom: vesiosuus hyvin pieni (${(waterFrac*100).toFixed(0)}%) - NDCI-tulkinta epävarma tällä ajanjaksolla.</span>`;
     } else {
       html+=`<span style="color:var(--muted);font-size:.85em">Yksi 3kk-mittauspiste - ei vielä aikasarjaa, ei riittävä trendin arviointiin.</span>`;
     }
