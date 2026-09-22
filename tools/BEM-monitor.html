@@ -213,6 +213,7 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 <div class="sbar">
   <span class="pill"><span class="dot" id="d-finbif"></span>FinBIF <span id="s-finbif">—</span></span>
   <span class="pill"><span class="dot" id="d-era5"></span>ERA5 <span id="s-era5">—</span></span>
+  <span class="pill"><span class="dot" id="d-rad"></span>STUK <span id="s-rad">—</span></span>
   <span class="pill"><span class="dot" id="d-cop"></span>Copernicus <span id="s-cop">—</span></span>
   <span style="color:var(--peat)">TS <span id="s-ts">—</span></span>
   <button class="btn" onclick="fetchAll()">↻ Päivitä</button>
@@ -356,6 +357,17 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 <div class="shdr"><span class="snum">§ 03</span><span class="stit">ERA5 ilmastodata + Copernicus</span></div>
 <div class="dbox" id="era5-box">Haetaan ERA5-dataa…</div>
 <div class="dbox" id="cop-box">Haetaan Copernicus-dataa…</div>
+
+<div class="shdr"><span class="snum">§ 03b</span><span class="stit">Ulkoisen säteilyn annosnopeus — STUK</span></div>
+<div class="dbox" id="rad-box">Haetaan STUKin mittauksia…</div>
+<div class="dbox" id="rad-hist" style="font-size:.9em;line-height:1.6">
+<b>Historia (STUK-A253, Radionuclide deposition in Finland 1961–2006):</b>
+Kuopio on ollut STUKin laskeuman mittauspaikka 1961–1994 ja uudelleen 1.4.2005 alkaen.
+Kertynyt laskeuma vuoden 1986 lopussa (hajoamiskorjattu): <b>¹³⁷Cs 5 200 Bq/m²</b>, ⁹⁰Sr 1 200 Bq/m².
+Vertailuksi Jyväskylä 21 000 ja Kankaanpää 34 000 Bq/m² ¹³⁷Cs — Kuopion seutu sai Tšernobylistä Suomen oloissa vähän laskeumaa.
+¹³⁷Cs:n puoliintumisaika on 30 v, joten vuoden 1986 määrästä on nyt jäljellä noin 40 %.
+Laskeuma (Bq/m²) ja annosnopeus (µSv/h) ovat eri suureita: nykyinen annosnopeus on pääosin luonnon taustasäteilyä.
+</div>
 
 <div class="ndvi-shot">
   <div class="ndvi-img-wrap">
@@ -614,6 +626,79 @@ function fetchSpecies() {
     });
 }
 
+
+// ── §03b STUK ulkoisen säteilyn annosnopeus (2026-09-22) ─────────────────
+// Suoraan FMI:n avoimesta rajapinnasta (CORS sallittu). Yksi kysely: 30 vrk,
+// tuntiaskel. Vertailu: (1) aseman oma 30 vrk mediaani ja vaihteluväli,
+// (2) Suomen luonnon taustasäteily 0,04–0,30 µSv/h (STUK).
+var RAD_STATIONS = [
+  {id:'103329', name:'Karttula',   note:'pilottialueella'},
+  {id:'103328', name:'Suonenjoki', note:'pilottialueella'},
+  {id:'103327', name:'Kuopio',     note:'itärajan takana'},
+  {id:'103330', name:'Tuusniemi',  note:'vertailuasema'}
+];
+function fetchRadiation() {
+  var end = new Date(), start = new Date(end.getTime() - 30*864e5);
+  var iso = function(d){ return d.toISOString().slice(0,19) + 'Z'; };
+  var url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature' +
+    '&storedquery_id=stuk::observations::external-radiation::multipointcoverage' +
+    '&bbox=26.9,62.6,28.8,63.1&timestep=60&starttime=' + iso(start) + '&endtime=' + iso(end);
+  fetch(url).then(function(r){ if(!r.ok) throw new Error('FMI HTTP ' + r.status); return r.text(); })
+  .then(function(txt){
+    var doc = new DOMParser().parseFromString(txt, 'application/xml');
+    if (txt.indexOf('ExceptionReport') >= 0) throw new Error('FMI: ' + ((doc.getElementsByTagName('ExceptionText')[0]||{}).textContent || 'virhe'));
+    // asemien koordinaatit -> fmisid
+    var coord = {};
+    var pts = doc.getElementsByTagNameNS('*', 'Point');
+    for (var i = 0; i < pts.length; i++) {
+      var gid = pts[i].getAttribute('gml:id') || pts[i].getAttributeNS('http://www.opengis.net/gml/3.2','id') || '';
+      var pos = pts[i].getElementsByTagNameNS('*','pos')[0];
+      if (gid.indexOf('point-') === 0 && pos) {
+        var p = pos.textContent.trim().split(/\s+/);
+        coord[Number(p[0]).toFixed(4) + ' ' + Number(p[1]).toFixed(4)] = gid.slice(6);
+      }
+    }
+    var posEl = doc.getElementsByTagNameNS('*','positions')[0];
+    var valEl = doc.getElementsByTagNameNS('*','doubleOrNilReasonTupleList')[0];
+    if (!posEl || !valEl) throw new Error('FMI: ei havaintoja');
+    var P = posEl.textContent.trim().split(/\n/), V = valEl.textContent.trim().split(/\n/);
+    var S = {};
+    for (var k = 0; k < Math.min(P.length, V.length); k++) {
+      var a = P[k].trim().split(/\s+/), v = Number(V[k].trim().split(/\s+/)[0]);
+      if (!isFinite(v)) continue;
+      var sid = coord[Number(a[0]).toFixed(4) + ' ' + Number(a[1]).toFixed(4)];
+      if (!sid) continue;
+      (S[sid] = S[sid] || []).push({t: Number(a[2]), v: v});
+    }
+    var q = function(arr, f){ var s = arr.slice().sort(function(x,y){return x-y;}); return s[Math.min(s.length-1, Math.floor(f*(s.length-1)))]; };
+    var rows = RAD_STATIONS.map(function(st){
+      var arr = S[st.id] || [];
+      if (!arr.length) return '<tr><td>' + st.name + '</td><td colspan="4" style="color:var(--muted)">ei dataa 30 vrk:lta</td></tr>';
+      arr.sort(function(x,y){ return x.t - y.t; });
+      var last = arr[arr.length-1], vs = arr.map(function(x){return x.v;});
+      var med = q(vs,.5), p05 = q(vs,.05), p95 = q(vs,.95), p99 = q(vs,.99), mx = Math.max.apply(null, vs);
+      // p99: p95-raja hälyttäisi määritelmän mukaan 5 % ajasta; sadepiikit ovat tavallisia
+      var flag = last.v > 0.30 ? ['var(--rust)','yli taustatason'] : last.v > p99 ? ['#b8860b','koholla (yli 30 vrk p99)'] : ['var(--spruce)','normaali'];
+      return '<tr><td><b>' + st.name + '</b> <span style="color:var(--muted);font-size:.85em">' + st.note + '</span></td>' +
+        '<td style="text-align:right"><b>' + last.v.toFixed(3) + '</b></td>' +
+        '<td style="text-align:right">' + med.toFixed(3) + '</td>' +
+        '<td style="text-align:right">' + p05.toFixed(3) + '–' + p95.toFixed(3) + ' <span style="color:var(--muted)">(max ' + mx.toFixed(3) + ')</span></td>' +
+        '<td style="color:' + flag[0] + '">' + flag[1] + '</td></tr>';
+    }).join('');
+    var lastT = 0; Object.keys(S).forEach(function(k){ S[k].forEach(function(x){ if (x.t > lastT) lastT = x.t; }); });
+    document.getElementById('rad-box').innerHTML =
+      '<table style="width:100%;border-collapse:collapse;font-size:.92em">' +
+      '<tr style="color:var(--muted);text-align:left"><th>Asema</th><th style="text-align:right">nyt µSv/h</th><th style="text-align:right">30 vrk mediaani</th><th style="text-align:right">p5–p95</th><th>tila</th></tr>' + rows + '</table>' +
+      '<div style="margin-top:6px;color:var(--muted);font-size:.85em">Viimeisin havainto ' + new Date(lastT*1000).toLocaleString('fi-FI') +
+      ' · <b>normaali taso</b>: Suomen luonnon taustasäteily 0,04–0,30 µSv/h (STUK) · aseman oma 30 vrk vaihteluväli sisältää sateen (radonin hajoamistuotteet) ja lumen vaikutuksen · ' +
+      'STUK: joditabletit lapsille, jos annosnopeus ylittää 10 µSv/h · lähde FMI avoin data / STUK, noin 255 asemaa</div>';
+    setDot('d-rad', 'ok'); setText('s-rad', 'OK');
+  }).catch(function(e){
+    var b = document.getElementById('rad-box'); if (b) b.innerHTML = '<span style="color:var(--rust)">Säteily: ' + e.message + '</span>';
+    setDot('d-rad', 'warn'); setText('s-rad', '—');
+  });
+}
+
 function fetchERA5() {
   var url = NVE + '/era5?lat=62.95&lng=26.85&start=2015-01-01';
   fetch(url)
@@ -794,6 +879,7 @@ function fetchAll() {
   loadDc();
   fetchSpecies();
   fetchERA5();
+  fetchRadiation();
   fetchCorineDf();
   fetchR();
   fetchNDVIImage();
