@@ -273,9 +273,9 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
   </div>
   <div class="core c">
     <div class="clbl">D_c · Kum. häiriö</div>
-    <div class="cval">0.610</div>
-    <div class="cbar"><i style="width:61%"></i></div>
-    <div class="csub">YVA-pipeline</div>
+    <div class="cval" id="dc-val">0.318</div>
+    <div class="cbar"><i id="dc-bar" style="width:32%"></i></div>
+    <div class="csub" id="dc-sub">hakkuut + pysyvä muutos</div>
   </div>
   <div class="core r">
     <div class="clbl">R · Palautuminen</div>
@@ -382,7 +382,12 @@ dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
 T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
 D_s: FinBIF — liito-orava, palokärki, kalasääski · <b>live</b><br>
 D_f: CORINE 2018 -ruudukko (metsäosuus) + Sentinel-2 NDVI-hajonta (aci-corine-proxy) · <b style="color:var(--spruce)">live (2026-07-08 lähtien)</b><br>
-D_c: YVA-pipeline 56.3 GW tuulivoima (0.61) · <b style="color:var(--rust)">kiinteä esimerkkiarvo, ei live-dataa</b><br>
+D_c: kaksi komponenttia (data/bem-dc-2004-2025.json) · <b style="color:var(--spruce)">laskettu aineistosta (2026-09-21)</b><br>
+<div id="dc-detail" style="margin:.3rem 0 .5rem 1.2rem;font-size:.9em;line-height:1.55">
+&nbsp;&nbsp;palautuva = hakkuut × 0,86 × (1 − ikä/20) · koko pilottialue, Metsäkeskuksen ilmoitukset 2004–2025<br>
+&nbsp;&nbsp;pysyvä = pelto + rakennettu + linjaus, kertymä · otanta 6 ruutua (Ruokavirasto, SYKE Ryhti)<br>
+&nbsp;&nbsp;D_c = 0,5·min(1, palautuva %/20) + 0,5·min(1, pysyvä %/2) [A]
+</div>
 R:   SYKE inspire_ps suojelualueet (Natura2000 SAC/SPA + valtion/yksityiset LSA), 3x otanta eri offseteilla · <b style="color:var(--spruce)">live (2026-07-08 lähtien)</b><br><br>
 <span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tama on v0.1-prototyyppi (TN-015: "Pre-development").
 BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s, D_f ja R
@@ -394,8 +399,10 @@ approksimaatio, ei validoitu todellista fragmentaatiomittausta vasten.
 R = suojellun pinta-alan piste-otantaosuus, kolme erillista 7x7-ruudukkoa
 eri offseteilla (0.25/0.5/0.75) yhdistettyna otantavirheen vahentamiseksi -
 edelleen pieni otos (nykyinen alue ~2-4 osumaa/147 pistetta), tulkittava
-varoen. D_c on ainoa yha kiinnitetty SERIES-taulukon esimerkkiarvo.
-BEPP-kokonaisarvo heijastaa siis kolmea neljasosaa oikeasta live-datasta.</span><br><br>
+varoen. D_c (2026-09-21) lasketaan tallennetusta aineistosta, ei live-hausta:
+2004–2025 vaatii n. 700 rajapintakutsua. Vuosien 2010 ja 2018 D_c on aliarvio
+(palautuvan komponentin 20 v ikkuna tayttyy vasta 2023), joten dS/dt (2018->2026)
+yliarvioi D_c:n kasvua. Kaikki nelja komponenttia perustuvat nyt havaintodataan.</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>
@@ -417,9 +424,12 @@ var BBOX  = '26.00,62.40,27.50,63.50';
 var RING_CIRC = 2 * Math.PI * 52;
 
 var SERIES = [
-  {year:2010, Df:0.28, Ds:0.30, Dc:0.18, R:0.48},
-  {year:2018, Df:0.41, Ds:0.38, Dc:0.35, R:0.42},
-  {year:2026, Df:0.52, Ds:0.44, Dc:0.61, R:0.38}
+  // Dc 2026-09-21: laskettu (data/bem-dc-2004-2025.json, pilot_area). 2010 ja 2018
+  // aliarvioituja: palautuvan komponentin 20 v ikkuna tayttyy vasta 2023 (data 2004->).
+  // Fallback-arvot; loadDc() korvaa ne tiedostosta.
+  {year:2010, Df:0.28, Ds:0.30, Dc:0.138, R:0.48},
+  {year:2018, Df:0.41, Ds:0.38, Dc:0.259, R:0.42},
+  {year:2026, Df:0.52, Ds:0.44, Dc:0.318, R:0.38}
 ];
 
 function beppV2(Df, Ds, Dc, R) {
@@ -748,9 +758,40 @@ function fetchNDVIImage() {
   img.src = url;
 }
 
+// D_c tallennetusta aineistosta (2026-09-21). pilot_area.years: palautuva koko
+// alueelta, pysyvä 6 ruudun otannasta (95 % LV), normalisointi [A].
+function loadDc() {
+  return fetch('data/bem-dc-2004-2025.json').then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(d) {
+    var pa = d.pilot_area; if (!pa) throw new Error('pilot_area puuttuu');
+    var by = {}; pa.years.forEach(function(y) { by[y.year] = y; });
+    var last = pa.years[pa.years.length - 1];
+    if (by[2010]) SERIES[0].Dc = by[2010].dc_normalized;
+    if (by[2018]) SERIES[1].Dc = by[2018].dc_normalized;
+    SERIES[2].Dc = last.dc_normalized;
+    setText('dc-val', last.dc_normalized.toFixed(3));
+    var bar = document.getElementById('dc-bar'); if (bar) bar.style.width = (last.dc_normalized*100).toFixed(0) + '%';
+    setText('dc-sub', 'palautuva ' + last.dc_recoverable_pct_land.toFixed(1) + ' % · pysyvä ' +
+      last.dc_permanent_cum_pct_land.toFixed(2) + ' % (' + last.year + ')');
+    var det = document.getElementById('dc-detail');
+    if (det) det.innerHTML +=
+      '<br>&nbsp;&nbsp;<b>' + last.year + ':</b> palautuva ' + last.dc_recoverable_pct_land.toFixed(2) + ' % maa-alasta' +
+      (last.window_full ? '' : ' (ikkuna vajaa)') + ' · pysyvä ' + last.dc_permanent_cum_pct_land.toFixed(2) +
+      ' % (95 % LV ' + last.dc_permanent_ci95[0].toFixed(2) + '–' + last.dc_permanent_ci95[1].toFixed(2) + ' %)' +
+      ' · epävarma ' + last.uncertain_cum_pct_land.toFixed(2) + ' % · hakkuut ' + last.clearcut_permille_land.toFixed(1) + ' ‰/v' +
+      '<br>&nbsp;&nbsp;maa-ala ' + pa.land_km2_est + ' km² · aineisto v' + d.version + ' (' + d.generated + ')';
+    updateBEPP(null);
+  }).catch(function(e) {
+    setText('dc-sub', 'aineisto ei latautunut — fallback 0,318 (' + e.message + ')');
+  });
+}
+
 function fetchAll() {
   setText('s-ts', new Date().toLocaleTimeString('fi-FI', {hour:'2-digit', minute:'2-digit'}));
   updateBEPP(null);
+  loadDc();
   fetchSpecies();
   fetchERA5();
   fetchCorineDf();
