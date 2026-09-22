@@ -64,7 +64,7 @@ footer a{color:var(--accent);text-decoration:none}
   <a href="https://aethercontinuity.org/tools/">Tools</a>
 </nav>
 
-<div class="kicker">ACI · HEM v1.2 · Hydrological Endurance Monitor</div>
+<div class="kicker">ACI · HEM v1.3 · Hydrological Endurance Monitor</div>
 <h1>Iisvesi/Virmasvesi — Hydrologinen tilannearvio</h1>
 <p class="sub">Vedenkorkeus · Sää · Pohjoismaiset reservoaarit · HEPP-indeksi · Kuopio FMI · SYKE WSFS · NVE</p>
 
@@ -110,6 +110,42 @@ footer a{color:var(--accent);text-decoration:none}
     <div class="cunit">°C · sade <span id="c-prec">—</span> mm</div>
     <div class="csub" id="c-fmi2">—</div>
   </div>
+</div>
+
+<div class="shdr"><span class="snum">§ 00</span><span class="stit">Iisvesi nyt — mitattu vedenkorkeus vs. normaali taso (SYKE)</span></div>
+<div class="gauge" style="border-width:2px">
+  <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px">
+    <div class="gval" id="iv-lvl" style="font-size:2rem">— m NN</div>
+    <div id="iv-dev" style="font-family:var(--mono);font-size:1.15rem;font-weight:700">—</div>
+    <div id="iv-date" style="font-family:var(--mono);font-size:.62rem;color:var(--muted)">Ladataan SYKE:n havaintoja…</div>
+  </div>
+  <div id="iv-sum" style="font-family:var(--mono);font-size:.68rem;margin:6px 0 4px;line-height:1.7">—</div>
+  <div id="iv-chart" style="margin-top:4px"></div>
+  <div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Viiva = 2026 (mitattu, päivittäin) · katkoviiva = saman päivän keskiarvo 1991–2020 · tumma nauha = p10–p90 · vaalea = havaittu min–max 1991–2020</div>
+</div>
+<div class="cards" style="margin-bottom:10px">
+  <div class="card">
+    <div class="clbl">Lähtövirtaama · Nokisenkoski</div>
+    <div class="cval" id="iv-qo">—</div>
+    <div class="cunit">m³/s · Iisveden luusua</div>
+    <div class="csub" id="iv-qo2">—</div>
+  </div>
+  <div class="card">
+    <div class="clbl">Tulovirtaama · Äyskoski</div>
+    <div class="cval" id="iv-qi">—</div>
+    <div class="cunit">m³/s · Nilakasta</div>
+    <div class="csub" id="iv-qi2">—</div>
+  </div>
+  <div class="card">
+    <div class="clbl">Tulon osuus lähdöstä</div>
+    <div class="cval" id="iv-ratio">—</div>
+    <div class="cunit">% · Äyskoski / Nokisenkoski</div>
+    <div class="csub" id="iv-ratio2">—</div>
+  </div>
+</div>
+<div class="dbox" id="iv-trend" style="margin-bottom:6px">Ladataan kausitrendejä…</div>
+<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-bottom:8px">
+Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R² 0,999), joten taso ja lähtö kertovat saman asian eikä niitä lasketa HEPP:iin erikseen. Tulovirtaama on riippumaton: se erottaa latvojen kuivuuden Iisveden omasta valuma-alueesta. Lähde: SYKE Hydrologiarajapinta (CC BY 4.0) · asemat 1966 / 1005 / 1003 · normaalit ja trendit: data/hem-iisvesi-normals-trends.json.
 </div>
 
 <div class="shdr"><span class="snum">§ 01</span><span class="stit">NVE Norja — Magasinstatistikk</span></div>
@@ -1068,9 +1104,93 @@ function drawDecadeBar(id, labels, values, fmtFn, colorFn, breakLabel) {
   el.outerHTML = s;
 }
 
+// ── §00 Iisvesi nyt (2026-09-22) ─────────────────────────────────────────
+// Mitattu SYKE-data suoraan aci-nve-proxyn /syke-reitin kautta (OData, max 500
+// riviä/kutsu). Normaalit ja trendit tallennetusta tiedostosta.
+async function sykeOdata(entity, filter, extra){
+  const u = PROXY + '/syke?entity=' + entity + '&$filter=' + encodeURIComponent(filter) + (extra||'') + '&cb=' + Date.now();
+  const r = await fetch(u); if(!r.ok) throw new Error(entity+' HTTP '+r.status);
+  const j = await r.json(); if(j.error) throw new Error(j.error);
+  return (j.value||[]).filter(x=>x.Arvo!=null).map(x=>({t:x.Aika.slice(0,10), v:Number(x.Arvo)}));
+}
+function ivKey(t){ const m=t.slice(5,7), d=t.slice(8,10); return m==='02'&&d==='29' ? '02-28' : m+'-'+d; }
+function ivChart(norm, series){
+  const W=620,H=190,P={l:44,r:8,t:8,b:20}, w=W-P.l-P.r, h=H-P.t-P.b;
+  const days=Object.keys(norm).sort(); // 365
+  const vals=[]; days.forEach(k=>{const n=norm[k]; vals.push(n[3],n[4]);}); series.forEach(p=>vals.push(p.v));
+  const lo=Math.min(...vals)-0.05, hi=Math.max(...vals)+0.05;
+  const X=i=>P.l+i*(w/(days.length-1)), Y=v=>P.t+h-(v-lo)/(hi-lo)*h;
+  const band=(a,b)=>days.map((k,i)=>`${X(i).toFixed(1)},${Y(norm[k][a]).toFixed(1)}`).join(' ')+' '+days.slice().reverse().map((k,i)=>`${X(days.length-1-i).toFixed(1)},${Y(norm[k][b]).toFixed(1)}`).join(' ');
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="font-family:var(--mono);font-size:9px">`;
+  s+=`<polygon points="${band(3,4)}" fill="#c8dde8" opacity=".55"/>`;
+  s+=`<polygon points="${band(1,2)}" fill="#8fb8d4" opacity=".6"/>`;
+  s+=`<polyline points="${days.map((k,i)=>`${X(i).toFixed(1)},${Y(norm[k][0]).toFixed(1)}`).join(' ')}" fill="none" stroke="#2a5f8f" stroke-dasharray="4 3" stroke-width="1.2"/>`;
+  const idx={}; days.forEach((k,i)=>idx[k]=i);
+  const pts=series.map(p=>idx[ivKey(p.t)]!=null?`${X(idx[ivKey(p.t)]).toFixed(1)},${Y(p.v).toFixed(1)}`:null).filter(Boolean).join(' ');
+  s+=`<polyline points="${pts}" fill="none" stroke="#b03020" stroke-width="2"/>`;
+  for(let k=0;k<=4;k++){ const v=lo+(hi-lo)*k/4; s+=`<text x="${P.l-4}" y="${(Y(v)+3).toFixed(0)}" text-anchor="end" fill="#888">${v.toFixed(2)}</text>`; }
+  ['01','03','05','07','09','11'].forEach(m=>{const i=idx[m+'-01']; if(i!=null) s+=`<text x="${X(i).toFixed(0)}" y="${H-5}" fill="#888">${Number(m)}.</text>`;});
+  return s+'</svg>';
+}
+async function loadIisvesiNow(){
+  try{
+    const D = await fetch('data/hem-iisvesi-normals-trends.json?cb='+Date.now()).then(r=>{if(!r.ok) throw new Error('normaalit HTTP '+r.status); return r.json();});
+    const Z = D.stations.level.zero_NN_m, NL=D.normals.level_m_NN.by_day, NO=D.normals.outflow_m3s.by_day, NI=D.normals.inflow_m3s.by_day;
+    const y = new Date().getFullYear();
+    const lv = (await sykeOdata('Vedenkorkeus', `Paikka_Id eq 1966 and Aika ge datetime'${y}-01-01T00:00:00'`, '&$orderby=Aika&$top=500'))
+                 .map(p=>({t:p.t, v:Z+p.v/100}));
+    if(!lv.length) throw new Error('ei tämän vuoden vedenkorkeuksia');
+    const last = lv[lv.length-1], n = NL[ivKey(last.t)];
+    const dev = (last.v-n[0])*100;
+    // sijoitus: sama päivä kaikkina vuosina (1909→)
+    const [mm,dd]=[Number(last.t.slice(5,7)),Number(last.t.slice(8,10))];
+    const same = await sykeOdata('Vedenkorkeus', `Paikka_Id eq 1966 and month(Aika) eq ${mm} and day(Aika) eq ${dd}`, '&$top=500');
+    const vals = same.map(p=>Z+p.v/100); const rank = vals.filter(v=>v<last.v-1e-9).length+1;
+    document.getElementById('iv-lvl').textContent = last.v.toFixed(2)+' m NN';
+    const devEl=document.getElementById('iv-dev');
+    devEl.textContent = (dev>=0?'+':'')+dev.toFixed(0)+' cm normaalista';
+    devEl.style.color = dev < -(n[0]-n[1])*100 ? 'var(--sr)' : dev < 0 ? 'var(--sy)' : 'var(--sg)';
+    setText('iv-date','mitattu '+last.t.split('-').reverse().join('.')+' · Iisvesi (1966)');
+    const spring = lv.filter(p=>{const m=Number(p.t.slice(5,7)); return m>=4&&m<=7;});
+    const sp = spring.length ? spring.reduce((a,b)=>b.v>a.v?b:a) : null;
+    const sm = lv.filter(p=>['06','07','08'].includes(p.t.slice(5,7))); const smv = sm.length>80 ? sm.reduce((a,p)=>a+p.v,0)/sm.length : null;
+    const sr = D.summer_mean_level_rank.values; const srank = smv!=null ? sr.filter(r=>r.level_m<smv).length+1 : null;
+    document.getElementById('iv-sum').innerHTML =
+      `Saman päivän normaali ${n[0].toFixed(2)} m (1991–2020) · vaihteluväli p10–p90 ${n[1].toFixed(2)}–${n[2].toFixed(2)} m · `+
+      `<b>${rank}/${vals.length}</b> alimmasta tälle päivälle (${Math.min(...same.map(p=>p.t.slice(0,4)))}→)`+
+      (sp?`<br>Kevään huippu ${y}: <b>${sp.v.toFixed(2)} m</b> (${sp.t.slice(8,10)}.${sp.t.slice(5,7)}.)`:'')+
+      (smv!=null?` · kesän (VI–VIII) keskitaso <b>${smv.toFixed(2)} m</b> — ${srank}/${sr.length+1} alimmasta (${Math.min(...sr.map(r=>r.year))}→)`:'');
+    document.getElementById('iv-chart').innerHTML = ivChart(NL, lv);
+    // virtaamat
+    const qo = await sykeOdata('Virtaama','Paikka_Id eq 1005','&$orderby=Aika desc&$top=3');
+    const qi = await sykeOdata('Virtaama','Paikka_Id eq 1003','&$orderby=Aika desc&$top=3');
+    const qcard=(id,q,N)=>{ if(!q.length){setText(id,'—');return null;} const p=q[0], nn=N[ivKey(p.t)];
+      setText(id, p.v.toFixed(1));
+      document.getElementById(id+'2').innerHTML = `${p.t.split('-').reverse().join('.')} · normaali ${nn[0].toFixed(1)} (p10 ${nn[1].toFixed(1)}) · <b style="color:${p.v<nn[1]?'var(--sr)':p.v<nn[0]?'var(--sy)':'var(--sg)'}">${Math.round(100*p.v/nn[0])} %</b> normaalista`;
+      return {p,nn}; };
+    const o=qcard('iv-qo',qo,NO), i=qcard('iv-qi',qi,NI);
+    if(o&&i){ const r=100*i.p.v/o.p.v, rn=100*i.nn[0]/o.nn[0];
+      setText('iv-ratio', r.toFixed(0));
+      document.getElementById('iv-ratio2').innerHTML = `normaali ${rn.toFixed(0)} % · ${r<rn-5?'latvat kuivemmat kuin oma valuma-alue':r>rn+5?'oma valuma-alue kuivempi kuin latvat':'kuivuus tasainen'}`; }
+    // trendit
+    const T=D.trends_1995_2025.series;
+    const cell=(r,unit)=>{ const v= unit==='%' ? r.pct_per_decade : r.sen_per_decade; const txt=(v>=0?'+':'')+v.toFixed(unit==='%'?0:1)+(unit==='%'?' %':' cm');
+      return `<td style="padding:1px 10px;text-align:right;${r.significant_5pct?'font-weight:700':''}">${txt}<span style="color:var(--muted);font-weight:400"> (z ${r.mk_z.toFixed(1)})</span></td>`; };
+    let t='<b>Kausitrendit 1995–2025</b> · muutos / 10 v · Mann–Kendall z, lihavoitu = merkitsevä (5 %)<table style="margin-top:4px;border-collapse:collapse">'+
+      '<tr style="color:var(--muted)"><td></td><td style="padding:1px 10px;text-align:right">vedenkorkeus</td><td style="padding:1px 10px;text-align:right">lähtö</td><td style="padding:1px 10px;text-align:right">tulo</td></tr>';
+    T.level_cm.forEach((r,k)=>{ t+=`<tr><td>${r.season} ${r.months}</td>${cell(r,'cm')}${cell(T.outflow_m3s[k],'%')}${cell(T.inflow_m3s[k],'%')}</tr>`; });
+    t+='</table><span style="color:var(--muted)">Talvi ja kevät ovat vetisemmiksi muuttuneet, kesä ja syksy ilman trendiä: kausijakauma muuttuu, kokonaisvaluma ei pienene. Yksittäinen kuiva kesä (esim. 2026) ei ole trendi.</span>';
+    document.getElementById('iv-trend').innerHTML=t;
+    dot('iis', dev < -(n[0]-n[1])*100 ? 'warn' : 'ok');
+  }catch(e){
+    setText('iv-date','Virhe: '+e.message);
+  }
+}
+
 fetchAll();
 fetchHEPP();
 drawTemporalCharts();
+loadIisvesiNow();
 
 </script>
 </body>
