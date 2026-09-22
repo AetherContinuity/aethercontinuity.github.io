@@ -627,23 +627,28 @@ function fetchSpecies() {
 }
 
 
-// ── §03b STUK ulkoisen säteilyn annosnopeus (2026-09-22) ─────────────────
-// Suoraan FMI:n avoimesta rajapinnasta (CORS sallittu). Yksi kysely: 30 vrk,
-// tuntiaskel. Vertailu: (1) aseman oma 30 vrk mediaani ja vaihteluväli,
+// ── §03b STUK ulkoisen säteilyn annosnopeus (2026-09-22, 168h-korjaus 2026-09-22) ──
+// Suoraan FMI:n avoimesta rajapinnasta (CORS sallittu). Tuntiaskel, 30 vrk:n
+// tilastoikkuna. Vertailu: (1) aseman oma 30 vrk mediaani ja vaihteluväli,
 // (2) Suomen luonnon taustasäteily 0,04–0,30 µSv/h (STUK).
+// KORJATTU: alkuperainen yksi 30 vrk:n (720h) kysely palautti FMI HTTP 400:
+// "Too long time interval requested! No more than 168.000000 hours allowed."
+// (kayttajan oma curl-diagnoosi dq.xml:sta ja ExceptionTextista). Tama
+// storedquery_id sallii korkeintaan 168h/pyynto - 30 vrk:n ikkuna haetaan
+// siksi viidessa 144h-erassa (5*144=720h=30vrk, marginaali 168h-rajaan) ja
+// yhdistetaan asemittain ennen tilastojen laskemista.
 var RAD_STATIONS = [
   {id:'103329', name:'Karttula',   note:'pilottialueella'},
   {id:'103328', name:'Suonenjoki', note:'pilottialueella'},
   {id:'103327', name:'Kuopio',     note:'itärajan takana'},
   {id:'103330', name:'Tuusniemi',  note:'vertailuasema'}
 ];
-function fetchRadiation() {
-  var end = new Date(), start = new Date(end.getTime() - 30*864e5);
-  var iso = function(d){ return d.toISOString().slice(0,19) + 'Z'; };
+function fetchRadiationChunk(startMs, endMs) {
+  var iso = function(ms){ return new Date(ms).toISOString().slice(0,19) + 'Z'; };
   var url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature' +
     '&storedquery_id=stuk::observations::external-radiation::multipointcoverage' +
-    '&bbox=26.9,62.6,28.8,63.1&timestep=60&starttime=' + iso(start) + '&endtime=' + iso(end);
-  fetch(url).then(function(r){ if(!r.ok) throw new Error('FMI HTTP ' + r.status); return r.text(); })
+    '&bbox=26.9,62.6,28.8,63.1&timestep=60&starttime=' + iso(startMs) + '&endtime=' + iso(endMs);
+  return fetch(url).then(function(r){ if(!r.ok) throw new Error('FMI HTTP ' + r.status); return r.text(); })
   .then(function(txt){
     var doc = new DOMParser().parseFromString(txt, 'application/xml');
     if (txt.indexOf('ExceptionReport') >= 0) throw new Error('FMI: ' + ((doc.getElementsByTagName('ExceptionText')[0]||{}).textContent || 'virhe'));
@@ -660,7 +665,7 @@ function fetchRadiation() {
     }
     var posEl = doc.getElementsByTagNameNS('*','positions')[0];
     var valEl = doc.getElementsByTagNameNS('*','doubleOrNilReasonTupleList')[0];
-    if (!posEl || !valEl) throw new Error('FMI: ei havaintoja');
+    if (!posEl || !valEl) return {};
     var P = posEl.textContent.trim().split(/\n/), V = valEl.textContent.trim().split(/\n/);
     var S = {};
     for (var k = 0; k < Math.min(P.length, V.length); k++) {
@@ -670,6 +675,24 @@ function fetchRadiation() {
       if (!sid) continue;
       (S[sid] = S[sid] || []).push({t: Number(a[2]), v: v});
     }
+    return S;
+  });
+}
+function fetchRadiation() {
+  var end = Date.now(), CHUNK_H = 144, N_CHUNKS = 5;
+  var chunks = [];
+  for (var c = 0; c < N_CHUNKS; c++) {
+    var chunkEnd = end - c * CHUNK_H * 3600e3;
+    chunks.push([chunkEnd - CHUNK_H * 3600e3, chunkEnd]);
+  }
+  Promise.all(chunks.map(function(ce){ return fetchRadiationChunk(ce[0], ce[1]); }))
+  .then(function(parts){
+    var S = {};
+    parts.forEach(function(part){
+      Object.keys(part).forEach(function(sid){
+        (S[sid] = S[sid] || []).push.apply(S[sid], part[sid]);
+      });
+    });
     var q = function(arr, f){ var s = arr.slice().sort(function(x,y){return x-y;}); return s[Math.min(s.length-1, Math.floor(f*(s.length-1)))]; };
     var rows = RAD_STATIONS.map(function(st){
       var arr = S[st.id] || [];
