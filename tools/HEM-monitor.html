@@ -383,43 +383,52 @@ async function fetchNordicReservoirs(nveCapacityTwh){
   }
 }
 
-// BEM-E (Aquatic Extension) - KOKEELLINEN, lisatty 2026-07-27. Hakee
-// MNDWI [A-luokka] ja NDCI [B-luokka] nykytilan (3kk keskiarvo) samalle
-// Iisvesi-Virmasvesi-Rasvanki-bbox:ille kuin §02. EI aikasarjaa (ks.
-// hem-satellite-water-quality-plan.md - /lake-timeseries ei viela toimi,
-// syy tuntematon). Yhdistetty tulkinta on SANALLINEN havainto, EI
-// matemaattinen yhdistaminen HEPP:iin - BEM-E pysyy omana, erillisena
-// mittarinaan kunnes yhteys on validoitu pitkalla aikasarjalla.
+// BEM-E (Aquatic Extension) - KOKEELLINEN, lisatty 2026-07-27, polygon-
+// korjaus 2026-09-22. Hakee MNDWI [A-luokka] ja NDCI [B-luokka] samalta
+// jarvelta (Iisvesi-Virmasvesi-Rasvanki) kuin §02, POLYGONIRAJAUKSELLA -
+// EI enaa samalla bbox:illa kuin §02 (vanhentunut, ks. alla). Vertailu
+// kalibroituun perusarvoon 2018-2025 (water_fraction_rank/ndci_rank).
+// Yhdistetty tulkinta on SANALLINEN havainto, EI matemaattinen
+// yhdistaminen HEPP:iin - BEM-E pysyy omana, erillisena mittarinaan
+// kunnes yhteys on validoitu pitkalla aikasarjalla.
+//
+// KORJATTU 2026-09-22 (kayttajan diagnoosi): bbox=IISVESI_BBOX (sama kuin
+// §02) epaonnistui NDCI:lle AINA - "mndwi_mean/ndci_mean puuttuu" (0.9.6-
+// korjauksen jalkeenkin). Syy: /ndci bbox-tilassa vaatii SCL==6-vesi-
+// pikseleita >=50% per P10D-vali, mutta tama bbox on vain 19% vetta
+// (MNDWI:n water_fraction_pct paljasti taman - rajauksessa on myos osia
+// Niinivedesta, Nokisenkosken alapuolinen allas ja pienempia jarvia).
+// Vaihdettu polygoniin kolmesta syysta: (1) perusarvot on kalibroitu
+// vain polygoneille (?polygon=iisvesi/iisvesi_raw), ei bbox:ille - bbox
+// ei koskaan saisi vertailukohtaa. (2) bbox ei kuvaa Iisvetta, vain 19%
+// siita on vetta ja osa siitakin muita jarvia. (3) "sama bbox kuin §02"
+// oli jo epatarkka maaritelma - "sama jarvi, polygonirajaus" on tarkempi.
 const CORINE_PROXY='https://aci-corine-proxy.ruotsalainen-marko.workers.dev';
-const IISVESI_BBOX='26.167,62.567,27.067,63.467';
 
 async function fetchBemE(hepp){
   try{
     const[mndwi,ndci]=await Promise.all([
-      fetch(`${CORINE_PROXY}/mndwi?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
-      fetch(`${CORINE_PROXY}/ndci?bbox=${IISVESI_BBOX}&months=3`).then(r=>r.json()),
+      fetch(`${CORINE_PROXY}/mndwi?polygon=iisvesi_raw`).then(r=>r.json()),
+      fetch(`${CORINE_PROXY}/ndci?polygon=iisvesi`).then(r=>r.json()),
     ]);
-    // 2026-09-22: corine-proxy v0.9-0.9.6 vaihtoi vastausmuodon sisakkaisesta
-    // mndwi_stats/ndci_stats (Sentinel Hub raaka stats, mean/stDev/sampleCount/
-    // noDataCount) tasaiseksi (mndwi_mean/water_fraction_pct/ndci_mean/
-    // n_intervals_used/n_intervals_total, P10D-mediaani) - vanha koodi luki
-    // aina puuttuvaa mndwi_stats/ndci_stats-kenttaa.
-    if(mndwi.mndwi_mean==null||ndci.ndci_mean==null) throw new Error('mndwi_mean/ndci_mean puuttuu jommastakummasta vastauksesta');
 
-    let html=`MNDWI: <b>${mndwi.mndwi_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(vesiosuus ${mndwi.water_fraction_pct!=null?mndwi.water_fraction_pct.toFixed(1)+'%':'—'}, ${mndwi.n_intervals_used}/${mndwi.n_intervals_total} P10D-välia) [A]</span><br>`;
-    html+=`NDCI: <b>${ndci.ndci_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(${ndci.n_intervals_used}/${ndci.n_intervals_total} P10D-välia) [B]</span><br>`;
+    let html='';
+    if(mndwi.mndwi_mean!=null){
+      html+=`MNDWI: <b>${mndwi.mndwi_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(vesiosuus ${mndwi.water_fraction_pct.toFixed(1)}%${mndwi.water_fraction_rank?', '+mndwi.water_fraction_rank:''}, ${mndwi.n_intervals_used}/${mndwi.n_intervals_total} P10D-välia) [A]</span><br>`;
+    } else {
+      // Pehmea kasittely (vaihtoehto 2, jaa varalle): syy nakyy lauseena,
+      // ei punaisena virheena - esim. pilvinen kausi tai liian harva data.
+      html+=`MNDWI: <span style="color:var(--muted)">ei laskettavissa (${mndwi.error||'tuntematon syy'}${mndwi.hint?' — '+mndwi.hint:''})</span> [A]<br>`;
+    }
+    if(ndci.ndci_mean!=null){
+      html+=`NDCI: <b>${ndci.ndci_mean.toFixed(3)}</b> <span style="color:var(--muted);font-size:.7em">(${ndci.ndci_rank?ndci.ndci_rank+', ':''}${ndci.n_intervals_used}/${ndci.n_intervals_total} P10D-välia) [B]</span><br>`;
+    } else {
+      html+=`NDCI: <span style="color:var(--muted)">ei laskettavissa (${ndci.error||'tuntematon syy'}${ndci.hint?' — '+ndci.hint:''})</span> [B]<br>`;
+    }
     if(hepp!=null) html+=`HEPP (rinnakkainen, EI yhdistetty kaavaan): <b>${hepp.toFixed(2)}</b><br>`;
 
-    // Sanallinen tulkinta - EI matemaattinen yhdistaminen. Vain karkea,
-    // varovainen huomio jos molemmat viittaavat samaan suuntaan. NDCI:n oma
-    // vesipikselifraktio ei ole enaa vastauksessa (bbox-tila) - kaytetaan
-    // MNDWI:n water_fraction_pct:ia samasta bbox:ista/ajanjaksosta.
-    const waterFrac=mndwi.water_fraction_pct!=null?mndwi.water_fraction_pct/100:null;
-    if(waterFrac!=null && waterFrac<0.05){
-      html+=`<span style="color:var(--muted);font-size:.85em">Huom: vesiosuus hyvin pieni (${(waterFrac*100).toFixed(0)}%) - NDCI-tulkinta epävarma tällä ajanjaksolla.</span>`;
-    } else {
-      html+=`<span style="color:var(--muted);font-size:.85em">Yksi 3kk-mittauspiste - ei vielä aikasarjaa, ei riittävä trendin arviointiin.</span>`;
-    }
+    const cw = mndwi.comparison_window || ndci.comparison_window;
+    html+=`<span style="color:var(--muted);font-size:.85em">Sama järvi kuin §02 (Iisvesi–Virmasvesi–Rasvanki), polygonirajaus · vertailu kalibroituun perusarvoon 2018–2025${cw?' · '+cw:''}.</span>`;
     setHTML('bem-e-det',html);
   }catch(e){
     setHTML('bem-e-det',`<span class="derr">BEM-E: ${e.message}</span>`);
