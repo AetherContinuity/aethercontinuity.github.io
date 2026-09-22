@@ -1,6 +1,6 @@
 {
  "dataset": "BEM D_c — kumulatiivinen häiriö, kaksi komponenttia",
- "version": "1.0",
+ "version": "1.1",
  "generated": "2026-09-21",
  "license_sources": "Metsäkeskus avoin metsätieto CC BY 4.0 · Ruokavirasto INSPIRE CC BY 4.0 · SYKE Ryhti CC BY 4.0 · Copernicus Sentinel-2 (Earth Search / AWS Open Data)",
  "definition": {
@@ -24,7 +24,8 @@
   "Maa-ala on arvio (2023 kesäkomposiitin pilvettömät maapikselit).",
   "Hakkuut kirjataan ilmoitusvuodelle; toteutus voi tapahtua 1–3 v myöhemmin.",
   "2024–2025 hakkuiden toteutuma on odotusarvo (kerroin), ei havaittu.",
-  "Harvennukset rajattu pois (päätös 2026-09): eivät korvaa puustoa."
+  "Harvennukset rajattu pois (päätös 2026-09): eivät korvaa puustoa.",
+  "pilot_area.years: dc_recoverable ja dc_normalized ovat vertailukelpoisia vasta window_full=true (2023→); aiemmat vuodet aliarvioivat (ikkuna täyttyy 2004→)."
  ],
  "boxes": [
   {
@@ -1863,5 +1864,424 @@
     }
    ]
   }
- ]
+ ],
+ "pilot_area": {
+  "name": "Rautalammin reitti (BEM-pilottialue)",
+  "bbox_wgs84": [
+   26.0,
+   62.4,
+   27.5,
+   63.5
+  ],
+  "area_km2": 9328,
+  "land_km2_est": 7726,
+  "land_note": "Sentinel-2 SCL 18.6.2023, 4 laattaa (MK, NK, ML, NL), vesi 16,7 %, pilvi 2,7 % jaettu suhteessa",
+  "recoverable_method": "KOKO ALUE: Metsäkeskuksen hakkuuilmoitukset (117 000 kpl 2004–2025), INTERSECTS pilottialueen polygoniin, vain AREA/vuosi/tarkoitus/toteutustapa (propertyName). Ei otantavirhettä.",
+  "permanent_method": "OTANTA: 6 ruutua 25×25 km säännöllinen ruudukko (shakkilauta), 3 050 km² maata (≈40 %). Luokittelu vain rekistereillä (Ruokavirasto peltolohkot 2021/2025, SYKE Ryhti rakennukset + luvat, muotosääntö linjauksille) kaikkina vuosina. Keskiarvo ruuduista, 95 % LV t-jakaumalla (n=6). Toistot vain LUC-ilmoitusten keskeen.",
+  "permanent_validation": "Suonenjoen ruutu (500/6925): rekisterit 382 ha vs rekisterit+Sentinel-2 408 ha (2018–2023 satelliitti lisäsi 6 %).",
+  "normalization": {
+   "formula": "D_c = 0.5·min(1, palautuva%/20) + 0.5·min(1, pysyvä%/2)",
+   "ref_recoverable_pct": 20.0,
+   "ref_permanent_pct": 2.0,
+   "weights": [
+    0.5,
+    0.5
+   ],
+   "note": "[A] vertailutasot hyväksytty 2026-09-21; valittu niin että nykyarvot ovat asteikon alaosassa. BEPP-kaavan D_c^0.8 käyttää tätä arvoa."
+  },
+  "sample_boxes": [
+   {
+    "id": "P450_6925",
+    "bbox_epsg3067": [
+     450000,
+     6925000,
+     475000,
+     6950000
+    ],
+    "land_km2": 512
+   },
+   {
+    "id": "P450_6975",
+    "bbox_epsg3067": [
+     450000,
+     6975000,
+     475000,
+     7000000
+    ],
+    "land_km2": 558
+   },
+   {
+    "id": "P475_6950",
+    "bbox_epsg3067": [
+     475000,
+     6950000,
+     500000,
+     6975000
+    ],
+    "land_km2": 461
+   },
+   {
+    "id": "P475_7000",
+    "bbox_epsg3067": [
+     475000,
+     7000000,
+     500000,
+     7025000
+    ],
+    "land_km2": 485
+   },
+   {
+    "id": "P500_6925",
+    "bbox_epsg3067": [
+     500000,
+     6925000,
+     525000,
+     6950000
+    ],
+    "land_km2": 528
+   },
+   {
+    "id": "P500_6975",
+    "bbox_epsg3067": [
+     500000,
+     6975000,
+     525000,
+     7000000
+    ],
+    "land_km2": 507
+   }
+  ],
+  "years": [
+   {
+    "year": 2004,
+    "clearcut_declared_ha": 6803.6,
+    "clearcut_realized_ha": 5851.1,
+    "clearcut_permille_land": 7.57,
+    "dc_recoverable_pct_land": 0.76,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.029,
+    "dc_permanent_ci95": [
+     0.002,
+     0.055
+    ],
+    "uncertain_cum_pct_land": 0.004,
+    "dc_normalized": 0.026
+   },
+   {
+    "year": 2005,
+    "clearcut_declared_ha": 5465.0,
+    "clearcut_realized_ha": 4699.9,
+    "clearcut_permille_land": 6.08,
+    "dc_recoverable_pct_land": 1.33,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.034,
+    "dc_permanent_ci95": [
+     0.005,
+     0.063
+    ],
+    "uncertain_cum_pct_land": 0.014,
+    "dc_normalized": 0.042
+   },
+   {
+    "year": 2006,
+    "clearcut_declared_ha": 7798.8,
+    "clearcut_realized_ha": 6707.0,
+    "clearcut_permille_land": 8.68,
+    "dc_recoverable_pct_land": 2.13,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.048,
+    "dc_permanent_ci95": [
+     0.007,
+     0.088
+    ],
+    "uncertain_cum_pct_land": 0.018,
+    "dc_normalized": 0.065
+   },
+   {
+    "year": 2007,
+    "clearcut_declared_ha": 7865.5,
+    "clearcut_realized_ha": 6764.3,
+    "clearcut_permille_land": 8.76,
+    "dc_recoverable_pct_land": 2.89,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.056,
+    "dc_permanent_ci95": [
+     0.008,
+     0.105
+    ],
+    "uncertain_cum_pct_land": 0.029,
+    "dc_normalized": 0.086
+   },
+   {
+    "year": 2008,
+    "clearcut_declared_ha": 4951.9,
+    "clearcut_realized_ha": 4258.6,
+    "clearcut_permille_land": 5.51,
+    "dc_recoverable_pct_land": 3.29,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.075,
+    "dc_permanent_ci95": [
+     0.017,
+     0.132
+    ],
+    "uncertain_cum_pct_land": 0.035,
+    "dc_normalized": 0.101
+   },
+   {
+    "year": 2009,
+    "clearcut_declared_ha": 4942.1,
+    "clearcut_realized_ha": 4250.2,
+    "clearcut_permille_land": 5.5,
+    "dc_recoverable_pct_land": 3.65,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.089,
+    "dc_permanent_ci95": [
+     0.015,
+     0.163
+    ],
+    "uncertain_cum_pct_land": 0.042,
+    "dc_normalized": 0.114
+   },
+   {
+    "year": 2010,
+    "clearcut_declared_ha": 9666.2,
+    "clearcut_realized_ha": 8312.9,
+    "clearcut_permille_land": 10.76,
+    "dc_recoverable_pct_land": 4.52,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.099,
+    "dc_permanent_ci95": [
+     0.013,
+     0.184
+    ],
+    "uncertain_cum_pct_land": 0.05,
+    "dc_normalized": 0.138
+   },
+   {
+    "year": 2011,
+    "clearcut_declared_ha": 6681.4,
+    "clearcut_realized_ha": 5746.0,
+    "clearcut_permille_land": 7.44,
+    "dc_recoverable_pct_land": 5.0,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.127,
+    "dc_permanent_ci95": [
+     0.02,
+     0.234
+    ],
+    "uncertain_cum_pct_land": 0.067,
+    "dc_normalized": 0.157
+   },
+   {
+    "year": 2012,
+    "clearcut_declared_ha": 6373.1,
+    "clearcut_realized_ha": 5480.9,
+    "clearcut_permille_land": 7.09,
+    "dc_recoverable_pct_land": 5.41,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.152,
+    "dc_permanent_ci95": [
+     0.028,
+     0.277
+    ],
+    "uncertain_cum_pct_land": 0.083,
+    "dc_normalized": 0.173
+   },
+   {
+    "year": 2013,
+    "clearcut_declared_ha": 7529.7,
+    "clearcut_realized_ha": 6475.5,
+    "clearcut_permille_land": 8.38,
+    "dc_recoverable_pct_land": 5.91,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.177,
+    "dc_permanent_ci95": [
+     0.036,
+     0.318
+    ],
+    "uncertain_cum_pct_land": 0.09,
+    "dc_normalized": 0.192
+   },
+   {
+    "year": 2014,
+    "clearcut_declared_ha": 6550.9,
+    "clearcut_realized_ha": 5633.8,
+    "clearcut_permille_land": 7.29,
+    "dc_recoverable_pct_land": 6.26,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.191,
+    "dc_permanent_ci95": [
+     0.054,
+     0.328
+    ],
+    "uncertain_cum_pct_land": 0.103,
+    "dc_normalized": 0.204
+   },
+   {
+    "year": 2015,
+    "clearcut_declared_ha": 6217.0,
+    "clearcut_realized_ha": 5346.6,
+    "clearcut_permille_land": 6.92,
+    "dc_recoverable_pct_land": 6.54,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.208,
+    "dc_permanent_ci95": [
+     0.076,
+     0.339
+    ],
+    "uncertain_cum_pct_land": 0.121,
+    "dc_normalized": 0.215
+   },
+   {
+    "year": 2016,
+    "clearcut_declared_ha": 7240.9,
+    "clearcut_realized_ha": 6227.2,
+    "clearcut_permille_land": 8.06,
+    "dc_recoverable_pct_land": 6.89,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.223,
+    "dc_permanent_ci95": [
+     0.076,
+     0.369
+    ],
+    "uncertain_cum_pct_land": 0.129,
+    "dc_normalized": 0.228
+   },
+   {
+    "year": 2017,
+    "clearcut_declared_ha": 7804.5,
+    "clearcut_realized_ha": 6711.9,
+    "clearcut_permille_land": 8.69,
+    "dc_recoverable_pct_land": 7.27,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.236,
+    "dc_permanent_ci95": [
+     0.083,
+     0.389
+    ],
+    "uncertain_cum_pct_land": 0.145,
+    "dc_normalized": 0.241
+   },
+   {
+    "year": 2018,
+    "clearcut_declared_ha": 8841.2,
+    "clearcut_realized_ha": 7603.4,
+    "clearcut_permille_land": 9.84,
+    "dc_recoverable_pct_land": 7.72,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.262,
+    "dc_permanent_ci95": [
+     0.091,
+     0.433
+    ],
+    "uncertain_cum_pct_land": 0.161,
+    "dc_normalized": 0.259
+   },
+   {
+    "year": 2019,
+    "clearcut_declared_ha": 5575.2,
+    "clearcut_realized_ha": 4794.7,
+    "clearcut_permille_land": 6.21,
+    "dc_recoverable_pct_land": 7.76,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.271,
+    "dc_permanent_ci95": [
+     0.097,
+     0.446
+    ],
+    "uncertain_cum_pct_land": 0.168,
+    "dc_normalized": 0.262
+   },
+   {
+    "year": 2020,
+    "clearcut_declared_ha": 7174.1,
+    "clearcut_realized_ha": 6169.7,
+    "clearcut_permille_land": 7.99,
+    "dc_recoverable_pct_land": 7.94,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.296,
+    "dc_permanent_ci95": [
+     0.111,
+     0.481
+    ],
+    "uncertain_cum_pct_land": 0.178,
+    "dc_normalized": 0.273
+   },
+   {
+    "year": 2021,
+    "clearcut_declared_ha": 8537.4,
+    "clearcut_realized_ha": 7342.2,
+    "clearcut_permille_land": 9.5,
+    "dc_recoverable_pct_land": 8.24,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.304,
+    "dc_permanent_ci95": [
+     0.115,
+     0.493
+    ],
+    "uncertain_cum_pct_land": 0.188,
+    "dc_normalized": 0.282
+   },
+   {
+    "year": 2022,
+    "clearcut_declared_ha": 7486.9,
+    "clearcut_realized_ha": 6438.7,
+    "clearcut_permille_land": 8.33,
+    "dc_recoverable_pct_land": 8.37,
+    "window_full": false,
+    "dc_permanent_cum_pct_land": 0.326,
+    "dc_permanent_ci95": [
+     0.131,
+     0.521
+    ],
+    "uncertain_cum_pct_land": 0.206,
+    "dc_normalized": 0.291
+   },
+   {
+    "year": 2023,
+    "clearcut_declared_ha": 7240.3,
+    "clearcut_realized_ha": 6226.7,
+    "clearcut_permille_land": 8.06,
+    "dc_recoverable_pct_land": 8.43,
+    "window_full": true,
+    "dc_permanent_cum_pct_land": 0.39,
+    "dc_permanent_ci95": [
+     0.142,
+     0.637
+    ],
+    "uncertain_cum_pct_land": 0.215,
+    "dc_normalized": 0.308
+   },
+   {
+    "year": 2024,
+    "clearcut_declared_ha": 8564.1,
+    "clearcut_realized_ha": 7365.1,
+    "clearcut_permille_land": 9.53,
+    "dc_recoverable_pct_land": 8.6,
+    "window_full": true,
+    "dc_permanent_cum_pct_land": 0.394,
+    "dc_permanent_ci95": [
+     0.144,
+     0.644
+    ],
+    "uncertain_cum_pct_land": 0.235,
+    "dc_normalized": 0.314
+   },
+   {
+    "year": 2025,
+    "clearcut_declared_ha": 7227.2,
+    "clearcut_realized_ha": 6215.4,
+    "clearcut_permille_land": 8.04,
+    "dc_recoverable_pct_land": 8.62,
+    "window_full": true,
+    "dc_permanent_cum_pct_land": 0.409,
+    "dc_permanent_ci95": [
+     0.15,
+     0.668
+    ],
+    "uncertain_cum_pct_land": 0.255,
+    "dc_normalized": 0.318
+   }
+  ]
+ }
 }
