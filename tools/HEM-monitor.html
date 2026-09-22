@@ -99,9 +99,9 @@ footer a{color:var(--accent);text-decoration:none}
     <div class="csub" id="c-nve2">—</div>
   </div>
   <div class="card">
-    <div class="clbl">Iisvesi · Keväthuippu</div>
+    <div class="clbl">Iisvesi · Vedenkorkeus</div>
     <div class="cval" id="c-iis">—</div>
-    <div class="cunit">m NN · WSFS-ennuste</div>
+    <div class="cunit">m NN · havaittu</div>
     <div class="csub" id="c-iis2">—</div>
   </div>
   <div class="card">
@@ -250,6 +250,17 @@ footer a{color:var(--accent);text-decoration:none}
   lasketaan nyt client-puolella samasta FMI-aikasarjasta, sama kaava kuin
   historiallisessa §05-sarjassa. Jos alle 12 kk yhtenäistä lämpötiladataa ei
   ole saatavilla, EP käyttää neutraalia fallback-arvoa 0.30.</span>
+  <br>
+  <span style="color:var(--muted);font-size:0.85em"><b>Huom (2026-09-17), SD-komponentin vertailukelpoisuus:</b> hepp_monthly.json
+  (§05, laskettu 2026-05-12) ei sisällä vedenkorkeuskenttää ollenkaan — sen
+  <code>sd</code>-sarake on laskettu lämpötilapohjaisella varakaavalla
+  (sama kuin computeHEPP():n "else"-haara, ei dokumentoitu vedenkorkeusvaje-
+  kaava yllä), koska Iisveden 65 vuoden päivittäistä vedenkorkeussarjaa ei ole
+  koskaan koottu. Live-SD (§02, WSFS-korjauksen jälkeen) on todellinen
+  vedenkorkeusvaje. Näitä kahta ei voi verrata suoraan lukuarvona eikä
+  Normal/Elevated/High-luokkana — ne mittaavat eri suureita. Historiallinen
+  sarja pitäisi laskea uudelleen SYKE:n pitkästä havaintosarjasta ennen kuin
+  §05:n kynnyksiä voi käyttää live-arvon vertailukohtana.</span>
 </div>
 
 <div class="shdr"><span class="snum">§ 09</span><span class="stit">Aquatic Status — BEM-E (Aquatic Extension) · KOKEELLINEN</span></div>
@@ -386,22 +397,30 @@ async function fetchNVE(){
       Kapasiteetti: ${d.capacity_twh??'—'} TWh · Sisältö: ${d.content_twh??'—'} TWh (hist.med ${d.median_pct??'—'}%)<br>
       ${d.week??''} · hydro_RF: ${rf.toFixed(3)}`);
     dot('nve','ok');
-    return{pct,rf,label:lbl,capacityTwh:d.capacity_twh};
+    return{pct,rf,label:lbl,capacityTwh:d.capacity_twh,medianPct:d.median_pct};
   }catch(e){setHTML('nve-det',`<span class="derr">NVE: ${e.message}</span>`);dot('nve','err');return null;}
 }
 
 async function fetchIisvesi(){
   try{
     const d=await(await fetch(RAW+'/iisvesi.json?t='+Date.now())).json();
-    const wl=d.forecast_central_m??d.f14?.peak_wl_mean??null,deficit=wl?+(NORM-wl).toFixed(2):null;
+    const obs=d.observed||null;
+    // KORJAUS 2026-09 (§02): wl on nyt HAVAITTU vedenkorkeus (obs.observed_m),
+    // ei WSFS-ennusteen kevathuipun keskiarvo. forecast_central_m/f14 jaavat
+    // ennustekentiksi (fcWl), naytetaan erikseen selvasti merkittyna.
+    const wlObserved=obs?.observed_m??null;
+    const fcWl=d.forecast_central_m??d.f14?.peak_wl_mean??null;
+    const wl=wlObserved??fcWl; // varakaytto: nayta ennuste jos havaintoa ei (vielä) ole
+    const isForecastFallback=wlObserved==null&&fcWl!=null;
+    const deficit=obs?.sd_kevat!=null&&obs?.spring_peak_m!=null?+(NORM-obs.spring_peak_m).toFixed(2):(wl?+(NORM-wl).toFixed(2):null);
     const pct=wl?Math.max(0,Math.min(100,((wl-MNW)/(MHW-MNW))*100)):0;
     setText('c-iis',wl?wl.toFixed(2):'—');
-    setText('c-iis2','Huippu '+((d.peak_timing??d.f14?.peak_date_mean??'—')).trim());
-    setText('gval',(wl?wl.toFixed(2):'—')+' m NN');
+    setText('c-iis2',isForecastFallback?'Ennuste (havainto puuttuu)':(obs?.observed_date?('Havaittu '+obs.observed_date):'—'));
+    setText('gval',(wl?wl.toFixed(2):'—')+' m NN'+(isForecastFallback?' (ennuste)':''));
     document.getElementById('gfill').style.width=pct+'%';
     setText('gpct',(wl?wl.toFixed(2):'—')+' m ('+pct.toFixed(0)+'%)');
     setText('s-iis',(wl?wl.toFixed(2):'?')+' m');
-    // Ennustekäyrä SVG
+    // Ennustekäyrä SVG (WSFS-ennuste — pysyy ennusteena, ei havaintona)
     const fcs=(d.f14||d).forecasts||[];
     let fcSvg='';
     if(fcs.length>=2&&wl){
@@ -433,13 +452,17 @@ async function fetchIisvesi(){
       fcSvg=s;
     }
     setHTML('iis-det',`${fcSvg}
-      Keväthuippu: <b>${wl?.toFixed(2)??'—'} m NN</b> · ka 1910–2025: ${NORM} m · vajaus <b style="color:${deficit>0.5?'var(--sr)':'var(--sy)'}">${deficit?'−'+deficit+' m':'—'}</b><br>
+      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)" title="'+obs.observed_provisional.field+'='+obs.observed_provisional.value+'">['+(obs.observed_provisional.description??'alustava arvo')+']</span>':''}<br>
+      Kevään huippu ${new Date().getFullYear()}: <b>${obs?.spring_peak_m?.toFixed(2)??'—'} m</b>${obs?.spring_peak_locked?' (lukittu)':''} · norm 1910–2025: ${NORM} m · SD_kevät <b style="color:${obs?.sd_kevat>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_kevat??'—'}</b><br>
+      Saman vuodenpäivän ka (${obs?.doy_ref_years??'1991-2020'}, n=${obs?.doy_ref_n_years??'—'}v): <b>${obs?.doy_avg_m?.toFixed(2)??'—'} m</b> · SD_nyt <b style="color:${obs?.sd_nyt>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_nyt??'—'}</b><br>
+      Nokisenkoski-virtaama: <b>${obs?.flow_m3s??'—'} m³/s</b>${obs?.flow_date?' ('+obs.flow_date+')':''} · vuodenpäivän mediaani (n=${obs?.flow_doy_n_years??'—'}v): ${obs?.flow_doy_median_m3s??'—'} m³/s · RF_virtaama <b>${obs?.rf_flow??'—'}</b><br>
+      WSFS-ennuste (kevathuippu, EI havainto): ${fcWl?.toFixed(2)??'—'} m NN · huippu ${((d.peak_timing??d.f14?.peak_date_mean??'—')).trim()}<br>
       Kesäennuste: VI 97.47 → VII 97.41 → VIII 97.36 m · 2027 huippu ka 97.92 m<br>
       MNW: ${MNW} m · MHW: ${MHW} m (keskim. keväthuippu) · Ennätys: ${RECORD_HIGH} m (10.6.1988)<br>
       Ennätysalin (vuosimaksimin joukossa pienin): 97.36 m (1942)<br>
-      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300</span>`);
-    dot('iis',deficit>0.5?'warn':'ok');
-    return{wl,deficit};
+      <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300 · nollakohta ${obs?.zero_point_m??'—'} m NN${obs&&!obs.zero_point_verified?' (fallback, ei dynaamisesti vahvistettu ajon aikana - ks. fetch_iisvesi.py)':' (haettu VedenkTasoTieto-entiteetista ajon aikana)'}</span>`);
+    dot('iis',(obs?.sd_nyt??(deficit>0.5?1:0))>0.5?'warn':'ok');
+    return{wl,deficit,sdKevat:obs?.sd_kevat??null,sdNyt:obs?.sd_nyt??null,rfFlow:obs?.rf_flow??null};
   }catch(e){setHTML('iis-det',`<span class="derr">Iisvesi: ${e.message}</span>`);dot('iis','err');return null;}
 }
 
@@ -591,13 +614,25 @@ function computeEPAnomaly(fmi){
 
 function computeHEPP(nve,iis,fmi){
   let sd=0.30;
-  if(iis?.deficit!=null)sd=Math.max(0,Math.min(1,iis.deficit/0.90));
+  // Ensisijainen: SD_nyt (havaittu vedenkorkeus vs. saman vuodenpäivän
+  // pitkän aikavälin keskiarvo) — laskettu skriptissä, ei ennusteesta.
+  // KORJAUS 2026-09 (§02): iis.deficit oli aiemmin (NORM−ennusteen
+  // keväthuippu), vuodenaikavirhe. sd_nyt on jo valmiiksi 0-1-skaalattu.
+  if(iis?.sdNyt!=null)sd=iis.sdNyt;
+  else if(iis?.deficit!=null)sd=Math.max(0,Math.min(1,iis.deficit/0.90));
   else if(fmi?.dates){
     const t=fmi.dates.slice(-30).map(d=>fmi.byDate[d]?.tday).filter(v=>v!=null&&v>-50);
     if(t.length>5)sd=Math.max(0,Math.min(1,(t.reduce((a,b)=>a+b,0)/t.length-5)/20));
   }
   const hsp=nve?.label==='low'?0.70:nve?.label==='high'?0.15:0.38;
-  const rf=nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40;
+  // RF: ensisijainen Nokisenkoski-virtaama (Q / saman vuodenpäivän mediaani
+  // 1994-2025) - mittaa suoraan veden läpivirtausta, ei sadanta-proxya.
+  // KAYTTAJAN OHJE 9: EI lisata SD:n rinnalle omana komponenttinaan
+  // (saannostelemattoman jarven lasku-uoman virtaama seuraa suoraan
+  // vedenkorkeutta - sama signaali kahdesti). NVE (Norja) -fallback jos
+  // Iisveden virtaamaa ei ole (esim. Muonio-osiossa, missa Iisveden
+  // rf_flow ei sovellu).
+  const rf=iis?.rfFlow!=null?iis.rfFlow:(nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40);
   // EP-anomalia: Thornthwaite PET nykykuukaudelle vs. 1961-2010-normaali.
   // Fallback 0.30 (neutraali) jos fmi-data ei riita laskentaan.
   const ep = fmi ? computeEPAnomaly(fmi) : null;
@@ -733,13 +768,19 @@ async function fetchMuonio() {
   const el  = document.getElementById('muo-gval');
   try {
     const d = await(await fetch(RAW+'/muonio.json?t='+Date.now())).json();
-    const wl = d.forecast_central_m ?? d.f14?.peak_wl_mean ?? null;
+    // Sama korjaus kuin Iisvedessä (§02). Havaintoasema Paikka_Id 2532
+    // vahvistettu 2026-09-17 (kayttaja, suora SYKE-tarkistus). Nollakohta
+    // EI vahvistettu Muoniolle - jos VedenkTasoTieto-haku epaonnistuu ajon
+    // aikana, obs.observed_m jaa null:ksi ja alla on ennuste-varakaytto.
+    const obs = d.observed || null;
+    const wl = obs?.observed_m ?? d.forecast_central_m ?? d.f14?.peak_wl_mean ?? null;
+    const isForecastFallback = (obs?.observed_m ?? null) == null && wl != null;
     const MNW_M = d.ref_min_max ?? 231.45;
     const MHW_M = d.mhw_m       ?? 233.79;
     const NORM_M = d.ref_mean_max ?? 232.57;
     const pct = wl ? Math.max(0,Math.min(100,((wl-MNW_M)/(MHW_M-MNW_M))*100)) : 0;
 
-    if (el) el.textContent = (wl ? wl.toFixed(2) : '—') + ' m NN';
+    if (el) el.textContent = (wl ? wl.toFixed(2) : '—') + ' m NN' + (isForecastFallback ? ' (ennuste)' : '');
     const fill = document.getElementById('muo-gfill');
     if (fill) fill.style.width = pct.toFixed(0) + '%';
     const gpct = document.getElementById('muo-gpct');
@@ -749,11 +790,14 @@ async function fetchMuonio() {
     const mhw = document.getElementById('muo-mhw');
     if (mhw) mhw.textContent = 'MHW ' + MHW_M.toFixed(2);
     if (det) det.innerHTML =
-      'Keväthuippu: ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
+      (isForecastFallback ? 'Ennuste (kevathuippu, EI havainto)' : 'Havaittu') + ': ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
       ' · ka ' + (NORM_M.toFixed(2)) + ' m' +
       ' · Huippu ' + (d.peak_date_mean ?? d.f14?.peak_date_mean ?? '—') +
+      (obs?.sd_kevat!=null ? ' · SD_kevät ' + obs.sd_kevat : '') +
+      (obs?.sd_nyt!=null ? ' · SD_nyt ' + obs.sd_nyt + ' (ka ' + (obs.doy_avg_m??'—') + ' m, ' + (obs.doy_ref_years??'1991-2020') + ')' : '') +
       '<br>MNW: ' + MNW_M.toFixed(2) + ' m · MHW: ' + MHW_M.toFixed(2) + ' m' +
-      '<br>Muonionjoki · Tornionjoen vesistöalue 67 · säännöstelemätön · WSFS q6700800y';
+      '<br>Muonionjoki · Tornionjoen vesistöalue 67 · säännöstelemätön · WSFS q6700800y' +
+      (isForecastFallback ? '<br><span style="color:var(--muted)">Havainto puuttuu (nollakohtaa ei saatu ajon aikana) — ks. fetch_muonio.py-loki</span>' : '');
   } catch(e) {
     if (el) el.textContent = '— m NN';
     if (det) det.innerHTML = 'Muonio: ei vielä cachessa · <a href="https://wwwi2.ymparisto.fi/i2/67/q6700800y/wqfi.html" target="_blank" style="color:var(--accent)">WSFS Muonio</a>';
@@ -800,7 +844,7 @@ async function fetchAll(){
     }
   }
 
-  setText('hdesc',(nve?`NVE täyttöaste ${nve.pct}% (hist.med ~58%). `:'')+
+  setText('hdesc',(nve?`NVE täyttöaste ${nve.pct}% (hist.med ${nve.medianPct??'—'}%). `:'')+
     (iis?.wl?`Iisvesi ${iis.wl.toFixed(2)} m NN, vajaus ${iis.deficit} m normaalista. `:'')+
     (fmi?.temp!=null?`Kuopio ${fmi.temp.toFixed(1)} °C.`:''));
   drawCharts(fmi);
