@@ -369,6 +369,9 @@ Vertailuksi Jyväskylä 21 000 ja Kankaanpää 34 000 Bq/m² ¹³⁷Cs — Kuopi
 Laskeuma (Bq/m²) ja annosnopeus (µSv/h) ovat eri suureita: nykyinen annosnopeus on pääosin luonnon taustasäteilyä.
 </div>
 
+<div class="shdr"><span class="snum">§ 03c</span><span class="stit">Ilmakehän CO₂, CH₄ ja CO — Puijo (ICOS) · taustatieto</span></div>
+<div class="dbox" id="co2-box">Ladataan ICOS-aineistoa…</div>
+
 <div class="ndvi-shot">
   <div class="ndvi-img-wrap">
     <img id="ndvi-img" alt="Sentinel-2 NDVI-kuva, Rautalammin reitti" />
@@ -722,6 +725,68 @@ function fetchRadiation() {
   });
 }
 
+// ── §03c ICOS Puijo CO2 (2026-09-22) — taustatieto, ei BEPP-komponentti ──
+function loadCO2() {
+  fetch('data/bem-icos-puijo.json').then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(d){
+    var rows = d.years.map(function(y){
+      return '<tr><td>' + y.year + '</td>' +
+        '<td style="text-align:right">' + (y.annual_mean_ppm != null ? y.annual_mean_ppm.toFixed(1) : '—<span style="color:var(--muted)">*</span>') + '</td>' +
+        '<td style="text-align:right"><b>' + (y.summer_drawdown_ppm != null ? y.summer_drawdown_ppm.toFixed(1) : '—') + '</b></td>' +
+        '<td style="text-align:right">' + (y.summer_diurnal_amplitude_ppm != null ? y.summer_diurnal_amplitude_ppm.toFixed(1) : '—') + '</td></tr>';
+    }).join('');
+    document.getElementById('co2-box').innerHTML =
+      '<table style="width:100%;border-collapse:collapse;font-size:.92em">' +
+      '<tr style="color:var(--muted);text-align:left"><th>Vuosi</th><th style="text-align:right">vuosi ka ppm</th>' +
+      '<th style="text-align:right">kesän painuma ppm</th><th style="text-align:right">kesän vrk-vaihtelu ppm</th></tr>' + rows + '</table>' +
+      '<div style="margin-top:6px;color:var(--muted);font-size:.85em;line-height:1.55">' +
+      '<b>Kesän painuma</b> = talven (I–III) ja kesän (VII–VIII) pitoisuusero vuosikasvulla korjattuna — kasvukauden hiilensidonta näkyy ilmakehässä. ' +
+      '<b>Vuorokausivaihtelu</b> = kesän päivän sidonnan ja yön hengityksen ero, paikallisen ekosysteemin signaali. ' +
+      'Kasvu +' + d.definitions.growth_ppm_per_year.toFixed(1) + ' ppm/v on globaali, ei alueellinen. ' +
+      'Pitoisuus ei ole hiilivuo: tuuli ja sekoittuminen vaikuttavat. <b>Ei BEPP-komponentti.</b> ' +
+      '* 2025: toukokuu puuttuu. Kesän 2026 (kuiva kesä) tulos vasta seuraavassa ICOS L2 -julkaisussa. ' +
+      'Lähde: ICOS ATC L2-2026.1, Puijo 84 m (IL / UEF), CC BY 4.0.</div>';
+    if (d.ch4) {
+      var hr = d.ch4.years.filter(function(y){ return y.year < 2026; }).map(function(y){
+        var f = function(v){ return v != null ? v.toFixed(0) : '—'; };
+        return '<tr><td>' + y.year + (y.missing_months.length ? '<span style="color:var(--muted)">*</span>' : '') + '</td>' +
+          '<td style="text-align:right">' + f(y.annual_mean_ppb) + '</td>' +
+          '<td style="text-align:right">' + f(y.seasonal_amplitude_ppb) + '</td>' +
+          '<td style="text-align:right"><b>' + (y.warm_season_diurnal_amplitude_ppb != null ? y.warm_season_diurnal_amplitude_ppb.toFixed(1) : '—') + '</b></td></tr>';
+      }).join('');
+      document.getElementById('co2-box').innerHTML +=
+        '<div style="margin-top:12px"><b>CH₄ — metaani</b> (ppb, ' + d.ch4.source.period + ')</div>' +
+        '<table style="width:100%;border-collapse:collapse;font-size:.92em;margin-top:4px">' +
+        '<tr style="color:var(--muted);text-align:left"><th>Vuosi</th><th style="text-align:right">vuosi ka</th>' +
+        '<th style="text-align:right">vuodenaikaisvaihtelu</th><th style="text-align:right">kesä–syys vrk-vaihtelu</th></tr>' + hr + '</table>' +
+        '<div style="margin-top:6px;color:var(--muted);font-size:.85em;line-height:1.55">' +
+        'Kasvu +' + d.ch4.definitions.growth_ppb_per_year.toFixed(1) + ' ppb/v on globaali. Minimi osuu kesä–heinäkuulle (OH-hapetus), maksimi loppuvuoteen. ' +
+        '<b>Kesä–syyskuun vuorokausivaihtelu</b> (yöllinen kertymä matalaan rajakerrokseen) on lähin alueellisten lähteiden — soiden, kosteikkojen ja maatalouden — signaali. ' +
+        '84 m torni yhdistää kymmenien kilometrien alueen: yksittäistä suota tai ojitusta ei voi tunnistaa. * puuttuvia kuukausia.</div>';
+    }
+    if (d.co) {
+      var cr = d.co.years.map(function(y){
+        var f = function(v, dec){ return v != null ? v.toFixed(dec) : '—'; };
+        return '<tr><td>' + y.year + '</td><td style="text-align:right">' + f(y.winter_JFM_ppb,0) + '</td><td style="text-align:right">' + f(y.summer_JA_ppb,0) +
+          '</td><td style="text-align:right"><b>' + f(y.winter_enhancement_ppb,0) + '</b></td><td style="text-align:right">' +
+          (y.episode_hours_gt200_winter_DJF != null ? y.episode_hours_gt200_winter_DJF : '—') + '</td></tr>';
+      }).join('');
+      document.getElementById('co2-box').innerHTML +=
+        '<div style="margin-top:12px"><b>CO — hiilimonoksidi</b> (ppb, ' + d.co.source.period + ')</div>' +
+        '<table style="width:100%;border-collapse:collapse;font-size:.92em;margin-top:4px">' +
+        '<tr style="color:var(--muted);text-align:left"><th>Vuosi</th><th style="text-align:right">talvi I–III</th><th style="text-align:right">kesä VII–VIII</th>' +
+        '<th style="text-align:right">talvikohoama</th><th style="text-align:right">episodit XII–II, h &gt;200</th></tr>' + cr + '</table>' +
+        '<div style="margin-top:6px;color:var(--muted);font-size:.85em;line-height:1.55">' +
+        'Talvikohoama johtuu pääosin CO:n lyhyemmästä eliniästä kesällä ja pohjoisen pallonpuoliskon taustasta, ei paikallisesta poltosta: ' +
+        'talven vuorokausivaihtelu on vain ' + d.co.winter_diurnal_amplitude_ppb + ' ppb. ' +
+        '<b>Episodit</b> (&gt;200 ppb ≈ sarjan p99) ovat talvella usein monipäiväisiä pysähtyneen pakkaskorkeapaineen ja kaukokulkeuman jaksoja — ' +
+        'hypoteesi, testaamatta: samat jaksot ovat WEM:n kylmä-tyyni-jaksoja. Ei BEPP- eikä WEM-komponentti.</div>';
+    }
+  }).catch(function(e){
+    var b = document.getElementById('co2-box'); if (b) b.innerHTML = '<span style="color:var(--rust)">CO₂: ' + e.message + '</span>';
+  });
+}
+
 function fetchERA5() {
   var url = NVE + '/era5?lat=62.95&lng=26.85&start=2015-01-01';
   fetch(url)
@@ -903,6 +968,7 @@ function fetchAll() {
   fetchSpecies();
   fetchERA5();
   fetchRadiation();
+  loadCO2();
   fetchCorineDf();
   fetchR();
   fetchNDVIImage();
