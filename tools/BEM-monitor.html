@@ -235,6 +235,7 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
       <div class="ring-num" id="bepp-val">—</div>
       <div class="ring-lbl">BEPP v2</div>
       <div class="ring-regime" id="bepp-regime" style="border-color:var(--muted);color:var(--muted)">Ladataan…</div>
+      <div id="bepp-cap" style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.35rem;line-height:1.5">—</div>
     </div>
   </div>
   <div class="hero-text">
@@ -409,7 +410,12 @@ BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s, D_f ja R
 haetaan nyt oikeasti live-lahteista: D_s FinBIF:sta, D_f kahdesta
 riippumattomasta lahteesta (SYKE CORINE-ruudukko + Sentinel Hub
 Statistical API NDVI-hajonta), R SYKE:n suojelualue-WMS:sta (aci-corine-proxy).
-D_f = 0.6*(1-metsaosuus) + 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu
+D_f = 0.6*(1-metsaosuus) + 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu<br>
+<b style="color:var(--rust)">Kertova muoto rajaa indeksin:</b> koska D_s, D_c &le; 1 ja R &ge; 0, BEPP &le; D_f^1.2.
+Metsaosuudella 65 % ja NDVI-hajonnalla 0.234 katto on 0.46, joten luokat Critical (&ge;0.50) ja BP-like (&ge;0.75)
+ovat aritmeettisesti ulottumattomissa. Kynnykset on asetettu olettaen vapaasti varioivat komponentit.
+Kynnysten kalibrointi vaatii nollajakauman (mita BEPP oli tunnetusti hyvana/huonona vuonna) - sita ei ole.
+Siihen asti: lue komponentit, ala indeksia. (Havainto ulkopuolisesta tarkastuksesta 2026-09-23, varmistettu koodista.)
 approksimaatio, ei validoitu todellista fragmentaatiomittausta vasten.
 R = suojellun pinta-alan piste-otantaosuus, kolme erillista 7x7-ruudukkoa
 eri offseteilla (0.25/0.5/0.75) yhdistettyna otantavirheen vahentamiseksi -
@@ -492,6 +498,18 @@ function updateBEPP(Ds, Df, R) {
   var cls    = classify(latest.S);
 
   setText('bepp-val', latest.S.toFixed(3));
+  // 2026-09-23: kertova muoto -> D_f rajaa indeksin. Saavutettava maksimi =
+  // D_f^1.2 (D_s, D_c <= 1, R >= 0). Naytetaan katto ja kerrotaan, mitkä
+  // luokat ovat sen ulkopuolella, ettei luokkia lueta vapaasti varioiviksi.
+  var capEl = document.getElementById('bepp-cap');
+  if (capEl) {
+    var Smax = Math.pow(SERIES[2].Df, 1.2);
+    var unreachable = [];
+    if (Smax < 0.75) unreachable.push('BP-like ≥ 0,75');
+    if (Smax < 0.50) unreachable.push('Critical ≥ 0,50');
+    capEl.innerHTML = 'saavutettava maksimi ' + Smax.toFixed(3) + ' (D_f = ' + SERIES[2].Df.toFixed(3) + ')' +
+      (unreachable.length ? '<br><span style="color:var(--rust)">ulottumattomissa: ' + unreachable.reverse().join(' · ') + '</span>' : '');
+  }
   var regimeEl = document.getElementById('bepp-regime');
   regimeEl.textContent = cls.label;
   regimeEl.style.color = cls.color;
@@ -643,7 +661,7 @@ function fetchSpecies() {
 var RAD_STATIONS = [
   {id:'103329', name:'Karttula',   note:'pilottialueella'},
   {id:'103328', name:'Suonenjoki', note:'pilottialueella'},
-  {id:'103327', name:'Kuopio',     note:'itärajan takana'},
+  {id:'103327', name:'Kuopio',     note:'pilottialueen itäpuolella'},
   {id:'103330', name:'Tuusniemi',  note:'vertailuasema'}
 ];
 function fetchRadiationChunk(startMs, endMs) {

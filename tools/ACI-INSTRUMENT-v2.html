@@ -3261,6 +3261,16 @@ async function init() {
     // uudestaan kun NVE-data saapuu, jotta ne pysyvat synkronissa.
     fetchHydroRF().then(() => {
       const mUpdated = computeAll(rawData);
+      // 2.12.4 (ulkopuolinen palaute 23.9.2026): §01 jai edelleen paivittamatta,
+      // eli sama 2026-08-01 korjattu vika oli yha voimassa yhdessa paikassa.
+      // Oire: §01:n EPP (esim. 0.573) poikkesi pysyvasti §02/§06/§09/§11:n
+      // arvosta (0.587) - molemmat W168, ero = hydroRF 1.0 vs. NVE:n arvo.
+      // §01 renderoidaan nyt samasta mUpdated-objektista; myos rullaava
+      // EPP-trendi (§05) ja SP (§06) lasketaan uudelleen.
+      renderPosture(mUpdated, spotVal);
+      renderSP(mUpdated);
+      renderLayerComp(mUpdated);
+      try { drawEPPChart(rollingEPP(rawData), rawData); } catch (e) { console.warn('EPP-trendi', e); }
       renderMetrics(mUpdated);
       renderStructural();
       renderV4(mUpdated ? mUpdated.w168 : null, rawData.slice(-168));
@@ -4117,7 +4127,7 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.12.3';
+const WEM_VERSION = '2.12.4';
 const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
@@ -4125,6 +4135,7 @@ const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
 // olivat jo koodissa. Versio ei ollut koskaan paivittynyt vastaamaan
 // todellista tilaa. Lista jarjestetty uusin ensin (oli sekaisin).
 const WEM_CHANGES = [
+  '2.12.4: §01 (posture), §05 (EPP-trendi), §06 (SP) ja §03 (kerrosrakenne) renderoidaan nyt uudelleen, kun NVE:n hydro_RF saapuu. Aiemmin vain §02, §10 ja §11 paivitettiin (korjaus 2026-08-01), joten §01 nayttI pysyvasti hydroRF=1.0-pohjaista EPP:ta: ulkopuolisen tarkastuksen havainto §01 0.573 vs §02/§06/§09/§11 0.587, molemmat merkitty W168 — ero ei ollut aikaleima- vaan renderointijarjestysvirhe. Tarkistettu samalla: EPP on rajattu Math.min(1, …), joten persistenssipreemio ei nosta maksimia yli 1.0 (vastaus samaan tarkastukseen).',
   '2.12.3: (1) §12 P1: kun DS 30 on tyhjä, kortti näyttää MALLIARVION P1 ≈ 1,098·SE1-tuonti + 0,529·NO-tuonti + 0,472·tuuli + 0,121·vesi − 0,224·kulutus + 1505 (sovitus 4.–14.9.2026, 240 h, testijakson R² 0,68, RMSE 239 MW). SE1-kerroin ≈ 1 = kaikki SE1-tuonti kulkee P1:n läpi; tuulen 0,47 = noin puolet tuulesta P1:n pohjoispuolella. NO-kerroin on epävakaa (koko aineistolla 1,88) — FI–NO-virta on pieni. Viimeisimmän arvon haku: 429-uusinta ja virhe erotettu tyhjästä (2.12.2 näytti virheellisesti ei arvoja 14 vrk:lta). DS 30 on Fingridin luettelossa edelleen Aktiivinen; katko alkoi 14.9.2026 12:24 UTC, samaan aikaan Fingridin ilmoittaman avoimen datan häiriön kanssa (14.9. n. klo 17 – 16.9. n. klo 14). (2) §10 CFE: puhtaan tuotannon kattavuus kolmella tavalla samasta W168-datasta — volyymitase (kuten vuositason alkuperätakuukirjanpito), tuntitase ja tuntitase stressitunneilla. Ero kertoo, paljonko volyymiin perustuva 100 % puhdas -väite yliarvioi kattavuuden juuri kriittisinä tunteina. Ilman aurinkoa ja CHP:n biopolttoaineosuutta, eli alaraja.',
   '2.12.2: Kolme korjausta ja uusi §17. (1) Hakurajoite: kumpikaan proxy (aci-fingrid-proxy/api, aci-transmission-proxy) ei välitä page-parametria — yksi kutsu palauttaa enintään 400 uusinta riviä. 3 min sarja kattoi siksi vain ~20 h ja 1 min sarja 6,7 h. Uusi fgRange() hakee pitkän ikkunan aikaviipaleina (≤380 riviä/viipale) ja poistaa päällekkäiset aikaleimat. (2) §16: keskiarvot vain tunneilta jotka löytyvät KAIKISTA kuudesta sarjasta. Mitattu 21.9.2026: vanha tapa antoi erotuksen 200 MW (27 %), tuntileikkaus 29 MW (1,5 %). NETTO-kortti Fingridin etumerkillä (− tuonti / + vienti), kuten rajakortit ja Fingridin oma näkymä — aiemmin sama suure näkyi +1348 täällä ja −1339 Fingridillä. Kaikkiin kortteihin W24-merkintä. EstLinkin täyttöaste lasketaan nyt livenä. (3) §12 P1: DS 30 lakkasi päivittymästä 14.9.2026 12:24 UTC (Fingridin puoli). Tyhjä vastaus jätti kortin tilaan ladataan…; nyt näytetään Ei dataa + viimeisin arvo ja sen aika. Keskiarvo oli laskettu 100 minuutista (size=100, 1 min data), nyt 24 h viipaleina. DS 28/29 (P1-viikkokapasiteetti) ovat tyhjiä 400 vrk:lta, joten 4000 MW jää viitearvoksi [A]. (4) §17 Sähkövarastot: DS 424 asennettu kapasiteetti (1222 MW 12.3.2026 → 1997 MW 21.9.2026), DS 398 purku, DS 399 lataus.',
   '2.12.1: §14 kalibrointitalven lämpötilakonteksti. Mitattu DS 178 (Helsinki, joulu-helmi, viikkootos): 2023-24 ka -8,4 C ja 38 % tunneista alle -10 C; 2024-25 ka -1,3 C ja 5 % (LAUHIN); 2025-26 ka -4,9 C ja 20 %. Kalibrointitalvi on siis KESKITASOA — vyöhykeosuudet eivät ole lauhan eivätkä kylmän talven arvoja, ja ∆Pr_tail = 0,0032 on keskitalven arvo. Aiempia talvia ei voi mitata RP_marginilla (DS 373 alkaa 3/2025), ja pelkkä hintavertailu kaatuu resoluutiomuutokseen: 2024-25 on tuntidataa ja 2025-26 varttidataa — mediaaniero (36,4 vs 79,7) on todellinen ja selittyy lämpötilalla, mutta maksimiero (550 vs 4 400) on resoluutioartefakti. Kalibrointitiedosto rev 3, tiiviste 11b0dc5b68a2; siihen lisätty myös ERP-parametrit CN-013.1:lle.',
