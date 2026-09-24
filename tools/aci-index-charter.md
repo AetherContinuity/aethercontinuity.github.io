@@ -4,7 +4,7 @@ Charterin tehtävä: jokainen instrumentti vastaa samoihin kysymyksiin yhdessä 
 ennen kuin live-lukemia luetaan kynnysluokkina. Tähän kirjataan myös tehdyt päätökset ja
 kaavamuutokset, koska ne katkaisevat aikasarjan.
 
-Laadittu 23.9.2026 ulkopuolisen tarkastuksen pohjalta. **Jokainen tämän tiedoston väite on
+Laadittu 23.9.2026 ulkopuolisen tarkastuksen pohjalta. Päivitetty 24.9.2026: HEM §3–§7 ja päätöslista. **Jokainen tämän tiedoston väite on
 tarkistettu instrumenttien koodista, ei PDF-tulosteista.** Tarkistusmerkintä on kunkin kohdan lopussa.
 
 ---
@@ -27,10 +27,18 @@ Ei ennuste, ei operatiivinen hälytys.
 | RF | FMI Kuopio (sadanta) tai virtaama | 1 − (sade/mediaani); v. 2026-09 alkaen ensisijaisesti Q/saman vuodenpäivän mediaani (Nokisenkoski 1005) | kk | 0,25 | sadantaversio |
 | HSP | NVE Magasinstatistikk | label low 0,70 / normal 0,38 / high 0,15 | viikko | 0,15 | — |
 
-**§3 Kynnykset.** 0,45 (Elevated) ja 0,65 (High). **Alkuperä dokumentoimaton, todennäköisesti a priori.**
-Odotettua osuutta luokissa ei ole määritelty.
+**§3 Kynnykset.** **Empiiriset 24.9.2026 alkaen:** Elevated 0,30 (p90) ja High 0,47 (p99), kalibroitu
+kuukausijakaumasta 1959–2026 (785 kk, hepp_monthly_v2.json). Odotettu osuus 10 % ja 1 % kuukausista;
+toteutunut 11 % ja 9 kk. Aiemmat rajat 0,45 ja 0,65 olivat a priori ja osoittautuivat mitatulla
+vedenkorkeudella persentiileiksi 98,6 ja 100 — High ei ylittynyt kertaakaan 67 vuodessa.
 
-**§4 Vertailusarja.** SD:n vertailutaso **päätetty 22.9.2026**: ensisijainen on saman vuodenpäivän normaali
+**§4 Vertailusarja.** **Ratkaistu 24.9.2026:** §05:n historiasarja on laskettu uudelleen samalla kaavalla
+kuin live-arvo (hepp_monthly_v2.json): SD mitatusta vedenkorkeudesta, 24 645 päivähavaintoa 1959–2026,
+vaje saman vuodenpäivän normaalista (1991–2020) jaettuna 0,90:llä. Jäljelle jää yksi ero: historiasta
+puuttuu HSP (NVE:n sarja ei ulotu 1959 asti), joten painot on normalisoitu 0,85:llä, kun live-HEPP
+sisältää lisäksi 0,15·HSP. Korrelaatio vanhaan sarjaan 0,72, mutta tasot eivät ole vertailukelpoisia.
+
+SD:n vertailutaso **päätetty 22.9.2026**: ensisijainen on saman vuodenpäivän normaali
 (1991–2020), jolloin SD on kausikorjattu; kevään huippuun perustuva SD_kevät näytetään erikseen
 (vertailutaso 98,01 m = keskimääräinen vuotuinen maksimi 1910–2025). Aiempi laskenta vertasi syksyn
 lukemaa kevään huippuun ja nosti HEPP:iä mekaanisesti läpi syksyn. *(Tarkistettu koodista:
@@ -40,16 +48,24 @@ lukemaa kevään huippuun ja nosti HEPP:iä mekaanisesti läpi syksyn. *(Tarkist
 pitkästä sarjasta on tehtävä ennen kuin sarjaa käytetään vertailuun.
 **Avoin:** SD:n jakaja 0,90 m on dokumentoimaton. Se on skaalausvakio, ei mitattu hajonta.
 
-**§5 Nollajakauma.** Puuttuu. Tarvitaan HEPP tunnetusti normaalilta, kuivalta ja märältä vuodelta samalla kaavalla.
+**§5 Nollajakauma.** **Olemassa 24.9.2026 alkaen** (hepp_monthly_v2.json, kenttä zero_distribution).
+Mediaani 0,092 · p75 0,191 · p90 0,302 · p95 0,363 · p99 0,470 · maksimi 0,614 (2003-11).
+Kuivimmat vuodet keskiarvona: 2003 (0,416), 2002 (0,399), 2004 (0,316), 2006 (0,208), 2025 (0,195).
+Vetisimmät: 1968 (0,040), 1971 (0,047), 1988 (0,048), 2012 (0,049).
+Kuluva vuosi: 2026-03 0,43 · 2026-04 0,49 (sarjan 5. korkein kuukausi) · 2026-05 0,43.
 
 **§6 Rajoitteet.**
-1. §05-sarja ei vertailukelpoinen live-arvon kanssa (pysyvä, kunnes uudelleen laskettu; vaikuttaa tulkintaan).
+1. ~~§05-sarja ei vertailukelpoinen~~ — ratkaistu 24.9.2026. Jäljelle jää HSP:n puuttuminen historiasta
+   (vaikuttaa tulkintaan; ei korjattavissa ilman NVE:n pitkää sarjaa).
 2. Nimikollisio: RF (sadantakomponentti) ja NVE:n hydro_RF (vesivoimakerroin FS(p):ssä) ovat eri suureita.
    Nimet on erotettava. (vaikuttaa tulkintaan)
 3. Muonion §02b: nollakohta puuttuu, osio ei toimi. Asema on tiedossa (Paikka_Id 2532).
 4. SD:n jakaja dokumentoimaton.
 
-**§7 Muutosloki.** 22.9.2026 SD_nyt ensisijaiseksi, havaittu vedenkorkeus ennusteen tilalle, NN-nollakohta
+**§7 Muutosloki.** 24.9.2026 §05 laskettu uudelleen mitatusta vedenkorkeudesta (hepp_monthly_v2.json,
+tiiviste 1c28313b7c84) ja kynnykset kalibroitu empiirisesti (0,45/0,65 → 0,30/0,47). **Kynnysmuutos
+katkaisee luokkahistorian:** aiemmin julkaistut Normal/Elevated-luokitukset eivät vastaa nykyisiä rajoja.
+22.9.2026 SD_nyt ensisijaiseksi, havaittu vedenkorkeus ennusteen tilalle, NN-nollakohta
 96,88 m luettuna VedenkTasoTieto-taulusta. 22.9.2026 §00: mitattu taso, saman vuodenpäivän normaali,
 tulo- ja lähtövirtaama, kausitrendit (data/hem-iisvesi-normals-trends.json).
 
@@ -141,16 +157,23 @@ Korjattu v2.12.4: §01, §03, §05 ja §06 renderöidään uudelleen samasta obj
 | # | Instrumentti | Päätös | Vaikutus | Tila |
 |---|---|---|---|---|
 | 1 | HEM | SD:n vertailutaso | koko verdict | **tehty 22.9.2026**: saman vuodenpäivän normaali |
+| 1b | HEM | Kynnysten kalibrointi | luokkarajat | **tehty 24.9.2026**: p90 = 0,30 ja p99 = 0,47 |
 | 2 | BEM | Kertova muoto: kalibroi kynnykset vai vaihda additiiviseksi | Critical/BP-like saavutettavuus | avoin; katto näkyvissä 23.9.2026 alkaen |
 | 3 | WEM | Preemion suhde kattoon | — | **ei toimenpiteitä**: jo rajattu koodissa |
-| 4 | Kaikki | Nollajakauma tunnetuilta vuosilta | kynnysten oikeutus | avoin, vaatii dataa |
-| 5 | HEM | §05-sarjan uudelleenlaskenta SYKE:n pitkästä sarjasta | live vs. historia | avoin |
+| 4 | Kaikki | Nollajakauma tunnetuilta vuosilta | kynnysten oikeutus | **HEM tehty 24.9.2026**; BEM ja WEM avoinna |
+| 5 | HEM | §05-sarjan uudelleenlaskenta SYKE:n pitkästä sarjasta | live vs. historia | **tehty 24.9.2026** |
 | 6 | WEM | FS(p):n kaavan dokumentointi | toistettavuus | avoin |
 | 7 | BEM | dS/dt 20 v ikkunan täytyttyä | trendin validiteetti | odottaa |
 | 8 | HEM | RF / hydro_RF -nimikollisio | tulkinta | avoin |
 
-**Järjestys:** kohta 2 on päätös, ei laskenta, ja se kannattaa tehdä ennen muita. Kohdat 4 ja 5 vaativat
-dataa. Kohdat 6 ja 8 ovat dokumentointia.
+**Järjestys:** kohta 2 on päätös, ei laskenta, ja se kannattaa tehdä ennen muita. Kohta 4 on jäljellä
+BEM:lle ja WEM:lle. Kohdat 6 ja 8 ovat dokumentointia.
+
+**HEM:n kokemus on siirrettävissä.** Kynnysten kalibrointi persentiileillä (p90 / p99) vaatii vain sarjan,
+joka on laskettu samalla kaavalla kuin live-arvo. WEM:lle se tarkoittaa EPP:n laskemista taaksepäin
+Fingridin datasta nykyisellä kaavalla (DP_t:n kalibrointi 8/2026 mukaan lukien), BEM:lle D_f:n ja D_c:n
+vuosisarjaa. Molemmissa tulos ratkaisee samalla sen, ovatko nykyiset kynnykset ylipäätään saavutettavissa —
+HEM:ssä ne eivät olleet.
 
 **Yhteinen havainto.** Kaikki kolme instrumenttia kärsivät samasta ongelmasta eri muodossa: live-arvoa
 verrataan sarjaan, joka on laskettu eri kaavalla (HEM: SD ja §05; BEM: D_c:n ikkuna; WEM: DP_t:n kalibrointi).
