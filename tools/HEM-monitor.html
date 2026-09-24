@@ -191,9 +191,9 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
 </div>
 
 
-<div class="shdr"><span class="snum">§ 05</span><span class="stit">HEPP-aikasarja 1959–2026 · 788 kk · ref. 1961–2010 · Kuopio FMI + Thornthwaite EP</span></div>
+<div class="shdr"><span class="snum">§ 05</span><span class="stit">HEPP-aikasarja 1959–2026 · 785 kk · SD mitatusta vedenkorkeudesta (SYKE) + FMI/Thornthwaite</span></div>
 <div class="cwrap">
-  <div class="clabel">Kuukausittainen HEPP · Normal &lt;0.45 · Elevated ≥0.45 · High ≥0.65</div>
+  <div class="clabel">Kuukausittainen HEPP · Normal &lt;0.30 · Elevated ≥0.30 (p90) · High ≥0.47 (p99)</div>
   <svg id="ch" width="100%" height="130" style="display:block"></svg>
 </div>
 <div class="dbox" id="hepp-stats" style="font-size:.65rem">Ladataan HEPP-historiadataa…</div>
@@ -240,7 +240,7 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
   <div>
-    <div class="clabel">Elevated-frekvenssi per vuosikymmen (% kuukausista ≥ 0.45)</div>
+    <div class="clabel">Elevated-frekvenssi per vuosikymmen (% kuukausista ≥ 0.30)</div>
     <svg id="cd" width="100%" height="160" style="display:block"></svg>
   </div>
   <div>
@@ -278,7 +278,7 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   &nbsp;&nbsp;EP: Thornthwaite (1948) PET — kuukausittainen lämpötilapohjainen haihdunta<br>
   &nbsp;&nbsp;RF: 1 − (kuukausisade / mediaanisade) · Referenssi: FMI Kuopio 1961–2010 (WMO)<br>
   &nbsp;&nbsp;HSP: NVE-label (low=0.70, normal=0.38, high=0.15) — pohjoismainen proxy<br>
-  &nbsp;&nbsp;Kynnykset: Normal &lt;0.45 · Elevated ≥0.45 · High ≥0.65<br>
+  &nbsp;&nbsp;Kynnykset (2026-09-24, empiiriset): Normal &lt;0.30 · Elevated ≥0.30 (p90) · High ≥0.47 (p99)<br>
   &nbsp;&nbsp;Katso: <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html" style="color:var(--accent)">TN-014 §04</a><br>
   <span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): live-posture (§01) laski aiemmin EP-komponentin ilman
   Thornthwaite-PET:tä (fallback-kaava puuttui EP:n kokonaan, painot poikkesivat
@@ -287,16 +287,14 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   historiallisessa §05-sarjassa. Jos alle 12 kk yhtenäistä lämpötiladataa ei
   ole saatavilla, EP käyttää neutraalia fallback-arvoa 0.30.</span>
   <br>
-  <span style="color:var(--muted);font-size:0.85em"><b>Huom (2026-09-17), SD-komponentin vertailukelpoisuus:</b> hepp_monthly.json
-  (§05, laskettu 2026-05-12) ei sisällä vedenkorkeuskenttää ollenkaan — sen
-  <code>sd</code>-sarake on laskettu lämpötilapohjaisella varakaavalla
-  (sama kuin computeHEPP():n "else"-haara, ei dokumentoitu vedenkorkeusvaje-
-  kaava yllä), koska Iisveden 65 vuoden päivittäistä vedenkorkeussarjaa ei ole
-  koskaan koottu. Live-SD (§02, WSFS-korjauksen jälkeen) on todellinen
-  vedenkorkeusvaje. Näitä kahta ei voi verrata suoraan lukuarvona eikä
-  Normal/Elevated/High-luokkana — ne mittaavat eri suureita. Historiallinen
-  sarja pitäisi laskea uudelleen SYKE:n pitkästä havaintosarjasta ennen kuin
-  §05:n kynnyksiä voi käyttää live-arvon vertailukohtana.</span>
+  <span style="color:var(--muted);font-size:0.85em"><b>Päivitetty 2026-09-24 (v2):</b> historiallinen sarja on laskettu
+  uudelleen Iisveden mitatusta vedenkorkeudesta (SYKE, asema 1966, 24 645 päivähavaintoa 1959–2026). SD käyttää nyt
+  samaa kaavaa kuin live-arvo §02:ssa: vaje saman vuodenpäivän normaalista (1991–2020) jaettuna 0,90:llä.
+  HSP puuttuu historiasta (NVE:n sarja ei ulotu 1959 asti), joten painot on normalisoitu 0,85:llä — live-HEPP sisältää
+  lisäksi 0,15·HSP, eivätkä luvut ole siksi täysin sama suure. <b>Kynnykset on kalibroitu uudelleen:</b> mitatulla
+  vedenkorkeudella vanha High-raja 0,65 ei ylittynyt kertaakaan 67 vuodessa ja 0,45 ylittyi 1 %:ssa kuukausista.
+  Uudet rajat ovat jakauman p90 (0,30) ja p99 (0,47). Korkein kuukausi on 2003-11 (0,614); kuivimmat vuodet
+  keskiarvona 2003, 2002, 2004, 2006 ja 2025.</span>
 </div>
 
 <div class="shdr"><span class="snum">§ 09</span><span class="stit">Aquatic Status — BEM-E (Aquatic Extension) · KOKEELLINEN</span></div>
@@ -329,7 +327,13 @@ const RAW='https://raw.githubusercontent.com/AetherContinuity/hydrological-endur
 // (98.46) sijaan - tama muuttaa nayteyn prosenttiluvun MERKITTAVASTI
 // (kapeampi, oikea vali 97.45-98.01 vs. aiempi virheellinen 97.45-98.46).
 const NORM=98.01,MNW=97.45,MHW=98.01,RECORD_HIGH=98.46; // MHW=NORM=1910-2025 keskimääräinen vuotuinen maksimi (todellinen MHW, WSFS) · RECORD_HIGH=kaikkien aikojen ennätys 10.6.1988
-const HEPP_URL=RAW+'/hepp_monthly.json';
+const HEPP_URL=RAW+'/hepp_monthly_v2.json';
+// 2026-09-24: v2 — SD lasketaan mitatusta vedenkorkeudesta (SYKE 1966, päivä-
+// kohtainen normaali 1991–2020), sama kaava kuin live-SD_nyt. v1:n sd-sarake
+// oli lämpötilapohjainen varakaava. HSP puuttuu historiasta → painot
+// normalisoitu 0,85:llä. Kynnykset empiirisiä: p90 ja p99 1959–2026.
+// Vanhat 0,45 / 0,65 vastasivat persentiilejä 98,6 ja 100 (ei koskaan ylitetty).
+const HEPP_T={elev:0.30,high:0.47};
 const BANDS_URL=RAW+'/fmi_bands.json';
 
 function dot(id,s){const e=document.getElementById('d-'+id);if(e)e.className='dot '+s}
@@ -689,8 +693,8 @@ function computeHEPP(nve,iis,fmi){
   return{val:+(0.35*sd+0.25*epVal+0.25*rf+0.15*hsp).toFixed(2),sd:+sd.toFixed(2),ep:+epVal.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2),epFallback:ep==null};
 }
 
-function hCol(v){return v>=0.65?'var(--sr)':v>=0.45?'var(--sy)':'var(--ink)'}
-function hReg(v){return v>=0.65?'Korkea endurance-paine':v>=0.45?'Kohonnut':'Normaali'}
+function hCol(v){return v>=HEPP_T.high?'var(--sr)':v>=HEPP_T.elev?'var(--sy)':'var(--ink)'}
+function hReg(v){return v>=HEPP_T.high?'Korkea endurance-paine':v>=HEPP_T.elev?'Kohonnut':'Normaali'}
 
 function drawBars(id,labels,values,color){
   const el=document.getElementById(id);
@@ -914,13 +918,13 @@ async function fetchHEPP(){
     const step=Math.max(1,Math.ceil(n/12));
     let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
     // Taustavyöhykkeet
-    const y65=P.t+h*(1-0.65),y45=P.t+h*(1-0.45);
+    const y65=P.t+h*(1-HEPP_T.high),y45=P.t+h*(1-HEPP_T.elev);
     s+=`<rect x="${P.l}" y="${P.t}" width="${w}" height="${(y45-P.t).toFixed(0)}" fill="#fee" opacity=".3"/>`;
     s+=`<rect x="${P.l}" y="${y45.toFixed(0)}" width="${w}" height="${(y65-y45).toFixed(0)}" fill="#ffd" opacity=".3"/>`;
     // Gridviivat
-    [0.25,0.45,0.65].forEach(v=>{
+    [0.15,HEPP_T.elev,HEPP_T.high].forEach(v=>{
       const y=P.t+h*(1-v);
-      s+=`<line x1="${P.l}" y1="${y.toFixed(1)}" x2="${W-P.r}" y2="${y.toFixed(1)}" stroke="${v>=0.65?'#c04040':v>=0.45?'#c07010':'#aaa'}" stroke-dasharray="3 2" stroke-width=".8"/>`;
+      s+=`<line x1="${P.l}" y1="${y.toFixed(1)}" x2="${W-P.r}" y2="${y.toFixed(1)}" stroke="${v>=HEPP_T.high?'#c04040':v>=HEPP_T.elev?'#c07010':'#aaa'}" stroke-dasharray="3 2" stroke-width=".8"/>`;
       s+=`<text x="${P.l-3}" y="${(y+3).toFixed(1)}" text-anchor="end" fill="#888">${v.toFixed(2)}</text>`;
     });
     // Viivakuvaaja
@@ -932,9 +936,9 @@ async function fetchHEPP(){
     s+=`<polyline points="${pts}" fill="none" stroke="var(--water)" stroke-width="1.2"/>`;
     // Pisteet elevated/high
     rows.forEach((r,i)=>{
-      if(r.hepp>=0.45){
+      if(r.hepp>=HEPP_T.elev){
         const x=P.l+i*(w/(n-1)),y=P.t+h*(1-Math.min(1,r.hepp));
-        const col=r.hepp>=0.65?'#c04040':'#c07010';
+        const col=r.hepp>=HEPP_T.high?'#c04040':'#c07010';
         s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}"/>`;
       }
     });
@@ -949,14 +953,14 @@ async function fetchHEPP(){
     document.getElementById('ch').outerHTML=s;
 
     // Tilastot
-    const elevated=rows.filter(r=>r.hepp>=0.45).length;
-    const high=rows.filter(r=>r.hepp>=0.65).length;
+    const elevated=rows.filter(r=>r.hepp>=HEPP_T.elev).length;
+    const high=rows.filter(r=>r.hepp>=HEPP_T.high).length;
     const max_r=rows.reduce((a,b)=>a.hepp>b.hepp?a:b);
     const last3=rows.slice(-3);
     setText('hepp-stats',
-      `Huippu: ${max_r.month} = ${max_r.hepp.toFixed(3)} (${max_r.hepp>=0.65?'High stress':'Elevated'})`+
-      ` · Elevated ≥0.45: ${elevated}/${rows.length} kk (${(elevated/rows.length*100).toFixed(0)}%)`+
-      ` · High ≥0.65: ${high} kk · Viimeinen: ${last3.map(r=>r.month+'='+r.hepp.toFixed(2)).join(', ')}`);
+      `Huippu: ${max_r.month} = ${max_r.hepp.toFixed(3)} (${max_r.hepp>=HEPP_T.high?'High stress':'Elevated'})`+
+      ` · Elevated ≥${HEPP_T.elev.toFixed(2)}: ${elevated}/${rows.length} kk (${(elevated/rows.length*100).toFixed(0)}%)`+
+      ` · High ≥${HEPP_T.high.toFixed(2)}: ${high} kk · Viimeinen: ${last3.map(r=>r.month+'='+r.hepp.toFixed(2)).join(', ')}`);
   }catch(e){setText('hepp-stats','HEPP-historia: '+e.message);}
 }
 
