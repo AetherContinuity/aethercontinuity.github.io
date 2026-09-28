@@ -75,11 +75,11 @@
 <div class="doc-header">
   <div class="doc-series">Synthesis Memo · SM-020 · Domain D-1 · Empiirinen mittaus</div>
   <div class="doc-meta-grid">
-    <span><strong>Status</strong>Working Draft v0.2</span>
+    <span><strong>Status</strong>Working Draft v0.3</span>
     <span><strong>Language</strong>FI</span>
-    <span><strong>Date</strong>2026-08-25 · v0.2 2026-09-03</span>
+    <span><strong>Date</strong>2026-08-25 · v0.2 2026-09-03 · v0.3 2026-09-28</span>
     <span><strong>Aineisto</strong>Fingrid Open Data + ENTSO-E, 14&nbsp;400 h (1.1.2025–23.8.2026)</span>
-    <span><strong>Relates to</strong>WP-015, DT-001, SM-017, SM-019, WEM §&nbsp;12</span>
+    <span><strong>Relates to</strong>WP-015, DT-001, SM-017, SM-019, TN-024, WEM §&nbsp;12</span>
     <span><strong>Toistettavuus</strong>DS 124/74/75/60/89/180/187/194/30/142 + ENTSO-E day-ahead FI/SE1/SE3/EE</span>
   </div>
   <h1 class="doc-title">753 tuntia</h1>
@@ -91,6 +91,18 @@
 
 <div class="section">
 <span class="section-marker">Muutosloki</span>
+<h2>v0.3 &mdash; 28.9.2026</h2>
+<p>§ 01&ndash;§ 04:n tulokset eivät muutu. v0.3 lisää § 05:een SE1:n ja Suomen välisen nettovirran ja tuntiosuuden Svenska kraftnätin KMA2025:stä: SE1 kääntyy vuositasolla nettotuojaksi Suomesta 2030. Lisäksi kapasiteettilukujen ristiriita.</p>
+<table>
+<thead><tr><th style="width:18%">Kohta</th><th>Muutos</th></tr></thead>
+<tbody>
+<tr><td>§ 05</td><td>Uusi alaotsikko: SE1&rarr;FI-nettovirta ja tuntiosuus KMA2025:stä (käänne nettotuonniksi SE1:een 2030), vertailu KMA 2024:ään ja SvK:n NUP 2026&ndash;2035:n arvio. Uusi huomio: Aurora Linen kapasiteettiluvut eroavat lähteittäin (1&nbsp;500&rarr;2&nbsp;300 MW vs. 1&nbsp;200&rarr;2&nbsp;000 MW)</td></tr>
+<tr><td>§ 06</td><td>Lisätty: SvK tutkii yhden Suomen-yhteyden uudelleeninvestointia elinkaaren päättyessä</td></tr>
+<tr><td>§ 08</td><td>Kohtaan 3 merkitty v0.3:n osittainen lisävastaus</td></tr>
+<tr><td>Lähteet</td><td>Kolme uutta, merkitty <span class="tbd">[v0.3]</span>. Kotimaisen puolen täsmäytys erotettu omaksi muistiokseen TN-024</td></tr>
+</tbody>
+</table>
+
 <h2>v0.2 &mdash; 3.9.2026</h2>
 <p>Alkuperäisen rakenne ja johtopäätökset (§ 01&ndash;§ 04) säilyvät muuttumattomina. v0.2 lisää kaksi pykälää, jotka vastaavat osittain § 08:n kohtaan 3 &mdash; &rdquo;vastaava purku SE1:n päästä&rdquo;.</p>
 <table>
@@ -231,8 +243,30 @@
 <p><strong>Tämä ei kumoa § 05:n argumenttia vaan tarkentaa sen.</strong> Svenska kraftnätin taseennuste on julkaistu 2026, eli LKAB:n alaskirjaus 2024 on siinä jo mukana. Ennuste ei siis nojaa maksimaalisiin ilmoituksiin. Se, että SE1:n tase silti kääntyy negatiiviseksi 2030, on vahvempi tulos kuin jos se nojaisi hankkeisiin joita ei ole vielä hyväksytty.</p>
 </div>
 
+<h3>SE1&rarr;FI kääntyy — lähempänä tuntitasoa kuin vuositase <span class="tbd">[v0.3]</span></h3>
+<p>Samasta Svenska kraftnätin analyysista (<em>KMA2025: Kortsiktig marknadsanalys 2026&ndash;2030</em>, maaliskuu 2026), josta yllä olevan taseen luvut ovat, saadaan kaksi Suomen kannalta suorempaa lukua: SE1:n ja Suomen välinen vuotuinen nettovirta sekä kauppavirran pysyvyyskäyrä, josta näkee, kuinka suuren osan tunneista virta kulkee Suomeen päin.</p>
+<table>
+<thead><tr><th style="width:22%">Vuosi</th><th>Nettovirta SE1&rarr;FI, TWh</th><th>Tunteja, joina SE1 vie Suomeen</th></tr></thead>
+<tbody>
+<tr><td>2026</td><td>+10</td><td>~88 %</td></tr>
+<tr><td>2027</td><td>+8</td><td>~79 %</td></tr>
+<tr><td>2028</td><td>+4</td><td>~60 %</td></tr>
+<tr><td>2029</td><td>+1</td><td>~52 %</td></tr>
+<tr><td>2030</td><td><strong>&minus;1</strong></td><td><strong>~43 %</strong></td></tr>
+</tbody>
+</table>
+<p class="note">Nettovirta: KMA2025, s. 25 <code>[M]</code>. Tuntiosuudet on luettu pysyvyyskäyrän nollakohdasta (KMA2025, s. 60), tarkkuus noin &plusmn;3 prosenttiyksikköä <code>[L]</code>. Mallinnettu, 35 sääaineistovuotta, ei mitattu.</p>
+<div class="callout">
+<p><strong>Vuonna 2030 SE1 on vuositasolla nettotuoja Suomesta.</strong> SvK:n oma muotoilu: &rdquo;SE1 nettoimporterar från norra FI i 2030 &mdash; vilket innebär att export- och importvolymerna blir närmare varandra under perioden, inte att SE1 endast importerar.&rdquo; Tämä on § 05:n puristuksen suora muoto: tuntien osuus, jolloin pohjoinen ylijäämä on Suomen käytettävissä, puolittuu viidessä vuodessa. Samalla kauppakapasiteetti pysyy mallissa &plusmn;2&nbsp;000 MW:ssa, eli kapasiteetti ei ole rajoite, vaan ylijäämän puute.</p>
+<p>SE1&ndash;FI-rajan kriittiset verkkoelementit rajoittavat markkinaa KMA2025:n mukaan 11,8 % ajasta vuonna 2026 ja 3,2 % vuonna 2030, mutta toinen SE1&ndash;FI-elementti nousee rajoittavaksi 19,6 %:ssa ajasta vuonna 2030 (s. 61). Sitova rajoite siirtyy eikä katoa.</p>
+<p><em>Kalibrointihuomio:</em> KMA2025 laski Suomen oletettua sähkönkulutusta edelliseen painokseen nähden 6&ndash;11 TWh vuodessa (s. 10). Käänne tapahtuu siis matalammallakin kysyntäoletuksella. Edellinen painos (KMA 2024) antoi vastaaville tuntiosuuksille yli 80 % (2026) ja hieman yli 50 % (2029) ja kuvasi muutosta &rdquo;markantiksi uudelleenjakautumiseksi&rdquo; vuodesta 2027 alkaen. Painokset ovat keskenään johdonmukaisia.</p>
+</div>
+<p>SvK:n verkkosuunnitelma NUP 2026&ndash;2035 tiivistää saman: vienti SE1:stä Suomeen jatkuu vuoteen 2029 asti, mutta &rdquo;heikkenee jyrkästi vuodesta 2028&rdquo;.</p>
+
 <h3>Aurora Line oli kertaluonteinen</h3>
 <p>Aurora Line (käyttöön 13.11.2025) nosti SE1&ndash;FI-kapasiteetin noin 1500 MW:sta noin 2300 MW:iin. <strong>Mitattu jakso alkoi kaksi kuukautta sen jälkeen</strong> — eli marginaalin ollessa leveimmillään. Seuraava merkittävä vahvistus Ruotsissa on SE1&ndash;SE3 (+800 MW, 2029), ja se palvelee Ruotsin sisäistä pohjois&ndash;etelä-siirtoa. Svenska kraftnätin investointiohjelma 2027&ndash;2029 on 70 mrd SEK, noin 2900 km johtoa ja 40 asemaa kymmenessä vuodessa.</p>
+<p class="note"><em>Kapasiteettiluvut eroavat lähteittäin</em> <span class="tbd">[v0.3]</span>: yllä oleva 1500&rarr;2300 MW vastaa Fingridin ilmoittamaa +800 MW:n lisäystä. SvK:n KMA 2024 käyttää kauppakapasiteettina SE1&rarr;FI 1&nbsp;200&rarr;2&nbsp;000 MW ja FI&rarr;SE1 1&nbsp;100&rarr;2&nbsp;000 MW (taulukko 20), ja KMA2025:n pysyvyyskäyrä on rajattu samaan &plusmn;2&nbsp;000 MW:iin. Ero on todennäköisesti määritelmäero (SvK:n suunnitteluverkon NTC vs. Fingridin ilmoittama siirtokyky). Flow-based-laskennassa kiinteä NTC ei ole sitova, mikä on § 03:n oma havainto. Lukua ei tässä korjata, mutta vertailuissa on käytettävä samaa lähdettä.</p>
+<p class="note">Seuraava SE1&ndash;FI-lisäyhteys (&rdquo;Aurora Line 2&rdquo;) on SvK:n NUP 2026&ndash;2035:n hankelistassa vuodelle 2036 &mdash; § 05:n ikkunan ulkopuolella. <span class="tbd">[v0.3]</span></p>
 <p class="note"><em>Varaus:</em> § 03 testasi hypoteesin Ruotsin sisäisen siirron kilpailusta ja hylkäsi sen mitatussa jaksossa — SE1:n ja SE3:n hintaero oli mediaanilta lähellä nollaa. Tämä pykälä koskee tulevaa rakennetta, ei mitattua jaksoa, eikä kumoa tuota havaintoa.</p>
 </div>
 
@@ -296,6 +330,7 @@
 
 <div class="callout">
 <p><strong>Aikarajaus.</strong> Ensimmäinen reaktori on käytössä aikaisintaan 2030-luvun puolivälissä — kokonaan § 05:n 2026&ndash;2030-ikkunan ulkopuolella. Videberg Kraft ei siis muuta Svenska kraftnätin taseennustetta eikä lievennä sitä puristusta, jota § 05 kuvaa. Se muuttaa sitä, mitä ikkunan jälkeen tapahtuu — ja vaikutus tulee FennoSkanin, ei Aurora Linen, kautta.</p>
+<p><strong>FennoSkanin oma elinkaari</strong> <span class="tbd">[v0.3]</span>. SvK:n NUP 2026&ndash;2035 toteaa, että yksi Suomen-yhteyksistä lähestyy teknisen käyttöikänsä loppua, ja SvK tutkii yhdessä Fingridin kanssa uudelleeninvestoinnin toteutustapaa. Maininta on Västmanlandin ja Uppsalan läänin kohdalla, jossa FennoSkanin Ruotsin pää sijaitsee, joten kyse on todennäköisesti FS1:stä (400 MW, 1989). <code>[A]</code> Yhteys, jolla § 03:n mukaan oli liikkumavaraa, on siis itse uusimisvaiheessa samalla vuosikymmenellä, jolla Videberg Kraftin vaikutus sen kautta alkaisi.</p>
 </div>
 
 <h3>Asymmetria Suomeen</h3>
@@ -330,7 +365,7 @@
 <ol>
 <li><strong>SE1:n katon syy.</strong> Fingridin avoimen datan dokumentaatio DS 142/143:sta, tai ENTSO-E:n kapasiteettiaikasarja rajaparille. Ratkaisee §&nbsp;03:n varauksen.</li>
 <li><strong>Siirron ja hinnan korrelaatio</strong> Keski-Suomen poikkileikkauksen yli. Tämä on SM-019:n keskeisin avoin tarkistus: jos siirtohuiput todella osuvat halvoille tunneille, hintaohjautuvan ja siirtoehdollisen jouston erottelu vahvistuu mitattuna.</li>
-<li><strong>Vastaava purku SE1:n päästä.</strong> ENTSO-E antaa SE1:n ja SE2:n kulutuksen ja tuotannon. Vasta silloin voidaan sanoa, oliko pohjoinen ylijäämä pienenemässä vai oliko este pelkästään siirrossa. <em>v0.2: § 05 vastaa tähän osittain Svenska kraftnätin ennusteella — mutta vuositasolla, ei tunneittain. Tuntitason purku SE1:n päästä on yhä tekemättä, ja se on tämän listan tärkein kohta.</em></li>
+<li><strong>Vastaava purku SE1:n päästä.</strong> ENTSO-E antaa SE1:n ja SE2:n kulutuksen ja tuotannon. Vasta silloin voidaan sanoa, oliko pohjoinen ylijäämä pienenemässä vai oliko este pelkästään siirrossa. <em>v0.2: § 05 vastaa tähän osittain Svenska kraftnätin ennusteella — mutta vuositasolla, ei tunneittain. Tuntitason purku SE1:n päästä on yhä tekemättä, ja se on tämän listan tärkein kohta.</em> <em>v0.3: SvK:n pysyvyyskäyrä (§ 05) on askel lähemmäs: tuntiosuus 88 % → 43 % vuosina 2026–2030. Se on kuitenkin mallinnettu, ei mitattu. Mitattu tuntitason purku on yhä tekemättä.</em></li>
 <li><strong>Jaksojen kestojakauma pidemmällä sarjalla.</strong> Kaksi talvea riittää yhden jakson purkuun, ei tiheyteen. Fingridin data ulottuu kauemmas taaksepäin.</li>
 </ol>
 </div>
@@ -343,6 +378,9 @@
 <li><strong>ENTSO-E Transparency Platform</strong> — day-ahead-hinnat FI, SE1, SE3, EE (A44), 15 min → tuntikeskiarvot</li>
 <li><strong>Nordic RCC</strong> — flow-based-kapasiteettilaskennan käyttöönotto 29.10.2024 (vuorokausimarkkina)</li>
 <li><strong>Svenska kraftnät</strong> — Kortsiktig marknadsanalys 2026–2030; raportti ehdollisista liittymissopimuksista (<em>villkorade avtal</em>) 30.4.2026; investointiohjelma 2027–2029 <span class="tbd">[v0.2]</span></li>
+<li><strong>Svenska kraftnät</strong> — KMA2025: Aktuella tendenser i kraftsystemet, Kortsiktig marknadsanalys 2026&ndash;2030, maaliskuu 2026: nettovirrat s. 25, Suomen kapasiteetti s. 35, pysyvyyskäyrät s. 60, rajoittavat verkkoelementit s. 61 (<a href="/tools/data/kma-2025_aktuella-tendenser.pdf">pdf</a>) <span class="tbd">[v0.3]</span></li>
+<li><strong>Svenska kraftnät</strong> — Kortsiktig marknadsanalys 2024, Svk 2025/359, 24.3.2025 (analyysijakso 2025&ndash;2029): handelsflöden SE1&ndash;FI, taulukko 20 (<a href="/tools/data/kma-2024_20250324.pdf">pdf</a>) <span class="tbd">[v0.3]</span></li>
+<li><strong>Svenska kraftnät</strong> — Network development plan 2026&ndash;2035 (<a href="/tools/data/svk_natutveckling_nup_2026-2035_eng.pdf">pdf</a>) <span class="tbd">[v0.3]</span></li>
 <li><strong>Stegra</strong> — rahoituskierros 10/2026; thyssenkrupp Materials Services -toimitussopimus 12.1.2026 <span class="tbd">[v0.2]</span></li>
 <li><strong>Vattenfall</strong> — Forsmarks Kraftgrupp, talous ja omistusrakenne; Forsmark/Ringhals 80 vuoden käyttöikäpäätös 6/2024; Videberg Kraft -omistusjärjestely 6/2026; Videberg Kraft — toimittajavalinta 15.6.2026 (Rolls-Royce SMR, 3 × 470 MW, ~12 TWh/a, Värö) <span class="tbd">[v0.2]</span></li>
 <li><strong>FennoSkan 1 ja 2</strong> — HVDC-yhteydet FI&ndash;SE3, 400 MW (1989) ja 800 MW (2011) <span class="tbd">[v0.2]</span></li>
