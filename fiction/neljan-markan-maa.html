@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neljän markan maa 2.0 · ACI</title>
+<meta name="description" content="Suomeen saapuvan sijoituksen bruttoarvo ei ole sama asia kuin Suomeen jäävä taloudellinen arvo.">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f8f6f1;
+    --rule: #c8c0b0;
+    --accent: #2a4a6e;
+    --cold: #e8eef5;
+    --mono: 'Courier New', Courier, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.85;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  nav {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+  }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 1.5rem; }
+  nav a:hover { text-decoration: underline; }
+
+  .masthead {
+    border-top: 3px solid var(--ink);
+    padding-top: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .institute-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+
+  .byline {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 0.4rem;
+  }
+
+  .meta-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #999;
+    line-height: 1.9;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .meta-line a { color: var(--accent); text-decoration: none; }
+
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+    margin-bottom: 0.3rem;
+  }
+
+  h2 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.1rem;
+    color: #333;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .epp-box {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    background: var(--cold);
+    border-left: 3px solid var(--accent);
+    padding: 0.75rem 1rem;
+    margin: 1.25rem 0;
+    line-height: 1.9;
+    color: #444;
+  }
+
+  .divider {
+    text-align: center;
+    color: #ddd;
+    margin: 2.5rem 0;
+    font-size: 1rem;
+    letter-spacing: 0.6rem;
+  }
+
+  .closing {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-style: italic;
+    color: #777;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #aaa;
+    line-height: 2.2;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  .cover { max-width:320px; margin:2rem auto 1.5rem; text-align:center; }
+  .cover img { width:100%; border-radius:2px; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+  .chapter-title { font-size:1.05rem; font-weight:bold; line-height:1.4; margin-bottom:.4rem; color:#333; }
+  .chapter-sub { font-style:italic; color:#777; margin-bottom:1.5rem; }
+  .interlude { font-style:italic; color:#555; margin:2rem 1.5rem; line-height:1.75; }
+  .chain { font-style:italic; text-align:center; margin:1.5rem 5%; }
+  .closing-lines p { margin-bottom:.3rem; }
+  .langs { font-family:var(--mono); font-size:11px; margin-top:.3rem; }
+  .langs a { color:var(--accent); text-decoration:none; margin-right:1rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://aethercontinuity.org/">ACI</a>
+  <a href="https://aethercontinuity.org/fiction/">Kaunokirjallisuus</a>
+  <a href="https://aethercontinuity.org/tools/">Välineet</a>
+  <a href="https://aethercontinuity.org/about.html">Tietoa</a>
+</nav>
+
+<div class="masthead">
+  <div class="institute-line">Aether Continuity Institute · Kaunokirjallisuus · 2026</div>
+  <h1>Neljän markan maa 2.0</h1>
+  <div class="cover"><img src="/fiction/neljan-markan-maa-kansi.jpg" alt="Neljän markan maa 2.0 · La tierra de los cuatro marcos 2.0"></div>
+  <p class="byline">Suomeen saapuvan sijoituksen bruttoarvo ei ole sama asia kuin Suomeen jäävä taloudellinen arvo.</p>
+</div>
+
+<div class="meta-line">
+  Esipuhe ja seitsemän kuvaa · 2029–2030 · Espanjalaisen kääntäjän kommentein<br>Perustuu <a href="https://aethercontinuity.org/papers/sm-012-energy-allocation-fiscal-sustainability.html">SM-012</a> · <a href="https://aethercontinuity.org/papers/cn-024-ppa-invisible-allocation.html">CN-024</a> · <a href="https://aethercontinuity.org/papers/sm-020-import-dependency-anatomy.html">SM-020</a><br>Kaunokirjallisuus: <a href="https://aethercontinuity.org/fiction/helmikuu-2029.html">Helmikuu 2029</a>
+  <div class="langs"><a href="/fiction/la-tierra-de-los-cuatro-marcos.html">Español — La tierra de los cuatro marcos 2.0</a><a href="/fiction/neljan-markan-maa.epub" download>↓ epub (FI + ES)</a></div>
+</div>
+
+<div class="section"><div class="chapter-title">Kääntäjän esipuhe</div>
+<p>Laiska lukijani — minä en vannota, että tämä teos on maailman paras, koska se ei ole, mutta yhden asian minä sinulle lupaan: yksikään kääntäjä ei ole hikoillut yhtä paljon sanojen vuoksi, jotka eivät sano mitään. Suomenkielinen alkuteos on kuin hakattua kiveä: kuinka vaikeaa olikaan kääntäjän pidättyä koristelemasta sitä, sillä tuulimyllyjen asioissa me espanjalaiset, sekä perinnön että ammatin puolesta, emme osaa vaieta. Mutta suomalainen vaikenee, ja vaikeneva puhuu; ja se, joka kääntää hänen hiljaisuutensa torvina, häviää.</p>
+<p>Ja yhden asian minä vielä mainitsen: täällä jättiläiset ovat oikeasti jättiläisiä, ja myllyt oikeasti myllyjä, ja silti joku sekoittaa ne. Meillä kotimaassamme sekoitimme myllyt jättiläisiksi; se oli näköharha, ja anteeksiantava. Tämän kirjan henkilöt sekoittavat jättiläiset myllyiksi; se on intressin virhe, ja sellaista silmälasit eivät paranna. Muun lukija näkee itse, sillä siksihän hänellä on silmät.</p>
+<p>Heikki Välitalo kysyi vuonna 1989, kuinka paljon Suomeen jää siitä, mikä Suomesta viedään. Suomen Pankin ekonomistit palasivat kysymykseen vuonna 2025: ratkaisevaa ei ole viennin bruttoarvo, vaan kuinka suuri osa siitä on kotimaista arvonlisää.</p>
+<p>Kysymys ei ole vanhentunut.</p>
+<p>Se on vain vaihtanut muotoa.</p>
+<p>Ketju on tämä:</p>
+<p class="chain">ulkomainen pääoma → tuulivoima → Fingridin sähköverkko → datakeskus / vety → mahdollinen Gasgridin vetoverkko → tuotettu palvelu tai vienti → verot + palkat + kansallinen lisäarvo – tuontipanokset – ulkomaille virtaavat pääomatulot – julkiset tuet</p>
+<p>Kysymys ei enää ole: kuinka paljon Suomeen sijoitetaan?</p>
+<p>Vaan: kuinka paljon suomalainen yhteiskunta saa tästä ketjusta suhteessa siihen, mitä sen on rakennettava ja mahdollistettava, jotta ketju ylipäätään on olemassa?</p>
+<p>Seitsemän kuvaa.</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">I</div><div class="chapter-title">Jossa kerrotaan suuresta luvusta ja siitä, kuinka se ei liikkunut koko lehdistötilaisuuden aikana</div><div class="chapter-sub">Investointi</div>
+<p>Pääministeri seisoi suuren näytön edessä lehdistötilaisuudessa.</p>
+<p>Näytöllä oli luku.</p>
+<div class="epp-box">13 000 000 000 €</div><p>»Suomessa on meneillään ennennäkemättömiä investointeja», hän sanoi.</p>
+<p>Toimittajat kirjoittivat.</p>
+<p>»Datakeskuksia. Puhdasta energiaa. Vetyä. Sähköverkkoa. Uutta teollisuutta.»</p>
+<p>Näytölle ilmestyi toinen luku.</p>
+<div class="epp-box">5 200 000 000 €</div><p>»Siirtoverkkoa vahvistetaan, jotta uusi tuotanto ja uusi kulutus saadaan liitettyä verkkoon.»</p>
+<p>Kolmas luku.</p>
+<div class="epp-box">5 000 000 000 €</div><p>»Suomessa on suunnitteilla kansallinen vetyrunkoverkko.»</p>
+<p>Pääministeri pitkitti hetken.</p>
+<p>»Kaikki tämä merkitsee investointia Suomeen.»</p>
+<p>Eräs toimittaja nosti kätensä.</p>
+<p>»Kuinka paljon näistä investoinneista jää Suomeen?»</p>
+<p>Pääministeri katsoi toimittajaa.</p>
+<p>»Investoinnit tehdään Suomeen.»</p>
+<p>»Se ei ollut kysymys.»</p>
+<p>»Ne tuottavat työpaikkoja.»</p>
+<p>»Kuinka monta?»</p>
+<p>»Ne vahvistavat veropohjaa.»</p>
+<p>»Kuinka paljon?»</p>
+<p>Pääministeri hymyili.</p>
+<p>»Suomi tarvitsee investointeja.»</p>
+<p>Toimittaja katsoi muistiinpanojaan.</p>
+<p>»Entä omistajat?»</p>
+<p>Pääministeri ei vastannut heti.</p>
+<p>»Suomi on avoin investoinneille.»</p>
+<p>Seuraava toimittaja sai puheenvuoron.</p>
+<p>Näytöllä 13 miljardia olivat yhä paikoillaan.</p>
+<p>Ne eivät olleet liikkuneet koko tilaisuuden aikana.</p>
+<p>Ne olivat ainoa asia salissa, joka ei ollut sanonut mitään.</p>
+<p>Toimittaja yritti vielä kerran.</p>
+<p>»Kuinka suuri osa 13 miljardista olisi suomalaista kymmenen vuoden kuluttua?»</p>
+<p>Pääministeri katsoi häntä.</p>
+<p>»Kymmenen vuotta on pitkä aika.»</p>
+<p>»On.»</p>
+<p>»Siihen mennessä tilanne voi olla aivan toinen.»</p>
+<p>»Tarkoitatteko, ettei sitä voi tietää?»</p>
+<p>»Päinvastoin.»</p>
+<p>Pääministeri hymyili.</p>
+<p>»Juuri siksi ei kannata tietää sitä vielä.»</p>
+<p>Tilaisuus päättyi ajallaan.</p>
+<p>Lehdistötiedote julkaistiin kello 14.00.</p>
+<p>Siinä ei ollut 13 miljardin lukua.</p>
+<p>Siinä luki, että Suomi on vetovoimainen sijoituskohde.</p>
+<p>Se oli totta.</p>
+<p class="interlude">— Vive Dios, jos don Quijotella olisi ollut edessään tuollainen jättiläinen, hän olisi kutsunut sitä jättiläiseksi ja hyökännyt sen kimppuun, sillä juuri sellainen don Quijote oli! Mutta tämän luvun jättiläinen on toista sorttia: sillä ei ole keihästä eikä kypärää vaan näyttö; eikä se nielaise kristittyjä vaan kysymyksiä. Sillä on jättiläisiä, jotka <em>syövät miehet, ja nämä kestävät vähän; ja on niitä, jotka syövät kysymykset, eivätkä nämä koskaan tule kylläisiksi.</em></p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">II</div><div class="chapter-title">Jossa kerrotaan virastosta ja virkamiehen kärsivällisyydestä, joka on kaikista eläimistä kärsivällisin</div><div class="chapter-sub">Virasto</div>
+<p>Energiaviraston lehdistötilaisuus alkoi kello kymmenen.</p>
+<p>Virkamies luki dioja.</p>
+<p>»Järjestelmän riittävyys on haaste, mutta hallittavissa.»</p>
+<p>Diossa oli käyrä.</p>
+<p>Se nousi lempeästi vuodesta 2025 vuoteen 2029.</p>
+<p>Käyrän vieressä vihreä piste.</p>
+<div class="epp-box">SYSTEM STABLE</div><p>Toimittaja nosti kätensä.</p>
+<p>»Kulutus kasvaa. Tuotanto ei kasva samaa tahtia. Mitä tapahtuu?»</p>
+<p>»Markkina reagoi.»</p>
+<p>»Milloin?»</p>
+<p>»Kun hinnoittelu-signaali on riittävän voimakas.»</p>
+<p>»Kuinka voimakas?»</p>
+<p>Virkamies katsoi diota.</p>
+<p>»Riittävä.»</p>
+<p>Seuraava dia.</p>
+<p>»Kysynnän joustavuudella on keskeinen rooli.»</p>
+<p>»Suosittelemme kotitalouksia siirtämään sähkönkäyttönsä halvimpiin tunteihin.»</p>
+<p>Toimittaja kysyi:</p>
+<p>»Entä jos kaikki tunnit ovat kalliita?»</p>
+<p>Virkamies hymyili.</p>
+<p>»Silloin joustavuutta on vielä käyttämättä.»</p>
+<p>Seuraava dia.</p>
+<div class="epp-box">Demand flexibility potential, 2029: 1 957 MW</div><p>Toimittaja katsoi lukua.</p>
+<p>»Mitä tapahtuu, jos joustavuus ei riitä?»</p>
+<p>»Joustavuudella on keskeinen rooli.»</p>
+<p>»Entä jos tulee heikkotuulinen viikko?»</p>
+<p>Virkamies pysähtyi.</p>
+<p>»Järjestelmä on suunniteltu kestämään.»</p>
+<p>»Kuinka kauan?»</p>
+<p>Hiljaisuus.</p>
+<p>»Seuraava kysymys.»</p>
+<p>Seuraava dia oli jo näytöllä.</p>
+<div class="epp-box">Kysynnän joustavuus:<br>• kotitaloudet: 633 MW<br>• teollisuus: 1 324 MW<br>• varastointi: 0 MW</div><p>Toimittaja katsoi taulukkoa.</p>
+<p>»Miksi varastointi on nollassa?»</p>
+<p>»Varastot ovat reservimarkkinoilla.»</p>
+<p>»Kuinka paljon?»</p>
+<p>»Yli kaksi gigawattia.»</p>
+<p>»Miksi ne eivät ole tässä taulukossa?»</p>
+<p>»Tämä on joustotaulukko.»</p>
+<p>»Eivätkö varastot jousta?»</p>
+<p>Virkamies hymyili.</p>
+<p>»Seuraava dia.»</p>
+<p>Toimittaja ei kysynyt enää.</p>
+<p>Hän oli ymmärtänyt prosessin.</p>
+<p>Kysymys oli yhä olemassa.</p>
+<p>Juuri siksi prosessi oli ollut menestys.</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">III</div><div class="chapter-title">Jossa kerrotaan siitä, mitä valvomohuoneesta näkyy, mikä on enemmän kuin mitä esiintymisestä näkyy</div><div class="chapter-sub">Valvomohuone</div>
+<p>Fingridin operaatiojohtaja seisoi valvomohuoneessa.</p>
+<p>Hän oli nähnyt järjestelmän kehittyvän kahdeksankymmentäluvulta asti.</p>
+<p>Hän oli nähnyt ydinvoimakapasiteetin kasvun.</p>
+<p>Hän oli nähnyt tuulivoiman saapuvan.</p>
+<p>Hän oli nähnyt sen lähtevän.</p>
+<p>Näytöllä:</p>
+<div class="epp-box">EPP 0,78 · BP-like<br>SP_cluster: JUMP<br>Pisin stressijakso: 89 h<br>SE1: 1 460 MW / 2 000 MW<br>Norjan varastot: 28 %</div><p>Nuorempi kollega tuli luokse.</p>
+<p>»Miten tästä selvitetään?»</p>
+<p>»Pitämällä verkko pystyssä.»</p>
+<p>»Kuinka kauan?»</p>
+<p>»Niin kauan kuin verkko pysyy pystyssä.»</p>
+<p>»Onko se virallinen vastaus?»</p>
+<p>»Ei.»</p>
+<p>»Mikä on virallinen?»</p>
+<p>»Tilanne on hallinnassa.»</p>
+<p>»Entä epävirallinen?»</p>
+<p>Vanhempi insinööri katsoi näyttöä.</p>
+<p>»Tilanne on hallinnassa, jos määrittelemme hallinnan riittävän löyhästi.»</p>
+<p>Kollega katsoi lukuja.</p>
+<p>»Mitä se EPP tarkoittaa?»</p>
+<p>»Se on ACI:n mittari.»</p>
+<p>»Mitä se mittaa?»</p>
+<p>»Kestävyyttä.»</p>
+<p>»Mitä se tarkoittaa?»</p>
+<p>»Se tarkoittaa, että järjestelmä kestää yhden yön. Ei viikkoa.»</p>
+<p>»Kestääkö se viikon?»</p>
+<p>»Kestää, jos tuulee.»</p>
+<p>»Entä jos ei tuule?»</p>
+<p>Vanhempi insinööri katsoi näyttöä.</p>
+<p>»Silloin meillä on vähemmän tuulta.»</p>
+<p>»Tarkoitatko, että ongelma kasvaa?»</p>
+<p>»En.»</p>
+<p>»Etkö?»</p>
+<p>»Ongelma pysyy samana. Meillä on vain vähemmän tuulta.»</p>
+<p>Kollega vaikeni.</p>
+<p>Hän katsoi SE1:n lukua.</p>
+<div class="epp-box">1 460 MW.</div><p>Se oli 73 prosenttia kapasiteetista.</p>
+<p>»Mitä tapahtuu, jos se menee alle 1 100:n?»</p>
+<p>»Se ei mene alle 1 100:n.»</p>
+<p>»Mistä tiedät?»</p>
+<p>»Se on voimassa oletus.»</p>
+<p>»Svenska kraftnät arvioi, että vienti SE1:stä Suomeen heikkenee jyrkästi vuodesta 2028.»</p>
+<p>»Se on heidän oletuksensa.»</p>
+<p>»Entä meidän?»</p>
+<p>»Meidän on voimassa.»</p>
+<p>»Entä jos oletus osoittautuu virheelliseksi?»</p>
+<p>»Silloin oletus tarkistetaan.»</p>
+<p>»Milloin?»</p>
+<p>»Kun se osoittautuu virheelliseksi.»</p>
+<p>Kollega mietti.</p>
+<p>»Totta.»</p>
+<p>»On.»</p>
+<p>»Mutta se ei ole vastaus.»</p>
+<p>»Ei ole.»</p>
+<p>Kollega katsoi häntä.</p>
+<p>»Eli mitä me tehdään?»</p>
+<p>Vanhempi insinööri katsoi näyttöä.</p>
+<p>»Pidetään verkko pystyssä.»</p>
+<p>»Ja sen jälkeen?»</p>
+<p>»Sen jälkeen rukoillaan, että tuulee.»</p>
+<p>»Entä jos ei tuule?»</p>
+<p>Insinööri ei vastannut.</p>
+<p>Hän katsoi SE1:n lukua.</p>
+<p>Se oli laskenut 1 410 megawattiin.</p>
+<p>Hän ei sanonut sitä ääneen.</p>
+<p>Hän tiesi, että jos tuonti laskisi alle 1 100:n, jotakin joutuisi tekemään.</p>
+<p>Hän ei tiennyt mitä.</p>
+<p>Kukaan ei kysynyt, kuinka monta tuntia järjestelmä kestäisi, jos tuuli ei nousisi.</p>
+<p>Se ei ollut hänen tehtävänsä.</p>
+<p>Hänen tehtävänsä oli pitää verkko pystyssä.</p>
+<p>Ja hän piti.</p>
+<p class="interlude">— Ja tässä näkyy ero ritarien ja insinöörien välillä: ritari hyökkää myllyjen kimppuun tietäen, että ne ovat jättiläisiä, ja insinööri hyökkää myllyjen puolesta tietäen, että ne ovat myllyjä; ja näistä kahdesta se, joka taistelee tuulta vastaan, voi ainakin vedota keihääseensä. Mutta tämän luvun insinööri taistelee tuulta pahempaa vastaan: voimassa oletusta. Sillä tuuli, kun se nousee, vastaa; voimassa oletus, kun se nousee, tarkistetaan; eivät ne ole sama asia. Eikä kummallakaan, kun se lopulta voittaa, ole käsillä ketään, joka kiittäisi.</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">IV</div><div class="chapter-title">Jossa kerrotaan Kassilasta, hyvän sanoman saarnaajasta, ja siitä, kuinka kysymys syntyi uudelleen pahemmalla nimellä</div><div class="chapter-sub">Hyvä sanoma</div>
+<p>Kassila istui studiossa.</p>
+<p>Hänellä oli edessään kolme näyttöä.</p>
+<p>Ensimmäisessä luki:</p>
+<div class="epp-box">13 000 000 000 €</div><p>Toisessa:</p>
+<div class="epp-box">DATA CENTERS</div><p>Kolmannessa:</p>
+<div class="epp-box">JOBS · GROWTH · INVESTMENTS</div><p>Juontaja hymyili.</p>
+<p>»Tänään puhumme datakeskusten valtavasta kasvusta Suomessa.»</p>
+<p>Kassila nyökkäsi.</p>
+<p>»Ja aihetta on.»</p>
+<p>»Mitä tämä merkitsee Suomelle?»</p>
+<p>Kassila katsoi kameraan.</p>
+<p>»Se merkitsee, että Suomi on voittanut.»</p>
+<p>»Missä?»</p>
+<p>»Digitaalisessa taloudessa.»</p>
+<p>»Miten?»</p>
+<p>»Meille tulee valtavat määrät investointeja.»</p>
+<p>»Mutta suuri osa teknologiasta ja pääomasta tulee ulkomailta.»</p>
+<p>»Juuri siinä on globalisaation koko idea.»</p>
+<p>»Entä omistus?»</p>
+<p>»Omistus ei ole tässä olennaista.»</p>
+<p>»Mikä on olennaista?»</p>
+<p>»Investointi.»</p>
+<p>»Mutta jos ulkomainen yritys rakentaa datakeskuksen, käyttää suomalaista sähköä ja vie voitot ulkomaille—»</p>
+<p>Kassila keskeytti.</p>
+<p>»Hetkinen.»</p>
+<p>Hän hymyili.</p>
+<p>»Emme voi katsoa tätä noin vanhanaikaisesti.»</p>
+<p>»Miten silloin pitäisi katsoa?»</p>
+<p>»On nähtävä kokonaisuus.»</p>
+<p>»Voimmeko nähdä sen?»</p>
+<p>»Totta kai.»</p>
+<p>Kassila vaihtoi diota.</p>
+<p>CONSTRUCCIÓN · EMPLEO · IMPUESTOS · SERVICIOS · INFRAESTRUCTURA · DIGITALIZACIÓN</p>
+<p>»Siinä kokonaisuus.»</p>
+<p>»Missä on sähkön hinta?»</p>
+<p>»Se on markkinakysymys.»</p>
+<p>»Missä on runkoverkon kustannus?»</p>
+<p>»Se on infrastruktuuri-investointi.»</p>
+<p>»Entä mahdollinen vetoverkko?»</p>
+<p>»Se on tulevaisuuden infrastruktuuria.»</p>
+<p>»Entä jos investointien toteuttaminen edellyttää julkista tukea?»</p>
+<p>»Se on investointipolitiikkaa.»</p>
+<p>»Entä jos kotitalouksien sähkö kallistuu?»</p>
+<p>Kassila huokasi.</p>
+<p>»Emme voi rakentaa Suomea pelkästään sen mukaan, mitä yksi kotitalous sähköstään maksaa.»</p>
+<p>Hän kääntyi kameraan.</p>
+<p>»On katsottava isoa kuvaa.»</p>
+<p>Juontaja nyökkäsi.</p>
+<p>Iso kuva oli taas näytöllä.</p>
+<div class="epp-box">13 000 000 000 €</div><p>Kassila puhui hitaasti.</p>
+<p>»Jos joku näkee tässä ongelman, kannattaa kysyä miksi.»</p>
+<p>»Miksi?»</p>
+<p>»Sitä.»</p>
+<p>»Mitä tarkoitat?»</p>
+<p>»Onko meillä Suomessa oikeasti varaa vastustaa investointeja?»</p>
+<p>Hiljaisuus.</p>
+<p>Juontaja katsoi häntä.</p>
+<p>»Entä jos joku ei vastusta investointeja, vaan kysyy niiden netto-vaikutuksesta?»</p>
+<p>Kassila hymyili.</p>
+<p>»Se on hyvä kysymys.»</p>
+<p>»No?»</p>
+<p>»Mutta väärällä näkökulmalla.»</p>
+<p>»Mikä olisi oikea näkökulma?»</p>
+<p>Kassila katsoi kameraan.</p>
+<p>»Se, jossa investointi näyttää investoinnilta.»</p>
+<p>»Mitä se tarkoittaa?»</p>
+<p>»Se tarkoittaa, että investointi nähdään investointina.»</p>
+<p>»Miten se määritellään?»</p>
+<p>»Sitä ei määritellä.»</p>
+<p>»Miksi?»</p>
+<p>»Koska silloin siitä tulisi näkökulma.»</p>
+<p>Juontaja teki muistiinpanoja.</p>
+<p>Hän ei ollut varma, mitä oli kirjoittanut.</p>
+<p>Hän kirjoitti silti.</p>
+<p>Se oli hänen tehtävänsä.</p>
+<p>Seuraavana päivänä kommentoi edustaja Työnantajien liitosta.</p>
+<p>»On tärkeää, ettei Suomeen synny sijoitusvastaisuutta.»</p>
+<p>Toimittaja kysyi:</p>
+<p>»Onko joku vastustanut investointeja?»</p>
+<p>»Tällainen ilmapiiri voi syntyä.»</p>
+<p>»Mistä?»</p>
+<p>»Jatkuvasta epäilystä.»</p>
+<p>»Mihin epäily kohdistuu?»</p>
+<p>»Investointeihin.»</p>
+<p>»Mutta jos epäily kohdistuu siihen, kuinka paljon lisäarvoa jää Suomeen, onko se sama asia?»</p>
+<p>»Se on toinen asia.»</p>
+<p>»Miten se eroaa?»</p>
+<p>»Se on investoinnin asettaminen kyseenalaiseksi.»</p>
+<p>»Eikö se ole sama?»</p>
+<p>»Ei.»</p>
+<p>»Mikä ero on?»</p>
+<p>»Toinen on rakentava ja toinen ei.»</p>
+<p>»Kumpi on kumpi?»</p>
+<p>»Se kuuluu äänensävystä.»</p>
+<p>Toimittaja kirjoitti sanan »äänensävy».</p>
+<p>Hän alleviivasi sen.</p>
+<p>Hän ei tiennyt miksi.</p>
+<p>Se tuntui tärkeältä.</p>
+<p>Yönä Kassila kirjoitti kolumninsa.</p>
+<p>Otsikko:</p>
+<p>Suomi ei voi olla maa, joka pelkää investointeja</p>
+<p>Alkulauseessa luki:</p>
+<p>Datakeskukset eivät ole vain varastoja täynnä palvelimia. Ne ovat merkki siitä, että Suomi kuuluu uuden talouden voittajiin.</p>
+<p>Lopussa luki:</p>
+<p>Kysymys ei ole siitä, jääkö jokainen euro Suomeen. Kysymys on siitä, uskaltaammeko hyväksyä ne miljardit, jotka haluavat Suomeen.</p>
+<p>Kolumni julkaistiin.</p>
+<p>Sitä jaettiin.</p>
+<p>Sitä lainattiin.</p>
+<p>Yrittäjät kiittivät keskustelusta.</p>
+<p>Hallitus kiitti keskustelusta.</p>
+<p>Sijoituspankki kiitti keskustelusta.</p>
+<p>Kassila kiitti kaikkia.</p>
+<p>Kukaan ei huomannut, että alkuperäinen kysymys oli yhä vastaamatta.</p>
+<p>Kuinka paljon Suomeen jää?</p>
+<p>Mutta kysymys oli saanut uuden nimen.</p>
+<p>Nyt sitä kutsuttiin sijoitusvastaisuudeksi.</p>
+<p class="interlude">— Ja se on, omalla tavallaan, mainitsemisen arvoinen ihme, joskaan ei sellainen, joka pyhäksyy ihmisen: ei vastata kysymykseen, vaan kastetaan se uudelleen. Maassani Sancho, joka kasteista jotain tiesi, olisi taputtanut myssyllään. Ja tarkkaan katsoen se on halvin kaikista ihmeistä: se ei vaadi uskoa eikä tekoa; se vaatii vain äänensävyn. Válgame Dios, se mikä Quijotessa oli Merlinin lumous, tehdään täällä lehdistötiedotteella.</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">V</div><div class="chapter-title">Jossa kerrotaan Lindholmista, joka laski loppuun asti, ja siitä, mitä liite seitsemän hänelle maksoi</div><div class="chapter-sub">Laskelma</div>
+<p>Taloustieteilijä Lindholm julkaisi laskelman.</p>
+<p>Se oli 34 sivua.</p>
+<p>Otsikko:</p>
+<p>Datakeskusinvestointien netto-vaikutus Suomeen: menetelmä ja alustavat tulokset</p>
+<p>Ensimmäisellä sivulla oli luku.</p>
+<p>3,1 miljardia euroa</p>
+<p>Lindholm oli kulkenut investointiketjun alusta loppuun.</p>
+<p>Hän oli vähentänyt tuontipanokset.</p>
+<p>Hän oli vähentänyt ulkomaille virtaavat pääomatulot.</p>
+<p>Hän oli lisännyt palkat.</p>
+<p>Hän oli lisännyt verotulot.</p>
+<p>Hän oli vähentänyt julkisen tuen.</p>
+<p>Hän oli vähentänyt verkon vahvistamisen kustannuksen.</p>
+<p>Hän oli vähentänyt muun infrastruktuurin.</p>
+<p>Tulos oli 3,1 miljardia.</p>
+<p>Se oli 23 prosenttia ilmoitetusta investointimäärästä.</p>
+<p>Lindholm julkaisi laskelman.</p>
+<p>Ensimmäinen kommentti tuli kolmessa tunnissa.</p>
+<p>»Kiinnostava laskelma. Se on kuitenkin staattinen.»</p>
+<p>Lindholm vastasi:</p>
+<p>»Dynaaminen ulottuvuus on luvussa 4.»</p>
+<p>Viidessä tunnissa:</p>
+<p>»Laskelma ei huomioi kaikkia epäsuoria vaikutuksia.»</p>
+<p>Lindholm vastasi:</p>
+<p>»Epäsuorat vaikutukset ovat luvussa 6.»</p>
+<p>Seuraavana päivänä:</p>
+<p>»Suomen on oltava vetovoimainen sijoituskohde.»</p>
+<p>Lindholm vastasi:</p>
+<p>»Kyky houkutella investointeja ei ole sama asia kuin netto-vaikutus.»</p>
+<p>Seuraavalla viikolla Kassila kirjoitti:</p>
+<p>»Kysymys ei ole siitä, jääkö jokainen euro Suomeen.»</p>
+<p>Lindholm ei vastannut.</p>
+<p>Hän oli jo vastannut.</p>
+<p>Lindholm kutsuttiin työryhmään.</p>
+<p>Hän meni.</p>
+<p>Hän vei laskelmansa mukanaan.</p>
+<p>Puheenjohtaja lehtasi sitä.</p>
+<p>»Tämä on arvokas näkökulma.»</p>
+<p>Lindholm katsoi häntä.</p>
+<p>»Onko se oikea?»</p>
+<p>Puheenjohtaja hymyili.</p>
+<p>»Se on näkökulma.»</p>
+<p>»Onko se väärä?»</p>
+<p>»Ei.»</p>
+<p>»Onko se oikea?»</p>
+<p>»Se on näkökulma.»</p>
+<p>Lindholm vetäytyi hetkeksi.</p>
+<p>»Mutta luvut ovat tarkastettavissa.»</p>
+<p>»Totta kai.»</p>
+<p>»Ja laskelma on toistettavissa.»</p>
+<p>»Totta kai.»</p>
+<p>»Ja jos joku käyttää samoja oletuksia, hänen pitäisi saada sama tulos.»</p>
+<p>»Näin pitäisi olla.»</p>
+<p>»Eli?»</p>
+<p>Puheenjohtaja sulki asiakirjan.</p>
+<p>»Emme halua asettua yhden luvun kannalle.»</p>
+<p>Lindholm ymmärsi.</p>
+<p>Hän oli tuonut pöydälle laskelman.</p>
+<p>Pöydällä puhuttiin nyt näkökulmista.</p>
+<p>Raportti valmistui joulukuussa 2029.</p>
+<p>Sivumäärä: 142.</p>
+<p>Tiivistelmä: 2 sivua.</p>
+<p>Liite 7: Lindholmin laskelma.</p>
+<p>Sivu 89.</p>
+<p>3,1 miljardia euroa.</p>
+<p>Tiivistelmässä lukua ei ollut.</p>
+<p>Työryhmän nuorin jäsen luki liitteen.</p>
+<p>Hän meni esimiehensä luo.</p>
+<p>»Liitteessä 7 on aika olennainen luku.»</p>
+<p>»Niin on.»</p>
+<p>»3,1 miljardia.»</p>
+<p>»Kyllä.»</p>
+<p>»Se on vain 23 prosenttia.»</p>
+<p>»Se on laskelman tulos.»</p>
+<p>»Eikö sitä pitäisi mainita?»</p>
+<p>»Se on mainittu.»</p>
+<p>»Liitteessä.»</p>
+<p>»Kyllä.»</p>
+<p>»Mutta miksi se on liitteessä?»</p>
+<p>»Koska se ei ole tiivistelmässä.»</p>
+<p>Nuori mies odotti hetken.</p>
+<p>»Ymmärrän.»</p>
+<p>»Hyvä.»</p>
+<p>»En ymmärrä.»</p>
+<p>»Silloin asia on käsitelty.»</p>
+<p>Nuori mies nyökkäsi.</p>
+<p>Hän palasi paikalleen.</p>
+<p>Liite 7 jäi siihen paikkaan, jossa se oli.</p>
+<p>Sivu 89.</p>
+<p class="interlude">— <em>Ja se on yhä siellä, sivulla 89, joka on raportin kaikista sivuista se, jota kukaan ei lue eniten ja kaikki lukevat eniten. Sillä raporteissa, kuten ritariromaaneissa, totuus on tavallisesti siellä, missä lukijan ei ole tapana katsoa; ja jos don Quijotella olisi ollut liite 7, hän ei olisi polttanut kirjastoa: hän olisi arkistoinut sen. Se on nykyaikaan kirjanpoltto, ja se tehdään savutta, ja toimituttaja allekirjoittaa sinisellä tussilla.</em></p>
+<p>Kassila kirjoitti raportista.</p>
+<p>Otsikko:</p>
+<p>Työryhmä: datakeskusinvestoinnit vahvistavat Suomen taloutta</p>
+<p>Alkulauseessa luki:</p>
+<p>»Työryhmän mukaan investointien kokonaisvaikutukset ovat merkittäviä.»</p>
+<p>Kassila ei maininnut 3,1 miljardin lukua.</p>
+<p>Hän ei maininnut liitettä 7.</p>
+<p>Hän ei maininnut sivua 89.</p>
+<p>Hän ei ollut kirjoittanut mitään väärää.</p>
+<p>Hän oli lukenut tiivistelmän.</p>
+<p>Riitti.</p>
+<p>Lindholm erosi työryhmästä joulukuussa.</p>
+<p>Eroilmoituksessa luki:</p>
+<p>»Työryhmä on käsitellyt laskelmaa näkökulmana, vaikka kyse on tarkastettavasta ja toistettavasta laskelmasta.»</p>
+<p>Vastaus tuli samana päivänä.</p>
+<p>»Kiitos panoksestasi.»</p>
+<p>Muuta ei.</p>
+<p>Tammikuussa 2030 Lindholm muutti ulkomaille.</p>
+<p>Ensimmäisessä konferenssissa opiskelija kysyi:</p>
+<p>»Kuinka paljon datakeskusinvestoinnista jäi Suomeen?»</p>
+<p>»Riippuu laskentamenetelmästä.»</p>
+<p>»Mutta mikä oli sinun tuloksesi?»</p>
+<p>»3,1 miljardia.»</p>
+<p>»Entä mitä sille tapahtui?»</p>
+<p>»Se lisättiin liitteeksi.»</p>
+<p>»Miksi?»</p>
+<p>»Koska se oli yksi näkökulma lisää.»</p>
+<p>Opiskelija vetäytyi hetkeksi.</p>
+<p>»Mutta oliko se virhe?»</p>
+<p>Lindholm katsoi taulua.</p>
+<p>»Ei.»</p>
+<p>Hän sulki kannettavansa.</p>
+<p>Luokka oli hiljaa.</p>
+<p>»Seuraava kysymys.»</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">VI</div><div class="chapter-title">Jossa kerrotaan Keikurasta, jota kutsuttiin kerettiläiseksi siksi, että hän laski oikein, ja karkeasta rovioepisodista, joka tässä kerrotaan ansaitsemallaan tunteella</div><div class="chapter-sub">Kerettiläinen</div>
+<p>Keikura teki saman virheen kuin Lindholm.</p>
+<p>Hän laski loppuun asti.</p>
+<p>Hän otti 13 miljardin investoinnin.</p>
+<p>Vähensi tuontipanokset.</p>
+<p>Vähensi ulkomaille virtaavat pääomatulot.</p>
+<p>Lisäsi palkat.</p>
+<p>Lisäsi verotulot.</p>
+<p>Vähensi julkisen tuen.</p>
+<p>Vähensi verkon vahvistamisen kustannuksen.</p>
+<p>Vähensi muun infrastruktuurin.</p>
+<p>Hän teki herkkyysanalyysin.</p>
+<p>Hän tarkisti laskelman.</p>
+<p>Kolmesti.</p>
+<p>Tulos ei muuttunut olennaisesti.</p>
+<p>Keikura julkaisi laskelman.</p>
+<p>Otsikko:</p>
+<p>Kuinka paljon 13 miljardista oikeasti jää Suomeen?</p>
+<p>Ensimmäinen reaktio tuli aamulla.</p>
+<p>»On tärkeää erottaa investointien suorat vaikutukset niiden laajemmista taloudellisista vaikutuksista.»</p>
+<p>Keikura luki tekstin.</p>
+<p>Hän jatkoi.</p>
+<p>Toinen reaktio:</p>
+<p>»Suomi tarvitsee investointeja, ei vastakkainasettelua investointien kanssa.»</p>
+<p>Keikura vastasi:</p>
+<p>»En vastusta investointeja.»</p>
+<p>Vastaus tuli nopeasti.</p>
+<p>»Se ei ole tässä olennaista.»</p>
+<p>Keikura tuijotti lausetta.</p>
+<p>Hän luki sen kolmesti.</p>
+<p>Se oli kieliopiltaan oikein.</p>
+<p>Iltapäivänä hänet kutsuttiin televisioon.</p>
+<p>»Teidän johtopäätöksenne on, että 13 miljardin euron investoinnista Suomeen jää huomattavasti vähemmän kuin investointiluku antaa ymmärtää.»</p>
+<p>»Se on laskelman tulos.»</p>
+<p>»Mutta eikö tässä olekin kysymys siitä, miten asiaa tarkastellaan?»</p>
+<p>Keikura katsoi juontajaa.</p>
+<p>»Se on teidän tulkintanne.»</p>
+<p>»Minä vain kysyn: eikö investointia pitäisi tarkastella laajemmin?»</p>
+<p>»Voi tarkastella.»</p>
+<p>»Kokonaisuutena siis?»</p>
+<p>»Totta kai.»</p>
+<p>»Ja siihen tulevat silloin esimerkiksi työllisyysvaikutukset, verotulot ja epäsuorat vaikutukset?»</p>
+<p>»Kyllä.»</p>
+<p>»Jotka ehkä teidän laskelmaanne eivät kokonaan tavoita?»</p>
+<p>»Ne ovat mukana.»</p>
+<p>»Kaikki?»</p>
+<p>»Ne ovat laskelmassa, eri osioissa.»</p>
+<p>Juontaja lehtasi papereitaan.</p>
+<p>»Mutta luvut riippuvat oletuksista.»</p>
+<p>»Kaikki laskelmat riippuvat oletuksista.»</p>
+<p>»Eli kyse on tulkinnasta?»</p>
+<p>Keikura katsoi kameraan.</p>
+<p>»Luvut eivät ole tulkinta.»</p>
+<p>Juontaja hymyili.</p>
+<p>»Luvut tarvitsevat kontekstin.»</p>
+<p>Keikura vetäytyi hetkeksi.</p>
+<p>»Tarvitsevat.»</p>
+<p>Yönä ilmestyi ensimmäinen otsikko.</p>
+<p>Kiistelty laskelma jakaa asiantuntijat</p>
+<p>Seuraava:</p>
+<p>Onko Suomi menettämässä uskonsa investointeihin?</p>
+<p>Kolmas:</p>
+<p>Keikuran luvut herättävät kysymyksiä</p>
+<p>Keikura katsoi viimeistä otsikkoa.</p>
+<p>Hän mietti, millaisia kysymyksiä.</p>
+<p>Luku oli siellä.</p>
+<p>Menetelmä oli siellä.</p>
+<p>Oletukset olivat siellä.</p>
+<p>Lähteet olivat siellä.</p>
+<p>Hän oli vastannut kysymyksiin ennen kuin kukaan esitti niitä.</p>
+<p>Silti kysymyksiä nousi.</p>
+<p>Hän ymmärsi, että kysymykset eivät olleet tehtyjä vastattaviksi.</p>
+<p>Ne olivat tehtyjä esitettäviksi.</p>
+<p>Se oli toinen asia.</p>
+<p>Hänet kutsuttiin kuultavaksi parlamentin valiokuntaan.</p>
+<p>Puheenjohtaja esitteli hänet.</p>
+<p>»Professori Keikura on tehnyt kiinnostavan laskelman.»</p>
+<p>Keikura nosti katseensa.</p>
+<p>»Se ei ole kiinnostava siksi, että se on minun.»</p>
+<p>»Ei tietenkään.»</p>
+<p>»Se on kiinnostava, jos se on oikea.»</p>
+<p>Puheenjohtaja hymyili.</p>
+<p>»Pidetään tämä rakentavana.»</p>
+<p>»Minä olen rakentava.»</p>
+<p>»Hyvä.»</p>
+<p>»Haluan vain, että lukua käsitellään lukuna.»</p>
+<p>»Näin käsitellään.»</p>
+<p>»Ei näkökulmana.»</p>
+<p>»Kaikki asiantuntijaraportit ovat näkökulmia.»</p>
+<p>»Mutta tämä on laskelma.»</p>
+<p>»Oletuksiin perustuva.»</p>
+<p>»Jotka on esitetty.»</p>
+<p>»Ja jotka voidaan arvioida.»</p>
+<p>»Aivan.»</p>
+<p>Puheenjohtaja nyökkäsi.</p>
+<p>»Kiitos.»</p>
+<p>Keikura ei ollut lopettanut.</p>
+<p>»Minulla on vielä yksi huomio.»</p>
+<p>Puheenjohtaja katsoi kelloa.</p>
+<p>»Lyhyesti.»</p>
+<p>»Jos laskelman tulosta ei haluta käyttää, olisi osoitettava, missä laskelma on väärässä.»</p>
+<p>Sali hiljeni.</p>
+<p>Puheenjohtaja katsoi muita.</p>
+<p>Kukaan ei vastannut.</p>
+<p>Silloin hän sanoi:</p>
+<p>»Seuraava asiantuntija.»</p>
+<p>Yönä Keikuran nimi oli taas uutisissa.</p>
+<p>Tällä kertaa otsikossa oli yksi sana:</p>
+<p>kerettiläinen</p>
+<p>Se oli sitaatti.</p>
+<p>Joku oli sanonut sen.</p>
+<p>Sitten joku toinen oli siteerannut ensimmäistä.</p>
+<p>Kolmas oli käyttänyt sanaa ironisesti.</p>
+<p>Neljäs ilman lainausmerkkejä.</p>
+<p>Aamuun mennessä sana oli jo muuttunut kuvaukseksi.</p>
+<p>Keikura kerettiläinen</p>
+<p>Keikura huomasi sen kahvin ääressä.</p>
+<p>Hän jätti lehden pöydälle.</p>
+<p>Hän ei ollut vihainen.</p>
+<p>Hän oli ennen kaikkea utelias.</p>
+<p>»Mitä olen tehnyt?»</p>
+<p>Hän kysyi sen ääneen.</p>
+<p>Keittiössä ei ollut ketään vastaamassa.</p>
+<p>Seuraavana aamuna soitti hänen yliopistonsa rehtori.</p>
+<p>»Meidän pitäisi puhua tästä.»</p>
+<p>»Mistä?»</p>
+<p>»Julkisuudesta.»</p>
+<p>»Laskelmastani?»</p>
+<p>»Sen ympärille syntyneestä keskustelusta.»</p>
+<p>»Onko laskelmassa virhe?»</p>
+<p>»Ei ole kysymys siitä.»</p>
+<p>»Mistä sitten?»</p>
+<p>»Sen julkisesta vaikutuksesta.»</p>
+<p>»Mitä vaikutuksesta?»</p>
+<p>»Siitä, että ihmiset voivat nähdä laskelman.»</p>
+<p>»Mutta laskelma on julkinen.»</p>
+<p>»Juuri sitä tarkoitin.»</p>
+<p>Keikura vaikeni.</p>
+<p>Rehtori jatkoi:</p>
+<p>»Meidän on pidettävä huolta yliopiston maineesta.»</p>
+<p>»Ymmärrän.»</p>
+<p>»Hyvä.»</p>
+<p>»Mutta kuka pitää huolta laskelman maineesta?»</p>
+<p>Rehtori ei vastannut.</p>
+<p>Yönä verkossa levisi yksi kuva.</p>
+<p>Keikura seisoi roviolla.</p>
+<p>Kuva oli piirros.</p>
+<p>Hänen ympärillään oli paperinipuja.</p>
+<p>3,1 miljardia euroa</p>
+<div class="epp-box">NETTO-VAIKUTUS<br>TUONTIPANOKSET<br>PÄÄOMATULOT<br>VEROT<br>INFRASTRUKTUURI</div><p>Rovion vieressä oli hahmoja.</p>
+<p>Yksi piti soihtua.</p>
+<p>Toinen puita.</p>
+<p>Kolmas kylttiä:</p>
+<div class="epp-box">SIJOITUSVASTAISUUS</div><p>Neljäs:</p>
+<div class="epp-box">VÄÄRÄ NÄKÖKULMA</div><p>Viides:</p>
+<div class="epp-box">VÄÄRÄ KYTKENTÄ</div><p>Kuva jaettiin tuhansia kertoja.</p>
+<p>Joku kirjoitti:</p>
+<p>»Älkää polttako laskijaa.»</p>
+<p>Toinen vastasi:</p>
+<p>»Täällä ei polteta ketään.»</p>
+<p>Kolmas kirjoitti:</p>
+<p>»Tämä on vain keskustelua.»</p>
+<p>Keikura katsoi kuvaa.</p>
+<p>Hän suurensi sitä.</p>
+<p>Rovio oli piirretty huolellisesti.</p>
+<p>Paperit paloivat.</p>
+<p>Hän huomasi jotain.</p>
+<p>Yksikään hänen laskelmansa luvuista ei ollut kirjoitettu väärin.</p>
+<p>Kaikki luvut olivat oikein.</p>
+<p>Myös nimi oli oikein.</p>
+<p>Keikura.</p>
+<p>Viikkoa myöhemmin Keikura lopetti kommentoinnin.</p>
+<p>Ei siksi, että hän olisi muuttanut kantaansa.</p>
+<p>Hän vain lakkasi vastaamasta.</p>
+<p>Laskelma jäi verkkoon.</p>
+<p>34 sivua.</p>
+<p>Menetelmä.</p>
+<p>Oletukset.</p>
+<p>Lähteet.</p>
+<p>Herkkyysanalyysi.</p>
+<p>Kaikki.</p>
+<p>Kukaan ei poistanut sitä.</p>
+<p>Kukaan ei korjannut sitä.</p>
+<p>Kukaan ei kumonnut sitä.</p>
+<p>Se vain lakkasi olemasta puheenaihe.</p>
+<p>Muutamaa kuukautta myöhemmin joku löysi vanhan kuvan.</p>
+<p>Rovio.</p>
+<p>Keikura keskellä.</p>
+<p>Paperit liekeissä.</p>
+<p>Kuvan alle oli kirjoitettu:</p>
+<p>Kerettiläinen.</p>
+<p>Joku kommentoi:</p>
+<p>»Mitähän hänelle tapahtui?»</p>
+<p>Toinen vastasi:</p>
+<p>»Ei mitään uutisia.»</p>
+<p>Kolmas:</p>
+<p>»Varmasti oppi.»</p>
+<p>Keikura ei ollut oppinut.</p>
+<p>Hän oli lakannut puhumasta, siinä kaikki.</p>
+<p>Rovio jäi kuvaan.</p>
+<p>Tuli oli sammunut.</p>
+<p>Paperit olivat palaneet.</p>
+<p>Luku oli yhä olemassa.</p>
+<p>3,1 miljardia euroa.</p>
+<p>Kesäkuussa 2030 Lindholm lähetti Keikuralle sähköpostin.</p>
+<p>Aihe:</p>
+<p>Liite 7</p>
+<p>Viestissä oli yksi lause:</p>
+<p>»Sinä julkaisit.»</p>
+<p>Keikura vastasi:</p>
+<p>»Sinä luovutit sen.»</p>
+<p>Lindholm kirjoitti:</p>
+<p>»Kyllä.»</p>
+<p>Keikura:</p>
+<p>»Sinut poltettiinkö?»</p>
+<p>»Ei.»</p>
+<p>»Minut poltettiin.»</p>
+<p>Lindholm vastasi:</p>
+<p>»Se oli odotettavissa.»</p>
+<p>Keikura mietti hetken.</p>
+<p>Sitten hän kirjoitti:</p>
+<p>»Ei.»</p>
+<p>»Mitä ei?»</p>
+<p>»Ei ollut odotettavissa.»</p>
+<p>Hän lähetti viestin.</p>
+<p>Kaksi miestä.</p>
+<p>Yksi laskelma liitteessä.</p>
+<p>Toinen roviolla.</p>
+<p>Molempien luvut olivat yhä samat.</p>
+<p>Niitä ei oltu kumottu.</p>
+<p>Niitä ei oltu korjattu.</p>
+<p>Niitä ei oltu käytetty.</p>
+<p>Riitti.</p>
+</div><div class="divider">· · ·</div><div class="section"><div class="section-label">VII</div><div class="chapter-title">Jossa kerrotaan laskusta, joka on se osa, jossa iso kuva muuttuu pieneksi, ja siitä, miten tämän tarinan sankari ei kanna keihästä vaan takkia</div><div class="chapter-sub">Lasku</div>
+<p>Hän avasi sähkölaskun.</p>
+<p>Viime vuonna 184 euroa.</p>
+<p>Nyt 617 euroa.</p>
+<p>Ulkona oli 28 astetta pakkasta.</p>
+<p>Tuulimittari ei liikkunut.</p>
+<p>Jääkaappi toimi. Lämpöpumppu toimi. Hän laski lämpötilaa yhden asteen.</p>
+<p>Sovellus ilmoitti:</p>
+<p>Siirrä sähkönkäyttösi halvimpiin tunteihin.</p>
+<p>Hän katsoi päivän hintoja.</p>
+<div class="epp-box">1,87.<br>1,94.<br>2,03.<br>1,79.<br>1,91.<br>2,14.</div><p>Yöllä:</p>
+<div class="epp-box">2,08.<br>2,21.<br>2,36.<br>2,41.<br>2,38.<br>2,17.</div><p>Hän päätti olla joustava.</p>
+<p>Valot pois.</p>
+<p>Televisio pois.</p>
+<p>Pesukone odottamaan.</p>
+<p>Sauna lämmittämättä.</p>
+<p>Jääkaapin hän avasi kerran ja sulki nopeasti.</p>
+<p>Lämpöpumppu jatkoi.</p>
+<p>Ulkona oli 31 astetta pakkasta.</p>
+<p>Sovellus ilmoitti:</p>
+<p>Sähkö nyt: 2,41 €/kWh</p>
+<p>Kulutus tänään: 38 % alle normaalin</p>
+<p>Hän oli tehnyt kaiken oikein.</p>
+<p>Seuraavana aamuna pääministeri kommentoi televisiossa sähkön hintaa.</p>
+<p>Hänen tietojensa mukaan hinnan ei pitäisi olla nousemassa.</p>
+<p>Hän sanoi seuraavansa tilannetta.</p>
+<p>Hän sammutti television.</p>
+<p>Lasku oli yhä pöydällä.</p>
+<p>617 euroa.</p>
+<p>Hän soitti sähköyhtiöön.</p>
+<p>Jonossa oli neljätoista asiakasta.</p>
+<p>Automaattinen ääni kertoi, että poikkeuksellisen korkeat markkinahinnat olivat kuormittaneet asiakaspalvelua.</p>
+<p>Asiakkaita suositeltiin siirtämään kulutus halvimpiin tunteihin.</p>
+<p>Hän lopetti puhelun.</p>
+<p>Hän maksoi laskun.</p>
+<p>Maksettu.</p>
+<p>Samana yönä etelärannikolla poltettiin kaasua.</p>
+<p>Kaasun hinta oli määräytynyt Rotterdamissa.</p>
+<p>Rotterdamissa se oli määräytynyt Hormuzinsalmessa.</p>
+<p>Jokaisesta megawattitunnista maksettiin lisäksi päästöoikeus.</p>
+<p>Hinta kirjattiin sähköpörssiin.</p>
+<p>Sähköpörssistä se kirjattiin hänen laskuunsa.</p>
+<p>Kolmen kilometrin päässä datakeskus kävi täydellä teholla.</p>
+<p>Se ei siirtänyt kulutustaan halvimpiin tunteihin.</p>
+<p>Sen sähkön hinta oli sovittu kymmeneksi vuodeksi.</p>
+<p>Naapuri oli tehnyt kiinteähintaisen sopimuksen keväällä.</p>
+<p>Hänen laskunsa oli sama kuin viime vuonna.</p>
+<p>Sopimus päättyi maaliskuussa.</p>
+<p>Huoltovarmuuskeskus tiedotti, että varmuusvarastot olivat kunnossa.</p>
+<p>Se oli totta.</p>
+<p>Seuraavana yönä oli 30 astetta pakkasta.</p>
+<p>Tuulimittari ei yhä liikkunut.</p>
+<p>Jääkaappi toimi.</p>
+<p>Lämpöpumppu toimi.</p>
+<p>Sähkömittari toimi.</p>
+<p>Lasku oli maksettu.</p>
+<p>Huomenna olisi taas sähköä.</p>
+<p>Todennäköisesti.</p>
+<p>Mitä muuta hän olisi voinut tehdä?</p>
+<p class="interlude">— Ja tässä, lukijani, tarina päättyy; ja kääntäjälle jää epäilys, joka ei anna hänen nukkua: että tämän kirjan oikea ritari ei koskaan ratsastanut myllyjä eikä jättiläisiä vastaan. Hän jäi kotiin, laski lämmitystä yhden asteen, avasi jääkaapin kerran ja sulki sen nopeasti. Siitä minä tiedän, hän on ensimmäinen maailmankirjallisuudessa, joka pelastaa järjestelmän kuluttamalla kolmekymmentäkahdeksan prosenttia vähemmän, ja myös ensimmäinen, jolle kukaan ei runoa säveltä eikä voittoa laula. Hän ei tarvitse sitä. Hänellä on lasku; ja jos se ei ole ritarien teko, sanokoon lukija, missä ovat nyt ne, joilla oli keihäs.</p>
+<div class="closing closing-lines"><p>Kesäkuu 2030.</p>
+<p>Suomi reagoi.</p>
+<p>Jokainen omalla tavallaan.</p>
+<p>Fiktiota. Reaktiot eivät.</p>
+</div></div>
+
+<footer>
+  Fiktiota. Reaktiot eivät. · Aether Continuity Institute · 2026 · <a href="https://aethercontinuity.org/fiction/">Kaunokirjallisuus</a>
+</footer>
+
+</body>
+</html>
