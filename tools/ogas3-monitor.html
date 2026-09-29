@@ -216,6 +216,21 @@ function render() {
   }).join('') + (older ? `<p class="note">${older} aiempaa versiota korvattu uudemmalla, ei näytetä.</p>` : '')
   : `<p class="empty">Ei traceja.</p>`;
 
+  // Vaikuttaminen
+  const vk = s.vaikuttaminen;
+  if (vk) {
+    h += `<h2>Vaikuttaminen</h2><p class="note">${esc(vk._note)}</p>`;
+    h += vk.ketjut_eniten.length ? vk.ketjut_eniten.map(x => `<div class="chain">
+        <div class="chain-h"><span class="he">${esc(x.he)}</span><span class="out ${OUT_CLS[x.outcome] || ''}">${esc(x.outcome)}</span></div>
+        <div class="title">${esc(x.nimeke || '')}</div>
+        <div class="kv"><span>vaikuttajia <b>${fmt(x.vaikuttajia)}</b></span><span>ilmoituksia <b>${fmt(x.ilmoituksia)}</b></span></div>
+      </div>`).join('') : `<p class="empty">Ei ketjuihin liittyvää vaikuttamista tässä kaappauksessa.</p>`;
+    if (vk.ilman_ketjua_yhteensa)
+      h += `<p class="note">Lisäksi ${fmt(vk.ilman_ketjua_yhteensa)} hanketta, joihin vaikutettiin mutta joita ei voitu liittää
+        hallituksen esitykseen (ei HE-numeroa: asetus-, selvitys- tai valmisteluhanke). Eniten vaikuttajia:
+        ${vk.ilman_ketjua.slice(0, 5).map(x => `<span class="mono" style="font-size:.62rem">${esc(x.tunnus)}</span> ${esc((x.hanke_nimi || '').slice(0, 60))} (${fmt(x.vaikuttajia)})`).join(' · ')}.</p>`;
+  }
+
   // Mittauksen laatu
   h += `<h2>Mittauksen laatu</h2>
     <table><thead><tr><th>Lähde</th><th>n</th><th>viive, mediaani</th><th>maksimi</th></tr></thead><tbody>
@@ -261,6 +276,7 @@ function renderChains() {
       <div class="title">${esc(r.nimeke || '(nimeke ei tiedossa)')}</div>
       <div class="steps">
         ${step(r.hankkeet.length, r.hankkeet.length ? 'hanke ' + esc(r.hankkeet.join(', ')) : 'hanke ?')}<span class="arrow">→</span>
+        ${r.vaikuttajat && r.vaikuttajat.length ? step(true, 'vaikuttajia ' + fmt(r.vaikuttajat.length)) + '<span class="arrow">→</span>' : ''}
         ${step(r.eduskunta_vaiheet, r.eduskunta_vaiheet ? 'käsittely ' + fmt(r.eduskunta_vaiheet) + ' vaihetta' : 'käsittely ?')}<span class="arrow">→</span>
         ${step(r.aanestykset, r.aanestykset ? 'äänestyksiä ' + fmt(r.aanestykset) : 'äänestys ?')}<span class="arrow">→</span>
         ${r.eduskunta_vastaus !== undefined ? step(r.eduskunta_vastaus, r.eduskunta_vastaus ? 'vastaus ' + esc(r.eduskunta_vastaus) : 'vastaus ?') + '<span class="arrow">→</span>' : ''}
