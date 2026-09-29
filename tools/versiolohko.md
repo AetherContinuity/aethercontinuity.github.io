@@ -1,7 +1,7 @@
 # ACI-instrumenttien versiolohko
 
-Kaava, jota WEM, HEM, OGAS2 ja tulevat instrumentit voivat käyttää.
-Otettu käyttöön OGAS2 v2.3:ssa 6.9.2026.
+Kaava, jota WEM, HEM ja tulevat instrumentit voivat käyttää.
+Otettu käyttöön 6.9.2026.
 
 ## Miksi
 

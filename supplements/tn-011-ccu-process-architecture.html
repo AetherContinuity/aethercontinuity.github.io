@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>TN-011 — CCU as Flexibility Sink | ACI</title>
-<meta name="description" content="Carbon capture and utilisation (CCU) functions as a structural demand-side flexibility asset. This note maps the CCU process chain, cost architecture, and integration points with SGFA-retrofit and OGAS2.">
+<meta name="description" content="Carbon capture and utilisation (CCU) functions as a structural demand-side flexibility asset. This note maps the CCU process chain, cost architecture, and integration points with SGFA-retrofit.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -128,7 +128,6 @@ tr:last-child td{border-bottom:none;}
     <span class="dtag">CCU</span>
     <span class="dtag">Power-to-X</span>
     <span class="dtag">SGFA-retrofit</span>
-    <span class="dtag">OGAS2</span>
     <span class="dtag">Flexibility</span>
     <span class="dtag">Finland</span>
   </div>
@@ -139,7 +138,7 @@ tr:last-child td{border-bottom:none;}
 
 <div class="abstract">
   <div class="abstract-label">Abstract</div>
-  Carbon capture and utilisation (CCU) is conventionally framed as an emissions-reduction technology. This note reframes it as a structural demand-side flexibility asset: a configurable electricity sink that converts surplus renewable generation into durable carbon-based commodities. The CCU process chain — CO₂ capture, electrolytic hydrogen production, synthesis, and upgrading — is mapped against ACI's energy system architecture (OGAS2, SGFA-retrofit, TN-010 loss function). The central finding mirrors ACI's broader diagnostic: the technology constraint is resolved. The binding constraint is coordination — between renewable power dispatch, electrolyser operation, CO₂ supply, and downstream product offtake. This note establishes the analytical foundation for integrating CCU demand into OGAS2 phase-state modelling and for extending WP-019's Varkaus retrofit path with a validated Power-to-X branch.
+  Carbon capture and utilisation (CCU) is conventionally framed as an emissions-reduction technology. This note reframes it as a structural demand-side flexibility asset: a configurable electricity sink that converts surplus renewable generation into durable carbon-based commodities. The CCU process chain — CO₂ capture, electrolytic hydrogen production, synthesis, and upgrading — is mapped against ACI's energy system architecture (SGFA-retrofit, TN-010 loss function). The central finding mirrors ACI's broader diagnostic: the technology constraint is resolved. The binding constraint is coordination — between renewable power dispatch, electrolyser operation, CO₂ supply, and downstream product offtake. This note establishes the analytical foundation for measuring the surplus-phase conditions for CCU demand and for extending WP-019's Varkaus retrofit path with a validated Power-to-X branch.
 </div>
 
 <span class="sec-num">§ 1</span>
@@ -149,7 +148,7 @@ tr:last-child td{border-bottom:none;}
 
 <p>CCU is one such mechanism. When renewable generation exceeds real-time demand — as increasingly occurs in Nordic systems during high-wind and high-hydro periods — the economic and physical options are limited: curtailment, export at negative or near-zero prices, battery storage, or conversion to another form of stored energy or material. CCU occupies a specific position in this option set: it is a large-scale, slow-response electricity sink that produces commodities with multi-month to multi-year storage horizons.</p>
 
-<p>This characteristic makes CCU structurally complementary to SGFA-retrofit nodes (WP-019) and to the OGAS2 phase-state model, which already tracks the interaction between dispatchable generation capacity and demand-side flexibility. The Power-to-X pathway — electrolysis, synthesis, upgrading — represents a demand curve that can, in principle, be scheduled against renewable surplus windows.</p>
+<p>This characteristic makes CCU structurally complementary to SGFA-retrofit nodes (WP-019). The Power-to-X pathway — electrolysis, synthesis, upgrading — represents a demand curve that can, in principle, be scheduled against renewable surplus windows.</p>
 
 <div class="callout">
   <div class="callout-label">ACI Structural Finding</div>
@@ -255,7 +254,7 @@ tr:last-child td{border-bottom:none;}
   The hydrogen cost dominance means that CCU economics are directly tied to the electricity price during electrolyser operation hours. A system that can schedule electrolysis during periods of surplus renewable generation — when spot prices approach zero — faces a fundamentally different cost structure than one operating at baseload. This is the linkage between CCU and the OGAS2 phase-state model: surplus phases are the commercial window for CCU.
 </div>
 
-<p>The implication for OGAS2 integration is direct. The model currently classifies system states by the ratio of available generation to demand. Surplus-phase duration and frequency determine whether CCU investment can achieve viable operating hours. A system that spends 15% of annual hours in deep surplus creates a different electrolyser utilisation profile than one at 8%. This relationship has not yet been parameterised in the OGAS2 state-transition matrix.</p>
+<p>Surplus-phase duration and frequency therefore determine whether CCU investment can achieve viable operating hours. A system that spends 15% of annual hours in deep surplus creates a different electrolyser utilisation profile than one at 8%. This relationship has not yet been measured.</p>
 
 <span class="sec-num">§ 4</span>
 <h2>Integration with SGFA-Retrofit (WP-019)</h2>
@@ -391,9 +390,9 @@ tr:last-child td{border-bottom:none;}
 <p>Technology is not the bottleneck. This is now confirmed by an independent Finnish research institution (VTT). SGFA-retrofit's technical feasibility is not in question. The decision window is closing on the coordination layer, not the technology layer.</p>
 
 <span class="sec-num">§ 7</span>
-<h2>OGAS2 Integration Pathway</h2>
+<h2>System Integration Pathway</h2>
 
-<p>OGAS2 currently models phase-state transitions (Surplus / Balanced / Scarcity / Crisis) as a function of generation-demand ratio, shock parameters, and reserve margin. CCU as a flexibility sink introduces a new demand-side actor with the following characteristics:</p>
+<p>CCU as a flexibility sink introduces a new demand-side actor with the following characteristics:</p>
 
 <div class="formula">
 CCU_demand(t) = f(P_spot(t), η_elec, H₂_price_target, synthesis_schedule)<br>
@@ -405,20 +404,20 @@ Where:<br>
   synthesis_schedule = minimum run-time constraint (hours/campaign)
 </div>
 
-<p>The electrolyser does not operate as a pure spot-price follower. Synthesis processes have minimum run-time requirements — Fischer-Tropsch reactors cannot be cold-started hourly. This creates a scheduled flexibility profile: commitment blocks of 6–24 hours during projected surplus windows, with advance scheduling against weather-based generation forecasts. This is a materially different flexibility shape than battery storage or demand response, and it affects how CCU demand interacts with the OGAS2 state-transition probabilities.</p>
+<p>The electrolyser does not operate as a pure spot-price follower. Synthesis processes have minimum run-time requirements — Fischer-Tropsch reactors cannot be cold-started hourly. This creates a scheduled flexibility profile: commitment blocks of 6–24 hours during projected surplus windows, with advance scheduling against weather-based generation forecasts. This is a materially different flexibility shape than battery storage or demand response.</p>
 
-<p>A proposed extension to OGAS2 would add a CCU demand tier to the Surplus phase model: when the system is in Surplus state for a projected duration exceeding the minimum synthesis campaign length, CCU nodes are activated, converting surplus electricity to stored chemical value. This dampens the price collapse in deep surplus periods and improves the overall system energy balance — reducing curtailment without creating new intermittency-sensitive capacity.</p>
+<p>The operating rule follows: when the system is in a surplus state for a projected duration exceeding the minimum synthesis campaign length, CCU nodes are activated, converting surplus electricity to stored chemical value. This dampens the price collapse in deep surplus periods and improves the overall system energy balance — reducing curtailment without creating new intermittency-sensitive capacity.</p>
 
 <span class="sec-num">§ 8</span>
 <h2>Summary and Forward References</h2>
 
 <p>This note establishes the following propositions for integration into subsequent ACI work:</p>
 
-<p><strong>P1.</strong> CCU is a structural flexibility sink, not merely an emissions abatement technology. Its analytical home in ACI is the demand-side of the OGAS2 phase-state model.</p>
+<p><strong>P1.</strong> CCU is a structural flexibility sink, not merely an emissions abatement technology. Its analytical home is the demand side of the power system, not emissions accounting.</p>
 
 <p><strong>P2.</strong> The process chain is technically validated at bench-to-pilot scale. The ForestCUMP reference (VTT, biogenic CO₂ + steam cracker integration) provides the closest available validated reference for the Varkaus SGFA-retrofit path (WP-019 §3).</p>
 
-<p><strong>P3.</strong> The cost structure is dominated by green hydrogen (80–90% of variable production cost). CCU economics are therefore a function of surplus-phase electricity pricing — establishing direct linkage to the OGAS2 surplus-state duration and frequency parameters.</p>
+<p><strong>P3.</strong> The cost structure is dominated by green hydrogen (80–90% of variable production cost). CCU economics are therefore a function of surplus-phase electricity pricing — and therefore of surplus-state duration and frequency.</p>
 
 <p><strong>P4.</strong> The coordination gap — not the technology gap — is the binding constraint. All five coordination requirements (PPA, CO₂ supply, offtake, policy, FCR-D integration) remain unresolved in Finland as of 2026.</p>
 
@@ -426,7 +425,7 @@ Where:<br>
 
 <div class="callout">
   <div class="callout-label">Forward Work</div>
-  (1) Parameterise electrolyser demand tier in OGAS2 surplus-phase model. (2) Extend WP-019 Varkaus path with ForestCUMP cost reference and three-revenue IRR recalculation. (3) Map coordination requirements against SM-010 financing instrument framework to identify which instruments could resolve the CCU coordination trap. (4) Assess VTT Mobile Synthesis Unit deployment feasibility as SGFA-retrofit pilot at Varkaus or Oulu.
+  (1) Measure surplus-phase duration and frequency (share of annual hours at near-zero spot price) from ENTSO-E and Fingrid data. (2) Extend WP-019 Varkaus path with ForestCUMP cost reference and three-revenue IRR recalculation. (3) Map coordination requirements against SM-010 financing instrument framework to identify which instruments could resolve the CCU coordination trap. (4) Assess VTT Mobile Synthesis Unit deployment feasibility as SGFA-retrofit pilot at Varkaus or Oulu.
 </div>
 
 <div class="preceded">
@@ -435,7 +434,6 @@ Where:<br>
   <a href="../papers/sm-010-financing-instruments-energy-clusters.html">SM-010 — Financing Instruments for Energy Clusters</a> ·
   <a href="tn-010-layered-economic-loss-function.html">TN-010 — Layered Economic Loss Function</a><br><br>
   <strong>Related:</strong>
-  <a href="../papers/wp-014-dynamic-coupled-risk-model.html">WP-014 — OGAS2 Dynamic Coupled Risk Model</a> ·
   <a href="tn-006-temporal-elasticity.html">TN-006 — Temporal Elasticity (εₜ)</a> ·
   <a href="../papers/sm-007-convergence-finding.html">SM-007 — The Convergence Finding</a><br><br>
   <strong>External reference:</strong> VTT Technical Research Centre of Finland. <em>Carbon Capture and Utilisation — Unlocking Value from Emissions.</em> VTT White Paper, 2025/2026.

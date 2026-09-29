@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WP-015 — Residual Market Failure and Elasticity Collapse · ACI</title>
-<meta name="description" content="Three simultaneous structural shifts — demand rigidification, buffer erosion, and spot market residualization — combine to produce an elasticity collapse in the Nordic power system during the 2027–2030 window. This working paper maps the interactions and their implications for EPP and OGAS2 instrumentation.">
+<meta name="description" content="Three simultaneous structural shifts — demand rigidification, buffer erosion, and spot market residualization — combine to produce an elasticity collapse in the Nordic power system during the 2027–2030 window. This working paper maps the interactions and their implications for EPP instrumentation.">
 <style>
   :root {
     --ink: #1a1a1a; --mid: #555; --light: #888;
@@ -125,7 +125,7 @@
   <h1 class="doc-title">Residual Market Failure and Elasticity Collapse in the Nordic Power System</h1>
   <p class="doc-subtitle">Three Simultaneous Structural Shifts and Their Interaction in the 2027–2030 Window</p>
   <div class="doc-abstract">
-    <p>The Nordic power system is undergoing three simultaneous structural shifts: demand is rigidifying as data centres, hydrogen industry, and heat pumps add inflexible baseload; the thermally-correlated supply buffer is eroding as combined heat and power capacity is phased out and hydropower becomes stochastically unreliable; and the spot market is residualising as long-term power purchase agreements pre-allocate capacity before market clearing. This paper maps the interactions between these shifts and argues that their combination produces an elasticity collapse — not a gradual stress increase but a structural discontinuity in the system's capacity to redistribute load under compound stress. The empirical window for the first full-stack test is 2027–2030. The implications for EPP and OGAS2 instrumentation are identified.</p>
+    <p>The Nordic power system is undergoing three simultaneous structural shifts: demand is rigidifying as data centres, hydrogen industry, and heat pumps add inflexible baseload; the thermally-correlated supply buffer is eroding as combined heat and power capacity is phased out and hydropower becomes stochastically unreliable; and the spot market is residualising as long-term power purchase agreements pre-allocate capacity before market clearing. This paper maps the interactions between these shifts and argues that their combination produces an elasticity collapse — not a gradual stress increase but a structural discontinuity in the system's capacity to redistribute load under compound stress. The empirical window for the first full-stack test is 2027–2030. The implications for EPP instrumentation are identified.</p>
   </div>
 </div>
 
@@ -319,7 +319,7 @@
 
   <div class="section">
     <span class="section-marker">§ 09</span>
-    <h2>Implications for EPP and OGAS2 Instrumentation</h2>
+    <h2>Implications for EPP Instrumentation</h2>
 
     <p>The EPP framework as currently specified (v3+T) measures demand pressure, firm share, wind risk, and stress persistence. These are appropriate variables for a drift regime. Three modifications are identified as necessary to extend the framework to the jump-regime vicinity.</p>
 
@@ -327,7 +327,7 @@
 
     <p><strong>Distribution-aware Stress Persistence.</strong> SP currently measures the fraction of hours in which consumption exceeds production by more than 5%. This correctly captures mean stress level but is insensitive to the tail risk structure that elasticity collapse introduces. A distribution-aware SP would track not only the fraction of stress hours but their serial correlation — the probability of extended stress sequences (168h blocks). This is the direct instrument for detecting the transition from drift to jump behaviour.</p>
 
-    <p><strong>Market depth indicator.</strong> Neither EPP nor OGAS2 currently includes a variable for spot market depth or PPA penetration. The development of such an indicator faces a fundamental data problem: PPA contract details are not public. Proxy approaches using spot price volatility relative to consumption (DS 105 / DS 124) and the long-run trend in price–consumption correlation are identified as candidates for investigation, but are not yet operational. This is noted as a development requirement rather than a current capability.</p>
+    <p><strong>Market depth indicator.</strong> EPP does not currently include a variable for spot market depth or PPA penetration. The development of such an indicator faces a fundamental data problem: PPA contract details are not public. Proxy approaches using spot price volatility relative to consumption (DS 105 / DS 124) and the long-run trend in price–consumption correlation are identified as candidates for investigation, but are not yet operational. This is noted as a development requirement rather than a current capability.</p>
 
     <p>Hydrological change is the only dimension among those discussed in this paper that is currently measurable through public Finnish data sources (SYKE, vesi.fi). The remaining structural variables — PPA penetration, SE1 industrial demand, CHP covariance loss — require either new data sources or proxy development.</p>
   </div>

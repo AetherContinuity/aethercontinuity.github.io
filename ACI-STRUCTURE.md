@@ -272,7 +272,6 @@ Korreloivatko markkinasignaalit (10v korko, CDS, OMXH) D-suppression vaiheiden (
 1. Parlamentaarisista asiakirjoista koodataan kriittiset energia- ja huoltovarmuuspäätökset D1/D2/D3-vaiheisiin
 2. Markkinareaktio mitataan 30/90/180 päivän ikkunoissa suhteessa päätöshetkeen
 3. Korrelaatioanalyysi: ennakoivatko markkinat D-suppressiota vai seuraavat päätöksiä?
-4. Vertailu OGAS2 SHI-trajektoriin: ovatko markkinat ja malli yhteneväisiä?
 
 ### Teoreettinen merkitys
 Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näkyväksi numeroin. Jos markkinat näkevät puutteen 6 kuukautta ennen päättäjiä, se osoittaa että "emme tienneet" -argumentti ei pidä.
@@ -280,7 +279,6 @@ Mittaa päätöksentekokyvyn finanssimarkkinavasteen — tekee tulosvastuun näk
 ### Kytkennät
 - WP-015 §9 regiimitunnistus → laajennettu parlamentaariseen dataan
 - WP-016 HDCI → terveysjärjestelmän D-suppressio, sama rakenne eri sektorilla
-- OGAS2 R_PUBLIC Buffer → markkinapohjainen kalibrointi
 - §3.6 legitimiteettivaje → mitattuna euroissa prosessitosiasioiden sijaan
 - Eduskunnan avoin API (löydetty 2026-04-25)
 

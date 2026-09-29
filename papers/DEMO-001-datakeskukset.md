@@ -1,6 +1,6 @@
 # DEMO-001 — Datakeskukset ja sähköjärjestelmä
 
-**Kolmen instrumentin yhteisajo · 7.9.2026 · Aether Continuity Institute**
+**Instrumenttien yhteisajo · 7.9.2026 · Aether Continuity Institute**
 
 Aihe: Ylen 5.9.2026 julkaisema juttu *"Tutkijat: Luonto ei kestä
 datakeskusten aiheuttamaa kasvavaa energiankulutusta"* ja siinä esitetyt
@@ -10,7 +10,7 @@ väitteet.
 
 ## Mitä tämä raportti on
 
-Ensimmäinen ajo, jossa WEM, OGAS2 ja OGAS3 katsovat samaa kysymystä.
+Ensimmäinen ajo, jossa WEM ja OGAS3 katsovat samaa kysymystä.
 Tarkoitus ei ole vastata siihen mitä datakeskuksista pitäisi ajatella,
 vaan näyttää **mitä mittarit näyttävät ja mitä ne eivät näytä.**
 
@@ -108,45 +108,7 @@ Tämän yli ei saa ekstrapoloida.
 
 ---
 
-## 3 · OGAS2 — järjestelmäterveys
-
-SHI yhdistää neljä kerrosta. S_ENERGY luetaan WEM:n EPP:stä, ei lasketa
-uudelleen — kaksi laskentaa samalla nimellä olisi pahempi kuin puuttuva
-kytkentä.
-
-| skenaario | S_ENERGY | SHI | luokka |
-|---|---|---|---|
-| Nykytila | 65,4 | **44,7** | ORANGE |
-| 2027 +500 MW | 68,4 | 43,3 | ORANGE |
-| 2027 +1500 MW | 74,3 | 40,6 | ORANGE |
-| 2030 +3000 MW | 81,2 | **32,6** | RED |
-
-Muut kerrokset pidetty vakiona: R_PUBLIC 63,8, E_REAL 30,
-X_EXTERNAL 28. [M/A — R_PUBLIC mitattu, muut osin asetettuja]
-
-**Kolme huomiota.**
-
-Fingridin oma kulutusennuste vie SHI:n punaiselle vuoteen 2030
-mennessä, muiden kerrosten pysyessä paikallaan. Se ei ole ACI:n
-skenaario vaan siirtoverkkoyhtiön.
-
-Compound-kytkentä aktivoituu: se vaatii että sekä S_ENERGY että
-R_PUBLIC ylittävät 50, ja nykytilassa molemmat ylittävät. Kytkentä
-kasvaa 1,8 → 3,5 pistettä. Mekanismi: energiakustannus vaatii julkista
-kompensaatiota, mikä kaventaa liikkumavaraa, mikä vähentää kykyä
-puskuroida seuraavaa shokkia.
-
-Ja **sitova rajoite vaihtui**. Ennen WEM-kytkentää R_PUBLIC kantoi
-49 % painotetusta stressistä; nyt S_ENERGY kantaa 44 %. Aiempi
-johtopäätös — "energiainterventiot eivät kosketa sitovaa rajoitetta" —
-oli väärän syötteen tulos.
-
-**Varaus:** OGAS2:n interventioiden `patch`-arvot ovat asetettuja [A]
-eivätkä johdettuja. Sitä ei ole korjattu.
-
----
-
-## 4 · OGAS3 — institutionaalinen kerros
+## 3 · OGAS3 — institutionaalinen kerros
 
 Tässä on raportin varsinainen tulos.
 
@@ -219,7 +181,7 @@ aineistossa lähes olematon.
 
 ---
 
-## 5 · Havainto: instrumenttien ero
+## 4 · Havainto: instrumenttien ero
 
 Yhdistettynä aineisto tuottaa yhden väitteen, jota ei ole julkaistu
 muualla:
@@ -253,7 +215,7 @@ jättäminen on myös päätös"* — mutta se kertoo lisäksi **miksi**.
 
 ---
 
-## 6 · Mitä tämä raportti ei osaa sanoa
+## 5 · Mitä tämä raportti ei osaa sanoa
 
 Rehellisyyden vuoksi, ja koska tämä on demo:
 
@@ -263,11 +225,6 @@ on kirjattu mutta arvoa ei ole.
 **Extractor on ajamatta.** 2 265 lausunnon `targeting`,
 `policy_proximity` ja `intensity` ovat luokittelematta. Ne vaativat
 PDF:n sisällön ja kielimallin.
-
-**`patch`-arvot ovat asetettuja.** OGAS2:n interventioiden vaikutus
-S_ENERGYyn on käsin annettu luku ilman johtoa — ja LDR-50:n kohdalla
-etumerkkikin on epäselvä, koska se voi korvata joko sähkökattilan
-(positiivinen) tai CHP:n lämmöntuotannon (negatiivinen).
 
 **WEM-snapshot on paikkamerkki.** Komponentit ovat havaituista
 lukemista, `SP` skenaarioissa on arvio, ja tiedosto odottaa WEM:n
@@ -294,8 +251,7 @@ lausunnot, asiakirjat) · Eduskunta (käsittelyvaiheet, äänestykset) ·
 Valtiokonttori (kirjanpitoyksiköt) · Yle 5.9.2026 · Tornion Voima /
 Wärtsilä / EPV.
 
-**Laskettu:** WEM v2.7.5 (EPP, FS, SP, DP_t, WR) · OGAS2 v2.8 (SHI,
-kerrospainot) · OGAS3 (aikaleimat, aggregaatio, roolit).
+**Laskettu:** WEM v2.7.5 (EPP, FS, SP, DP_t, WR) · OGAS3 (aikaleimat, aggregaatio, roolit).
 
 **Ei mitattu, kirjattu auki:** uptake · targeting · policy_proximity ·
 intensity · impact_weight · patch-arvot · D- ja O-tapahtumat.
