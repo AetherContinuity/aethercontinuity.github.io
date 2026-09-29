@@ -43,7 +43,8 @@ input[type=search]{flex:1 1 180px}
 .he{font-family:var(--mono);font-size:.72rem;color:var(--accent)}
 .out{font-family:var(--mono);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);padding:.05rem .4rem;color:var(--muted)}
 .out.vahvistettu{border-color:var(--ok);color:var(--ok)}
-.out.aanestetty{border-color:var(--accent);color:var(--accent)}
+.out.aanestetty,.out.paattanyt{border-color:var(--accent);color:var(--accent)}
+.out.eduskunnassa{border-color:var(--muted);color:var(--ink)}
 .title{font-size:.98rem;margin:.2rem 0 .3rem;overflow-wrap:anywhere}
 .steps{display:flex;flex-wrap:wrap;gap:.25rem .4rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);align-items:center}
 .step{border:1px solid var(--rule);padding:.05rem .35rem}
@@ -87,10 +88,12 @@ td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
   <div id="app"></div>
 
   <div class="foot">
-    <strong>Miten tätä luetaan.</strong> Ketju kootaan hallituksen esityksen numeron (HE) mukaan. Lopputulos on
-    <em>säädös vahvistettu</em> kun Finlexin säädöksen esitöissä viitataan esitykseen, <em>äänestetty</em> kun
-    täysistuntoäänestys on löytynyt, ja muuten <em>määrittämätön</em> — ei koskaan “hylätty” pelkän puuttuvan tiedon
-    perusteella. Äänestyshaun “ei tietuetta” ei tarkoita ettei äänestetty: hyväksyminen ilman äänestystä ja kesken
+    <strong>Miten tätä luetaan.</strong> Ketju kootaan hallituksen esityksen numeron (HE) mukaan. Lopputulos on vahvin
+    havaittu tila: <em>säädös vahvistettu</em> kun Finlexin säädöksen esitöissä viitataan esitykseen;
+    <em>eduskunta päättänyt</em> kun eduskunnan vastaus on annettu (vastaus voi olla myös hylkäävä, joten tämä ei
+    tarkoita hyväksyttyä); <em>äänestetty</em> kun täysistuntoäänestys on löytynyt; <em>eduskunnassa</em> kun
+    käsittelyvaiheita on mutta vastausta ei vielä; ja muuten <em>määrittämätön</em> — ei koskaan “hylätty” pelkän
+    puuttuvan tiedon perusteella. Äänestyshaun “ei tietuetta” ei tarkoita ettei äänestetty: hyväksyminen ilman äänestystä ja kesken
     oleva käsittely näyttävät samalta.<br><br>
     <strong>Mitä tämä ei ole.</strong> RRI-indeksiä ei näytetä: tapahtumia ei ole vielä luokiteltu, ja tyhjä kenttä on
     rehellisempi kuin nolla. Hankeikkunan tiedot ovat ministeriöiden omaa raportointia; Eduskunta ja Finlex ovat
@@ -107,7 +110,11 @@ const BASE = `https://raw.githubusercontent.com/AetherContinuity/ogas3/${REF}/sn
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt = n => (n == null ? '—' : Number(n).toLocaleString('fi-FI'));
-const OUT_CLS = {'säädös vahvistettu':'vahvistettu','äänestetty':'aanestetty','määrittämätön':'maar'};
+const OUT_CLS = {'säädös vahvistettu':'vahvistettu','eduskunta päättänyt':'paattanyt','äänestetty':'aanestetty',
+                 'eduskunnassa':'eduskunnassa','määrittämätön':'maar'};
+// Tilojen järjestys tulee tiivistelmästä (outcome_order); tämä on vain
+// varajärjestys vanhoille tiivistelmille.
+const outcomeOrder = () => summary.outcome_order || Object.keys(OUT_CLS);
 const PAGE = 40;
 let index = null, summary = null, filter = new Set(), query = '', shown = PAGE;
 
@@ -159,7 +166,7 @@ function render() {
   // Ketjut
   const counts = oc;
   h += `<h2>Päätösketjut</h2>
-    <div class="bar"><div class="chips">${Object.keys(OUT_CLS).map(o =>
+    <div class="bar"><div class="chips">${outcomeOrder().map(o =>
       `<button class="chip" data-o="${esc(o)}" aria-pressed="${filter.has(o)}">${esc(o)} ${fmt(counts[o] || 0)}</button>`).join('')}</div>
       <input type="search" id="q" placeholder="Hae HE, nimeke tai hanke" value="${esc(query)}"></div>
     <div id="chains"></div>`;
@@ -228,8 +235,9 @@ function renderChains() {
       <div class="title">${esc(r.nimeke || '(nimeke ei tiedossa)')}</div>
       <div class="steps">
         ${step(r.hankkeet.length, r.hankkeet.length ? 'hanke ' + esc(r.hankkeet.join(', ')) : 'hanke ?')}<span class="arrow">→</span>
-        ${step(r.eduskunta_vaiheet, 'käsittely ' + fmt(r.eduskunta_vaiheet) + ' vaihetta')}<span class="arrow">→</span>
+        ${step(r.eduskunta_vaiheet, r.eduskunta_vaiheet ? 'käsittely ' + fmt(r.eduskunta_vaiheet) + ' vaihetta' : 'käsittely ?')}<span class="arrow">→</span>
         ${step(r.aanestykset, r.aanestykset ? 'äänestyksiä ' + fmt(r.aanestykset) : 'äänestys ?')}<span class="arrow">→</span>
+        ${r.eduskunta_vastaus !== undefined ? step(r.eduskunta_vastaus, r.eduskunta_vastaus ? 'vastaus ' + esc(r.eduskunta_vastaus) : 'vastaus ?') + '<span class="arrow">→</span>' : ''}
         ${step(r.saadokset.length, r.saadokset.length
           ? 'säädös ' + esc(r.saadokset.length > 3 ? `${r.saadokset[0]} … ${r.saadokset.at(-1)} (${r.saadokset.length})` : r.saadokset.join(', '))
           : 'säädös ?')}
