@@ -174,7 +174,6 @@
   <span class="nav-right">
     <a href="/research.html">Research</a>
     <a href="/papers/">Papers</a>
-    <a href="/tools/ogas2-simulator.html">OGAS2 Instrument</a>
   </span>
 </nav>
 
@@ -183,7 +182,7 @@
   <div class="doc-meta-grid">
     <div><strong>Status</strong>Working Draft v1.0</div>
     <div><strong>Domain</strong>D-1 / D-3 / D-4</div>
-    <div><strong>Instrument</strong><a href="/tools/ogas2-simulator.html">OGAS2 v2.4</a></div>
+    <div><strong>Instrument</strong>OGAS2 v2.4 (withdrawn 2026-09-29)</div>
     <div><strong>Basis</strong>WP-004 · WP-013</div>
     <div><strong>Backtest</strong>2021-Q3 — 2026-Q1</div>
     <div><strong>Runs</strong>500 MC simulations</div>
@@ -422,7 +421,8 @@
   <div class="section">
     <span class="section-marker">&sect; 11</span>
     <h2>Implementation: OGAS2 instrument</h2>
-    <p>The model described in this paper is implemented as the OGAS2 System Health Simulator, available at <a href="/tools/ogas2-simulator.html">aethercontinuity.org/tools/ogas2-simulator.html</a>. The instrument provides interactive layer adjustment, live data integration (Fingrid and ECB), shock injection, intervention selection, and Monte Carlo projection. All layer mappings and model parameters described in this paper are faithfully implemented in the instrument.</p>
+    <p><strong>Withdrawn 2026-09-29.</strong> The instrument has been removed from the site. Its forward projection was determined by constant drift and buffer-decay parameters rather than by data: without interventions the SHI fell from 41.5 to 5.8 over 60 months by construction, so intervention returns were measured against an assumed collapse. The Monte Carlo sampled noise around a fixed structure, not the uncertainty of the structure itself, and the 2021–2026 backtest validated input definitions that were replaced in September 2026. The text below describes the instrument as it was.</p>
+    <p>The model described in this paper was implemented as the OGAS2 System Health Simulator. The instrument provides interactive layer adjustment, live data integration (Fingrid and ECB), shock injection, intervention selection, and Monte Carlo projection. All layer mappings and model parameters described in this paper are faithfully implemented in the instrument.</p>
     <p>The instrument is open and does not require registration. Layer values may be set to any value for scenario analysis. Live data integration updates S_ENERGY from Fingrid real-time data and R_PUBLIC from ECB bond yield data; X_EXTERNAL from EUR/USD; E_REAL from 7-day spot history. These update the instrument to current conditions at the time of the fetch.</p>
 
     <blockquote>OGAS2 is a diagnostic instrument, not a forecasting service. Its outputs are structural assessments conditional on model parameters. They should be used to understand the structure of risk, not to predict specific outcomes.</blockquote>
@@ -435,7 +435,7 @@
     <div class="ref-item"><span class="ref-id">SM-001</span><span class="ref-desc"><a href="/supplements/synthesis-memo-finland-2030.html">Finland 2030: A Compound Risk Diagnosis</a> — Empirical basis for layer weight calibration and 2026 baseline.</span></div>
     <div class="ref-item"><span class="ref-id">DA-007</span><span class="ref-desc"><a href="/supplements/da-007-household-energy-continuity.html">Household Energy Continuity</a> — Household-level analysis complementary to system-level SHI.</span></div>
     <div class="ref-item"><span class="ref-id">SP-002</span><span class="ref-desc"><a href="/papers/sp-002-sgfa-4-toteutusohjelma.html">SGFA 4.0 — Municipal Energy Stability Implementation Programme</a> — Source of SGFA intervention parameters in §09.</span></div>
-    <div class="ref-item"><span class="ref-id">OGAS2</span><span class="ref-desc"><a href="/tools/ogas2-simulator.html">OGAS2 System Health Simulator</a> — Interactive implementation of this model. Live data integration, Monte Carlo, phase-state, intervention matrix.</span></div>
+    <div class="ref-item"><span class="ref-id">OGAS2</span><span class="ref-desc">OGAS2 System Health Simulator (withdrawn 2026-09-29) — Interactive implementation of this model. Live data integration, Monte Carlo, phase-state, intervention matrix.</span></div>
   </div>
 
 </div><!-- /paper -->
