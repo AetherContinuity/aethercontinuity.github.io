@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OGAS3 — Päätösketjumonitori · ACI</title>
+<meta name="description" content="OGAS3:n kuukausikaappaukset: hallituksen esitysten päätösketjut Hankeikkunasta Eduskunnan äänestyksiin ja Finlexin säädöksiin, seurantalista ja mittauksen laatu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f5f0e8;--paper-2:#ede7d8;--rule:#c8bfad;--muted:#7a7468;--accent:#8b4513;
+  --ok:#3f6e3f;--bad:#8b2500;--serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.6;min-height:100vh}
+nav{border-bottom:1px solid var(--rule);padding:1.4rem 4rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.nav-home{font-family:var(--mono);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.nav-home::before{content:'<- '}
+.nav-id{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.page{max-width:860px;margin:0 auto;padding:4rem 2rem 6rem}
+.page-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+h1{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:500;line-height:1.2;margin-bottom:.8rem}
+.intro{font-size:1rem;color:var(--muted);font-style:italic;margin-bottom:1.6rem}
+h2{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:400;
+  margin:2.8rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule)}
+.mono{font-family:var(--mono)}
+.prov{font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.9;background:var(--paper-2);border:1px solid var(--rule);padding:.8rem 1rem}
+.prov a{color:var(--accent)}
+.prov .ok{color:var(--ok)} .prov .bad{color:var(--bad)}
+.bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1.2rem 0}
+select,input[type=search]{font-family:var(--mono);font-size:.72rem;background:var(--paper);color:var(--ink);border:1px solid var(--rule);padding:.4rem .5rem;min-width:0}
+input[type=search]{flex:1 1 180px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem}
+.stat{border:1px solid var(--rule);padding:.6rem .75rem;min-width:0}
+.stat .k{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:1.05rem;overflow-wrap:anywhere}
+.stat .s{font-size:.78rem;color:var(--muted);font-style:italic;line-height:1.35;margin-top:.15rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;border:1px solid var(--rule);background:transparent;color:var(--muted);padding:.3rem .55rem;cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--ink);color:var(--ink);background:var(--paper-2)}
+.chain{border-bottom:1px solid var(--rule);padding:.8rem 0;min-width:0}
+.chain-h{display:flex;flex-wrap:wrap;gap:.3rem .7rem;align-items:baseline}
+.he{font-family:var(--mono);font-size:.72rem;color:var(--accent)}
+.out{font-family:var(--mono);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);padding:.05rem .4rem;color:var(--muted)}
+.out.vahvistettu{border-color:var(--ok);color:var(--ok)}
+.out.aanestetty{border-color:var(--accent);color:var(--accent)}
+.title{font-size:.98rem;margin:.2rem 0 .3rem;overflow-wrap:anywhere}
+.steps{display:flex;flex-wrap:wrap;gap:.25rem .4rem;font-family:var(--mono);font-size:.6rem;color:var(--muted);align-items:center}
+.step{border:1px solid var(--rule);padding:.05rem .35rem}
+.step.on{color:var(--ink);border-color:var(--muted)}
+.arrow{color:var(--rule)}
+.more{font-family:var(--mono);font-size:.62rem;background:none;border:1px solid var(--rule);color:var(--muted);padding:.4rem .8rem;margin-top:1rem;cursor:pointer}
+.trace{border-bottom:1px solid var(--rule);padding:.8rem 0}
+.kv{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.3rem;display:flex;flex-wrap:wrap;gap:.2rem .9rem}
+.kv b{color:var(--ink);font-weight:400}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{text-align:left;padding:.35rem .4rem;border-bottom:1px solid var(--rule);vertical-align:top;overflow-wrap:anywhere}
+th{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.note{font-size:.85rem;color:var(--muted);font-style:italic;margin:.5rem 0}
+.list li{list-style:none;border-bottom:1px solid var(--rule);padding:.45rem 0;font-size:.85rem;overflow-wrap:anywhere}
+.list .mono{font-size:.62rem;color:var(--accent)}
+.err{border-left:3px solid var(--bad);background:var(--paper-2);padding:.8rem 1rem;font-size:.9rem;margin:1rem 0}
+.err code{font-family:var(--mono);font-size:.7rem;overflow-wrap:anywhere}
+.empty{font-style:italic;color:var(--muted);font-size:.9rem}
+.foot{margin-top:3.5rem;border-top:1px solid var(--rule);padding-top:1rem;font-size:.85rem;color:var(--muted);line-height:1.7}
+@media(max-width:640px){nav{padding:1rem 16px}.page{padding:2.5rem 16px 4rem}html{font-size:17px}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-home" href="/tools/">Tools</a>
+  <span class="nav-id">OGAS3</span>
+</nav>
+<div class="page">
+  <div class="page-label">OGAS3 · Päätösketjumonitori</div>
+  <h1>Mitä valmistelulle tapahtui</h1>
+  <p class="intro">Kuukausittainen kaappaus hallituksen esitysten ketjusta: valmistelu Hankeikkunassa, käsittely ja äänestykset Eduskunnassa, vahvistetut säädökset Finlexissä. Sivu näyttää, se ei laske — luvut on laskettu kaappauksen yhteydessä ja sidottu lähdetiedostoonsa.</p>
+
+  <div id="prov" class="prov">Ladataan…</div>
+
+  <div class="bar">
+    <label class="mono" style="font-size:.6rem;color:var(--muted)" for="month">Kuukausi</label>
+    <select id="month"></select>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="foot">
+    <strong>Miten tätä luetaan.</strong> Ketju kootaan hallituksen esityksen numeron (HE) mukaan. Lopputulos on
+    <em>säädös vahvistettu</em> kun Finlexin säädöksen esitöissä viitataan esitykseen, <em>äänestetty</em> kun
+    täysistuntoäänestys on löytynyt, ja muuten <em>määrittämätön</em> — ei koskaan “hylätty” pelkän puuttuvan tiedon
+    perusteella. Äänestyshaun “ei tietuetta” ei tarkoita ettei äänestetty: hyväksyminen ilman äänestystä ja kesken
+    oleva käsittely näyttävät samalta.<br><br>
+    <strong>Mitä tämä ei ole.</strong> RRI-indeksiä ei näytetä: tapahtumia ei ole vielä luokiteltu, ja tyhjä kenttä on
+    rehellisempi kuin nolla. Hankeikkunan tiedot ovat ministeriöiden omaa raportointia; Eduskunta ja Finlex ovat
+    virallisia lähteitä.<br><br>
+    Lähdekoodi ja kaappaukset: <a href="https://github.com/AetherContinuity/ogas3" style="color:var(--accent)">github.com/AetherContinuity/ogas3</a>
+  </div>
+</div>
+
+<script>
+(() => {
+const params = new URLSearchParams(location.search);
+const REF = (params.get('ref') || 'main').replace(/[^\w.\-\/]/g, '');
+const BASE = `https://raw.githubusercontent.com/AetherContinuity/ogas3/${REF}/snapshots/`;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => (n == null ? '—' : Number(n).toLocaleString('fi-FI'));
+const OUT_CLS = {'säädös vahvistettu':'vahvistettu','äänestetty':'aanestetty','määrittämätön':'maar'};
+const PAGE = 40;
+let index = null, summary = null, filter = new Set(), query = '', shown = PAGE;
+
+async function getJSON(name) {
+  const r = await fetch(BASE + name, { cache: 'no-cache' });
+  if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
+  return r.json();
+}
+
+function fail(err) {
+  $('#prov').innerHTML = '';
+  $('#app').innerHTML = `<div class="err"><strong>Tietoja ei saatu.</strong> ${esc(err.message)}<br>
+    Haettu osoitteesta <code>${esc(BASE)}</code>.
+    ${REF === 'main' ? 'Jos tiivistelmiä ei ole vielä yhdistetty main-haaraan, kokeile <code>?ref=classification-layer</code>.' : ''}</div>`;
+}
+
+function renderProv() {
+  const m = summary;
+  const idxRow = index.months.find(x => x.month === m.month) || {};
+  const match = idxRow.summary_matches_snapshot;
+  $('#prov').innerHTML = [
+    `lähde <a href="https://github.com/AetherContinuity/ogas3/blob/${esc(REF)}/snapshots/${esc(m.source_file)}">${esc(m.source_file)}</a>`
+      + ` · sha256 ${esc((m.source_sha256 || '').slice(0, 12))}`
+      + ` · <span class="${match === true ? 'ok' : match === false ? 'bad' : ''}">${match === true ? 'tiivistelmä täsmää' : match === false ? 'TIIVISTELMÄ EI TÄSMÄÄ LÄHTEESEEN' : 'täsmäystä ei tarkistettu'}</span>`,
+    `kaapattu ${esc((m.captured_at || '').replace('T', ' ').slice(0, 16))} UTC · ${esc(m.captured_by || '—')}`
+      + (m.run_url ? ` · <a href="${esc(m.run_url)}">ajoloki</a>` : '')
+      + (m.git_sha ? ` · commit ${esc(m.git_sha.slice(0, 8))}` : ''),
+    `hakemisto ${esc((index.generated_at || '').replace('T', ' ').slice(0, 16))} UTC · haara ${esc(REF)}`
+  ].join('<br>');
+}
+
+function stat(k, v, s = '') {
+  return `<div class="stat"><div class="k">${esc(k)}</div><div class="v">${v}</div>${s ? `<div class="s">${s}</div>` : ''}</div>`;
+}
+
+function render() {
+  const s = summary, t = s.totals;
+  const src = Object.entries(t.by_source).map(([k, v]) => `${esc(k)} ${fmt(v)}`).join(' · ');
+  const oc = s.chains_outcome || {};
+  let h = `<h2>Kuukausi ${esc(s.month)}</h2><div class="stats">
+    ${stat('Tapahtumia', fmt(t.events), src)}
+    ${stat('Ketjuja (HE)', fmt(s.chains.length), Object.entries(oc).map(([k, v]) => `${esc(k)} ${fmt(v)}`).join(' · '))}
+    ${stat('Anomalioita', fmt(t.anomalies), 'todisteen virheet, ei korjattu')}
+    ${stat('Epäonnistuneita hakuja', fmt(s.errors.length))}
+    ${stat('Luokiteltu', `${fmt(t.typed)} / ${fmt(t.events)}`, 'tyyppi D/O/S/L/IR')}
+    ${stat('RRI', s.rri == null ? 'ei laskettu' : esc(s.rri), s.rri == null ? 'vaatii luokituksen' : '')}
+  </div>`;
+
+  // Ketjut
+  const counts = oc;
+  h += `<h2>Päätösketjut</h2>
+    <div class="bar"><div class="chips">${Object.keys(OUT_CLS).map(o =>
+      `<button class="chip" data-o="${esc(o)}" aria-pressed="${filter.has(o)}">${esc(o)} ${fmt(counts[o] || 0)}</button>`).join('')}</div>
+      <input type="search" id="q" placeholder="Hae HE, nimeke tai hanke" value="${esc(query)}"></div>
+    <div id="chains"></div>`;
+
+  // Seurantalista
+  const latest = index.traces.filter(x => x.latest);
+  const older = index.traces.length - latest.length;
+  h += `<h2>Seurantalista</h2>`;
+  h += latest.length ? latest.map(tr => {
+    const st = tr.state || {};
+    const kv = [
+      ['lukittu', tr.locked_at], ['revisio', tr.revision],
+      ['havaittu', tr.observed], ['odotettu', tr.expected],
+      ['tiiviste', tr.hash_matches === true ? 'täsmää' : tr.hash_matches === false ? 'EI TÄSMÄÄ' : 'ei tallennettu'],
+      ...(st.tila ? [['tila', st.tila]] : []),
+      ...(st.lausuntoja_hankeikkunassa != null ? [['lausuntoja (alaraja)', st.lausuntoja_hankeikkunassa]] : []),
+      ...(st.lausuntokierros_jaljella_vrk != null ? [['kierrosta jäljellä lukitushetkellä', st.lausuntokierros_jaljella_vrk + ' vrk']] : []),
+      ...(tr.known_at_missing ? [['known_at puuttuu', tr.known_at_missing]] : []),
+    ];
+    return `<div class="trace"><div class="chain-h"><span class="he">${esc(tr.tunnus || tr.file)}</span>
+      ${tr.domain ? `<span class="out">${esc(tr.domain)}</span>` : ''}</div>
+      <div class="title">${esc(tr.subject || tr.file)}</div>
+      <div class="kv">${kv.map(([k, v]) => `<span>${esc(k)} <b>${esc(v)}</b></span>`).join('')}</div>
+      ${tr.error ? `<div class="err">${esc(tr.error)}</div>` : ''}</div>`;
+  }).join('') + (older ? `<p class="note">${older} aiempaa versiota korvattu uudemmalla, ei näytetä.</p>` : '')
+  : `<p class="empty">Ei traceja.</p>`;
+
+  // Mittauksen laatu
+  h += `<h2>Mittauksen laatu</h2>
+    <table><thead><tr><th>Lähde</th><th>n</th><th>viive, mediaani</th><th>maksimi</th></tr></thead><tbody>
+    ${Object.entries(s.visibility_lag_days).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="n">${fmt(v.n)}</td>
+      <td class="n">${v.median == null ? '—' : fmt(v.median) + ' vrk'}</td><td class="n">${v.max == null ? '—' : fmt(v.max) + ' vrk'}</td></tr>`).join('')}
+    </tbody></table>
+    <p class="note">Näkyvyysviive = milloin tieto oli ulkopuolisen havaittavissa − milloin asia tapahtui. ${esc(s._lag_note || '')}</p>`;
+  const vl = s.votes_lookup || {};
+  if (Object.keys(vl).length)
+    h += `<p class="note">Äänestyshaut: ${Object.entries(vl).map(([k, v]) => `${esc(k)} ${fmt(v)}`).join(' · ')}. ${esc(s._votes_note || '')}</p>`;
+  if (s.finlex_window && !s.finlex_window.error)
+    h += `<p class="note">Finlex: julkaistu ${esc(s.finlex_window.window?.join(' – '))}, ${fmt(s.finlex_window.n)} säädöstä, ${fmt(s.finlex_window.calls)} hakua.</p>`;
+
+  h += `<h2>Anomaliat (${fmt(s.anomalies.length)})</h2>` + (s.anomalies.length
+    ? `<ul class="list">${s.anomalies.map(a => `<li><span class="mono">${esc(a.event_id)}</span> — ${esc(a.note)}</li>`).join('')}</ul>`
+    : `<p class="empty">Ei anomalioita.</p>`);
+  h += `<h2>Epäonnistuneet haut (${fmt(s.errors.length)})</h2>` + (s.errors.length
+    ? `<ul class="list">${s.errors.map(e => `<li><span class="mono">${esc(e.source)} ${esc(Array.isArray(e.kohde) ? e.kohde.join('–') : e.kohde || '')}</span> — ${esc(e.error)}</li>`).join('')}</ul>`
+    : `<p class="empty">Kaikki haut onnistuivat.</p>`);
+
+  $('#app').innerHTML = h;
+  document.querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    const o = b.dataset.o; filter.has(o) ? filter.delete(o) : filter.add(o);
+    b.setAttribute('aria-pressed', filter.has(o)); shown = PAGE; renderChains();
+  });
+  $('#q').oninput = e => { query = e.target.value; shown = PAGE; renderChains(); };
+  renderChains();
+}
+
+function renderChains() {
+  const q = query.trim().toLowerCase();
+  const rows = summary.chains.filter(r =>
+    (!filter.size || filter.has(r.outcome)) &&
+    (!q || [r.he, r.nimeke, ...(r.hankkeet || []), ...(r.saadokset || [])].join(' ').toLowerCase().includes(q)));
+  const vis = rows.slice(0, shown);
+  const step = (on, label) => `<span class="step${on ? ' on' : ''}">${label}</span>`;
+  $('#chains').innerHTML = (vis.length ? vis.map(r => `<div class="chain">
+      <div class="chain-h"><span class="he">${esc(r.he)}</span><span class="out ${OUT_CLS[r.outcome] || ''}">${esc(r.outcome)}</span></div>
+      <div class="title">${esc(r.nimeke || '(nimeke ei tiedossa)')}</div>
+      <div class="steps">
+        ${step(r.hankkeet.length, r.hankkeet.length ? 'hanke ' + esc(r.hankkeet.join(', ')) : 'hanke ?')}<span class="arrow">→</span>
+        ${step(r.eduskunta_vaiheet, 'käsittely ' + fmt(r.eduskunta_vaiheet) + ' vaihetta')}<span class="arrow">→</span>
+        ${step(r.aanestykset, r.aanestykset ? 'äänestyksiä ' + fmt(r.aanestykset) : 'äänestys ?')}<span class="arrow">→</span>
+        ${step(r.saadokset.length, r.saadokset.length
+          ? 'säädös ' + esc(r.saadokset.length > 3 ? `${r.saadokset[0]} … ${r.saadokset.at(-1)} (${r.saadokset.length})` : r.saadokset.join(', '))
+          : 'säädös ?')}
+      </div></div>`).join('') : `<p class="empty">Ei osumia.</p>`)
+    + (rows.length > shown ? `<button class="more" id="more">Näytä lisää (${fmt(rows.length - shown)})</button>` : '');
+  const m = $('#more'); if (m) m.onclick = () => { shown += PAGE; renderChains(); };
+}
+
+async function loadMonth(month) {
+  const row = index.months.find(x => x.month === month);
+  if (!row || !row.summary) { $('#app').innerHTML = `<p class="empty">Kuukaudelle ${esc(month)} ei ole tiivistelmää.</p>`; return; }
+  summary = await getJSON(row.summary);
+  filter.clear(); query = ''; shown = PAGE;
+  renderProv(); render();
+}
+
+(async () => {
+  try {
+    index = await getJSON('index.json');
+    const months = [...index.months].reverse();
+    if (!months.length) throw new Error('hakemistossa ei ole kuukausia');
+    $('#month').innerHTML = months.map(m => `<option value="${esc(m.month)}">${esc(m.month)} · ${fmt(m.events)} tapahtumaa</option>`).join('');
+    $('#month').onchange = e => loadMonth(e.target.value).catch(fail);
+    await loadMonth(params.get('month') || months[0].month);
+    if (params.get('month')) $('#month').value = params.get('month');
+  } catch (e) { fail(e); }
+})();
+})();
+</script>
+</body>
+</html>
