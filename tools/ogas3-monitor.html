@@ -231,6 +231,21 @@ function render() {
         ${vk.ilman_ketjua.slice(0, 5).map(x => `<span class="mono" style="font-size:.62rem">${esc(x.tunnus)}</span> ${esc((x.hanke_nimi || '').slice(0, 60))} (${fmt(x.vaikuttajia)})`).join(' · ')}.</p>`;
   }
 
+  // YVA
+  const yv = s.yva;
+  if (yv) {
+    const VN = {ohjelma_nahtavilla: 'arviointiohjelma nähtävillä', ohjelma_lausunto: 'lausunto ohjelmasta',
+                selostus_nahtavilla: 'arviointiselostus nähtävillä', perusteltu_paatelma: 'perusteltu päätelmä'};
+    const rows = yv.vaiheet_ikkunassa || [];
+    h += `<h2>YVA — menettelyn vaiheet ${esc(yv.ikkuna || '')}</h2><p class="note">${esc(yv._note)}</p>`;
+    h += rows.length ? rows.map(r => `<div class="chain">
+        <div class="chain-h"><span class="he">${esc(r.paiva)}</span><span class="out ${r.energia ? 'aanestetty' : ''}">${esc(VN[r.vaihe] || r.vaihe)}</span></div>
+        <div class="title">${r.url ? `<a href="${esc(r.url)}" style="color:inherit" target="_blank" rel="noopener">${esc(r.hanke)}</a>` : esc(r.hanke)}</div>
+        <div class="kv"><span>aihealue <b>${esc(r.aihealue || '—')}</b></span><span>tila <b>${esc(r.tila || '—')}</b></span></div>
+      </div>`).join('') : `<p class="empty">Ei YVA-vaiheita ikkunassa.</p>`;
+    h += `<p class="note">Seurannassa ${fmt(yv.hankkeita)} hanketta, ${fmt(yv.vaiheet_yhteensa)} vaihetta. Energia-aihealueen vaiheet korostettu.</p>`;
+  }
+
   // Mittauksen laatu
   h += `<h2>Mittauksen laatu</h2>
     <table><thead><tr><th>Lähde</th><th>n</th><th>viive, mediaani</th><th>maksimi</th></tr></thead><tbody>
