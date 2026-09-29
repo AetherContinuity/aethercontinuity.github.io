@@ -50,6 +50,11 @@ input[type=search]{flex:1 1 180px}
 .step{border:1px solid var(--rule);padding:.05rem .35rem}
 .step.on{color:var(--ink);border-color:var(--muted)}
 .arrow{color:var(--rule)}
+.nosta{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;color:var(--accent);text-decoration:none;margin-left:auto}
+.nosta:hover{text-decoration:underline}
+.seur{font-family:var(--mono);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);border:1px solid var(--ok);padding:.05rem .4rem}
+.prom{font-size:.82rem;color:var(--muted);margin-top:.35rem;line-height:1.45}
+.prom b{font-family:var(--mono);font-size:.6rem;font-weight:400;color:var(--ink)}
 .more{font-family:var(--mono);font-size:.62rem;background:none;border:1px solid var(--rule);color:var(--muted);padding:.4rem .8rem;margin-top:1rem;cursor:pointer}
 .trace{border-bottom:1px solid var(--rule);padding:.8rem 0}
 .kv{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.3rem;display:flex;flex-wrap:wrap;gap:.2rem .9rem}
@@ -95,6 +100,10 @@ td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
     käsittelyvaiheita on mutta vastausta ei vielä; ja muuten <em>määrittämätön</em> — ei koskaan “hylätty” pelkän
     puuttuvan tiedon perusteella. Äänestyshaun “ei tietuetta” ei tarkoita ettei äänestetty: hyväksyminen ilman äänestystä ja kesken
     oleva käsittely näyttävät samalta.<br><br>
+    <strong>Nosto seurantaan</strong> avaa GitHub-lomakkeen. Nostot käsitellään automaattisesti vain avustajilta;
+    muut odottavat hyväksyntää. Jokaiseen nostoon kirjataan nostohetki ja ketjun tila sillä hetkellä, jotta ennen
+    ratkaisua tehdyt nostot erottuvat jälkikäteen tehdyistä. Seurantalista on valittu otos — yleistävät väitteet
+    tehdään koko kaappauksesta.<br><br>
     <strong>Mitä tämä ei ole.</strong> RRI-indeksiä ei näytetä: tapahtumia ei ole vielä luokiteltu, ja tyhjä kenttä on
     rehellisempi kuin nolla. Hankeikkunan tiedot ovat ministeriöiden omaa raportointia; Eduskunta ja Finlex ovat
     virallisia lähteitä.<br><br>
@@ -116,6 +125,14 @@ const OUT_CLS = {'säädös vahvistettu':'vahvistettu','eduskunta päättänyt':
 // varajärjestys vanhoille tiivistelmille.
 const outcomeOrder = () => summary.outcome_order || Object.keys(OUT_CLS);
 const PAGE = 40;
+const REPO = 'https://github.com/AetherContinuity/ogas3';
+// Nosto avaa esitäytetyn issue-lomakkeen. Käsitellään automaattisesti vain
+// avustajilta — muut odottavat hyväksyntää. Sivu itse ei kirjoita mitään.
+const nostoUrl = r => `${REPO}/issues/new?` + new URLSearchParams({
+  template: 'nosto.yml', title: `Nosto: ${r.he}${r.nimeke ? ' — ' + r.nimeke.slice(0, 60) : ''}`,
+  he: r.he, tunnus: (r.hankkeet || []).length === 1 ? r.hankkeet[0] : '' }).toString();
+const promotions = () => index.promotions || [];
+const promotedKeys = () => new Set(promotions().flatMap(p => [p.he, p.tunnus]).filter(Boolean));
 let index = null, summary = null, filter = new Set(), query = '', shown = PAGE;
 
 async function getJSON(name) {
@@ -190,6 +207,11 @@ function render() {
       ${tr.domain ? `<span class="out">${esc(tr.domain)}</span>` : ''}</div>
       <div class="title">${esc(tr.subject || tr.file)}</div>
       <div class="kv">${kv.map(([k, v]) => `<span>${esc(k)} <b>${esc(v)}</b></span>`).join('')}</div>
+      ${promotions().filter(p => p.tunnus && p.tunnus === tr.tunnus).map(p => `<div class="prom">
+        nostanut <b>${esc(p.promoted_by)}</b> ${esc((p.promoted_at || '').slice(0, 10))}
+        · tila nostettaessa <b>${esc(p.outcome_at_promotion || 'tuntematon')}</b>
+        · <b>${p.ennen_ratkaisua === true ? 'ennen ratkaisua' : p.ennen_ratkaisua === false ? 'ratkaisun jälkeen' : 'ajoitus tuntematon'}</b>
+        ${p.issue ? `· <a href="${esc(p.issue)}" style="color:var(--accent)">peruste</a>` : ''}</div>`).join('')}
       ${tr.error ? `<div class="err">${esc(tr.error)}</div>` : ''}</div>`;
   }).join('') + (older ? `<p class="note">${older} aiempaa versiota korvattu uudemmalla, ei näytetä.</p>` : '')
   : `<p class="empty">Ei traceja.</p>`;
@@ -230,8 +252,12 @@ function renderChains() {
     (!q || [r.he, r.nimeke, ...(r.hankkeet || []), ...(r.saadokset || [])].join(' ').toLowerCase().includes(q)));
   const vis = rows.slice(0, shown);
   const step = (on, label) => `<span class="step${on ? ' on' : ''}">${label}</span>`;
+  const seen = promotedKeys();
   $('#chains').innerHTML = (vis.length ? vis.map(r => `<div class="chain">
-      <div class="chain-h"><span class="he">${esc(r.he)}</span><span class="out ${OUT_CLS[r.outcome] || ''}">${esc(r.outcome)}</span></div>
+      <div class="chain-h"><span class="he">${esc(r.he)}</span><span class="out ${OUT_CLS[r.outcome] || ''}">${esc(r.outcome)}</span>
+        ${[r.he, ...(r.hankkeet || [])].some(k => seen.has(k))
+          ? '<span class="seur">seurannassa</span>'
+          : `<a class="nosta" href="${esc(nostoUrl(r))}" target="_blank" rel="noopener">Nosta seurantaan →</a>`}</div>
       <div class="title">${esc(r.nimeke || '(nimeke ei tiedossa)')}</div>
       <div class="steps">
         ${step(r.hankkeet.length, r.hankkeet.length ? 'hanke ' + esc(r.hankkeet.join(', ')) : 'hanke ?')}<span class="arrow">→</span>
