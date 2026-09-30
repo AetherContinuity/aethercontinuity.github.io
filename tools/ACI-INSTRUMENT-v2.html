@@ -2205,6 +2205,7 @@ const fmt = {
 //   DEPTH        kuinka suuri fyysinen vajaus stressissä?   SP_depth
 //   DURATION     kuinka pitkään stressi jatkuu yhtäjaksoisesti? T₁₆₈
 //   CORRECTION   millä hinnalla marginaali korjataan?       RP_curve
+//   SOURCE       riittääkö tuonnin lähde pitkään jaksoon?   NO+SE-vesivarannot (2.14.0)
 //
 // Havainto joka tämän aiheutti (10.9.2026):
 //   SP 54,8 % BP-like · SP_depth 10,0 % matala · T₁₆₈ 49 h metastable
@@ -2249,6 +2250,27 @@ function renderDimensions(m){
               : rm < 0.60 ? ['normaali',     C.amber]
               :             ['runsas',       C.ok];
 
+  // SOURCE (2.14.0) — tuonnin lähde: NO+SE-vesivarantojen poikkeama saman
+  // viikon mediaanista, aci-entsoe-proxy /balance (sama reitti kuin HEM §01b).
+  // Ainoa ulottuvuus joka katsoo Suomen ULKOPUOLELLE: muut neljä mittaavat
+  // miten Suomi kantaa vajeen, tämä sitä mistä vaje katetaan viikkoja.
+  // Luokka järjestyksestä perusjaksossa, EI TWh-kynnyksestä. Kynnykset
+  // ASETETTUJA [A]: pienin kaikista vuosista = ennätysmatala, alin
+  // neljännes = alakvartiili. Palkki = osuus vuosista joina oli ENEMMÄN.
+  const bal = window.__balance || null;
+  const src = bal && bal.import_source;
+  const srcCls = bal===null ? ['haetaan…', C.grey]
+               : !src || src.deviation_twh==null || !src.n_years ? ['ei dataa', C.grey]
+               : src.years_lower === 0 ? ['ennätysmatala', C.red]
+               : src.years_lower/src.n_years < 0.25 ? ['alakvartiili', C.amber]
+               : src.deviation_twh < 0 ? ['alle mediaanin', C.ok]
+               : ['mediaani tai yli', C.ok];
+  const srcFrac = src && src.n_years ? 1 - src.years_lower/src.n_years : null;
+  const srcVal = src && src.deviation_twh!=null
+    ? (src.deviation_twh>0?'+':'') + src.deviation_twh.toFixed(1) + ' TWh' : '—';
+  const srcQ = 'Riittääkö tuonnin lähde pitkään jaksoon? (NO+SE-altaat vs. saman viikon mediaani'
+    + (src ? `, ${src.week}, alempana ${src.years_lower}/${src.n_years} v` : '') + ')';
+
   const row = (nimi, kysymys, arvo, frac, cls) =>
     `<tr>
       <td style="font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;padding:.15rem .6rem .15rem 0;color:var(--muted)">${nimi}</td>
@@ -2260,13 +2282,13 @@ function renderDimensions(m){
 
   // Ristiriitatarkistus: yksi punainen ja muita vihreitä = EPP piilottaa
   const lvl = c => c[1]===C.red?2 : c[1]===C.amber?1 : c[1]===C.ok?0 : null;
-  const lv = [spCls,sdCls,tCls,rcCls].map(lvl).filter(x=>x!==null);
+  const lv = [spCls,sdCls,tCls,rcCls,srcCls].map(lvl).filter(x=>x!==null);
   const ristiriita = lv.length>=3 && Math.max(...lv)>=2 && Math.min(...lv)===0;
 
   el.innerHTML =
     `<div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
       <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">
-        Neljä kysymystä — ei neljä komponenttia
+        Viisi kysymystä — ei viittä komponenttia
       </div>
       <table style="border-collapse:collapse;width:100%">
         ${row('FREQUENCY','Kuinka usein joudutaan stressitilaan?',
@@ -2278,6 +2300,7 @@ function renderDimensions(m){
         ${row('CORRECTION','Paljonko korjauskykyä on jäljellä? (matalin hetki W72:ssa)',
               rm==null?'—':(rm*100).toFixed(0)+' % min',
               rm==null?null:Math.min(1,Math.max(0,1-rm)), rcCls)}
+        ${row('SOURCE', srcQ, srcVal, srcFrac, srcCls)}
       </table>` +
     (ristiriita
       ? `<div style="margin-top:.5rem;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;font-size:.66rem;line-height:1.5;color:#8b3a10">
@@ -2286,13 +2309,16 @@ function renderDimensions(m){
          </div>`
       : '') +
     `<div style="margin-top:.45rem;font-size:.6rem;color:var(--muted);line-height:1.5">
-       Ei uutta laskentaa: SP §02 · SP_depth §10 · T₁₆₈ §11 · RP_margin §14.
+       Ei uutta laskentaa: SP §02 · SP_depth §10 · T₁₆₈ §11 · RP_margin §14 ·
+       SOURCE aci-entsoe-proxy <code>/balance</code> (sama kuin HEM §01b; SOURCE-luokat ASETETTUJA [A],
+       järjestys perusjaksossa 2015–, A72-data 1–2 vk viiveellä).
        DEPTH-kynnykset ovat <strong>ASETETTUJA [A]</strong>; SP:n ja T₁₆₈:n kynnykset ovat
        §06:n ja §11:n omia, ja CORRECTION-vyöhykkeet tulevat talven kalibroinnista
        (17 470 pistettä).<br>
        <strong>HUOM aikaperspektiivi:</strong> FREQUENCY ja DEPTH ovat osuuksia W168-ikkunassa,
        DURATION on pisin yhtäjaksoinen jakso, ja <strong>CORRECTION on MATALIN HETKI W72:ssa</strong>
        — ei nykyhetken arvo. Yksi neljännestunti riittää painamaan sen nollaan.
+       SOURCE on viikkotason varanto, ei teho: se kertoo mistä pitkä jakso katetaan, ei riittääkö tunti.
      </div></div>`;
 }
 
@@ -2958,7 +2984,19 @@ function buildW168(liveData) {
   return result;
 }
 
+// SOURCE-ulottuvuuden data (2.14.0). Haetaan erikseen, ei estä pääpolkua;
+// virhe näkyy kortissa "ei dataa", ei nollana.
+async function fetchBalance() {
+  try {
+    const r = await fetch('https://aci-entsoe-proxy.ruotsalainen-marko.workers.dev/balance');
+    const d = await r.json();
+    window.__balance = (r.ok && !d.error) ? d : {};
+  } catch (_) { window.__balance = {}; }
+  if (window.__lastW168) renderDimensions(window.__lastW168);
+}
+
 async function init() {
+  fetchBalance();
   const btn = document.getElementById('btnRefresh');
   btn.disabled = true;
   setStatus('loading', [['Tila', 'Ladataan…']]);
@@ -4156,14 +4194,15 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.13.1';
-const WEM_BUILD   = '2026-04-25d'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.14.0';
+const WEM_BUILD   = '2026-09-30a'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
 // olivat jo koodissa. Versio ei ollut koskaan paivittynyt vastaamaan
 // todellista tilaa. Lista jarjestetty uusin ensin (oli sekaisin).
 const WEM_CHANGES = [
+  '2.14.0: §01 ulottuvuuskorttiin viides kysymys SOURCE — tuonnin lähde. NO+SE-vesivarantojen poikkeama saman kalenteriviikon mediaanista (TWh) aci-entsoe-proxyn /balance-reitiltä, samasta lähteestä kuin HEM §01b; WEM ei laske tasetta itse. Peruste: 30.9.2026 kortti näytti kaikki neljä Suomen sisäistä ulottuvuutta, mutta talven kannalta tärkein luku (NO+SE −12,1 TWh, 2/11 vuotta alempana) oli EPP:n ulkopuolella ja vain kokeellisessa FS(p):ssä Norjan täyttöasteena. Luokka järjestyksestä perusjaksossa, kynnykset ASETETTUJA [A]. EI EPP:hen.',
   '2.13.1: Dokumentaatiotekstit paivitetty vastaamaan 2.13.0:n C_exp-mallia. §02:n DP_t-kuvaus, §07:n lampotiladata-kohta ja §01:n kesakauden huomautus kuvasivat yha vanhaa mallia (7000 MW + 200 MW/°C, "kalibroitu talven huippukulutukselle") - koodi ja teksti olivat ristiriidassa. Lisaksi kirjattu, etta §09:n backtest-periodeilta puuttuu tuulidata, joten niiden DP_t on systemaattisesti matalampi kuin live-arvo (tuulitermi 182 MW/GW puuttuu) - periodit eivat ole vertailukelpoisia keskenaan eivatka live-arvon kanssa.',
   '2.13.0: C_exp(T) korjattu kolmella tavalla, mitattu 1339 tunnista (8 x 168 h, 2024-2026): perustaso 7000 -> 7506 MW + liukuva +177 MW/vuosi, kulmakerroin 200 -> 153 MW/°C, uusi tuulitermi +182 MW/GW (hintaohjattu kuorma), TEMP_SIGMA 900 -> 700 (mitattu jaannoshajonta). Syy: takautuva EPP-laskenta paljasti, etta vanha malli oli harhainen molempiin suuntiin - kesalla DP_t=1.0 joka vuosi (heinakuu 2026 oli +1427 MW yli mallin, kesan peruskulutus on noussut 833 MW vuodesta 2022) ja talvella 2022-2023 DP_t=0 (malli odotti jopa 933 MW liikaa). Spot-hinta hylattiin selittajana: kerroin on positiivinen (endogeenisuutta, ei joustoa); tuuli toimii eksogeenisena instrumenttina samalle ilmiolle. HUOM: muutos katkaisee DP_t-sarjan toisen kerran (edellinen 2026-08), joten backtest-jaksot ennen ja jalkeen eivat ole vertailukelpoisia.',
   '2.12.4: §01 (posture), §05 (EPP-trendi), §06 (SP) ja §03 (kerrosrakenne) renderoidaan nyt uudelleen, kun NVE:n hydro_RF saapuu. Aiemmin vain §02, §10 ja §11 paivitettiin (korjaus 2026-08-01), joten §01 nayttI pysyvasti hydroRF=1.0-pohjaista EPP:ta: ulkopuolisen tarkastuksen havainto §01 0.573 vs §02/§06/§09/§11 0.587, molemmat merkitty W168 — ero ei ollut aikaleima- vaan renderointijarjestysvirhe. Tarkistettu samalla: EPP on rajattu Math.min(1, …), joten persistenssipreemio ei nosta maksimia yli 1.0 (vastaus samaan tarkastukseen).',
