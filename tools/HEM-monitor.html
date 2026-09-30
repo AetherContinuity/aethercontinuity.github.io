@@ -361,6 +361,7 @@ async function fetchNordicReservoirs(){
       const col=z.deviation_twh==null?'':z.deviation_twh<0?'color:var(--sy)':'';
       return `${label}: <b>${f(z.content_twh)} TWh</b> · mediaani ${f(z.median_twh)} · `+
         `<b style="${col}">${sg(z.deviation_twh)} TWh</b> · alempana ${z.years_lower}/${z.n_years} v`+
+        (z.week&&z.week!==d.zones?.NO?.week?` <span style="color:var(--sy)">(${z.week})</span>`:'')+
         (z.missing_years&&z.missing_years.length?` <span style="color:var(--muted)">(puuttuu ${z.missing_years.join(', ')})</span>`:'')+'<br>';
     };
     let html='';
