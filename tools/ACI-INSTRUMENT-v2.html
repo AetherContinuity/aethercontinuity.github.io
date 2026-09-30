@@ -54,6 +54,35 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .btn-refresh:hover{border-color:var(--accent);color:var(--accent);}
 .btn-refresh:disabled{opacity:.4;cursor:default;}
 
+/* ── Ryhmät ja historialinkit (2.16.0) ── */
+.grp-nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin:-1rem 0 2.2rem;}
+.grp-nav a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;}
+.grp-nav a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+.grp{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1rem;border-top:2px solid var(--ink);padding-top:.6rem;margin:3.5rem 0 2rem;scroll-margin-top:1rem;}
+.grp:first-of-type{margin-top:0;}
+.grp-lbl{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.12em;}
+.grp-tit{font-size:1.5rem;font-weight:500;}
+.grp-note{font-size:.85rem;font-style:italic;color:var(--muted);}
+.hlink{font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;white-space:nowrap;font-style:normal;}
+.hlink:hover{text-decoration:underline;}
+.epp-line{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .8rem;margin-top:.9rem;padding-top:.7rem;border-top:1px dashed var(--rule);}
+.epp-line .epp-val{font-size:1.35rem;}
+.epp-line-lbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);}
+.epp-line-note{font-size:.75rem;font-style:italic;color:var(--muted);}
+.epp-line-note a{color:var(--muted);}
+#dimCard table td{vertical-align:middle;}
+.epp-limits{margin:.8rem 0 1.2rem;border:1px solid var(--rule);border-left:3px solid #8b3a10;padding:.6rem .85rem;background:#fdfaf8;}
+.epp-limits summary{cursor:pointer;font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:#8b3a10;}
+@media (max-width:640px){
+  .grp-tit{font-size:1.25rem}.grp-nav{margin-top:-.5rem}
+  /* mobiili: ei vaakavieritystä sivulle (ennen 2.16.0 ~570 px ylivuoto) */
+  .page{padding-left:16px;padding-right:16px;overflow-wrap:break-word}
+  .page table{display:block;max-width:100%;overflow-x:auto}
+  .page code,.page b,.page strong,.page em,.hlink{overflow-wrap:anywhere;white-space:normal}
+  .page [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr 1fr !important}
+  .page [class*="-panel"],.page [class*="-card"],.page [class*="-grid"],.page canvas,.page svg{max-width:100%;min-width:0}
+}
+
 /* ── §01 Posture block ── */
 .posture-blk{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);}
 .posture-epp{display:flex;flex-direction:column;gap:.5rem;}
@@ -218,8 +247,8 @@ input.dc-range::-webkit-slider-thumb:hover{background:var(--accent);}
 .struct-warn{display:flex;align-items:flex-start;gap:.75rem;background:var(--bg-o);border:1px solid #c4a080;border-left:3px solid var(--so);padding:.85rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--muted);line-height:1.6;}
 .struct-warn strong{color:var(--ink);}
 .bounds-list{list-style:none;border-top:1px solid var(--rule);}
-.bounds-list li{padding:.7rem 0;border-bottom:1px solid var(--rule);font-size:.85rem;display:flex;gap:1rem;line-height:1.6;}
-.bounds-list li::before{content:'—';font-family:var(--mono);color:var(--muted);flex-shrink:0;}
+.bounds-list li{padding:.7rem 0 .7rem 1.6rem;border-bottom:1px solid var(--rule);font-size:.85rem;line-height:1.6;position:relative;}
+.bounds-list li::before{content:'—';font-family:var(--mono);color:var(--muted);position:absolute;left:0;top:.7rem;}
 
 
 /* ── §12 Transmission & Endurance ── */
@@ -257,8 +286,8 @@ canvas.s12-canvas{width:100%;height:80px;display:block;}
 .ref-id{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--accent);flex-shrink:0;min-width:60px;}
 
 /* ── Alert ── */
-.alert-blk{display:flex;align-items:flex-start;gap:.75rem;border:1px solid;border-left-width:3px;padding:.85rem 1rem;margin-bottom:1.5rem;opacity:0;transition:opacity .3s;pointer-events:none;}
-.alert-blk.on{opacity:1;pointer-events:auto;}
+.alert-blk{display:none;align-items:flex-start;gap:.75rem;border:1px solid;border-left-width:3px;padding:.85rem 1rem;margin-bottom:1.5rem;}
+.alert-blk.on{display:flex;} /* 2.16.0: piilotettu hälytys ei enää varaa tilaa */
 .alert-dot{width:6px;height:6px;border-radius:50%;margin-top:.4rem;flex-shrink:0;}
 .alert-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem;}
 .alert-body{font-size:.82rem;color:var(--muted);line-height:1.5;}
@@ -296,7 +325,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="dih-inst">Aether Continuity Institute &middot; ACI</div>
     <div class="dih-ser">Winter Endurance Monitor &middot; <span>ACI Open Grid Instrument</span> &middot; <span id="versionBadge">v2.7</span></div>
   </div>
-  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 188 · 191 · 181 · 105 · §12: DS 60</div>
+  <div class="dih-meta">Instrument &middot; <span id="hdrDate">2026</span> &middot; <a href="wem-historia.html" target="_blank" rel="noopener" style="color:var(--accent)">kehityshistoria ↗</a><br>Basis: WP-001 · DA-003 · WP-008<br>DS 124 · 192 · 188 · 191 · 181 · 105 · §12: DS 60</div>
 </div>
 
 <div class="page">
@@ -310,60 +339,26 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <button class="btn-refresh" id="btnRefresh" onclick="init()" disabled>&#9654;&nbsp; Päivitä</button>
   </div>
 
+  <nav class="grp-nav"><a href="#nyt">A · Tila nyt</a><a href="#rakenne">B · Rakenne</a><a href="#menetelma">C · Menetelmä ja rajaukset</a><a href="wem-historia.html" target="_blank" rel="noopener">Kehityshistoria ↗</a></nav>
+
+  
+  <div class="grp" id="nyt"><span class="grp-lbl">A</span><span class="grp-tit">Tila nyt</span><span class="grp-note">mitä järjestelmässä tapahtuu nyt ja mistä vaje katetaan</span></div>
+
   <!-- §01 Current posture -->
   <div style="margin-bottom:3rem;">
-    <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">Nykyinen posture — EPP (W168)</span></div>
-    <p class="snote">Endurance Pressure Proxy (EPP) on synteettinen indeksi [0–1], joka mittaa Suomen talvijärjestelmän monipäiväistä kestävyyttä. Korkea EPP viittaa kasvavaan riippuvuuteen ohuista marginaaleista. W168 = 168 tunnin liukuva ikkuna (7 vrk). Lähde: DS 124 (kulutus) · DS 192 (tuotanto) · DS 188 (ydin) · DS 191 (hydro) · DS 181 (tuuli).</p>
+    <div class="shdr"><span class="snum">&sect; 01</span><span class="stit">Nykytila — viisi kysymystä (W168)</span></div>
+    <p class="snote">Instrumentti ei kysy, riittääkö sähkö tällä tunnilla, vaan kasvaako Suomen talvijärjestelmän riippuvuus ohuista monipäiväisistä marginaaleista. Viisi kysymystä luetaan erikseen: ne eivät ole saman riskin komponentteja, eikä niitä lasketa yhteen.</p>
 
     <div class="posture-blk">
       <div class="posture-epp">
-        <div class="epp-val" id="eppVal">—</div>
-        <div class="epp-badge" id="eppBadge">
-          <div class="epp-badge-dot" id="eppDot"></div>
-          <span class="epp-badge-txt" id="eppTxt">—</span>
+        <div id="dimCard"></div>
+        <div class="epp-line">
+          <span class="epp-line-lbl">EPP v3</span>
+          <div class="epp-val" id="eppVal">—</div>
+          <div class="epp-badge" id="eppBadge"><div class="epp-badge-dot" id="eppDot"></div><span class="epp-badge-txt" id="eppTxt">—</span></div>
+          <span class="epp-line-note">jäädytetty historiallinen indeksi, ei pääluku &mdash; <a href="#epp">kaava ja rajoitteet</a></span>
         </div>
-        <div class="epp-sub" id="eppSub">W168 · v3+T+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈)</div>
-        <div id="eppSatWarn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin-top:.3rem;padding:.3rem .5rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;"></div>
-        <div id="dimCard" style="margin-top:1rem"></div>
-        <details style="margin-top:.8rem;border:1px solid var(--rule);border-left:3px solid #8b3a10;padding:.6rem .85rem;background:#fdfaf8">
-          <summary style="cursor:pointer;font-family:var(--mono);font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;color:#8b3a10">
-            EPP:n rakenteelliset rajoitteet &mdash; lue ennen tulkintaa
-          </summary>
-          <div style="margin-top:.6rem;font-size:.75rem;line-height:1.65">
-
-            <strong>1 &middot; FS ei n&auml;e CHP:t&auml;.</strong>
-            <code>FS = (ydin + vesi) / kulutus</code> &mdash; CHP ei ole osoittajassa. (2.15.0: hydro_RF poistettu EPP:n FS:st&auml;, ks. muutosloki.)
-            <code>ECI_semi = (ydin + vesi + CHP) / tuotanto</code> n&auml;kee sen, mutta se ei ole EPP:ss&auml;.<br>
-            Seuraus: <strong>&sect;10:n kuvaama CHP-eroosio ja SM-015:n mittaama Helsingin
-            &minus;650 MW eiv&auml;t n&auml;y EPP:ss&auml; lainkaan.</strong> Skenaariotaulukon rivit
-            <code>+3000 MW / &minus;30 %</code> ja <code>+3000 MW / &minus;40 %</code> antavat siksi
-            identtisen FS 42,8 %.<br>
-            <span style="color:var(--muted)">Kaavaa EI korjata: se katkaisisi aikasarjan. Ks. koodin
-            kommentti 2026-08-01 &mdash; FS-m&auml;&auml;ritelm&auml;n muutos "muutti hiljaa julkaistuja
-            historia-arvoja ilman versiointia" ja peruttiin samana p&auml;iv&auml;n&auml;.</span>
-
-            <br><br><strong>2 &middot; SP on saturoitunut.</strong> Kynnys on
-            <code>gap &gt; kulutus &times; 5 %</code>. Mitattu 9.9.2026: <strong>21 tuntia,
-            21 stressituntia (100 %)</strong>, gap 29&ndash;35 % eli kuusinkertaisesti kynnyksen yli
-            koko ajan. Mittari joka on p&auml;&auml;ll&auml; sadassa prosentissa ei erottele.
-            <code>SP_depth</code> erottelee &mdash; se on &sect;01:n ulottuvuuskortissa SP:n rinnalla.
-
-            <br><br><strong>3 &middot; DP_t on vakio.</strong> <code>1,000</code> kaikissa ikkunoissa;
-            <code>dp_t_raw</code> on 2,41 eli leikattu ykk&ouml;seen.
-            <strong>Viidennes EPP:st&auml; ei liiku.</strong>
-
-            <br><br><strong>4 &middot; Seuraus &mdash; EPP:n liikkuva osa on kapeampi kuin milt&auml; n&auml;ytt&auml;&auml;.</strong>
-            Nelj&auml;st&auml; komponentista yksi on vakio (DP_t), yksi l&auml;hes kyll&auml;stynyt (SP) ja yksi sokea
-            CHP:lle (FS). <strong>EPP liikkuu k&auml;yt&auml;nn&ouml;ss&auml; WR:n ja kulutuksen mukaan.</strong><br>
-            Se ei tee EPP:st&auml; v&auml;&auml;r&auml;&auml; &mdash; se tekee siit&auml; kapeamman ja tarkemmin rajatun kuin nelj&auml;n
-            komponentin summa antaa ymm&auml;rt&auml;&auml;. Lue &sect;01:n ulottuvuuskortti, &auml;l&auml; pelkk&auml;&auml; indeksi&auml;.
-
-            <br><br><span style="color:var(--muted);font-size:.68rem">
-            Kirjattu 2026-09-11 korjausinventaarion (K1&ndash;K4) perusteella. Mittausaineisto:
-            <code>data/wem-mittaukset-2026-09.json</code> (tiiviste d90ed9140b7e) ja
-            <code>data/rp-margin-talvi-2025-2026.json</code> (69a25d6a94ad).</span>
-          </div>
-        </details>
+        
       </div>
       <div class="posture-grid">
         <div class="pg-item">
@@ -385,9 +380,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="pg-lbl">Tuotanto (W24 ka)</div>
           <div class="pg-val" id="pgP">—</div>
           <div class="pg-desc">MW · DS 192</div>
-          <div style="grid-column:1/-1;margin-top:.5rem;padding:.6rem .75rem;background:#f5f5f0;border-left:2px solid var(--muted);font-size:.78rem;color:var(--muted);line-height:1.5;">
-            <strong style="color:var(--ink);">Huom:</strong> Luvut ovat liukuvia <strong>24h keskiarvoja</strong> (W24), eivät hetkellistä tehoa. Fingridin reaaliaikainen näyttö voi poiketa merkittävästi — molemmat ovat oikeita, eri asia mitataan. Fingridin hetkellinen arvo kuvaa yhden mittaushetken tehoa; WEM laskee tunnin keskiarvoista 24h tai 168h ikkunan.
-          </div>
+          
         </div>
         <div class="pg-item">
           <div class="pg-lbl">Import-gap (W24 ka)</div>
@@ -439,68 +432,173 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <div class="pg-val" id="pgCexp">—</div>
           <div class="pg-desc">MW · DP_t:n vertailuarvo tälle lämpötilalle</div>
         </div>
-      </div>
+      <div style="grid-column:1/-1;margin-top:.25rem;padding:.6rem .75rem;background:#f5f5f0;border-left:2px solid var(--muted);font-size:.78rem;color:var(--muted);line-height:1.5;">
+            <strong style="color:var(--ink);">Huom:</strong> Luvut ovat liukuvia <strong>24h keskiarvoja</strong> (W24), eivät hetkellistä tehoa. Fingridin reaaliaikainen näyttö voi poiketa merkittävästi — molemmat ovat oikeita, eri asia mitataan. Fingridin hetkellinen arvo kuvaa yhden mittaushetken tehoa; WEM laskee tunnin keskiarvoista 24h tai 168h ikkunan.
+          </div>
+        </div>
+        
     </div>
 
-    <!-- Alerts -->
-    <div class="alert-blk danger" id="alertBP">
-      <div class="alert-dot"></div>
-      <div>
-        <div class="alert-title">BP-like — kriittinen kestävyyspaine</div>
-        <div class="alert-body">EPP ylittää 0.75. Monipäiväinen endurance-kapasiteetti on kriittisesti ohut suhteessa jatkuvan kuorman sitoumuksiin. Tämä ei ole toiminnallinen hälytys — se on rakenteellinen diagnoosi. Viitteet: WP-001 (168h stress-ikkuna) · DA-003 (kerrosdivergenssi).</div>
-      </div>
-    </div>
-    <div class="alert-blk warn" id="alertEl">
-      <div class="alert-dot"></div>
-      <div>
-        <div class="alert-title">Elevated — kestävyyspaine kasvussa</div>
-        <div class="alert-body">EPP välillä 0.50–0.75. Stressipersistenssi ja tuontiriippuvuus koholla. Suositus: seuraa DA-001 varhaisvaroituslogiikan mukaisesti (concern trending toward danger). Viite: WP-008 (jatkuvan kuorman allokaatio).</div>
-      </div>
-    </div>
-    <div class="alert-blk danger" id="alertComp">
-      <div class="alert-dot"></div>
-      <div>
-        <div class="alert-title">Komponenttikohtainen hälytys (riippumaton EPP-kokonaisluokasta)</div>
-        <div class="alert-body" id="alertCompBody">—</div>
-      </div>
-    </div>
-    <div class="alert-blk" id="alertSummer" style="background:var(--bg-n,#eef2fa);border-color:#a8c0c4;border-left-color:var(--sg,#2d6b3a);">
-      <div class="alert-dot" style="background:var(--sg,#2d6b3a);"></div>
-      <div>
-        <div class="alert-title" style="color:var(--sg,#2d6b3a);">Kesäkauden huomautus</div>
-        <div class="alert-body">Yllä oleva BP-like/Elevated-lukema on todennäköisesti kesän kysyntäprofiilin (esim. helle, ilmastointikuorma) heijastumaa — EI talven Dunkelflaute-tyyppistä riskiä, jota tämä instrumentti on ensisijaisesti suunniteltu mittaamaan. <b>Päivitetty 2026-09-24 (v2.13.0):</b> C_exp(T) sisältää nyt perustason vuosittaisen kasvun (+177 MW/v) ja tuulitermin (+182 MW/GW), jotka mitattiin 1 339 tunnista. Aiemmin kesän DP_t oli 1,00 joka vuosi pelkästään siksi, että malli odotti liian pientä peruskulutusta — kesän 2026 kulutus oli 1 427 MW yli vanhan mallin. Kesälukemaa voi nyt lukea, mutta sään suunta (kylmä vs. kuuma) kannattaa silti tarkistaa: talven ja kesän korkea DP_t syntyy eri mekanismista.</div>
-      </div>
     </div>
 
-    <!-- Threshold zones -->
-    <div class="zone-blk">
-      <div class="zone-item"><div class="zone-val" style="color:var(--sg);">Normal</div><div class="zone-lbl" style="color:var(--sg);">0.00 – 0.25</div><div class="zone-rng">Endurance buffer riittävä</div></div>
-      <div class="zone-item"><div class="zone-val" style="color:var(--sy);">Tight</div><div class="zone-lbl" style="color:var(--sy);">0.25 – 0.50</div><div class="zone-rng">Marginaalit supistuvat</div></div>
-      <div class="zone-item"><div class="zone-val" style="color:var(--so);">Elevated</div><div class="zone-lbl" style="color:var(--so);">0.50 – 0.75</div><div class="zone-rng">Stressipersistenssi koholla</div></div>
-      <div class="zone-item"><div class="zone-val" style="color:var(--sr);">BP-like</div><div class="zone-lbl" style="color:var(--sr);">0.75 – 1.00</div><div class="zone-rng">Kriittinen — Black Period -paine (Dunkelflaute-tyyppinen tilanne)</div></div>
+  <!-- §04 Time series chart -->
+  <div class="chart-section">
+    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Aikasarjat — MW · tuntidatan kelluva ikkuna</span></div>
+    <div class="chart-controls">
+      <button class="cb" id="cbW24" onclick="setChartWindow(24)">W24</button>
+      <button class="cb on" id="cbW72" onclick="setChartWindow(72)">W72</button>
+      <button class="cb" id="cbW168" onclick="setChartWindow(168)">W168</button>
+    </div>
+    <div class="chart-wrap"><svg id="chMain" style="width:100%;height:100%;"></svg></div>
+    <div class="chart-legend">
+      <div class="lg-item"><div class="lg-line" style="background:var(--ink);"></div>Kulutus (DS 124)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sg);"></div>Kotimainen tuotanto (DS 192)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.7;"></div>Import-gap (kulutus − tuotanto)</div>
+      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.2;height:8px;"></div>Stressitunti (gap > 5% kulutuksesta)</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);line-height:1.9;padding-top:.5rem;border-top:1px solid var(--rule);">
+      MW ≠ MWh · Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa · Import-gap positiivinen = nettomaahantuonti · Stressitunti = kulutus &gt; 1.05 × tuotanto
     </div>
   </div>
 
-  <!-- §02 Core metrics table -->
-  <div class="metrics-section">
-    <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Core Metrics — W24 · W72 · W168</span></div>
-    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP v3+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈). P(T₁₆₈) = persistenssipreemio: +0.05 jos T₁₆₈≥6h, +0.12 jos T₁₆₈≥24h. DC ja NIR esitetään infona. Luokittelu jokaiselle ikkunalle erikseen.</p>
-    <table class="met-tbl" id="metTable">
-      <thead>
-        <tr>
-          <th style="width:28%;">Metriikka</th>
-          <th class="rh">W24</th>
-          <th class="rh">W72</th>
-          <th class="rh">W168</th>
-          <th class="rh">Paino</th>
-          <th class="rh">Luokka (W168)</th>
-        </tr>
-      </thead>
-      <tbody id="metBody">
-        <tr><td colspan="6" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:1.5rem .75rem;">Ladataan…</td></tr>
-      </tbody>
-    </table>
+  <div class="v4-section" id="s14">
+  <div class="shdr"><span class="snum">&sect; 14</span><span class="stit">Säätösähkömarkkinan stressi — RP</span></div>
+  <p class="snote">Mittaa sitä mitä EPP ei näe: <strong>mitä viimeisestä megawatista oikeasti maksettiin, ja kuinka monta niitä tarvittiin.</strong> Spot-hinta on listahinta, säätömarkkina on toteuma. Lähde: DS 244 (ylössäätöhinta) · DS 106 (alassäätöhinta) · DS 342 (aktivoitu mFRR, MW). 15 min resoluutio, W72-ikkuna.<br><br><strong>Miksi erillinen osio:</strong> 9.9.2026 klo 14:45–20:15 ylössäätöhinta oli 500–4 000 €/MWh yksitoista kertaa. Samana päivänä EPP näytti 0.566 "Elevated" ja Shortage Status 0. Kumpikaan ei näyttänyt mitään — kuusi tuntia 166:sta keskiarvoistuu näkymättömiin. §01:n oma varoitus sanoo tämän: <em>"Kokonais-EPP on lineaarinen summa — se voi keskiarvoistaa tämän näkymättömiin."</em> RP on se erillinen mittari jota varoitus edellyttää.</p>
+
+  <div id="rpCards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0"></div>
+  <div id="rpChartWrap" style="display:none;margin:1rem 0">
+    <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">
+      RP_margin W72 &mdash; jokainen 15 min piste. Vy&ouml;hykerajat talven kalibroinnista.
+    </div>
+    <canvas class="s12-canvas" id="rpChart" height="120" style="height:120px"></canvas>
+    <div style="display:flex;gap:1rem;font-size:.58rem;color:var(--muted);margin-top:.25rem;flex-wrap:wrap">
+      <span><span style="color:#2d5016">&#9644;</span> runsas &gt;60 %</span>
+      <span><span style="color:#8b3a10">&#9644;</span> normaali 40&ndash;60 %</span>
+      <span><span style="color:#b05010">&#9644;</span> kire&auml; 20&ndash;40 %</span>
+      <span><span style="color:#8b2500">&#9644;</span> niukka &lt;20 %</span>
+      <span style="margin-left:auto">Punainen viiva = 40 % (talvella alitettiin 0,32 % ajasta)</span>
+    </div>
   </div>
+  <div id="rpZones"></div>
+  <p class="snote" id="rpNote"></p>
+  <div style="margin-top:.8rem"><button class="btn" onclick="loadRP()">&#9654;&nbsp; Hae säätösähködata</button></div>
+</div>
+
+  <!-- §12 Transmission & Endurance Layer -->
+  <div class="section" id="s12">
+    <div class="shdr"><span class="snum">&sect; 12</span><span class="stit">Siirtoyhteydet &amp; Energiakestävyys — Transmission &amp; Endurance Layer</span></div>
+    <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60 (SE1→FI siirto), DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — Fingrid Open Data API. Latautuu 15s päähaun jälkeen.</p>
+
+    <div class="s12-progress-label" id="s12ProgressLabel">§12 latautuu — odota…</div>
+    <div class="s12-progress-wrap" id="s12ProgressWrap">
+      <div class="s12-progress-bar" id="s12ProgressBar"></div>
+    </div>
+
+    <div class="s12-grid">
+      <!-- TRR -->
+      <div class="s12-card">
+        <div class="s12-card-title">BCI &mdash; SE1→FI pullonkaulan sitovuus</div>
+        <div class="s12-value" id="s12TRR">—</div>
+        <div class="s12-sub">Sitovien tuntien osuus (hintaero &gt; 0,5 €/MWh, 72 h)</div>
+        <div class="s12-status s12-normal" id="s12TRRlabel">ladataan…</div>
+      </div>
+      <!-- P1 sisäinen siirto -->
+      <div class="s12-card">
+        <div class="s12-card-title">P1 &mdash; Sisäinen siirto pohj.→etelä</div>
+        <div class="s12-value" id="s12P1">—</div>
+        <div class="s12-sub">DS 30 · MW · W24 ka</div>
+        <div class="s12-status s12-normal" id="s12P1label">ladataan…</div>
+      </div>
+      <!-- Shortage Status -->
+      <div class="s12-card">
+        <div class="s12-card-title">Shortage Status &mdash; DS 336</div>
+        <div class="s12-value" id="s12SS">—</div>
+        <div class="s12-sub">0=normaali · 1–3=hälytys</div>
+        <div class="s12-status s12-normal" id="s12SSlabel">ladataan…</div>
+      </div>
+      <!-- Taajuus -->
+      <div class="s12-card">
+        <div class="s12-card-title">Taajuus &mdash; DS 177</div>
+        <div class="s12-value" id="s12Freq">—</div>
+        <div class="s12-sub">Hz · reaaliaikainen</div>
+        <div class="s12-status s12-normal" id="s12Freqlabel">ladataan…</div>
+      </div>
+      <!-- mFRR suunta -->
+      <div class="s12-card">
+        <div class="s12-card-title">mFRR-suunta &mdash; DS 369</div>
+        <div class="s12-value" id="s12mFRR">—</div>
+        <div class="s12-sub">Taajuuspohjalta arvioitu · Hz-poikkeama</div>
+        <div class="s12-status s12-normal" id="s12mFRRlabel">ladataan…</div>
+      </div>
+      <!-- Kumulatiivinen energiatasapaino -->
+      <div class="s12-card">
+        <div class="s12-card-title">Energia-alijäämä &mdash; 72h</div>
+        <div class="s12-value" id="s12CEB">—</div>
+        <div class="s12-sub">MWh · kumulatiivinen alijäämä</div>
+        <div class="s12-status s12-normal" id="s12CEBlabel">ladataan…</div>
+      </div>
+      <!-- Tuulivoima 72h ennuste -->
+      <div class="s12-card">
+        <div class="s12-card-title">Tuulivoima — 72h ennuste</div>
+        <div class="s12-value" id="s12WindFcst">—</div>
+        <div class="s12-sub">MW · DS 245 (+72h eteenpäin ennuste, 15min) · ka / min · DS 246 (24h, kerran/vrk) ei vielä haettu — huom: §11 Nordic-WR on −168h taaksepäin toteuma, eri suunta, ei suoraan vertailukelpoinen</div>
+        <div class="s12-status s12-normal" id="s12WindFcstLabel">ladataan…</div>
+      </div>
+      <!-- Tuulikato-riski -->
+      <div class="s12-card">
+        <div class="s12-card-title">Tuulikato-riski &mdash; 72h</div>
+        <div class="s12-value" id="s12WindRisk">—</div>
+        <div class="s12-sub">Tunteja &lt;500 MW / 72h ikkunassa</div>
+        <div class="s12-status s12-normal" id="s12WindRiskLabel">ladataan…</div>
+      </div>
+    </div>
+
+    <!-- SE1→FI siirto aikasarja -->
+    <div class="s12-chart-wrap">
+      <div class="s12-chart-title">SE1→FI fyysinen siirto W72 — DS 60 (MW · 15min) &nbsp;·&nbsp; <span id="s12ChartNote" style="color:var(--muted)">ladataan…</span></div>
+      <canvas class="s12-canvas" id="s12Chart" height="80"></canvas>
+    </div>
+
+    <div class="snote" style="margin-top:.75rem;">
+      <strong>Lähde:</strong> Fingrid Open Data (uusi API) · DS 60 SE1→FI reaaliaikainen (15min) · DS 30 P1-siirto · DS 336 shortage status · DS 177 taajuus · DS 369 mFRR-suunta
+&nbsp;·&nbsp; <em>Huom: datalogin sarake vaihtui TRR:stä BCI:hin 25.8.2026 — arvot eivät ole vertailukelpoisia yli tuon rajan. Sitä ennen TRR-arvot ennen 5.5.2026 on laskettu vanhalla NTC:llä (~1500 MW). Nykyinen NTC ~2300 MW Aurora Linen myötä (käyttöön 13.11.2025). Vanhat lukemat 103–105% vastaavat noin 65–70% uudella NTC:llä.</em> &nbsp;·&nbsp;
+      <strong>BCI:</strong> pullonkaulan sitovuus = niiden tuntien osuus, joina FI:n ja SE1:n day-ahead-hinnat eroavat yli 0,5 €/MWh (ENTSO-E). <em>Korvasi TRR:n 25.8.2026: Pohjoismaat siirtyivät NTC:stä flow-basediin 29.10.2024, eikä kahdenvälistä NTC:tä enää ole — TRR:n nimittäjää ei ollut olemassa. Lukemat ennen ja jälkeen eivät ole vertailukelpoisia.</em> &nbsp;·&nbsp;
+      <strong>Energia-alijäämä:</strong> Σ max(0, kulutus−tuotanto) 72h:ssa &nbsp;·&nbsp;
+      Yhteys: <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a>
+    </div>
+    <div class="s12-log-wrap" id="s12LogWrap">
+      <div class="s12-log-title">Datalog — viimeiset 10 hakua
+        <button class="s12-log-clear" onclick="s12ClearLog()">Tyhjennä</button>
+      </div>
+      <table class="s12-log-table">
+        <thead><tr><th>Aika</th><th>BCI</th><th>SE1 MW</th><th>Shortage</th><th>Taajuus Hz</th><th>CEB MWh</th><th>Tuuli ka/min</th><th>Tuulikato h</th><th>Hinta (W168 ka)</th></tr></thead>
+        <tbody id="s12LogBody"><tr><td colspan="7" style="color:var(--muted)">Ei vielä dataa — odota ensimmäistä hakua</td></tr></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="v4-section" id="s16">
+  <div class="shdr"><span class="snum">&sect; 16</span><span class="stit">Rajasiirrot &mdash; koko tase</span></div>
+  <p class="snote">
+    §12 mittaa vain FI&ndash;SE1:tä. Tämä näyttää <strong>kaikki neljä rajaa</strong> ja sen että
+    Suomi on <strong>siirtoreitti</strong>: se tuo pohjoisesta ja lännestä ja vie etelään Baltiaan.
+    Bruttovirta on noin kaksinkertainen nettoon nähden, eikä se näy missään yhdessä luvussa.<br><br>
+    <strong>Lähteet (fyysinen mittaus, ei kaupallinen):</strong>
+    <code>DS 87</code> FI&ndash;SE1 400 kV, 3 min &middot;
+    <code>DS 61</code> FI&ndash;SE3 varttiteho, 15 min &middot;
+    <code>DS 187</code> FI&ndash;NO 220 kV, 3 min &middot;
+    <code>DS 140</code> EstLink.<br>
+    Etumerkki Fingridin mukaan kaikissa korteissa, myös NETTO-kortissa: <strong>+ vienti Suomesta, &minus; tuonti Suomeen.</strong><br>
+    Kaikki luvut ovat <strong>W24-keskiarvoja</strong> (viim. 24 täyttä tuntia), laskettuna vain tunneilta jotka löytyvät kaikista kuudesta sarjasta. Fingridin oma näkymä on hetkellinen &mdash; lähellä mutta ei sama luku.
+  </p>
+  <div id="xbCards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:1rem 0"></div>
+  <p class="snote" id="xbNote"></p>
+  <div style="margin-top:.8rem"><button class="btn" onclick="loadXB()">&#9654;&nbsp; Hae rajasiirrot</button></div>
+</div>
+
+  
+  <div class="grp" id="rakenne"><span class="grp-lbl">B</span><span class="grp-tit">Rakenne</span><span class="grp-note">mikä muuttaa marginaaleja vuosien aikana</span></div>
 
   <!-- §03 Layer Composition -->
   <div class="layer-section">
@@ -610,108 +708,6 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     </div>
   </div>
 
-  <!-- §04 Time series chart -->
-  <div class="chart-section">
-    <div class="shdr"><span class="snum">&sect; 04</span><span class="stit">Aikasarjat — MW · tuntidatan kelluva ikkuna</span></div>
-    <div class="chart-controls">
-      <button class="cb" id="cbW24" onclick="setChartWindow(24)">W24</button>
-      <button class="cb on" id="cbW72" onclick="setChartWindow(72)">W72</button>
-      <button class="cb" id="cbW168" onclick="setChartWindow(168)">W168</button>
-    </div>
-    <div class="chart-wrap"><svg id="chMain" style="width:100%;height:100%;"></svg></div>
-    <div class="chart-legend">
-      <div class="lg-item"><div class="lg-line" style="background:var(--ink);"></div>Kulutus (DS 124)</div>
-      <div class="lg-item"><div class="lg-line" style="background:var(--sg);"></div>Kotimainen tuotanto (DS 192)</div>
-      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.7;"></div>Import-gap (kulutus − tuotanto)</div>
-      <div class="lg-item"><div class="lg-line" style="background:var(--sr);opacity:.2;height:8px;"></div>Stressitunti (gap > 5% kulutuksesta)</div>
-    </div>
-    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);line-height:1.9;padding-top:.5rem;border-top:1px solid var(--rule);">
-      MW ≠ MWh · Hetkellinen teho ei yksin ratkaise Black Period -ongelmaa · Import-gap positiivinen = nettomaahantuonti · Stressitunti = kulutus &gt; 1.05 × tuotanto
-    </div>
-  </div>
-
-  <!-- §04 EPP Trend -->
-  <div style="margin-bottom:3rem;">
-    <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
-    <p class="snote">Rullaava EPP lasketaan jokaiselle tunnille käyttäen 24h taaksepäin suuntautuvaa ikkunaa (W24-EPP) koko W168-datassa. Värikynnykset: Normal &lt; 0.25 · Tight 0.25–0.50 · Elevated 0.50–0.75 · BP-like &gt; 0.75.</p>
-    <p class="snote" style="color:var(--muted);font-size:.78rem;">Huom: trendikuvaajan viimeinen piste on EPP(W24) eli viimeisen 24h ikkuna. §01:n posture-arvo on EPP(W168) eli 7 vrk ikkuna. Ero on normaali — tyypillisesti enintään ±0.03. W24-arvo reagoi nopeammin lyhytaikaisiin muutoksiin; W168 kuvaa rakenteellista tilaa.</p>
-    <div class="epp-trend-wrap"><svg id="chEPP" style="width:100%;height:100%;"></svg></div>
-    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · v3+T: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 · Laskettu Fingrid-datasta</div>
-  </div>
-
-  <!-- §05 Stress Persistence -->
-  <div class="sp-section">
-    <div class="shdr"><span class="snum">&sect; 06</span><span class="stit">Stress Persistence — SP (D)</span></div>
-    <p class="snote">Stressipersistenssi mittaa osuuden tunneista, joissa kulutus ylittää kotimaisen tuotannon yli 5 %. Threshold-vyöhykkeet: Normal &lt; 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like &gt; 50 %. Viite: WP-001 (168h stress-ikkuna).</p>
-    <div class="sp-grid">
-      <div class="sp-blk" id="spW24">
-        <div class="sp-win">W24</div>
-        <div class="sp-val" id="sp24v">—</div>
-        <div class="sp-label" id="sp24l">—</div>
-        <div class="sp-hours" id="sp24h">—</div>
-      </div>
-      <div class="sp-blk" id="spW72">
-        <div class="sp-win">W72</div>
-        <div class="sp-val" id="sp72v">—</div>
-        <div class="sp-label" id="sp72l">—</div>
-        <div class="sp-hours" id="sp72h">—</div>
-      </div>
-      <div class="sp-blk" id="spW168">
-        <div class="sp-win">W168</div>
-        <div class="sp-val" id="sp168v">—</div>
-        <div class="sp-label" id="sp168l">—</div>
-        <div class="sp-hours" id="sp168h">—</div>
-      </div>
-    </div>
-
-    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;margin-top:.75rem;">
-      <thead>
-        <tr>
-          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">SP-vyöhyke</th>
-          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Osuus</th>
-          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Tulkinta</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sg);">Normal</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-family:var(--mono);">&lt; 15 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Endurance-kapasiteetti riittävä</td></tr>
-        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sy);">Tight</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">15–30 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Marginaalit supistuvat — seuraa</td></tr>
-        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--so);">Elevated</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">30–50 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Stressitunteja liikaa — DA-001 -kynnys</td></tr>
-        <tr><td style="padding:.5rem .6rem;color:var(--sr);">BP-like</td><td style="padding:.5rem .6rem;">&gt; 50 %</td><td style="padding:.5rem .6rem;font-size:.8rem;color:var(--muted);">Black Period -analogia — kriittinen (vrt. Dunkelflaute)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- §09 Backtest -->
-  <div class="bt-section">
-    <div class="shdr"><span class="snum">&sect; 09</span><span class="stit">EPP Backtest — signaalivalidointi 2022–2025</span></div>
-    <p class="snote"><b>Huom 2026-09-24:</b> periodeilta 2022–2024 puuttuu tuulidata, joten niiden C_exp jää ilman tuulitermiä (182 MW/GW) ja DP_t on systemaattisesti matalampi kuin live-arvossa. Periodit eivät siksi ole vertailukelpoisia live-lukeman kanssa. Backtest laskee EPP:n kahdeksalle historialliselle periodille. Historialliset periodit (2022–2024) käyttävät sisäänrakennettuja kuukausikeskiarvoja (rekonstruoitu: Fingrid statistiikka, Energiateollisuus, Statistics Finland) + synteettistä tuntiprofiilia. Nykyinen periodi käyttää live-dataa. Tulokset validoidaan tunnettuja stressijaksoja vastaan. Recall = kuinka moni tunnettu stressiperiodi tunnistettiin (EPP ≥ 0.50). Precision = kuinka suuri osa flagauksista oli oikeita. Huom: EPP on ex-post-laskenta — se ei ole ennuste.</p>
-    <div class="bt-controls">
-      <button class="btn-bt" id="btnBT" onclick="runBacktest()">&#9654;&nbsp; Aja backtest</button>
-      <div class="bt-progress" id="btProgress">8 periodita · DS 124 + DS 192 · ~20 s</div>
-    </div>
-    <div id="btDPRawPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
-    <div class="bt-timeline-wrap"><svg id="chBT" style="width:100%;height:100%;"><text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#c8bfad">Aja backtest nähdäksesi aikajana</text></svg></div>
-    <div id="btTableWrap"><table class="bt-table"><thead><tr>
-      <th>Periodi</th><th>Tapahtuma</th>
-      <th class="rh">EPP</th><th class="rh">Luokka</th>
-      <th class="rh">ECI</th><th class="rh">SP</th><th class="rh">DC</th>
-      <th class="rh">Pisteet</th>
-    </tr></thead><tbody id="btBody">
-      <tr><td colspan="8" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
-    </tbody></table></div>
-    <div class="bt-sig" id="btSig" style="display:none;">
-      <div class="bt-sig-card" style="opacity:.5;">
-        <div class="bt-sig-lbl">Recall / Precision / F1</div>
-        <div class="bt-sig-val" style="font-size:1rem;color:var(--muted);">POISTETTU 2026-08-01</div>
-        <div class="bt-sig-sub">Poistettu kokonaan, ei vain piilotettu (ks. §07 Rakenteellinen rajoite 3). Stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa. Palautetaan kun fyysinen kriteeri (DS 336, tehoreservi, ERAA LOLE) on kaytossa.</div>
-      </div>
-      <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub">2022-01 → 2024-12<br>OL3-vaikutus ECI:hin</div></div>
-    </div>
-    <div id="btF1Warn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin:.4rem 0;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;">
-      ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa, joten TP/FP/FN/TN-luokittelu ja Recall/Precision/F1 on poistettu kokonaan (ei vain nakymasta) kunnes kriteeri korvataan fyysisella mittarilla (esim. DS 336 shortage status, tehoreservin aktivoinnit, tai ERAA:n LOLE-tunnit).
-    </div>
-  </div>
-
   <!-- §10 Rakenteellinen paine -->
   <div class="struct-section">
     <div class="shdr"><span class="snum">&sect; 10</span><span class="stit">Rakenteellinen paine — CHP-purkaminen &amp; DC-kuorma</span></div>
@@ -722,7 +718,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <div><strong>Rakenteellinen divergenssi:</strong> Data center -kuorma on 24/7-litteä — se ei reagoi lämpötilaan. Tämä tarkoittaa, että C_exp(T)-mallimme aliarvioi todellista paineeta systemaattisesti kun DC-kapasiteetti kasvaa. Samanaikaisesti CHP-kapasiteetin purkaminen poistaa sen kerroksen, joka kompensoi juuri talvihuippua. Nämä muutokset liikkuvat samaan suuntaan.</div>
     </div>
 
-    <p class="snote"><strong>Huomio 2026-07 — tuulen ja auringon eriaikaiset investointisyklit, ei ristiriita:</strong> Suomen tuulivoimarakentaminen on hidastumassa 2026 (heikko taloustilanne, korkojen nousu, parhaat länsirannikon paikat jo käytetty) samaan aikaan kun teollisen mittakaavan aurinkovoima on kaksinkertaistanut kapasiteettinsa (n. 176→352 MW vuonna 2025). Tämä EI ole ristiriitainen signaali vaan sama taloudellinen paine (korot, epävarma kysynnän kasvuvauhti) heijastuu eri viiveellä: tuulen investointipäätöksestä valmistumiseen kuluu ~2 vuotta (2026:n hiljaisuus heijastaa n. 2024:n investointitaukoa, uudet päätökset 2026 näkyvät vasta 2027–2028), kun taas aurinko rakentuu nopeammin ja on hyötynyt paneelien globaalista hintaromahduksesta. <strong>WEM:n oman WR-komponentin kannalta olennaista:</strong> aurinkovoiman nopea kasvu EI vähennä talven Dunkelflaute-riskiä riippumatta sen lopullisesta kapasiteetista — Suomen talvella auringon säteily on lähes nolla viikkojen ajan, joten aurinko ei tarjoa mitään riskiä pienentävää diversifikaatiota juuri sinä ikkunana jota WEM mittaa. WR:n rajaus pelkkään tuulivoimaan pysyy siis metodologisesti perusteltuna myös jatkossa, vaikka kokonaistuotantorakenne monipuolistuu — kysymys ei ole "unohdimmeko auringon" vaan että talven endurance-kysymyksen kannalta sen unohtaminen on oikein.</p>
+    <p class="snote"><strong>Tuulen ja auringon eriaikaiset investointisyklit, ei ristiriita:</strong> Suomen tuulivoimarakentaminen on hidastumassa 2026 (heikko taloustilanne, korkojen nousu, parhaat länsirannikon paikat jo käytetty) samaan aikaan kun teollisen mittakaavan aurinkovoima on kaksinkertaistanut kapasiteettinsa (n. 176→352 MW vuonna 2025). Tämä EI ole ristiriitainen signaali vaan sama taloudellinen paine (korot, epävarma kysynnän kasvuvauhti) heijastuu eri viiveellä: tuulen investointipäätöksestä valmistumiseen kuluu ~2 vuotta (2026:n hiljaisuus heijastaa n. 2024:n investointitaukoa, uudet päätökset 2026 näkyvät vasta 2027–2028), kun taas aurinko rakentuu nopeammin ja on hyötynyt paneelien globaalista hintaromahduksesta. <strong>WEM:n oman WR-komponentin kannalta olennaista:</strong> aurinkovoiman nopea kasvu EI vähennä talven Dunkelflaute-riskiä riippumatta sen lopullisesta kapasiteetista — Suomen talvella auringon säteily on lähes nolla viikkojen ajan, joten aurinko ei tarjoa mitään riskiä pienentävää diversifikaatiota juuri sinä ikkunana jota WEM mittaa. WR:n rajaus pelkkään tuulivoimaan pysyy siis metodologisesti perusteltuna myös jatkossa, vaikka kokonaistuotantorakenne monipuolistuu — kysymys ei ole "unohdimmeko auringon" vaan että talven endurance-kysymyksen kannalta sen unohtaminen on oikein.</p>
 
     <div class="struct-grid">
       <!-- DC-kuormaparametri -->
@@ -765,8 +761,8 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);line-height:1.6;">
           <strong>Tuulivoima</strong> (Suomen uusiutuvat ry): asennettu ~9 430 MW (loppu 2025) · rakenteilla 2026 ~100 MW · vireillä 2027 ~250 MW · suunnitteilla julkaistu &gt;100 GW (varhaisen vaiheen hankkeita, suurin osa ei toteudu — vrt. §13 liittymäjono 250 GW vs. toteutunut ~0,5 GW/12kk). Rakentaminen hiipumassa — Suomen uusiutuvat ry:n oma arvio.<br><br>
           <strong>Aurinkovoima, teollinen</strong> (Suomen uusiutuvat ry, kesäkuu 2026): käytössä 842 MW (45 laitosta) · suunnitteilla julkaistu &gt;23 300 MW (tammikuu 2025 -tilasto, kasvava). Aurinko ei tarjoa talven Dunkelflaute-riskiä pienentävää vaikutusta (ks. §10 huomio), mutta kasvattaa kesän tuotantoylijäämää.<br><br>
-          <strong>Kaasumoottorivoimalat — säätökapasiteetti</strong> (EPV Energia / Tornion Voima, käyttäjän oma huomio 2026-08-05): neljä hanketta eri vaiheissa — <strong>Tornio</strong> (Röyttä) 43 MW <em>käytössä 1.4.2026</em> · <strong>Lappeenranta</strong> ~40–45 MW, investointipäätös tehty, valmis 2030 · <strong>Kotka</strong> (Mussalo) ~40–45 MW, esisopimus/luvat kesken (~2v) · <strong>Oripää</strong> ~40–45 MW, mainittu suunnitteilla. Yhteensä n. 160–180 MW jos kaikki toteutuu — nopea käynnistys, tarkoitettu tuuli/aurinko-vaihtelun ja pakkasjaksojen tasapainottamiseen, ei jatkuvaan peruskuormaan. Suoraan relevanttia WEM:n SP-komponentille (säätökapasiteetti lyhentää stressitunteja) mutta mittakaava pieni suhteessa OL3:n 1600 MW:iin tai yhteen Loviisa-yksikköön (507 MW).<br><br>
-          <strong>Politiikkavaste — Fossiilittoman jouston tukimekanismi</strong> (TEM, käyttäjän huomio 2026-08-08, Talouselämä/Antti Honkamaa): hallituksen esitystä valmistellaan säävarman joustokapasiteetin (mukaan lukien <strong>CHP-laitosten käyttöiän pidennykset ja tehonkorotukset</strong>, ei vain uusi tuotanto) tukemiseksi kilpailutuksen kautta. Tämä on ensimmäinen konkreettinen institutionaalinen vaste juuri siihen CHP-eroosiotrendiin jota tämä osio kuvaa yllä — mahdollinen osittainen vastavoima, ei kumoa. Tila (2026-08): säädösvalmistelu alkuvaiheessa, rahoitusmuoto (tariffi sähkönkäyttäjiltä, päätetty periaatteessa kevään 2025 puoliväliriihessä) yhä selvityksen alla, hallituksen tavoite ensimmäisille hauille "ensi vuonna" (2027) mutta laki ei ole vielä eduskunnassa. Työryhmän oma toukokuun 2025 loppuraportti tunnisti riskin: "pitkät, tuulettomat ja erityisen kylmät ajanjaksot" haastavat tehon riittävyyttä "kuluvan vuosikymmenen loppua kohden, kun CHP-kapasiteetin odotetaan vähenevän entisestään" — sama diagnoosi kuin WEM:n oma §10, eri lähteestä riippumattomasti. Ei muuta mitään laskentaa nyt — vaikutus (jos toteutuu) näkyisi vasta vuosien viiveellä CHP-osuustrendissä.<br><br>
+          <strong>Kaasumoottorivoimalat — säätökapasiteetti</strong> (EPV Energia / Tornion Voima, tilanne 8/2026): neljä hanketta eri vaiheissa — <strong>Tornio</strong> (Röyttä) 43 MW <em>käytössä 1.4.2026</em> · <strong>Lappeenranta</strong> ~40–45 MW, investointipäätös tehty, valmis 2030 · <strong>Kotka</strong> (Mussalo) ~40–45 MW, esisopimus/luvat kesken (~2v) · <strong>Oripää</strong> ~40–45 MW, mainittu suunnitteilla. Yhteensä n. 160–180 MW jos kaikki toteutuu — nopea käynnistys, tarkoitettu tuuli/aurinko-vaihtelun ja pakkasjaksojen tasapainottamiseen, ei jatkuvaan peruskuormaan. Suoraan relevanttia WEM:n SP-komponentille (säätökapasiteetti lyhentää stressitunteja) mutta mittakaava pieni suhteessa OL3:n 1600 MW:iin tai yhteen Loviisa-yksikköön (507 MW).<br><br>
+          <strong>Politiikkavaste — Fossiilittoman jouston tukimekanismi</strong> (TEM; Talouselämä 8/2026): hallituksen esitystä valmistellaan säävarman joustokapasiteetin (mukaan lukien <strong>CHP-laitosten käyttöiän pidennykset ja tehonkorotukset</strong>, ei vain uusi tuotanto) tukemiseksi kilpailutuksen kautta. Tämä on ensimmäinen konkreettinen institutionaalinen vaste juuri siihen CHP-eroosiotrendiin jota tämä osio kuvaa yllä — mahdollinen osittainen vastavoima, ei kumoa. Tila (2026-08): säädösvalmistelu alkuvaiheessa, rahoitusmuoto (tariffi sähkönkäyttäjiltä, päätetty periaatteessa kevään 2025 puoliväliriihessä) yhä selvityksen alla, hallituksen tavoite ensimmäisille hauille "ensi vuonna" (2027) mutta laki ei ole vielä eduskunnassa. Työryhmän oma toukokuun 2025 loppuraportti tunnisti riskin: "pitkät, tuulettomat ja erityisen kylmät ajanjaksot" haastavat tehon riittävyyttä "kuluvan vuosikymmenen loppua kohden, kun CHP-kapasiteetin odotetaan vähenevän entisestään" — sama diagnoosi kuin WEM:n oma §10, eri lähteestä riippumattomasti. Ei muuta mitään laskentaa nyt — vaikutus (jos toteutuu) näkyisi vasta vuosien viiveellä CHP-osuustrendissä.<br><br>
           <em>Karkea, vuositason kontekstitieto — ei syötetä EPP-laskentaan. Päivitetään manuaalisesti kun uutta tietoa löytyy, ei automaattisesti.</em>
         </div>
       </div>
@@ -820,7 +816,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     </div>
 
     <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">EPP W168 — skenaariovertailu (PROJEKTIO, ei live-havainto lukuun ottamatta "Nykytila"-korttia)</div>
-    <p class="snote" style="margin:-.4rem 0 .75rem"><strong>chpPct-parametrista (K6, kirjattu 2026-09-11):</strong>
+    <p class="snote" style="margin:-.4rem 0 .75rem"><strong>chpPct-parametrista:</strong>
       kaksi viimeistä riviä antavat <strong>identtisen FS 42,8 %</strong> vaikka CHP eroaa
       &minus;30 % / &minus;40 %. Syy ei ole virhe vaan m&auml;&auml;ritelm&auml;:
       <code>FS = (ydin + vesi) / kulutus</code> &mdash; <strong>CHP ei ole osoittajassa.</strong>
@@ -877,38 +873,220 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     </div>
   </div>
 
-  <!-- §07 Instrument boundaries -->
-  <div class="bounds-section">
-    <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
-    <ul class="bounds-list">
-      <li><strong>Aurora Line -huomio:
-Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marraskuussa 2025, puolitoista kuukautta etuajassa. Se lisäsi SE1→FI-kapasiteettia +800 MW (1 500 MW → ~2 300 MW). WEM §12 NTC päivitetty vastaavasti. Aurora Line 2 on erillinen projekti, vasta selvitysvaiheessa — selvitys valmistuu 2026.
+  <div class="v4-section" id="s17">
+  <div class="shdr"><span class="snum">&sect; 17</span><span class="stit">Sähkövarastot &mdash; vakaus, ei kestävyys</span></div>
+  <p class="snote">
+    Akut osallistuvat jo lyhytaikaiseen säätöön, mutta suurin osa kapasiteetista on reservimarkkinoilla
+    (FCR, FFR, aFRR), joissa lataus ja purku lähes kumoavat toisensa. Siksi nettoteho (§03, DS 398&minus;399)
+    on pieni suhteessa asennettuun tehoon. <strong>Stability &ne; endurance:</strong> 1&ndash;2 tunnin varasto
+    parantaa vakautta sekunneista tunteihin, mutta ei 168 tunnin Black Period -jakson kestävyyttä.
+    Siksi akut eivät ole EPP:ssä eivätkä FS:ssä.<br><br>
+    <strong>Lähteet:</strong> <code>DS 424</code> asennettu kapasiteetti (MW, &ge;1 MW varastot, 1 h, alkaen 11.3.2026) &middot;
+    <code>DS 398</code> purkuteho verkkoon &middot; <code>DS 399</code> latausteho akkuun (3 min, aina positiivisia).
+    Purkuaika 1&ndash;2 h on oletus [A] &mdash; Fingrid julkaisee tehon (MW), ei energiaa (MWh).
+  </p>
+  <div id="bessCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:1rem 0"></div>
+  <p class="snote" id="bessNote"></p>
+  <div style="margin-top:.8rem"><button class="btn" onclick="loadBESS()">&#9654;&nbsp; Hae akkudata</button></div>
+</div>
 
-SE1-vientimarginaali ei ole staattinen: Aurora Line lisäsi SE1→FI fyysistä siirtokapasiteettia, mutta SE1-alueen samanaikainen teollinen sähköistymispaine (Stegra 700 MW elektrolyysi Bodenissa, HYBRIT vetyteräs Gällivaressa) voi pitkällä aikavälillä pienentää käytettävissä olevaa vientimarginaalia erityisesti matalan hydro- ja tuulituotannon periodeina. WEM käsittelee SE1-kapasiteettia toistaiseksi eksogeenisena resurssina — malli ei diskonttaa Pohjois-Ruotsin kasvavaa omaa teollista kuormaa FS(p)- tai TRR-logiikassa. Kehitystarve tunnistettu.
-    Kehityssuunnitelma — ENTSO-E Transparency Platform (2026-07, ei viela toteutettu):
-    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria, mutta EI ole viela toteutettu. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). NTC 2 300 MW on fyysinen kapasiteetti — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
+  <div class="v4-section" id="s13">
+  <div class="shdr"><span class="snum">&sect; 13</span><span class="stit">Institutionaalinen taso — SM-015 Omistusrakennemonitori</span></div>
+  <p class="snote">WEM mittaa fyysisen tason (EPP, CHP-paine, DC-kuorma). §13 täydentää tätä institutionaalisella tasolla: kuka omistaa järjestelmän osat, miten investoidaan, miten silmukka kiihtyy. Päivitetään kvartaaleittain. <a href="/tools/sm015-ownership-monitor.html" style="color:#8b2500">Täysi monitori →</a></p>
 
-Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
-      <li><strong>Käsitteiden suhde — Black Period vs. Dunkelflaute:</strong> "Black Period" (WP-001) on WEM:n oma, järjestelmätason analyyttinen konstruktio: 168 tunnin ikkuna jossa endurance-marginaalit ovat kriittisen ohuet, mitattuna EPP:llä. "Dunkelflaute" on kansainvälisesti vakiintunut, meteorologis-energeettinen termi sille fyysiselle säätilalle (samanaikainen matala tuuli- ja aurinkotuotanto, usein kylmällä säällä) joka tyypillisimmin laukaisee Black Period -tyyppisen tilan. Ne eivät ole synonyymejä: Dunkelflaute on yksi — todennäköisin — Black Periodin syy, mutta Black Period voisi periaatteessa syntyä myös muista syistä (esim. laaja tuotantovajaus ilman tuulikatoa). WEM:n WR-komponentti (WindRisk) on lähin suora Dunkelflaute-indikaattori instrumentissa.</li>
-      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Kulutusmalli: <code>C_exp = 7 506 + 177·(vuosi−2024) + 153·max(0, 18−T) + 182·tuuli[GW]</code>, katto 13 500 MW. <strong>UUDELLEENKALIBROITU 2026-09-24</strong> (1 339 tuntia, 8 × 168 h vuosilta 2024–2026, Fingrid DS 124/75 + ERA5, R² 0,88): perustaso 7 000 → 7 506 MW ja liukuvaksi, kulmakerroin 200 → 153 MW/°C, uusi tuulitermi, TEMP_SIGMA 900 → 700 MW (mitattu jäännöshajonta). Syy: takautuva EPP-laskenta osoitti vanhan mallin harhaiseksi molempiin suuntiin — kesällä DP_t = 1,00 joka vuosi (peruskulutus on noussut 833 MW vuodesta 2022, datakeskusten litteä kuorma) ja talvella 2022–2023 DP_t = 0 (malli odotti jopa 933 MW liikaa). Tuulitermi kuvaa hintaohjattua kuormaa (sähkökattilat), joka kytkeytyy päälle halvoilla tunneilla; mitattu erikseen +122 MW/GW (2/2026) ja +204 MW/GW (1/2024) lämpötila vakioituna. Spot-hinta ei kelpaa selittäjäksi, koska sen kerroin on positiivinen — hinta nousee kun kulutus on suuri (endogeenisuutta, ei joustoa). Alle −5 °C:n kulmakerroin (76 MW/°C) jäi ennalleen: otoksessa ei ollut riittävästi kylmempiä tunteja. Aiempi kalibrointi 2026-08 korjasi vain kulmakertoimen (350 → 200), ei perustasoa. <b>Kumpikin kalibrointi katkaisee DP_t-sarjan</b>, joten jaksot 2026-08 ja 2026-09-24 välillä eivät ole vertailukelpoisia. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
-      <li><strong>Rakenteellinen rajoite 2 — Fingridin oma tuotantomuotojaottelu on suuntaa-antava:</strong> Fingrid ilmoittaa itse (fingrid.fi/sahkomarkkinat/sahkojarjestelman-tila), että reaaliaikamitatun tuotannon jaottelu tuotantomuodoittain (mukaan lukien DS 201/202) perustuu Energiaviraston voimalaitosrekisteriin ja tehdään laitoksen <em>pääasiallisen</em> tuotantomuodon mukaan — "lukemat ovat suuntaa-antavia". Mittaamaton tuotanto (mukaan lukien nopean häiriöreservin varavoimalaitokset) sisältyy kokonaan kohtaan "muu tuotanto", ei erottele tuotantomuotoa. WEM:n DS 201/202 -pohjainen CHP-laskenta (ks. §03 debug-paneeli) on siis sisäisesti oikein laskettu sille datalle jota Fingrid tarjoaa, mutta itse lähdedatan tuotantomuotojaottelu ei ole tarkka mittaus — se on hyväksytty epätarkkuus Fingridin oman ilmoituksen mukaan, ei WEM:n oma approksimaatiovirhe.</li>
-      <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
-      <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
-      <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
-      <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
-      <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
-      <li><strong>Backtest käyttää synteettistä rekonstruktiota tietoisesti, ei väliaikaisena varapolkuna:</strong> useiden istuntojen ja kymmenien tuntien yritysten jälkeen (verkkoasetukset, erillinen hakutyökalu, Fingridin oma avoin data -latauslomake — kaikki kohtasivat aitoja, dokumentoituja esteitä: resoluutioerot 3 min vs. tunti vs. 15 min 13.6.2023 jälkeen, proxyn sivutusparametrin arvaamattomuus, mobiiliselaimen tausta-ajastimen hidastus pitkien hakujen aikana, Fingridin dataset-ID:iden muuttuminen) päätettiin luopua oikean historiadatan hakuyrityksestä tällä hetkellä. Backtest-periodit 2022–2024 käyttävät sisäänrakennettuja kuukausikeskiarvoja + synteettistä tuntiprofiilia — tämä on nyt ensisijainen ja ainoa polku, ei väliaikainen. Hakulogiikka (fetchHistorical, fetchRealHistoricalPeriod) on säilytetty koodissa testattuna mutta kutsumattomana, jos päätös joskus muuttuu.</li>
-      <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
-      <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS(p):ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
-      <br><br><strong>Loviisan vuosihuollot (lisätty 2026-07-29, käyttäjän oma huomio; KORJATTU 2026-08-04, käyttäjän uusi huomio + vahvistettu tuoreista uutislähteistä):</strong> Fortumin Loviisan voimalaitoksen kaksi yksikköä (LO1 ~507 MW, LO2 ~507 MW, yhteensä ~1000 MW) puuttuivat aiemmin tästä listasta kokonaan, vaikka ne ovat yhtä lailla osa firm-kapasiteettia. Fortumin oman julkisen aikataulun mukaan (fortum.com, haettu 2026-07-29): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10.
-      <br><br><strong>VIRHE KORJATTU:</strong> aiempi versio väitti "eri ikkuna kuin OL3:n marraskuu... kaikki osuvat elo-lokakuulle... ei koskaan samanaikaisesti" — tämä oli VÄÄRIN. OL3:n oma huoltoikkuna on 10.9.–30.10.2026 (ei marraskuu), ja se menee suoraan päällekkäin MOLEMPIEN Loviisa-yksiköiden kanssa: LO2 (2.8.–21.9.) päällekkäin 10.–21.9., LO1 (26.9.–18.10.) päällekkäin koko 26.9.–18.10. Tuoreet uutislähteet (Uusi Suomi 2026-08, "Loviisan ydinvoimaloiden ja Olkiluoto 3:n vuosihuollot ajoittuvat osittain samaan aikaan") vahvistavat: reilun kuukauden ajan syksyllä 2026 yli 2100 MW ydinvoimakapasiteetista on poissa yhtä aikaa — hieman yli puolet Suomen ~4400 MW:n ydinvoimakapasiteetista jää käyttöön tänä ikkunana. Tämä on suoraan relevantti WEM:n omalle FS-komponentille: jos backtest tai skenaariotyö joskus kattaa syyskuun 2026, FS(p) laskisi automaattisesti tuon pudotuksen live-datasta, mutta STAATTINEN dokumentaatioteksti (talla ollut) ei saa vaittaa paallekkaisyyden puuttuvan kun se on todistetusti olemassa. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus).</li>
-      <br>
-    </ul>
-  <div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.7rem 1rem;margin:1rem 0;font-size:.82rem;font-family:'EB Garamond',Georgia,serif">
-    <strong style="font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500;display:block;margin-bottom:.4rem">Metodologinen huomio — abstraktiotaso</strong>
-    <p style="margin-bottom:.5rem">WEM toimii 1–2 abstraktiotasoa yli PLEXOS- tai ENTSO-E-tyyppisen sähköjärjestelmäsimuloinnin. EPP ei ole MW eikä MWh — se on synteettinen endurance-indeksi joka kuvaa järjestelmän toimintamarginaalia ilman yksikkösitoumusta. Tämä on tarkoituksellinen valinta: instrumentti on suunniteltu referenssipisteeksi institutionaaliselle päätöksenteolle, ei korvaamaan operatiivista kapasiteettimallinnusta.</p>
-    <p style="margin:0">Insinööritason muunnos: DA-001 §03 tarjoaa EPP-signaalien kytkennän MW-muuttujiin. ENTSO-E ERAA on ainoa virallinen kapasiteettiriittävyysanalyysi. WEM ja ERAA mittaavat samoja ilmiöitä eri abstraktiotasolla — ne eivät ole korvattavissa toisillaan.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0">
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Kuntakaupat / v (3v ka)</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">6.3</div>
+      <div style="font-size:.72rem;color:#666">Kynnys &gt;5 · ↑ kiihtyvä</div>
+    </div>
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Elenia investointiaste</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">0.72</div>
+      <div style="font-size:.72rem;color:#666">&lt;0.8 lypsää verkkoa · ↓</div>
+    </div>
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">CHP-eroosio (yht.)</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">−650 MW</div>
+      <div style="font-size:.72rem;color:#666">Helsinki+Porvoo+muut · jatkuu</div>
+    </div>
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Liittymäjono (kyselyt)</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">250 GW</div>
+      <div style="font-size:.72rem;color:#666">Toteutunut ~0.5 GW/12kk</div>
+    </div>
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">PE-omistus jakelusta</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#c8960c">~34%</div>
+      <div style="font-size:.72rem;color:#666">Arvio · ↑ kasvava</div>
+    </div>
+
+    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Silmukan katkaisijat</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#c8960c">1/3</div>
+      <div style="font-size:.72rem;color:#666">Polhem/Pori · Jousto 0 · Kunnallist. 0</div>
+    </div>
+
   </div>
+
+  <p style="font-family:'DM Mono',monospace;font-size:.68rem;color:#666;margin-top:.5rem">
+    Kokonaisarvio Q2/2026: <strong style="color:#8b2500">VAHVA RAKENTEELLINEN JÄNNITE</strong> — 
+    kaikki 8 SM-015-silmukan askelta aktiivisia.<br>
+    <strong>Seurannassa (2026-08):</strong> TEM valmistelee fossiilittoman jouston tukimekanismia (CHP-käyttöiän pidennykset/tehonkorotukset, kilpailutus) — mahdollinen 4. silmukan katkaisija, mutta laki ei ole vielä eduskunnassa, ei lasketa mukaan "1/3"-lukuun ennen konkreettista rahoituspäätöstä. Ks. §10.<br>
+    Päivitetään kvartaaleittain manuaalisesti julkisista lähteistä.<br>
+    Institutionaalinen taso täydentää EPP-fysiikkaa — ei korvaa sitä.
+  </p>
+</div>
+
+  
+  <div class="grp" id="menetelma"><span class="grp-lbl">C</span><span class="grp-tit">Menetelmä ja rajaukset</span><span class="grp-note">miten luvut lasketaan, mitä ne eivät kerro, validointi</span></div>
+
+  <!-- EPP v3 (jäädytetty) -->
+  <div id="epp" style="margin-bottom:3rem;">
+    <div class="shdr"><span class="snum">EPP&nbsp;v3</span><span class="stit">Endurance Pressure Proxy — jäädytetty historiallinen indeksi</span></div>
+    <p class="snote">Synteettinen indeksi [0–1]. Lasketaan ja arkistoidaan vertailukelpoisuuden vuoksi, mutta sitä ei käytetä päälukuna.
+    Nykytila luetaan §01:n kortista.</p>
+    <div class="epp-sub" id="eppSub" style="margin-bottom:.6rem">W168 · v3+T+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈)</div>
+    <div id="eppSatWarn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin-top:.3rem;padding:.3rem .5rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;"></div>
+    <details class="epp-limits" open>
+          <summary>EPP:n rakenteelliset rajoitteet &mdash; miksi indeksi on jäädytetty</summary>
+          <div style="margin-top:.6rem;font-size:.8rem;line-height:1.65">
+            <strong>1 &middot; FS ei näe CHP:tä.</strong> <code>FS = (ydin + vesi) / kulutus</code>.
+            <code>ECI_semi</code> näkee CHP:n, mutta se ei ole EPP:ssä. &sect;10:n CHP-eroosio ja SM-015:n Helsingin
+            &minus;650 MW eivät näy EPP:ssä lainkaan.<br><br>
+            <strong>2 &middot; SP saturoituu.</strong> Kynnys <code>gap &gt; kulutus &times; 5 %</code> on rakenteellisella tuonnilla
+            melkein aina päällä (9.9.2026: 21/21 tuntia, gap 29&ndash;35 %). Mittari, joka on päällä sadassa prosentissa, ei erottele.<br><br>
+            <strong>3 &middot; Persistenssipreemio laskee saman kynnyksen toiseen kertaan.</strong> P(T₁₆₈) syntyy SP:n
+            stressitunneista. SP ja preemio yhdessä voivat olla yli puolet indeksistä.<br><br>
+            <strong>4 &middot; DP_t on leikattu.</strong> Arvo rajataan välille [0,&nbsp;1] ja on usein jommassakummassa päässä
+            (backtestissä 4/8 periodia lattialla). Skenaariotaulukon hyppy +500 → +1500 MW DC johtuu pääosin DP_t:n
+            siirtymästä 0 → 1.<br><br>
+            <strong>5 &middot; WR on väärän merkkinen juuri tuulikadossa.</strong> WR on tuulen osuus <em>toteutuneesta</em>
+            tuotannosta. Kun tuuli loppuu, WR laskee ja vetää EPP:tä alas &mdash; siinä tilanteessa, jota varten indeksi on rakennettu.<br><br>
+            <strong>6 &middot; Ei kohdemuuttujaa.</strong> Painot 0,30/0,30/0,20/0,20 on valittu, ei estimoitu, ja luokkarajat asetettu.
+            Validointi poistettiin, koska vertailukriteeri oli väärä. Yhdistelmäindeksiä ei voi kalibroida ilman lopputulosta.<br><br>
+            <strong>Siksi:</strong> EPP v3 lasketaan ja arkistoidaan historiallisena sarjana, mutta kaavaa ei muuteta eikä sitä käytetä
+            päälukuna. Uusi yhdistelmä tehdään vain ennakkorekisteröitynä fyysistä lopputulosta vastaan
+            (RP_margin &lt; 20 %, ylössäätö &ge; 500 €/MWh, DS 336 &ne; 0 tai tehoreservin aktivointi).<br>
+            <span style="color:var(--muted);font-size:.72rem">Mittausaineisto: <code>data/wem-mittaukset-2026-09.json</code> (d90ed9140b7e),
+            <code>data/rp-margin-talvi-2025-2026.json</code> (69a25d6a94ad).</span> <a class="hlink" href="wem-historia.html#epp-jaadytys" target="_blank" rel="noopener">historia&nbsp;↗</a>
+          </div>
+        </details>
+    <!-- Alerts -->
+    <div class="alert-blk danger" id="alertBP">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">BP-like — kriittinen kestävyyspaine</div>
+        <div class="alert-body">EPP ylittää 0.75. Monipäiväinen endurance-kapasiteetti on kriittisesti ohut suhteessa jatkuvan kuorman sitoumuksiin. Tämä ei ole toiminnallinen hälytys — se on rakenteellinen diagnoosi. Viitteet: WP-001 (168h stress-ikkuna) · DA-003 (kerrosdivergenssi).</div>
+      </div>
+    </div>
+    <div class="alert-blk warn" id="alertEl">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">Elevated — kestävyyspaine kasvussa</div>
+        <div class="alert-body">EPP välillä 0.50–0.75. Stressipersistenssi ja tuontiriippuvuus koholla. Suositus: seuraa DA-001 varhaisvaroituslogiikan mukaisesti (concern trending toward danger). Viite: WP-008 (jatkuvan kuorman allokaatio).</div>
+      </div>
+    </div>
+    <div class="alert-blk danger" id="alertComp">
+      <div class="alert-dot"></div>
+      <div>
+        <div class="alert-title">Komponenttikohtainen hälytys (riippumaton EPP-kokonaisluokasta)</div>
+        <div class="alert-body" id="alertCompBody">—</div>
+      </div>
+    </div>
+    <div class="alert-blk" id="alertSummer" style="background:var(--bg-n,#eef2fa);border-color:#a8c0c4;border-left-color:var(--sg,#2d6b3a);">
+      <div class="alert-dot" style="background:var(--sg,#2d6b3a);"></div>
+      <div>
+        <div class="alert-title" style="color:var(--sg,#2d6b3a);">Kesäkauden huomautus</div>
+        <div class="alert-body">Lukema voi heijastaa kesän kysyntäprofiilia (helle, jäähdytyskuorma) eikä talven tuulikatoriskiä, jota instrumentti on suunniteltu mittaamaan. Näytetään vain, kun W168-keskilämpötila on vähintään 15 °C ja DP_t on koholla — muuten huomautus ei päde. <a class="hlink" href="wem-historia.html#kesa" target="_blank" rel="noopener">historia&nbsp;↗</a></div>
+      </div>
+    </div>
+
+    <!-- Threshold zones -->
+    <div class="zone-blk">
+      <div class="zone-item"><div class="zone-val" style="color:var(--sg);">Normal</div><div class="zone-lbl" style="color:var(--sg);">0.00 – 0.25</div><div class="zone-rng">Endurance buffer riittävä</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--sy);">Tight</div><div class="zone-lbl" style="color:var(--sy);">0.25 – 0.50</div><div class="zone-rng">Marginaalit supistuvat</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--so);">Elevated</div><div class="zone-lbl" style="color:var(--so);">0.50 – 0.75</div><div class="zone-rng">Stressipersistenssi koholla</div></div>
+      <div class="zone-item"><div class="zone-val" style="color:var(--sr);">BP-like</div><div class="zone-lbl" style="color:var(--sr);">0.75 – 1.00</div><div class="zone-rng">Kriittinen — Black Period -paine (Dunkelflaute-tyyppinen tilanne)</div></div>
+    </div>
+  
+  </div>
+
+  <!-- §02 Core metrics table -->
+  <div class="metrics-section">
+    <div class="shdr"><span class="snum">&sect; 02</span><span class="stit">Core Metrics — W24 · W72 · W168</span></div>
+    <p class="snote">Jokainen metriikka lasketaan kolmelle liukuvalle ikkunalle: W24 (viimeisin vuorokausi), W72 (3 vrk), W168 (7 vrk). EPP v3+P: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 + P(T₁₆₈). P(T₁₆₈) = persistenssipreemio: +0.05 jos T₁₆₈≥6h, +0.12 jos T₁₆₈≥24h. DC ja NIR esitetään infona. Luokittelu jokaiselle ikkunalle erikseen.</p>
+    <table class="met-tbl" id="metTable">
+      <thead>
+        <tr>
+          <th style="width:28%;">Metriikka</th>
+          <th class="rh">W24</th>
+          <th class="rh">W72</th>
+          <th class="rh">W168</th>
+          <th class="rh">Paino</th>
+          <th class="rh">Luokka (W168)</th>
+        </tr>
+      </thead>
+      <tbody id="metBody">
+        <tr><td colspan="6" style="font-family:var(--mono);font-size:.7rem;color:var(--muted);padding:1.5rem .75rem;">Ladataan…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §04 EPP Trend -->
+  <div style="margin-bottom:3rem;">
+    <div class="shdr"><span class="snum">&sect; 05</span><span class="stit">Endurance Pressure Proxy — EPP historiatrendi (W168)</span></div>
+    <p class="snote">Rullaava EPP lasketaan jokaiselle tunnille käyttäen 24h taaksepäin suuntautuvaa ikkunaa (W24-EPP) koko W168-datassa. Värikynnykset: Normal &lt; 0.25 · Tight 0.25–0.50 · Elevated 0.50–0.75 · BP-like &gt; 0.75.</p>
+    <p class="snote" style="color:var(--muted);font-size:.78rem;">Huom: trendikuvaajan viimeinen piste on EPP(W24) eli viimeisen 24h ikkuna. §01:n posture-arvo on EPP(W168) eli 7 vrk ikkuna. Ero on normaali — tyypillisesti enintään ±0.03. W24-arvo reagoi nopeammin lyhytaikaisiin muutoksiin; W168 kuvaa rakenteellista tilaa.</p>
+    <div class="epp-trend-wrap"><svg id="chEPP" style="width:100%;height:100%;"></svg></div>
+    <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.35rem;">Synteettinen indeksi [0–1] · v3+T: (1−FS)×0.30 + SP×0.30 + DP_t×0.20 + WR×0.20 · Laskettu Fingrid-datasta</div>
+  </div>
+
+  <!-- §05 Stress Persistence -->
+  <div class="sp-section">
+    <div class="shdr"><span class="snum">&sect; 06</span><span class="stit">Stress Persistence — SP (D)</span></div>
+    <p class="snote">Stressipersistenssi mittaa osuuden tunneista, joissa kulutus ylittää kotimaisen tuotannon yli 5 %. Threshold-vyöhykkeet: Normal &lt; 15 % · Tight 15–30 % · Elevated 30–50 % · BP-like &gt; 50 %. Viite: WP-001 (168h stress-ikkuna).</p>
+    <div class="sp-grid">
+      <div class="sp-blk" id="spW24">
+        <div class="sp-win">W24</div>
+        <div class="sp-val" id="sp24v">—</div>
+        <div class="sp-label" id="sp24l">—</div>
+        <div class="sp-hours" id="sp24h">—</div>
+      </div>
+      <div class="sp-blk" id="spW72">
+        <div class="sp-win">W72</div>
+        <div class="sp-val" id="sp72v">—</div>
+        <div class="sp-label" id="sp72l">—</div>
+        <div class="sp-hours" id="sp72h">—</div>
+      </div>
+      <div class="sp-blk" id="spW168">
+        <div class="sp-win">W168</div>
+        <div class="sp-val" id="sp168v">—</div>
+        <div class="sp-label" id="sp168l">—</div>
+        <div class="sp-hours" id="sp168h">—</div>
+      </div>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;margin-top:.75rem;">
+      <thead>
+        <tr>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">SP-vyöhyke</th>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Osuus</th>
+          <th style="border-bottom:1px solid var(--rule);padding:.4rem .6rem;text-align:left;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;">Tulkinta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sg);">Normal</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-family:var(--mono);">&lt; 15 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Endurance-kapasiteetti riittävä</td></tr>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--sy);">Tight</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">15–30 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Marginaalit supistuvat — seuraa</td></tr>
+        <tr><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);color:var(--so);">Elevated</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);">30–50 %</td><td style="padding:.5rem .6rem;border-bottom:1px solid var(--paper-3);font-size:.8rem;color:var(--muted);">Stressitunteja liikaa — DA-001 -kynnys</td></tr>
+        <tr><td style="padding:.5rem .6rem;color:var(--sr);">BP-like</td><td style="padding:.5rem .6rem;">&gt; 50 %</td><td style="padding:.5rem .6rem;font-size:.8rem;color:var(--muted);">Black Period -analogia — kriittinen (vrt. Dunkelflaute)</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- §11 EPP v4 -->
@@ -919,15 +1097,14 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
     <div class="struct-warn" style="border-left-color:var(--sg);">
       <div style="color:var(--sg);font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;flex-shrink:0;">◆</div>
       <div>
-        <strong>Arkkitehtuurinen virstanpylväs 2026-07 — Fingrid-keskeisestä instrumentista alueelliseksi observatorioksi:</strong> Nordic-WR v0:n käyttöönotto (ENTSO-E Transparency Platform) merkitsee laadullista muutosta WEM:n omassa arkkitehtuurissa. Aiemmin kaikki ydinmittarit (EPP, ECI, SP, FS) perustuivat yksinomaan Suomen järjestelmään (Fingrid Open Data). Nyt datapipeline erottelee kansallisen ja alueellisen tason:
+        <strong>Kansallinen ja alueellinen taso:</strong> ydinmittarit (EPP, ECI, SP, FS) perustuvat Fingridin dataan; ENTSO-E, Open-Meteo ja A72-vesivarannot tuovat alueellisen tason:
         <ul style="margin:.5rem 0 .5rem 1.2rem;padding:0;">
           <li><strong>Fingrid Open Data</strong> → Suomen EPP, §12 Transmission, ECI/SP/FS (kansallinen taso, muuttumaton ydin)</li>
           <li><strong>ENTSO-E Transparency Platform</strong> → Nordic-WR, rajasiirrot, Pohjoismaiden tuulivoima, tulevat Nordic-indikaattorit (alueellinen konteksti, uusi 2026-07)</li>
           <li><strong>Open-Meteo</strong> → lämpötilamalli (DP_t)</li>
           <li><strong>ENTSO-E A72 (/balance)</strong> → hydro_RF (FS(p), FI) ja SOURCE (NO+SE, §01)</li>
         </ul>
-        Tämä mahdollistaa kolme asiaa joita puhtaasti Fingrid-pohjainen malli ei voinut: (1) erottaa onko matala tuuli paikallinen suomalainen ilmiö vai koko Pohjolan Dunkelflaute (Nordic-WR), (2) havaita SE1:n kasvava teollinen kuorma (Stegra/HYBRIT) SUORAAN ennen kuin se näkyy Suomen tuontimarginaalin kiristymisenä, (3) <strong>PYRKIÄ</strong> validoimaan WEM:n omia tuloksia kahdella riippumattomalla lähteellä rinnakkain — <strong>KORJATTU 2026-08-01 (käyttäjän oma live-havainto):</strong> FI-Fingrid vs. FI-ENTSO-E-ristiintarkistus EI ANNA VAKIOSUHDETTA ikkunoiden yli (W24 +3,7%, W72 +76%, W168 +96% — ei ~4,5% kuten aiemmin väitettiin yhtenä lukuna). Suhteen kasvu ikkunan pidentyessä viittaa MTU-eroon (vartti vs. tunti), pistemäärän vs. aikaleiman mukaiseen ikkunointiin, ja/tai UTC/EEST-aikavyöhyke-eroon (kesällä 3h) — ei pelkkään aggregaattimääritelmän eroon. Ristiintarkistus ei toistaiseksi ole luotettava missään ikkunassa paitsi ehkä W24:ssä; korjaus (UTC-ankkurointi, tuntiresamplaus, aikaleimadedupointi) ei ole vielä toteutettu.</strong> Seuraavat kehitysaskeleet (esim. Nordic ECI, Nordic Endurance Pressure) ovat nyt luonteeltaan pääosin analytiikkaa olemassa olevan datapohjan päällä, ei uusia rajapintoja — datalähdepohja (Fingrid + ENTSO-E + Open-Meteo + NVE) kattaa jo sekä Suomen että laajemman pohjoismaisen järjestelmän keskeiset rakenteelliset tekijät.
-      </div>
+        Alueellinen taso erottaa, onko matala tuuli paikallinen vai koko Pohjolan tuulikato (Nordic-WR), ja näyttää SE1:n kasvavan teollisen kuorman (Stegra/HYBRIT) ennen kuin se näkyy Suomen tuontimarginaalissa. <strong>FI-Fingrid vs. FI-ENTSO-E -ristiintarkistus ei anna vakiosuhdetta</strong> ikkunoiden yli (W24 +3,7 %, W72 +76 %, W168 +96 %). Todennäköiset syyt: MTU-ero (vartti vs. tunti), ikkunointi pistemäärän vs. aikaleiman mukaan ja UTC/EEST-ero. Ristiintarkistus ei ole luotettava missään ikkunassa paitsi ehkä W24:ssä; korjausta (UTC-ankkurointi, tuntiresamplaus, aikaleimojen deduplikointi) ei ole toteutettu. <a class="hlink" href="wem-historia.html#nordic" target="_blank" rel="noopener">historia&nbsp;↗</a></div>
     </div>
 
     <div class="v4-grid">
@@ -994,7 +1171,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
     </div>
 
     <div class="shdr" style="margin-top:1.5rem;"><span class="snum">§ 11b</span><span class="stit">Hinta vs. tuulituotanto (W168) — KOKEELLINEN</span></div>
-    <p class="snote">Havainnollistaa hintasignaalin ja tuulituotannon yhteyttä samalla aikajanalla — kaksoisasteikko (hinta vasemmalla, tuuli oikealla). Käyttäjän oma pyyntö 2026-07-29: "hauska nähdä käytännössä miten hintasignaali ohjaa markkinaa ja tuotantoa." Live-haku, ei tallennusta. Lähde: aci-entsoe-proxy /day-ahead-price + /wind-generation, FI, 168h.</p>
+    <p class="snote">Havainnollistaa hintasignaalin ja tuulituotannon yhteyttä samalla aikajanalla — kaksoisasteikko (hinta vasemmalla, tuuli oikealla). Live-haku, ei tallennusta. Lähde: aci-entsoe-proxy /day-ahead-price + /wind-generation, FI, 168h.</p>
     <div id="priceWindStatus" style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem;">Ladataan…</div>
     <div class="chart-wrap" style="height:220px;"><svg id="chPriceWind" style="width:100%;height:100%;"></svg></div>
     <div class="snote" style="margin-top:.5rem;font-size:.72rem;">
@@ -1005,98 +1182,124 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
   </div>
 
 
-  <!-- §12 Transmission & Endurance Layer -->
-  <div class="section" id="s12">
-    <div class="shdr"><span class="snum">&sect; 12</span><span class="stit">Siirtoyhteydet &amp; Energiakestävyys — Transmission &amp; Endurance Layer</span></div>
-    <p class="snote">§12 laajentaa WEM:n mittariston tehopohjaisesta (MW) energiapohjaiseen (MWh/72h). Kolme kysymystä: (1) Kuinka suuri osa SE1:n siirtokapasiteetista on käytössä? (2) Onko järjestelmä stressaantunut reaaliajassa? (3) Paljonko energiaa on siirretty 72h:ssa? Datalähde: Fingrid Open Data API — DS 60 (SE1→FI siirto), DS 30, DS 336, DS 177, DS 369, DS 404. <strong>Kokeellinen osio</strong> — Fingrid Open Data API. Latautuu 15s päähaun jälkeen.</p>
-
-    <div class="s12-progress-label" id="s12ProgressLabel">§12 latautuu — odota…</div>
-    <div class="s12-progress-wrap" id="s12ProgressWrap">
-      <div class="s12-progress-bar" id="s12ProgressBar"></div>
+  <!-- §09 Backtest -->
+  <div class="bt-section">
+    <div class="shdr"><span class="snum">&sect; 09</span><span class="stit">EPP Backtest — signaalivalidointi 2022–2025</span></div>
+    <p class="snote"><b>Huom:</b> periodeilta 2022–2024 puuttuu tuulidata, joten niiden C_exp jää ilman tuulitermiä (182 MW/GW) ja DP_t on systemaattisesti matalampi kuin live-arvossa. Periodit eivät siksi ole vertailukelpoisia live-lukeman kanssa. Backtest laskee EPP:n kahdeksalle historialliselle periodille. Historialliset periodit (2022–2024) käyttävät sisäänrakennettuja kuukausikeskiarvoja (rekonstruoitu: Fingrid statistiikka, Energiateollisuus, Statistics Finland) + synteettistä tuntiprofiilia. Nykyinen periodi käyttää live-dataa. Validointimittarit (Recall/Precision/F1) on poistettu, koska vertailukriteeri oli hinta eikä fyysinen niukkuus. <a class="hlink" href="wem-historia.html#backtest-validointi" target="_blank" rel="noopener">historia&nbsp;↗</a> Huom: EPP on ex-post-laskenta — se ei ole ennuste.</p>
+    <div class="bt-controls">
+      <button class="btn-bt" id="btnBT" onclick="runBacktest()">&#9654;&nbsp; Aja backtest</button>
+      <div class="bt-progress" id="btProgress">8 periodita · DS 124 + DS 192 · ~20 s</div>
     </div>
-
-    <div class="s12-grid">
-      <!-- TRR -->
-      <div class="s12-card">
-        <div class="s12-card-title">BCI &mdash; SE1→FI pullonkaulan sitovuus</div>
-        <div class="s12-value" id="s12TRR">—</div>
-        <div class="s12-sub">Sitovien tuntien osuus (hintaero &gt; 0,5 €/MWh, 72 h)</div>
-        <div class="s12-status s12-normal" id="s12TRRlabel">ladataan…</div>
+    <div id="btDPRawPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
+    <div class="bt-timeline-wrap"><svg id="chBT" style="width:100%;height:100%;"><text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#c8bfad">Aja backtest nähdäksesi aikajana</text></svg></div>
+    <div id="btTableWrap"><table class="bt-table"><thead><tr>
+      <th>Periodi</th><th>Tapahtuma</th>
+      <th class="rh">EPP</th><th class="rh">Luokka</th>
+      <th class="rh">ECI</th><th class="rh">SP</th><th class="rh">DC</th>
+      <th class="rh">Pisteet</th>
+    </tr></thead><tbody id="btBody">
+      <tr><td colspan="8" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
+    </tbody></table></div>
+    <div class="bt-sig" id="btSig" style="display:none;">
+      <div class="bt-sig-card" style="opacity:.5;">
+        <div class="bt-sig-lbl">Recall / Precision / F1</div>
+        <div class="bt-sig-val" style="font-size:1rem;color:var(--muted);">POISTETTU</div>
+        <div class="bt-sig-sub">Poistettu kokonaan, ei vain piilotettu (ks. §07 Rakenteellinen rajoite 3). Stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa. Palautetaan kun fyysinen kriteeri (DS 336, tehoreservi, ERAA LOLE) on kaytossa.</div>
       </div>
-      <!-- P1 sisäinen siirto -->
-      <div class="s12-card">
-        <div class="s12-card-title">P1 &mdash; Sisäinen siirto pohj.→etelä</div>
-        <div class="s12-value" id="s12P1">—</div>
-        <div class="s12-sub">DS 30 · MW · W24 ka</div>
-        <div class="s12-status s12-normal" id="s12P1label">ladataan…</div>
-      </div>
-      <!-- Shortage Status -->
-      <div class="s12-card">
-        <div class="s12-card-title">Shortage Status &mdash; DS 336</div>
-        <div class="s12-value" id="s12SS">—</div>
-        <div class="s12-sub">0=normaali · 1–3=hälytys</div>
-        <div class="s12-status s12-normal" id="s12SSlabel">ladataan…</div>
-      </div>
-      <!-- Taajuus -->
-      <div class="s12-card">
-        <div class="s12-card-title">Taajuus &mdash; DS 177</div>
-        <div class="s12-value" id="s12Freq">—</div>
-        <div class="s12-sub">Hz · reaaliaikainen</div>
-        <div class="s12-status s12-normal" id="s12Freqlabel">ladataan…</div>
-      </div>
-      <!-- mFRR suunta -->
-      <div class="s12-card">
-        <div class="s12-card-title">mFRR-suunta &mdash; DS 369</div>
-        <div class="s12-value" id="s12mFRR">—</div>
-        <div class="s12-sub">Taajuuspohjalta arvioitu · Hz-poikkeama</div>
-        <div class="s12-status s12-normal" id="s12mFRRlabel">ladataan…</div>
-      </div>
-      <!-- Kumulatiivinen energiatasapaino -->
-      <div class="s12-card">
-        <div class="s12-card-title">Energia-alijäämä &mdash; 72h</div>
-        <div class="s12-value" id="s12CEB">—</div>
-        <div class="s12-sub">MWh · kumulatiivinen alijäämä</div>
-        <div class="s12-status s12-normal" id="s12CEBlabel">ladataan…</div>
-      </div>
-      <!-- Tuulivoima 72h ennuste -->
-      <div class="s12-card">
-        <div class="s12-card-title">Tuulivoima — 72h ennuste</div>
-        <div class="s12-value" id="s12WindFcst">—</div>
-        <div class="s12-sub">MW · DS 245 (+72h eteenpäin ennuste, 15min) · ka / min · DS 246 (24h, kerran/vrk) ei vielä haettu — huom: §11 Nordic-WR on −168h taaksepäin toteuma, eri suunta, ei suoraan vertailukelpoinen</div>
-        <div class="s12-status s12-normal" id="s12WindFcstLabel">ladataan…</div>
-      </div>
-      <!-- Tuulikato-riski -->
-      <div class="s12-card">
-        <div class="s12-card-title">Tuulikato-riski &mdash; 72h</div>
-        <div class="s12-value" id="s12WindRisk">—</div>
-        <div class="s12-sub">Tunteja &lt;500 MW / 72h ikkunassa</div>
-        <div class="s12-status s12-normal" id="s12WindRiskLabel">ladataan…</div>
-      </div>
+      <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub">2022-01 → 2024-12<br>OL3-vaikutus ECI:hin</div></div>
     </div>
-
-    <!-- SE1→FI siirto aikasarja -->
-    <div class="s12-chart-wrap">
-      <div class="s12-chart-title">SE1→FI fyysinen siirto W72 — DS 60 (MW · 15min) &nbsp;·&nbsp; <span id="s12ChartNote" style="color:var(--muted)">ladataan…</span></div>
-      <canvas class="s12-canvas" id="s12Chart" height="80"></canvas>
+    <div id="btF1Warn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin:.4rem 0;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;">
+      ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa, joten TP/FP/FN/TN-luokittelu ja Recall/Precision/F1 on poistettu kokonaan (ei vain nakymasta) kunnes kriteeri korvataan fyysisella mittarilla (esim. DS 336 shortage status, tehoreservin aktivoinnit, tai ERAA:n LOLE-tunnit).
     </div>
+  </div>
 
-    <div class="snote" style="margin-top:.75rem;">
-      <strong>Lähde:</strong> Fingrid Open Data (uusi API) · DS 60 SE1→FI reaaliaikainen (15min) · DS 30 P1-siirto · DS 336 shortage status · DS 177 taajuus · DS 369 mFRR-suunta
-&nbsp;·&nbsp; <em>Huom: datalogin sarake vaihtui TRR:stä BCI:hin 25.8.2026 — arvot eivät ole vertailukelpoisia yli tuon rajan. Sitä ennen TRR-arvot ennen 5.5.2026 on laskettu vanhalla NTC:llä (~1500 MW). Nykyinen NTC ~2300 MW Aurora Linen myötä (käyttöön 13.11.2025). Vanhat lukemat 103–105% vastaavat noin 65–70% uudella NTC:llä.</em> &nbsp;·&nbsp;
-      <strong>BCI:</strong> pullonkaulan sitovuus = niiden tuntien osuus, joina FI:n ja SE1:n day-ahead-hinnat eroavat yli 0,5 €/MWh (ENTSO-E). <em>Korvasi TRR:n 25.8.2026: Pohjoismaat siirtyivät NTC:stä flow-basediin 29.10.2024, eikä kahdenvälistä NTC:tä enää ole — TRR:n nimittäjää ei ollut olemassa. Lukemat ennen ja jälkeen eivät ole vertailukelpoisia.</em> &nbsp;·&nbsp;
-      <strong>Energia-alijäämä:</strong> Σ max(0, kulutus−tuotanto) 72h:ssa &nbsp;·&nbsp;
-      Yhteys: <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a>
-    </div>
-    <div class="s12-log-wrap" id="s12LogWrap">
-      <div class="s12-log-title">Datalog — viimeiset 10 hakua
-        <button class="s12-log-clear" onclick="s12ClearLog()">Tyhjennä</button>
-      </div>
-      <table class="s12-log-table">
-        <thead><tr><th>Aika</th><th>BCI</th><th>SE1 MW</th><th>Shortage</th><th>Taajuus Hz</th><th>CEB MWh</th><th>Tuuli ka/min</th><th>Tuulikato h</th><th>Hinta (W168 ka)</th></tr></thead>
-        <tbody id="s12LogBody"><tr><td colspan="7" style="color:var(--muted)">Ei vielä dataa — odota ensimmäistä hakua</td></tr></tbody>
-      </table>
-    </div>
+  <div class="v4-section" id="s15">
+  <div class="shdr"><span class="snum">&sect; 15</span><span class="stit">Suojautumisen hinta &mdash; vähittäismarkkinan validointi</span></div>
+  <p class="snote">
+    <strong>EI komponentti vaan validointi.</strong> §14 mittaa korjauskyvyn niukkuutta järjestelmässä;
+    tämä mittaa mitä <em>markkina veloittaa</em> siitä riskistä. Kaksi riippumatonta arviota samasta
+    tulevaisuudesta, eri menetelmällä ja eri toimijoilta.<br><br>
 
+    <strong>Preemio = kiinteä 1v &minus; spot</strong>, tyyppikäyttäjä K2 (kotitalous), verottomat
+    hinnat snt/kWh. Lähteet: Energiavirasto <code>Tarjoushinnat.xlsx</code> ·
+    ENTSO-E day-ahead FI kuukausikeskiarvo. Data:
+    <code>data/retail-premium-2006-2026.json</code> (tiiviste de926e16ad2d).
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0">
+    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
+      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Preemio, keskiarvo 2024&ndash;2026</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono)">+5,19</div>
+      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">snt/kWh &middot; positiivinen 33/35 kk &middot; sähkölämmitteiselle omakotitalolle (20 000 kWh/v) <strong>~1 000 &euro;/v</strong></div>
+    </div>
+    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
+      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Trendi</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono);color:#8b3a10">4,7 &rarr; 8,7</div>
+      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">alkuvuosi 2025 &rarr; kesä 2026 &middot; kiinteä nousi 8,95 &rarr; 12,48 <strong>samalla kun spot pysyi paikallaan</strong></div>
+    </div>
+    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
+      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Milloin suojaus kannatti</div>
+      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono)">2 / 35</div>
+      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">2026-01 (&minus;3,44) ja 2026-02 (&minus;3,73) &middot; spot 11,7 ja 13,5 snt/kWh</div>
+    </div>
+  </div>
+
+  <p class="snote">
+    <strong>Tulkinta.</strong> Nouseva preemio tarkoittaa että myyjä hinnoittelee kasvavaa hajontaa.
+    Se on riippumaton vahvistus sille mitä §14 ja SvK:n ennuste sanovat &mdash; ja se kohdistuu
+    juuri siihen ryhmään joka ei ole suojautunut pitkillä sopimuksilla.<br>
+    Ja <em>osa pörssisähkösopimuksista seuraa jo varttihintoja</em>: kotitalous kohtaa nyt saman
+    15 min resoluution kuin §14:n niukkuus. Aiemmin tuntikeskiarvo tasoitti piikin.
+
+    <br><br><strong>NELJÄ VARAUSTA:</strong><br>
+
+    <strong>1 &middot; Tarjoushinta ei ole maksettu hinta.</strong> Energiaviraston oma huomautus:
+    hinnat perustuvat <em>"kullakin hetkellä yleisesti tarjolla oleviin tuotteisiin"</em> eivätkä
+    voimassa oleviin sopimuksiin. Eri <code>data_class</code> kuin Tilastokeskuksen toteumasarja.<br>
+
+    <strong>2 &middot; Spot on ilman marginaalia.</strong> Todellinen pörssisähkösopimus on
+    ~0,3&ndash;0,5 snt/kWh kalliimpi. Taso muuttuu, suunta ei.<br>
+
+    <strong>3 &middot; Vertailupari on pörssisähkö.</strong> Toistaiseksi voimassa oleva <em>ei ole suojaamaton vaihtoehto</em> &mdash; se on passiivisen asiakkaan sopimus, jonka hintaa myyjä voi muuttaa ilmoituksella, ja se kantaa sekä riskin että asiakasinertian. <a class="hlink" href="wem-historia.html#retail" target="_blank" rel="noopener">historia&nbsp;↗</a><br>
+
+    <strong>4 &middot; 1.7.2022&ndash;1.7.2023 vertailukohta on epäluotettava.</strong>
+    Energiaviraston alaviite: toistaiseksi voimassa olevien arvo perustuu tuolloin
+    <em>"poikkeuksellisen vähäiseen tuotetietomäärään"</em> &mdash; kriisin aikana niitä ei juuri
+    tarjottu. Vertailukohta puuttuu juuri silloin kun se olisi kiinnostavin.
+  </p>
+</div>
+
+  <!-- §07 Instrument boundaries -->
+  <div class="bounds-section">
+    <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
+    <ul class="bounds-list">
+      <li><strong>Aurora Line -huomio:
+Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marraskuussa 2025, puolitoista kuukautta etuajassa. Se lisäsi SE1→FI-kapasiteettia +800 MW (1 500 MW → ~2 300 MW). WEM §12 NTC päivitetty vastaavasti. Aurora Line 2 on erillinen projekti, vasta selvitysvaiheessa — selvitys valmistuu 2026.
+
+SE1-vientimarginaali ei ole staattinen: Aurora Line lisäsi SE1→FI fyysistä siirtokapasiteettia, mutta SE1-alueen samanaikainen teollinen sähköistymispaine (Stegra 700 MW elektrolyysi Bodenissa, HYBRIT vetyteräs Gällivaressa) voi pitkällä aikavälillä pienentää käytettävissä olevaa vientimarginaalia erityisesti matalan hydro- ja tuulituotannon periodeina. WEM käsittelee SE1-kapasiteettia toistaiseksi eksogeenisena resurssina — malli ei diskonttaa Pohjois-Ruotsin kasvavaa omaa teollista kuormaa FS(p)- tai TRR-logiikassa. Kehitystarve tunnistettu.
+    Kehityssuunnitelma — ENTSO-E Transparency Platform (2026-07, ei viela toteutettu):
+    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria, mutta EI ole viela toteutettu. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). NTC 2 300 MW on fyysinen kapasiteetti — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
+
+Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
+      <li><strong>Käsitteiden suhde — Black Period vs. Dunkelflaute:</strong> "Black Period" (WP-001) on WEM:n oma, järjestelmätason analyyttinen konstruktio: 168 tunnin ikkuna jossa endurance-marginaalit ovat kriittisen ohuet, mitattuna EPP:llä. "Dunkelflaute" on kansainvälisesti vakiintunut, meteorologis-energeettinen termi sille fyysiselle säätilalle (samanaikainen matala tuuli- ja aurinkotuotanto, usein kylmällä säällä) joka tyypillisimmin laukaisee Black Period -tyyppisen tilan. Ne eivät ole synonyymejä: Dunkelflaute on yksi — todennäköisin — Black Periodin syy, mutta Black Period voisi periaatteessa syntyä myös muista syistä (esim. laaja tuotantovajaus ilman tuulikatoa). WEM:n WR-komponentti (WindRisk) on lähin suora Dunkelflaute-indikaattori instrumentissa.</li>
+      <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Kulutusmalli: <code>C_exp = 7 506 + 177·(vuosi−2024) + 153·max(0, 18−T) + 182·tuuli[GW]</code>, katto 13 500 MW. Kalibroitu 1 339 tunnista (8 × 168 h vuosilta 2024–2026, Fingrid DS 124/75 + ERA5, R² 0,88), jäännöshajonta 700 MW. Perustason kasvu (+177 MW/v) kuvaa datakeskusten litteää kuormaa. Tuulitermi kuvaa hintaohjattua kuormaa (sähkökattilat), joka kytkeytyy päälle halvoilla tunneilla; mitattu erikseen +122 MW/GW (2/2026) ja +204 MW/GW (1/2024) lämpötila vakioituna. Spot-hinta ei kelpaa selittäjäksi, koska sen kerroin on positiivinen — hinta nousee kun kulutus on suuri (endogeenisuutta, ei joustoa). Alle −5 °C:n kulmakerroin (76 MW/°C) on vanhaa perua: otoksessa ei ollut riittävästi kylmempiä tunteja. <b>DP_t-sarja katkeaa kalibrointien kohdalla</b> (8/2026 ja 24.9.2026), joten jaksot niiden yli eivät ole vertailukelpoisia. <a class="hlink" href="wem-historia.html#cexp" target="_blank" rel="noopener">historia&nbsp;↗</a> Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
+      <li><strong>Rakenteellinen rajoite 2 — Fingridin oma tuotantomuotojaottelu on suuntaa-antava:</strong> Fingrid ilmoittaa itse (fingrid.fi/sahkomarkkinat/sahkojarjestelman-tila), että reaaliaikamitatun tuotannon jaottelu tuotantomuodoittain (mukaan lukien DS 201/202) perustuu Energiaviraston voimalaitosrekisteriin ja tehdään laitoksen <em>pääasiallisen</em> tuotantomuodon mukaan — "lukemat ovat suuntaa-antavia". Mittaamaton tuotanto (mukaan lukien nopean häiriöreservin varavoimalaitokset) sisältyy kokonaan kohtaan "muu tuotanto", ei erottele tuotantomuotoa. WEM:n DS 201/202 -pohjainen CHP-laskenta (ks. §03 debug-paneeli) on siis sisäisesti oikein laskettu sille datalle jota Fingrid tarjoaa, mutta itse lähdedatan tuotantomuotojaottelu ei ole tarkka mittaus — se on hyväksytty epätarkkuus Fingridin oman ilmoituksen mukaan, ei WEM:n oma approksimaatiovirhe.</li>
+      <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
+      <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
+      <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
+      <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
+      <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
+      <li><strong>Backtest käyttää synteettistä rekonstruktiota tietoisesti, ei väliaikaisena varapolkuna:</strong> useiden istuntojen ja kymmenien tuntien yritysten jälkeen (verkkoasetukset, erillinen hakutyökalu, Fingridin oma avoin data -latauslomake — kaikki kohtasivat aitoja, dokumentoituja esteitä: resoluutioerot 3 min vs. tunti vs. 15 min 13.6.2023 jälkeen, proxyn sivutusparametrin arvaamattomuus, mobiiliselaimen tausta-ajastimen hidastus pitkien hakujen aikana, Fingridin dataset-ID:iden muuttuminen) päätettiin luopua oikean historiadatan hakuyrityksestä tällä hetkellä. Backtest-periodit 2022–2024 käyttävät sisäänrakennettuja kuukausikeskiarvoja + synteettistä tuntiprofiilia — tämä on nyt ensisijainen ja ainoa polku, ei väliaikainen. Hakulogiikka (fetchHistorical, fetchRealHistoricalPeriod) on säilytetty koodissa testattuna mutta kutsumattomana, jos päätös joskus muuttuu.</li>
+      <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
+      <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS(p):ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
+      <br><br><strong>Loviisan vuosihuollot:</strong> LO1 ja LO2, noin 507 MW kumpikin. Fortumin julkinen aikataulu (fortum.com, haettu 29.7.2026): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6 vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10.<br><br><strong>Päällekkäisyys syksyllä 2026:</strong> OL3:n huolto (10.9.–30.10.) menee päällekkäin molempien Loviisan yksiköiden kanssa: LO2 10.–21.9. ja LO1 koko 26.9.–18.10. Reilun kuukauden ajan yli 2 100 MW ydinvoimasta on poissa yhtä aikaa (Uusi Suomi 8/2026). FS laskee pudotuksen live-datasta automaattisesti. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus). <a class="hlink" href="wem-historia.html#loviisa" target="_blank" rel="noopener">historia&nbsp;↗</a></li>
+      <br>
+    </ul>
+  <div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.7rem 1rem;margin:1rem 0;font-size:.82rem;font-family:'EB Garamond',Georgia,serif">
+    <strong style="font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8b2500;display:block;margin-bottom:.4rem">Metodologinen huomio — abstraktiotaso</strong>
+    <p style="margin-bottom:.5rem">WEM toimii 1–2 abstraktiotasoa yli PLEXOS- tai ENTSO-E-tyyppisen sähköjärjestelmäsimuloinnin. EPP ei ole MW eikä MWh — se on synteettinen endurance-indeksi joka kuvaa järjestelmän toimintamarginaalia ilman yksikkösitoumusta. Tämä on tarkoituksellinen valinta: instrumentti on suunniteltu referenssipisteeksi institutionaaliselle päätöksenteolle, ei korvaamaan operatiivista kapasiteettimallinnusta.</p>
+    <p style="margin:0">Insinööritason muunnos: DA-001 §03 tarjoaa EPP-signaalien kytkennän MW-muuttujiin. ENTSO-E ERAA on ainoa virallinen kapasiteettiriittävyysanalyysi. WEM ja ERAA mittaavat samoja ilmiöitä eri abstraktiotasolla — ne eivät ole korvattavissa toisillaan.</p>
+  </div>
   </div>
 
   <!-- References -->
@@ -1124,6 +1327,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
   <div>aethercontinuity.org<br>Open diagnostic instrument<br>Not an operational alert system</div>
 </footer>
 
+<script src="wem-changes.js"></script>
 <script>
 // ── Config ────────────────────────────────────────────────────────────────────
 // LISATTY 2026-08-01: &fsdebug=1 URL-parametrilla FS-diagnostiikka
@@ -2309,7 +2513,7 @@ function renderDimensions(m){
     (ristiriita
       ? `<div style="margin-top:.5rem;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;font-size:.66rem;line-height:1.5;color:#8b3a10">
            <strong>RISTIRIITAINEN TILA.</strong> Yksi ulottuvuus on kriittinen ja vähintään yksi normaali.
-           EPP on niiden keskiarvo — <strong>se ei kuvaa kumpaakaan.</strong> Lue ulottuvuudet, älä indeksiä.
+           Keskiarvo ei kuvaisi kumpaakaan &mdash; <strong>lue ulottuvuudet erikseen.</strong>
          </div>`
       : '') +
     `<div style="margin-top:.45rem;font-size:.6rem;color:var(--muted);line-height:1.5">
@@ -2442,9 +2646,12 @@ function renderPosture(m, spot) {
   const currentMonth = new Date().getMonth() + 1; // 1-12
   const isSummer = currentMonth >= 5 && currentMonth <= 9;
   const anyAlertActive = (w168.epp >= 0.50) || compAlerts.length > 0;
+  // 2.16.0: huomautus pätee vain, kun lukema todella syntyy helteestä.
+  // 30.9.2026 se näytettiin 9,7 °C:ssa, vaikka syy oli ydinvoimahuolto + tuulikato.
+  const hot = (w168.avgTemp ?? -99) >= 15 && (w168.dp_t ?? 0) > 0;
   const summerEl = document.getElementById('alertSummer');
   if (summerEl) {
-    summerEl.className = 'alert-blk' + (isSummer && anyAlertActive ? ' on' : '');
+    summerEl.className = 'alert-blk' + (isSummer && anyAlertActive && hot ? ' on' : '');
   }
 }
 
@@ -4169,43 +4376,17 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.15.0';
-const WEM_BUILD   = '2026-09-30b'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.0';
+const WEM_BUILD   = '2026-09-30c'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
 // olivat jo koodissa. Versio ei ollut koskaan paivittynyt vastaamaan
 // todellista tilaa. Lista jarjestetty uusin ensin (oli sekaisin).
-const WEM_CHANGES = [
-  '2.15.0: EPP:n FS on nominaali (ydin+vesi)/kulutus — hydro_RF poistettu EPP:stä. Kaksi vikaa: (1) Norjan täyttöaste kerrottiin Suomen vesivoimaan (DS 191), vaikka Norjan altaat ovat tuonnin lähde eivätkä tuota Suomen vesivoimaa; (2) globaali live-hydroRF kulkeutui backtestiin, joten 2022–2024 EPP-arvot riippuivat ajoviikosta — sarja ei ollut toistettava. Vaikutus 30.9.2026: hydroRF 0,803 → EPP W168 noin −0,014. FS(p) säilyy §11:ssä EPP:n ulkopuolella, kerroin nyt FI:n A72-sisältö / viikkomediaani 2015– (/balance). NO+SE on §01 SOURCE -rivillä. 2026-08-01:n ja 2.12.4:n uudelleenrenderöintisynkronointi poistettu tarpeettomana; regressiovaroitus tarkistaa, ettei FS muutu haun jälkeen.',
-  '2.14.0: §01 ulottuvuuskorttiin viides kysymys SOURCE — tuonnin lähde. NO+SE-vesivarantojen poikkeama saman kalenteriviikon mediaanista (TWh) aci-entsoe-proxyn /balance-reitiltä, samasta lähteestä kuin HEM §01b; WEM ei laske tasetta itse. Peruste: 30.9.2026 kortti näytti kaikki neljä Suomen sisäistä ulottuvuutta, mutta talven kannalta tärkein luku (NO+SE −12,1 TWh, 2/11 vuotta alempana) oli EPP:n ulkopuolella ja vain kokeellisessa FS(p):ssä Norjan täyttöasteena. Luokka järjestyksestä perusjaksossa, kynnykset ASETETTUJA [A]. EI EPP:hen.',
-  '2.13.1: Dokumentaatiotekstit paivitetty vastaamaan 2.13.0:n C_exp-mallia. §02:n DP_t-kuvaus, §07:n lampotiladata-kohta ja §01:n kesakauden huomautus kuvasivat yha vanhaa mallia (7000 MW + 200 MW/°C, "kalibroitu talven huippukulutukselle") - koodi ja teksti olivat ristiriidassa. Lisaksi kirjattu, etta §09:n backtest-periodeilta puuttuu tuulidata, joten niiden DP_t on systemaattisesti matalampi kuin live-arvo (tuulitermi 182 MW/GW puuttuu) - periodit eivat ole vertailukelpoisia keskenaan eivatka live-arvon kanssa.',
-  '2.13.0: C_exp(T) korjattu kolmella tavalla, mitattu 1339 tunnista (8 x 168 h, 2024-2026): perustaso 7000 -> 7506 MW + liukuva +177 MW/vuosi, kulmakerroin 200 -> 153 MW/°C, uusi tuulitermi +182 MW/GW (hintaohjattu kuorma), TEMP_SIGMA 900 -> 700 (mitattu jaannoshajonta). Syy: takautuva EPP-laskenta paljasti, etta vanha malli oli harhainen molempiin suuntiin - kesalla DP_t=1.0 joka vuosi (heinakuu 2026 oli +1427 MW yli mallin, kesan peruskulutus on noussut 833 MW vuodesta 2022) ja talvella 2022-2023 DP_t=0 (malli odotti jopa 933 MW liikaa). Spot-hinta hylattiin selittajana: kerroin on positiivinen (endogeenisuutta, ei joustoa); tuuli toimii eksogeenisena instrumenttina samalle ilmiolle. HUOM: muutos katkaisee DP_t-sarjan toisen kerran (edellinen 2026-08), joten backtest-jaksot ennen ja jalkeen eivat ole vertailukelpoisia.',
-  '2.12.4: §01 (posture), §05 (EPP-trendi), §06 (SP) ja §03 (kerrosrakenne) renderoidaan nyt uudelleen, kun NVE:n hydro_RF saapuu. Aiemmin vain §02, §10 ja §11 paivitettiin (korjaus 2026-08-01), joten §01 nayttI pysyvasti hydroRF=1.0-pohjaista EPP:ta: ulkopuolisen tarkastuksen havainto §01 0.573 vs §02/§06/§09/§11 0.587, molemmat merkitty W168 — ero ei ollut aikaleima- vaan renderointijarjestysvirhe. Tarkistettu samalla: EPP on rajattu Math.min(1, …), joten persistenssipreemio ei nosta maksimia yli 1.0 (vastaus samaan tarkastukseen).',
-  '2.12.3: (1) §12 P1: kun DS 30 on tyhjä, kortti näyttää MALLIARVION P1 ≈ 1,098·SE1-tuonti + 0,529·NO-tuonti + 0,472·tuuli + 0,121·vesi − 0,224·kulutus + 1505 (sovitus 4.–14.9.2026, 240 h, testijakson R² 0,68, RMSE 239 MW). SE1-kerroin ≈ 1 = kaikki SE1-tuonti kulkee P1:n läpi; tuulen 0,47 = noin puolet tuulesta P1:n pohjoispuolella. NO-kerroin on epävakaa (koko aineistolla 1,88) — FI–NO-virta on pieni. Viimeisimmän arvon haku: 429-uusinta ja virhe erotettu tyhjästä (2.12.2 näytti virheellisesti ei arvoja 14 vrk:lta). DS 30 on Fingridin luettelossa edelleen Aktiivinen; katko alkoi 14.9.2026 12:24 UTC, samaan aikaan Fingridin ilmoittaman avoimen datan häiriön kanssa (14.9. n. klo 17 – 16.9. n. klo 14). (2) §10 CFE: puhtaan tuotannon kattavuus kolmella tavalla samasta W168-datasta — volyymitase (kuten vuositason alkuperätakuukirjanpito), tuntitase ja tuntitase stressitunneilla. Ero kertoo, paljonko volyymiin perustuva 100 % puhdas -väite yliarvioi kattavuuden juuri kriittisinä tunteina. Ilman aurinkoa ja CHP:n biopolttoaineosuutta, eli alaraja.',
-  '2.12.2: Kolme korjausta ja uusi §17. (1) Hakurajoite: kumpikaan proxy (aci-fingrid-proxy/api, aci-transmission-proxy) ei välitä page-parametria — yksi kutsu palauttaa enintään 400 uusinta riviä. 3 min sarja kattoi siksi vain ~20 h ja 1 min sarja 6,7 h. Uusi fgRange() hakee pitkän ikkunan aikaviipaleina (≤380 riviä/viipale) ja poistaa päällekkäiset aikaleimat. (2) §16: keskiarvot vain tunneilta jotka löytyvät KAIKISTA kuudesta sarjasta. Mitattu 21.9.2026: vanha tapa antoi erotuksen 200 MW (27 %), tuntileikkaus 29 MW (1,5 %). NETTO-kortti Fingridin etumerkillä (− tuonti / + vienti), kuten rajakortit ja Fingridin oma näkymä — aiemmin sama suure näkyi +1348 täällä ja −1339 Fingridillä. Kaikkiin kortteihin W24-merkintä. EstLinkin täyttöaste lasketaan nyt livenä. (3) §12 P1: DS 30 lakkasi päivittymästä 14.9.2026 12:24 UTC (Fingridin puoli). Tyhjä vastaus jätti kortin tilaan ladataan…; nyt näytetään Ei dataa + viimeisin arvo ja sen aika. Keskiarvo oli laskettu 100 minuutista (size=100, 1 min data), nyt 24 h viipaleina. DS 28/29 (P1-viikkokapasiteetti) ovat tyhjiä 400 vrk:lta, joten 4000 MW jää viitearvoksi [A]. (4) §17 Sähkövarastot: DS 424 asennettu kapasiteetti (1222 MW 12.3.2026 → 1997 MW 21.9.2026), DS 398 purku, DS 399 lataus.',
-  '2.12.1: §14 kalibrointitalven lämpötilakonteksti. Mitattu DS 178 (Helsinki, joulu-helmi, viikkootos): 2023-24 ka -8,4 C ja 38 % tunneista alle -10 C; 2024-25 ka -1,3 C ja 5 % (LAUHIN); 2025-26 ka -4,9 C ja 20 %. Kalibrointitalvi on siis KESKITASOA — vyöhykeosuudet eivät ole lauhan eivätkä kylmän talven arvoja, ja ∆Pr_tail = 0,0032 on keskitalven arvo. Aiempia talvia ei voi mitata RP_marginilla (DS 373 alkaa 3/2025), ja pelkkä hintavertailu kaatuu resoluutiomuutokseen: 2024-25 on tuntidataa ja 2025-26 varttidataa — mediaaniero (36,4 vs 79,7) on todellinen ja selittyy lämpötilalla, mutta maksimiero (550 vs 4 400) on resoluutioartefakti. Kalibrointitiedosto rev 3, tiiviste 11b0dc5b68a2; siihen lisätty myös ERP-parametrit CN-013.1:lle.',
-  '2.12.0: §16 Rajasiirrot — koko tase. §12 mittasi vain FI-SE1; tämä näyttää kaikki neljä rajaa fyysisinä mittauksina: DS 87 (FI-SE1 400kV), DS 61 (FI-SE3 varttiteho), DS 187 (FI-NO 220kV), DS 140 (EstLink). Mitattu 16.9.2026: SE1 -1629, SE3 -661, NO -71, EE +929 MW. SUOMI ON SIIRTOREITTI — tuo 2 361 MW pohjoisesta ja lännestä, vie 929 MW Baltiaan, bruttovirta 1,6x netto. TASETARKISTUS sisäänrakennettu: nettotuonti 1 433 vs. gap 1 411 MW, erotus 1,5 %. Se on ainoa tapa havaita väärä etumerkki tai datasetti ilman dokumentaatiota. EstLink täynnä vientisuuntaan 88 % ajasta = litteä hintaan reagoimaton kuorma, samaa luokkaa kuin datakeskus. Syy Baltian puolella: Viron säädettävä lämpövoima 1 970 -> 1 215 MW (2020-2026), LV-EE-hintaero sitoo 72 % ajasta. Tunnisteet LUETTIIN Fingridin luettelosta — neljä arvausta epäonnistui, ja DS 31 osoittautui KAUPALLISEKSI (pörssitulos) eikä fyysiseksi.',
-  '2.11.0: §15 Suojautumisen hinta — vähittäismarkkinan validointi. EI komponentti vaan validointi: §14 mittaa korjauskyvyn niukkuutta, §15 mitä markkina veloittaa siitä riskistä. Preemio = kiinteä 1v − spot, tyyppikäyttäjä K2: keskimäärin +5,19 snt/kWh, positiivinen 33/35 kk (2024-01..2026-08). Sähkölämmitteiselle omakotitalolle ~1 000 EUR/v. TRENDI NOUSEVA 4,7 -> 8,7 — kiinteä nousi 8,95 -> 12,48 samalla kun spot pysyi paikallaan, eli riskilisä kasvaa. Lähteet: Energiavirasto Tarjoushinnat.xlsx (EI rajapintaa, ladattu käsin) + ENTSO-E. Data data/retail-premium-2006-2026.json (de926e16ad2d). NELJÄ VARAUSTA kirjattu, joista kolmas on tehty virhe: ensimmäinen laskelma vertasi kiinteää TOISTAISEKSI VOIMASSA OLEVAAN ja sai negatiivisen preemion — se ei ole suojaamaton vaihtoehto vaan passiivisen asiakkaan sopimus. Suojaamaton on pörssisähkö.',
-  '2.10.0: §14 RP_margin-aikasarja canvasille. Kortit näyttävät W72:n MINIMIN — se kertoo pahimman hetken muttei sitä oliko kyse yhdestä neljännestunnista vai pitkästä jaksosta. 9.9.2026 romahdus oli kuusi tuntia; lauantai-ilta 12.9. oli kohonnut hinta ILMAN marginaalin laskua (tuuli 69 MW klo 12 -> 3 499 MW klo 02, hinta 191 EUR -> 0, tarjouskirja 771 -> 1 448 MW). Yksi luku ei erota niitä, aikasarja erottaa. Värit vyöhykkeen mukaan, samat rajat kuin §01:n ulottuvuuskortti. Nollan alitukset korostettu erikseen. Ei uutta laskentaa eikä hakua.',
-  '2.9.5: §01 CORRECTION merkitty MINIMIKSI. Tuloste 11.9.2026 näytti "-0 % tyhjenemässä" ilman että se kertoi olevansa W72:n matalin hetki (9.9. klo 17:15, yhä ikkunassa). Lukija olettaa nykyhetken arvon. Kolme muuta ulottuvuutta ovat ikkunan koostearvoja — osuuksia ja pisin jakso — joten aikaperspektiivi erosi merkitsemättä. Lisätty "min"-merkintä arvoon, kysymykseen "(matalin hetki W72:ssa)" ja selitteeseen kappale aikaperspektiiveistä.',
-  '2.9.4: §01 ulottuvuuskortin CORRECTION luki RP_curvea vaikka §14:n päämittari vaihtui RP_marginiin jo v2.9.0:ssa. Tuloste 11.9.2026 näytti CORRECTION 8.2 = käyrän jyrkkyys, ei jäljellä olevaa marginaalia. Korjattu: CORRECTION on nyt RP_margin prosentteina, vyöhykkeet talven kalibroinnista (runsas/normaali/kireä/niukka/tyhjenemässä). Palkki KÄÄNNETTY (1 − margin) koska matala marginaali on niukkuutta. Kysymys muutettu: "Millä hinnalla marginaali korjataan?" -> "Paljonko korjauskykyä on jäljellä?". HUOM sijoitusjärjestys: window.__rpMargin asetetaan mMin:n JÄLKEEN — ensimmäinen yritys sijoitti sen curven viereen jolloin arvo oli määrittelemätön.',
-  '2.9.3: Korjausinventaario loppuun (K5, K6). K6: §10:n skenaariotaulukkoon alaviite siitä miksi kaksi viimeistä riviä antavat identtisen FS 42,8 % — CHP ei ole FS:n osoittajassa, ja mitattu 10.9.2026 että chpPct ei muuta FS:ää lainkaan eikä WR:ää kuin 0,001 EPP:ssä. Parametria ei poistettu: SP-kanava on todellinen muttei laskettavissa keskiarvoista. K5: §14:ään kirjattu että korjauskyky EI ole kausiluonteista vaikka nimi viittaa talveen — kesän tarjouskirja 1 010 MW vs. talven 1 059 MW (suhde 0,95), RP_margin kesällä mediaani 100 %. Riittävyys on kausiluonteista, korjausmarginaali ei. K7 (CHP~lämpötila-regressio) ei koske instrumenttia: negatiivinen tulos, otos liian pieni, kirjattu data/wem-mittaukset-2026-09.json.',
-  '2.9.2: §01 EPP:n rakenteelliset rajoitteet kirjattu näkyviin (korjausinventaario K1–K4). (1) FS ei näe CHP:tä — se ei ole osoittajassa, joten §10:n CHP-eroosio ja SM-015:n −650 MW eivät näy EPP:ssä lainkaan; se selittää myös miksi skenaariorivit −30 % ja −40 % antavat identtisen FS 42,8 %. (2) SP saturoitunut: 9.9.2026 mitattu 21/21 stressituntia, gap 29–35 % kun kynnys on 5 %. (3) DP_t vakio 1,000, raaka-arvo 2,41 leikattuna. (4) SEURAUS: EPP liikkuu käytännössä WR:n ja kulutuksen mukaan — neljästä komponentista yksi on vakio, yksi lähes kyllästynyt, yksi sokea CHP:lle. Kaavoja EI korjattu: se katkaisisi aikasarjan, kuten 2026-08-01 tapahtui. Rajoitteet kirjataan näkyviin sen sijaan — sama ratkaisu kuin role_confidence 0.5 ja calibrated:false muualla.',
-  '2.9.1: §14 CHP-VARAUS KORJATTU — edellinen versio väitti että talvella olisi "vähemmän firmiä mutta enemmän korjausmarginaalia". MITATTU DATA SANOO PÄINVASTOIN: korrelaatio CHP-teho ↔ tarjottu ylössäätö r = −0,67 (26 vrk otos, 2 087 paria). CHP ajaa kun on kylmä, ja kylmällä liikkumavaraa on vähemmän — CHP:n teho on KYLMYYDEN MITTARI, ei tarjonnan lähde. Syyskuun 592–857 MW vastaa talven kylmintä kvintiiliä (769 MW), ei leutoa. · SÄHKÖKATTILAT lisätty (DS 371, 3.12.2024→): hintajoustava kuorma, max 1 069 MW, korrelaatio hintaan r = −0,64 ja CHP:hen r = −0,67. Käytännössä alassäätöresurssi joka ei ole tarjouskirjassa; selittää osan epäsymmetriasta. Takaisinkytkentä CHP:hen mitattu, ei päätelty. · HUOM: DS 373 alkaa vasta 3/2025 — trendimittausta EI voi tehdä, käytettävissä on yksi talvi (2025-26).',
-  '2.9.0: §14 PÄÄMITTARI VAIHTUI — RP_margin korvaa RP_curven. RP_margin = (tarjottu ylös − aktivoitu) / tarjottu ylös, lähteinä DS 373 (mFRR-ylössäätötarjoukset, EI sisällä epäkäytettäviä = AVAILABLE eikä installed) ja DS 342. RP_curve oli keskiarvojen SUHDE; RP_margin on SUORA mittaus. Kalibroitu talvelta 2025-10..2026-03, 17 470 pistettä (data/rp-margin-talvi-2025-2026.json, tiiviste 69a25d6a94ad). Hinnan mediaani nousee MONOTONISESTI vyöhykkeittäin 44 → 300 → 542 → 1990 → 4000 €/MWh; rajoja ei valittu hinnan mukaan vaan hinta seuraa niistä. Marginaali ei mennyt miinukselle kertaakaan talvella (0/17470), mutta 9.9.2026 klo 17:15 se kävi −0 %: tarjottu 592 MW, aktivoitu 593 MW. Epäsymmetria alas/ylös 1.63 talvella, 1.64 syyskuussa — järjestelmä on yksipuolisesti niukka. CHP-VARAUS kirjattu: syyskuun ohut tarjouskirja johtuu myös siitä ettei kaukolämpö-CHP aja kesällä, joten 9.9. ei ole talven ennakkokoe RP_marginin osalta.',
-  '2.8.2: §12 BCI-korttiin SE1:n OMA hintataso. BCI kertoo onko rajoite sitova; se ei kerro onko naapuri halpa. Mitattu 9.9.2026 piikkitunneilta: SE1 spot ka 107,1 €/MWh, FI 173,6, ero 66,5. Yleinen oletus halvasta pohjoisruotsalaisesta vesivoimasta (40–50 €/MWh) EI pitänyt paikkaansa — SE1 oli yli sata euroa, huipussaan 147. Sitova rajoite KALLIISEEN naapuriin on huonompi tilanne kuin sitova rajoite halpaan: edellinen on kapasiteettiongelma, jälkimmäinen siirto-ongelma. Ei yhtään lisähakua — mSE oli jo muistissa BCI:tä varten.',
-  '2.8.1: §01 neljän ulottuvuuden kortti EPP:n viereen. PERIAATE: älä anna synteettisen indeksin ylittää komponenttidatan informaatiota. FREQUENCY (SP) · DEPTH (SP_depth) · DURATION (T₁₆₈) · CORRECTION (RP_curve) — neljä eri KYSYMYSTÄ, ei neljä komponenttia. EI uutta laskentaa eikä dataa: arvot olivat jo olemassa hajautettuina §02/§10/§11/§14:ään. Havainto: 10.9.2026 SP 54,8 % BP-like, SP_depth 10,0 % matala, T₁₆₈ 49 h metastable — yksi punainen, kaksi ei, ja EPP 0.566 Elevated on niiden keskiarvo. 54,8 % stressitunteja EI tarkoita että järjestelmä olisi 54,8 % vajauksessa. Kortti näyttää RISTIRIITAISEN TILAN erikseen kun yksi ulottuvuus on kriittinen ja toinen normaali. DEPTH- ja CORRECTION-kynnykset ASETETTUJA [A].',
-  '2.8.0: §10 empiirinen ankkuri — huoltopäällekkäisyys 9/2026 vastaa FS:ltään skenaariota +1988 MW kulutusta (mitattu 57,9 % vs. laskettu 71,4 % ilman huoltoja). Ensimmäinen kerta kun skenaariotaulukolla on empiirinen ankkuri. HUOM: koe aliarvioi pysyvän kasvun vaikutusta — huolto on väliaikainen ja ennakoitu. · §14 RP — säätösähkömarkkinan stressi. DS 244/106/342, 15 min resoluutio. PÄÄMITTARI RP_curve = tarjouskäyrän jyrkkyys (ka määrä niukkuudessa / ka määrä halvalla) — riippumaton hintatasosta, reagoi vain käyrän MUOTOON. Aiheutti: 9.9.2026 klo 14:45–20:15 ylössäätöhinta 500–4000 €/MWh 11 kertaa, EPP näytti 0.566 Elevated ja Shortage Status 0. Kuusi tuntia 166:sta keskiarvoistuu näkymättömiin — §01:n oma varoitus toteutui mitattuna. Kalibrointi: talvi 2025-10..2026-03, 17 470 pistettä, tallennettu data/rp-244-talvi-2025-2026.json (tiiviste 527f60ca2a97). Vyöhykerajat ovat YHÄ ASETETTUJA [A] — aineisto kertoo jakauman rajojen sisällä, ei johda rajoja.',
-  '2.7.5: EPP v3+P — persistenssipreemio SP_cluster T₁₆₈ pohjalta. Kalibrointi 1/2016 osoitti SP 30% ei riitä Elevated-tasoon pitkissä jaksoissa. T168≥6h: +0.05, T168≥24h: +0.12.',
-  '2.7.4: NTC SE1→FI korjattu 1500→2300 MW (Aurora Line käyttöön 11/2025, lisäys +800 MW). TRR 105% → ~68% — ei saturaatio vaan korkea käyttöaste.',
-  '2.7.2→2.7.3: DS 87 korjattu DS 188:ksi — ydinvoima sisältää nyt Loviisan (+~500 MW). Vaikutus: FS +6.5 pp, EPP −1.9 pp, ECI +6.2 pp. Historialliset arvot olivat konservatiivisia. Kvalitatiiviset johtopäätökset muuttumaton.',
-  '2.7: §12 TX proxy → Fingrid proxy, tuulivoima 72h ennuste (DS 246/245), progress bar, datalog, NTC 900→1500 MW',
-  '2.6: §11 "EPP v4" -paketti (SP_cluster, FS(p), MD_proxy, NVE hydro). HUOM: "EPP v4" on §11:n regiimitunnistuspaketin OSIONIMI, ei ydinkaavan versionumero — ydinkaava pysyy nimeltään v3/v3+P (ks. eppFull-muuttuja). Kaksi rinnakkaista, huonosti erotettua nimeamiskaytantoa: kaavan versiointi (v1→v2→v3→v3+P) ja §11:n oma nimi ("v4") eivat ole sama sarja. "v4" ei siis tarkoita uudempaa kuin "v3+P" — 2.6 on kronologisesti ennen 2.7-sarjaa.',
-];
+// WEM_CHANGES: wem-changes.js (jaettu kehityshistoria-sivun kanssa, 2.16.0)
 document.querySelectorAll('#versionBadge, #versionBadge2').forEach(el => {
   if (el) el.textContent = 'v' + WEM_VERSION;
-  if (el) el.title = WEM_CHANGES.join('\n');
+  if (el) el.title = (window.WEM_CHANGES || []).join('\n');
 });
 const bs = document.getElementById('buildStamp');
 if (bs) bs.textContent = 'build ' + WEM_BUILD;
@@ -4767,28 +4948,7 @@ function drawS12Chart(data) {
 
 </script>
 
-<div class="v4-section" id="s14">
-  <div class="shdr"><span class="snum">&sect; 14</span><span class="stit">Säätösähkömarkkinan stressi — RP</span></div>
-  <p class="snote">Mittaa sitä mitä EPP ei näe: <strong>mitä viimeisestä megawatista oikeasti maksettiin, ja kuinka monta niitä tarvittiin.</strong> Spot-hinta on listahinta, säätömarkkina on toteuma. Lähde: DS 244 (ylössäätöhinta) · DS 106 (alassäätöhinta) · DS 342 (aktivoitu mFRR, MW). 15 min resoluutio, W72-ikkuna.<br><br><strong>Miksi erillinen osio:</strong> 9.9.2026 klo 14:45–20:15 ylössäätöhinta oli 500–4 000 €/MWh yksitoista kertaa. Samana päivänä EPP näytti 0.566 "Elevated" ja Shortage Status 0. Kumpikaan ei näyttänyt mitään — kuusi tuntia 166:sta keskiarvoistuu näkymättömiin. §01:n oma varoitus sanoo tämän: <em>"Kokonais-EPP on lineaarinen summa — se voi keskiarvoistaa tämän näkymättömiin."</em> RP on se erillinen mittari jota varoitus edellyttää.</p>
 
-  <div id="rpCards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0"></div>
-  <div id="rpChartWrap" style="display:none;margin:1rem 0">
-    <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">
-      RP_margin W72 &mdash; jokainen 15 min piste. Vy&ouml;hykerajat talven kalibroinnista.
-    </div>
-    <canvas class="s12-canvas" id="rpChart" height="120" style="height:120px"></canvas>
-    <div style="display:flex;gap:1rem;font-size:.58rem;color:var(--muted);margin-top:.25rem;flex-wrap:wrap">
-      <span><span style="color:#2d5016">&#9644;</span> runsas &gt;60 %</span>
-      <span><span style="color:#8b3a10">&#9644;</span> normaali 40&ndash;60 %</span>
-      <span><span style="color:#b05010">&#9644;</span> kire&auml; 20&ndash;40 %</span>
-      <span><span style="color:#8b2500">&#9644;</span> niukka &lt;20 %</span>
-      <span style="margin-left:auto">Punainen viiva = 40 % (talvella alitettiin 0,32 % ajasta)</span>
-    </div>
-  </div>
-  <div id="rpZones"></div>
-  <p class="snote" id="rpNote"></p>
-  <div style="margin-top:.8rem"><button class="btn" onclick="loadRP()">&#9654;&nbsp; Hae säätösähködata</button></div>
-</div>
 
 <script>
 
@@ -5084,10 +5244,8 @@ function renderRP(up, dn, act, bidUp, bidDn){
     `vyöhykkeittäin: 44 → 300 → 542 → 1990 → 4000 €/MWh. <strong>Rajoja ei valittu hinnan mukaan — ` +
     `hinta seuraa niistä.</strong> Marginaali ei mennyt miinukselle kertaakaan talvella (0/${RP_MARGIN.n}); ` +
     `9.9.2026 klo 17:15 se kävi arvossa −0 %.<br><br>` +
-    `<strong>CHP — KORJATTU 2026-09-11:</strong> tässä luki aiemmin, että syyskuun ohut ` +
-    `tarjouskirja johtuu osin siitä ettei kaukolämpö-CHP aja kesällä, ja että talvella olisi ` +
-    `<em>"vähemmän firmiä mutta enemmän korjausmarginaalia"</em>. <strong>Mitattu data sanoo ` +
-    `päinvastoin.</strong><br>` +
+    `<strong>CHP ja korjausmarginaali:</strong> kun CHP ajaa, ylössäätötarjouksia on <strong>vähemmän</strong>, ei enemmän. ` +
+    `<a class="hlink" href="wem-historia.html#rp-chp" target="_blank" rel="noopener">historia&nbsp;↗</a><br>` +
     `Talven otoksesta (26 vrk, 2 087 paria): korrelaatio CHP-teho ↔ tarjottu ylössäätö ` +
     `<strong>r = −0,67</strong>. Kun CHP ajaa enemmän, tarjouksia on VÄHEMMÄN:<br>` +
     `<span style="font-family:var(--mono);font-size:.62rem">` +
@@ -5124,24 +5282,7 @@ function renderRP(up, dn, act, bidUp, bidDn){
 }
 </script>
 
-<div class="v4-section" id="s16">
-  <div class="shdr"><span class="snum">&sect; 16</span><span class="stit">Rajasiirrot &mdash; koko tase</span></div>
-  <p class="snote">
-    §12 mittaa vain FI&ndash;SE1:tä. Tämä näyttää <strong>kaikki neljä rajaa</strong> ja sen että
-    Suomi on <strong>siirtoreitti</strong>: se tuo pohjoisesta ja lännestä ja vie etelään Baltiaan.
-    Bruttovirta on noin kaksinkertainen nettoon nähden, eikä se näy missään yhdessä luvussa.<br><br>
-    <strong>Lähteet (fyysinen mittaus, ei kaupallinen):</strong>
-    <code>DS 87</code> FI&ndash;SE1 400 kV, 3 min &middot;
-    <code>DS 61</code> FI&ndash;SE3 varttiteho, 15 min &middot;
-    <code>DS 187</code> FI&ndash;NO 220 kV, 3 min &middot;
-    <code>DS 140</code> EstLink.<br>
-    Etumerkki Fingridin mukaan kaikissa korteissa, myös NETTO-kortissa: <strong>+ vienti Suomesta, &minus; tuonti Suomeen.</strong><br>
-    Kaikki luvut ovat <strong>W24-keskiarvoja</strong> (viim. 24 täyttä tuntia), laskettuna vain tunneilta jotka löytyvät kaikista kuudesta sarjasta. Fingridin oma näkymä on hetkellinen &mdash; lähellä mutta ei sama luku.
-  </p>
-  <div id="xbCards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:1rem 0"></div>
-  <p class="snote" id="xbNote"></p>
-  <div style="margin-top:.8rem"><button class="btn" onclick="loadXB()">&#9654;&nbsp; Hae rajasiirrot</button></div>
-</div>
+
 
 <script>
 // ── §16 rajasiirrot (lisätty 2026-09-16) ────────────────────────────
@@ -5277,22 +5418,7 @@ function renderXB(H,startMs,endMs){
 }
 </script>
 
-<div class="v4-section" id="s17">
-  <div class="shdr"><span class="snum">&sect; 17</span><span class="stit">Sähkövarastot &mdash; vakaus, ei kestävyys</span></div>
-  <p class="snote">
-    Akut osallistuvat jo lyhytaikaiseen säätöön, mutta suurin osa kapasiteetista on reservimarkkinoilla
-    (FCR, FFR, aFRR), joissa lataus ja purku lähes kumoavat toisensa. Siksi nettoteho (§03, DS 398&minus;399)
-    on pieni suhteessa asennettuun tehoon. <strong>Stability &ne; endurance:</strong> 1&ndash;2 tunnin varasto
-    parantaa vakautta sekunneista tunteihin, mutta ei 168 tunnin Black Period -jakson kestävyyttä.
-    Siksi akut eivät ole EPP:ssä eivätkä FS:ssä.<br><br>
-    <strong>Lähteet:</strong> <code>DS 424</code> asennettu kapasiteetti (MW, &ge;1 MW varastot, 1 h, alkaen 11.3.2026) &middot;
-    <code>DS 398</code> purkuteho verkkoon &middot; <code>DS 399</code> latausteho akkuun (3 min, aina positiivisia).
-    Purkuaika 1&ndash;2 h on oletus [A] &mdash; Fingrid julkaisee tehon (MW), ei energiaa (MWh).
-  </p>
-  <div id="bessCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:1rem 0"></div>
-  <p class="snote" id="bessNote"></p>
-  <div style="margin-top:.8rem"><button class="btn" onclick="loadBESS()">&#9654;&nbsp; Hae akkudata</button></div>
-</div>
+
 
 <script>
 // §17 (2.12.2). Ankkuri: DS 424 ensimmäinen julkaistu arvo 12.3.2026 = 1222 MW (mitattu 21.9.2026).
@@ -5341,118 +5467,9 @@ async function loadBESS(){
 </script>
 
 
-<div class="v4-section" id="s15">
-  <div class="shdr"><span class="snum">&sect; 15</span><span class="stit">Suojautumisen hinta &mdash; vähittäismarkkinan validointi</span></div>
-  <p class="snote">
-    <strong>EI komponentti vaan validointi.</strong> §14 mittaa korjauskyvyn niukkuutta järjestelmässä;
-    tämä mittaa mitä <em>markkina veloittaa</em> siitä riskistä. Kaksi riippumatonta arviota samasta
-    tulevaisuudesta, eri menetelmällä ja eri toimijoilta.<br><br>
 
-    <strong>Preemio = kiinteä 1v &minus; spot</strong>, tyyppikäyttäjä K2 (kotitalous), verottomat
-    hinnat snt/kWh. Lähteet: Energiavirasto <code>Tarjoushinnat.xlsx</code> ·
-    ENTSO-E day-ahead FI kuukausikeskiarvo. Data:
-    <code>data/retail-premium-2006-2026.json</code> (tiiviste de926e16ad2d).
-  </p>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0">
-    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
-      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Preemio, keskiarvo 2024&ndash;2026</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono)">+5,19</div>
-      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">snt/kWh &middot; positiivinen 33/35 kk &middot; sähkölämmitteiselle omakotitalolle (20 000 kWh/v) <strong>~1 000 &euro;/v</strong></div>
-    </div>
-    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
-      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Trendi</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono);color:#8b3a10">4,7 &rarr; 8,7</div>
-      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">alkuvuosi 2025 &rarr; kesä 2026 &middot; kiinteä nousi 8,95 &rarr; 12,48 <strong>samalla kun spot pysyi paikallaan</strong></div>
-    </div>
-    <div style="border:1px solid var(--rule);padding:.7rem .9rem;background:#fff">
-      <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem">Milloin suojaus kannatti</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:var(--mono)">2 / 35</div>
-      <div style="font-size:.62rem;color:var(--muted);line-height:1.5;margin-top:.2rem">2026-01 (&minus;3,44) ja 2026-02 (&minus;3,73) &middot; spot 11,7 ja 13,5 snt/kWh</div>
-    </div>
-  </div>
 
-  <p class="snote">
-    <strong>Tulkinta.</strong> Nouseva preemio tarkoittaa että myyjä hinnoittelee kasvavaa hajontaa.
-    Se on riippumaton vahvistus sille mitä §14 ja SvK:n ennuste sanovat &mdash; ja se kohdistuu
-    juuri siihen ryhmään joka ei ole suojautunut pitkillä sopimuksilla.<br>
-    Ja <em>osa pörssisähkösopimuksista seuraa jo varttihintoja</em>: kotitalous kohtaa nyt saman
-    15 min resoluution kuin §14:n niukkuus. Aiemmin tuntikeskiarvo tasoitti piikin.
-
-    <br><br><strong>NELJÄ VARAUSTA, JA KOLMAS ON VIRHE JOKA TEHTIIN:</strong><br>
-
-    <strong>1 &middot; Tarjoushinta ei ole maksettu hinta.</strong> Energiaviraston oma huomautus:
-    hinnat perustuvat <em>"kullakin hetkellä yleisesti tarjolla oleviin tuotteisiin"</em> eivätkä
-    voimassa oleviin sopimuksiin. Eri <code>data_class</code> kuin Tilastokeskuksen toteumasarja.<br>
-
-    <strong>2 &middot; Spot on ilman marginaalia.</strong> Todellinen pörssisähkösopimus on
-    ~0,3&ndash;0,5 snt/kWh kalliimpi. Taso muuttuu, suunta ei.<br>
-
-    <strong>3 &middot; Ensimmäinen laskelma vertasi väärää paria.</strong> Toistaiseksi voimassa
-    oleva <em>ei ole suojaamaton vaihtoehto</em> &mdash; se on passiivisen asiakkaan sopimus, jonka
-    hintaa myyjä voi muuttaa ilmoituksella, ja se kantaa sekä riskin että asiakasinertian.
-    Vertailu kiinteä vs. toist.voim. antoi <strong>negatiivisen</strong> preemion
-    (&minus;0,93 snt/kWh). Suojaamaton vaihtoehto on <strong>pörssisähkö</strong>.<br>
-
-    <strong>4 &middot; 1.7.2022&ndash;1.7.2023 vertailukohta on epäluotettava.</strong>
-    Energiaviraston alaviite: toistaiseksi voimassa olevien arvo perustuu tuolloin
-    <em>"poikkeuksellisen vähäiseen tuotetietomäärään"</em> &mdash; kriisin aikana niitä ei juuri
-    tarjottu. Vertailukohta puuttuu juuri silloin kun se olisi kiinnostavin.
-  </p>
-</div>
-
-<div class="v4-section" id="s13">
-  <div class="shdr"><span class="snum">&sect; 13</span><span class="stit">Institutionaalinen taso — SM-015 Omistusrakennemonitori</span></div>
-  <p class="snote">WEM mittaa fyysisen tason (EPP, CHP-paine, DC-kuorma). §13 täydentää tätä institutionaalisella tasolla: kuka omistaa järjestelmän osat, miten investoidaan, miten silmukka kiihtyy. Päivitetään kvartaaleittain. <a href="/tools/sm015-ownership-monitor.html" style="color:#8b2500">Täysi monitori →</a></p>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0">
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Kuntakaupat / v (3v ka)</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">6.3</div>
-      <div style="font-size:.72rem;color:#666">Kynnys &gt;5 · ↑ kiihtyvä</div>
-    </div>
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Elenia investointiaste</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">0.72</div>
-      <div style="font-size:.72rem;color:#666">&lt;0.8 lypsää verkkoa · ↓</div>
-    </div>
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">CHP-eroosio (yht.)</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">−650 MW</div>
-      <div style="font-size:.72rem;color:#666">Helsinki+Porvoo+muut · jatkuu</div>
-    </div>
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Liittymäjono (kyselyt)</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#8b2500">250 GW</div>
-      <div style="font-size:.72rem;color:#666">Toteutunut ~0.5 GW/12kk</div>
-    </div>
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">PE-omistus jakelusta</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#c8960c">~34%</div>
-      <div style="font-size:.72rem;color:#666">Arvio · ↑ kasvava</div>
-    </div>
-
-    <div style="border:1px solid #ddd;padding:.7rem .9rem;background:#fff">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:.2rem">Silmukan katkaisijat</div>
-      <div style="font-size:1.4rem;font-weight:500;font-family:'DM Mono',monospace;color:#c8960c">1/3</div>
-      <div style="font-size:.72rem;color:#666">Polhem/Pori · Jousto 0 · Kunnallist. 0</div>
-    </div>
-
-  </div>
-
-  <p style="font-family:'DM Mono',monospace;font-size:.68rem;color:#666;margin-top:.5rem">
-    Kokonaisarvio Q2/2026: <strong style="color:#8b2500">VAHVA RAKENTEELLINEN JÄNNITE</strong> — 
-    kaikki 8 SM-015-silmukan askelta aktiivisia.<br>
-    <strong>Seurannassa (2026-08):</strong> TEM valmistelee fossiilittoman jouston tukimekanismia (CHP-käyttöiän pidennykset/tehonkorotukset, kilpailutus) — mahdollinen 4. silmukan katkaisija, mutta laki ei ole vielä eduskunnassa, ei lasketa mukaan "1/3"-lukuun ennen konkreettista rahoituspäätöstä. Ks. §10.<br>
-    Päivitetään kvartaaleittain manuaalisesti julkisista lähteistä.<br>
-    Institutionaalinen taso täydentää EPP-fysiikkaa — ei korvaa sitä.
-  </p>
-</div>
 
 </body>
 </html>

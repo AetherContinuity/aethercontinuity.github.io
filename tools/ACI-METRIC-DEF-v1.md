@@ -257,6 +257,8 @@ Raportoitava pääarvo: **SP_168** (Black Period -analoginen ikkuna).
 
 ## Core Metric E — Endurance Pressure Proxy (EPP)
 
+> **Tila 30.9.2026: JÄÄDYTETTY (WEM 2.16.0).** EPP v3 lasketaan ja arkistoidaan historiallisena sarjana, mutta kaavaa ei muuteta eikä sitä käytetä päälukuna. Pääluku on viiden kysymyksen kortti (FREQUENCY, DEPTH, DURATION, CORRECTION, SOURCE). Perusteet: WR on väärän merkkinen toteutuneessa tuulikadossa, painoilla ja luokkarajoilla ei ole kohdemuuttujaa, ja kolme neljästä komponentista on leikkurissa (DP_t, SP, SP:tä toistava persistenssipreemio). Poikkeus: 2.15.0 poisti hydro_RF:n FS:stä, koska se teki sarjasta ei-toistettavan. Uusi yhdistelmäindeksi vain ennakkorekisteröitynä fyysistä lopputulosta vastaan. Ks. [kehityshistoria](wem-historia.html#epp-jaadytys). Alla oleva rooli- ja kaavakuvaus on historiallinen.
+
 ### Rooli
 
 Instrumentin tärkein synteettinen mittari. Yhdistää A–D:n tulokset yhdeksi diagnostiseksi arvoksi, joka kuvaa kokonaispaineena: järjestelmä voi olla hetkellisesti tasapainossa mutta samalla ajallisesti kiristyvä.
