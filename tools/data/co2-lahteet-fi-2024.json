@@ -1,0 +1,1321 @@
+{
+ "_skeema": "aci/co2-lahteet/v0.1",
+ "_kuvaus": "Suomen suurimmat CO2-lähteet 2024 (E-PRTR), biogeeninen osuus = CO2 − CO2EXCLBIOMASS, kytkettynä PtX-hankkeisiin YVA:ssa. Pohja SGFA:n läpikäynnille ja hiilidioksidikilpailun kartalle.",
+ "_lahde": {
+  "aineisto": "EEA Industrial Reporting (IED/E-PRTR), DiscoData [IED].[latest], raportointivuosi 2024",
+  "haettu": "2026-09-30, Marko Ruotsalainen DiscoData-selaimessa (dremio); TOP 64 CO2-riviä, alaraja ~107 kt",
+  "kysely": "PollutantRelease ⨝ ProductionFacilityReport ⨝ ProductionFacility, countryCode='FI', mediumCode='AIR', pollutant IN ('CO2','CO2EXCLBIOMASS'), GROUP BY kunta, laitos, toimiala",
+  "raakadata_sha256": "edf136fcd20b",
+  "ptx_yva": "OGAS3 ennakkorekisteroinnit/q001/lahto_ptx.json (YVA-hakemisto 30.9.2026) + VolagHy käsin; kunta jäsennetty hankenimestä käsin; siirtoverkot pois",
+  "pienreaktori": "Steady Energy -tiedote 19.5.2026 (Helsinki, Kuopio, Kerava, Jyväskylä); Kuopion YVA-kuulutus 15.4.2026; haettu 30.9.2026. Muiden kehittäjien hankkeita ei haettu."
+ },
+ "_menetelma": [
+  "biogeeninen_t = co2_t − fossiili_t (E-PRTR raportoi CO2 sisältäen biomassan ja CO2EXCLBIOMASS erikseen)",
+  "tyyppi E-PRTR-toimialasta: 6(a)/6(b) sellu_paperi, 1(c) chp_voimala, 5(b) jatteenpoltto, muut muu_teollisuus",
+  "kuntakoonnissa laitokset, jotka ovat listalla; puuttuvat laitokset kohdassa aukot",
+  "chp_voimala-laitosten omistus luokiteltu käsin nimestä [A]: teollisuus / sekä / kunnallinen-energiayhtiö; tarkistettava"
+ ],
+ "aukot": [
+  {
+   "laitos": "Kuopion Energia, Haapaniemi",
+   "syy": "ei E-PRTR:n CO2-rivejä vuoden 2015 jälkeen",
+   "arvio_biogeeninen_t": [
+    350000,
+    400000
+   ],
+   "arvion_peruste": "Kuopion Energian tunnusluvut: kaukolämmön tuotanto 920 GWh, sähkön tuotanto 140 GWh/a; kokonaishyötysuhde ~88 % → polttoaine ~1,2 TWh; >80 % biopolttoaineita; puu ~0,40 t CO2/MWh [A]. Korjattu 30.9.2026: aiempi arvio 450–500 kt perustui sähköntuotantoon 0,30–0,35 TWh, mutta nykyinen sähköntuotanto on 140 GWh — CHP ajaa käytännössä lämpölaitoksena.",
+   "huom": "Haapaniemi 2 poistuu ~10 vuoden kuluessa (Yle); korvaajaksi kaavaillaan 2×50 MW LDR-50, kustannusarvio ~200 M€ (Kuopion Energia)."
+  },
+  {
+   "laitos": "Lahti Energia, Kymijärvi",
+   "syy": "puuttuu listalta; tarkistettava"
+  },
+  {
+   "laitos": "Jyväskylän Energia, Rauhalahti",
+   "syy": "puuttuu listalta; tarkistettava"
+  },
+  {
+   "laitos": "Tammervoima, Tampere",
+   "syy": "puuttuu listalta (jätteenpoltto); Ren-Gas Tampereen CO2-lähde"
+  },
+  {
+   "laitos": "Varkauden kaukolämpö-CHP",
+   "syy": "alle listan alarajan (107 kt)"
+  },
+  {
+   "laitos": "Jyväskylän Voima, Keljonlahti",
+   "syy": "co2_t = fossiili_t = 140 000 t: joko 100 % turvetta tai raportointivirhe"
+  }
+ ],
+ "tapaushuomiot": {
+  "Kuopio": {
+   "mondi_powerflute_co2_t": {
+    "2017": 300000,
+    "2020": 298000,
+    "2022": 289000,
+    "2023": 253000,
+    "2024": 232000
+   },
+   "mondi_fossiili_t": {
+    "2017": 95600,
+    "2020": 104000,
+    "2022": 95000,
+    "2023": 90300,
+    "2024": 79400
+   },
+   "havainto": "VolagHy eSAF -hankkeen CO2-tarve 250 kt/a > Mondin koko päästö 2024 (232 kt), biogeeninen vain 153 kt. YVA-ohjelma (nähtävillä 20.2.–23.3.2026) puhuu biogeenisestä CO2:sta Mondin voimalaitoksen savukaasuista."
+  },
+  "Varkaus": {
+   "lahde": "Stora Enso, Varkauden tehdas -sivu (käyttäjän liittämä 30.9.2026)",
+   "kapasiteetti": "335 000 t sellua ja 410 000 t aaltopahvin raaka-ainetta vuodessa; puunkulutus ~2 milj. m3/a; lisäksi saha ja LVL",
+   "vuosihuolto_2026": "21.8.–7.9.2026 koko integraatissa",
+   "havainto": "Tehtaan CO2 ei ole jatkuva: vuosihuolto katkaisee sen ~2,5 viikoksi. Tehtaan CO2:n varaan rakennettu PtX-laitos seisoo samaan aikaan, ellei sillä ole CO2-varastoa."
+  },
+  "Nordic_Ren-Gas": {
+   "havainto": "Hankkeet Tampere, Lahti, Kerava, Mikkeli, Pori, Kotka: kunnallinen CHP/jätevoimala → CO2 → e-metaani, hukkalämpö samaan kaukolämpöverkkoon. SGFA:n Property B + C ilman A:ta (ei säätövoimaa)."
+  }
+ },
+ "laitokset": [
+  {
+   "kunta": "Äänekoski",
+   "laitos": "Metsä Fibre Oy, Äänekosken biotuotetehdas",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 2770000,
+   "fossiili_t": 0,
+   "biogeeninen_t": 2770000
+  },
+  {
+   "kunta": "Raahe",
+   "laitos": "SSAB Europe Oy, Raahen terästehdas",
+   "eprtr_toimiala": "2(b)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 2180000,
+   "fossiili_t": 2180000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Imatra",
+   "laitos": "Stora Enso Oyj, Imatran tehtaat",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 2150000,
+   "fossiili_t": 137000,
+   "biogeeninen_t": 2013000
+  },
+  {
+   "kunta": "Porvoo",
+   "laitos": "Neste Oyj, Porvoon jalostamo",
+   "eprtr_toimiala": "1(a)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 1900000,
+   "fossiili_t": 1900000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Pietarsaari",
+   "laitos": "UPM-Kymmene Oyj, Pietarsaaren tehtaat",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 1530000,
+   "fossiili_t": 16100,
+   "biogeeninen_t": 1513900
+  },
+  {
+   "kunta": "Lappeenranta",
+   "laitos": "UPM-Kymmene Oyj, Kaukaan tehtaat",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 1520000,
+   "fossiili_t": 87000,
+   "biogeeninen_t": 1433000
+  },
+  {
+   "kunta": "Raahe",
+   "laitos": "Raahen Voima Oy, Energiantuotanto",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 1480000,
+   "fossiili_t": 1480000,
+   "biogeeninen_t": 0,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Kouvola",
+   "laitos": "UPM-Kymmene Oyj, Kymi",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 1420000,
+   "fossiili_t": 72500,
+   "biogeeninen_t": 1347500
+  },
+  {
+   "kunta": "Joensuu",
+   "laitos": "Stora Enso Oyj, Uimaharjun tehdas",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 1380000,
+   "fossiili_t": 27800,
+   "biogeeninen_t": 1352200
+  },
+  {
+   "kunta": "Rauma",
+   "laitos": "Metsä Fibre Oy, Rauman tehdas",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 1140000,
+   "fossiili_t": 73500,
+   "biogeeninen_t": 1066500
+  },
+  {
+   "kunta": "Lappeenranta",
+   "laitos": "Metsä Fibre Oy, Joutsenon tehdas",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 961000,
+   "fossiili_t": 24000,
+   "biogeeninen_t": 937000
+  },
+  {
+   "kunta": "Helsinki",
+   "laitos": "Helen Oy, Salmisaaren voimalaitokset",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 906000,
+   "fossiili_t": 727000,
+   "biogeeninen_t": 179000,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Oulu",
+   "laitos": "Stora Enso Oulu Oy, Oulun tehdas, Oulu",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 886000,
+   "fossiili_t": 13900,
+   "biogeeninen_t": 872100
+  },
+  {
+   "kunta": "Varkaus",
+   "laitos": "Stora Enso Oyj, Varkauden tehtaat",
+   "eprtr_toimiala": "6(b)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 639000,
+   "fossiili_t": 30000,
+   "biogeeninen_t": 609000
+  },
+  {
+   "kunta": "Naantali",
+   "laitos": "Turun Seudun Energiantuotanto Oy, Naantalin voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 621000,
+   "fossiili_t": 85200,
+   "biogeeninen_t": 535800,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Tornio",
+   "laitos": "Outokumpu Chrome Oy, Tornion tehtaat",
+   "eprtr_toimiala": "2(b)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 610000,
+   "fossiili_t": 610000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Porvoo",
+   "laitos": "Borealis Polymers Oy, Petrokemian laitokset",
+   "eprtr_toimiala": "4(a)(i)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 543000,
+   "fossiili_t": 543000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Helsinki",
+   "laitos": "Helen Oy, Vuosaaren biolämpökeskus",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 503000,
+   "fossiili_t": 387,
+   "biogeeninen_t": 502613,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Oulu",
+   "laitos": "Oulun Energia Oy, Laanilan Biovoimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 465000,
+   "fossiili_t": 37900,
+   "biogeeninen_t": 427100,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Lappeenranta",
+   "laitos": "Kaukaan Voima Oy, Energiantuotanto",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 386000,
+   "fossiili_t": 32300,
+   "biogeeninen_t": 353700,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Tampere",
+   "laitos": "Tampereen Energia Oy, Naistenlahden voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 374000,
+   "fossiili_t": 47300,
+   "biogeeninen_t": 326700,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kouvola",
+   "laitos": "Kymin Voima Oy, Energiantuotanto",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 373000,
+   "fossiili_t": 23900,
+   "biogeeninen_t": 349100,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Kotka",
+   "laitos": "MM Kotkamills Boards Oy, Kotkan tehtaat",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 368000,
+   "fossiili_t": 116000,
+   "biogeeninen_t": 252000
+  },
+  {
+   "kunta": "Riihimäki",
+   "laitos": "NG Nordic Finland Oy, Riihimäen toimipiste",
+   "eprtr_toimiala": "5(a)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 347000,
+   "fossiili_t": 212000,
+   "biogeeninen_t": 135000
+  },
+  {
+   "kunta": "Oulu",
+   "laitos": "Oulun Energia Oy, Toppilan voimalaitokset",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 338000,
+   "fossiili_t": 78400,
+   "biogeeninen_t": 259600,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Tornio",
+   "laitos": "Tornion Voima Oy, Röyttän teollisuusalueen voimalaitos ja kattilalai",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 337000,
+   "fossiili_t": 236000,
+   "biogeeninen_t": 101000,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Joensuu",
+   "laitos": "Savon Voima Oyj, Joensuun voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 321000,
+   "fossiili_t": 34700,
+   "biogeeninen_t": 286300,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Heinola",
+   "laitos": "Stora Enso Oyj, Heinolan Flutingtehdas",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 306000,
+   "fossiili_t": 81700,
+   "biogeeninen_t": 224300
+  },
+  {
+   "kunta": "Lohja",
+   "laitos": "Sappi Finland Operations Oy, Kirkniemen voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 301000,
+   "fossiili_t": 15700,
+   "biogeeninen_t": 285300,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Rovaniemi",
+   "laitos": "Neve Oy, Suosiolan voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 301000,
+   "fossiili_t": 52800,
+   "biogeeninen_t": 248200,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Vantaa",
+   "laitos": "Vantaan Energia Oy, Jätevoimala",
+   "eprtr_toimiala": "5(b)",
+   "tyyppi": "jatteenpoltto",
+   "co2_t": 284000,
+   "fossiili_t": 284000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Rauma",
+   "laitos": "Rauman Biovoima Oy, Rauman voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 276000,
+   "fossiili_t": 38300,
+   "biogeeninen_t": 237700,
+   "omistus": "sekä (teollisuus + kaukolämpö)"
+  },
+  {
+   "kunta": "Vantaa",
+   "laitos": "Vantaan Energia Oy, Martinlaakson voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 259000,
+   "fossiili_t": 79600,
+   "biogeeninen_t": 179400,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Lappeenranta",
+   "laitos": "Finnsementti Oy, Lappeenrannan sementtitehdas",
+   "eprtr_toimiala": "3(c)(i)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 249000,
+   "fossiili_t": 249000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Äänekoski",
+   "laitos": "Metsä Fibre Oy, Energiantuotanto",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 249000,
+   "fossiili_t": 32600,
+   "biogeeninen_t": 216400,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Kajaani",
+   "laitos": "Kainuun Voima Oy, Kainuun Voima Oy:n höyryvoimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 249000,
+   "fossiili_t": 18600,
+   "biogeeninen_t": 230400,
+   "omistus": "sekä (teollisuus + kaukolämpö)"
+  },
+  {
+   "kunta": "Espoo",
+   "laitos": "Fortum Power and Heat Oy, Suomenojan voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 239000,
+   "fossiili_t": 239000,
+   "biogeeninen_t": 0,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Jämsä",
+   "laitos": "UPM Communication Papers Oy, Jämsänkosken paperitehdas",
+   "eprtr_toimiala": "6(b)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 238000,
+   "fossiili_t": 24500,
+   "biogeeninen_t": 213500
+  },
+  {
+   "kunta": "Pori",
+   "laitos": "Pori Energia Oy, Aittaluodon voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 236000,
+   "fossiili_t": 3190,
+   "biogeeninen_t": 232810,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kuopio",
+   "laitos": "Mondi Powerflute Oy, Puunjalostusteollisuus, Mondi Powerflute Oy",
+   "eprtr_toimiala": "6(b)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 232000,
+   "fossiili_t": 79400,
+   "biogeeninen_t": 152600
+  },
+  {
+   "kunta": "Parainen",
+   "laitos": "Finnsementti Oy, Parainen / Sementtitehdas",
+   "eprtr_toimiala": "3(c)(i)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 232000,
+   "fossiili_t": 232000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Pori",
+   "laitos": "Porin Prosessivoima Oy, Energiantuotanto",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 231000,
+   "fossiili_t": 15800,
+   "biogeeninen_t": 215200,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Valkeakoski",
+   "laitos": "UPM Specialty Papers Oy, Tervasaari, Valkeakoski",
+   "eprtr_toimiala": "6(b)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 227000,
+   "fossiili_t": 67500,
+   "biogeeninen_t": 159500
+  },
+  {
+   "kunta": "Pietarsaari",
+   "laitos": "Oy Alholmens Kraft Ab, Pietarsaaren voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 227000,
+   "fossiili_t": 103000,
+   "biogeeninen_t": 124000,
+   "omistus": "sekä (teollisuus + kaukolämpö)"
+  },
+  {
+   "kunta": "Mustasaari",
+   "laitos": "Westenergy Oy, Mustasaaren jätteenpolttolaitos",
+   "eprtr_toimiala": "5(b)",
+   "tyyppi": "jatteenpoltto",
+   "co2_t": 212000,
+   "fossiili_t": 77400,
+   "biogeeninen_t": 134600
+  },
+  {
+   "kunta": "Espoo",
+   "laitos": "Fortum Power and Heat Oy, Kivenlahden lämpökeskus",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 204000,
+   "fossiili_t": 1070,
+   "biogeeninen_t": 202930,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kouvola",
+   "laitos": "Stora Enso Anjalankoski Oy, Anjalankosken tehtaat",
+   "eprtr_toimiala": "6(b)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 191000,
+   "fossiili_t": 28900,
+   "biogeeninen_t": 162100
+  },
+  {
+   "kunta": "Seinäjoki",
+   "laitos": "Seinäjoen Voima Oy, Seinäjoen voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 182000,
+   "fossiili_t": 109000,
+   "biogeeninen_t": 73000,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kaskinen",
+   "laitos": "Metsä Board Oyj, Metsä Board Kaskinen Pulp Mill",
+   "eprtr_toimiala": "6(a)",
+   "tyyppi": "sellu_paperi",
+   "co2_t": 182000,
+   "fossiili_t": 2050,
+   "biogeeninen_t": 179950
+  },
+  {
+   "kunta": "Helsinki",
+   "laitos": "Helen Oy, Vuosaaren voimalaitokset",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 181000,
+   "fossiili_t": 181000,
+   "biogeeninen_t": 0,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Oulu",
+   "laitos": "Oulun Energia Oy, Laanilan ekovoimalaitos",
+   "eprtr_toimiala": "5(b)",
+   "tyyppi": "jatteenpoltto",
+   "co2_t": 174000,
+   "fossiili_t": 88500,
+   "biogeeninen_t": 85500
+  },
+  {
+   "kunta": "Raahe",
+   "laitos": "Nordkalk Oy Ab, Raahen kalkinpolttamo",
+   "eprtr_toimiala": "3(c)(ii)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 168000,
+   "fossiili_t": 168000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Hämeenlinna",
+   "laitos": "Loimua Oy, Vanajan voimalaitos, Hämeenlinna",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 165000,
+   "fossiili_t": 7520,
+   "biogeeninen_t": 157480,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Porvoo",
+   "laitos": "Oy Linde Gas Ab, Kilpilahden vedyntuotantolaitos",
+   "eprtr_toimiala": "4(b)(i)",
+   "tyyppi": "muu_teollisuus",
+   "co2_t": 157000,
+   "fossiili_t": 157000,
+   "biogeeninen_t": 0
+  },
+  {
+   "kunta": "Järvenpää",
+   "laitos": "Tuusulanjärven Lämpö Oy, Järvenpään voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 154000,
+   "fossiili_t": 31500,
+   "biogeeninen_t": 122500,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Porvoo",
+   "laitos": "Porvoon Energia Oy - Borgå Energi Ab, Tolkkisten voimalaitokset",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 153000,
+   "fossiili_t": 67,
+   "biogeeninen_t": 152933,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Vaasa",
+   "laitos": "Vaasan Voima Oy, Vaasan voimalaitos, VL2",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 153000,
+   "fossiili_t": 63200,
+   "biogeeninen_t": 89800,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Mikkeli",
+   "laitos": "ESE-Energia Oy, PURSIALAN VOIMALAITOS",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 152000,
+   "fossiili_t": 18500,
+   "biogeeninen_t": 133500,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Jyväskylä",
+   "laitos": "Jyväskylän Voima Oy, Keljonlahden voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 140000,
+   "fossiili_t": 140000,
+   "biogeeninen_t": 0,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kerava",
+   "laitos": "Keravan Lämpövoima Oy, Keravan voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 137000,
+   "fossiili_t": 3040,
+   "biogeeninen_t": 133960,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Mänttä-vilppula",
+   "laitos": "Mäntän Energia Oy, Voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 136000,
+   "fossiili_t": 4740,
+   "biogeeninen_t": 131260,
+   "omistus": "teollisuus"
+  },
+  {
+   "kunta": "Kotka",
+   "laitos": "Kotkan Energia Oy, Hovinsaaren voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 132000,
+   "fossiili_t": 42700,
+   "biogeeninen_t": 89300,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Mikkeli",
+   "laitos": "Järvi-Suomen Voima Oy, Ristiinan voimalaitos",
+   "eprtr_toimiala": "1(c)",
+   "tyyppi": "chp_voimala",
+   "co2_t": 127000,
+   "fossiili_t": 195,
+   "biogeeninen_t": 126805,
+   "omistus": "kunnallinen/energiayhtiö"
+  },
+  {
+   "kunta": "Kotka",
+   "laitos": "Kotkan Energia Oy, Hyötyvoimalaitos",
+   "eprtr_toimiala": "5(b)",
+   "tyyppi": "jatteenpoltto",
+   "co2_t": 107000,
+   "fossiili_t": 40000,
+   "biogeeninen_t": 67000
+  }
+ ],
+ "kunnat": [
+  {
+   "kunta": "Äänekoski",
+   "biogeeninen_t": {
+    "sellu_paperi": 2770000,
+    "chp_voimala": 216400
+   },
+   "biogeeninen_yht_t": 2986400,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Lappeenranta",
+   "biogeeninen_t": {
+    "sellu_paperi": 2370000,
+    "chp_voimala": 353700,
+    "muu_teollisuus": 0
+   },
+   "biogeeninen_yht_t": 2723700,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [
+    "St1, metanoli"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Imatra",
+   "biogeeninen_t": {
+    "sellu_paperi": 2013000
+   },
+   "biogeeninen_yht_t": 2013000,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Kouvola",
+   "biogeeninen_t": {
+    "sellu_paperi": 1509600,
+    "chp_voimala": 349100
+   },
+   "biogeeninen_yht_t": 1858700,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Oulu",
+   "biogeeninen_t": {
+    "sellu_paperi": 872100,
+    "chp_voimala": 686700,
+    "jatteenpoltto": 85500
+   },
+   "biogeeninen_yht_t": 1644300,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [
+    "P2X Solutions + Oulun Energia, vety ja sähköpolttoaineet"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 686700
+  },
+  {
+   "kunta": "Joensuu",
+   "biogeeninen_t": {
+    "sellu_paperi": 1352200,
+    "chp_voimala": 286300
+   },
+   "biogeeninen_yht_t": 1638500,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [
+    "P2X Solutions, vety ja synteettinen polttoaine"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 286300
+  },
+  {
+   "kunta": "Pietarsaari",
+   "biogeeninen_t": {
+    "sellu_paperi": 1513900,
+    "chp_voimala": 124000
+   },
+   "biogeeninen_yht_t": 1637900,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee",
+   "kunnallinen_chp_biogeeninen_t": 124000
+  },
+  {
+   "kunta": "Rauma",
+   "biogeeninen_t": {
+    "sellu_paperi": 1066500,
+    "chp_voimala": 237700
+   },
+   "biogeeninen_yht_t": 1304200,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [
+    "Luoto Energia, vety ja metaani"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 237700
+  },
+  {
+   "kunta": "Helsinki",
+   "biogeeninen_t": {
+    "chp_voimala": 681613
+   },
+   "biogeeninen_yht_t": 681613,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": "Steady Energy + Helen: LDR-50-koelaitos Helsingissä (rakenteilla)",
+   "sgfa_seula": "karsiutuu: pienreaktori",
+   "kunnallinen_chp_biogeeninen_t": 681613
+  },
+  {
+   "kunta": "Varkaus",
+   "biogeeninen_t": {
+    "sellu_paperi": 609000
+   },
+   "biogeeninen_yht_t": 609000,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Naantali",
+   "biogeeninen_t": {
+    "chp_voimala": 535800
+   },
+   "biogeeninen_yht_t": 535800,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "FlagshipSEVEN, e-metanoli",
+    "Green North Energy, vety ja ammoniakki"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 535800
+  },
+  {
+   "kunta": "Pori",
+   "biogeeninen_t": {
+    "chp_voimala": 448010
+   },
+   "biogeeninen_yht_t": 448010,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Nordic Ren-Gas, P2X + kaukolämpö"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 232810
+  },
+  {
+   "kunta": "Kotka",
+   "biogeeninen_t": {
+    "sellu_paperi": 252000,
+    "chp_voimala": 89300,
+    "jatteenpoltto": 67000
+   },
+   "biogeeninen_yht_t": 408300,
+   "sellu_ja_chp_samassa_kunnassa": true,
+   "ptx_yva": [
+    "Arctic Sisu, e-metaani",
+    "Nordic Ren-Gas, P2X + kaukolämpö + CO2-talteenotto"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 89300
+  },
+  {
+   "kunta": "Tampere",
+   "biogeeninen_t": {
+    "chp_voimala": 326700
+   },
+   "biogeeninen_yht_t": 326700,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Nordic Ren-Gas, P2X + kaukolämpö"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 326700
+  },
+  {
+   "kunta": "Lohja",
+   "biogeeninen_t": {
+    "chp_voimala": 285300
+   },
+   "biogeeninen_yht_t": 285300,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Mikkeli",
+   "biogeeninen_t": {
+    "chp_voimala": 260305
+   },
+   "biogeeninen_yht_t": 260305,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Nordic Ren-Gas, P2X + kaukolämpö"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 260305
+  },
+  {
+   "kunta": "Rovaniemi",
+   "biogeeninen_t": {
+    "chp_voimala": 248200
+   },
+   "biogeeninen_yht_t": 248200,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 248200
+  },
+  {
+   "kunta": "Kajaani",
+   "biogeeninen_t": {
+    "chp_voimala": 230400
+   },
+   "biogeeninen_yht_t": 230400,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 230400
+  },
+  {
+   "kunta": "Heinola",
+   "biogeeninen_t": {
+    "sellu_paperi": 224300
+   },
+   "biogeeninen_yht_t": 224300,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Jämsä",
+   "biogeeninen_t": {
+    "sellu_paperi": 213500
+   },
+   "biogeeninen_yht_t": 213500,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Espoo",
+   "biogeeninen_t": {
+    "chp_voimala": 202930
+   },
+   "biogeeninen_yht_t": 202930,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 202930
+  },
+  {
+   "kunta": "Kaskinen",
+   "biogeeninen_t": {
+    "sellu_paperi": 179950
+   },
+   "biogeeninen_yht_t": 179950,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Vantaa",
+   "biogeeninen_t": {
+    "jatteenpoltto": 0,
+    "chp_voimala": 179400
+   },
+   "biogeeninen_yht_t": 179400,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Vantaan Energia, synteettinen metaani"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 179400
+  },
+  {
+   "kunta": "Valkeakoski",
+   "biogeeninen_t": {
+    "sellu_paperi": 159500
+   },
+   "biogeeninen_yht_t": 159500,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Hämeenlinna",
+   "biogeeninen_t": {
+    "chp_voimala": 157480
+   },
+   "biogeeninen_yht_t": 157480,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 157480
+  },
+  {
+   "kunta": "Porvoo",
+   "biogeeninen_t": {
+    "muu_teollisuus": 0,
+    "chp_voimala": 152933
+   },
+   "biogeeninen_yht_t": 152933,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Plug Power, synteettinen metaani"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: CO2:sta kilpailee PtX-hanke",
+   "kunnallinen_chp_biogeeninen_t": 152933
+  },
+  {
+   "kunta": "Kuopio",
+   "biogeeninen_t": {
+    "sellu_paperi": 152600
+   },
+   "biogeeninen_yht_t": 152600,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "VolagHy (InnoEnergy), eSAF 50 kt/a, CO2-tarve 250 kt/a Mondilta — LISÄTTY KÄSIN: puuttuu Q-001:n PTX-luettelosta (hakulauseke ei tunnista 'eSAF')"
+   ],
+   "pienreaktori": "Kuopion Energia: pienydinvoimalan YVA-ohjelma kuulutettu 15.4.2026 (VN/10941/2026), TEM yhteysviranomainen",
+   "sgfa_seula": "karsiutuu: pienreaktori",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Riihimäki",
+   "biogeeninen_t": {
+    "muu_teollisuus": 135000
+   },
+   "biogeeninen_yht_t": 135000,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Mustasaari",
+   "biogeeninen_t": {
+    "jatteenpoltto": 134600
+   },
+   "biogeeninen_yht_t": 134600,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "synteettinen metaani"
+   ],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Kerava",
+   "biogeeninen_t": {
+    "chp_voimala": 133960
+   },
+   "biogeeninen_yht_t": 133960,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [
+    "Nordic Ren-Gas, P2X + kaukolämpö"
+   ],
+   "pienreaktori": "Keravan Energia: Steady Energyn esiselvitys (kolmas kaupunki ennen Jyväskylää)",
+   "sgfa_seula": "karsiutuu: pienreaktori",
+   "kunnallinen_chp_biogeeninen_t": 133960
+  },
+  {
+   "kunta": "Mänttä-vilppula",
+   "biogeeninen_t": {
+    "chp_voimala": 131260
+   },
+   "biogeeninen_yht_t": 131260,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Järvenpää",
+   "biogeeninen_t": {
+    "chp_voimala": 122500
+   },
+   "biogeeninen_yht_t": 122500,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 122500
+  },
+  {
+   "kunta": "Tornio",
+   "biogeeninen_t": {
+    "muu_teollisuus": 0,
+    "chp_voimala": 101000
+   },
+   "biogeeninen_yht_t": 101000,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Vaasa",
+   "biogeeninen_t": {
+    "chp_voimala": 89800
+   },
+   "biogeeninen_yht_t": 89800,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 89800
+  },
+  {
+   "kunta": "Seinäjoki",
+   "biogeeninen_t": {
+    "chp_voimala": 73000
+   },
+   "biogeeninen_yht_t": 73000,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "läpäisee (ei teollista CO2-lähdettä listalla)",
+   "kunnallinen_chp_biogeeninen_t": 73000
+  },
+  {
+   "kunta": "Raahe",
+   "biogeeninen_t": {
+    "muu_teollisuus": 0,
+    "chp_voimala": 0
+   },
+   "biogeeninen_yht_t": 0,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Parainen",
+   "biogeeninen_t": {
+    "muu_teollisuus": 0
+   },
+   "biogeeninen_yht_t": 0,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Jyväskylä",
+   "biogeeninen_t": {
+    "chp_voimala": 0
+   },
+   "biogeeninen_yht_t": 0,
+   "sellu_ja_chp_samassa_kunnassa": false,
+   "ptx_yva": [],
+   "pienreaktori": "Alva + Steady Energy: vuoden esiselvitys, julkistettu 19.5.2026 (neljäs kaupunki)",
+   "sgfa_seula": "karsiutuu: pienreaktori",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Kokkola",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Flexens, ammoniakki"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Kristiinankaupunki",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Koppö Energia, synteettinen metaani/metanoli"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Vaala",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Vetyalfa, vety"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Utajärvi",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Mustikkakangas, vety"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Nivala",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Wega Group, bio- ja e-metaani",
+    "ABO Energy, vety"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Lahti",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Nordic Ren-Gas, P2X + kaukolämpö"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Pöytyä",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Wega Group, bio- ja e-metaani"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Ranua",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "ETFuels, e-metanoli"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  },
+  {
+   "kunta": "Nokia",
+   "biogeeninen_t": {},
+   "biogeeninen_yht_t": null,
+   "sellu_ja_chp_samassa_kunnassa": null,
+   "ptx_yva": [
+    "Freija/Vanir, synteettinen metaani"
+   ],
+   "huom": "ei laitosta top-64-listalla (raja 107 kt)",
+   "pienreaktori": null,
+   "sgfa_seula": "karsiutuu: ei kunnallista CHP:tä listalla",
+   "kunnallinen_chp_biogeeninen_t": 0
+  }
+ ],
+ "_sgfa_seula": {
+  "versio": "2026-09-30",
+  "ehdot": [
+   "kunnallinen tai sekakäyttöinen CHP (E-PRTR 1(c), omistus [A]) listalla",
+   "ei pienreaktorihanketta",
+   "ei PtX-hanketta YVA:ssa samassa kunnassa",
+   "etusija: myös sellu/paperi (ympärivuotinen CO2)"
+  ],
+  "rajoitus": "CHP:n elinkaarta (ehto 2) ei ole aineistossa; E-PRTR:n puuttuvat CHP:t (Kymijärvi, Rauhalahti, Haapaniemi) eivät voi läpäistä."
+ }
+}
