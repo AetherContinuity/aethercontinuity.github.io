@@ -4,6 +4,8 @@
 **Versio:** C-1.0  
 **Status:** Kanoninen sisäinen rekisteri — ei julkinen
 
+> **Huom. 30.9.2026:** WEM:n EPP v3 on jäädytetty historialliseksi indeksiksi, eikä se enää ole instrumentin pääluku; nykytila luetaan viiden kysymyksen kortista. Tämän dokumentin EPP-arvot on laskettu aiemmalla kaavalla — ennen WEM 2.15.0:aa FS sisälsi myös Norjan täyttöasteen (hydro_RF), joten ne eivät ole toistettavissa. [WEM:n kehityshistoria](/tools/wem-historia.html#epp-jaadytys)
+
 ---
 
 ## Käyttöperiaate
