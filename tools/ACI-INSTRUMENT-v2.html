@@ -783,9 +783,9 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
         kuitenkin lyhyen jakson, joka vastaa suhdeluvultaan yhtä sen riveistä — <strong>mitattuna,
         ei laskettuna.</strong><br><br>
 
-        OL3 (10.9.–30.10.) ja Loviisan molemmat yksiköt (LO2 2.8.–21.9., LO1 26.9.–18.10.) olivat
-        huollossa osittain samanaikaisesti. W168-keskiarvo ydinvoimasta oli <strong>3 243 MW</strong>
-        täyden <strong>4 394 MW</strong> sijaan.
+        OL3 (10.9.–30.10.) ja Loviisan molemmat yksiköt olivat huollossa osittain samanaikaisesti.
+        Ensimmäinen mittaus (10.9.2026, kaava ennen 2.15.0): W168-keskiarvo ydinvoimasta oli
+        <strong>3 243 MW</strong> täyden <strong>4 394 MW</strong> sijaan.
 
         <table class="rt" style="margin:.7rem 0">
           <tbody>
@@ -798,7 +798,18 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           </tbody>
         </table>
 
-        <strong>Järjestelmä ajoi siis sitä tilaa jota rivi &quot;2027: +1500 MW DC&quot; kuvaa</strong>
+        <strong>Toteuma oli suunniteltua syvempi.</strong> LO2:n huolto venyi laajennetun tarkastuksen vuoksi
+        21.9. &rarr; 29.9. (täysi seisokki; porrastettu paluu 4.10. asti, Nord Pool UMM, 8 päivitystä).
+        26.–29.9. kaikki kolme yksikköä olivat poissa yhtä aikaa, noin 2 600 MW; Fingridin mittaama ydinvoima
+        30.9. aamulla 1 640 MW. W168 30.9.2026: ydinvoima 1 779 MW, FS 43,7 % (nominaali, 2.15.0).
+        Täydellä ydinvoimalla sama FS vaatisi noin <strong>+6 000 MW</strong> lisäkulutusta &mdash;
+        enemmän kuin skenaariotaulukon suurin rivi. Samalla ikkunalla CORRECTION pysyi runsaana (62 % min),
+        DEPTH matalana (9 %) eikä W72:ssa ollut yhtään ≥500 €/MWh ylössäätöpiikkiä: syyskuun kulutuksella
+        ja tuonnin ollessa saatavilla järjestelmä kantoi FS-tason, jonka taulukko luokittelee BP-likeksi.
+        Tämä ei kumoa rajoituksia alla &mdash; se mittaa, kuinka paljon FS yksin kertoo.
+        <a class="hlink" href="https://umm.nordpoolgroup.com/#/messages/9084c5c8-319f-4e33-aa4c-705a5e45862a/8" target="_blank" rel="noopener">UMM LO2 v8&nbsp;↗</a><br><br>
+
+        <strong>Ensimmäisen mittauksen perusteella järjestelmä ajoi sitä tilaa jota rivi &quot;2027: +1500 MW DC&quot; kuvaa</strong>
         — ja hieman ylikin. Ja se tuotti mitattavan seurauksen: §14 näytti 9.9.2026 klo 14:45–20:15
         yksitoista ylössäätöpiikkiä ≥500 €/MWh, <strong>yhdeksän kertaa tiheämmin kuin koko talvi
         2025–26</strong> (3,82 % vs. 0,44 %).<br><br>
@@ -1291,8 +1302,8 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
       <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
       <li><strong>Backtest käyttää synteettistä rekonstruktiota tietoisesti, ei väliaikaisena varapolkuna:</strong> useiden istuntojen ja kymmenien tuntien yritysten jälkeen (verkkoasetukset, erillinen hakutyökalu, Fingridin oma avoin data -latauslomake — kaikki kohtasivat aitoja, dokumentoituja esteitä: resoluutioerot 3 min vs. tunti vs. 15 min 13.6.2023 jälkeen, proxyn sivutusparametrin arvaamattomuus, mobiiliselaimen tausta-ajastimen hidastus pitkien hakujen aikana, Fingridin dataset-ID:iden muuttuminen) päätettiin luopua oikean historiadatan hakuyrityksestä tällä hetkellä. Backtest-periodit 2022–2024 käyttävät sisäänrakennettuja kuukausikeskiarvoja + synteettistä tuntiprofiilia — tämä on nyt ensisijainen ja ainoa polku, ei väliaikainen. Hakulogiikka (fetchHistorical, fetchRealHistoricalPeriod) on säilytetty koodissa testattuna mutta kutsumattomana, jos päätös joskus muuttuu.</li>
       <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
-      <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS(p):ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
-      <br><br><strong>Loviisan vuosihuollot:</strong> LO1 ja LO2, noin 507 MW kumpikin. Fortumin julkinen aikataulu (fortum.com, haettu 29.7.2026): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6 vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10.<br><br><strong>Päällekkäisyys syksyllä 2026:</strong> OL3:n huolto (10.9.–30.10.) menee päällekkäin molempien Loviisan yksiköiden kanssa: LO2 10.–21.9. ja LO1 koko 26.9.–18.10. Reilun kuukauden ajan yli 2 100 MW ydinvoimasta on poissa yhtä aikaa (Uusi Suomi 8/2026). FS laskee pudotuksen live-datasta automaattisesti. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus). <a class="hlink" href="wem-historia.html#loviisa" target="_blank" rel="noopener">historia&nbsp;↗</a></li>
+      <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS:ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
+      <br><br><strong>Loviisan vuosihuollot:</strong> LO1 ja LO2, noin 507 MW kumpikin. Fortumin julkinen aikataulu (fortum.com, haettu 29.7.2026): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6 vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10. <em>Suunnitelma ei ole toteuma:</em> vuonna 2026 LO2:n huolto venyi laajennetun tarkastuksen vuoksi — täysi seisokki 29.9. asti ja porrastettu paluu 4.10. asti (Nord Pool UMM, 8 päivitystä).<br><br><strong>Päällekkäisyys syksyllä 2026:</strong> OL3:n huolto (10.9.–30.10.) meni päällekkäin molempien Loviisan yksiköiden kanssa: LO2 10.–29.9. ja LO1 26.9.–18.10. 26.–29.9. kaikki kolme yksikköä olivat poissa yhtä aikaa, noin 2 600 MW. FS laskee pudotuksen live-datasta automaattisesti. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus). <a class="hlink" href="wem-historia.html#loviisa" target="_blank" rel="noopener">historia&nbsp;↗</a></li>
       <br>
     </ul>
   <div style="background:#f3f0ea;border-left:3px solid #8b2500;padding:.7rem 1rem;margin:1rem 0;font-size:.82rem;font-family:'EB Garamond',Georgia,serif">
@@ -4376,8 +4387,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.16.0';
-const WEM_BUILD   = '2026-09-30c'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.1';
+const WEM_BUILD   = '2026-09-30d'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
@@ -4438,7 +4449,7 @@ function s12RenderLog(log) {
   if (!log.length) { tbody.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Ei dataa</td></tr>'; return; }
   tbody.innerHTML = log.map(r => `<tr>
     <td>${r.t}</td>
-    <td>${r.trr != null ? r.trr+'%' : '—'}</td>
+    <td>${r.bci != null ? r.bci+'%' : (r.trr != null ? r.trr+'% (TRR)' : '—')}</td>
     <td>${r.se1 != null ? r.se1+' MW' : '—'}</td>
     <td>${r.shortage != null ? r.shortage : '—'}</td>
     <td>${r.freq != null ? r.freq+' Hz' : '—'}</td>
@@ -5244,7 +5255,7 @@ function renderRP(up, dn, act, bidUp, bidDn){
     `vyöhykkeittäin: 44 → 300 → 542 → 1990 → 4000 €/MWh. <strong>Rajoja ei valittu hinnan mukaan — ` +
     `hinta seuraa niistä.</strong> Marginaali ei mennyt miinukselle kertaakaan talvella (0/${RP_MARGIN.n}); ` +
     `9.9.2026 klo 17:15 se kävi arvossa −0 %.<br><br>` +
-    `<strong>CHP ja korjausmarginaali:</strong> kun CHP ajaa, ylössäätötarjouksia on <strong>vähemmän</strong>, ei enemmän. ` +
+    `<strong>CHP ja korjausmarginaali.</strong> ` +
     `<a class="hlink" href="wem-historia.html#rp-chp" target="_blank" rel="noopener">historia&nbsp;↗</a><br>` +
     `Talven otoksesta (26 vrk, 2 087 paria): korrelaatio CHP-teho ↔ tarjottu ylössäätö ` +
     `<strong>r = −0,67</strong>. Kun CHP ajaa enemmän, tarjouksia on VÄHEMMÄN:<br>` +
