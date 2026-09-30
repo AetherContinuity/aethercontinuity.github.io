@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEM kehityshistoria · ACI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e0d0b;--paper:#f5f0e8;--paper-2:#ede7d8;--accent:#8b4513;--muted:#7a7468;--rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.7;font-size:17px}
+.wrap{max-width:820px;margin:0 auto;padding:1.5rem 16px 5rem}
+.top{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0;margin-bottom:2rem}
+.top .inst{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:1.8rem;font-weight:500;line-height:1.2;margin:.3rem 0}
+.lede{font-style:italic;color:var(--muted)}
+.back{font-family:var(--mono);font-size:.65rem;letter-spacing:.06em;color:var(--accent)}
+h3.sec{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:2.5rem 0 .8rem;border-bottom:1px solid var(--rule);padding-bottom:.4rem}
+.toc{list-style:none} .toc li{padding:.2rem 0;border-bottom:1px dotted var(--rule)}
+.toc a{color:var(--ink)} .toc span{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-left:.4rem}
+.entry{padding:1.4rem 0;border-bottom:1px solid var(--rule);scroll-margin-top:1rem}
+.entry:target{background:var(--paper-2);box-shadow:0 0 0 12px var(--paper-2)}
+.entry header{display:flex;gap:.8rem;align-items:baseline;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--muted)}
+.e-sec{color:var(--accent)} .e-anchor{margin-left:auto;color:var(--muted);text-decoration:none}
+.entry h2{font-size:1.2rem;font-weight:500;margin:.2rem 0 .6rem}
+.e-body{font-size:.95rem} .e-body p{margin-bottom:.6rem}
+.e-body code{font-family:var(--mono);font-size:.8em;background:var(--paper-2);padding:0 .2em}
+.e-body .was-summary{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#8b3a10;margin-bottom:.4rem}
+.e-body *{max-width:100%}
+.log{list-style:none} .log li{padding:.7rem 0;border-bottom:1px dotted var(--rule);font-size:.9rem;scroll-margin-top:1rem;overflow-wrap:anywhere}
+.log li:target{background:var(--paper-2)}
+.log b{font-family:var(--mono);font-size:.72rem;color:var(--accent);margin-right:.4rem}
+.note{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:.6rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="inst">Aether Continuity Institute · Winter Endurance Monitor</div>
+    <h1>Kehityshistoria</h1>
+    <p class="lede">Korjaukset, aiemmat väitteet ja niiden kumoukset sekä merkintöjen alkuperä. Instrumenttisivu kertoo, mitä nyt mitataan;
+    tämä sivu kertoo, miten siihen päädyttiin. Vanhaa ei poisteta: virheellinen väite säilyy tässä korjauksineen.</p>
+    <p style="margin-top:.6rem"><a class="back" href="ACI-INSTRUMENT-v2.html">← Winter Endurance Monitor</a></p>
+  </div>
+
+  <h3 class="sec">Merkinnät</h3>
+  <ul class="toc"><li><a href="#epp-jaadytys">EPP v3 jäädytetty, ulottuvuuskortti pääluvuksi</a> <span>§01 · 2026-09-30</span></li><li><a href="#kesa">Kesäkauden huomautus</a> <span>§01 · 2026-07-29 / 2026-09-24</span></li><li><a href="#cexp">C_exp(T)-mallin kalibroinnit</a> <span>§07 · 2026-08 / 2026-09-24</span></li><li><a href="#rp-chp">§14 CHP ja korjausmarginaali: korjattu väite</a> <span>§14 · 2026-09-11</span></li><li><a href="#epp-rajoitteet">EPP:n rakenteelliset rajoitteet: alkuperäinen kirjaus</a> <span>§01 · 2026-08-01 / 2026-09-11</span></li><li><a href="#loviisa">Loviisan vuosihuollot ja päällekkäisyysvirhe</a> <span>§07 · 2026-07-29 / 2026-08-04</span></li><li><a href="#nordic">Alueellinen taso (ENTSO-E) ja ristiintarkistuksen korjaus</a> <span>§11 · 2026-07 / 2026-08-01</span></li><li><a href="#backtest-validointi">Backtestin Recall/Precision/F1 poistettu</a> <span>§09 · 2026-08-01</span></li><li><a href="#kontekstilahteet">§10:n kontekstitiedot: alkuperä</a> <span>§10 · 2026-08-05 / 2026-08-08</span></li><li><a href="#hinta-tuuli">§11b Hinta vs. tuuli: tausta</a> <span>§11b · 2026-07-29</span></li><li><a href="#retail">§15 ensimmäinen laskelma vertasi väärää paria</a> <span>§15 · 2026-09</span></li></ul>
+
+  <article class="entry" id="epp-jaadytys">
+  <header><span class="e-sec">§01</span><span class="e-date">2026-09-30</span><a class="e-anchor" href="#epp-jaadytys">#</a></header>
+  <h2>EPP v3 jäädytetty, ulottuvuuskortti pääluvuksi</h2>
+  <div class="e-body"><p>Pääindeksi osoittautui ongelmalliseksi useassa kehitysvaiheessa: jokainen korjaus lisäsi varoitustekstin, ja sivu kehotti jo itse lukemaan ulottuvuudet eikä indeksiä. 30.9.2026 EPP v3 jäädytettiin historialliseksi sarjaksi ja viiden kysymyksen kortti (FREQUENCY, DEPTH, DURATION, CORRECTION, SOURCE) nostettiin pääluvuksi.</p><p>Peruste: (1) WR on väärän merkkinen toteutuneessa tuulikadossa; (2) painoilla ja luokkarajoilla ei ole kohdemuuttujaa; (3) kolme neljästä komponentista on leikkurissa (DP_t lattialla/katossa, SP lähes kyllästynyt, persistenssipreemio laskee SP:n toiseen kertaan); (4) aikasarjan lukitus esti korjaukset. 30.9.2026 aamun 0,550:stä yli puolet tuli yhdestä 5 %:n kynnyksestä (SP 0,175 + preemio 0,12).</p><p>Poikkeus jäädytykseen: 2.15.0 poisti hydro_RF:n EPP:n FS:stä, koska se teki sarjasta ei-toistettavan (ks. muutosloki).</p></div>
+</article><article class="entry" id="kesa">
+  <header><span class="e-sec">§01</span><span class="e-date">2026-07-29 / 2026-09-24</span><a class="e-anchor" href="#kesa">#</a></header>
+  <h2>Kesäkauden huomautus</h2>
+  <div class="e-body"><div class="alert-body">Yllä oleva BP-like/Elevated-lukema on todennäköisesti kesän kysyntäprofiilin (esim. helle, ilmastointikuorma) heijastumaa — EI talven Dunkelflaute-tyyppistä riskiä, jota tämä instrumentti on ensisijaisesti suunniteltu mittaamaan. <b>Päivitetty 2026-09-24 (v2.13.0):</b> C_exp(T) sisältää nyt perustason vuosittaisen kasvun (+177 MW/v) ja tuulitermin (+182 MW/GW), jotka mitattiin 1 339 tunnista. Aiemmin kesän DP_t oli 1,00 joka vuosi pelkästään siksi, että malli odotti liian pientä peruskulutusta — kesän 2026 kulutus oli 1 427 MW yli vanhan mallin. Kesälukemaa voi nyt lukea, mutta sään suunta (kylmä vs. kuuma) kannattaa silti tarkistaa: talven ja kesän korkea DP_t syntyy eri mekanismista.</div></div>
+</article><article class="entry" id="cexp">
+  <header><span class="e-sec">§07</span><span class="e-date">2026-08 / 2026-09-24</span><a class="e-anchor" href="#cexp">#</a></header>
+  <h2>C_exp(T)-mallin kalibroinnit</h2>
+  <div class="e-body"><p>Kulutusmalli: <code>C_exp = 7 506 + 177·(vuosi−2024) + 153·max(0, 18−T) + 182·tuuli[GW]</code>, katto 13 500 MW. <strong>UUDELLEENKALIBROITU 2026-09-24</strong> (1 339 tuntia, 8 × 168 h vuosilta 2024–2026, Fingrid DS 124/75 + ERA5, R² 0,88): perustaso 7 000 → 7 506 MW ja liukuvaksi, kulmakerroin 200 → 153 MW/°C, uusi tuulitermi, TEMP_SIGMA 900 → 700 MW (mitattu jäännöshajonta). Syy: takautuva EPP-laskenta osoitti vanhan mallin harhaiseksi molempiin suuntiin — kesällä DP_t = 1,00 joka vuosi (peruskulutus on noussut 833 MW vuodesta 2022, datakeskusten litteä kuorma) ja talvella 2022–2023 DP_t = 0 (malli odotti jopa 933 MW liikaa). Tuulitermi kuvaa hintaohjattua kuormaa (sähkökattilat), joka kytkeytyy päälle halvoilla tunneilla; mitattu erikseen +122 MW/GW (2/2026) ja +204 MW/GW (1/2024) lämpötila vakioituna. Spot-hinta ei kelpaa selittäjäksi, koska sen kerroin on positiivinen — hinta nousee kun kulutus on suuri (endogeenisuutta, ei joustoa). Alle −5 °C:n kulmakerroin (76 MW/°C) jäi ennalleen: otoksessa ei ollut riittävästi kylmempiä tunteja. Aiempi kalibrointi 2026-08 korjasi vain kulmakertoimen (350 → 200), ei perustasoa. <b>Kumpikin kalibrointi katkaisee DP_t-sarjan</b>, joten jaksot 2026-08 ja 2026-09-24 välillä eivät ole vertailukelpoisia. Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</p></div>
+</article><article class="entry" id="rp-chp">
+  <header><span class="e-sec">§14</span><span class="e-date">2026-09-11</span><a class="e-anchor" href="#rp-chp">#</a></header>
+  <h2>§14 CHP ja korjausmarginaali: korjattu väite</h2>
+  <div class="e-body"><p>§14:ssä luki aiemmin, että syyskuun ohut tarjouskirja johtuu osin siitä, ettei kaukolämpö-CHP aja kesällä, ja että talvella olisi <em>"vähemmän firmiä mutta enemmän korjausmarginaalia"</em>. Talven otos (26 vrk, 2 087 paria) osoitti päinvastaista: korrelaatio CHP-teho ↔ tarjottu ylössäätö r = −0,67. Korjattu 11.9.2026 (v2.9.1).</p></div>
+</article><article class="entry" id="epp-rajoitteet">
+  <header><span class="e-sec">§01</span><span class="e-date">2026-08-01 / 2026-09-11</span><a class="e-anchor" href="#epp-rajoitteet">#</a></header>
+  <h2>EPP:n rakenteelliset rajoitteet: alkuperäinen kirjaus</h2>
+  <div class="e-body"><div style="margin-top:.8rem;border:1px solid var(--rule);border-left:3px solid #8b3a10;padding:.6rem .85rem;background:#fdfaf8">
+          <div class="was-summary" style="cursor:pointer;font-family:var(--mono);font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;color:#8b3a10">
+            EPP:n rakenteelliset rajoitteet &mdash; lue ennen tulkintaa
+          </div>
+          <div style="margin-top:.6rem;font-size:.75rem;line-height:1.65">
+
+            <strong>1 &middot; FS ei n&auml;e CHP:t&auml;.</strong>
+            <code>FS = (ydin + vesi) / kulutus</code> &mdash; CHP ei ole osoittajassa. (2.15.0: hydro_RF poistettu EPP:n FS:st&auml;, ks. muutosloki.)
+            <code>ECI_semi = (ydin + vesi + CHP) / tuotanto</code> n&auml;kee sen, mutta se ei ole EPP:ss&auml;.<br>
+            Seuraus: <strong>&sect;10:n kuvaama CHP-eroosio ja SM-015:n mittaama Helsingin
+            &minus;650 MW eiv&auml;t n&auml;y EPP:ss&auml; lainkaan.</strong> Skenaariotaulukon rivit
+            <code>+3000 MW / &minus;30 %</code> ja <code>+3000 MW / &minus;40 %</code> antavat siksi
+            identtisen FS 42,8 %.<br>
+            <span style="color:var(--muted)">Kaavaa EI korjata: se katkaisisi aikasarjan. Ks. koodin
+            kommentti 2026-08-01 &mdash; FS-m&auml;&auml;ritelm&auml;n muutos "muutti hiljaa julkaistuja
+            historia-arvoja ilman versiointia" ja peruttiin samana p&auml;iv&auml;n&auml;.</span>
+
+            <br><br><strong>2 &middot; SP on saturoitunut.</strong> Kynnys on
+            <code>gap &gt; kulutus &times; 5 %</code>. Mitattu 9.9.2026: <strong>21 tuntia,
+            21 stressituntia (100 %)</strong>, gap 29&ndash;35 % eli kuusinkertaisesti kynnyksen yli
+            koko ajan. Mittari joka on p&auml;&auml;ll&auml; sadassa prosentissa ei erottele.
+            <code>SP_depth</code> erottelee &mdash; se on &sect;01:n ulottuvuuskortissa SP:n rinnalla.
+
+            <br><br><strong>3 &middot; DP_t on vakio.</strong> <code>1,000</code> kaikissa ikkunoissa;
+            <code>dp_t_raw</code> on 2,41 eli leikattu ykk&ouml;seen.
+            <strong>Viidennes EPP:st&auml; ei liiku.</strong>
+
+            <br><br><strong>4 &middot; Seuraus &mdash; EPP:n liikkuva osa on kapeampi kuin milt&auml; n&auml;ytt&auml;&auml;.</strong>
+            Nelj&auml;st&auml; komponentista yksi on vakio (DP_t), yksi l&auml;hes kyll&auml;stynyt (SP) ja yksi sokea
+            CHP:lle (FS). <strong>EPP liikkuu k&auml;yt&auml;nn&ouml;ss&auml; WR:n ja kulutuksen mukaan.</strong><br>
+            Se ei tee EPP:st&auml; v&auml;&auml;r&auml;&auml; &mdash; se tekee siit&auml; kapeamman ja tarkemmin rajatun kuin nelj&auml;n
+            komponentin summa antaa ymm&auml;rt&auml;&auml;. Lue &sect;01:n ulottuvuuskortti, &auml;l&auml; pelkk&auml;&auml; indeksi&auml;.
+
+            <br><br><span style="color:var(--muted);font-size:.68rem">
+            Kirjattu 2026-09-11 korjausinventaarion (K1&ndash;K4) perusteella. Mittausaineisto:
+            <code>data/wem-mittaukset-2026-09.json</code> (tiiviste d90ed9140b7e) ja
+            <code>data/rp-margin-talvi-2025-2026.json</code> (69a25d6a94ad).</span>
+          </div>
+        </div></div>
+</article><article class="entry" id="loviisa">
+  <header><span class="e-sec">§07</span><span class="e-date">2026-07-29 / 2026-08-04</span><a class="e-anchor" href="#loviisa">#</a></header>
+  <h2>Loviisan vuosihuollot ja päällekkäisyysvirhe</h2>
+  <div class="e-body"><p><strong>Loviisan vuosihuollot (lisätty 2026-07-29, käyttäjän oma huomio; KORJATTU 2026-08-04, käyttäjän uusi huomio + vahvistettu tuoreista uutislähteistä):</strong> Fortumin Loviisan voimalaitoksen kaksi yksikköä (LO1 ~507 MW, LO2 ~507 MW, yhteensä ~1000 MW) puuttuivat aiemmin tästä listasta kokonaan, vaikka ne ovat yhtä lailla osa firm-kapasiteettia. Fortumin oman julkisen aikataulun mukaan (fortum.com, haettu 2026-07-29): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10.
+      <br><br><strong>VIRHE KORJATTU:</strong> aiempi versio väitti "eri ikkuna kuin OL3:n marraskuu... kaikki osuvat elo-lokakuulle... ei koskaan samanaikaisesti" — tämä oli VÄÄRIN. OL3:n oma huoltoikkuna on 10.9.–30.10.2026 (ei marraskuu), ja se menee suoraan päällekkäin MOLEMPIEN Loviisa-yksiköiden kanssa: LO2 (2.8.–21.9.) päällekkäin 10.–21.9., LO1 (26.9.–18.10.) päällekkäin koko 26.9.–18.10. Tuoreet uutislähteet (Uusi Suomi 2026-08, "Loviisan ydinvoimaloiden ja Olkiluoto 3:n vuosihuollot ajoittuvat osittain samaan aikaan") vahvistavat: reilun kuukauden ajan syksyllä 2026 yli 2100 MW ydinvoimakapasiteetista on poissa yhtä aikaa — hieman yli puolet Suomen ~4400 MW:n ydinvoimakapasiteetista jää käyttöön tänä ikkunana. Tämä on suoraan relevantti WEM:n omalle FS-komponentille: jos backtest tai skenaariotyö joskus kattaa syyskuun 2026, FS(p) laskisi automaattisesti tuon pudotuksen live-datasta, mutta STAATTINEN dokumentaatioteksti (talla ollut) ei saa vaittaa paallekkaisyyden puuttuvan kun se on todistetusti olemassa. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus).</p></div>
+</article><article class="entry" id="nordic">
+  <header><span class="e-sec">§11</span><span class="e-date">2026-07 / 2026-08-01</span><a class="e-anchor" href="#nordic">#</a></header>
+  <h2>Alueellinen taso (ENTSO-E) ja ristiintarkistuksen korjaus</h2>
+  <div class="e-body"><p><strong>Arkkitehtuurinen virstanpylväs 2026-07 — Fingrid-keskeisestä instrumentista alueelliseksi observatorioksi:</strong> Nordic-WR v0:n käyttöönotto (ENTSO-E Transparency Platform) merkitsee laadullista muutosta WEM:n omassa arkkitehtuurissa. Aiemmin kaikki ydinmittarit (EPP, ECI, SP, FS) perustuivat yksinomaan Suomen järjestelmään (Fingrid Open Data). Nyt datapipeline erottelee kansallisen ja alueellisen tason:</p><p>Tämä mahdollistaa kolme asiaa joita puhtaasti Fingrid-pohjainen malli ei voinut: (1) erottaa onko matala tuuli paikallinen suomalainen ilmiö vai koko Pohjolan Dunkelflaute (Nordic-WR), (2) havaita SE1:n kasvava teollinen kuorma (Stegra/HYBRIT) SUORAAN ennen kuin se näkyy Suomen tuontimarginaalin kiristymisenä, (3) <strong>PYRKIÄ</strong> validoimaan WEM:n omia tuloksia kahdella riippumattomalla lähteellä rinnakkain — <strong>KORJATTU 2026-08-01 (käyttäjän oma live-havainto):</strong> FI-Fingrid vs. FI-ENTSO-E-ristiintarkistus EI ANNA VAKIOSUHDETTA ikkunoiden yli (W24 +3,7%, W72 +76%, W168 +96% — ei ~4,5% kuten aiemmin väitettiin yhtenä lukuna). Suhteen kasvu ikkunan pidentyessä viittaa MTU-eroon (vartti vs. tunti), pistemäärän vs. aikaleiman mukaiseen ikkunointiin, ja/tai UTC/EEST-aikavyöhyke-eroon (kesällä 3h) — ei pelkkään aggregaattimääritelmän eroon. Ristiintarkistus ei toistaiseksi ole luotettava missään ikkunassa paitsi ehkä W24:ssä; korjaus (UTC-ankkurointi, tuntiresamplaus, aikaleimadedupointi) ei ole vielä toteutettu.</strong> Seuraavat kehitysaskeleet (esim. Nordic ECI, Nordic Endurance Pressure) ovat nyt luonteeltaan pääosin analytiikkaa olemassa olevan datapohjan päällä, ei uusia rajapintoja — datalähdepohja (Fingrid + ENTSO-E + Open-Meteo + NVE) kattaa jo sekä Suomen että laajemman pohjoismaisen järjestelmän keskeiset rakenteelliset tekijät.
+      </p></div>
+</article><article class="entry" id="backtest-validointi">
+  <header><span class="e-sec">§09</span><span class="e-date">2026-08-01</span><a class="e-anchor" href="#backtest-validointi">#</a></header>
+  <h2>Backtestin Recall/Precision/F1 poistettu</h2>
+  <div class="e-body"><p>Aiemmin backtest luokitteli periodit TP/FP/FN/TN-luokkiin kriteerillä NordPool &gt; 200 €/MWh ja raportoi Recall/Precision/F1. 2022 oli hintakriisi, ei kapasiteettikriisi, joten kriteeri mittasi väärää asiaa. Mittarit poistettiin kokonaan (ei vain näkymästä) 1.8.2026. Palautetaan, kun fyysinen kriteeri (DS 336 shortage status, tehoreservin aktivoinnit tai ERAA:n LOLE-tunnit) on käytössä.</p></div>
+</article><article class="entry" id="kontekstilahteet">
+  <header><span class="e-sec">§10</span><span class="e-date">2026-08-05 / 2026-08-08</span><a class="e-anchor" href="#kontekstilahteet">#</a></header>
+  <h2>§10:n kontekstitiedot: alkuperä</h2>
+  <div class="e-body"><p>Kaasumoottorivoimaloiden hankelista (EPV Energia / Tornion Voima) lisättiin ylläpitäjän omana huomiona 5.8.2026. Fossiilittoman jouston tukimekanismi (TEM) lisättiin ylläpitäjän huomiona 8.8.2026, lähteenä Talouselämä (Antti Honkamaa). Kumpikaan ei vaikuta laskentaan.</p></div>
+</article><article class="entry" id="hinta-tuuli">
+  <header><span class="e-sec">§11b</span><span class="e-date">2026-07-29</span><a class="e-anchor" href="#hinta-tuuli">#</a></header>
+  <h2>§11b Hinta vs. tuuli: tausta</h2>
+  <div class="e-body"><p>Kaavio lisättiin ylläpitäjän pyynnöstä 29.7.2026: "hauska nähdä käytännössä miten hintasignaali ohjaa markkinaa ja tuotantoa."</p></div>
+</article><article class="entry" id="retail">
+  <header><span class="e-sec">§15</span><span class="e-date">2026-09</span><a class="e-anchor" href="#retail">#</a></header>
+  <h2>§15 ensimmäinen laskelma vertasi väärää paria</h2>
+  <div class="e-body"><p><strong>3 &middot; Ensimmäinen laskelma vertasi väärää paria.</strong> Toistaiseksi voimassa
+    oleva <em>ei ole suojaamaton vaihtoehto</em> &mdash; se on passiivisen asiakkaan sopimus, jonka
+    hintaa myyjä voi muuttaa ilmoituksella, ja se kantaa sekä riskin että asiakasinertian.
+    Vertailu kiinteä vs. toist.voim. antoi <strong>negatiivisen</strong> preemion
+    (&minus;0,93 snt/kWh). Suojaamaton vaihtoehto on <strong>pörssisähkö</strong>.<br></p></div>
+</article>
+
+  <h3 class="sec" id="muutosloki">Muutosloki</h3>
+  <ul class="log" id="log"><li>Ladataan…</li></ul>
+  <p class="note">Muutosloki luetaan tiedostosta <code>wem-changes.js</code>, jota instrumenttisivu käyttää samana lähteenä.
+  Ennen versiota 2.6 muutoksia ei kirjattu lokiin.</p>
+</div>
+<script src="wem-changes.js"></script>
+<script>
+(function(){
+  var ul = document.getElementById('log'), L = window.WEM_CHANGES || [];
+  if (!L.length) { ul.innerHTML = '<li>Muutoslokia ei voitu ladata.</li>'; return; }
+  ul.innerHTML = '';
+  L.forEach(function(t){
+    var m = /^([0-9.→]+):\s*/.exec(t), v = m ? m[1] : '', li = document.createElement('li');
+    if (v) li.id = 'v' + v.replace(/[^0-9]+/g, '-');
+    var b = document.createElement('b'); b.textContent = v ? 'v' + v : '';
+    li.appendChild(b); li.appendChild(document.createTextNode(m ? t.slice(m[0].length) : t));
+    ul.appendChild(li);
+  });
+  if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+})();
+</script>
+</body>
+</html>
