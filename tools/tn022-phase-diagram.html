@@ -51,14 +51,16 @@ const P_MIN = 0, P_MAX = 150, R_MIN = 1, R_MAX = 10;
 function dominant(p, ratio, co2, biomass, bci) {
   // If BCI < 0.6, LDR-50 is not viable — suppress S-3 where LDR is assumed
   // BCI affects whether high-duration configurations are structurally sound
-  const ldr_viable = bci > 0.6 ? (bci - 0.6) / 0.4 : 0; // 0 at BCI=0.6, 1 at BCI=1.0
+  // 2026-09-30: BCI removed from dominance. In TN-022, LDR-50 is a separate add-on
+  // (Node+), not part of S-3 (F-T hybrid); multiplying S-3's bonus by LDR viability
+  // mixed two different choices. BCI is now shown as a separate LDR-50 verdict.
   const elec_viable = Math.max(0, 1 - (p - 35) / 45);
   const co2_factor = co2;
   const s1_score = biomass * 0.6 - p * 0.002 + 0.15;
   const fuel_saving = Math.max(0, (55 - p) / 55) * co2_factor;
   const s2_score = fuel_saving * 0.8 + elec_viable * 0.5 + co2_factor * 0.4
-                   - (1 - biomass) * 0.1 + (0.35 + ratio * 0.03) * 0.2;
-  const liquid_bonus = ratio > 5 ? (ratio - 5) * 0.08 * ldr_viable : 0;
+                   + (1 - biomass) * 0.1 + (0.35 + ratio * 0.03) * 0.2; // 2026-09-30: sign fixed — scarce biomass favours electrolysis, not the reverse
+  const liquid_bonus = ratio > 5 ? (ratio - 5) * 0.08 : 0;
   // BCI below 0.6: PEM+HP dominates over LDR-backed S-3
   const s3_score = fuel_saving * 0.7 + co2_factor * 0.5
                    + (0.6 + ratio * 0.05) * 0.25 + liquid_bonus
@@ -101,6 +103,8 @@ function PhaseDiagram() {
   const [peakMW, setPeakMW] = useState(120);
   const [hovered, setHovered] = useState(null);
   const [cursor, setCursor] = useState(null);
+  const [cw, setCw] = useState(0);
+  useEffect(() => { const f = () => setCw(window.innerWidth); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
 
   const innerW = W - PAD.left - PAD.right;
   const innerH = H - PAD.top - PAD.bottom;
@@ -117,8 +121,9 @@ function PhaseDiagram() {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = W * dpr;
     canvas.height = H * dpr;
-    canvas.style.width = W + "px";
-    canvas.style.height = H + "px";
+    canvas.style.width = "100%";
+    canvas.style.maxWidth = W + "px";
+    canvas.style.height = "auto";
     ctx.scale(dpr, dpr);
 
     const STEP = 3;
@@ -188,11 +193,12 @@ function PhaseDiagram() {
       ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2);
       ctx.fillStyle = "white"; ctx.fill();
     }
-  }, [co2, biomass, cursor]);
+  }, [co2, biomass, cursor, cw]);
 
   const handleMouseMove = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const k = W / rect.width; // canvas scales with the viewport
+    const mx = (e.clientX - rect.left) * k, my = (e.clientY - rect.top) * k;
     if (mx < PAD.left || mx > PAD.left + innerW || my < PAD.top || my > PAD.top + innerH) {
       setCursor(null); setHovered(null); return;
     }
@@ -213,7 +219,7 @@ function PhaseDiagram() {
     React.createElement("p", { style: { fontSize: "0.7rem", color: "#7a7468", marginBottom: "0.5rem", textAlign: "center", maxWidth: 520 } },
       "S-1 / S-2 / S-3 dominance by electricity price \xd7 seasonal demand ratio"),
     React.createElement("p", { style: { fontSize: "0.68rem", color: "#7a7468", marginBottom: "1.5rem", textAlign: "center", maxWidth: 560, fontStyle: "italic", lineHeight: 1.6 } },
-      "Shows which TN-022 node configuration (S-1 biomass CHP, S-2 electrolytic SNG, S-3 F-T liquid hybrid) has the lowest-cost duration capability at a given electricity price and seasonal demand ratio. Boundaries are derived from the \xa708 CAPEX and duration model in the companion document, not from a market simulation \u2014 move the sliders to see how CO\u2082 availability, biomass feedstock, and Baseload Compatibility (BCI) shift which configuration dominates."),
+      "Shows which TN-022 node configuration (S-1 biomass CHP, S-2 electrolytic SNG, S-3 F-T liquid hybrid) has the lowest-cost duration capability at a given electricity price and seasonal demand ratio. Regions come from hand-set indicative scores [A] \u2014 they are NOT computed from the TN-022 CAPEX figures or the duration index D, and not from a market simulation. The x-axis is a single price level, although node economics depend on the price spread (cheap charging hours vs. expensive dispatch hours); a spread-based version is pending. Known issue: S-2 (electrolytic) dominates again above ~100 \u20ac/MWh and S-1 barely appears \u2014 this contradicts the model\u2019s own logic (electrolysis is unviable at high prices) and shows that the hand-set weights, not the economics, draw the map. Read the diagram as a sketch, not a result. CO\u2082 availability and biomass feedstock shift the regions; BCI and peak demand only classify the node and the LDR-50 add-on."),
 
     React.createElement("canvas", {
       ref: canvasRef,
@@ -231,12 +237,12 @@ function PhaseDiagram() {
             " \u2014 " + COLORS[s].name))),
       React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.4rem" } },
         React.createElement("div", { style: { width: 20, height: 2, backgroundImage: "repeating-linear-gradient(90deg,rgba(255,220,100,0.85) 0 6px,transparent 6px 10px)" } }),
-        React.createElement("span", { style: { fontSize: "0.7rem", color: "rgba(255,220,100,0.8)" } }, "PtX \u2194 CHP boundary"))),
+        React.createElement("span", { style: { fontSize: "0.7rem", color: "rgba(255,220,100,0.8)" } }, "PtX \u2194 CHP reference (fixed)"))),
 
     React.createElement("div", {
       style: { height: 44, display: "flex", alignItems: "center", gap: "2rem", padding: "0 1.5rem",
                background: "#ede7d8", border: "1px solid #c8bfad",
-               borderRadius: 4, margin: "1rem 0", minWidth: 480, justifyContent: "center", flexWrap: "wrap" }
+               borderRadius: 4, margin: "1rem 0", width: "100%", maxWidth: 560, minHeight: 44, height: "auto", padding: ".5rem 1rem", justifyContent: "center", flexWrap: "wrap" }
     },
       hovered ? [
         React.createElement("span", { key: "p", style: { fontSize: "0.7rem" } },
@@ -254,14 +260,14 @@ function PhaseDiagram() {
             COLORS[hovered.s].label + " \u2014 " + COLORS[hovered.s].name)),
       ] : React.createElement("span", { style: { fontSize: "0.7rem", color: "#7a7468" } }, "Move cursor over diagram")),
 
-    React.createElement("div", { style: { display: "flex", gap: "3rem", background: "#ede7d8", border: "1px solid #c8bfad", borderRadius: 4, padding: "1rem 2rem" } },
+    React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "1.2rem 2rem", background: "#ede7d8", border: "1px solid #c8bfad", borderRadius: 4, padding: "1rem 1.2rem", width: "100%", maxWidth: 860, justifyContent: "center" } },
       ...[
         { label: "CO\u2082 availability", value: co2, setter: setCo2, note: co2 < 0.5 ? "S3 signal active" : "sufficient" },
         { label: "Biomass feedstock", value: biomass, setter: setBiomass, note: biomass > 0.7 ? "S-1 viable" : "limited" },
-        { label: "BCI (Baseload Compatibility)", value: bci, setter: setBci, note: bci < 0.6 ? "LDR-50 poor — PEM+HP preferred" : bci < 1.0 ? "LDR-50 conditional" : "LDR-50 structurally sound" },
-        { label: "Peak heat demand (MW)", value: peakMW, setter: setPeakMW, min: 30, max: 500, step: 10, note: nodeClass(peakMW).cls + " — " + nodeClass(peakMW).label + " · " + nodeClass(peakMW).capex },
+        { label: "BCI (Baseload Compatibility)", value: bci, setter: setBci, note: "LDR-50 add-on: " + ldrRecommended(bci, peakMW) + " · does not change the diagram" },
+        { label: "Peak heat demand (MW)", value: peakMW, setter: setPeakMW, min: 30, max: 500, step: 10, note: nodeClass(peakMW).cls + " — " + nodeClass(peakMW).label + " · " + nodeClass(peakMW).capex + " · does not change the diagram" },
       ].map(({ label, value, setter, note, min, max, step }) =>
-        React.createElement("div", { key: label, style: { display: "flex", flexDirection: "column", gap: "0.4rem", minWidth: 180 } },
+        React.createElement("div", { key: label, style: { display: "flex", flexDirection: "column", gap: "0.4rem", flex: "1 1 170px", minWidth: 150 } },
           React.createElement("div", { style: { display: "flex", justifyContent: "space-between" } },
             React.createElement("span", { style: { fontSize: "0.68rem" } }, label),
             React.createElement("strong", { style: { fontSize: "0.68rem", color: "#0e0d0b" } }, max > 1 ? Math.round(value) + " MW" : Math.round(value * 100) + "%")),
@@ -270,7 +276,7 @@ function PhaseDiagram() {
           React.createElement("span", { style: { fontSize: "0.6rem", color: "#7a7468" } }, note)))),
 
     React.createElement("div", { style: { marginTop: "1.5rem", fontSize: "0.6rem", color: "#7a7468", maxWidth: 520, textAlign: "center", lineHeight: 1.7 } },
-      "TN-022 \xb7 ACI June 2026 \xb7 Phase boundaries indicative \u2014 derived from \u00a708 cost and duration model. ",
+      "TN-022 \xb7 ACI June 2026, revised 30.9.2026 \xb7 Scores indicative [A], not derived from the CAPEX model. The dashed line is a fixed reference (42 + 2.8 \xd7 ratio \u20ac/MWh), not a computed region boundary. ",
       React.createElement("a", { href: "/supplements/tn-022-node-capex-model.html", style: { color: "#7a7468" } }, "Full document \u2192")));
 }
 
