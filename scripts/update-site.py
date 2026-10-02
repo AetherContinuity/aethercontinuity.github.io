@@ -53,6 +53,15 @@ def is_internal(path: str) -> bool:
     return False
 
 
+def is_stub(filepath: Path) -> bool:
+    """Uudelleenohjaustynkä tai noindex-sivu — ei sitemapiin."""
+    try:
+        head = filepath.read_text(encoding="utf-8", errors="ignore")[:1500]
+    except OSError:
+        return False
+    return bool(re.search(r'http-equiv="refresh"|name="robots" content="noindex', head, re.I))
+
+
 def get_title(filepath: Path) -> str:
     try:
         content = filepath.read_text(encoding="utf-8", errors="ignore")
@@ -85,7 +94,7 @@ def collect_html_files(root: Path) -> list[dict]:
 
     # Root HTML files
     for f in sorted(root.glob("*.html")):
-        if f.name in EXCLUDE or is_internal(f.name):
+        if f.name in EXCLUDE or is_internal(f.name) or is_stub(f):
             continue
         priority = get_priority("root", f.name)
         entries.append({
@@ -113,7 +122,7 @@ def collect_html_files(root: Path) -> list[dict]:
         })
         # Add individual files
         for f in sorted(folder_path.glob("*.html")):
-            if f.name in EXCLUDE or is_internal(f.name):
+            if f.name in EXCLUDE or is_internal(f.name) or is_stub(f):
                 continue
             entries.append({
                 "url": f"/{folder}/{f.name}",

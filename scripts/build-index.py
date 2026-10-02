@@ -113,6 +113,9 @@ def scan(rel: str, dates: dict[str, str]) -> dict:
     }
     if AUTO_HIDE.search(rel):
         entry["hidden"] = True
+    if re.search(r'http-equiv="refresh"', text, re.I):      # uudelleenohjaustynkä
+        entry["hidden"] = True
+        entry["note"] = "uudelleenohjaus"
     return entry
 
 
@@ -143,8 +146,11 @@ def nice_date(iso: str) -> str:
     return f"{int(d)} {MONTHS[int(m) - 1]} {y}"
 
 
-def visible(items: list[dict], group: str) -> list[dict]:
-    return [e for e in items if e["group"] == group and not e.get("hidden") and not e.get("variant_of")]
+def visible(items: list[dict], group: str, front: bool = False) -> list[dict]:
+    """Julkaisut ilman piilotettuja ja käännöksiä. front=True jättää pois
+    myös rivit, joilla on nofront (julkaisu on olemassa, ei etusivulle)."""
+    return [e for e in items if e["group"] == group and not e.get("hidden") and not e.get("variant_of")
+            and not (front and e.get("nofront"))]
 
 
 def row(pid: str, href: str, title: str, meta: str) -> str:
@@ -158,7 +164,7 @@ def row(pid: str, href: str, title: str, meta: str) -> str:
 
 
 def render_latest(items: list[dict], n: int = 10) -> str:
-    pubs = sorted(visible(items, "pub"), key=lambda e: (e["date"], e.get("id") or ""), reverse=True)[:n]
+    pubs = sorted(visible(items, "pub", True), key=lambda e: (e["date"], e.get("id") or ""), reverse=True)[:n]
     out = []
     for e in pubs:
         meta = [nice_date(e["date"]), TYPES.get(e.get("type"), "Document"), e["lang"].upper()]
@@ -177,7 +183,7 @@ def render_tools(items: list[dict]) -> str:
 def render_fiction(items: list[dict], n: int = 4) -> str:
     all_f = [e for e in items if e["group"] == "fiction" and not e.get("hidden")]
     out = []
-    for e in sorted(visible(items, "fiction"), key=lambda e: e["date"], reverse=True)[:n]:
+    for e in sorted(visible(items, "fiction", True), key=lambda e: e["date"], reverse=True)[:n]:
         langs = [e["lang"].upper()] + sorted(v["lang"].upper() for v in all_f if v.get("variant_of") == e["path"])
         meta = [nice_date(e["date"]), " / ".join(dict.fromkeys(langs))]
         if e.get("blurb"):
@@ -236,7 +242,7 @@ def main() -> int:
     REGISTRY.parent.mkdir(exist_ok=True)
     REGISTRY.write_text(json.dumps({
         "_note": "Julkaisurekisteri. Uudet tiedostot lisää scripts/build-index.py; olemassa olevia "
-                 "rivejä se ei muuta. Käsin muokattavat kentät: title, date, lang, hidden, "
+                 "rivejä se ei muuta. Käsin muokattavat kentät: title, date, lang, hidden, nofront, "
                  "variant_of (käännös: alkuperäisen path), featured + label + blurb (mittarit), "
                  "blurb (fiktio, päätösraidat), domains.",
         "items": items}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
