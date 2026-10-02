@@ -1,0 +1,68 @@
+name: Site build — registry, front page, sitemap
+
+# Ajaa scripts/build-index.py (julkaisurekisteri + etusivun generoidut
+# lohkot) ja scripts/update-site.py (sitemap.xml), kun sisältöä tulee
+# mainiin. Tulos commitoidaan takaisin mainiin merkinnällä [skip ci],
+# joten ajo ei laukaise itseään.
+#
+# Käsin ladattu julkaisu (Add files via upload) näkyy näin etusivulla
+# ilman erillistä vaihetta.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'papers/**'
+      - 'supplements/**'
+      - 'tools/**'
+      - 'fiction/**'
+      - 'decisions/**'
+      - '*.html'
+      - 'data/registry.json'
+      - 'scripts/build-index.py'
+      - 'scripts/update-site.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # rekisterin päivämäärä = tiedoston ensimmäinen commit
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build and commit
+        run: |
+          git config user.name  "aci-site-build"
+          git config user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/build-index.py
+            python3 scripts/update-site.py
+            git add data/registry.json index.html sitemap.xml
+            if git diff --staged --quiet; then
+              echo "Ei muutoksia."
+              exit 0
+            fi
+            git commit -m "auto: registry, front page, sitemap [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Push onnistui yrityksellä $i."
+              exit 0
+            fi
+            echo "Push hylätty (yritys $i) — main muuttui. Yritetään uudelleen."
+            sleep $((i * 3))
+          done
+          echo "::error::Push epäonnistui viiden yrityksen jälkeen."
+          exit 1

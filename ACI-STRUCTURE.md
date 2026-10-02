@@ -205,43 +205,66 @@ This axiom is the foundation of all ACI work. Publications that contradict or su
 
 ## 10. Current Publication Inventory
 
-As of March 2026 — update this table when new publications are added.
+As of 2 October 2026. The authoritative list is `data/registry.json`
+(maintained by `scripts/build-index.py`); this table is a summary.
 
 | Type | Range | Next ID |
 |------|-------|---------|
-| Working Papers (WP) | WP-001 – WP-013 | WP-014 |
-| Supporting Papers (SP) | SP-001 – SP-006 | SP-007 |
-| Diagnostic Assessments (DA) | DA-001 – DA-007 | DA-008 |
-| Technical Notes (TN) | TN-001 – TN-006 | TN-007 |
-| Concept Notes (CN) | CN-001 – CN-002 | CN-003 |
+| Working Papers (WP) | WP-001 – WP-020 | WP-021 |
+| Supporting Papers (SP) | SP-001 – SP-010 | SP-011 |
+| Diagnostic Assessments (DA) | DA-001 – DA-009 | DA-010 |
+| Technical Notes (TN) | TN-001 – TN-024 | TN-025 |
+| Concept Notes (CN) | CN-001 – CN-031 | CN-032 |
+| Synthesis Memos (SM) | SM-001 – SM-021 | SM-022 |
+| Resilience Doctrine (DRD) | DRD-01 – DRD-09 | DRD-10 |
+| Decision Tracks (DT) | DT-001 – DT-006 | DT-007 |
+| DASC series (DASC) | DASC-001 – DASC-002 | DASC-003 |
 | Research Query Memos (RQM) | RQM-001 | RQM-002 |
 
-**Homepage §-structure** (index.html) — these sections are fixed:
+**DASC series** (decided 2 October 2026): protocols and assessments of the
+distributed-authorship coherence experiment (human–LLM interaction). A
+separate line from the energy and institutional diagnostics.
 
-| § | Title | Editable? |
-|---|-------|-----------|
-| 01 | Purpose | Content only |
-| 02 | Why Systems Fail Under Pressure | Content only |
-| 03 | Methodological Principle | Content only |
-| 04 | Institutional Position | Content only |
-| 05 | Publication Principle | Content only |
-| 06 | Working Domains | Grows with new domains only |
-| 07 | Non-Goals | Content only |
-| 08 | Publications | Grows with new publications |
+**Renumbering, 2 October 2026.** Three IDs had been assigned to two
+publications each, against §3. The less-referenced document of each pair was
+renumbered; the old paths redirect.
 
-Adding a §09 or beyond requires explicit decision and an update to this document.
+| Was | Now | Document |
+|-----|-----|----------|
+| WP-013 | WP-014 | Distributed Authorship and Structural Coherence in Human–LLM Research Systems |
+| DA-007 | DASC-002 | Baseline Coherence Assessment: DASC Experiment Analytical Object |
+| SP-007 | SP-010 | SGFA Institutional Blueprint |
+
+WP-014 was previously held by the withdrawn Dynamic Coupled Risk Model
+(removed 29 September 2026). This is the one deliberate exception to the
+never-reused rule. The second TN-011 document is TN-011b.
+
+**Homepage structure** (index.html), decided 2 October 2026. Replaces the
+fixed §01–§08 structure; the texts of the former §02–§07 are on about.html.
+
+| Block | Source |
+|-------|--------|
+| Title, core claim, position sentence, disclosure | Hand-written |
+| Latest publications (10) | Generated from registry |
+| Live instruments | Generated (`featured` in registry) |
+| Where to start (3 questions, 3 links each) | Hand-written |
+| Decision tracks | Generated |
+| Fiction (4 newest) | Generated |
+
+Adding or removing a block requires explicit decision and an update to this document.
 
 ---
 
 *This document governs ACI's research system structure. It is itself subject to revision, but only through explicit decision — not through content operations.*
 
-*ACI-STRUCTURE.md · v1.1 · March 2026*
+*ACI-STRUCTURE.md · v1.4 · October 2026*
 
 **Version History**  
 v1.0 · March 2026 · Initial governance definition  
 v1.1 · March 2026 · Added core axiom (§9), publication inventory table (§10), homepage §-structure invariants, RQM definition, fixed duplicate DA entry
 v1.2 · March 2026 · CN-002 added to inventory
 v1.3 · March 2026 · WP-013 added to inventory
+v1.4 · October 2026 · Inventory brought up to date; registry named as authoritative list; DASC series; renumbering of WP-013/DA-007/SP-007 duplicates; homepage structure replaced
 
 ---
 
