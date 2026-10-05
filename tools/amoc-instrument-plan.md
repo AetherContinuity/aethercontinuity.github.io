@@ -1476,3 +1476,11 @@ alipyyntörajan sivutuote (näytteenotto harvennettiin 1 kk -> 6 kk ->
 ei vuoden sisäistä, eikä pysty antamaan muuta kuin nollan. Tähän
 testiin ei pidä nojata kumpaankaan suuntaan; pitkän aineiston tulos
 on §01h. Otsikko muutettu vastaamaan tilaa.
+
+### Lisäys 2026-10-05 (ilta): pois etusivun instrumenttilistasta
+
+Sivu poistettu etusivun "Live instruments" -listasta (rekisterin
+`featured`-merkintä pois) ja lisätty työkaluluetteloon ryhmään
+"Calibration & Validation" kuvauksella "validointiloki, ei
+live-instrumentti". Osoite ja nimi ennallaan. Peruste: sivu ei mittaa
+kierron tilaa eikä yksikään pari ole validoitunut.
