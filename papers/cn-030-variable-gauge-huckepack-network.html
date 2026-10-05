@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CN-030 — Vaihtuva raideleveys ja huckepack-terminaalit · ACI</title>
-<meta name="description" content="Selvitämme mahdollisuutta hyödyntää vaihtuvan raideleveyden kalustoa Suomen ja Euroopan rataverkon rajapinnassa. Tekninen perusta on vahva. Kysyntä on kapeassa tulkinnassa heikko, laajemmassa avoin. Häiriönsieto arvioidaan erikseen.">
+<meta name="description" content="Mitä vaihtuvan raideleveyden kalusto on arvoltaan Suomen ja Euroopan rataverkkojen rajalla. Tekniikka on hyväksyttyä mutta tavaraliikenteessä vähän käytettyä; kysyntä on osittain auki; länsikäytävän häiriönsieto on mittaamatta.">
 <style>
 :root {
   --ink: #0e0d0b; --paper: #f5f0e8; --paper-2: #ede7d8; --paper-3: #e4dccb;
@@ -49,7 +49,7 @@ td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-alig
     "publisher": {"@type": "Organization", "name": "ACI", "url": "https://aethercontinuity.org"},
     "url": "https://aethercontinuity.org/papers/cn-030-variable-gauge-huckepack-network.html",
     "datePublished": "2026-08-09",
-    "dateModified": "2026-10-02",
+    "dateModified": "2026-10-05",
     "inLanguage": "fi"
   }
   </script>
@@ -72,10 +72,10 @@ td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-alig
     <div class="dih-series">Concept Note · <span class="series-accent">CN-030</span></div>
   </div>
   <div class="dih-meta">
-    <strong>Päiväys</strong>2026-08-09, päivitetty ja jäsennetty uudelleen 2026-10-02
+    <strong>Päiväys</strong>2026-08-09, kirjoitettu uudelleen 2026-10-05
     <strong>Kieli</strong>Suomi
     <strong>Viittaa</strong>WP-020 · CN-008
-    <strong>Status</strong>Tekninen perusta tarkastettu, kysyntä osittain auki, kriisikapasiteetti mittaamatta
+    <strong>Status</strong>Tekniikka hyväksyttyä, tavaraliikenteen kokemus ohut; kysyntä osittain auki; häiriönsieto mittaamatta
   </div>
 </div>
 
@@ -85,574 +85,375 @@ td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-alig
   <h1 class="paper-title">Vaihtuva raideleveys ja huckepack-terminaalit</h1>
   <p class="paper-subtitle">Mitä vaihtuvan raideleveyden kalusto on arvoltaan Suomen (1 524 mm) ja Euroopan (1 435 mm) rataverkkojen rajalla — kannattavuuden ja häiriönsiedon kannalta erikseen.</p>
 
-  <p>Suomen rataverkko on rakennettu venäläisen 1 524 mm raideleveyden mukaan, kun taas Ruotsin, Norjan ja Manner-Euroopan verkko on 1 435 mm. Ero pakottaa rajanylittävän rautatieliikenteen valitsemaan siirtokuormauksen, telinvaihdon tai rautatien käyttämättä jättämisen. Tämä nootti selvittää kalustopoolia, joka on varustettu vaihtuvalla raideleveydellä (VGHN, Variable-Gauge Huckepack Network) ja voi siksi liikkua molemmilla verkoilla käsittelemättä lastia uudelleen rajalla.</p>
+  <p>Suomen rataverkon raideleveys on 1 524 mm, Ruotsin, Norjan ja Manner-Euroopan 1 435 mm. Rajan yli kulkeva rautatiekuljetus joutuu siksi valitsemaan siirtokuormauksen, telinvaihdon tai rautatien käyttämättä jättämisen. Tämä nootti tutkii neljättä vaihtoehtoa: kalustopoolia, jonka pyöräkerrat vaihtavat raideleveyttä vaunun ajaessa vaihtolaitteen läpi (VGHN, Variable-Gauge Huckepack Network), jolloin lastiin ei kosketa rajalla.</p>
 
-  <p>Asiaa arvioidaan kahdella kriteerillä, joita ei pidä sekoittaa. Kannattavuus (luvut 3–7): riittääkö tavaravirta kantamaan kaluston kustannuspreemion. Häiriönsieto (luku 9): mitä länsikäytävä ja joustava kalusto ovat arvoltaan silloin, kun meriyhteys tai maantiekuljetus ei toimi normaalisti. Luvut 1–2 ovat kummallekin yhteinen perusta: tekniikka, tavaravirran yksiköt ja tavat ylittää raideleveysraja.</p>
+  <p>Asiaa arvioidaan kahdella kriteerillä, joita ei pidä sekoittaa. Kannattavuus: riittääkö tavaravirta kantamaan kaluston kustannuspreemion (luvut 3–6). Häiriönsieto: mitä länsikäytävä ja joustava kalusto ovat arvoltaan, kun meriyhteys tai maantiekuljetus ei toimi normaalisti (luku 8). Nootti kirjoitettiin uudelleen 5.10.2026 sen jälkeen, kun ensisijaiset lähteet oli luettu; aiempien versioiden virheet on lueteltu muutoshistoriassa.</p>
 
   <div class="finding">
     <div class="finding-label">Tulos lyhyesti</div>
-    <p><strong>Tekniikka</strong> on olemassa ja hyväksyttyä, mutta tavaraliikenteessä sitä on käytetty vain pienin erin, eikä Tornion vaihtolaite ole käyttökunnossa. Talviluotettavuus ja hyväksyntäreitti ovat auki (luku 1).</p>
-    <p><strong>Rajanylitystapa määräytyy yksiköstä.</strong> Kontti ja nosturikelpoinen perävaunu nostetaan. Puutavaralle ja irtolastille pienimmän investoinnin tapa on telinvaihto. Vaihtuvatelin paikka on tiheä säännöllinen liikenne, jossa se on Väyläviraston laskelman mukaan käyttökustannuksiltaan halvin, sekä nosturikelvoton perävaunu ja vaunu, joka ei saa pysähtyä (luku 2).</p>
-    <p><strong>Kannattavuus:</strong> Tornion rajanylitys yksinään ei kanna (luku 3). Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–7).</p>
-    <p><strong>Häiriönsieto:</strong> maakäytävä kantaa enintään priorisoidun osan tuonnista. Sen arvo riippuu kapasiteettiketjun heikoimmasta lenkistä, jota ei ole mitattu (luku 9).</p>
-    <p><strong>Järjestys:</strong> halvimmat mittaukset ensin, koe-erä kalustoa vasta niiden jälkeen (luku 11). Nootti ei ole hankesuositus.</p>
+    <p><strong>Tekniikka</strong> on hyväksyttyä ja matkustajaliikenteessä kypsää. Tavaraliikenteessä sitä on käytetty vain koe-erin, eikä Tornion vaihtolaite ole käyttökunnossa (luku 1).</p>
+    <p><strong>Rajanylitystapa määräytyy yksiköstä ja liikenteen tiheydestä.</strong> Kontti ja nosturikelpoinen perävaunu nostetaan. Harvassa liikenteessä telinvaihto on pienin investointi. Tiheässä säännöllisessä liikenteessä vaihtuvateli on Väyläviraston laskelman mukaan käyttökustannuksiltaan halvin (luvut 2–3).</p>
+    <p><strong>Kannattavuus:</strong> Tornion rajanylitys yksinään ei kanna. Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6).</p>
+    <p><strong>Valtion linja</strong> on rinnakkaisraide ja siirtokuormaus. Rakentaminen alkaa aikaisintaan 2028, sotilaallisen liikkuvuuden rahoitus on kehysten ulkopuolella ja kalusto on kirjattu selvitettäväksi (luku 7).</p>
+    <p><strong>Häiriönsieto:</strong> länsikäytävän nykyinen läpäisy on noin yksi juna viikossa. Jos koko Itämeri olisi poikki, kymmenyksen siirtäminen ulkomaankaupasta maantielle sitoisi yli neljätuhatta yhdistelmää ja kuluttaisi itse runsaan kymmenyksen maan dieselistä (luku 8).</p>
+    <p><strong>Järjestys:</strong> halvimmat mittaukset ensin, koe-erä kalustoa niiden jälkeen (luku 9). Nootti ei ole hankesuositus.</p>
   </div>
 
-<h2>1. Tekninen perusta</h2>
+<h2>1. Tekniikka ja sen tila</h2>
 
-  <p>Vaihtuva raideleveys on matkustajaliikenteessä kypsää tekniikkaa: Talgo RD on ollut kaupallisessa käytössä vuodesta 1969. Tavaraliikenteessä se on hyväksyttyä mutta vähän käytettyä; liikenne on jäänyt koe-eriin, ja Talgon tavaravaunun pyöräkerta testattiin Haaparannassa 1997–1999 mutta jäi käyttöönottamatta hinnan ja lisäpainon vuoksi (Väylävirasto 83/2025; korjattu 2026-10-05). VGHN-periaate koskee kuitenkin kahta eri vaunutyyppiä — pussivaunua (trailerit) ja puutavaravaunua — joiden sitovat rajoitteet ovat eri suureita ja osin vastakkaisia. Sama teli, eri portti.</p>
-
-  <h3>1.1 Yhteinen tekninen perusta</h3>
-
-  <div class="finding">
-    <div class="finding-label">Käyttöhistoria: pitkä matkustajaliikenteessä, ohut tavaraliikenteessä</div>
-    <p>Espanjalainen Transfesa on operoinut vaihdettavilla akseleilla varustettua tavaraliikennettä Ranskan ja Espanjan rajalla (Hendaye 1950, Cerbère 1952) yli 70 vuoden ajan, keskimäärin 25 junaa päivässä (Global Railway Review; vahvistettu myös Transfesan omalla sivulla, DB Cargolla, Railway Journalilla ja Wikipedialla). Korjaus 2026-10-05: tämä on pyöräkertojen vaihtoa rajalla, ei automaattisesti vaihtuvaa raideleveyttä, eli se kuuluu luvun 2.2 telinvaihtoluokkaan eikä todista vaihtuvatelin kypsyydestä. Automaattisesti vaihtuvan raideleveyden tavaraliikenne on Euroopassa jäänyt pieniin eriin; vuonna 2025 tavaraliikennekäytössä on vain espanjalainen ADIF/OGI-järjestelmä, hyväksytty 2020 välille 1 435–1 668 mm (Väylävirasto 83/2025). Puolan SUW 2000 -järjestelmä oli kaupallisessa käytössä verrattavissa olevassa talvi-ilmastossa, mutta ei ole enää: Varsova–Vilna-matkustajajuna 1999–2005, tavaraliikenne Puolan ja Liettuan välillä vuoteen 2009, Krakova/Wrocław–Lviv/Kiova vuoteen 2015–2016, minkä jälkeen järjestelmää ei ole käytetty (Rynek Kolejowy 2.4.2022; Wikipedia). Kenttätestit (1998 alkaen) osoittivat vähäistä kulumista ja projisoivat yli 500 000 km:n käyttöiän, ja järjestelmä toimi −35 °C:ssa. <strong>Korjaus 2026-10-02:</strong> nootin aiempi muotoilu "jatkuvassa käytössä vuodesta 2000" oli virheellinen. Käytön päättymisen syyksi ilmoitetaan vakioteliä korkeammat kunnossapitokustannukset ja palvelun kilpailukyky, ei tekniikka — eli sama pysyvä kustannuspreemio, jota tämä nootti muualla käsittelee, toteutui siellä käytännössä. PKP hankki patentit 2019; seuraajaa (Polsuw) kehitetään, käyttöönottoa ei ole ilmoitettu. Kansainvälinen järjestelmäkatalogi kattaa lisäksi Rafil Typ V:n (Saksa), CAF/BRAVA:n, ADIF/OGI:n (Espanja) ja Talgo-RD:n. Rafil Typ V ja SUW 2000 ovat teknisesti yhteentoimivia (UIC-vertailu). EN 17069-1:2019 kattaa nimenomaisesti raideleveysvälin 1435/1520/1524/1600/1668 mm.</p>
-  </div>
-
-  <div class="finding">
-    <div class="finding-label">Tornion laitteet ovat olemassa, mutta eivät käyttökunnossa (korjattu 2026-10-05)</div>
-    <p>Torniossa on Rafil Typ V -raideleveydenvaihtolaite, mutta sen ohjausyksikkö tuhoutui tulipalossa 2017. Laite ei ole käytössä; käyttökuntoon saattaminen vaatii uuden ohjausyksikön, ratalaitteen kunnostuksen tai uusimisen ja uuden vaunukaluston. Laitteen omistaa edelleen Deutsche Bahn. Telinvaihtoraide on 130 metriä pitkä ja kattamaton, ja siinä voidaan vaihtaa telit kuuteen vaunuun kerrallaan käsin liikuteltavilla tunkeilla; ongelmina ovat talvella lumi ja jää sekä telinvaihtomontun puute, ja käyttö on satunnaista, lähinnä kunnossapitokalustolle. Tornion suuri siirtokuormausnosturi ei ole toiminnassa ja sen purkamista suunnitellaan. Haaparannassa siirtokuormataan noin yksi juna viikossa kiskoilta kumipyörille (Väylävirasto 83/2025). VR:n oma lausunto (Yle, tammikuu 2025): raideleveyden vaihtomenetelmä soveltuu "lähinnä yksittäisiin siirtoihin", ja käytännössä tavaraliikenne hoidetaan siirtokuormauksella tavanomaisella kalustolla — koska Suomessa ei ole säännöllistä vaihtuvatelillistä kalustoa joka voisi käyttää laitetta ollenkaan. Nootin aiempi muotoilu "toimiva, moderni infrastruktuuri odottaa kalustoa" oli virheellinen: puuttuu sekä kalusto että käyttökuntoinen laitteisto.</p>
-  </div>
-
-  <div class="finding">
-    <div class="finding-label">Dynaaminen käyttäytyminen on turvallinen; hyötykuorman menetys on todellinen ja pysyvä — mutta rajoitteen laji ratkaisee, ei teli</div>
-    <p>Vertaisarvioitu tutkimus (Kaiser, Viñolas, Gómez del Pulgar &amp; Galán, 2019, <em>Vehicle System Dynamics</em>): vaihtuvatelillisen pyöräkerran suurempi massa ei aiheuta dramaattisia muutoksia ajokäyttäytymisessä suoralla radalla eikä kaarteessa, kuormattuna tai tyhjänä. Vaihtuvatelin pysyvä kustannus ei ole ajodynaaminen vaan massaperusteinen: suurempi tyhjäpaino on suora, jokaisella matkalla toistuva hyötykuorman vähennys. Se sitoo vain painorajoitteisessa käytössä — tilavuus- tai korkeusrajoitteisessa käytössä se ei sido lainkaan. Suurlujuusterästen mahdollistama kevyempi päällirakenne kompensoi massalisää, mutta on saatavilla myös vakiotelivaunuun (suhteellinen preemio säilyy), ja väsytyskuormitetussa hitsatussa rakenteessa lujuusluokan nosto ei realisoidu ilman hitsin jälkikäsittelyä (HFMI tai vastaava) — relevantti vain uustuotannossa, ei konversiossa.</p>
-  </div>
-
-  <div class="finding">
-    <div class="finding-label">Talviluotettavuus on osittain, ei kokonaan avoin kysymys</div>
-    <p>Tornio–Haaparannan alueella tehtiin raideleveyden vaihtokokeiluja noin 30 vuotta sitten; ne kohtasivat suuria haasteita sohjon, lumen ja jään kanssa (LIMOWA-webinaari, 29.10.2024). Väyläviraston selvitys tarkentaa: vuosina 1997–1999 testattiin Talgon ja Rafil Typ V:n järjestelmiä; Talgon teleissä todettiin rasitusvaurioita ja Rafil-teli suistui kiskoilta, minkä jälkeen pyöräkertoja korjattiin ja lukitukselle lisättiin diagnostiikka. Green Cargo ajoi hyväksynnän jälkeen pienimuotoista tavaraliikennettä seitsemällä vaunulla 2006–2008; liikenne päättyi, koska erikoislaitteiden kunnossapitoa ei saatu varmistettua valmistajalta (Väylävirasto 83/2025). Tämä oli olosuhdetekninen epäonnistuminen, ei investointipäätös jättää rakentamatta. VIS Suomen Kiskokalustotehdas (SKT-VIS), suomalainen vaunuvalmistaja, kehittää parhaillaan vaihtuva-akselista kalustoa — täsmälleen VGHN:n omaa periaatetta, ei vaihdettavaa kuljetuskoria vakioalustalla — ja on nimennyt talviluotettavuuden nimenomaan omaksi, ratkaisemattomaksi kehityskohteekseen (yhtiön toimitusjohtaja Jari Lappalainen, Yle, lokakuu 2025; LIMOWA 29.10.2024). Puolan SUW 2000:n noin 16 vuoden käyttö (1999–2016, ei jatkuva; ks. korjaus luvussa 1.1) osoittaa että talvitoimivuus on ratkaistavissa jollain toteutuksella, mutta ei todista että jokainen toteutus olisi jo ratkaissut sen. Avoin kysymys jota ei ollut aiemmin esitetty: kehittääkö SKT-VIS vaunua vai irrotettavaa telikomponenttia. Erotus on kaupallisesti ratkaiseva — jos tuote on vaunu, markkina on uustuotanto; jos tuote on teli, markkina on olemassa oleva vaunukanta ja konversio (luku 2.4). SKT-VIS on VGHN-konseptin lähin, aktiivisesti kehitteillä oleva kotimainen vertailukohta.</p>
-  </div>
-
-  <h3>1.2 Pussivaunu (P400, trailerit) — rajoite on korkeus</h3>
-
-  <p>Sdggmrss on Keski-Euroopan yleinen intermodaalivaunu ja Traficomin selvityksen mukaan optimaalinen tyyppi tälle liikenteelle: kuormatila 34,2 m, kaksi 40'/45' konttia tai kaksi puoliperävaunua tai neljä 7,82 m vaihtokoria, kuorma 100 t, kuorman vapaa korkeus 5 m. Suomessa tätä vaunutyyppiä ei ole käytössä lainkaan. Kaksi puoliperävaunua nelipyöräisessä vaunussa jää selvästi alle Y25-perheen vakioakselipainon 22,5 t — akselipaino ei ole pussivaunun sitova rajoite. Aiemmin tässä noottiin esitetty avoin kysymys "25 t akselipainon soveltuvuus P400-pussivaunuun" oli väärään vaunutyyppiin liitetty ja poistetaan sellaisena; oikea, sitova rajoite on pystysuora ja kotimainen.</p>
-
-  <div style="overflow-x:auto"><table>
-    <thead><tr><th>Suure</th><th>Arvo</th><th>Lähde</th></tr></thead>
-    <tbody>
-      <tr><td>Ajojohtimen minimikorkeus kiskon selästä</td><td>5600 mm (nimellinen 6150 mm)</td><td>RATO 2</td></tr>
-      <tr><td>Minimietäisyys johtimesta kuormaan</td><td>300 mm</td><td>RATO 2</td></tr>
-      <tr><td>Kuorman maksimikorkeus kiskon selästä</td><td>5300 mm</td><td>RATO 2</td></tr>
-      <tr><td>Nykykaluston sallima yksikkökorkeus</td><td>4,0–4,2 m vaunutyypistä riippuen</td><td>Traficom 9/2023</td></tr>
-      <tr><td>Suomen tieliikenteen maksimikorkeus</td><td>4,4 m</td><td>—</td></tr>
-      <tr><td>Kuormaulottumaa rajoittavat sillat</td><td>Helsinki–Pasila asema–Ilmala</td><td>Verkkoselostus 2023</td></tr>
-    </tbody>
-  </table></div>
-
-  <p>Suomen suurin sallittu maantieyksikkö ei mahdu Suomen radalle. Tämä on kotimaisen yhdistetyn kuljetuksen sitova rajoite, se on riippumaton raideleveydestä, ja se on todennäköinen osasyy aiempien yhdistettyjen kuljetusten päättymiseen (luku 5.1). Kuormaulottuman ylittäviä yksiköitä (leveys ≤2600 mm, korkeus ≤4200 mm vaunun lattiakorkeudella 1100 mm) saa kuljettaa vain erikseen määritellyillä rataosilla, ja sallittu liikennöintialue on suppeampi ≥24 m vaunuilla. Seuraus konseptille: VGHN ratkaisee raideleveyden. Se ei ratkaise korkeutta. Kolmen ehdon yhtälöstä — yksikön korkeus, kuormaulottuma kummallakin verkolla, teli — se ratkaisee yhden.</p>
-
-  <h3>1.3 Puutavaravaunu — rajoite on akselipaino</h3>
-
-  <p>Puutavara ei ole korkea eikä leveä; kuormaulottuma ei sido, ja Suomen ulottuma on väljempi kuin Euroopan. Rajoite on paino. Tuore havupuu on kiintokuutiona noin 800–900 kg/m³, ja pinokuutiossa ilmaa 35–40 %, jolloin kuormatilaan tulee ~500–550 kg/m³ — tuoreella kuitupuulla painoraja tulee tyypillisesti vastaan ennen tilavuutta, kun taas kuivunut puu ja hake ovat tilavuusrajoitteisia.</p>
-
-  <div style="overflow-x:auto"><table>
-    <thead><tr><th>Kysymys</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td>Y25-perheen vakioakselipaino</td><td>22,5 t (todennettu, useita toimittajia)</td></tr>
-      <tr><td>Rafil/SUW-akselin vahvistettu kantavuus</td><td>22,5 t (todennettu)</td></tr>
-      <tr><td>25 t vaihtuvatelisenä</td><td>Plausible, vaatii lisäinsinöörityötä</td></tr>
-      <tr><td>Suomen puutavaraliikenteen käyttämä akselipaino</td><td>Tarkistamaton — ratkaisee sitooko rajoite</td></tr>
-      <tr><td>Suomalaisen puutavaravaunun telityyppi (Y25-perhettä vai ei)</td><td>Tarkistamaton</td></tr>
-    </tbody>
-  </table></div>
-
-  <p>22,5 t ei ole vaihtuvatelin oma rajoite vaan koko Y25-perheen vakio — vertailukohtakin on 22,5 t. Suomen 25 t on eurooppalaisen vakiotelin ulkopuolella joka tapauksessa; tätä esitettiin aiemmin virheellisesti vaihtuvatelin omana ominaisuutena.</p>
-
-  <p>Väylävirasto on itse tunnistanut ja kuvannut vaihtuvatelilliset järjestelmät osana omaa, viisiosaista raideleveysselvitystään (ks. luku 8) — mukaan lukien nelivaihtoehtoinen kustannusvertailu siirtokuormauksen, telinvaihdon ja vaihtuvatelillisen kaluston välillä. Selvitys ei kuitenkaan tee syvällistä teknistä arviota P400-yhteensopivuudesta eikä puutavaravaunun akselipainosta; se on taustaselvitys, ei tekninen hyväksyntä.</p>
-
-  <div style="overflow-x:auto"><table>
-    <thead><tr><th>Muu avoin kysymys</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td>Vaunun CAPEX, tavanomainen P400 vs. vaihtuvatelillinen</td><td>Yhden valmistajan tiedoin noin 30 % kalliimpi hankkia ja 15–20 % kalliimpi ylläpitää; taarapaino +1,8 t (kaksiakselinen) tai +2,7 t (neliakselinen), noin 10 % (Väylävirasto 83/2025; luku 2.5)</td></tr>
-      <tr><td>Sääntelyreitti (TSI WAG -hyväksyntä) vaihtomekanismille erikseen</td><td>Ei ole — 2026 Traficom–Transportstyrelsen-sopimus koskee vain tavanomaista, yhden raideleveyden kalustoa lyhyellä kaksoisraidealueella, ei vaihtuvatelillistä kalustoa</td></tr>
-    </tbody>
-  </table></div>
-
-  <h2>2. Tavaravirta ja rajanylitystavat</h2>
-
-  <p>Kannattavuus ja häiriönsieto nojaavat kahteen perustietoon: missä yksiköissä Suomen ulkomaankauppa kulkee, ja millä tavoin kukin yksikkö voi ylittää raideleveysrajan. Yksikkö ratkaisee tavan, ja tapa ratkaisee, onko vaihtuvatelillä roolia.</p>
-
-  <h3>2.1 Yksiköt ja määrät</h3>
-
-  <p>Suomen ulkomaankaupasta noin 96 % kulkee meritse (Suomen Varustamot ry).</p>
-
-  <p>Ulkomaan meriliikenne oli 90,2 miljoonaa tonnia vuonna 2025 (Tilastokeskus). Tonneista 71 % oli kiinteää ja nestemäistä irtolastia, 12 % kontteja (11,2 Mt), 10 % perävaunuja ja 7 % muuta rullaavaa lastia (Tapaninen 12.3.2026, Tilastokeskuksen aineistosta). Kontit ja kumipyöräliikenne ovat siis samaa suuruusluokkaa, ja kumpikin on pieni irtolastiin verrattuna.</p>
-
-  <div class="finding">
-    <div class="finding-label">Ammatillinen havainto, ei riippumattomasti todennettu: kappaletavaran yksikkö on puoliperävaunu</div>
-    <p>Baltian kautta Suomeen tuleva ja sieltä lähtevä liikenne kulkee pääosin puoliperävaunuilla niin, että vetoauto ja kuljettaja ylittävät Suomenlahden perävaunun mukana; liikennöitsijät ovat pääosin entisen itäblokin maista ja kalusto on dieselvetoista. Saksan ja Suomen välillä kulkevat pääosin irtoperävaunut ilman vetoautoa: paikalliset vetäjät tuovat ja hakevat ne satamissa. Ruotsin liikenne on näiden yhdistelmä. Kontteja tulee myös: konttivarustamot liikennöivät Suomen satamiin säännöllisesti. Saksan-liikenteessä on huckepack-perävaunuja eli nosturikelpoisia, rautatiekuljetukseen koodattuja yksiköitä.</p>
-  </div>
-
-  <p>Nosturikelpoisuus jakaa perävaunut kahtia. Saksan liikenneministeriön teettämän selvityksen mukaan Euroopan puoliperävaunutuotannosta 49 % on teoriassa yhdistettyyn kuljetukseen sopivia ja 11 % nosturikelpoisia (Logistik Heute); toisen lähteen mukaan nosturikelpoisten osuus kannasta on yksinumeroinen (Forschungsinformationssystem). Saksan-liikenteen huckepack-perävaunut ovat tämän vähemmistön sisällä, ja niiden osuus juuri Suomen virrasta on tarkistamatta. Nosturikelvotonta perävaunua ei siirretä vaunusta toiseen reach stackerilla ilman erillistä apualustaa.</p>
-
-  <h3>2.2 Neljä tapaa ylittää raideleveysraja</h3>
+  <h3>1.1 Neljä tapaa ylittää raideleveysraja</h3>
 
   <div style="overflow-x:auto"><table>
     <thead><tr><th>Tapa</th><th>Mitä tehdään</th><th>Kustannuksen luonne</th><th>Mihin se pettää</th></tr></thead>
     <tbody>
-      <tr><td>Siirtokuormaus</td><td>Yksikkö nostetaan tai lasti puretaan vaunusta toiseen</td><td>Kiinteä terminaali, pieni kustannus nostoa kohden</td><td>Nosturin vika, jono, toisen raideleveyden vaunujen saatavuus</td></tr>
-      <tr><td>Telinvaihto</td><td>Vaunu nostetaan ja telit vaihdetaan</td><td>Nostimet, raide ja telivarasto; noin kymmenen minuuttia vaunua kohden (SeaRail, luku 9.6)</td><td>Vaihtopaikan läpäisykyky, telivarasto, telinvaihtoon kelpaavan kaluston määrä</td></tr>
-      <tr><td>Vaihtuvateli</td><td>Vaunu ajaa vaihtolaitteen läpi</td><td>Vaunukohtainen preemio: hankinta, massa, kunnossapito</td><td>Vaihtolaitteen jäätyminen, kaluston vähyys</td></tr>
-      <tr><td>Rinnakkaisraide</td><td>1 435 mm:n raide rakennetaan Suomen puolelle</td><td>Limittäisraide noin 2,0 M€/km (luku 8)</td><td>Siirtää rajan sisämaahan, ei poista sitä</td></tr>
+      <tr><td>Siirtokuormaus</td><td>Yksikkö nostetaan tai lasti puretaan vaunusta toiseen tai autoon</td><td>Pieni investointi, suuri käyttökustannus: 5–15 € tonnilta, 3–6 h junalta</td><td>Nosturin vika, jono, toisen raideleveyden vaunujen saatavuus</td></tr>
+      <tr><td>Telinvaihto</td><td>Vaunu nostetaan ja telit vaihdetaan</td><td>Vaihtotelit 25 000–45 000 € kappale, halli 0,5–3 M€; noin 2,5 h 25 vaunun junalta</td><td>Vaihtopaikan läpäisykyky, telivarasto, hyväksytyn kaluston määrä</td></tr>
+      <tr><td>Vaihtuvateli</td><td>Vaunu ajaa vaihtolaitteen läpi 5–30 km/h</td><td>Vaunukohtainen preemio; vaihtolaitteisto 1–2 M€; 0,5–1 h junalta veturinvaihtoineen</td><td>Vaihtolaitteen ja lukituksen toiminta talvella, kaluston vähyys, huollon saatavuus</td></tr>
+      <tr><td>Rinnakkaisraide</td><td>1 435 mm:n raide rakennetaan Suomen puolelle</td><td>Limittäisraide noin 2,0 M€/km</td><td>Siirtää rajan sisämaahan, ei poista sitä</td></tr>
     </tbody>
   </table></div>
 
+  <p>Luvut ovat Väyläviraston kalustoteknisestä selvityksestä (julkaisuja 83/2025), joka on tämän luvun päälähde.</p>
+
+  <h3>1.2 Vaihtuvan raideleveyden järjestelmät</h3>
+
+  <p>Matkustajaliikenteessä tekniikka on kypsää. Talgo RD on ollut kaupallisessa käytössä Espanjan ja Ranskan rajalla vuodesta 1969, ja Espanjassa on noin 90 raideleveyttä vaihtavaa junaa. Talgon ja CAF:n järjestelmissä pyörät kevennetään tukikiskoille vaihdon ajaksi ja kiskot voidellaan vedellä, mikä vaatii talvella sulatusta. Rafil Typ V ja puolalainen SUW 2000 vaihtavat pyörät kuormitettuina ilman tukikiskoja; ne ovat keskenään yhteensopivia, ja Rafilin laitteen talvikunnossapito vastaa selvityksen mukaan tavallisen vaihteen kunnossapitoa. Rafil-pyöräkerta on hyväksytty 22,5 tonnin akselipainolle ja lämpötiloihin −40…+40 °C. Standardi EN 17069-1:2019 kattaa raideleveydet 1 435, 1 520, 1 524, 1 600 ja 1 668 mm.</p>
+
+  <p>Tavaraliikenteessä käyttö on jäänyt koe-eriin, ja jokainen yritys on päättynyt muuhun kuin vaihtomekanismin perusvikaan:</p>
+
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>Liikenne</th><th>Laajuus</th><th>Miksi päättyi</th></tr></thead>
+    <tbody>
+      <tr><td>Green Cargo, Ruotsi–Suomi, Rafil Typ V</td><td>Seitsemän vaunua, 2006–2008</td><td>Erikoislaitteiden kunnossapitoa ei saatu varmistettua valmistajalta</td></tr>
+      <tr><td>PKP, Puola–Liettua ja Puola–Ukraina, SUW 2000</td><td>Yhteensä noin 16 matkustajavaunua ja neljä tavaravaunua; 2000–2015</td><td>Kunnossapitokustannukset, kaluston saatavuus, vähäinen kysyntä. Ukrainassa suistuminen 2006 lukitsemattoman pyörän vuoksi vei luvan kolmeksi vuodeksi</td></tr>
+      <tr><td>Talgon tavaravaunun pyöräkerta</td><td>Testattu Haaparannassa 1997–1999, Renfen hyväksyntä 1999</td><td>Ei otettu käyttöön: hinta ja lisäpaino</td></tr>
+      <tr><td>ADIF/OGI, Espanja</td><td>Hyväksytty 2020 välille 1 435–1 668 mm; yli 250 000 km ajettu</td><td>Käynnissä; rajalla tehtiin testejä vielä 2025</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Suomen ja Ruotsin rajalla Talgon ja Rafilin järjestelmiä testattiin 1997–1999. Talgon teleissä todettiin rasitusvaurioita ja Rafil-teli suistui kiskoilta, minkä jälkeen pyöräkertoja korjattiin ja lukitukselle lisättiin diagnostiikka. Espanjalainen Transfesa, jota on joskus käytetty esimerkkinä tekniikan kypsyydestä, vaihtaa rajalla pyöräkerrat; se on telinvaihtoluokan järjestelmä, ei vaihtuvaa raideleveyttä.</p>
+
+  <p>Kehityshankkeita 1 520 mm:n alueella on kolme. Ukrainan rautatiet kehittää Adifin ja Trian kanssa tavaravaunun vaihtuvateliä välille 1 520–1 435 mm, ja Espanja myönsi hankkeelle 5,48 M€ maaliskuussa 2026; jos teli valmistuu ja hyväksytään, se on mitoiltaan lähes sellaisenaan Suomen raideleveydelle sopiva. Liettua on selvittänyt vaihtuvatelistä matkustajakalustoa Vilnan ja Rail Baltican välille ilman päätöksiä. Puolan Polsuw, SUW 2000:n seuraaja, on pysähdyksissä; Puolan infrastruktuuriministeriön mukaan este on vakaan kysynnän puute, ei tekniikka. Talvi on Suomen rajalla ratkaiseva kysymys: 1990-luvun kokeiluissa lumi, sohjo ja jää aiheuttivat suuria ongelmia (LIMOWA 10/2024), ja Väyläviraston mukaan uusi järjestelmä jouduttaisiin todennäköisesti hyväksyttämään standardin EN 17069-1 mukaan, ellei sillä ole hyväksyntää lämpötilaluokkaan T2 (−40…+35 °C). Kotimainen SKT-VIS on kertonut kehittävänsä vaihtuva-akselista kalustoa ja nimennyt talviluotettavuuden ratkaisemattomaksi kohdaksi (Yle 10/2025).</p>
+
+  <h3>1.3 Tornion laitteiden tila</h3>
+
+  <p>Torniossa on Rafil Typ V -vaihtolaite, mutta sen ohjausyksikkö tuhoutui tulipalossa 2017. Laite ei ole käytössä, ja sen omistaa edelleen Deutsche Bahn. Telinvaihtoraide on 130 metriä pitkä ja kattamaton; siinä voidaan vaihtaa telit kuuteen vaunuun kerrallaan käsin liikuteltavilla tunkeilla. Ongelmina ovat talvella lumi ja jää sekä telinvaihtomontun puute, ja käyttö on satunnaista, lähinnä kunnossapitokalustolle. Tornion suuri siirtokuormausnosturi ei ole toiminnassa. Haaparannassa siirtokuormataan noin yksi juna viikossa kiskoilta kumipyörille. Rajalta puuttuu siis sekä kalusto että käyttökuntoinen laitteisto.</p>
+
+  <h3>1.4 Paino, hinta ja hyväksyntä</h3>
+
+  <p>Vaihtuvatelinen vaunu on yhden valmistajan tiedoin noin 30 % kalliimpi hankkia ja 15–20 % kalliimpi ylläpitää kuin tavanomainen. Taarapaino kasvaa noin 1,8 tonnia kaksiakselisessa ja 2,7 tonnia neliakselisessa vaunussa, eli noin kymmenen prosenttia, ja sama määrä menetetään hyötykuormasta. Haitta sitoo vain painorajoitteisessa käytössä. Ajodynamiikka ei ole ongelma: vertaisarvioidun tutkimuksen mukaan raskaampi pyöräkerta ei muuta ajokäyttäytymistä olennaisesti (Kaiser ym. 2019). Sääntelyreittiä vaihtomekanismin hyväksymiseksi Suomen ja Ruotsin välillä ei tällä hetkellä ole; vuoden 2026 Traficomin ja Transportstyrelsenin sopimus koskee vain tavanomaista kalustoa lyhyellä kaksoisraidealueella. Olemassa olevaan vaunuun jälkiasennettu vaihtuvateli vaatisi vaunun uudelleenhyväksynnän.</p>
+
+  <h3>1.5 Kaksi vaunutyyppiä, kaksi eri rajoitetta</h3>
+
+  <p><strong>Pussivaunu ja perävaunut: rajoite on korkeus.</strong> Keski-Euroopan yleinen intermodaalivaunu (Sdggmrss) kantaa kaksi puoliperävaunua tai kaksi 45 jalan konttia, eikä akselipaino sido. Suomessa vaunutyyppiä ei ole käytössä. Suomen radalla kuorman suurin korkeus kiskon selästä on 5 300 mm (RATO 2), ja nykykalusto sallii 4,0–4,2 metrin yksikön (Traficom 9/2023). Suomen suurin sallittu maantieyksikkö on 4,4 metriä korkea, eli se ei mahdu Suomen radalle. Tämä rajoite on riippumaton raideleveydestä ja sitoo perävaunuliikennettä ennen sitä.</p>
+
+  <p><strong>Puutavara- ja irtolastivaunu: rajoite on paino.</strong> Puutavara ei ole korkeaa eikä leveää, joten kuormaulottuma ei sido. Tuore kuitupuu on painorajoitteista lastia, kuivunut puu ja hake tilavuusrajoitteisia. Y25-teliperheen ja Rafil-pyöräkerran akselipaino on 22,5 tonnia; Suomen 25 tonnin akselipaino on eurooppalaisen vakiotelin ulkopuolella vaihtuvatelistä riippumatta. Suomen puutavaraliikenteessä käytetty akselipaino ja telityyppi ovat tarkistamatta.</p>
+
+<h2>2. Tavaravirta ja työnjako</h2>
+
+  <p>Suomen ulkomaankaupasta noin 96 % kulkee meritse (Suomen Varustamot). Ulkomaan meriliikenne oli 90,2 miljoonaa tonnia vuonna 2025. Tonneista 71 % oli kiinteää ja nestemäistä irtolastia, 12 % kontteja, 10 % perävaunuja ja 7 % muuta rullaavaa lastia (Tilastokeskus; Tapaninen 3/2026). Kontit ja kumipyöräliikenne ovat siis samaa suuruusluokkaa, ja kumpikin on pieni irtolastiin verrattuna.</p>
+
   <div class="finding">
-    <div class="finding-label">Hypoteesi: siirtokuormauksen ja vaihtuvan raideleveyden kustannuskäyrät kulkevat eri suuntiin volyymin mukana</div>
-    <p>Siirtokuormauksen kustannus (nosturi, ratapiha) on suurelta osin kiinteä; marginaalikustannus per nosto on pieni. Suurella, tasaisella virralla keskihinta per yksikkö laskee kohti tätä marginaalia — terminaali skaalautuu. VGHN:n oma kustannus on per-vaunu-preemio joka ei katoa volyymin myötä, vaan skaalautuu suoraan vaunumäärän mukana. Tästä seuraisi, että vaihtuva raideleveys voittaa siirtokuormauksen vain kun nosto on kallis tai mahdoton — ohut virta jossa terminaali-investointi ei kuoletu, ei-nostettava yksikkö (bulkkitavara, joka puretaan eikä nosteta, ja joka ei muutenkaan ole VGHN:n oman P400-kaluston kohdealuetta), tai vaunu joka ei saa pysähtyä. Tämä on sama mekanismi joka tekee luvun 7 kolmannesta tasosta (lähettäjän oma raide) VGHN:n ainoan aidosti vahvan tapauksen: yksittäisen tehtaan sivuraide ei koskaan tuota tarpeeksi volyymia oman siirtokuormausnosturin kannattavuuteen. Suuri, kasvava, tasainen virta ei tämän päättelyn mukaan tue VGHN:ää vaan terminaalia. Päättely on nootin oma eikä sitä ole osoitettu luvuilla: Väyläviraston laskelmassa yhden päivittäisen junan liikenteelle siirtokuormaus on käyttökustannuksiltaan kallein ja vaihtuvateli halvin (2.5). Hypoteesi voi päteä konteille ja selvästi suuremmille volyymeille.</p>
+    <div class="finding-label">Ammatillinen havainto, ei riippumattomasti todennettu: kappaletavaran yksikkö on puoliperävaunu</div>
+    <p>Baltian kautta kulkeva liikenne hoidetaan pääosin puoliperävaunuilla niin, että vetoauto ja kuljettaja ylittävät Suomenlahden perävaunun mukana; liikennöitsijät ovat pääosin entisen itäblokin maista. Saksan ja Suomen välillä kulkevat pääosin irtoperävaunut ilman vetoautoa, ja paikalliset vetäjät tuovat ja hakevat ne satamissa. Ruotsin liikenne on näiden yhdistelmä. Kontteja tulee myös säännöllisesti. Saksan-liikenteessä on huckepack-perävaunuja eli nosturikelpoisia, rautatiekuljetukseen koodattuja yksiköitä.</p>
   </div>
+
+  <p>Nosturikelpoisuus jakaa perävaunut kahtia. Euroopan puoliperävaunutuotannosta 49 % sopii teoriassa yhdistettyyn kuljetukseen ja 11 % on nosturikelpoisia (Saksan liikenneministeriön selvitys, Logistik Heute); osuus juuri Suomen virrasta on tarkistamatta. Nosturikelvotonta perävaunua ei siirretä vaunusta toiseen ilman apualustaa.</p>
+
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>Yksikkö</th><th>Luontevin tapa ylittää raja</th><th>Vaihtuvatelin rooli</th></tr></thead>
+    <tbody>
+      <tr><td>Kontti, myös säiliö- ja bulkkikontti</td><td>Nosto; konttijunan siirtokuormaus 1–2 h</td><td>Ohitus, kun nostojono sitoo</td></tr>
+      <tr><td>Nosturikelpoinen perävaunu</td><td>Nosto</td><td>Sama kuin kontilla</td></tr>
+      <tr><td>Nosturikelvoton perävaunu</td><td>Ei nostettavissa ilman apualustaa; ajamalla laiturin kautta</td><td>Pussivaunu vaihtuvatelillä, konseptin alkuperäinen kohde. Korkeusrajoite sitoo ensin</td></tr>
+      <tr><td>Puutavara, harva liikenne</td><td>Telinvaihto tai siirtokuormaus nippuina</td><td>Ei perustetta</td></tr>
+      <tr><td>Irtolasti ja nesteet vaunussa, harva liikenne</td><td>Telinvaihto; säiliökontti tekee lastin nostettavaksi</td><td>Ei perustetta</td></tr>
+      <tr><td>Irtolasti tai puutavara, päivittäinen heiluri</td><td>Telinvaihto tai vaihtuvateli</td><td>Käyttökustannuksiltaan halvin (luku 3)</td></tr>
+      <tr><td>Raskas kalusto, joka ei kulje perävaunussa</td><td>Telinvaihto; ajoneuvot ajamalla</td><td>22,5 tonnin akselipainon riittävyys tarkistamatta</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Raideleveys ratkaisee vain silloin, kun vaunu itse ylittää rajan, eli Torniossa tai junalautalla. Meritse roro-aluksella saapuva perävaunu tarvitsisi Suomen radalla tavallisen 1 524 mm:n pussivaunun ja terminaalin, eikä niitäkään Suomessa ole. Irtolastissa hyötykuormaero vaihtoehtojen välillä on pieni: neliakselinen säiliövaunu kantaa noin 65 tonnia ja kaksi 20 jalan säiliökonttia konttivaunulla noin 62 tonnia (arvioita tyypillisistä omapainoista). Telinvaihtoon käy Väyläviraston mukaan keskieurooppalainen ja ruotsalainen kalusto, joka mahtuu mitoiltaan Suomen verkolle; Y25-telillä varustetun vaunun raideleveyden vaihto on suhteellisen yksinkertaista, mutta vaunun on oltava tyypitetty ja hyväksytty siihen.</p>
 
   <div class="finding">
     <div class="finding-label">Ammatillinen havainto, ei riippumattomasti todennettu: siirtokuormaus on rajoilla usein pullonkaula</div>
-    <p>Edellä oleva hypoteesi koskee keskimääräistä kustannusta, ei välityskykyä ruuhkassa. Nosturi, raidepituus ja toisen raideleveyden vaunujen saatavuus ovat pisteitä, joiden läpi koko virta kulkee; yhden vikaantuminen tai jono pysäyttää rajan. Vaihtuvatelinen kalusto ei tässä kilpaile terminaalin kanssa vaan ohittaa sen: jokainen vaihtolaitteen läpi ajava vaunu on poissa nostojonosta. Arvo syntyy terminaalin ollessa täynnä, eli samassa tilanteessa jota luku 9.3 käsittelee. Havainto on peräisin pitkästä käytännön rahtityöstä; rajakohtaista mittausta Torniosta ei ole tähän tarkistettu. Sotilaskuljetusten osalta havainnolle on riippumaton tuki: Naton harjoituksissa keväällä 2024 Tornion–Haaparannan rajanylitys tunnistettiin kriittiseksi pullonkaulaksi raideleveyseron ja rajallisen siirtokuormauskapasiteetin vuoksi (LVM:n kirje komissiolle 29.7.2026, luku 9.1).</p>
+    <p>Nosturi, raidepituus ja toisen raideleveyden vaunujen saatavuus ovat pisteitä, joiden läpi koko virta kulkee; yhden vikaantuminen tai jono pysäyttää rajan. Jokainen vaihtolaitteen tai telinvaihdon kautta kulkeva vaunu on poissa nostojonosta. Sotilaskuljetusten osalta havainnolle on riippumaton tuki: Naton harjoituksissa keväällä 2024 Tornion–Haaparannan rajanylitys tunnistettiin kriittiseksi pullonkaulaksi raideleveyseron ja rajallisen siirtokuormauskapasiteetin vuoksi (luku 7).</p>
   </div>
 
-  <h3>2.3 Työnjako yksikön mukaan</h3>
+<h2>3. Kustannusvertailu</h2>
+
+  <p>Väyläviraston WSP:llä teettämä selvitys on ainoa virallinen lähde, joka vertaa kolmea kalustolähtöistä tapaa keskenään Tornion rajalla.</p>
 
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Yksikkö</th><th>Halvin tapa ylittää raja</th><th>Vaihtuvatelin rooli</th></tr></thead>
-    <tbody>
-      <tr><td>Kontti, myös säiliö- ja bulkkikontti</td><td>Nosto terminaalissa</td><td>Ei omaa roolia; ohitus, kun nostojono sitoo</td></tr>
-      <tr><td>Nosturikelpoinen puoliperävaunu</td><td>Nosto terminaalissa</td><td>Sama kuin kontilla</td></tr>
-      <tr><td>Nosturikelvoton puoliperävaunu</td><td>Ei nostettavissa ilman apualustaa</td><td>Pussivaunu vaihtuvatelillä: konseptin alkuperäinen kohde. Korkeusrajoite sitoo ensin (luku 1.2)</td></tr>
-      <tr><td>Puutavara</td><td>Telinvaihto (2.4)</td><td>Harvassa liikenteessä häviää telinvaihdolle (2.4); päivittäisessä liikenteessä avoin (2.5)</td></tr>
-      <tr><td>Nestemäinen ja kuiva irtolasti vaunussa</td><td>Telinvaihto; pumppaus tai purku; säiliökontti tekee lastin nostettavaksi</td><td>Vain jos vaihtopaikan läpäisykyky sitoo tai vaunun on päästävä raiteelle, jolla ei ole nosturia eikä telinvaihtoa</td></tr>
-      <tr><td>Raskas kalusto, joka ei kulje perävaunussa</td><td>Telinvaihto</td><td>Akselipainon 22,5 t riittävyys tarkistamatta</td></tr>
-    </tbody>
-  </table></div>
-
-  <p>Kumpikaan pääratkaisu ei yksin kata virtaa: kontti ja nosturikelpoinen perävaunu kuuluvat terminaalille, nosturikelvoton perävaunu vaihtuvatelille. Rajaus on tehtävä tarkasti. Raideleveys ratkaisee vain silloin, kun vaunu itse ylittää rajan — Torniossa tai junalautalla. Meritse roro-aluksella saapuva perävaunu tarvitsee Suomen radalla tavallisen 1 524 mm:n pussivaunun ja terminaalin, ei vaihtuvateliä, eikä niitäkään Suomessa ole (luku 1.2).</p>
-
-  <p>Irtolastissa hyötykuormaero vaihtoehtojen välillä on pieni. Neliakselinen säiliövaunu kantaa 22,5 tonnin akselipainolla noin 65 t tuotetta; samalle konttivaunulle mahtuu kaksi täyttä 20 jalan säiliökonttia, yhteensä noin 62 t (molemmat arvioita tyypillisistä omapainoista, tarkistamatta). Säiliökontti kulkee lisäksi rekalla ja millä tahansa konttialuksella. Kuivalle irtotavaralle ja puulle on vastaavia konttijärjestelmiä, joissa kontti siirretään trukilla vaunusta toiseen; niiden käyttöä Suomessa ei ole tähän tarkistettu. Telinvaihto edellyttää vaunua, joka on tyypitetty ja hyväksytty siihen. Väyläviraston selvityksen mukaan keskieurooppalainen ja ruotsalainen kalusto mahtuu mitoiltaan Suomen rataverkolle ja Y25-telillä varustetun kaluston raideleveyden vaihto on suhteellisen yksinkertaista; kaluston saatavuus on selvityksessä nimetty jatkoselvitystarpeeksi (Väylävirasto 83/2025).</p>
-
-  <h3>2.4 Puutavara: vertailukohta on telinvaihto, ei siirtokuormaus</h3>
-
-  <p>Luvun 4.3 kolme vertailukohtaa (erilliset poolit, siirtokuormausterminaali, olemassa oleva kilpailija) pätevät trailereille. Puutavaralle ne eivät päde, koska puutavaraa ei siirtokuormata vaunusta vaunuun missään tapauksessa — vertailukohta on telinvaihto. Tämä muuttaa laskelman luonteen: vaihtuvateli ei osta siirtokuormauksen välttämistä, vaan sen ettei junaa tarvitse pysäyttää telinvaihtoon. Kysymys on, mitä pysähtymättömyys on arvoista.</p>
-
-  <p>Kolme seikkaa painavat vastaan:</p>
-  <ul>
-    <li><strong>Paluu on tyhjä.</strong> Puutavaraliikenne on noutoliikennettä: kuormattu yhteen suuntaan, tyhjä toiseen. Tyhjä vaunu ei ole aikakriittinen eikä sen seisonta maksa lastille mitään — telinvaihto voidaan tehdä paluusuunnassa käytännössä ilmaiseksi. (Ammatillinen havainto, ei riippumattomasti todennettu.)</li>
-    <li><strong>Puu ei ole aikakriittistä lastia.</strong> Toisin kuin trailerivirta, joka myy läpimenoaikaa maantielle, raaka-ainevirta tehtaan puupihalle sietää tunteja.</li>
-    <li><strong>Kotimainen telinvaihtokapasiteetti on yleinen konepajaominaisuus, ei erikoiskyvykkyys.</strong> Telinvaihto on rautateillä huoltorutiini: siihen tarvitaan nostimet, raide ja telivarasto — ei mitään harvinaista. Sitä tehdään useassa kotimaisessa konepajassa ja varikolla; Pieksämäki on esimerkki, ei ainoa (konepajan nykyistä omistusta, laajuutta ja tehtyä vaunutyyppiä ei ole tässä erikseen todennettu). Historiallinen ennakkotapaus on Hangon Railship 1975: telit ja pyöräkerrat vaihdettiin satamassa (luku 9.6). Jos vaihtokapasiteettia on useassa pisteessä eikä vain rajalla, vaihtuvatelin ainoa myyntiargumentti — pysähtymättömyys — kutistuu entisestään: vaihto voidaan tehdä siellä missä vaunu muutenkin käy huollossa, ei erillisenä operaationa matkan varrella.</li>
-  </ul>
-
-  <p><strong>Johtopäätös: puutavaralla vaihtuvateli häviää telinvaihdolle, ellei löydy syytä miksi juna ei saa pysähtyä.</strong> Sellaista syytä ei tässä noottiin ole tunnistettu. Harvassa liikenteessä haara on kielteisesti testattu; päivittäisessä heiluriliikenteessä se on avoin, koska Väyläviraston laskelma päätyy siinä toiseen tulokseen (2.5). Vastaavasti telinvaihtohaara — vakiotelisarja rajanvaihtoon — säilyy avoimena ja on selvästi halvempi. Se ei ole VGHN, mutta se ratkaisee saman logistisen ongelman.</p>
-
-  <h3>2.5 Väyläviraston kalustotekninen selvitys (83/2025)</h3>
-
-  <p>Väyläviraston WSP:llä teettämä selvitys (elokuu 2025) on ainoa virallinen lähde, joka vertaa kolmea kalustolähtöistä tapaa keskenään Tornion rajalla. Sen luvut ovat tämän nootin ainoa mitattu vertailukohta luvun 2.2 hypoteesille ja luvun 2.4 johtopäätökselle.</p>
-
-  <div style="overflow-x:auto"><table>
-    <thead><tr><th>Esimerkkiliikenne: 2 × 26 vaunua, yksi rajanylitys vuorokaudessa, toinen suunta tyhjänä</th><th>Siirtokuormaus vaunusta vaunuun</th><th>Telinvaihto</th><th>Vaihtuvatelinen kalusto</th></tr></thead>
+    <thead><tr><th>Esimerkkiliikenne: 2 × 26 vaunua, yksi rajanylitys vuorokaudessa, toinen suunta tyhjänä</th><th>Siirtokuormaus</th><th>Telinvaihto</th><th>Vaihtuvateli</th></tr></thead>
     <tbody>
       <tr><td>Investoinnit yhteensä</td><td>0,3–5,0 M€</td><td>2,6–11,5 M€</td><td>14,0–25,8 M€</td></tr>
       <tr><td>… josta kalusto</td><td>0</td><td>1,3–4,7 M€ (vaihtotelit)</td><td>12,5–20,8 M€ (uudet vaunut)</td></tr>
-      <tr><td>… josta rajan laitteet ja tilat</td><td>0,3–5,0 M€</td><td>1,3–6,8 M€ (alue, halli)</td><td>1,5–5,0 M€ (alue, vaihtolaitteisto 1–2 M€)</td></tr>
       <tr><td>Käyttökustannus vuodessa</td><td>4,8–12,8 M€</td><td>2,2–3,2 M€</td><td>1,2–1,8 M€</td></tr>
       <tr><td>Aika rajalla junaa kohden</td><td>3–6 h</td><td>noin 2,5 h</td><td>0,5–1 h</td></tr>
     </tbody>
   </table></div>
 
-  <p>Selvityksen omat johtopäätökset: kalustolähtöiset ratkaisut ovat infralähtöisiä edullisempia, nopeasti käyttöönotettavia ja skaalattavia, ja ne "toimivat hyvin rakentamisen aikaisena siirtymävaiheen ratkaisuna". Satunnaiseen liikenteeseen sopii siirtokuormaus, kasvavaan liikenteeseen telinvaihto, ja "tiheässä säännöllisessä liikenteessä edullisin ratkaisu on vaihtuvaraideleveyksinen kalusto". Telinvaihtoa selvitys pitää teknisesti toimivana ja erityisen sopivana nesteille, bulkille ja vaarallisille aineille; rautatieliikenteen harjoittajat ilmoittivat kuitenkin kyselyssä, etteivät ole kiinnostuneita siitä. Vaihtuvatelisen vaunun pitäisi kyselyn mukaan ylittää raja päivittäin tai joka toinen päivä, jotta investointi kannattaa. Kysynnästä selvitys nimeää yhden konkreettisen virran: SSAB:n Raahen tehtaan rautaraaka-aine kuljetetaan Ruotsista proomuilla, joiden käyttöikä on päättymässä, ja kuljetuksen siirtämistä raiteille on harkittu nimenomaan raideleveyttä vaihtavilla vaunuilla. Jatkoselvitystarpeiksi nimetään kaluston saatavuus ja ulottuma, huoltomahdollisuudet ja talviolot, joista todetaan, että "usein testaaminen onkin ainoa keino saada luotettavaa tietoa".</p>
+  <p>Selvityksen johtopäätökset: kalustolähtöiset ratkaisut ovat infralähtöisiä edullisempia, nopeasti käyttöönotettavia ja skaalattavia, ja ne "toimivat hyvin rakentamisen aikaisena siirtymävaiheen ratkaisuna". Satunnaiseen liikenteeseen sopii siirtokuormaus, kasvavaan telinvaihto, ja "tiheässä säännöllisessä liikenteessä edullisin ratkaisu on vaihtuvaraideleveyksinen kalusto". Vaihtuvatelisen vaunun pitäisi operaattorikyselyn mukaan ylittää raja päivittäin tai joka toinen päivä, jotta investointi kannattaa. Telinvaihtoa selvitys pitää teknisesti toimivana ja erityisen sopivana nesteille, bulkille ja vaarallisille aineille, mutta rautatieliikenteen harjoittajat ilmoittivat, etteivät ole siitä kiinnostuneita. Jatkoselvitystarpeiksi nimetään kaluston saatavuus, huoltomahdollisuudet ja talviolot, joista todetaan, että "usein testaaminen onkin ainoa keino saada luotettavaa tietoa".</p>
 
   <div class="finding">
-    <div class="finding-label">Mitä tämä muuttaa nootissa</div>
-    <p><strong>Luvun 2.2 hypoteesi on avoin.</strong> Nootti päätteli, että suuri tasainen virta puoltaa terminaalia, koska nosto halpenee volyymin mukana. Selvityksen luvuissa siirtokuormaus on käyttökustannuksiltaan kallein (5–15 € tonnilta, 8 500–26 500 € junalta) ja vaihtuvateli halvin juuri säännöllisessä liikenteessä. Luvut koskevat yhtä junaa vuorokaudessa, ja siirtokuormauksen yksikkökustannus on niissä vakio; selvitys toteaa itse, että investoinnit voivat laskea sitä volyymin kasvaessa. Konttijunan siirtokuormaus on selvityksen mukaan nopeaa, tunnista kahteen. Hypoteesi voi siis päteä konteille ja suurille volyymeille, mutta sitä ei ole osoitettu, eikä se päde selvityksen esimerkkiliikenteessä.</p>
-    <p><strong>Luvun 2.4 johtopäätös puutavarasta pätee vain harvassa liikenteessä.</strong> Selvityksen esimerkki on juuri puutavaran tai rikasteen kaltainen heiluri, kuormassa yhteen suuntaan ja tyhjänä takaisin. Siinä vaihtuvateli säästää telinvaihtoon verrattuna noin 1,0–1,4 M€ vuodessa. Säästö syntyy selvityksen tavasta hinnoitella junan odotusaika (1 000 € tunnilta) ja telinvaihtotyö.</p>
-    <p><strong>Investointivertailu ei ole yhteismitallinen</strong> (nootin oma huomio, ei selvityksen). Vaihtuvatelin sarakkeessa lasketaan kokonaan uudet vaunut, telinvaihdon sarakkeessa vain vaihtotelit olemassa oleviin vaunuihin. Jos vaunut on joka tapauksessa hankittava, vertailtava erä on 30 prosentin preemio: 52 vaunulle noin 2,9–4,8 M€ eli noin 55 000–92 000 € vaunulta (johdettu selvityksen luvuista). Silloin vaihtuvatelin lisäinvestointi laitteistoineen (noin 3,9–6,8 M€) on samaa suuruusluokkaa kuin telinvaihdon telit, halli ja alue (noin 2,1–8,5 M€), ja käyttökustannusero ratkaisee. Selvityksen kokonaisluvuilla takaisinmaksuaika telinvaihtoon nähden olisi noin kymmenen vuotta.</p>
-    <p><strong>Mitä selvitys ei käsittele.</strong> Puoliperävaunuja ja pussivaunuja se ei tarkastele lainkaan, ei myöskään Suomen korkeusrajoitetta (luku 1.2); tavaravirtoina ovat rautarikaste ja raakapuu. Painohaitta on selvityksen sisällä ristiriitainen: tekstin mukaan taarapainon kasvua ei ole laskelmassa huomioitu, mutta liitteen taulukossa sille on 1 000 € vuorokaudessa. Vaihtuvatelin lisäpainoksi annetaan eri kohdissa noin 0,9 t ja noin 2 t teliltä.</p>
+    <div class="finding-label">Nootin huomiot selvityksestä</div>
+    <p><strong>Investointivertailu ei ole yhteismitallinen.</strong> Vaihtuvatelille lasketaan kokonaan uudet vaunut, telinvaihdolle vain vaihtotelit olemassa oleviin vaunuihin. Jos vaunut on joka tapauksessa hankittava, vertailtava erä on 30 prosentin preemio: 52 vaunulle noin 2,9–4,8 M€ eli 55 000–92 000 € vaunulta (johdettu selvityksen luvuista). Silloin vaihtuvatelin lisäinvestointi laitteistoineen, noin 3,9–6,8 M€, on samaa suuruusluokkaa kuin telinvaihdon telit, halli ja alue, noin 2,1–8,5 M€, ja käyttökustannusero ratkaisee. Selvityksen omilla kokonaisluvuilla takaisinmaksuaika telinvaihtoon nähden olisi noin kymmenen vuotta.</p>
+    <p><strong>Käyttökustannusero riippuu ajan hinnasta.</strong> Selvitys hinnoittelee junan odotuksen rajalla 1 000 eurolla tunnilta. Puutavara ei ole aikakriittistä, ja paluusuunnassa vaunu on tyhjä, jolloin telinvaihdon voi tehdä kiireettä (ammatillinen havainto, ei riippumattomasti todennettu). Harvassa liikenteessä telinvaihto siksi voittaa; päivittäisessä heilurissa selvityksen laskelma kääntyy vaihtuvatelin eduksi noin 1,0–1,4 miljoonalla eurolla vuodessa.</p>
+    <p><strong>Mitä selvitys ei käsittele.</strong> Puoliperävaunut, pussivaunut ja Suomen korkeusrajoite puuttuvat kokonaan; tavaravirtoina ovat rautarikaste ja raakapuu. Taarapainon vaikutus on selvityksen sisällä ristiriitainen: tekstin mukaan sitä ei ole laskettu, mutta liitetaulukossa sille on 1 000 € vuorokaudessa.</p>
   </div>
 
-    <h2>3. Kysyntä Tornion rajanylityksellä</h2>
+  <p>Nootin aiempi versio päätteli, että suuri tasainen virta puoltaa terminaalia, koska nosto halpenee volyymin mukana ja vaihtuvatelin preemio ei. Tätä ei ole osoitettu luvuilla. Selvityksen esimerkkiliikenteessä siirtokuormauksen tonnikustannus on vakio ja se on kallein vaihtoehto; selvitys toteaa itse, että investoinnit voivat laskea yksikkökustannusta volyymin kasvaessa. Päättely voi päteä konteille ja selvästi suuremmille volyymeille, ja se jää hypoteesiksi.</p>
 
-  <p>Väylävirasto on arvioinut nimenomaan piilevää kysyntää — ei vain nykyistä liikennemäärää, vaan sitä siirtyisikö olemassa oleva tavaravirta Tornion kautta, jos raideleveysesteet poistuisivat.</p>
+<h2>4. Kysyntä ja poolausarvo</h2>
 
-  <div class="finding">
-    <div class="finding-label">Väylävirasto: vähän potentiaalia, syy on rakenteellinen</div>
-    <p>Väyläviraston pääselvitys ja siihen liittyvä kysyntäselvitys sekä erillinen kuljetuspotentiaaliselvitys (Theseus) toteavat: rataosuudella on "nykytilassa vähän potentiaalia varteenotettavaksi reitiksi tuonti- ja vientikuljetuksille" — syynä raideleveysero <em>ja</em> merikuljetusten pysyvästi korkeampi kustannustehokkuus. Halvimmankin hankevaihtoehdon (Kemi-painotteinen) nettonykyarvo on negatiivinen, vain "selvästi muita vähemmän negatiivinen". Kansallinen ennuste: rautatiekuljetusten kokonaismäärä pysyy vakiona vuoteen 2060, metsäteollisuus jo ~70 % nettotonnikilometreistä.</p>
-    <p>Metsäteollisuus-hypoteesi saa vastauksen, mutta eri suuntaan kuin oletettiin: suurin tunnistettu hyöty ei ole viennin siirtyminen raiteelle — meri säilyy tärkeimpänä vienti-/tuontimuotona joka tapauksessa — vaan puunhankinta-alueen laajentuminen Pohjois-Ruotsiin: raaka-aineen tuontia, ei valmiin tuotteen vientiä. Transit-hypoteesi ei saanut vastausta näistä lähteistä. Metalliteollisuudesta kalustotekninen selvitys nimeää yhden virran, SSAB:n Raahen tehtaan rautaraaka-aineen, jonka siirtoa proomuista raiteille on harkittu vaihtuvatelisillä vaunuilla (2.5); se on tiheä, säännöllinen irtolastivirta eli vaihtuvatelin edullisin käyttötapaus.</p>
-  </div>
+  <h3>4.1 Tornion rajanylitys yksinään</h3>
 
-  <p>Tämä on olennainen erottelu: Väylävirasto vastaa kysymykseen "siirtyisikö olemassa oleva tavaravirta raiteelle" (<em>diverted demand</em>). Se ei vastaa kysymykseen "mitä uutta logistista kysyntää poolattu, monikäyttöinen kalusto voisi mahdollistaa, jota ei ole aiemmin ollut taloudellisesti mahdollista" (<em>induced demand</em>). Jälkimmäistä ei ole arvioitu missään tähän mennessä löydetyssä lähteessä. Tämä ero määrittää koko nootin loppuosan rakenteen.</p>
+  <p>Väyläviraston pääselvitys (85/2025) ja kysyntäselvitys toteavat, että rataosuudella on "nykytilassa vähän potentiaalia varteenotettavaksi reitiksi tuonti- ja vientikuljetuksille". Syinä ovat raideleveysero ja merikuljetuksen pysyvästi parempi kustannustehokkuus. Halvimmankin hankevaihtoehdon nettonykyarvo on negatiivinen. Suurin tunnistettu hyöty ei ole viennin siirtyminen raiteelle vaan puunhankinta-alueen laajeneminen Pohjois-Ruotsiin. Tällä hetkellä Ruotsista ei tuoda raakapuuta Suomeen rautateitse.</p>
 
-  <h2>4. Uudelleenkehystys: poolausarvo, ei yksi suuri tapaus</h2>
+  <p>Kalustotekninen selvitys nimeää yhden konkreettisen virran: SSAB:n Raahen tehtaan rautaraaka-aine kuljetetaan Ruotsista proomuilla, joiden käyttöikä on päättymässä, ja kuljetuksen siirtämistä raiteille on harkittu nimenomaan raideleveyttä vaihtavilla vaunuilla. Se on tiheä, säännöllinen irtolastivirta eli vaihtuvatelin edullisin käyttötapaus. Päätöksestä ei ole tietoa.</p>
 
-  <p>VGHN ei tarvitse yhtä suurta, itsenäistä kysyntävirtaa. Sen pitää osoittaa, että useampi kaupallisesti uskottava virta voi yhdessä tuottaa kalustolle paremman käyttöprofiilin kuin erilliset järjestelmät. Kalusto ei ole sidottu rajanylitykseen — samat vaunut voivat kulkea kotimaan reiteillä käyttämättä vaihtomekanismia ollenkaan, mikä muuttaa käyttöasteongelman rakennetta.</p>
+  <p>Väylävirasto vastaa kysymykseen, siirtyisikö olemassa oleva tavaravirta raiteelle. Se ei vastaa kysymykseen, mitä uutta kysyntää monikäyttöinen kalusto voisi mahdollistaa. Jälkimmäistä ei ole arvioitu missään löydetyssä lähteessä.</p>
 
-  <h3>4.1 Laskennallinen kehys</h3>
+  <h3>4.2 Poolausarvo</h3>
+
+  <p>VGHN ei tarvitse yhtä suurta virtaa. Sen pitäisi osoittaa, että useampi virta tuottaa yhdessä kalustolle paremman käyttöprofiilin kuin erilliset järjestelmät. Sama vaunu voi kulkea kotimaan reiteillä käyttämättä vaihtomekanismia.</p>
 
   <p style="font-family:monospace;background:var(--paper-2);padding:0.75rem 1rem;border-left:3px solid var(--rule);">
-    N<sub>dedicated</sub> = Σᵢ maxₜ Dᵢ(t) &nbsp;&nbsp;(erillisten poolien mitoitus: kunkin virran oma huippukuukausi)<br>
-    N<sub>joint</sub> = maxₜ Σᵢ Dᵢ(t) &nbsp;&nbsp;(yhteisen poolin mitoitus: virtojen summan huippukuukausi)<br>
-    ΔN = N<sub>dedicated</sub> − N<sub>joint</sub> &nbsp;&nbsp;(kalustosäästö)<br>
-    Gate avautuu jos: C<sub>std</sub> × N<sub>dedicated</sub> − C<sub>VGHN</sub> × N<sub>joint</sub> − C<sub>muut</sub> &gt; 0
+    N<sub>erillinen</sub> = Σᵢ maxₜ Dᵢ(t) &nbsp;&nbsp;(kunkin virran oma huippu)<br>
+    N<sub>yhteinen</sub> = maxₜ Σᵢ Dᵢ(t) &nbsp;&nbsp;(virtojen summan huippu)<br>
+    ΔN = N<sub>erillinen</sub> − N<sub>yhteinen</sub> &nbsp;&nbsp;(kalustosäästö)
   </p>
 
-  <p>Kahdella liikennevirralla voi olla samanlainen korrelaatiokerroin mutta erilainen todellinen huippu — korrelaatiokerroin toimii diagnostisena muuttujana, ei riittävänä perusteena. Poolauksen arvo ei ole ensisijaisesti käyttöaste, se on huippukapasiteetin välttäminen: jos kaksi virtaa tarvitsevat kalustoa eri aikaan, yhteinen pooli kattaa yhdistetyn huipun ilman että kumpaakin varten tarvitsee mitoittaa erillistä, täyteen kokoon rakennettua poolia.</p>
+  <p>Poolauksen arvo on huippukapasiteetin välttäminen: jos virrat tarvitsevat kalustoa eri aikaan, yhteinen pooli kattaa yhdistetyn huipun. Jos vaihtuvatelinen vaunu on p prosenttia kalliimpi, yhteispoolin on säästettävä kalustoa vähintään 1 − 1/(1+p) ennen kuin poolaus kääntyy hankinnassa voitolle. Arvolla p = 0,30 kynnys on noin 23 %, ja ylläpidon preemio nostaa sitä. Virtojen ajalliset profiilit ovat mittaamatta.</p>
 
-  <p>Kriittinen kynnysarvo: jos VGHN-vaunun CAPEX on p prosenttia korkeampi kuin tavanomaisen vaunun, yhteispoolin on saavutettava vähintään kalustosäästö ΔN<sub>krit</sub> = 1 − 1/(1+p) ennen kuin poolaus kääntyy CAPEXissa voitolliseksi (OPEX-premium ja muut kustannukset nostavat kynnystä edelleen). Tätä ei pidä käyttää olettamalla mitään tiettyä p:n tai ΔN:n arvoa etukäteen — molemmat ovat mitattavia, ei oletettavia. Väyläviraston selvityksen yhden valmistajan arviolla p = 0,30 (2.5) kynnys olisi noin 23 %.</p>
+  <p>Pooliin kelpaa vain virta, jonka yksikkö mahtuu samaan vaunuun. Raakapuu ja kylmäketju käyttävät erikoiskalustoa; ehdokkaita ovat yleiset perävaunu- ja intermodaaliyksiköt. Väyläviraston tekninen selvitys (82/2025) tekee saman erottelun.</p>
 
-  <h3>4.2 Poolauskelpoisuuden esiseulonta</h3>
+<h2>5. Kotimaan kaksoiskäyttö ja sen ennakkotapaus</h2>
 
-  <p>D<sub>i</sub>(t) ei saa muodostua markkinasegmenteistä sinänsä, vaan sellaisen liikennevirran kalustotarpeesta, joka on <em>teknisesti yhteensopiva</em> VGHN-poolin kanssa. Pohjois-Ruotsin raakapuukuljetus käyttää tyypillisesti omaa, erikoistunutta vaunutyyppiä — sitä ei pidä laskea VGHN-poolin profiiliksi ilman näyttöä P400-yhteensopivuudesta. Norjan kylmäketjuvirta (esim. lohi) käyttää todennäköisesti jäähdytettyä kalustoa — relevantti kysymys on voidaanko juuri se intermodaalinen yksikkö kuljettaa VGHN-vaunulla, ei se, että "Norjan kalavirta" olisi automaattisesti VGHN:n liikennevirta. Tämä esiseulonta tuottaa kaksijaon: VGHN-poolin ehdokkaita ovat yleiset trailer-/intermodaaliyksiköt; erillispooleihin kuuluvat erikoisvaunut joiden yhteensopivuutta ei ole osoitettu.</p>
-
-  <p>Erillinen Väylävirasto-selvitys (82/2025) vahvistaa riippumattomasti täsmälleen tämän erottelun: "osa edellä kuvatuista tyypeistä on käyttökelpoista vain ja ainoastaan yhdessä tietyssä tarkoituksessa... muutamissa vaunutyypeissä joustoa on enemmän: esimerkiksi katetut vaunut sopivat useille erilaisille..." — sama analyyttinen kehys virallisesta lähteestä, riippumattomasti johdettuna.</p>
-
-  <h3>4.3 Vertailukohdat</h3>
-
-  <p>Kolme vaihtoehtoa, ei yksi, on nimettävä eksplisiittisesti:</p>
-  <ul>
-    <li><strong>Erilliset, sitoutuneet kalustopoolit</strong> yhtä käyttötarkoitusta varten.</li>
-    <li><strong>Tavanomainen siirtokuormausterminaali</strong> — pistoraide, sorakenttä, kuormankäsittelykone, sosiaalitilat. Tämä on käytännössä se ratkaisu jota VR itse käyttää Torniossa nyt, ja sen CAPEX on todennäköisesti murto-osa vaihtuvatelillisestä poolista.</li>
-    <li><strong>Olemassa oleva, jo toimiva kilpailija</strong> kullakin reitillä — meri Tornion tapauksessa, joustava ja edullinen maantiekuljetus Helsinki–Tallinna-reitillä (luku 6).</li>
-  </ul>
-
-  <h2>5. Kotimaan kaksoiskäyttö</h2>
-
-  <p>VR Transpoint on julkisesti ilmaissut kiinnostuksensa yhdistettyyn kuljetukseen Helsinki (Vuosaari)–Oulu-reitillä, viitaten kynnykseen 20 yhdistelmää tai 30 traileria per arkipäivä per suunta. Tämä on kotimainen, rajanylityksestä riippumaton markkina jolle sama vaihtuvatelillinen kalusto soveltuisi ilman vaihtomekanismin käyttöä.</p>
-
-  <p>Aiemmin käytetty 30 % modal shift -osuus (tie→rata) ei täsmentänyt tarkoittiko se rajanylittävää liikennettä (heikko, Väyläviraston mukaan) vai kotimaista liikennettä (tunnistettu mahdollisuus, ei mitattu). Näillä kahdella on täysin eri evidenssipohja, ja ne pitää käsitellä erillisinä, ei-summattavina syöttöarvoina — ei yhtenä oletettuna prosenttilukuna.</p>
-
-  <h3>5.1 Kotimainen ennakkotapaus: mitä yhdistetyistä kuljetuksista tiedetään</h3>
-
-  <p>Edellä nojattiin VR Transpointin ilmoittamaan suunnittelukynnykseen — se ei ole toteumaa. Toteumasta tiedetään enemmän.</p>
-
-  <p>Kotimainen yhdistetty kuljetus on ajettu, ja se on päättynyt. Kansallinen konsepti käynnistyi 1991; Oulun Oritkarin terminaali toimi 2004–2013, operaattorina VR Transpoint, ja lastasi runsaat 30 000 ajoneuvoa vuodessa. Terminaalin ja radan kustannusarvio oli 7,2 M€ (Oulun kaupunki, VR, Ratahallintokeskus). Viimeinen jäljellä ollut reitti (Pasila–Oritkari) päättyi tammikuussa 2014. Tässä liikenteessä ei ollut raideleveysongelmaa lainkaan — se on puhdas luonnollinen koe: sitova rajoite oli jokin muu, ja se sitoi ennen rajaa. Tämä on nootin kannalta epämukava havainto ja se on kirjattava sellaisena: jos nollakitkainen kotimainen tapaus ei kantanut, rajanylittävä ohuempi virta ei kanna sitäkään vähempää.</p>
-
-  <p>Virallinen syy (Kaleva): "heikentynyt kysyntä ja huono kannattavuus... huono toimintavarmuus, Kokkola–Ylivieska-ruuhka, Seinäjoki–Oulu-ratatyöt." Tunnistetut, osin tarkistamattomat lisäsyyt:</p>
+  <p>VR Transpoint on ilmaissut kiinnostuksensa yhdistettyyn kuljetukseen Vuosaaren ja Oulun välillä ja nimennyt kynnykseksi 20 yhdistelmää tai 30 perävaunua arkipäivässä suuntaansa. Se on suunnittelukynnys, ei toteuma. Toteumasta tiedetään enemmän: kotimainen yhdistetty kuljetus on ajettu, ja se on päättynyt. Kansallinen konsepti käynnistyi 1991. Oulun Oritkarin terminaali toimi 2004–2013 operaattorinaan VR Transpoint ja lastasi runsaat 30 000 ajoneuvoa vuodessa; terminaalin ja radan kustannusarvio oli 7,2 M€. Viimeinen reitti, Pasila–Oritkari, päättyi tammikuussa 2014. Tässä liikenteessä ei ollut raideleveysongelmaa lainkaan. Jos kitkaton kotimainen tapaus ei kantanut, ohuempi rajanylittävä virta ei kanna ilman, että päättymisen syyt on ymmärretty.</p>
 
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Syy</th><th>Status</th></tr></thead>
+    <thead><tr><th>Syy päättymiseen</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>Kuormakorkeus: 4,0–4,2 m vaunussa vs. 4,4 m tiellä (luku 1.2)</td><td>Todennettu rajoite, kausaalisuus päätelty</td></tr>
-      <tr><td>Kalusto vanhentui yksikkömittojen muuttuessa (Rbnqss-perhe suunniteltu ennen 1997 käytössä olleille yksiköille)</td><td>Todennettu (Traficom 9/2023)</td></tr>
-      <tr><td>Paluukuormaparin katoaminen: Tornion panimon lakkautus 2010, siirto Lahteen</td><td>Ammatillinen havainto + julkinen tieto, yhteys päätelty</td></tr>
-      <tr><td>Palautusvirran muuttuminen materiaalivirraksi (tölkin/lasin murskaus lähteellä)</td><td>Ammatillinen havainto</td></tr>
-      <tr><td>Vertikaalinen integraatio: hinta jolla Transpointin kilpailijat saivat ostaa junakuljetuksen</td><td>Ei todennettavissa, hinnat eivät julkisia — ks. alla</td></tr>
-      <tr><td>Terminaaliverkoston purkautuminen ja maankäytön muutos</td><td>Osin todennettu (Traficom 9/2023: valmiita kuormauspaikkoja vain Vuosaari ja Oritkari)</td></tr>
+      <tr><td>Heikentynyt kysyntä, huono toimintavarmuus, ratatyöt (virallinen syy, Kaleva)</td><td>Julkinen tieto</td></tr>
+      <tr><td>Kuormakorkeus: 4,0–4,2 m vaunussa, 4,4 m tiellä</td><td>Todennettu rajoite, syy-yhteys päätelty</td></tr>
+      <tr><td>Kalusto vanhentui yksikkömittojen muuttuessa</td><td>Todennettu (Traficom 9/2023)</td></tr>
+      <tr><td>Paluukuormaparin katoaminen: Tornion panimon lakkautus 2010; palautusvirran muuttuminen murskatuksi materiaaliksi</td><td>Ammatillinen havainto, yhteys päätelty</td></tr>
+      <tr><td>Hinta, jolla operaattorin kilpailijat saivat ostaa junakuljetuksen</td><td>Ei todennettavissa</td></tr>
     </tbody>
   </table></div>
 
-  <p>Vertikaalisen integraation kysymykselle on jälkitodiste. Traficomin 2023 toimintakonsepti asettaa nimenomaisen ehdon: vetopalvelun tuottavalla raideliikennöitsijällä ei tule olla omassa tarjonnassaan tiekuljetuspalveluita siten, että rautatiekuljetus voidaan siirtää maantiekuljetukseksi asiakkaan tietämättä; palvelun tulee olla avoin kaikille eikä sen käytöllä saa olla suoraa vaikutusta toimijoiden väliseen kilpailuasetelmaan. Tämä ei todista hintasyrjintää, mutta osoittaa että konseptin suunnittelijat pitivät vertikaalista integraatiota kaatavana riskinä.</p>
+  <p>Viimeisestä seuraa kysymys, jota poolauslaskelma ei näe: kuka poolin omistaa. Koko yhdistettyihin kuljetuksiin soveltuva vaunukanta, 195 vaunua kolmea tyyppiä, on VR Yhtymän omistuksessa (Traficom 9/2023). Rataverkko on avattu ja ratamaksu säännelty, vaunukanta ei. Traficomin 2023 toimintakonsepti asettaa ehdoksi, ettei vetopalvelun tuottajalla saa olla omaa kilpailevaa tiekuljetusta ja että palvelun on oltava avoin kaikille. Jos poolin omistaa yhden virran kilpailija, virrat eivät jaa poolia millään ajallisella profiililla.</p>
 
-  <p>Tästä seuraa aiemmin puuttunut kysymys: <strong>poolin institutionaalinen omistajuus.</strong> Luku 4 käsittelee poolauskelpoisuutta teknisenä kysymyksenä (mahtuuko yksikkö vaunuun). Institutionaalista versiota ei ole ollut: kuka poolin omistaa, ja käyttääkö kilpailija poolia jonka omistaa sen kilpailija. Koko yhdistettyihin kuljetuksiin soveltuva vaunukanta (62 + 103 + 30 kpl) on VR Yhtymän omistuksessa. Rataverkko on avattu ja ratamaksu säännelty; vaunukanta ei ole avattu. Pääsyn pullonkaula on siirtynyt kiskoilta kalustoon eikä sitä säädellä. Jos poolin omistaja on yhden virran kilpailija, virrat eivät jaa poolia millään korrelaatiolla — pooli hajoaa erillispooleiksi institutionaalisesta, ei ajallisesta syystä, ja luvun 4.1 portti ei koskaan avaudu vaikka D<sub>i</sub>(t) olisi ihanteellinen. Sama rakenne kuin havainnossa "kukaan ei omista järjestelmän yhteisvaikutusta" (luku 12).</p>
+  <p>Yksi mahdollisesti toteutunut poolaustapaus on tunnistettu: puutavaravaunuja on käytetty myös konttien kuljetukseen (ammatillinen havainto, ei todennettu). Kolme asiaa ratkaisee, oliko kyse poolauksesta vai satunnaisesta käytöstä: oliko käytäntö vakiintunut, vaatiko se muutostöitä vaunuun ja oliko käyttö kausiluonteista, esimerkiksi kelirikon aikana, kun puuta ei saatu tienvarresta. Jos viimeiseen vastaus on myönteinen, kyseessä olisi todennettu vastakkaisvaiheisuus kahden virran välillä samalla kalustolla, eli luvun 4 laskennallisen kehyksen ensimmäinen empiirinen ankkuri ilman, että vaihtuvasta raideleveydestä tarvitsee olettaa mitään. Suomessa on myös ajettu ajolastausta (ammatillinen havainto), vaikka Traficomin konsepti on nostoperustainen.</p>
 
-  <p>Ajolastauksesta: Traficomin 2023 konsepti on eksplisiittisesti nostoperustainen (nosturi), koska ajamalla lastattavien yksiköiden käsittely on hitaampaa ja vaatisi rampit — tämä on konseptivalinta, ei fysikaalinen rajoite. Suomessa on aiemmin ajettu ajolastausta (Pohjolan Liikenne/VR, Kuopio; Pasila–Kemi/Tornio-pendeli). Ammatillinen havainto, ei riippumattomasti todennettu.</p>
+<h2>6. Kansainväliset virrat ja lähettäjän oma raide</h2>
 
-  <h3>5.2 Toteutunut poolaustapaus</h3>
+  <p>Ruotsi, Norja ja Rail Baltica jakavat 1 435 mm:n raideleveyden, ja Baltian maiden nykyverkko on 1 520 mm, joka on samalle mekanismille käytännössä sama kuin Suomen 1 524 mm. Alueiden näyttö on eri vahvuista, eikä niitä pidä esittää samanarvoisina.</p>
 
-  <p>Luku 4 esittää poolauksen laskennallisena hypoteesina. Yksi mahdollisesti toteutunut tapaus on tunnistettu: puutavaravaunukalustoa on käytetty myös konttien kuljetukseen. (Ammatillinen havainto, ei todennettu.) Jos tosi, tämä on ainoa tässä noottiin nimetty tapaus jossa yksi kalustotyyppi on tosiasiallisesti palvellut kahta virtaa — kotimainen, ei edellytä vaihtuvaa raideleveyttä, ja puunkorjuun kausivaihtelu (kelirikko, routa) on rakenteellisesti eri profiili kuin konttiliikenteen.</p>
+  <p><strong>Norja.</strong> Suomen rajat ylittäneistä noin 972 000 kuormatusta kuorma-autosta kymmenen prosenttia kulki Norjan rajanylityspaikkojen kautta vuonna 2023 (Traficom). Volyymi on todennettu ja olemassa. FREJA on rakentanut Norjaan seitsemän toimipistettä Suomen ja Norjan väliselle liikenteelle. Etelään kulkee kalaa; paluusuunnan kuormat ovat ammatillisen havainnon mukaan elintarvikkeita, kappaletavaraa ja poronrehua. Kappaletavara läpäisisi poolin esiseulonnan, kylmäketju ja rehu vaatisivat oman tarkistuksensa.</p>
 
-  <p>Kolme tarkistettavaa kysymystä, joihin vastaus ratkaisee onko kyseessä poolaus vai satunnainen käyttö: oliko kontin ajo puutavaravaunulla vakiintunut käytäntö vai poikkeus, tehtiinkö se siksi että vaunut olisivat muuten seisoneet; vaatiko se muutostyötä vaunuun; oliko käyttö kausiluonteista, esimerkiksi kelirikon aikana kun puuta ei saatu tienvarresta. Jos vastaus kolmanteen on myönteinen, kyseessä on todennettu antikorrelaatio kahden virran välillä samalla kalustolla, ja luvun 4 laskennallinen kehys saa ensimmäisen empiirisen ankkurinsa — suomalaisella kalustolla ja kotimaisella liikenteellä, ilman että vaihtuvasta raideleveydestä tarvitsee olettaa mitään.</p>
+  <p><strong>Helsinki–Tallinna.</strong> Helsingin sataman kautta kulki 329 000 kuorma-autoa ja perävaunua vuoden 2026 ensimmäisellä puoliskolla. Historiallinen ankkuri vuodelta 2010 on noin 236 600 yksikköä vuodessa, lähes tasan suunnittain. Reitillä on toimiva kilpailija, roro-alus ja edullinen maantiekuljetus. Erillisen, tässä tarkistamattoman arvion mukaan noin kolmannes rekoista jatkaa Virosta etelään, mikä ratkaisisi, kuinka pitkälle vaunun pitäisi päästä ollakseen hyödyllinen. Väylävirasto arvioi Suomen ja Viron junalautan (7/2026) ja päätyi kielteiseen tulokseen investointi- ja käyttökustannusten vuoksi.</p>
 
-  <h2>6. Kansainvälinen ulottuvuus: kolme aluetta, eri evidenssitaso</h2>
+  <p><strong>Baltia.</strong> Rail Baltica rakentaa 1 435 mm:n rungon, mutta maiden teollisuus- ja jakeluverkko jää 1 520 mm:ään. Kysymys on sama kuin Suomessa, aikaisintaan 2030-luvulla; hankkeen kustannusarvio on kolminkertaistunut. Latvian oma peruste 1 520 mm:n verkon säilyttämiselle on yhteensopivuus itään, mikä ei ole tämän nootin peruste. Tässä kiinnostaa vain länteen suuntautuva virta, ja sille tekninen ratkaisu voi valmistua Ukrainan telihankkeesta (luku 1.2).</p>
 
-  <p>Tutkimusasetelma laajentuu luonnollisesti Ruotsin ohi Norjaan ja Baltiaan, koska Ruotsi, Norja ja Baltian maat jakavat 1 435/1 520 mm raideleveyden (4 mm ero 1520/1524 välillä on merkityksetön samalle mekanismille). Kolme aluetta, joilla on eri vahvuinen evidenssipohja — niitä ei pidä esittää samanarvoisina.</p>
+  <p><strong>Lähettäjän oma raide.</strong> Jos vaunun tarvitsee päästä vain Tornioon, rinnakkaisraide riittää. Jos sen tarvitsee päästä Kemin tai Oulun terminaaliin, siirtokuormaus tai telinvaihto käy. Vasta jos sen tarvitsee päästä suomalaisen lähettäjän omalle sivuraiteelle sisämaassa, vaihtuva raideleveys on ainoa tapa ilman lastin käsittelyä, koska koko verkkoa ei rakenneta kahteen kertaan. Viralliset selvitykset tarkastelevat rajapintaa, eivät kotimaista jakelua lähettäjälle asti. Tätä ei ole kysytty yhdeltäkään lähettäjältä, ja se on konseptin oma, suoraan testattava kysymys.</p>
 
-  <h3>6.1 Norja — todennettu, olemassa oleva volyymi</h3>
+<h2>7. Valtion linja</h2>
 
-  <p>Traficomin tilasto (2023): kaikista Suomen rajat ylittävistä kuormatuista kuorma-autoista (~972 000) 10 % kulki Norjan rajanylityspaikkojen kautta — karkeasti ~97 000 rekkaa vuodessa. FREJA Finland on rakentanut seitsemän toimipistettä Norjaan nimenomaan "Suomi–Norja–Suomi"-reitille pitkäaikaisilla sopimuksilla. Etelään suuntautuva kalavirta (lohi) on vahvistettu riippumattomista lähteistä (Kaleva, Suomen Kuvalehti); paluusuunnan kuormaus (elintarvikkeet, kappaletavara, poronrehu vs. tyhjänä ajo) on ammatillinen havainto, ei riippumattomasti todennettu, ja on relevantti poolauskelpoisuuden esiseulonnalle — kappaletavara läpäisisi seulan, kala ja poronrehu vaatisivat oman tarkistuksensa.</p>
+  <p>Liikenne- ja viestintäministeriön selvitys (4/2023) torjui koko verkon muuttamisen ja totesi vaihtuvatelisestä kalustosta, ettei sitä ole tavaraliikenteessä otettu käyttöön. Arvio vastaa luvun 1.2 kuvaa. Vuonna 2025 peruste vaihtui taloudesta turvallisuuteen: ministeri vetosi turvallisuustilanteeseen, ja hallitus osoitti puoliväliriihessään 20 M€ Haaparannan ja Kemin välisen rinnakkaisraiteen suunnitteluun. Väyläviraston viisiosainen selvitys (pääselvitys, tekninen, kalustotekninen ja kysyntäselvitys sekä hankearviointi) laadittiin lähtökohdasta, että suomalainen raideleveys säilyy ja eurooppalainen raide rakennetaan rinnalle. Koko selvitetyn Pohjois-Suomen alueen muuttaminen maksaisi Väyläviraston arvion mukaan noin 3,2 mrd €, Kolarin ja Svappavaaran yhteydellä noin 4,8 mrd €.</p>
 
-  <h3>6.2 Helsinki–Tallinna — todennettu volyymi, todennettu kilpailija</h3>
+  <p>Ministeriön kirje Euroopan komissiolle 29.7.2026 tiivistää nykytilan. Suunnittelua priorisoidaan ensisijaisesti sotilaallisen liikkuvuuden perusteella; kaupallinen kysyntä todetaan alhaiseksi. Narvikin ja Rovaniemen välisen reitin testaus keväällä 2024 tunnisti Tornion–Haaparannan rajanylityksen kriittiseksi pullonkaulaksi. Suunnitteluun on osoitettu 61 M€, rakentamisen arvioidaan alkavan vaiheittain 2028 Tornion alueelta, ja kustannusarvio rajalta Kemiin, Ouluun ja Rovaniemelle on 1,5 mrd €. Koko verkon siirtymäsuunnitelma toimitetaan kesään 2027 mennessä; sen kustannusarvio on 15–31 mrd €. Yhdeksi koko verkon muutoksen hyödyksi nimetään vaunujen parempi saatavuus. Pohjoismaat allekirjoittivat maaliskuussa 2026 yhteisen liikennejärjestelmän varautumisstrategian, joka sisältää Haaparannan, Tornion ja Kemin eurooppalaisen raiteen. Vaihtuvatelistä kalustoa kirje ei mainitse.</p>
 
-  <p>Helsingin sataman koko liikenne (H1 2026, ei reittikohtainen): 235 513 kuorma-autoa + 93 714 perävaunua = 329 227 yksikköä. Historiallinen, reittikohtainen ankkuri (2010, Traficomin edeltäjän aineisto): Helsinki–Tallinna ~236 600 yksikköä/vuosi, lähes täysin tasapainossa suunnittain. Erillisen, tähän noottiin itsenäisesti tarkistamattoman analyysin mukaan noin 2/3 reitin rekoista kulkee vain Suomen ja Viron välillä, noin 1/3 jatkaa Virosta etelään (Via Baltica), ja noin 42 % Suomen puolen liikenteestä jää pääkaupunkiseudulle — nämä kolme lukua eivät ole samalla evidenssitasolla kuin sataman ja Traficomin omat tilastot yllä, ja ne on merkitty erikseen sellaisiksi. Jos 1/3-osuus pitää paikkansa, se on suoraan relevantti kysymykselle siitä kuinka pitkälle vaunun pitäisi päästä ollakseen hyödyllinen (luku 7).</p>
+  <p>Valtioneuvoston päätös huoltovarmuuden tavoitteista (568/2024) velvoittaa laadullisesti: "Vaihtoehtoisten kuljetusreittien volyymien kasvuun varaudutaan suunnitelmin ja harjoituksin sekä tarvittaessa rakentamalla tarvittavaa infrastruktuuria ja kuljetuskapasiteettia jo normaalioloissa." Päätöksen mukaan "erityisesti raideliikenne on keskiössä". Määrällisiä tavoitteita ei ole. Huoltovarmuusorganisaation poolit esittivät lausunnossaan, että reitit nimettäisiin "muun muassa Ruotsin ja Pohjois-Norjan satamiin" ja tavoitteet konkretisoitaisiin investointiohjelmiin; esitys ei mennyt läpi. Samassa päätöksessä todetaan, että merkittävä osa kuljetuksista hoidetaan markkinaehtoisesti myös poikkeusoloissa.</p>
 
-  <p>Tällä reitillä on nimettävissä todellinen, toimiva kilpailija: RoRo-laiva yhdistettynä joustavaan, edulliseen itäeurooppalaiseen maantiekuljetukseen, ei teoreettinen tyhjiö. Väylävirasto arvioi erikseen (7/2026) myös suoraa Suomi–Viro-junalauttayhteyttä ja päätyi kielteiseen tulokseen — eri syystä kuin Tornion tapauksessa (junalautan oma investointi- ja operointikustannus, ei raideleveys, koska Viron 1520 mm on lähes yhteensopiva Suomen kanssa nykyiselläänkin).</p>
+  <p>Liikennejärjestelmäsuunnitelman selonteko (12/2025) toteaa, että Tornion sähköistys tuo huoltovarmuudelle mahdollisuuksia, mutta "eri raideleveys Ruotsin kanssa sekä ohuista kuljetusvirroista aiheutuva heikko kannattavuus tuovat haasteita". Sotilaallisen liikkuvuuden kiireellisimpiin kohteisiin tarvittaisiin noin 1,4 mrd € vuosina 2027–2030; "rahoitusta ei ole huomioitu vuosien 2026–2029 kehyksissä". Kalustosta on yksi kirjaus: "Valtio selvittää kokonaistaloudellisimman tavan raideliikennekaluston kehittämiseksi vastaamaan sotilaallisia vaatimuksia huomioiden kaksikäyttöisyys."</p>
 
-  <h3>6.3 Baltian laajempi laajennus — hypoteettinen, ei nykyinen kysymys</h3>
-
-  <p>Rail Baltica rakentaa uuden 1 435 mm runkoyhteyden Tallinna–Riika–Kaunas–Varsova, mutta Viron, Latvian ja Liettuan olemassa oleva teollisuus- ja jakeluverkko jää 1 520 mm:aan — sama rakenne kuin Suomessa, nelinkertaisessa mittakaavassa. Tämä on Suomen osalta selvästi tulevaisuuden kysymys, ei nykyinen: Rail Baltican ensimmäinen vaihe on aikaisintaan 2030, ja hanke on kolminkertaistunut kustannuksissaan alkuperäisestä arviosta.</p>
-
-  <p>Yksi erottelu on tehtävä tarkasti: Latvian oma kansallinen toimeenpanosuunnitelma nimeää 1 520 mm -verkon säilyttämisen perusteeksi yhteensopivuuden Venäjän ja Valko-Venäjän kanssa — tämä on Baltian omien viranomaisten peruste, ei VGHN:n. VGHN:n oma, tähän noottiin rajattu väite koskisi yksinomaan länteen suuntautuvaa virtaa: Baltian teollisuuden liittämistä Rail Baltican runkoon eurooppalaisia asiakkaita varten. Ukrainan Ukrzaliznytsia ja Espanjan Adif/Tria allekirjoittivat maaliskuussa 2024 yhteisymmärryspöytäkirjan ja toukokuussa 2026 tarkemman suunnittelusopimuksen täsmälleen tästä 1 520 mm -vaihtuvatelistä — jos se etenee, tekninen ratkaisu olisi valmiina, ei kehitettävä Suomessa erikseen.</p>
-
-  <p>Junalauttayhteys ilmaantunee vasta kun kalustoa on kaupallisesti molemmilla rannoilla samanaikaisesti — sama kana-muna-rakenne kuin VR Transpointin kotimaan yhdistetyssä kuljetuksessa. Ei löytynyt julkista arviota siitä mikä osuus Baltian teollisuudesta jäisi Rail Baltican jälkeen 1 520 mm -raiteen varaan.</p>
-
-  <h2>7. Konseptin oma, ainutlaatuinen kysymys</h2>
-
-  <p>Kaikki tähän mennessä käydyt läpi viralliset selvitykset — Väyläviraston viisiosainen kokonaisuus, LVM 2023, Suomi–Viro-junalauttaselvitys — tarkastelevat rajapintaa: Tornio–Haaparanta, Helsinki–Tallinna. Yksikään ei käsittele kotimaista jakelua yksittäisen lähettäjän terminaalille asti. Tämä ratkaisee koko konseptin tarpeellisuuden:</p>
-
-  <ul>
-    <li>Jos vaunun tarvitsee päästä vain Tornioon/Haaparantaan: rinnakkaisraide riittää, ja sen suunnittelu on rahoitettu ja käynnissä (luku 8). Vaunua ei tarvita.</li>
-    <li>Jos vaunun tarvitsee päästä Kemin/Oulun terminaaleihin: siirtokuormaus tai akselinvaihto olisi halvempi ratkaisu.</li>
-    <li>Jos vaunun tarvitsee päästä suomalaisen vientilähettäjän omalle terminaalille — esimerkiksi Kuopiossa tai Kouvolassa — vasta silloin vaihtuva raideleveys on ainoa käytännöllinen vaihtoehto, koska koko kotimaan verkkoa ei rakenneta uudelleen rinnakkaiseksi.</li>
-  </ul>
-
-  <p>Tämä kolmas taso on VGHN:n omaa, ainutlaatuista aluetta. Se on suoraan testattavissa: kuinka moni suomalainen vientilähettäjä haluaisi trailerin liikkuvan omalta terminaaliltaan eurooppalaiselle asiakkaalle käsittelemättä lastia, ja mitä se olisi heille arvoista. Tätä ei ole kysytty keneltäkään.</p>
-
-  <h2>8. Kansallinen konteksti: kolme polkua</h2>
-
-  <p>Koko raideleveyskysymystä on käsitelty Suomessa kansallisella, poliittisella tasolla useaan otteeseen, ja VGHN:n oma tekninen periaate on eksplisiittisesti nimetty vaihtoehto virallisessa valtioneuvoston tason selvityksessä.</p>
+  <p>Huoltovarmuuskeskus rahoitti Tornion radan sähköistystä kymmenellä miljoonalla eurolla (valmistui 1/2025) ja totesi lausunnossaan 3/2025, että meriliikenteen korvaaminen muilla kuljetusmuodoilla ja reiteillä on haastavaa. VR kannattaa eurooppalaista raidetta Torniosta Ouluun ja pitää parempaa siirtokuormausterminaalia edellytyksenä.</p>
 
   <div class="finding">
-    <div class="finding-label">LVM 2023 nimeää vaihtuvatelillisen kaluston viralliseksi vaihtoehdoksi</div>
-    <p>Liikenne- ja viestintäministeriö julkaisi 12.4.2023 selvityksen koko Suomen TEN-T-verkon muuttamisesta eurooppalaiseen raideleveyteen. Johtopäätös: kustannukset ovat huomattavat suhteessa hyötyihin, vaihtoehdot eivät ole kannattavia pelkästään liikenteen kannalta. Selvitys nimeää kaksi päävaihtoehtoa: koko verkon muutoksen (torjuttu) ja raideleveydenvaihtolaitteiston — vaunut erikoisakselistoilla, joissa pyörien väliä siirretään raideleveyden mukaisesti. Selvitys toteaa tämän jälkimmäisen kohdalla, ettei sitä ole "tavaraliikenteessä otettu vielä käyttöön" — Väyläviraston selvitys 83/2025 tukee tätä: Transfesan liikenne on pyöräkertojen vaihtoa, ja automaattisesti vaihtuvan raideleveyden tavaraliikenne on jäänyt koe-eriin (Green Cargo seitsemän vaunua 2006–2008, PKP neljä vaunua). Nootin aiempi vastaväite ministeriön muotoiluun oli virheellinen (korjaus 2026-10-05; luku 1.1).</p>
+    <div class="finding-label">Mitä linjasta puuttuu</div>
+    <p>Pullonkaula todettiin 2024, ja rakentaminen alkaa aikaisintaan 2028. Väliin jää vuosia, joille julkisissa asiakirjoissa ei ole toimenpidettä, vaikka Väyläviraston oma selvitys pitää kalustoratkaisuja sopivina juuri siirtymävaiheeseen. Tavoite on kirjattu ilman määrää, rahoitus on kehysten ulkopuolella ja kalusto on selvitettävänä. Operatiiviset varautumissuunnitelmat eivät ole julkisia, joten tämä kuvaa sitä, mikä asiakirjoista näkyy, ei sitä, mitä on olemassa.</p>
   </div>
 
-  <div class="finding">
-    <div class="finding-label">2025: turvallisuusperuste, ei taloudellinen — ja siihen on osoitettu rahaa</div>
-    <p>Liikenneministeri Lulu Ranne totesi toukokuussa 2025, että Suomen rataverkko olisi pitkällä tähtäimellä syytä muuttaa eurooppalaiseen raideleveyteen — vedoten turvallisuustilanteeseen, ei taloudelliseen kannattavuuteen. Väyläviraston kesäkuun 2025 arvio: koko selvitetyn Pohjois-Suomen alueen muuttaminen maksaisi noin 3,2 mrd €, ja Kolari–Svappavaara-yhteydellä laajennettuna noin 4,8 mrd €. Hallitus osoitti puoliväliriihessään (huhtikuu 2025) 20 M€ Haaparanta–Kemi-rinnakkaisraiteen suunnitteluun — sama hanke joka on osa laajempaa "Jäämeren rata / Narvik-yhteys" -keskustelua, jonka Kirkkoniemi-vaihtoehto hylättiin nimenomaan Venäjän-läheisyyden vuoksi. Useat riippumattomat lähteet vahvistavat: hankkeen tausta on huoltovarmuus, sotilaallinen liikkuvuus ja Nato-yhteistyö, ei liikennetalous.</p>
-  </div>
+  <p>Arktinen merireitti ei ole kalustokysymyksen ajuri. Koillisväylän liikenne oli 37 miljoonaa tonnia vuonna 2025, josta Aasian ja Euroopan välistä transitoa 3,2 miljoonaa tonnia (Carnegie 9/2026). Reitti kulkee Venäjän vesillä, liikenne purkautuu suuriin satamiin, ja kontti on yksikkö, jonka siirtokuormaus on nopeaa.</p>
 
-  <div class="finding">
-    <div class="finding-label">Käytännössä valittu kolmas polku: rinnakkainen raide</div>
-    <p>Väyläviraston viisiosainen selvityskokonaisuus (pääselvitys 85/2025, tekninen selvitys 82/2025, kalustotekninen selvitys 83/2025, kysyntäselvitys, hankearviointi; LVM:n toimeksianto 3.6.2024) on rakennettu lähtöoletukselle, että suomalainen raideleveys säilytetään ja eurooppalainen raide rakennetaan rinnalle strategisissa kohdissa — limittäisraide maksaa noin 2,0 M€/km. Kalustoratkaisu (julkaisu 83/2025, joka kattaa juuri Rafil/SUW/CAF-BRAVA/ADIF-OGI/Talgo-RD-katalogin ja nelivaihtoehtoisen kustannusvertailun) on tutkittu täydentävänä, ei ensisijaisena vaihtoehtona — konkreettinen rahoitus on osoitettu rinnakkaisraiteelle, ei kalustolle. Hankearviointi toteaa: "tunnistettu kysyntä on elinkeinoelämän kuljetuksia, henkilöliikenteen osalta markkinaehtoista kysyntää ei juurikaan ole tunnistettu" — sama hienovarainen ero (kysyntä on olemassa vs. kysyntä riittää) jonka tämä nootti tekee Tornio-kysymykselle muutenkin.</p>
-  </div>
+<h2>8. Häiriönsieto</h2>
 
-  <p>Kolme polkua eivät ole toisiaan poissulkevia. Havainto on, että VGHN:n perusidea on osa Suomen omaa, aktiivista poliittista keskustelua — ei ulkopuolinen ehdotus sen ulkopuolelta.</p>
+  <h3>8.1 Kriteeri ja lähtöluvut</h3>
 
-  <div class="finding">
-    <div class="finding-label">Rail Nordica yleissuunnittelussa (syyskuu 2026)</div>
-    <p>Väyläviraston Rail Nordica -hanke on edennyt yleissuunnitteluun, ja maastotutkimukset Keminmaan ja Tornion alueella alkoivat syyskuussa 2026 (Yle). Suunnittelutoimeksianto ja rahoitus kattavat 1 435 mm:n radan Torniosta Kemiin; suunnitelmaan kuuluvat yhteydet Kemin satamaan ja Tornion Röyttään, siirtokuormausterminaali Tornioon ja silta Tornionjoen yli. Liikenneministerin mukaan suunnittelu laajenee Ouluun ja Rovaniemelle. Seuraus tälle nootille: raideleveysraja siirtyy Torniosta sisämaahan, ja valtio rakentaa samalla siirtokuormausterminaalin. LVM:n mukaan suunnitteluun on osoitettu 61 M€, rakentamisen arvioidaan alkavan vaiheittain vuodesta 2028 Tornion alueelta, ja kustannusarvio rajalta Kemiin, Ouluun ja Rovaniemelle on 1,5 mrd € (kirje komissiolle 29.7.2026).</p>
-  </div>
-
-  <h3>8.1 Narvik ja Koillisväylä</h3>
-
-  <p>Narvik-yhteyden laajempi konteksti — arktisen meriliikenteen (Koillisväylä) ja pohjoisen kaivos-/malmiteollisuuden mahdollinen kasvu — jakautuu yksikön mukaan (2.3). Jos Koillisväylän kautta kulkeva rahti on konttiliikennettä, se on täsmälleen se yksikkö joka ei tarvitse vaihtuvaa raideleveyttä: reach stacker nostaa kontin vaunusta toiseen minuuteissa, ja mitä suurempi virta, sitä halvempi nosto per yksikkö. Jos rahti on bulkkimalmia tai rikastetta, sitä ei nosteta vaan se kulkee vaunussa rajan yli tai puretaan. Tiheässä säännöllisessä liikenteessä tämä on vaihtuvatelin edullisin käyttötapaus (2.5), harvassa telinvaihdon.</p>
-
-  <p>Koillisväylä-oletus itsessään on merkittävä avoimeksi kysymykseksi, ei taustaksi: nykyinen liikennemäärä on pientä ja suurelta osin venäläistä bulkkia, jääolot vaihtelevat, vakuutuskustannus on korkea, ja aikataulun epävarmuus on juuri väärä ominaisuus konttiliikenteelle joka myy täsmällisyyttä (UPI:n Harri Mikkola, Yle: volyymit "hyvin pieniä", reitti käytännössä vain kesäkautinen).</p>
-
-  <p>Vuoden 2026 tiedot tarkentavat kuvaa kumpaankin suuntaan (Carnegie Endowment, syyskuu 2026). Reitin kokonaisliikenne oli 37 miljoonaa tonnia vuonna 2025; Aasian ja Euroopan välinen transit oli 103 matkaa ja 3,2 miljoonaa tonnia, alle 9 % kokonaismäärästä. Lähi-idän sota on lisännyt kysyntää: kiinalainen varustamo aloitti elokuussa 2026 ensimmäisen säännöllisen konttilinjan Ningbosta Britanniaan, ja Intia ja Etelä-Korea ovat ilmoittaneet suunnitelmista vedoten Lähi-idän tilanteeseen. Kustannus on noin 8 500 dollaria konttia kohden, lähes kaksinkertainen tavanomaisiin reitteihin verrattuna, ja suuret länsivarustamot ovat poissa.</p>
-
-  <p>Epävakaus siis siirtää liikennettä pohjoiseen. Kolme asiaa pysyy: reitti kulkee Venäjän vesillä, joten se vaihtaa yhden riippuvuuden toiseen; liikenne purkautuu suuriin satamiin eikä Narvikiin; ja kontti on yksikkö, jonka siirtokuormaus on nopeaa (2.5), joten se puoltaa terminaalia. Arktinen reitti ei ole tämän nootin kalustokysymyksen ajuri.</p>
-
-  <h2>9. Häiriönsieto: käytävä kriisikapasiteettina</h2>
-
-  <p>Luvut 3–7 kysyvät, riittääkö tavaravirta kaluston kannattavuuteen. Tämä luku kysyy eri asiaa: mitä länsikäytävä ja joustava kalusto ovat arvoltaan silloin, kun meriyhteys tai maantiekuljetus ei toimi normaalisti. Ajureita on esitetty kolme: Itämeren merikuljetusten häiriö, polttoaineen hinta ja saatavuus sekä arktinen merireitti. Kaksi ensimmäistä käsitellään tässä. Kolmas ei ole kalustokysymyksen ajuri (luku 8.1).</p>
-
-  <h3>9.1 Arviointikriteeri: vakuutus, ei kannattavuuslaskelma</h3>
-
-  <p>Rata, satama ja kalusto ovat 30–100 vuoden hankkeita. Lyhyen aikavälin kannattavuus ei ole niille riittävä kriteeri, ja luvun 8 mukaan valtio ei sitä käytäkään: rinnakkaisraiteen peruste on huoltovarmuus ja sotilaallinen liikkuvuus. Vakuutusperuste ei kuitenkaan vapauta laskemasta. Se vaihtaa kysymykset kolmeen muuhun: mitä tapahtumaa vastaan vakuutetaan, kuinka suuren osan tarpeesta vakuutus kattaa, ja kuka maksaa preemion niinä vuosina kun mitään ei tapahdu.</p>
-
-  <div class="finding">
-    <div class="finding-label">Mittakaava: maakäytävä ei korvaa merta</div>
-    <p>Suomen ulkomaankaupasta noin 96 % kulkee meritse (Suomen Varustamot ry). Huoltovarmuuskeskuksen arvion mukaan noin 10 % ulkomaankaupasta on siirrettävissä muihin kuljetusmuotoihin (sama lähde). Länsikäytävä on siis parhaimmillaankin priorisoidun kymmenyksen reitti, ei meriliikenteen korvaaja. Tämä rajaa vakuutuksen kattavuuden ylhäältä ennen kuin yhtäkään kapasiteettilukua on laskettu.</p>
-  </div>
-
-  <div class="finding">
-    <div class="finding-label">Mitä julkisesti on tehty (haku 2026-10-02)</div>
-    <p>Huoltovarmuuskeskus rahoitti Laurila–Tornio–Haaparanta-radan sähköistystä 10 M€:lla; koko hanke oli 37 M€ ja valmistui tammikuussa 2025. Perusteluna oli, että maareitti Ruotsin kautta voi osittain korvata meriliikennettä häiriötilanteissa (HVK 27.1.2025). Tiedotteessa ei ole kapasiteettilukuja, kalustoa eikä rajan käsittelyä. Merikuljetusten huoltovarmuuskapasiteetista on Turun yliopiston selvitys (2/2023), joka koskee aluskapasiteettia eikä korvaavia reittejä: kotimainen tonnisto kattaisi poikkeusoloissa tuotetankkereissa noin 35 % ja öljytankkereissa noin 60 % tarpeesta, ro-ro-kapasiteetti riittäisi (Navigator Magazine; itse raporttia ei ole tähän luettu).</p>
-    <p>Hankeikkunan tekstihaku ei palauta yhtään hanketta sanoilla raideleveys, Rail Nordica tai sotilaallinen liikkuvuus; lähimmät osumat ovat Liikenne 12 -suunnitelma 2026–2037 (LVM029:00/2023) ja valtioneuvoston päätös huoltovarmuuden tavoitteista (TEM080:00/2022). Laskelmaa, joka yhdistäisi sataman, Ruotsin radan, rajan, kaluston ja priorisoidun tarpeen, ei löytynyt. Se ei osoita, ettei sitä ole: operatiiviset varautumissuunnitelmat eivät yleensä ole julkisia. Julkisesti näkyvä rahoitus on kohdistunut rataan, ei kalustoon eikä rajan käsittelyyn.</p>
-    <p>Hankeikkunan asiakirjoista löytyy valtion linja ja lausunnonantajien kannat. Liikenne- ja viestintäministeriön kirje Euroopan komissiolle 29.7.2026 (TEN-T-asetuksen 17 artiklan mukainen ilmoitus; Liikenne 12 -hanke LVM029:00/2023) toteaa, että eurooppalaisen raideleveyden suunnittelua priorisoidaan ensisijaisesti sotilaallisen liikkuvuuden perusteella ja että tavoitteena on parantaa rajan siirtokuormauskapasiteettia ja pääsyä Ruotsin ja Norjan satamiin. Narvik–Rovaniemi-reitin sotilaskuljetusten testaus keväällä 2024 (Steadfast Defender, Nordic Response) tunnisti Tornion–Haaparannan rajanylityksen kriittiseksi pullonkaulaksi raideleveyseron ja rajallisen siirtokuormauskapasiteetin vuoksi. Kirje mainitsee vaihtoehtoiset maareitit tilanteisiin, joissa merireitit ja siirtokuormaus häiriintyvät, mutta toteaa merikuljetuksen pysyvän maakuljetusta edullisempana. Koko verkon siirtymäsuunnitelma toimitetaan kesään 2027 mennessä; kustannusarvio on 15–31 mrd €, ja yhdeksi hyödyksi nimetään vaunujen parempi saatavuus. Pohjoismaat allekirjoittivat maaliskuussa yhteisen liikennejärjestelmän varautumisstrategian. Vaihtuvatelistä kalustoa kirje ei mainitse.</p>
-    <p>Huoltovarmuuskeskus toteaa Liikenne 12 -luonnoksesta antamassaan lausunnossa (5.3.2025), että meriliikenteen korvaaminen toisilla kuljetusmuodoilla ja vaihtoehtoisilla reiteillä on haastavaa. Huoltovarmuusorganisaation sektorit ja poolit esittivät huoltovarmuuden tavoitepäätöksen luonnoksesta (1/2024; TEM080:00/2022), että vaihtoehtoiset kuljetusreitit täsmennettäisiin "muun muassa Ruotsin ja Pohjois-Norjan satamiin" ja että kuljetusten jatkuvuudelle asetettaisiin konkreettisempia tavoitteita, joiden tulisi näkyä tie- ja rataverkon investointiohjelmissa. VR kannattaa eurooppalaista raideleveyttä Torniosta Ouluun ja pitää nykyistä parempaa siirtokuormausterminaalia Tornio–Haaparannassa edellytyksenä; sen mukaan pääradan yhteys Haaparantaan olisi teollisuudelle elintärkeä, jos Suomenlahden kuljetukset häiriintyvät (lausunto 5.3.2025).</p>
-    <p>Lopullinen valtioneuvoston päätös huoltovarmuuden tavoitteista (568/2024) ei nimeä Ruotsin ja Pohjois-Norjan satamia, mutta velvoittaa laadullisesti: "Vaihtoehtoisten kuljetusreittien volyymien kasvuun varaudutaan suunnitelmin ja harjoituksin sekä tarvittaessa rakentamalla tarvittavaa infrastruktuuria ja kuljetuskapasiteettia jo normaalioloissa." Päätöksen mukaan meriyhteyksiä korvaavien maayhteyksien kehittämistä on kiirehdittävä, ja "erityisesti raideliikenne on keskiössä ratkaistaessa kriittisten materiaalivirtojen toteutusta". Määrällisiä tavoitteita päätöksessä ei ole.</p>
-    <p>Valtioneuvoston selonteko liikennejärjestelmäsuunnitelmasta 2026–2037 (18.12.2025) toteaa, että Tornio–Haaparanta-radan sähköistys tuo huoltovarmuudelle uusia mahdollisuuksia, mutta "eri raideleveys Ruotsin kanssa sekä ohuista kuljetusvirroista aiheutuva heikko kannattavuus tuovat haasteita ko. yhteyden käytölle". Sotilaallisen liikkuvuuden kiireellisimpiin kohteisiin tarvittaisiin selonteon mukaan noin 80 M€ vuodesta 2026 alkaen, kehyskaudella 2027–2030 yhteensä noin 1,4 mrd € ja vuodesta 2031 alkaen 300 M€ vuodessa; "rahoitusta ei ole huomioitu vuosien 2026–2029 kehyksissä". Rahoitusta kohdistettaisiin muun muassa eurooppalaiseen raideleveyteen ja kuormauspaikkojen kehittämiseen. Kalustosta selonteossa on yksi kirjaus: "Valtio selvittää kokonaistaloudellisimman tavan raideliikennekaluston kehittämiseksi vastaamaan sotilaallisia vaatimuksia huomioiden kaksikäyttöisyys ja mahdollisuudet hyödyntää EU-tukea."</p>
-    <p>Yhteenveto: pullonkaula rajalla on viranomaisten tunnistama, ja siihen vastataan rinnakkaisraiteella ja siirtokuormauksella. Tavoitepäätös edellyttää suunnitelmia, harjoituksia ja tarvittaessa kuljetuskapasiteettia jo normaalioloissa, mutta ilman määrällistä tavoitetta. Kalusto on kirjattu selvitettäväksi, ja sotilaallisen liikkuvuuden rahoitus on kehysten ulkopuolella. Tämän nootin kalustokysymys osuu siis kohtaan, jonka valtio on itse nimennyt avoimeksi.</p>
-  </div>
-
-  <h3>9.2 Mikä käytävä: Göteborg, ei Narvik</h3>
-
-  <p>Länsikäytävän pääksi nimetään usein Narvik. Lähempi ja suurempi vaihtoehto on Göteborg: se on Kattegatissa Tanskan salmien pohjoispuolella, joten sinne pääsee Pohjanmereltä kulkematta Itämeren kautta. Göteborgista Suomeen on kaksi reittiä, joilla on eri pullonkaula.</p>
+  <p>Rata, satama ja kalusto ovat 30–100 vuoden hankkeita, eikä lyhyen aikavälin kannattavuus ole niille riittävä kriteeri. Vakuutusperuste ei silti vapauta laskemasta. Se vaihtaa kysymykset: mitä tapahtumaa vastaan vakuutetaan, kuinka suuren osan tarpeesta vakuutus kattaa ja kuka maksaa preemion niinä vuosina, kun mitään ei tapahdu.</p>
 
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Reitti</th><th>Kulku</th><th>Raideleveysraja</th><th>Todennäköinen pullonkaula</th></tr></thead>
+    <thead><tr><th>Suure</th><th>Arvo</th><th>Lähde ja varmuus</th></tr></thead>
     <tbody>
-      <tr><td>A — maareitti</td><td>Göteborg → Ruotsin pääradat → Haaparanta → Tornio/Kemi</td><td>Tornio (Rail Nordican jälkeen Kemi)</td><td>Ylä-Norrlannin yksiraiteinen osuus tai rajan läpäisykyky</td></tr>
-      <tr><td>B — lauttareitti</td><td>Göteborg → Ruotsin itärannikko → lautta Ahvenanmeren tai Merenkurkun yli</td><td>Ei rajaa, jos tavara kulkee trailerissa; satamassa, jos kulkee junavaunussa</td><td>Lauttakapasiteetti ja ylityksen käytettävyys</td></tr>
+      <tr><td>Ulkomaan meriliikenne</td><td>90,2 Mt vuodessa, noin 247 000 t/vrk</td><td>Tilastokeskus 2025</td></tr>
+      <tr><td>Öljytuotteiden kotimaan myynti</td><td>6,76 Mt vuodessa, noin 18 500 t/vrk</td><td>Tilastokeskus 2025</td></tr>
+      <tr><td>… josta dieselöljy</td><td>2,05 Mt vuodessa, noin 5 600 t/vrk</td><td>Tilastokeskus 2025</td></tr>
+      <tr><td>Siirrettävissä muihin kuljetusmuotoihin</td><td>Noin 10 % ulkomaankaupasta; tonneina noin 25 000 t/vrk</td><td>HVK:n arvio Suomen Varustamojen mukaan; yksikkö ei selviä lähteestä</td></tr>
+      <tr><td>Polttoainevarastojen mitoitus</td><td>Vähintään viiden kuukauden kriisiajan tarve</td><td>VNp 568/2024; todellinen taso ei tiedossa</td></tr>
+      <tr><td>Kotimaisen tonniston kattavuus poikkeusoloissa</td><td>Tuotetankkerit noin 35 %, öljytankkerit noin 60 %, ro-ro riittää</td><td>Turun yliopisto 2023, toissijaisesta lähteestä</td></tr>
+      <tr><td>Rajan nykyinen läpäisy</td><td>Noin yksi siirtokuormattu juna viikossa</td><td>Väylävirasto 83/2025</td></tr>
     </tbody>
   </table></div>
 
-  <p>Reitti A ei käytä Malmbanania, joten Narvik-keskustelun yhteydessä esitetty malmiradan kapasiteettirajoite ei koske sitä. Sen oma rajoite on Ylä-Norrlannin läpi kulkeva päärata: Uumajan ja Luulajan välillä sähköistetty yksiraiteinen rata, suurin sallittu junapaino 1 600 t, toteutunut keskimääräinen junapaino noin 1 000 t (Norrbotniabanan-hankkeen oma kuvaus). Norrbotniabanan on rakenteilla; vapaiden junapaikkojen määrää vuorokaudessa ei ole tähän tarkistettu. Reitti B on lyhyempi — kierto Haaparannan kautta on Etelä-Suomeen suuruusluokkaa 1 500–2 000 km pidempi (arvio, ei mitattu) — mutta se kulkee edelleen Itämeren pohjoisosan yli.</p>
+  <h3>8.2 Käytävä: Göteborg, ei Narvik</h3>
 
-  <h3>9.3 Kapasiteettiketju</h3>
-
-  <p>Käytävän arvo kriisissä on sen heikoimman lenkin välityskyky. Ketju on mitattavissa, ja se on halvempi testi kuin yksikään kalustolaskelma.</p>
+  <p>Länsikäytävän pääksi nimetään usein Narvik. Lähempi ja suurempi vaihtoehto on Göteborg, joka on Tanskan salmien pohjoispuolella ja jonne pääsee Pohjanmereltä kulkematta Itämeren kautta. Sieltä Suomeen on kaksi reittiä. Maareitti kulkee Ruotsin pääratoja Haaparantaan; sen rajoite on Uumajan ja Luulajan välinen yksiraiteinen rata, jolla suurin junapaino on 1 600 tonnia ja toteutunut keskimäärin noin 1 000 tonnia. Väyläviraston kysyntäselvityksessä Ruotsin puolen kapasiteetti nousi huoleksi: kapasiteettia lienee kohtalaisellekin junamäärälle, mutta epäedullisiin vuorokaudenaikoihin. Lauttareitti kulkee Ruotsin itärannikolle ja Pohjanlahden tai Ahvenanmeren yli; se on lyhyempi mutta käyttää yhä Itämeren pohjoisosaa.</p>
 
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Lenkki</th><th>Mitä tiedetään</th><th>Status</th></tr></thead>
+    <thead><tr><th>Kapasiteettiketjun lenkki</th><th>Mitä tiedetään</th><th>Mittaamatta</th></tr></thead>
     <tbody>
-      <tr><td>1. Göteborgin sataman vapaa kapasiteetti</td><td>—</td><td>Tarkistamaton</td></tr>
-      <tr><td>2. Ratakapasiteetti Göteborg–Haaparanta</td><td>Uumaja–Luulaja yksiraiteinen, junapaino enintään 1 600 t. Ruotsin puolen kapasiteetti nousi Väyläviraston kysyntäselvityksessä huoleksi: kapasiteettia lienee kohtalaisellekin junamäärälle, mutta epäedullisiin vuorokaudenaikoihin (Väylävirasto 83/2025)</td><td>Vapaiden junapaikkojen määrä tarkistamatta</td></tr>
-      <tr><td>3. Rajan läpäisykyky (Tornio, myöhemmin Kemi)</td><td>Telinvaihtoraide 130 m, kuusi vaunua kerrallaan, kattamaton, käyttö satunnaista; vaihtolaite ja nosturi eivät käytössä; Haaparannassa siirtokuormataan noin juna viikossa (luku 1.1)</td><td>Ihanneoloissa telinvaihto noin 2,5 h ja siirtokuormaus 3–6 h junaa kohden (Väylävirasto 83/2025); vuorokausikapasiteettia ei ole ilmoitettu. Sotilaskuljetuksille tunnistettu kriittiseksi pullonkaulaksi 2024 (9.1)</td></tr>
-      <tr><td>4. Lauttakapasiteetti Ahvenanmerellä ja Merenkurkussa</td><td>—</td><td>Tarkistamaton</td></tr>
-      <tr><td>5. Priorisoitu tuontitarve</td><td>Enintään noin 10 % ulkomaankaupasta siirrettävissä (HVK)</td><td>Tonnit ja tavaralajit tarkistamatta</td></tr>
+      <tr><td>1. Göteborgin sataman vapaa kapasiteetti</td><td>—</td><td>Kaikki</td></tr>
+      <tr><td>2. Rata Göteborg–Haaparanta</td><td>Yksiraiteinen Uumajasta pohjoiseen, junapaino enintään 1 600 t</td><td>Vapaat junapaikat</td></tr>
+      <tr><td>3. Rajan läpäisykyky</td><td>Telinvaihto kuusi vaunua kerrallaan, yksi työvuoro hoitaa junaparin; vaihtolaite ja nosturi eivät käytössä</td><td>Vuorokausikapasiteetti, telivarasto</td></tr>
+      <tr><td>4. Lautat Pohjanlahdella ja Ahvenanmerellä</td><td>Ro-ro-kapasiteetin arvioitu riittävän</td><td>Kapasiteetti lisäkysynnälle</td></tr>
+      <tr><td>5. Priorisoitu tuontitarve</td><td>Noin 10 % ulkomaankaupasta</td><td>Tonnit ja tavaralajit</td></tr>
     </tbody>
   </table></div>
 
-  <p>Kolme lopputulosta sulkee kysymyksen eri suuntiin. Jos lenkki 4 kattaa lenkin 5, maareitti ja sen kalusto ovat vakuutus kapealle tapaukselle, jossa myös Pohjanlahden ylitys on poissuljettu. Jos lenkki 2 on ketjun pienin, mikään raideleveysratkaisu ei lisää välityskykyä. Vain jos lenkki 3 on pienin, rajan ratkaisulla on mitattava arvo. Kumpi rajan ratkaisu silloin on edullisin, riippuu yksiköstä ja liikenteen tiheydestä (2.3, 2.5); ruuhkahuipulle telinvaihto ja vaihtuvateli ovat lisäksi ohitus, joka purkaa nostojonoa.</p>
+  <p>Käytävän arvo häiriössä on sen heikoimman lenkin välityskyky. Jos lenkki 4 kattaa tarpeen, maareitti on vakuutus kapealle tapaukselle. Jos lenkki 2 on pienin, mikään rajan ratkaisu ei lisää välityskykyä. Vain jos lenkki 3 on pienin, rajan ratkaisulla on mitattava arvo.</p>
 
-  <div class="finding">
-    <div class="finding-label">Häiriöt eivät ole riippumattomia: Itämeri ja polttoaine</div>
-    <p>Ketju käsittelee Itämeren häiriötä ja luku 9.5 dieselin saatavuutta erikseen. Ne ovat todennäköisesti sama tapahtuma. Suomen polttoainehuolto perustuu meritse tuotavaan raakaöljyyn ja öljytuotteisiin, joten Itämeren merikuljetusten häiriö osuu ensimmäisenä siihen polttoaineeseen, jolla korvaava maantiekuljetus ajettaisiin. Tornion kautta pääsee myös maanteitse ilman raideleveysrajaa, joten häiriötilanteessa sähköistetyn radan vertailukohta ei ole roro-alus vaan rekka 1 500–2 000 kilometrin kierrolla — juuri silloin, kun diesel ja kuljettajat ovat niukimmillaan. Yksi juna korvaa kymmeniä yhdistelmiä yhdellä kuljettajalla ilman dieseliä. Varmuusvarastojen kesto ja maantiereitin oma välityskyky ovat tässä tarkistamatta; ne kuuluvat lenkkiin 5.</p>
-  </div>
-
-  <h3>9.4 Irtolasti: kokonaisuutena ei, priorisoitu osa kyllä</h3>
-
-  <p>Ulkomaan meriliikenteen tonneista 71 % on kiinteää ja nestemäistä irtolastia (2.1), noin 64 miljoonaa tonnia vuodessa eli noin 175 000 tonnia vuorokaudessa. Tätä ei siirretä yksiraiteiselle radalle. Suuruusluokka-arvio: jos reitille A mahtuisi kymmenen lisäjunaa vuorokaudessa ja juna kantaa noin 1 000 tonnia lastia (junapainoraja 1 600 t, 9.2), välityskyky on noin 10 000 t/vrk eli alle 4 miljoonaa tonnia vuodessa — noin kuusi prosenttia irtolastista. Junamäärä on oletus, ei mitattu luku.</p>
-
-  <p>Priorisoitu osa on eri kokoluokkaa. Dieselöljyä myytiin kotimaahan 2,05 miljoonaa tonnia vuonna 2025 (Tilastokeskus, öljytuotteiden myynti), eli noin 5 600 t/vrk — samaa suuruusluokkaa kuin kuusi junaa vuorokaudessa. Kaikkia öljytuotteita myytiin 6,76 miljoonaa tonnia eli noin 18 500 t/vrk, mikä ylittäisi oletetun kymmenen junan välityskyvyn; raakaöljyn tuontimäärä on Tilastokeskuksen taulukossa salattu. Koko irtolastia rata ei kanna, eikä jalostamon raakaöljyä, mutta valmiin polttoaineen kriittisen osan se voisi kantaa, jos kalusto ja rajan käsittely ovat olemassa.</p>
-
-  <p>Irtolastia ei nosteta, joten rajalla on neljä vaihtoehtoa (2.3): telinvaihto, pumppaus- tai purkulaitos, säiliö- ja bulkkikontit tai vaihtuvatelinen vaunu. Normaalioloissa ne asettuvat kustannusjärjestykseen, ja vaihtuvateli on siinä viimeinen. Häiriössä ratkaisee se, mitä on saatavilla riittävä määrä heti. Telinvaihto vaatii telivaraston ja telinvaihtoon kelpaavia vaunuja, kontit konttivaunuja ja nosturin, pumppaus laitoksen ja 1 524 mm:n säiliövaunut rajan toisella puolella; vaihtuvatelinen vaunu vaatii vain vaihtolaitteen, mutta kalustoa ei ole. Minkään näistä riittävyyttä kuuden junan päivittäiseen virtaan ei ole tarkistettu. Tämä on irtolastin osalta se kohta, jossa joustavalla kalustolla voi olla arvoa, jota kannattavuuslaskelma ei näytä.</p>
-
-  <h3>9.5 Polttoaine: hinta, pula ja pysyvä muutos</h3>
-
-  <div class="finding">
-    <div class="finding-label">Tausta: rakenteellinen shokki ja Suomen verorakenne (2026)</div>
-    <p>Hormuzin salmi on ollut suljettuna maaliskuusta 2026 lähtien (Iranin julistus). Brent-öljy on käynyt yli 120 dollarissa; Moody's luokittelee tilanteen rakenteelliseksi, ei ohimeneväksi. Tilastokeskuksen dieselin kuluttajahintaindeksi (2025=100): tammikuu 104,83, helmikuu 106,4, maaliskuu 124,39 (Hormuz suljettiin tässä kuussa), huhtikuu 137,84 (huippu, +38 % tammikuuhun verrattuna), kesäkuu 126,22. Suomen dieselin hinnasta noin 50 % on veroa, ja suurin osa siitä on kiinteää valmisteveroa (senttiä/litra) — vain arvonlisävero (25,5 %, laskettuna valmisteveron sisältävästä hinnasta) on arvoperusteinen. Koska kiinteä valmistevero ei muutu öljyn markkinahinnan mukana, se vaimentaa shokin suhteellista vaikutusta lopulliseen pumppuhintaan verrattuna maahan jossa vero on pienempi osuus hinnasta. Tämä nostaa dieselriippuvaisen maantiekuljetuksen suhteellista kustannusta Suomen sisäisessä rekka-vs-rata-vertailussa, mutta suuntaa Baltian/Puolan kilpailuasetelmalle (luku 6.3) ei voida päätellä tästä ilman vastaavaa, tässä tarkistamatonta tarkastelua niiden verorakenteesta.</p>
-  </div>
-
-  <p>EU:n keskimääräinen dieselin hinta oli 1.10.2026 ennätyksessä, 2,24 €/l, kun se ennen helmikuun sotaa oli 1,59 €/l; Suomessa hinta oli 2,52 €/l, EU:n kolmanneksi korkein (Yle 1.10.2026, komission tiedot). Kuljetusalan mukaan yritykset käyttävät dieseliä noin 100 miljoonaa litraa kuukaudessa, polttoaine on noin 26 % kustannuksista ja vuosikulut ovat nousseet yli 500 M€ vuoteen 2025 verrattuna (Yle 7.9.2026). EU harkitsee varmuusvarastojen purkua; säännöstelystä ei ole ilmoitettu.</p>
-
-  <div class="finding">
-    <div class="finding-label">Laskettavissa oleva osa: polttoainekomponentti traileria kohden</div>
-    <p>Suomen keskihinta 2025 oli 1,69 €/l ja nyt 2,52 €/l, eli +0,83 €/l verollisena ja noin +0,66 €/l ilman arvonlisäveroa (25,5 %). Jos puoliperävaunuyhdistelmä kuluttaa 33 l/100 km (oletus, tarkistamaton), lisäkustannus on noin 0,22 €/km eli noin 220 € tuhannen kilometrin trailerimatkaa kohden. Tämä on ainoa osa kynnyshinnasta, joka on laskettavissa julkisista luvuista. Rautatie- ja lauttaketjun oma hinta samalle matkalle puuttuu, joten kynnystä — dieselin hintaa, jolla sähköistetty rata ja lautta alittavat trailerin vaihtuvatelin omamassahaitta mukaan lukien — ei voi vielä ilmoittaa. Se on neljäs syöttötieto luvun 11 haastatteluihin.</p>
-  </div>
-
-  <p>Kaksi varausta. Hinta ei ole pula: jos varastojen purku ja Hormuzin tilanteen muutos palauttavat hinnan, peruste heikkenee yhtä nopeasti kuin syntyi, ja kaluston 30 vuoden käyttöikä (luku 11) on mitoitettava toistuvuuden eikä yhden piikin mukaan. Lisäksi Suomen hintaero Ruotsiin (0,57 €/l, Yle 7.9.2026) on kotimaista vero- ja velvoiterakennetta, ei saatavuutta.</p>
-
-  <div class="finding">
-    <div class="finding-label">Pysyvä muutos: vertailutaso ei ole vuosien 2005–2016 kustannusrakenne</div>
-    <p>Hintapiikki on jakso. Osa muutoksesta on pysyvää. SUW 2000 hävisi vakiotelille (luku 1.1) kustannusrakenteessa, jossa diesel oli halpaa, tieliikenteen polttoaineella ei ollut päästöhintaa ja kuljettajia oli saatavilla. Osa näistä muuttuu pysyvästi, ei jaksoittain. Tieliikenteen polttoaineiden päästökauppa (ETS2) alkaa 2028; 50 €/t hinnalla vaikutus dieseliin on noin 11 snt/l (SKAL), eli samalla 33 l/100 km -oletuksella noin 36 € tuhannen kilometrin trailerimatkaa kohden. Yksin se on pieni verrattuna vuoden 2026 hinnannousuun (noin 220 €, yllä), mutta se on pysyvä ja hinta voi nousta.</p>
-    <p>Taakanjakosektori tuo toisenlaisen tekijän: maksajan. Tuhannen kilometrin trailerimatka polttaa noin 330 litraa dieseliä, mikä on noin 0,87 t CO₂ (2,64 kg/l). Sähköistetylle radalle siirtyvä kuljetus poistuu Suomen taakanjakosektorin päästöistä siltä osin kuin polttoaine olisi myyty Suomessa. Jos Suomi ei saavuta taakanjakotavoitettaan, valtiolla on velvoite, jolla on hinta tonnia kohden. Tämä vastaa luvun 9.1 kolmanteen kysymykseen — kuka maksaa preemion — tavalla, jota pelkkä huoltovarmuusperuste ei tee: preemiolle on olemassa laskettava vertailuhinta. Sitä ei ole tässä laskettu; taakanjakoyksikön hinta ja Suomen vaje ovat tarkistamatta.</p>
-    <p>Varaus pysyy: meriliikenne on jo päästökaupassa, joten junalautan ja roro-aluksen merimatka kallistuu samalla tavalla, ja kansainvälisellä trailerilla vain Suomessa tankattu osuus kuuluu Suomen taakanjakoon. Vahvin vaikutus kohdistuu siksi kotimaan pitkiin runkokuljetuksiin (luku 5), ei rajanylitykseen.</p>
-  </div>
-
-  <h3>9.6 Junalautta: Railship ja SeaRail</h3>
-
-  <p>M/S Railship I aloitti liikennöinnin Hangon ja Travemünden välillä 15.2.1975 — telit ja pyöräkerrat vaihdettiin Hangossa Suomen ja Saksan raideleveyseron vuoksi. Tämä on telinvaihto, eri mekanismi kuin VGHN:n oma automaattinen, junan liikkuessa tapahtuva vaihtuva-akseliteknologia. Kalusto kasvoi ajan myötä (Railship II 1984/1985, III 1990). Palvelun päättymisajankohtaa ei löydetty riippumattomasti vahvistettuna. Nykyinen Finnlines-reitti (Travemünde–Helsinki, päivittäinen, RoRo) käyttää samaa merikäytävää eri intermodaalisella ratkaisulla.</p>
-
-  <p>Tämä on todistettu, toiminnassa ollut ennakkotapaus junalauttaliikenteelle samalla Saksa–Suomi-käytävällä — se ei todista että VGHN:n oma teknologia toisi lisäarvoa telinvaihtoon nähden, mutta se asettaa kysymyksen oikein: mitä moderni vaihtuvatelillinen kalusto tarjoaisi joka telinvaihto ei tarjonnut.</p>
-
-  <p>Suomen ja Ruotsin välillä junalautta on toiminut myöhemminkin: SeaRail liikennöi Turun ja Tukholman välillä M/S Sea Windillä, vaunujen telit vaihdettiin erillisessä hallissa nostamalla vaunu, noin kymmenen minuuttia vaunua kohden, ja junavaunuliikenne päättyi 30.4.2012 (Wikipedia, SeaRail; yksi lähde). Väyläviraston selvitys Suomen ja Viron junalautasta (7/2026, luku 6.2) päätyi kielteiseen tulokseen markkinaehtoisen kysynnän puuttumisen ja korkeiden investointi- ja käyttökustannusten vuoksi.</p>
-
-  <p>Junalautta on kuitenkin se tapaus, jossa luvun 2.2 ehto täyttyy: vaunu ei saa pysähtyä, koska lastia ei nosteta vaan vaunu itse ylittää meren. Telinvaihto satamassa oli Railshipin ja SeaRailin hidas vaihe. Vaihtuvatelinen vaunu ajaisi vaihtolaitteen läpi. Tämä vastaa edellä esitettyyn kysymykseen siitä, mitä moderni kalusto tarjoaisi, mitä telinvaihto ei tarjonnut. Sama kalusto palvelisi myös reittiä A, mikä on luvun 4 poolausehdon mukainen toinen virta.</p>
+  <h3>8.3 Kolme porrasta</h3>
 
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Ehto, jolla junalautta palaa</th><th>Status</th></tr></thead>
+    <thead><tr><th></th><th>A: Häirintä</th><th>B: Eteläinen Itämeri ja Suomenlahti poikki</th><th>C: Koko Itämeri poikki</th></tr></thead>
     <tbody>
-      <tr><td>Raskas kalusto, joka ei kulje perävaunussa (sotilaallinen liikkuvuus)</td><td>Rahoitusperuste olemassa (luku 8); vaihtuvatelin 22,5 t akselipainon riittävyys tarkistamatta</td></tr>
-      <tr><td>Maantiekuljetus ei skaalaudu: kuljettaja- tai polttoainepula</td><td>Polttoaineen hinta toteutunut (9.5); fyysistä pulaa ei todettu</td></tr>
-      <tr><td>Nestemäinen irtolasti säiliövaunussa</td><td>Normaalioloissa heikko: telinvaihto ja säiliökontti ovat halvempia (2.3). Häiriössä avoin: ratkaisee saatavilla oleva kalustomäärä (9.4)</td></tr>
+      <tr><td>Mitä tapahtuu</td><td>Vakuutusmaksut nousevat, osa varustamoista välttää aluetta</td><td>Tanskan salmien kautta ei pääse; Pohjanlahti ja Ahvenanmeri toimivat</td><td>Myöskään Pohjanlahden ylitys ei toimi</td></tr>
+      <tr><td>Reitti</td><td>Nykyinen, kalliimpana</td><td>Göteborg, Ruotsin poikki, lautta länsirannikolle</td><td>Vain Tornio: rata ja maantie</td></tr>
+      <tr><td>Sitova rajoite</td><td>Hinta ja alusten saatavuus</td><td>Ruotsin maaosuus ja irtolastin käsittely</td><td>Rajan läpäisykyky, kuljettajat, diesel</td></tr>
+      <tr><td>Kappaletavara</td><td>Kulkee</td><td>Kulkee perävaunuilla, jos Ruotsin läpi mahtuu</td><td>Murto-osa</td></tr>
+      <tr><td>Irtolasti ja polttoaine</td><td>Kulkee</td><td>Ei kulje lautalla ilman säiliö- ja bulkkiyksiköitä</td><td>Ei kulje nykyvälinein</td></tr>
     </tbody>
   </table></div>
 
-  <p>Vastaväite on vahva ja kuuluu samaan taulukkoon. Junalautat hävisivät trailereille, koska traileri ei tarvitse raideleveysratkaisua ja kulkee millä tahansa roro-aluksella. Kriisissäkin nykyiset lautat ja trailerit ovat ensimmäinen ratkaisu, koska kapasiteetti on jo olemassa. Junalautta vaatii raidekannellisen aluksen ja raiderampit molempiin satamiin, eikä kumpaakaan ole. Väyläviraston tuore kielteinen tulos koskee eri ylitystä ja markkinaehtoista kysyntää, mutta kustannusrakenne on sama.</p>
-
-  <h3>9.7 Reitinvaihtokyky</h3>
-
-  <p>Luvut 9.3–9.6 arvioivat yhtä reittiä kerrallaan, ja reitti kerrallaan edullisin ratkaisu riippuu yksiköstä ja liikenteen tiheydestä (2.5). Konseptin lähtöajatus on kuitenkin toinen. Se ei väitä, että vaihtuvatelinen kalusto voittaisi terminaalin millään yksittäisellä reitillä, vaan että monikäyttöinen kalusto ja laivayhteydet yhdessä antavat kyvyn siirtää Suomen ulkomaanyhteydet reitiltä toiselle, kun olosuhteet muuttuvat. Terminaali on sidottu paikkaansa. Vaunu ei ole.</p>
-
-  <p>Tämä eroaa luvun 4 poolauksesta. Poolaus koskee samanaikaisia virtoja, jotka jakavat kaluston. Reitinvaihtokyky koskee peräkkäisiä tilanteita: sama kalusto palvelee Tornion maareittiä, lauttaa Ruotsiin, lauttaa Saksaan tai Rail Balticaa sen mukaan, mikä niistä on kulloinkin käytettävissä ja edullisin. Arvo ei synny käyttöasteesta vaan siitä, ettei mikään yksittäinen häiriö katkaise kaikkia vaihtoehtoja.</p>
+  <p>Portaiden todennäköisyyttä tai kestoa ei tässä arvioida. Portaalla B on nimettävissä oleva laukaisija, esimerkiksi jännitteen nousu eteläisellä Itämerellä Kaliningradin alueen ympärillä, jonka ohi Suomen liikenne Tanskan salmista kulkee. Portaaseen A valtiolla on väline: valmius antaa valtiontakuu vakuutuksille poikkeusoloissa (laki 408/2007).</p>
 
   <div class="finding">
-    <div class="finding-label">Vertailukohta on traileri, ei terminaali</div>
-    <p>Suomella on jo joustava järjestelmä: traileri ja roro-alus. Traileri kulkee millä tahansa aluksella ja millä tahansa tiellä ilman raideleveysratkaisua, ja reitti vaihtuu varustamon päätöksellä. Vaihtuvatelinen kalusto ja raidekannelliset alukset olisivat saman joustavuuden versio, joka ei ole riippuvainen dieselistä eikä kuljettajista. Konseptin arvo on siis rajattavissa tarkasti: se on olemassa niissä tilanteissa, joissa trailerijärjestelmän oma rajoite sitoo, eikä muissa.</p>
+    <div class="finding-label">Porras C laskettuna</div>
+    <p><strong>Maantie.</strong> 25 000 t/vrk on 40 tonnin kuormilla noin 625 kuormaa vuorokaudessa. Göteborgista Etelä-Suomeen Tornion kautta on noin 2 050–2 250 km suuntaansa (laskettu koordinaateista tiekertoimella), joten kierros on noin 4 200 km ja kestää ajoaikasäännöin noin seitsemän vuorokautta. Jatkuvasti sidottuna olisi noin 4 400 yhdistelmää ja kuljettajaa. Kulutuksella 33 l/100 km silta polttaisi noin 870 m³ dieseliä vuorokaudessa, eli noin 13 % maan normaalista dieselin myynnistä. Reitti kuluttaa siis itse sitä polttoainetta, jota ei saada meritse.</p>
+    <p><strong>Rata.</strong> Sama määrä olisi 25 junaa vuorokaudessa tuhannen tonnin kuormilla. Nykyinen läpäisy on noin yksi juna viikossa. Kolmessa vuorossa telinvaihtoraiteella päästäisiin ehkä kolmeen junaan vuorokaudessa, jos vaihtotelejä ja hyväksyttyjä vaunuja olisi. Pelkkä diesel, 5 600 t/vrk, vaatisi kuusi junaa tai noin 140 säiliöautokuormaa vuorokaudessa. Yksi juna korvaa kymmeniä yhdistelmiä yhdellä kuljettajalla ilman dieseliä.</p>
+    <p><strong>Aika.</strong> Varastot on mitoitettu kuukausille. Rajan laitteet, hyväksynnät ja kalusto vievät vuosia. Varastojen keston aikana ei ehdi rakentaa sitä, mitä ei ole tehty etukäteen; maantie on ainoa, joka skaalautuu viikoissa.</p>
+    <p>Oletukset: kymmenen prosenttia tulkittu tonneiksi, kuorma 40 t, ajo 600 km vuorokaudessa. Ruotsin oma tarve samalla reitillä ja viennin pysähtyminen eivät ole laskelmassa.</p>
   </div>
 
+  <h3>8.4 Irtolasti ja polttoaine</h3>
+
+  <p>Koko irtolastia, noin 175 000 t/vrk, ei siirretä yksiraiteiselle radalle, eikä jalostamon raakaöljyä; raakaöljyn tuontimäärä on tilastossa salattu. Valmiin polttoaineen kriittinen osa on eri kokoluokkaa ja mahtuisi radalle. Irtolastia ei nosteta, joten rajalla on neljä keinoa: telinvaihto, pumppaus- tai purkulaitos, säiliö- ja bulkkikontit tai vaihtuvatelinen vaunu. Normaalioloissa ne asettuvat kustannusjärjestykseen. Häiriössä ratkaisee se, mitä on saatavilla riittävä määrä heti, eikä minkään riittävyyttä kuuden päivittäisen junan virtaan ole tarkistettu.</p>
+
+  <p>Häiriöt eivät ole riippumattomia. Suomen polttoainehuolto perustuu meritse tuotavaan raakaöljyyn ja tuotteisiin, joten Itämeren häiriö osuu ensimmäisenä siihen polttoaineeseen, jolla korvaava maantiekuljetus ajettaisiin. Vuosi 2026 näytti hintavaikutuksen ilman fyysistä pulaa: dieselin hinta oli Suomessa 2,52 €/l lokakuun alussa, kun vuoden 2025 keskihinta oli 1,69 €/l (Yle, komission tiedot). Arvonlisäverottomana lisäys on noin 0,66 €/l eli noin 220 € tuhannen kilometrin perävaunumatkaa kohden. Osa muutoksesta on pysyvää: tieliikenteen polttoaineiden päästökauppa alkaa 2028, ja 50 euron tonnihinnalla vaikutus on noin 11 senttiä litralta (SKAL). Sähköistetylle radalle siirtyvä kuljetus poistuu lisäksi taakanjakosektorin päästöistä, noin 0,87 tonnia hiilidioksidia tuhannelta kilometriltä, mikä antaa valtiolle laskettavan vertailuhinnan preemiolle. Sitä ei ole tässä laskettu.</p>
+
+  <h3>8.5 Junalautta ja reitinvaihtokyky</h3>
+
+  <p>Junalautta on Suomessa toiminut kahdesti. Railship liikennöi Hangon ja Travemünden välillä vuodesta 1975, ja SeaRail Turun ja Tukholman välillä; SeaRailin vaunuliikenne päättyi 30.4.2012. Kummassakin telit vaihdettiin satamassa. Turussa kahden vaunun telinvaihto kesti 8–9 minuuttia. Junalautta on tapaus, jossa vaunu itse ylittää meren, ja vaihtuvatelinen vaunu ajaisi sataman vaihtolaitteen läpi ilman nostoa. Vastaväite on vahva: junalautat hävisivät perävaunuille, jotka kulkevat millä tahansa roro-aluksella ilman raideleveysratkaisua. Raidekannellisia aluksia ja raideramppeja ei ole.</p>
+
+  <p>Konseptin alkuperäinen väite on laajempi kuin yksikään reitti. Terminaali on sidottu paikkaansa, vaunu ei. Monikäyttöinen kalusto ja laivayhteydet yhdessä antaisivat kyvyn siirtää yhteydet reitiltä toiselle sen mukaan, mikä on kulloinkin käytettävissä: Tornion maareitti, lautta Ruotsiin tai Saksaan, myöhemmin Rail Baltica. Suomella on jo tällainen järjestelmä, perävaunu ja roro-alus. Raidekalusto olisi sen versio, joka ei riipu dieselistä eikä kuljettajista, ja sillä on arvoa täsmälleen niin usein ja niin pitkään kuin ne rajoittavat maantiekuljetusta kaluston 30 vuoden käyttöiän aikana.</p>
+
   <div style="overflow-x:auto"><table>
-    <thead><tr><th>Mitä reitinvaihtokyky edellyttää</th><th>Status</th></tr></thead>
+    <thead><tr><th>Mitä reitinvaihtokyky edellyttää</th><th>Tila</th></tr></thead>
     <tbody>
-      <tr><td>Vaihtolaite jokaisessa satamassa ja rajapisteessä, jota kalusto käyttää</td><td>Torniossa on, mutta ei käyttökunnossa (luku 1.1); muualla ei. Uusi laitteisto 1–2 M€ (Väylävirasto 83/2025)</td></tr>
-      <tr><td>Raidekannelliset alukset ja raiderampit</td><td>Ei ole. Ketjun kallein ja hitain osa; Väylävirasto 7/2026 kielteinen yhdellä ylityksellä</td></tr>
-      <tr><td>Kaluston hyväksyntä jokaisella verkolla (Suomi, Ruotsi, Saksa, Baltia)</td><td>Sääntelyreittiä vaihtomekanismille ei ole (luku 1.3); kysymyslistalla luvussa 11</td></tr>
-      <tr><td>Akselipaino ja kuormaulottuma, jotka kelpaavat kaikilla reiteillä</td><td>22,5 t ja Suomen korkeusrajoite sitovat (luvut 1.2–1.3)</td></tr>
+      <tr><td>Vaihtolaite jokaisessa satamassa ja rajapisteessä</td><td>Torniossa on, ei käyttökunnossa; muualla ei. Uusi laitteisto 1–2 M€</td></tr>
+      <tr><td>Raidekannelliset alukset ja raiderampit</td><td>Ei ole. Ketjun kallein ja hitain osa</td></tr>
+      <tr><td>Kaluston hyväksyntä jokaisella verkolla</td><td>Sääntelyreittiä ei ole (luku 1.4)</td></tr>
+      <tr><td>Akselipaino ja kuormaulottuma, jotka kelpaavat kaikilla reiteillä</td><td>22,5 t ja Suomen korkeusrajoite sitovat (luku 1.5)</td></tr>
     </tbody>
   </table></div>
 
-  <p>Falsifiointi on sama kuin vertailukohta. Jos traileri ja roro-alus kattavat samat tilanteet halvemmalla, reitinvaihtokyvyllä ei ole omaa arvoa. Sillä on arvoa täsmälleen niin usein ja niin pitkään kuin diesel tai kuljettajat rajoittavat maantiekuljetusta kaluston 30 vuoden käyttöiän aikana. Vuosi 2026 on yksi tällainen jakso (9.5). Yksi jakso ei riitä perusteeksi, mutta se muuttaa kysymyksen spekulaatiosta mitattavaksi: kuinka monta tällaista jaksoa, kuinka pitkiä, ja mitä maantiekuljetus niiden aikana maksoi.</p>
+  <p>Yksikään edellytys ei tällä hetkellä täyty.</p>
 
-  <h3>9.8 Eri pettämiskohdat, ei yhtä voittajaa</h3>
+  <h3>8.6 Eri pettämiskohdat, ei yhtä voittajaa</h3>
 
-  <p>Luku 2 ja luvut 9.3–9.7 vertaavat ratkaisuja pareittain ja nimeävät kussakin tapauksessa edullisimman. Kannattavuuslaskelmaan se on oikea tapa. Häiriönsietoon se ei riitä: järjestelmällä, jossa on yksi voittaja, on yksi pettämiskohta.</p>
-
-  <p>Virrat altistuvat häiriölle eri tavoin. Saattaen kulkeva Baltian liikenne on sidottu dieseliin ja kuljettajiin koko matkalta, joten se on luvun 9.3 yhdistetylle häiriölle herkin. Saksan irtoperävaunuliikenne on jo valmiiksi muodossa, jossa perävaunu kulkee ilman kuljettajaa; sen siirtäminen satamasta eteenpäin raiteille ei muuta lähettäjän toimintatapaa. Se on luontevin ensimmäinen virta luvun 4.2 esiseulontaan.</p>
+  <p>Kannattavuuslaskelma vertaa ratkaisuja pareittain ja nimeää edullisimman. Häiriönsietoon se ei riitä: järjestelmällä, jossa on yksi voittaja, on yksi pettämiskohta.</p>
 
   <div style="overflow-x:auto"><table>
     <thead><tr><th>Osa</th><th>Mihin se pettää</th><th>Arkikäyttö, joka pitää sen toimintakunnossa</th></tr></thead>
     <tbody>
-      <tr><td>Terminaali ja konttikalusto (ml. säiliö- ja bulkkikontit)</td><td>Nosturin vika, jono, työvoima</td><td>Nykyinen tavaraliikenne</td></tr>
-      <tr><td>Telinvaihto</td><td>Vaihtopaikan läpäisykyky, telivarasto, kelpaavan kaluston määrä</td><td>Torniossa kattamaton telinvaihtoraide; käyttö satunnaista (luku 1.1)</td></tr>
-      <tr><td>Vaihtuvatelinen kalusto</td><td>Vaihtolaitteen jäätyminen, kaluston vähyys</td><td>Kotimaan runkokuljetus (luku 5; taakanjako, 9.5)</td></tr>
-      <tr><td>Rinnakkaisraide Tornio–Kemi</td><td>Siirtää rajan, ei poista sitä</td><td>Yleissuunnittelussa oleva valtion hanke (luku 8)</td></tr>
+      <tr><td>Terminaali ja konttikalusto</td><td>Nosturin vika, jono, työvoima</td><td>Nykyinen tavaraliikenne</td></tr>
+      <tr><td>Telinvaihto</td><td>Läpäisykyky, telivarasto, hyväksytyn kaluston määrä</td><td>Torniossa satunnaista</td></tr>
+      <tr><td>Vaihtuvatelinen kalusto</td><td>Vaihtolaite talvella, kaluston vähyys, huolto</td><td>Ei ole; ehdokkaita tiheä irtolastiheiluri ja kotimaan runkokuljetus</td></tr>
+      <tr><td>Rinnakkaisraide Tornio–Kemi</td><td>Siirtää rajan, ei poista sitä</td><td>Yleissuunnittelussa</td></tr>
       <tr><td>Lautat ja perävaunut</td><td>Meriyhteys, diesel, kuljettajat</td><td>Nykyinen pääjärjestelmä</td></tr>
     </tbody>
   </table></div>
 
-  <p>Osat pettävät eri syistä, joten mikään yksittäinen häiriö ei kaada niitä kaikkia. Monipuolisuudella on kuitenkin hinta: jokainen osa tarvitsee vähimmäismittakaavan huollolle, varaosille, hyväksynnöille ja osaamiselle. SUW 2000 (luku 1.1) päättyi juuri tähän — pieni erikoiskalusto oli kallis ylläpitää. Kriteeri on siksi kaksiosainen: osa kuuluu järjestelmään, jos se poistaa pettämiskohdan, jota muut osat eivät poista, ja jos sillä on arkikäyttö, joka pitää sen toimintakunnossa kriisien välillä.</p>
-
-  <h2>10. Mittakaava: vaihtoehtoiskustannus niukalle pääomalle</h2>
-
-  <p>VGHN:n oma CAPEX-arvio (60–90 M€ 300 vaunun poolille) on tässä noottiin eksplisiittisesti tarkistamaton — se ei ole samalla evidenssitasolla kuin seuraavat, todennetut vertailuluvut, ja seuraava kappale on tarkoituksellisesti havainnollistava, ei laskelma.</p>
-
-  <p>Länsiradan ensimmäisen rakentamisvaiheen kustannusarvio on 1,32 mrd € (Espoon kaupunginvaltuusto, 17.11.2025), koko hankkeen noin 3 mrd €. Tasavallan presidentin virka-asunnon Mäntyniemen äskettäin valmistuneen peruskorjauksen kustannusarvio on noin 55 M€ — ja alkuperäinen rakentaminen 1993 maksoi vastaavasti noin 60 M€, ylittäen budjetin tuolloinkin. Jos VGHN:n tarkistamaton CAPEX-arvio osuisi lähelle todellisuutta, se vastaisi karkeasti 5–7 % Länsiradan ensimmäisestä vaiheesta — sama kokoluokka kuin Mäntyniemen remontti.</p>
-
-  <p>Tämä ei tee VGHN:stä kannattavaa. Se muuttaa kysymyksen luonnetta: mitä suomalainen teollisuus saisi yhdellä miljardilla Länsirataan verrattuna vaikkapa sataan miljoonaan euroon kansainvälistä vaihtuvatelillistä kalusto- ja rajapintajärjestelmää? Tätä vertailua ei voi kuitata yhdellä NPV-luvulla — se vaatisi järjestelmätason tarkastelun jota kumpikaan hanke ei ole tehnyt toiselle. Merkitty avoimeksi kysymykseksi.</p>
-
-  <h2>11. Tutkimusasetelma: falsifioitava, ei "iso keissi"</h2>
-
-  <p>Lopullinen, korjattu kysymys ei ole "toimiiko vaihtuva raideleveys" — teknologia on hyväksyttyä ja matkustajaliikenteessä kaupallisesti todistettua, tavaraliikenteessä koe-erien tasolla (luku 1), ja talviluotettavuus omalle, vielä suunnittelematta olevalle vaunutoteutukselle on osittain avoin (luku 1) — eikä "onko Tornion kautta tarpeeksi liikennettä" (vastattu kielteisesti, luku 3). Se on: <strong>onko Pohjoismaiden ja Baltian välillä olemassa liikennevirtojen ajallinen ja kaupallinen rakenne, jossa yksi joustava kalustopooli tuottaa enemmän arvoa kuin erilliset järjestelmät.</strong></p>
-
-  <p>Tämä tuottaa selvän falsifikaatiorakenteen:</p>
-  <ul>
-    <li>Jos löytyy useita hyviä virtoja mutta ne tarvitsevat kalustoa samaan aikaan (korkea korrelaatio) → poolaus ei tuota hyötyä, kysymys sulkeutuu kielteisesti.</li>
-    <li>Jos löytyy vain yksi vahva virta → poolaus ei ole perusteltu, tarvitaan erillinen ratkaisu.</li>
-    <li>Jos löytyy kaksi tai kolme kaupallisesti uskottavaa virtaa joiden ajallinen tarve täydentää toisiaan → kysymys aukeaa, ja vasta silloin on mielekästä kysyä kattaako poolauksen arvo vaihtuvatelillisen kaluston lisäkustannuksen.</li>
-  </ul>
-
-  <p>Haastatteluista tarvitaan kolme syöttötietoa: kunkin virran todellinen vaunutarve ja sen ajallinen profiili D<sub>i</sub>(t); VGHN-vaunun todellinen CAPEX/OPEX-premium tavanomaiseen verrattuna; asiakkaan willingness-to-pay joustavuudesta. Haastatteluja ei pidä aloittaa olettamalla mitään tiettyä säästöprosenttia — 3 %, 12 %, 17 % ja 30 % ovat kaikki valideja, informatiivisia tuloksia. Tunnistetut, ei vielä sitoutuneet haastattelukohteet: VR Transpoint, Green Cargo, Nurminen Logistics, CargoNet (kaupallinen operaattori, arvokkaampi kysynnän todentamiseen), Bane NOR (infrastruktuurihaltija, eri kysymyksiin).</p>
-
-  <p>Konkreettinen kysymys Norjan ja Baltian haastatteluihin: ei "olisiko kysyntää" vaan kaksiosainen — kuinka paljon nykyisestä maantieliikenteestä soveltuisi intermodaaliseen rautatiekuljetukseen jos kuljetusyksikkö kulkisi käsittelemättä lastia, ja mikä tällä hetkellä estää sen. Jälkimmäinen erottaa vastaukset "ei kysyntää" (hypoteesi heikkenee) ja "palvelua ei ole tarjolla" (hypoteesi vahvistuu, markkinarako on olemassa).</p>
-
-  <h3>11.1 Halvin falsifiointi ensin</h3>
-
-  <p>Yksi porras tulee haastatteluja ennen ja on halvempi. Sdggmrss on markkinatuote, ei suunniteltava vaunu; sitä vuokraavat useat kalustonhaltijat (VTG, GATX, Wascosa, AAE). Kotimaan yhdistetty kuljetus voidaan siis testata vuokrakalustolla ilman omistusta, telikonversiota tai rajanylitystä. Jos VR:n oma kynnys (20 yhdistelmää / 30 traileria per arkipäivä per suunta) täyttyy vuokrakalustolla, on olemassa virta josta kannattaa jatkaa. Jos ei täyty, koko VGHN-kysymys on ratkaistu ilman että yhtäkään vaunua on ostettu.</p>
-
-  <p>Tämä myös määrittää CAPEX-kysymyksen oikein: ei "mitä uusi vaunu maksaa" vaan mikä on vaihtuvatelisen version preemio vakiotuotteeseen nähden — luvun 4.1 tuntematon p. Ilman vakiotelin hintaa preemioluku ei kerro mitään. Vakiotelin toimittajia on useita (mm. Greenbrier Europe, Techni Industrie), ja Y25-perheen ilmoitetut vakioarvot ovat: kantavuus 22,5 t/akseli, telin massa 4,0–4,5 t, suunniteltu käyttöikä yli 3 milj. km tai 30 vuotta, toimitusaika 1–3 kk. Julkista listahintaa ei löytynyt; kaikki toimittajat ohjaavat tarjouspyyntöön.</p>
-
-  <p>Telispeksin kysymyslista, esitettävä samanaikaisesti vähintään kahdelle toimittajalle jotta tiedetään onko hinta markkinahinta: akselipaino (25 t vahvistettuna, ei tutkittuna — portti puutavarahaaralle); preemio vakiotelin päälle €/vaunu, erikseen uustuotantoon ja jälkiasennukseen; jälkiasennettavuus (kelpaako olemassa oleva suomalainen vaunu sellaisenaan vai vaatiiko runkomuutoksia); talviluotettavuus toimittajan omilla referensseillä; huoltoväli ja käyttöikä toteumana, ei projektiona (SUW:n 500 000 km on projektio); hyväksyntäreitti mihin verkkoihin tuote on hyväksytty; telin massa kilogrammoina, ainoa pysyvä kustannus joka on laskettavissa etukäteen. Vaihtoehtoiskustannus telinvaihtoon nähden ei ole toimittajakysymys, mutta se on laskelmassa mukana (luku 2.4).</p>
-
-  <p>Käyttöiän ja markkinan epäsuhta on merkittävä avoimeksi: telin suunniteltu käyttöikä on 30 vuotta. Yksikään tässä noottiin nimetty kysyntävirta ei ole kestänyt niin kauan — yhdistetty kuljetus 1991–2014 (Oritkari 2004–2013), paluukuormapari 2010 saakka, terminaaliverkosto purettu. Investointi on 30-vuotinen veto markkinasta jonka rakenne on muuttunut kolmesti kahdessakymmenessä vuodessa.</p>
-
-  <h3>11.2 Häiriönsieto: kapasiteettiketju ja valmius</h3>
-
-  <p>Häiriönsiedon halvin testi on kapasiteettiketjun viisi lukua (9.3), ja niistä erityisesti rajan todellinen läpäisykyky ruuhkassa. Ne ovat viranomaisten ja satamien julkista tai pyydettävissä olevaa tietoa, eikä niiden hankkiminen vaadi yhtään kalustopäätöstä.</p>
+  <p>Monipuolisuudella on hinta: jokainen osa tarvitsee vähimmäismittakaavan huollolle, varaosille, hyväksynnöille ja osaamiselle. Green Cargon ja PKP:n liikenne päättyi juuri tähän. Kriteeri on siksi kaksiosainen: osa kuuluu järjestelmään, jos se poistaa pettämiskohdan, jota muut eivät poista, ja jos sillä on arkikäyttö, joka pitää sen toimintakunnossa kriisien välillä. Saattaen kulkeva Baltian liikenne on sidottu dieseliin ja kuljettajiin koko matkalta ja on häiriölle herkin. Saksan irtoperävaunuliikenne on valmiiksi muodossa, jossa perävaunu kulkee ilman kuljettajaa, ja se on luontevin ensimmäinen virta esiseulontaan.</p>
 
   <div class="finding">
-    <div class="finding-label">Valmiuden vähimmäissisältö</div>
-    <p>Jos länsikäytävältä halutaan häiriönsietoa, valmius jakautuu sen mukaan, mitä kriisin aikana ei enää ehdi hankkia. Vuosien toimitusaika on vaunutyypin hyväksynnällä, rajan purku- ja pumppauslaitoksella sekä ratakapasiteetista sopimisella Ruotsin kanssa. Viikoissa saatavissa, jos sopimus on tehty etukäteen, ovat lisävaunut ja säiliökontit vuokramarkkinalta, satamakapasiteetti sekä vetokalusto ja henkilöstö. Suunnitelma itse — mikä lasti priorisoidaan, mitä reittiä, kuka operoi — maksaa vähiten.</p>
-    <p>Pelkkä suunnitelma ja optiot eivät kuitenkaan riitä. Reitin toimivuus selviää vain ajamalla: telinvaihdon tai nostojen todellinen läpimenoaika, rajamuodollisuudet, kiertoaika ja pettämiskohdat eivät näy paperilta. Siksi vähimmäisvalmiuteen kuuluu pieni oma kalustoerä — suuruusluokkana yksi junarunko kutakin tutkittavaa kalustotyyppiä — joka on säännöllisessä liikenteessä. Se tuottaa kolme asiaa: mitatut luvut kapasiteettiketjuun (9.3), hyväksytyn vaunutyypin, jonka varaan optiot voi kirjoittaa, ja henkilöstön, joka on tehnyt työn ennen kuin sitä tarvitaan. Sama erä on kokeilualusta arkiliikenteelle: mitä reitillä kulkee ja millä hinnalla, selviää samasta ajosta. Erän koko on oletus, ei laskettu.</p>
+    <div class="finding-label">Kuka omistaa kokonaisuuden</div>
+    <p>Tavoitepäätöksen mukaan kuljetukset hoidetaan pääosin markkinaehtoisesti myös poikkeusoloissa. Valtio varmistaa väylät, rajanylityspaikat ja varmuusvarastot; kalusto, sopimukset ja reittien tuntemus ovat yrityksillä. Iso toimija voi neuvotella varareitin etukäteen, pieni ostaa kuljetuksen päivän hinnalla. Kun jokainen varautuu omaan tarpeeseensa, reitin kokonaiskapasiteettiin ei varaudu kukaan. Sähköjärjestelmässä vastaavalla aukolla on sentään järjestelmävastaava, mittaus ja julkinen riittävyysarvio. Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa. Yritysten todellista varautumista ei ole tässä selvitetty.</p>
   </div>
 
-  <h3>11.3 Järjestys</h3>
+<h2>9. Tutkimusasetelma ja järjestys</h2>
+
+  <p>Kysymys ei ole, toimiiko vaihtuva raideleveys, eikä, riittääkö Tornion liikenne. Kannattavuuden kysymys on, onko Pohjoismaiden ja Baltian välillä virtoja, joiden ajallinen rakenne tekee yhteisestä kalustopoolista arvokkaamman kuin erilliset järjestelmät. Jos virrat tarvitsevat kalustoa samaan aikaan, poolaus ei tuota hyötyä. Jos vahvoja virtoja on vain yksi, tarvitaan erillinen ratkaisu. Vasta jos kaksi tai kolme uskottavaa virtaa täydentää toisiaan, on mielekästä kysyä, kattaako säästö preemion.</p>
 
   <ol>
-    <li><strong>Kapasiteettiketjun viisi lukua</strong> (9.3). Jos rata tai lautat ovat ketjun pienin lenkki, rajan ratkaisu ei lisää välityskykyä.</li>
-    <li><strong>Telispeksi ja preemio vähintään kahdelta toimittajalta</strong> (11.1), mukaan lukien hyväksyntäreitti, jota ei vielä ole (luku 1.3).</li>
-    <li><strong>Kotimaan yhdistetty kuljetus vuokrakalustolla</strong> (11.1). Jos kynnys ei täyty, kannattavuushaara sulkeutuu.</li>
-    <li><strong>Haastattelut:</strong> virtojen ajallinen profiili, maksuhalukkuus ja rautatie–lauttaketjun hinta (9.5).</li>
-    <li><strong>Koe-erä säännöllisessä liikenteessä</strong> (11.2), jos portaat 1–3 eivät ole sulkeneet kysymystä.</li>
+    <li><strong>Kapasiteettiketjun viisi lukua</strong> (8.2). Ne ovat viranomaisten ja satamien julkista tai pyydettävissä olevaa tietoa. Samalla selviää, mitä Huoltovarmuuskeskuksen kymmenen prosentin arvio tarkoittaa ja mille reiteille se on oletettu.</li>
+    <li><strong>Telispeksi ja preemio vähintään kahdelta toimittajalta:</strong> hinta uustuotantoon ja jälkiasennukseen, akselipaino, massa, talvireferenssit, huoltoväli toteumana, hyväksyntäreitti ja huollon saatavuus Suomessa.</li>
+    <li><strong>Kotimaan yhdistetty kuljetus vuokrakalustolla.</strong> Sdggmrss on markkinatuote, jota vuokraavat useat kalustonhaltijat. Jos kynnys ei täyty vuokrakalustolla, kannattavuushaara sulkeutuu ilman yhtään ostettua vaunua.</li>
+    <li><strong>Haastattelut:</strong> virtojen ajallinen profiili, maksuhalukkuus, rautatie–lauttaketjun hinta ja se, mikä nykyisin estää siirtymisen raiteille. Kohteita ovat VR Transpoint, Green Cargo, Nurminen Logistics, CargoNet ja SSAB.</li>
+    <li><strong>Koe-erä säännöllisessä liikenteessä,</strong> suuruusluokkana yksi junarunko tutkittavaa kalustotyyppiä kohden, jos portaat 1–3 eivät ole sulkeneet kysymystä.</li>
   </ol>
 
-  <p>Portaat 1–4 eivät vaadi kalustopäätöstä. Porras 5 vaatii, ja se on ainoa, joka tuottaa mitattua tietoa reitin toimivuudesta käytännössä.</p>
+  <p>Haastatteluissa kysymys ei ole "olisiko kysyntää" vaan kaksiosainen: kuinka suuri osa nykyisestä maantieliikenteestä soveltuisi rautatiekuljetukseen, jos yksikkö kulkisi käsittelemättä, ja mikä sen tällä hetkellä estää. Jälkimmäinen erottaa vastaukset "ei kysyntää" ja "palvelua ei ole tarjolla". Säästöprosenttia ei pidä olettaa etukäteen; kolme ja kolmekymmentä prosenttia ovat molemmat tuloksia. Telispeksissä massa on ainoa pysyvä haitta, joka on laskettavissa etukäteen, ja huollon saatavuus se kohta, johon aiemmat yritykset kaatuivat.</p>
 
-  <h2>12. Johtopäätökset</h2>
+  <p>Portaat 1–4 eivät vaadi kalustopäätöstä. Porras 5 vaatii, ja se on ainoa, joka tuottaa mitattua tietoa reitin toimivuudesta. Erän koko on oletus.</p>
 
-  <p><strong>Kannattavuus.</strong> Tornion rajanylitys itsenäisenä virtana ei kanna vaihtuvatelistä kalustoa (luku 3). Puutavaralla vaihtuvateli häviää telinvaihdolle harvassa liikenteessä (2.4); päivittäisessä liikenteessä Väyläviraston laskelma kääntää käyttökustannukset sen eduksi (2.5). Avoimeksi jää poolattu, monikäyttöinen kalusto, jonka arvo riippuu virtojen ajallisesta rakenteesta, preemiosta ja poolin omistajuudesta (luvut 4–5), sekä lähettäjän omalle raiteelle ulottuva kuljetus, jota ei ole kysytty keneltäkään (luku 7). Perävaunuliikenteessä Suomen radan korkeusrajoite sitoo ennen raideleveyttä (luku 1.2).</p>
+  <div class="finding">
+    <div class="finding-label">Valmiuden vähimmäissisältö, jos häiriönsietoa halutaan</div>
+    <p>Valmius jakautuu sen mukaan, mitä kriisin aikana ei ehdi hankkia. Vuosia vievät vaunutyypin hyväksyntä, rajan telinvaihtohalli tai purkulaitos ja ratakapasiteetista sopiminen Ruotsin kanssa. Viikoissa saadaan, jos sopimus on tehty etukäteen, lisävaunut ja säiliökontit vuokramarkkinalta, vaihtotelit, satamakapasiteetti sekä vetokalusto ja henkilöstö. Suunnitelma itse maksaa vähiten. Pelkkä suunnitelma ei kuitenkaan riitä, koska reitin toimivuus selviää vain ajamalla: koe-erä tuottaa mitatut luvut, hyväksytyn vaunutyypin, jonka varaan optiot voi kirjoittaa, ja henkilöstön, joka on tehnyt työn ennen kuin sitä tarvitaan.</p>
+  </div>
 
-  <p><strong>Häiriönsieto.</strong> Länsikäytävän merkitys ei riipu arktisesta reitistä. Se riippuu siitä, kuinka suuri osa priorisoidusta tuonnista on kuljetettavissa, jos eteläinen Itämeri tai maantiekuljetuksen polttoaine ei ole käytettävissä — ja nämä kaksi häiriötä ovat todennäköisesti sama tapahtuma (9.3). Kriisiperuste vahvistaa ensisijaisesti käytävää ja rajan läpäisykykyä; se, millä keinolla läpäisykyky halvimmin saadaan, on mittaamatta (9.3).</p>
+  <p>Mittakaavasta: Väyläviraston esimerkkiliikenteen kalustoinvestointi on 12–21 M€ ja rajan laitteet muutamia miljoonia. Rinnakkaisraiteen kustannusarvio Kemiin, Ouluun ja Rovaniemelle on 1,5 mrd €. Kaluston suunniteltu käyttöikä on kuitenkin 30 vuotta, eikä yksikään tässä nimetty kysyntävirta ole kestänyt niin kauan: yhdistetty kuljetus 1991–2014, paluukuormapari vuoteen 2010, terminaaliverkosto purettu. Investointi on pitkä veto markkinasta, jonka rakenne on muuttunut kolmesti kahdessakymmenessä vuodessa. Väyläviraston selvitys tekee saman huomion toisin päin: siirtymävaiheen pituus ratkaisee, millaiseen kalustoon ja kuinka suureen määrään kannattaa investoida.</p>
 
-  <p><strong>Vaihtuvatelin asema.</strong> Rooleja on viisi: tiheä säännöllinen irtolastiliikenne, jossa se on käyttökustannuksiltaan halvin (2.5); nosturikelvottoman perävaunun rajanylitys (2.3); ohitus silloin kun nostojono sitoo (2.2); junalautta, jossa vaunu itse ylittää meren (9.6); ja kyky vaihtaa reittiä ilman dieseliä (9.7), joskin raidekannelliset alukset puuttuvat. Harvassa liikenteessä ja häiriön ensimmäisenä keinona telinvaihto on halvempi ja nopeammin saatavilla (2.3, 9.4). Kalustoratkaisut sopivat Väyläviraston mukaan myös siirtymävaiheeseen sinä aikana, kun rinnakkaisraidetta rakennetaan (2.5). Kaikkia rooleja sitoo sama ehto: kalustolla on oltava arkikäyttö, joka kantaa sen kustannuspreemion kriisien välillä (9.8).</p>
+<h2>10. Johtopäätökset</h2>
 
-  <h3>Miksi tätä ei ole vielä laskettu</h3>
+  <p><strong>Kannattavuus.</strong> Tornion rajanylitys itsenäisenä virtana ei kanna vaihtuvatelistä kalustoa. Harvassa liikenteessä telinvaihto on halvempi. Avoimia ovat tiheä säännöllinen irtolastivirta, jossa Väyläviraston laskelma kääntyy vaihtuvatelin eduksi, poolattu monikäyttöinen kalusto, jonka arvo riippuu virtojen ajallisesta rakenteesta, preemiosta ja poolin omistajuudesta, sekä lähettäjän omalle raiteelle ulottuva kuljetus. Perävaunuliikenteessä Suomen radan korkeusrajoite sitoo ennen raideleveyttä.</p>
 
-  <p>Väylävirasto arvioi rajanylityksen kannattavuutta omalla vastuualueellaan. VR Transpoint arvioi kotimaan yhdistettyä kuljetusta omalla kynnyksellään. Kumpikaan ei tee virhettä. Mutta poolausarvo — se mitä syntyisi jos kotimaan ja rajanylityksen kysyntä palvelisi samaa kalustoa — ei elä kummankaan toimijan omien rajojen sisällä, koska kumpikaan ei arvioi toisen kysyntävirtaa osana omaa laskelmaansa. Se ei ole kenenkään yksittäisen viraston tai yhtiön vastuulla, koska sen tehtävä ei kuulu kenellekään. Sama rakenne toistuu WEM:n havainnossa energiajärjestelmästä: kukin toimija optimoi oman osansa rationaalisesti, mutta kukaan ei omista koko järjestelmän yhteisvaikutusta.</p>
+  <p><strong>Häiriönsieto.</strong> Länsikäytävän merkitys ei riipu arktisesta reitistä. Se riippuu siitä, kuinka suuri osa priorisoidusta tuonnista on kuljetettavissa, jos Itämeri tai maantiekuljetuksen polttoaine ei ole käytettävissä, ja nämä kaksi ovat todennäköisesti sama tapahtuma. Nykyinen läpäisy on lähellä nollaa tarpeeseen nähden, ja nopeimmin saatava lisäys on telinvaihto, ei vaihtuvateli.</p>
 
-  <p>Sama koskee kapasiteettiketjua (9.3): sataman, Ruotsin radan, rajan ja lauttojen välityskyky ovat kukin eri toimijan tietoa. Julkisista lähteistä ei löytynyt laskelmaa ketjun pienimmästä lenkistä (9.1).</p>
+  <p><strong>Vaihtuvatelin asema.</strong> Rooleja on viisi: tiheä säännöllinen irtolastiliikenne, nosturikelvottoman perävaunun rajanylitys, ohitus silloin kun nostojono sitoo, junalautta ja kyky vaihtaa reittiä ilman dieseliä. Kalustoratkaisut sopivat Väyläviraston mukaan myös siirtymävaiheeseen sinä aikana, kun rinnakkaisraidetta rakennetaan. Kaikkia rooleja sitoo sama ehto, johon jokainen aiempi yritys on kaatunut: kalustolla on oltava arkikäyttö ja huolto, jotka kantavat sen kriisien välillä.</p>
 
-  <p>Tämä ei ole hankesuositus. Tekninen perusta on tarkastettu: tekniikka on hyväksyttyä, mutta tavaraliikenteen käyttökokemus on ohut eikä Tornion laitteisto ole käyttökunnossa. Kysyntä on kapeassa tulkinnassa (Tornion rajanylitys itsenäisenä virtana) heikko, mutta laajemmassa tulkinnassa (poolattu, monikäyttöinen kalusto useille virroille) avoin — laskematon, ei kielteisesti testattu. Lopputulos voi olla "ei kannata" yhtä hyvin kuin "tässä on jotain", ja se on tarkoituksella näin.</p>
+  <p><strong>Miksi tätä ei ole laskettu.</strong> Väylävirasto arvioi rajanylitystä, VR kotimaan yhdistettyä kuljetusta, Huoltovarmuuskeskus varastoja ja tonnistoa. Kukin tekee oman osansa. Poolausarvo ja kapasiteettiketjun pienin lenkki eivät kuulu yhdenkään tehtävään, koska ne syntyvät vasta, kun osat lasketaan yhdessä.</p>
 
-  <h3>Mitä ei viety tähän noottiin</h3>
+  <p>Tämä ei ole hankesuositus. Lopputulos voi olla "ei kannata" yhtä hyvin kuin "tässä on jotain".</p>
 
-  <p>Kaksi havaintoa kuuluvat WP-020:een, eivät CN-030:een, koska ne koskevat alueellista logistiikkaekosysteemiä eivätkä kalustokysymystä — ja koska ne ovat tarkistamattomia:</p>
+  <h3>Tarkistamatta</h3>
 
-  <p><strong>Terminaaliverkoston purkautuminen.</strong> Hypoteesi "osa VGHN:n tarvitsemasta infrastruktuurista on Suomessa jo olemassa vajaakäyttöisenä pääomana" on testattu kielteisesti: Traficom 2023 tunnisti valmiita kuormauspaikkoja vain kaksi (Vuosaari, Oritkari). Haara sulkeutuu, selvitystyö säästyy.</p>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>Asia</th><th>Mihin se vaikuttaa</th></tr></thead>
+    <tbody>
+      <tr><td>Kymmenen prosentin arvion yksikkö ja alkuperä</td><td>Koko luvun 8 mitoitus</td></tr>
+      <tr><td>Vapaat junapaikat Ruotsin pääradalla; rajan vuorokausikapasiteetti; vaihtotelien määrä</td><td>Kapasiteettiketju</td></tr>
+      <tr><td>Polttoainevarastojen todellinen taso ja kriisiajan kulutus</td><td>Aikaikkuna</td></tr>
+      <tr><td>Maantie-etäisyys ja kierrosaika (laskettu, ei mitattu); kulutusoletus</td><td>Porras C</td></tr>
+      <tr><td>Nosturikelpoisten perävaunujen osuus Suomen liikenteessä; yksiköiden korkeusjakauma</td><td>Perävaunuhaara</td></tr>
+      <tr><td>Säiliö- ja pussivaunun hyötykuorma-arviot; puutavaraliikenteen akselipaino</td><td>Painohaitan merkitys</td></tr>
+      <tr><td>SSAB:n päätös; ADIF/OGI:n kaupallinen tila; Ukrainan telihankkeen aikataulu</td><td>Kysyntä ja tekniikan saatavuus</td></tr>
+      <tr><td>Taakanjakoyksikön hinta ja Suomen vaje</td><td>Preemion maksaja</td></tr>
+      <tr><td>Väyläviraston ja puolustusministeriön lausunnot kokonaan; Huoltovarmuuskeskuksen omat laskelmat</td><td>Luvun 5 kattavuus</td></tr>
+    </tbody>
+  </table></div>
 
-  <p><strong>Sisä-Suomen tehtaiden hankintasäde.</strong> Stora Enson Varkauden tehtaan puunkulutus on noin 2 milj. m³/v, ja hankinta tapahtuu pääosin 100 km:n säteeltä (yhtiön turvallisuustiedote 2024). Jos suomalaisen sellu- ja kartonkitehtaan puuhuolto on rakenteeltaan lähihankintaa, ruotsalainen puu ei kilpaile etäisyydellä vaan hinnalla ja saatavuudella — jolloin ostopäätös tehdään puumarkkinalla eikä logistiikassa, eikä telillä ole siihen vaikutusta. Tämä heikentää aiempaa oletusta sisämaan tehtaasta VGHN:n asiakkaana. Varkauden tehdas ei ole alasajossa: ympäristölupa 12/2023 nosti sellun 340 000 t/v, kartongin 420 000 t/v, sahatavaran 360 000 m³/v ja LVL:n 130 000 m³/v; puun käyttö kasvaa arviolta 11 %.</p>
+  <h3>Muutoshistoria</h3>
 
-  <p class="footer-note">Muutoshistoria: 2026-08-09 julkaistu. 2026-10-05 luvun 2.2 periaate muutettu hypoteesiksi ja siihen nojanneet kohdat (luvut 8, 9 ja 12) sovitettu Väyläviraston laskelmaan. 2026-10-05 lisätty Väyläviraston kalustotekninen selvitys 83/2025 (luku 2.5) ja korjattu sen perusteella Tornion laitteiden tila, Transfesan luokittelu ja vastaväite LVM:n muotoiluun (luvut 1.1 ja 8). 2026-10-02 lisätty tavaravirta ja rajanylitystavat (luku 2) sekä häiriönsieto (luku 9), SUW 2000 -tieto korjattu (luku 1.1), rakenne jäsennetty uudelleen aiheen mukaan.</p>
+  <p>Julkaistu 9.8.2026. Lisätty häiriönsieto 2.10.2026. Kirjoitettu uudelleen 5.10.2026. Aiemmissa versioissa oli seuraavat virheet, jotka on korjattu ensisijaisten lähteiden perusteella:</p>
+
+  <ul>
+    <li>Väitettiin, että vaihtuvatelinen tavaraliikenne on ollut kaupallisessa käytössä vuosikymmeniä, ja Transfesaa käytettiin siitä esimerkkinä. Transfesa vaihtaa pyöräkerrat; vaihtuvatelin tavaraliikenne on jäänyt koe-eriin (Väylävirasto 83/2025). Samalla perusteella moitittiin liikenne- ja viestintäministeriön muotoilua, joka oli oikea.</li>
+    <li>Väitettiin, että Torniossa on toimiva, moderni vaihtolaitteisto, josta puuttuu vain kalusto. Vaihtolaite ei ole ollut käytössä vuoden 2017 jälkeen.</li>
+    <li>Väitettiin, että SUW 2000 on ollut jatkuvassa käytössä vuodesta 2000. Käyttö päättyi 2015.</li>
+    <li>Esitettiin yleisenä periaatteena, että suuri tasainen virta puoltaa terminaalia eikä vaihtuvateliä, ja että puutavaralla vaihtuvateli häviää aina telinvaihdolle. Väyläviraston laskelma ei tue kumpaakaan päivittäisessä liikenteessä.</li>
+    <li>Rinnakkaisraidetta kuvattiin rakenteilla olevaksi ja rahoitetuksi. Se on yleissuunnittelussa, ja rahoitettu on suunnittelu.</li>
+    <li>Irtolastin todettiin jäävän rautatien ulkopuolelle Itämeren häiriössä. Koko irtolasti jää, priorisoitu polttoaine ei.</li>
+  </ul>
+
+  <p>Kaksi havaintoa on jätetty tämän nootin ulkopuolelle, koska ne koskevat alueellista ekosysteemiä (WP-020): terminaaliverkoston purkautuminen, josta Traficom tunnisti 2023 vain kaksi valmista kuormauspaikkaa, sekä sisämaan sellutehtaiden puunhankinnan lyhyt säde, joka heikentää oletusta ruotsalaisen puun kysynnästä.</p>
+
 
   <p class="footer-note">Laajempi konteksti: <a href="/papers/wp-020-perameri-logistics-energy-ecosystem.html">WP-020 — Perämeri Logistics-Energy Ecosystem</a> · <a href="/papers/cn-008-perameri-logistiikka-energiaekosysteemi.html">CN-008</a><br>
-  Keskeiset lähteet: Väylävirasto, julkaisut 82/2025, 83/2025, 85/2025 (Eurooppalaiseen raideleveyteen siirtyminen Pohjois-Suomessa) · Väylävirasto, RATO 2 Radan geometria (ohjeita 22/2021) ja Rautateiden verkkoselostus 2023 (julkaisuja 60/2021) · Traficom, tutkimuksia ja selvityksiä 9/2023: Selvitys toimenpiteistä yhdistettyjen kuljetusten käynnistymisen mahdollistamiseksi (Sirkiä, Björkman, Ilomäki, Pohjosenperä / Ramboll, 13.2.2023) · Väylävirasto, Julkaisuja 7/2026 (Junalauttayhteyden edellytykset Suomen ja Viron välillä) · Liikenne- ja viestintäministeriö (12.4.2023) · Theseus: Kuljetuspotentiaalin arviointi Tornio–Haaparanta-ratayhteysvälillä · Pohjois-Pohjanmaan liitto (2020): Yhdistettyjen kuljetusten edellytykset Helsinki–Oulu ja Turku–Oulu · Vaasan yliopisto: TruckTrain-loppuraportti · Kaleva: Oritkarin terminaalin historia (käyttöönotto, 2004–2013-toiminta, päättyminen) · Traficom: ulkomaankuljetustilastot (2023) ja edeltäjän 2010-aineisto · Tilastokeskus: dieselin kuluttajahintaindeksi (Autoalan tiedotuskeskuksen kautta) · Helsingin Satama: kuukausitilastot (H1 2026) · Global Railway Review, Transfesa, DB Cargo: Hendaye/Cerbère-historia · Kaiser, Viñolas, Gómez del Pulgar &amp; Galán (2019), <em>Vehicle System Dynamics</em> · EN 17069-1:2019 · Y25-telien toimittajatiedot (Greenbrier Europe, Techni Industrie ym.) · LIMOWA: webinaariaineisto (29.10.2024, 17.3.2025) · Yle (lokakuu 2025): SKT-VIS/Jari Lappalainen · Railway Gazette, CFTS: Ukrzaliznytsia–Adif-MOU (2024) · Rollingstock World: Ukrzaliznytsia–Adif–Tria-sopimus (2026) · RB Rail AS: Rail Baltica -projektikuvaus · Yle, Kaleva, Suomen Kuvalehti, Osto&amp;Logistiikka, Uusi Suomi Puheenvuoro: uutisoinnit ja taustaselvitykset · Espoon kaupunki, Länsirata Oy, Tasavallan presidentin kanslia: Länsirata/Mäntyniemi-vertailuluvut · Wikipedia: Junalautta (Railship) · Lisäys 2026-10-05: WSP Finland Oy, Kalustotekninen selvitys raideleveyksien (1 435/1 524 mm) yhteensovittamisesta Pohjois-Suomessa, Väyläviraston julkaisuja 83/2025 (luettu kokonaan) · Lisäys 2026-10-02: Tilastokeskus, öljytuotteiden myynti kotimaahan (StatFin 11t2, päivitetty 23.9.2026) · Huoltovarmuuskeskus (27.1.2025): <a href="https://www.huoltovarmuuskeskus.fi/a/ratayhteyden-sahkoistaminen-ruotsiin-valmistui">Ratayhteyden sähköistäminen Ruotsiin valmistui</a> · Navigator Magazine: <a href="https://navigatormagazine.fi/uutiset/meriliikenne-ja-varustamot/huoltovarmuuskeskus-julkaisi-selvityksen-merikuljetusten-huoltovarmuuskapasiteetista/">Huoltovarmuuskeskus julkaisi selvityksen merikuljetusten huoltovarmuuskapasiteetista</a> · Hankeikkuna, LVM029:00/2023: liikenne- ja viestintäministeriön kirje Euroopan komissiolle 29.7.2026, Huoltovarmuuskeskuksen lausunto 5.3.2025, VR-Yhtymän lausunto 5.3.2025 · Valtioneuvoston päätös huoltovarmuuden tavoitteista (568/2024, Finlex) · Valtioneuvoston selonteko valtakunnallisesta liikennejärjestelmäsuunnitelmasta vuosille 2026–2037 (18.12.2025; Hankeikkuna LVM029:00/2023) · Hankeikkuna, TEM080:00/2022: Huoltovarmuusorganisaation sektorien, poolien ja toimikuntien lausunto 25.1.2024 · Suomen Varustamot ry, <a href="https://shipowners.fi/elintarkea-itameri/">Elintärkeä Itämeri</a> · <a href="https://norrbotniabanan.se/for-godset-i-tiden/">Norrbotniabanan: För godset i tiden</a> · Yle, <a href="https://yle.fi/a/74-20245109">Junaradan kytkeminen länteen etenee</a> (Rail Nordica) · Wikipedia: <a href="https://en.wikipedia.org/wiki/SeaRail">SeaRail</a> · Yle, <a href="https://yle.fi/uutiset/lyhyesti/74-20249384">Dieselin hinta nousi ennätyskorkeaksi EU:ssa</a> (1.10.2026) · Yle, <a href="https://yle.fi/a/74-20245620">Dieselin hinta nousi Suomessa EU:n kalleimmaksi</a> (7.9.2026) · Carnegie Endowment, <a href="https://carnegieendowment.org/russia-eurasia/politika/2026/09/russia-northern-sea-route">International Demand for Russia’s Arctic Shipping Route Is Unlikely to Last</a> (9/2026) · Rynek Kolejowy (2.4.2022): <a href="https://www.rynek-kolejowy.pl/wiadomosci/polsuw-czeka-na-wdrozenie-z-suw-2000-od-lat-nie-korzystamy-107455.html">Polsuw czeka na wdrożenie. Z SUW 2000 od lat nie korzystamy</a> · Wikipedia: <a href="https://en.wikipedia.org/wiki/SUW_2000">SUW 2000</a> · SKAL: <a href="https://skal.fi/polttoainejakelun-paastokaupan-ja-sosiaalisen-ilmastorahaston-tilannekatsaus/">Polttoainejakelun päästökaupan ja sosiaalisen ilmastorahaston tilannekatsaus</a> · Tilastokeskus: <a href="https://stat.fi/fi/julkaisu/cmg0w4oyu0m9i07w7njdlw8g3">Ulkomaan meriliikenteen kuljetukset kasvoivat 5 % vuonna 2025</a> · U. Tapaninen (12.3.2026): <a href="https://ullatapaninen.net/2026/03/12/milta-suomen-merikuljetusten-volyymit-nayttivat-vuonna-2025/">Miltä Suomen merikuljetusten volyymit näyttivät vuonna 2025?</a> · Logistik Heute: <a href="https://logistik-heute.de/news/kombinierter-verkehr-studie-ermittelt-kv-faehigkeit-von-sattelaufliegern-41016.html">Studie ermittelt KV-Fähigkeit von Sattelaufliegern</a> · <a href="https://www.forschungsinformationssystem.de/servlet/is/341382/">Forschungsinformationssystem: Sattelauflieger im Kombinierten Verkehr</a></p>
+  Keskeiset lähteet: Väylävirasto, julkaisut 82/2025, 83/2025, 85/2025 (Eurooppalaiseen raideleveyteen siirtyminen Pohjois-Suomessa) · Väylävirasto, RATO 2 Radan geometria (ohjeita 22/2021) ja Rautateiden verkkoselostus 2023 (julkaisuja 60/2021) · Traficom, tutkimuksia ja selvityksiä 9/2023: Selvitys toimenpiteistä yhdistettyjen kuljetusten käynnistymisen mahdollistamiseksi (Sirkiä, Björkman, Ilomäki, Pohjosenperä / Ramboll, 13.2.2023) · Väylävirasto, Julkaisuja 7/2026 (Junalauttayhteyden edellytykset Suomen ja Viron välillä) · Liikenne- ja viestintäministeriö (12.4.2023) · Theseus: Kuljetuspotentiaalin arviointi Tornio–Haaparanta-ratayhteysvälillä · Pohjois-Pohjanmaan liitto (2020): Yhdistettyjen kuljetusten edellytykset Helsinki–Oulu ja Turku–Oulu · Vaasan yliopisto: TruckTrain-loppuraportti · Kaleva: Oritkarin terminaalin historia (käyttöönotto, 2004–2013-toiminta, päättyminen) · Traficom: ulkomaankuljetustilastot (2023) ja edeltäjän 2010-aineisto · Tilastokeskus: dieselin kuluttajahintaindeksi (Autoalan tiedotuskeskuksen kautta) · Helsingin Satama: kuukausitilastot (H1 2026) · Global Railway Review, Transfesa, DB Cargo: Hendaye/Cerbère-historia · Kaiser, Viñolas, Gómez del Pulgar &amp; Galán (2019), <em>Vehicle System Dynamics</em> · EN 17069-1:2019 · Y25-telien toimittajatiedot (Greenbrier Europe, Techni Industrie ym.) · LIMOWA: webinaariaineisto (29.10.2024, 17.3.2025) · Yle (lokakuu 2025): SKT-VIS/Jari Lappalainen · Railway Gazette, CFTS: Ukrzaliznytsia–Adif-MOU (2024) · Rollingstock World: Ukrzaliznytsia–Adif–Tria-sopimus (2026) · RB Rail AS: Rail Baltica -projektikuvaus · Yle, Kaleva, Suomen Kuvalehti, Osto&amp;Logistiikka, Uusi Suomi Puheenvuoro: uutisoinnit ja taustaselvitykset · Espoon kaupunki, Länsirata Oy, Tasavallan presidentin kanslia: Länsirata/Mäntyniemi-vertailuluvut · Wikipedia: Junalautta (Railship) · Lisäys 2026-10-05: Railway Gazette International (26.3.2026): <a href="https://www.railwaygazette.com/technology/2026/03/26/spain-to-give-55-million-to-ukraine-for-variable-gauge-systems/">Spain supports Ukraine with €5,5 million for variable-gauge bogies</a> · Railmarket (5/2026): <a href="https://railmarket.com/news/technology-innovation/56930-ltg-talgo-and-adif-discuss-variable-gauge-technology-for-rail-baltica">Rail Baltica variable gauge-changing technology</a> · Rynek Kolejowy (29.7.2025): <a href="https://www.rynek-kolejowy.pl/wiadomosci/mi-odbudowa-polsuw-jednak-mozliwa-124199.html">MI: Odbudowa POLSUW jednak możliwa!</a> · Rolling Stock World (24.3.2025): <a href="https://rollingstockworld.com/freight-cars/freight-car-automatic-gauge-changeover-technology-tests-on-french-spanish-border/">Freight car automatic gauge changeover technology tests on French-Spanish border</a> · WSP Finland Oy, Kalustotekninen selvitys raideleveyksien (1 435/1 524 mm) yhteensovittamisesta Pohjois-Suomessa, Väyläviraston julkaisuja 83/2025 (luettu kokonaan) · Lisäys 2026-10-02: Tilastokeskus, öljytuotteiden myynti kotimaahan (StatFin 11t2, päivitetty 23.9.2026) · Huoltovarmuuskeskus (27.1.2025): <a href="https://www.huoltovarmuuskeskus.fi/a/ratayhteyden-sahkoistaminen-ruotsiin-valmistui">Ratayhteyden sähköistäminen Ruotsiin valmistui</a> · Navigator Magazine: <a href="https://navigatormagazine.fi/uutiset/meriliikenne-ja-varustamot/huoltovarmuuskeskus-julkaisi-selvityksen-merikuljetusten-huoltovarmuuskapasiteetista/">Huoltovarmuuskeskus julkaisi selvityksen merikuljetusten huoltovarmuuskapasiteetista</a> · Hankeikkuna, LVM029:00/2023: liikenne- ja viestintäministeriön kirje Euroopan komissiolle 29.7.2026, Huoltovarmuuskeskuksen lausunto 5.3.2025, VR-Yhtymän lausunto 5.3.2025 · Valtioneuvoston päätös huoltovarmuuden tavoitteista (568/2024, Finlex) · Valtioneuvoston selonteko valtakunnallisesta liikennejärjestelmäsuunnitelmasta vuosille 2026–2037 (18.12.2025; Hankeikkuna LVM029:00/2023) · Hankeikkuna, TEM080:00/2022: Huoltovarmuusorganisaation sektorien, poolien ja toimikuntien lausunto 25.1.2024 · Suomen Varustamot ry, <a href="https://shipowners.fi/elintarkea-itameri/">Elintärkeä Itämeri</a> · <a href="https://norrbotniabanan.se/for-godset-i-tiden/">Norrbotniabanan: För godset i tiden</a> · Yle, <a href="https://yle.fi/a/74-20245109">Junaradan kytkeminen länteen etenee</a> (Rail Nordica) · Wikipedia: <a href="https://en.wikipedia.org/wiki/SeaRail">SeaRail</a> · Yle, <a href="https://yle.fi/uutiset/lyhyesti/74-20249384">Dieselin hinta nousi ennätyskorkeaksi EU:ssa</a> (1.10.2026) · Yle, <a href="https://yle.fi/a/74-20245620">Dieselin hinta nousi Suomessa EU:n kalleimmaksi</a> (7.9.2026) · Carnegie Endowment, <a href="https://carnegieendowment.org/russia-eurasia/politika/2026/09/russia-northern-sea-route">International Demand for Russia’s Arctic Shipping Route Is Unlikely to Last</a> (9/2026) · Rynek Kolejowy (2.4.2022): <a href="https://www.rynek-kolejowy.pl/wiadomosci/polsuw-czeka-na-wdrozenie-z-suw-2000-od-lat-nie-korzystamy-107455.html">Polsuw czeka na wdrożenie. Z SUW 2000 od lat nie korzystamy</a> · Wikipedia: <a href="https://en.wikipedia.org/wiki/SUW_2000">SUW 2000</a> · SKAL: <a href="https://skal.fi/polttoainejakelun-paastokaupan-ja-sosiaalisen-ilmastorahaston-tilannekatsaus/">Polttoainejakelun päästökaupan ja sosiaalisen ilmastorahaston tilannekatsaus</a> · Tilastokeskus: <a href="https://stat.fi/fi/julkaisu/cmg0w4oyu0m9i07w7njdlw8g3">Ulkomaan meriliikenteen kuljetukset kasvoivat 5 % vuonna 2025</a> · U. Tapaninen (12.3.2026): <a href="https://ullatapaninen.net/2026/03/12/milta-suomen-merikuljetusten-volyymit-nayttivat-vuonna-2025/">Miltä Suomen merikuljetusten volyymit näyttivät vuonna 2025?</a> · Logistik Heute: <a href="https://logistik-heute.de/news/kombinierter-verkehr-studie-ermittelt-kv-faehigkeit-von-sattelaufliegern-41016.html">Studie ermittelt KV-Fähigkeit von Sattelaufliegern</a> · <a href="https://www.forschungsinformationssystem.de/servlet/is/341382/">Forschungsinformationssystem: Sattelauflieger im Kombinierten Verkehr</a></p>
 
 </div>
 </body>
