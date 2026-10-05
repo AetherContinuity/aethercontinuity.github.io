@@ -1466,3 +1466,13 @@ Testin aikana hylätty oletus: yhteys ei selity Ekman-kuljetuksella
   -mallilla kokonaan.
 - Riippumaton vahvistus (vaihe 3) puuttuu edelleen kaikilta pareilta.
   RAPID:n seuraava julkaisu on ainoa uusi aineisto.
+
+### Lisäys 2026-10-05 (ilta): §01g:n yhden kalenteripäivän testi
+
+Käyttäjän huomio: testi on outo. Syy kirjattu sivulle: testin muoto
+(yksi päivä vuodessa, huhtikuun puoliväli) ei ollut suunniteltu vaan
+alipyyntörajan sivutuote (näytteenotto harvennettiin 1 kk -> 6 kk ->
+12 kk, ks. 31.7.–1.8. merkinnät). Se vertaa vuosienvälistä yhteyttä,
+ei vuoden sisäistä, eikä pysty antamaan muuta kuin nollan. Tähän
+testiin ei pidä nojata kumpaankaan suuntaan; pitkän aineiston tulos
+on §01h. Otsikko muutettu vastaamaan tilaa.
