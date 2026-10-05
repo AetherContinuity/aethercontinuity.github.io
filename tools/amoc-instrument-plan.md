@@ -1,6 +1,13 @@
 # AMOC Endurance/Continuity -instrumentti — suunnitelma
 
-**Tila:** Suunnitteluvaihe, 2026-07-30. Ei vielä koodia. Sama kuri kuin
+**Tila 2026-10-05:** v0.3. Yksikään testattu sarja ei ole validoitunut
+AMOC-proksiksi. Tämä tiedosto on aikajärjestyksessä etenevä kehitysloki:
+vanhoja merkintöjä ei ole kirjoitettu uudelleen, ja osa niistä on
+myöhemmin kumottu. Voimassa oleva tilanne on tiedoston LOPUSSA
+(osio "KORJAUKSET JA TOISTOTESTI 2026-10-05") ja sivulla
+AMOC-monitor.html. Kumotut väitteet on lueteltu siinä osiossa.
+
+**Alkuperäinen tila (2026-07-30):** Suunnitteluvaihe. Ei vielä koodia. Sama kuri kuin
 BEM-E:n omassa suunnitteluvaiheessa (ks. hem-satellite-water-quality-plan.md):
 data ensin, koodi vasta kun lähteet on vahvistettu.
 
@@ -1356,3 +1363,106 @@ merkittavaa uutta tyota):**
 dokumentoitu rajoitus (RAPID ei paivity maaliskuun 2024 jalkeen,
 §02/§07 kirjattu tama jo aiemmin) - ulkopuolinen arvio vahvistaa tama
 saman havainnon riippumattomasti, ei paljasta mitaan uutta.
+
+## KORJAUKSET JA TOISTOTESTI 2026-10-05
+
+Sivu, tämä suunnitelma ja proxyn koodi luettiin kokonaan läpi. Tulos:
+kolme virhettä koodissa, kaksi virhettä sivun elokuun korjauksissa, ja
+ainoa "validoitu" pari ei toistunut.
+
+### Koodin virheet (korjattu, aci-amoc-proxy PR #1)
+
+1. **p-arvot normaalijakaumasta.** `pValueFromR` käytti normaali-
+   approksimaatiota, jonka oma kommentti rajasi tapauksiin n>100, mutta
+   funktiota kutsuttiin tehollisella otoskoolla (7–44). p-arvot olivat
+   2–3 kertaa liian pieniä. Nyt Studentin t, df = Neff−2. Kaikki tätä
+   ennen lasketut p- ja BH-arvot tässä tiedostossa ovat liian
+   optimistisia. Koska t-jakauma voi vain suurentaa p-arvoja,
+   "ei näyttöä" -tulokset pysyvät.
+2. **GEUS:n ennusterivit.** Mankoffin ym. tuote jatkuu noin viikon
+   eteenpäin ("from 1840 through next week"). `/greenland-gmb` ja
+   `gmb`-sarja lukivat viimeisen rivin. Tämä oli 20.8.2026 havaitun
+   tulevaisuuteen päivätyn arvon juurisyy.
+3. **§01d:n live-kuvaaja.** `/compare` hakee ERDDAP:sta 350 vrk:n
+   palan, jonka palvelin hylkää (502). Kuvaaja toimi elokuussa
+   ilmeisesti 30 vrk:n välimuistista ja hajosi sen vanhennuttua.
+   5.10. mitattuna 90 vrk:n pala hylätään, 30 vrk:n pala menee läpi.
+
+Uusi reitti `/series` palauttaa yhden sarjan raaka-arvot. Sillä
+ohitetaan Cloudflaren 50 alipyynnön raja: pitkä aikaväli haetaan
+usealla kutsulla ja analyysi ajetaan Workerin ulkopuolella
+(`scripts/amoc_sst_rapid_analysis.py`). Tämä oli "myllyongelma".
+
+### Virheet sivun elokuun korjauksissa
+
+4. **Neff 24,2 väärällä rivillä.** Luku kuuluu parille SLA↔RAPID_UMO.
+   SST↔RAPID_MOC-parin Neff on 32,3 (toistettu 5.10.). Myös tämän
+   tiedoston §01f-taulukon "Ei suod. / Neff 24,2" on sama virhe.
+5. **"Viive ei matemaattisesti voi siirtyä."** Liian vahva. Suodatin on
+   takautuva, ei symmetrinen; saman suodattimen ajaminen molempiin
+   sarjoihin tasoittaa ristikorrelaation symmetrisellä ytimellä, mutta
+   huippu voi siirtyä, jos käyrä on huipun ympärillä epäsymmetrinen.
+   Pysyvyys on odotettavaa eikä todista mitään.
+
+### Toistotesti: SST ↔ RAPID_MOC ei toistu
+
+SST-anomalia haettiin koko RAPID-jaksolle (7.4.2004–22.3.2024, 7 290
+päivää, ei aukkoja).
+
+| Testi | Tulos |
+|---|---|
+| Alkuperäinen ikkuna (2/2023–3/2024), raaka | r=0,525, viive −11, Neff 32,3, p=0,0019, BH 18/61, surrogaatti-p 0,018 |
+| Sama ikkuna, kausisykli poistettu | paras r=0,33, viive −12, BH 0/61 |
+| 19 vuotta erikseen, raaka | BH-merkitsevä 1 vuotena (alkuperäinen ikkuna) |
+| 19 vuotta erikseen, kausisykli poistettu | BH-merkitsevä 2 vuotena, eri viiveillä ja eri etumerkillä |
+| r viiveellä −11, raaka | positiivinen 15/19, mediaani 0,12 |
+| r viiveellä −11, kausisykli poistettu | positiivinen 9/19, mediaani −0,01 |
+| Koko 20 v, päiväanomaliat ±60 vrk | paras r=−0,14, BH 0/121 |
+| Koko 20 v, kuukausianomaliat ±12 kk | paras r=−0,21, surrogaatti-p 0,17 |
+
+**Johtopäätös:** alkuperäinen havainto oli pääosin kausisyklin tuote.
+RAPID:n MOC-sarjasta ei ollut poistettu vuodenaikaisvaihtelua. Sykli
+selittää MOC:n päivävaihtelusta vain 12–19 %, mutta se riitti
+tuottamaan tuloksen yhdessä ikkunassa yhdeksästätoista. Tämä on
+"reseptiongelma": data ja mylly olivat kunnossa, hypoteesi ei.
+
+Luokitus: SST↔RAPID_MOC siirtyy luokkaan **ei näyttöä**. Validoituja
+pareja ei ole. NAO↔RAPID_EK pysyy luokassa lupaava mutta vahvistamaton
+(t-jakaumalla: Neff 44, p=0,0051, laaja skannaus BH 0/61, ±3 vrk 7/7;
+kapea ikkuna on edelleen jälkikäteen rajattu).
+
+Sivulöytö: kuukausitasolla Ekman-kuljetus edeltää SST-anomaliaa
+kuukaudella (r=−0,21, surrogaatti-p 0,04). Sopii NAO-vaikutukseen,
+kertoo ilmakehästä eikä kierron tilasta.
+
+Testin aikana hylätty oletus: yhteys ei selity Ekman-kuljetuksella
+(alkuperäisessä ikkunassa SST↔MOC−Ekman r=0,52, SST↔Ekman r=0,26).
+
+### Tässä tiedostossa aiemmin esitetyt väitteet, jotka eivät enää päde
+
+- "21 peräkkäistä viivettä muodostavat klusterin — aidon signaalin
+  merkki" (31.7.). Kumottu sivulla elokuussa; viety tänne vasta nyt.
+- "Viiveen pysyvyys −11 vrk:ssa kaikilla suodatustasoilla on
+  metodologisesti vahvempi havainto" (31.7., §01f). Ei päde, ks. kohta 5.
+- "AMOC-instrumentin muut kolme korttia (SST, Grönlanti-SMB,
+  RAPID-viitetilastot) pysyvät validina, itsenäisinä indikaattoreina"
+  (31.7.). SST-kortilla ei ole validointia; se näyttää yhden hilapisteen
+  absoluuttisen anomalian, kun "kylmä läiskä" määritellään suhteessa
+  globaaliin keskiarvoon.
+- "SST-lähde: NOAA OISST v2.1, referenssi 1991–2020" (30.7.). Koodi
+  hakee Coral Reef Watchin tuotetta (`noaacrwsstanomalyDaily`,
+  CoralTemp), jolla on oma klimatologiansa.
+- "DMI:n GSMB.txt kattaa nykyisen sulamiskauden." Tiedosto alkaa
+  massatasevuoden alusta 1.9. Lähde ei ole päivittynyt 8.9.2026 jälkeen.
+
+### Avoimet kohdat
+
+- Subpolaarinen laatikkokeskiarvo miinus globaali keskiarvo (Caesar ym.
+  2018) on testaamatta. Se olisi oikein määritelty mittari, mutta
+  kiistanalainen (ks. 1.8. merkintä CMIP6-vertailusta), eikä 20 vuoden
+  RAPID-sarja riitä sen validointiin.
+- `/compare`:n päivätason haku on rikki (350 vrk:n pala). Korjaus:
+  30 vrk:n palat, tai reitin korvaaminen `/series` + ulkoinen analyysi
+  -mallilla kokonaan.
+- Riippumaton vahvistus (vaihe 3) puuttuu edelleen kaikilta pareilta.
+  RAPID:n seuraava julkaisu on ainoa uusi aineisto.
