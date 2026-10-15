@@ -303,8 +303,9 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 <div id="sp-body">
   <div class="sp-row"><div class="st" style="grid-column:1/-1">Ladataan FinBIF-dataa…</div></div>
 </div>
-<p class="note">Norm. suhde = (nyk. / ref.) / 1,8. Luvut ovat jaksojen havaintomääriä yhteensä, eivät vuosikeskiarvoja (jaksot 11 v ja noin 6,8 v). Kerroin 1,8 on kiinteä oletus havaintoaktiivisuuden kasvusta.<br>
-<b>Tarkistus 2026-10-15:</b> kaikkia lintuhavaintoja alueelta on FinBIFissä 2000–10 noin 86 600 ja 2020–26 noin 86 100. Kokonaismäärien suhde on siis noin 1,0, ei 1,8, joten normalisointi aliarvioi jokaisen lajin suhteen ja kallistaa D_s:n laskuun. Viitejaksoon osuu Lintuatlas 3 (2006–10), ja metson ja tavin havainnot hyppäävät vuodesta 2022 alkaen, mikä viittaa aineistolähteen muutokseen eikä kannan kasvuun. Liito-oravan havaintojen sijainteja karkeistetaan. D_s mittaa toistaiseksi raportointia yhtä paljon kuin lajistoa.</p>
+<p class="note"><span id="sp-norm-live">Normalisointia haetaan…</span><br>
+Luvut ovat jaksojen havaintomääriä yhteensä, eivät vuosikeskiarvoja (jaksot 11 v ja noin 6,8 v).<br>
+<b>Tarkistus 2026-10-15:</b> kaikkia lintuhavaintoja alueelta on FinBIFissä 2000–10 noin 86 600 ja 2020–26 noin 86 100. Kokonaismäärien suhde on siis noin 1,0, ei 1,8: kiinteä kerroin aliarvioi jokaisen lajin suhteen ja kallisti D_s:n laskuun (0,386 vs. 0,286 osuusnormalisoinnilla). Viitejaksoon osuu Lintuatlas 3 (2006–10), ja metson ja tavin havainnot hyppäävät vuodesta 2022 alkaen, mikä viittaa aineistolähteen muutokseen eikä kannan kasvuun. Liito-oravan havaintojen sijainteja karkeistetaan. D_s mittaa toistaiseksi raportointia yhtä paljon kuin lajistoa.</p>
 
 <div class="shdr"><span class="snum">§ 01b</span><span class="stit">Tapaustutkimus — Kukkiajärvi: tummuminen ja näkövaraiset saalistajat</span></div>
 <div class="dbox">
@@ -606,7 +607,18 @@ function fetchSpecies() {
 
       var Ds = (d.D_s != null) ? d.D_s : null;
       setText('ds-val', Ds != null ? Ds.toFixed(3) : '—');
-      setText('ds-class', d.D_s_classification || '');
+      // 2026-10-15: proxy v0.2 -> D_s_validated, normalisointi, effort, huomiot
+      setText('ds-class', d.D_s_validated === false ? 'ei validoitu · FinBIF' : (d.D_s_classification || ''));
+      var nEl = document.getElementById('sp-norm-live');
+      if (nEl) {
+        if (d.normalisointi && d.effort && d.effort.ratio != null) {
+          nEl.innerHTML = '<b>Proxyn normalisointi:</b> ' + d.normalisointi + ' (lintuhavaintoja ' +
+            d.effort.ref_total + ' → ' + d.effort.cur_total + ', suhde ' + d.effort.ratio.toFixed(2) + ').' +
+            (d.huomiot ? '<br>' + d.huomiot.join('<br>') : '');
+        } else {
+          nEl.textContent = 'Proxy käyttää vielä kiinteää kerrointa 1,8 (norm. suhde = nyk./ref./1,8).';
+        }
+      }
       updateBEPP(Ds);
 
       var sp   = d.species || {};
