@@ -693,14 +693,16 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
           <th class="rh">Hydro MW</th>
           <th class="rh">CHP MW</th>
           <th class="rh">Tuuli MW</th>
-          <th class="rh">Residuaali MW</th>
+          <th class="rh">Aurinko MW</th>
+          <th class="rh">Varasto MW</th>
+          <th class="rh">Muu MW</th>
           <th class="rh">Tuotanto yht.</th>
           <th class="rh">ECI firm</th>
           <th class="rh">ECI semi</th>
         </tr>
       </thead>
       <tbody id="eciTableBody">
-        <tr><td colspan="8" style="color:var(--muted);padding:1rem .6rem;">Ladataan…</td></tr>
+        <tr><td colspan="12" style="color:var(--muted);padding:1rem .6rem;">Ladataan…</td></tr>
       </tbody>
     </table>
     <div style="font-family:var(--mono);font-size:.54rem;color:var(--muted);margin-top:.75rem;line-height:1.9;">
@@ -1178,7 +1180,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <span class="v4-card-regime v4-regime-drift">Drift</span> T₁₆₈ &lt; 24h — stressi sirpaloitunutta, markkina allokoi normaalisti &nbsp;·&nbsp;
       <span class="v4-card-regime v4-regime-metastable">Metastable</span> T₁₆₈ 24–72h — stressiä klusteroituu &nbsp;·&nbsp;
       <span class="v4-card-regime v4-regime-jump">Jump</span> T₁₆₈ ≥ 72h — pitkä yhtenäinen stressijakso, jump-regiimin indikaattori
-      &nbsp;·&nbsp; <strong>Lähde:</strong> NVE Magasinstatistikk (Norja) · Fingrid DS 124+192 (import-gap CV) · WP-015 §9
+      &nbsp;·&nbsp; <strong>Lähde:</strong> ENTSO-E A72 FI (aci-entsoe-proxy /balance, FS(p)) · Fingrid DS 124+192 (import-gap CV) · WP-015 §9
     </div>
 
     <div class="shdr" style="margin-top:1.5rem;"><span class="snum">§ 11b</span><span class="stit">Hinta vs. tuulituotanto (W168) — KOKEELLINEN</span></div>
@@ -1289,13 +1291,13 @@ Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marra
 
 SE1-vientimarginaali ei ole staattinen: Aurora Line lisäsi SE1→FI fyysistä siirtokapasiteettia, mutta SE1-alueen samanaikainen teollinen sähköistymispaine (Stegra 700 MW elektrolyysi Bodenissa, HYBRIT vetyteräs Gällivaressa) voi pitkällä aikavälillä pienentää käytettävissä olevaa vientimarginaalia erityisesti matalan hydro- ja tuulituotannon periodeina. WEM käsittelee SE1-kapasiteettia toistaiseksi eksogeenisena resurssina — malli ei diskonttaa Pohjois-Ruotsin kasvavaa omaa teollista kuormaa FS(p)- tai TRR-logiikassa. Kehitystarve tunnistettu.
     Kehityssuunnitelma — ENTSO-E Transparency Platform (2026-07, ei viela toteutettu):
-    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria, mutta EI ole viela toteutettu. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). NTC 2 300 MW on fyysinen kapasiteetti — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
+    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria. <b>Tila 2026-10-15:</b> aci-entsoe-proxy on käytössä: Nordic-WR (§11), rajasiirrot, day-ahead-hinta ja A72-vesivarannot (§01 SOURCE, FS(p)). SE-tarjousalueiden kulutus (kohta 2) ei vielä ole mukana. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). NTC 2 300 MW on fyysinen kapasiteetti — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
 
 Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
       <li><strong>Käsitteiden suhde — Black Period vs. Dunkelflaute:</strong> "Black Period" (WP-001) on WEM:n oma, järjestelmätason analyyttinen konstruktio: 168 tunnin ikkuna jossa endurance-marginaalit ovat kriittisen ohuet, mitattuna EPP:llä. "Dunkelflaute" on kansainvälisesti vakiintunut, meteorologis-energeettinen termi sille fyysiselle säätilalle (samanaikainen matala tuuli- ja aurinkotuotanto, usein kylmällä säällä) joka tyypillisimmin laukaisee Black Period -tyyppisen tilan. Ne eivät ole synonyymejä: Dunkelflaute on yksi — todennäköisin — Black Periodin syy, mutta Black Period voisi periaatteessa syntyä myös muista syistä (esim. laaja tuotantovajaus ilman tuulikatoa). WEM:n WR-komponentti (WindRisk) on lähin suora Dunkelflaute-indikaattori instrumentissa.</li>
       <li><strong>Lämpötiladata:</strong> Kolme Open-Meteo-asemaa — Helsinki (w=0.45), Kuopio (w=0.30), Rovaniemi (w=0.25) — painotettu energiankulutuksen mukaan. Painotettu keskilämpötila syötetään C_exp-malliin. Alueellinen lämpötilaero (Helsinki−Rovaniemi) toimii kylmäpiikki-indikaattorina. Kulutusmalli: <code>C_exp = 7 506 + 177·(vuosi−2024) + 153·max(0, 18−T) + 182·tuuli[GW]</code>, katto 13 500 MW. Kalibroitu 1 339 tunnista (8 × 168 h vuosilta 2024–2026, Fingrid DS 124/75 + ERA5, R² 0,88), jäännöshajonta 700 MW. Perustason kasvu (+177 MW/v) kuvaa datakeskusten litteää kuormaa. Tuulitermi kuvaa hintaohjattua kuormaa (sähkökattilat), joka kytkeytyy päälle halvoilla tunneilla; mitattu erikseen +122 MW/GW (2/2026) ja +204 MW/GW (1/2024) lämpötila vakioituna. Spot-hinta ei kelpaa selittäjäksi, koska sen kerroin on positiivinen — hinta nousee kun kulutus on suuri (endogeenisuutta, ei joustoa). Alle −5 °C:n kulmakerroin (76 MW/°C) on vanhaa perua: otoksessa ei ollut riittävästi kylmempiä tunteja. <b>DP_t-sarja katkeaa kalibrointien kohdalla</b> (8/2026 ja 24.9.2026), joten jaksot niiden yli eivät ole vertailukelpoisia. <a class="hlink" href="wem-historia.html#cexp" target="_blank" rel="noopener">historia&nbsp;↗</a> Kun lämpötiladata ei ole saatavilla, käytetään DP_s-fallbackia.</li>
       <li><strong>Rakenteellinen rajoite 2 — Fingridin oma tuotantomuotojaottelu on suuntaa-antava:</strong> Fingrid ilmoittaa itse (fingrid.fi/sahkomarkkinat/sahkojarjestelman-tila), että reaaliaikamitatun tuotannon jaottelu tuotantomuodoittain (mukaan lukien DS 201/202) perustuu Energiaviraston voimalaitosrekisteriin ja tehdään laitoksen <em>pääasiallisen</em> tuotantomuodon mukaan — "lukemat ovat suuntaa-antavia". Mittaamaton tuotanto (mukaan lukien nopean häiriöreservin varavoimalaitokset) sisältyy kokonaan kohtaan "muu tuotanto", ei erottele tuotantomuotoa. WEM:n DS 201/202 -pohjainen CHP-laskenta (ks. §03 debug-paneeli) on siis sisäisesti oikein laskettu sille datalle jota Fingrid tarjoaa, mutta itse lähdedatan tuotantomuotojaottelu ei ole tarkka mittaus — se on hyväksytty epätarkkuus Fingridin oman ilmoituksen mukaan, ei WEM:n oma approksimaatiovirhe.</li>
-      <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat ovat suuntaa antavia, eivät rigorisia validointeja.</li>
+      <li><strong>Rakenteellinen rajoite 3 — Backtest mittaa osittain väärää asiaa:</strong> Vuoden 2022 energiakriisi oli hintojen kriisi — Suomen fyysinen tuotantokapasiteetti ei ollut kriisissä. EPP-arvo tuolta ajanjaksolta heijastaa hintojen ohjaamaa kysyntäjoustoa, ei endurance-kapasiteetin vajetta. Recall/Precision-metriikat on poistettu (ks. §09).</li>
       <li><strong>SP-kynnys (5 %):</strong> Suomen rakenteellinen tuonti (500–2 500 MW) voi triggeröidä stressitunnin herkästi. SP toimii varhaisvaroituksena eikä kriisi-indikaattorina — Tight-taso on normaali talvessa. Elevated (>30 %) on todellinen signaali.</li>
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
       <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
@@ -2447,7 +2449,11 @@ function renderDimensions(m){
 
   // FREQUENCY — SP, kynnykset §06:sta
   const sp = m.sp;
-  const spCls = sp==null?['—',C.grey]: sp>=.50?['BP-like',C.red]: sp>=.30?['Elevated',C.amber]
+  // 2026-10-15: SP saturoituu (§C rajoite 2): tallennetuista 20 otosikkunasta
+  // (data/wem-epp-windows.json) 14:ssa SP >= 50 %. BP-like-luokka ei siksi
+  // erottele, eika se saa yksin laukaista RISTIRIITAINEN TILA -huomautusta:
+  // vari on oranssi, ei punainen. Luokkarajat ennallaan (§06).
+  const spCls = sp==null?['—',C.grey]: sp>=.50?['BP-like (saturoituu)',C.amber]: sp>=.30?['Elevated',C.amber]
               : sp>=.15?['Tight',C.amber]:['Normal',C.ok];
   // DEPTH — SP_depth. EI vakiintuneita kynnyksiä; nämä ovat ASETETTUJA [A].
   const sd = m.spDepth;
@@ -2531,6 +2537,7 @@ function renderDimensions(m){
        Ei uutta laskentaa: SP §02 · SP_depth §10 · T₁₆₈ §11 · RP_margin §14 ·
        SOURCE aci-entsoe-proxy <code>/balance</code> (sama kuin HEM §01b; SOURCE-luokat ASETETTUJA [A],
        järjestys perusjaksossa 2015–, A72-data 1–2 vk viiveellä).
+       FREQUENCY ei erottele: SP ≥ 50 % 14/20 tallennetussa otosikkunassa (2022–2026), joten sen BP-like ei yksin laukaise ristiriitahuomautusta (2026-10-15).
        DEPTH-kynnykset ovat <strong>ASETETTUJA [A]</strong>; SP:n ja T₁₆₈:n kynnykset ovat
        §06:n ja §11:n omia, ja CORRECTION-vyöhykkeet tulevat talven kalibroinnista
        (17 470 pistettä).<br>
@@ -2639,7 +2646,8 @@ function renderPosture(m, spot) {
   }
   if (w168.sp != null) {
     const spCls = spLabel(w168.sp);
-    if (spCls.label === 'Elevated' || spCls.label === 'BP-like') compAlerts.push('SP ' + spCls.label + ' (' + fmt.pct(w168.sp) + ')');
+    // 2026-10-15: SP ei enaa komponenttihalytyksessa - saturoituu (>= 50 % 14/20
+    // otosikkunassa), joten halytys oli kaytannossa aina paalla. Arvo nakyy §02:ssa ja §06:ssa.
   }
   const alertCompEl = document.getElementById('alertComp');
   if (alertCompEl) {
@@ -4387,8 +4395,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.16.1';
-const WEM_BUILD   = '2026-09-30d'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.2';
+const WEM_BUILD   = '2026-10-15a'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
