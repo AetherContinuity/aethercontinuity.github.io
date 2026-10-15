@@ -274,9 +274,10 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   <br>
   <b>HEPP-laskenta</b> — Hydrological Endurance Pressure Proxy<br>
   &nbsp;&nbsp;HEPP = 0.35·SD + 0.25·EP_anomalia + 0.25·RF + 0.15·HSP<br>
-  &nbsp;&nbsp;SD: (normaali keväthuippu − havaittu) / 0.90 · Normaali = 98.01 m NN (WSFS ka 1910–2025)<br>
+  &nbsp;&nbsp;SD: (saman vuodenpäivän normaali 1991–2020 − mitattu vedenkorkeus) / 0.90 · SYKE asema 1966 (korjattu 15.10.2026, aiemmin keväthuippunormaali 98.01 m)<br>
   &nbsp;&nbsp;EP: Thornthwaite (1948) PET — kuukausittainen lämpötilapohjainen haihdunta<br>
-  &nbsp;&nbsp;RF: 1 − (kuukausisade / mediaanisade) · Referenssi: FMI Kuopio 1961–2010 (WMO)<br>
+  &nbsp;&nbsp;RF: 1 − (Nokisenkosken lähtövirtaama / saman vuodenpäivän normaali) · varapolku NVE hydro_RF (korjattu 15.10.2026: aiempi kuvaus "1 − kuukausisade / mediaanisade" ei vastannut koodia)<br>
+  &nbsp;&nbsp;EP: Thornthwaite-PET viimeiseltä kokonaiselta kuukaudelta vs. 1961–2010 (korjattu 15.10.2026: aiemmin kesken oleva kuukausi)<br>
   &nbsp;&nbsp;HSP: NVE-label (low=0.70, normal=0.38, high=0.15) — pohjoismainen proxy<br>
   &nbsp;&nbsp;Kynnykset (2026-09-24, empiiriset): Normal &lt;0.30 · Elevated ≥0.30 (p90) · High ≥0.47 (p99)<br>
   &nbsp;&nbsp;Katso: <a href="https://aethercontinuity.org/supplements/tn-014-hem-virmasvesi-iisvesi.html" style="color:var(--accent)">TN-014 §04</a><br>
@@ -295,7 +296,15 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   vedenkorkeudella vanha High-raja 0,65 ei ylittynyt kertaakaan 67 vuodessa ja 0,45 ylittyi 1 %:ssa kuukausista.
   Uudet rajat ovat jakauman p90 (0,30) ja p99 (0,47). Korkein kuukausi on 2003-11 (0,614); kuivimmat vuodet
   keskiarvona 2003, 2002, 2004, 2006 ja 2025.</span>
-</div>
+<br><br><b>Korjaus 15.10.2026:</b> live-HEPP laski SD:n väärin aina, kun HEM-repositorion
+  välimuistitiedostossa ei ollut Iisveden havaintoa: SD = (98,01 − WSFS-ennuste) / 0,90 eli vertailu
+  keväthuipun normaaliin, ei saman päivän normaaliin. 15.10. tämä antoi SD 0,58 (oikein 0,15) ja HEPP 0,49
+  "Korkea" (oikein 0,33 "Kohonnut"). Nyt SD ja RF lasketaan §00:n mitatusta vedenkorkeudesta ja
+  Nokisenkosken virtaamasta. Samalla: EP lasketaan viimeiseltä kokonaiselta kuukaudelta (aiemmin kesken
+  oleva kuukausi vääristi arvoa), RF ei enää käytä Norjan vesivarantoja, kun Iisveden virtaama on
+  saatavilla (Norja oli kaavassa kahdesti), §05-kaavion kynnysnauhat korjattu, lämpötilakaavion
+  vertailujakson seliteteksti korjattu (1961–2010, ei 2016–2023) ja kiinteäksi kirjoitettu,
+  vanhentunut "Kesäennuste"-rivi poistettu. Komponenttien lähde näkyy viemällä osoitin arvon päälle.</div>
 
 <div class="shdr"><span class="snum">§ 09</span><span class="stit">Aquatic Status — BEM-E (Aquatic Extension) · KOKEELLINEN</span></div>
 <div class="dbox" style="margin-bottom:8px">
@@ -495,17 +504,16 @@ async function fetchIisvesi(){
       fcSvg=s;
     }
     setHTML('iis-det',`${fcSvg}
-      ${isForecastFallback?'Ennuste (kevathuippu)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)" title="'+obs.observed_provisional.field+'='+obs.observed_provisional.value+'">['+(obs.observed_provisional.description??'alustava arvo')+']</span>':''}<br>
+      ${isForecastFallback?'WSFS-ennuste (havainto puuttuu välimuistista, ks. §00)':'Havaittu'}: <b>${wl?.toFixed(2)??'—'} m NN</b>${obs?.observed_date?' ('+obs.observed_date+')':''}${obs?.observed_provisional?' <span style="color:var(--sy)" title="'+obs.observed_provisional.field+'='+obs.observed_provisional.value+'">['+(obs.observed_provisional.description??'alustava arvo')+']</span>':''}<br>
       Kevään huippu ${new Date().getFullYear()}: <b>${obs?.spring_peak_m?.toFixed(2)??'—'} m</b>${obs?.spring_peak_locked?' (lukittu)':''} · norm 1910–2025: ${NORM} m · SD_kevät <b style="color:${obs?.sd_kevat>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_kevat??'—'}</b><br>
       Saman vuodenpäivän ka (${obs?.doy_ref_years??'1991-2020'}, n=${obs?.doy_ref_n_years??'—'}v): <b>${obs?.doy_avg_m?.toFixed(2)??'—'} m</b> · SD_nyt <b style="color:${obs?.sd_nyt>0.5?'var(--sr)':'var(--sy)'}">${obs?.sd_nyt??'—'}</b><br>
       Nokisenkoski-virtaama: <b>${obs?.flow_m3s??'—'} m³/s</b>${obs?.flow_date?' ('+obs.flow_date+')':''} · vuodenpäivän mediaani (n=${obs?.flow_doy_n_years??'—'}v): ${obs?.flow_doy_median_m3s??'—'} m³/s · RF_virtaama <b>${obs?.rf_flow??'—'}</b><br>
-      WSFS-ennuste (kevathuippu, EI havainto): ${fcWl?.toFixed(2)??'—'} m NN · huippu ${((d.peak_timing??d.f14?.peak_date_mean??'—')).trim()}<br>
-      Kesäennuste: VI 97.47 → VII 97.41 → VIII 97.36 m · 2027 huippu ka 97.92 m<br>
+      WSFS-ennuste (ennustejakson huippu, EI havainto): ${fcWl?.toFixed(2)??'—'} m NN · huippu ${((d.peak_timing??d.f14?.peak_date_mean??'—')).trim()}<br>
       MNW: ${MNW} m · MHW: ${MHW} m (keskim. keväthuippu) · Ennätys: ${RECORD_HIGH} m (10.6.1988)<br>
       Ennätysalin (vuosimaksimin joukossa pienin): 97.36 m (1942)<br>
       <span style="color:var(--muted)">Rautalammin reitti · säännöstelemätön · WSFS-O 1403300 · nollakohta ${obs?.zero_point_m??'—'} m NN${obs&&!obs.zero_point_verified?' (fallback, ei dynaamisesti vahvistettu ajon aikana - ks. fetch_iisvesi.py)':' (haettu VedenkTasoTieto-entiteetista ajon aikana)'}</span>`);
     dot('iis',(obs?.sd_nyt??(deficit>0.5?1:0))>0.5?'warn':'ok');
-    return{wl,deficit,sdKevat:obs?.sd_kevat??null,sdNyt:obs?.sd_nyt??null,rfFlow:obs?.rf_flow??null};
+    return{wl,deficit,sdKevat:obs?.sd_kevat??null,sdNyt:obs?.sd_nyt??null,rfFlow:obs?.rf_flow??null,isForecastFallback};
   }catch(e){setHTML('iis-det',`<span class="derr">Iisvesi: ${e.message}</span>`);dot('iis','err');return null;}
 }
 
@@ -624,14 +632,25 @@ function referencePETNormals(fmi){
   return normals;
 }
 
-// EP-anomalia [0,1]: nykyisen kuukauden PET verrattuna referenssinormaaliin,
+let _epMonth = null;
+// EP-anomalia [0,1]: viimeisen kokonaisen kuukauden PET verrattuna referenssinormaaliin,
 // normalisoitu referenssikauden omalla keskihajonnalla samalle kalenterikuukaudelle.
 // +2 keskihajontaa (poikkeuksellisen korkea haihdunta) -> 1.0. Ei alle normaalin -> 0.
 function computeEPAnomaly(fmi){
   try{
     const mm = monthlyMeansFromFMI(fmi);
     const lastDate = fmi.dates[fmi.dates.length-1];
-    const [ly, lm] = lastDate.split('-').map(Number);
+    let [ly, lm, ld] = lastDate.split('-').map(Number);
+    // KORJAUS 2026-10-15: kesken oleva kuukausi ohitetaan. Aiemmin
+    // kuluvan kuukauden keskilampotila laskettiin niista paivista, jotka
+    // oli jo havaittu (esim. 1.-13.10.), ja sita verrattiin koko kuukauden
+    // normaaliin. Syksylla kuukauden alku on lampimampi kuin loppu, joten
+    // EP oli kuun alkupuolella jarjestelmallisesti liian korkea (15.10.2026:
+    // 0.78 "hyvin korkea") ja kevaalla liian matala. Kaytetaan viimeista
+    // kokonaista kuukautta, kuten historiallinen §05-sarja.
+    const dim = new Date(Date.UTC(ly, lm, 0)).getUTCDate();
+    if (ld < dim) { lm -= 1; if (lm <= 0) { lm = 12; ly -= 1; } }
+    _epMonth = ly + '-' + String(lm).padStart(2, '0');
     // 12 kk taaksepain nykyhetkesta I:n (heat index) laskemiseksi.
     // HUOM (korjattu): temps ei ole Jan-Dec-jarjestyksessa vaan rullaava
     // (esim. elo->heina) - months-taulukko kertoo thornthwaitePET:lle
@@ -655,18 +674,27 @@ function computeEPAnomaly(fmi){
   } catch(e){ console.warn('EP-anomalia:', e.message); return null; }
 }
 
-function computeHEPP(nve,iis,fmi){
-  let sd=0.30;
+function computeHEPP(nve,iis,fmi,now){
+  let sd=0.30, sdSrc='neutraali 0.30 (ei havaintoa)', rfSrc='';
+  // KORJAUS 2026-10-15: SD lasketaan ensisijaisesti §00:n mitatusta
+  // vedenkorkeudesta (SYKE OData, asema 1966) suhteessa saman
+  // vuodenpaivan normaaliin 1991-2020, jaettuna 0.90:lla - sama kaava kuin
+  // historiallisessa §05-sarjassa (v2, 24.9.2026). Aiemmin, kun
+  // iisvesi.json:n observed oli null, SD laskettiin (98.01 - WSFS-ennuste)
+  // / 0.90 eli KEVATHUIPPUNORMAALIA vasten - sama vuodenaikavirhe, joka
+  // korjattiin syyskuussa ensisijaiselta polulta. 15.10.2026 se antoi
+  // SD 0.58 kun oikea arvo oli 0.14, ja HEPP nousi luokkaan "Korkea".
+  if(now?.level!=null&&now?.normal!=null){
+    sd=Math.max(0,Math.min(1,(now.normal-now.level)/0.90));
+    sdSrc='mitattu '+now.date+' vs. saman päivän normaali '+now.normal.toFixed(2)+' m';
+  }
   // Ensisijainen: SD_nyt (havaittu vedenkorkeus vs. saman vuodenpäivän
   // pitkän aikavälin keskiarvo) — laskettu skriptissä, ei ennusteesta.
   // KORJAUS 2026-09 (§02): iis.deficit oli aiemmin (NORM−ennusteen
   // keväthuippu), vuodenaikavirhe. sd_nyt on jo valmiiksi 0-1-skaalattu.
-  if(iis?.sdNyt!=null)sd=iis.sdNyt;
-  else if(iis?.deficit!=null)sd=Math.max(0,Math.min(1,iis.deficit/0.90));
-  else if(fmi?.dates){
-    const t=fmi.dates.slice(-30).map(d=>fmi.byDate[d]?.tday).filter(v=>v!=null&&v>-50);
-    if(t.length>5)sd=Math.max(0,Math.min(1,(t.reduce((a,b)=>a+b,0)/t.length-5)/20));
-  }
+  else if(iis?.sdNyt!=null){sd=iis.sdNyt;sdSrc='iisvesi.json sd_nyt';}
+  // Poistettu 2026-10-15: varapolut (NORM - ennuste) ja lampotilasta
+  // arvattu SD. Ilman havaintoa SD on neutraali 0.30 ja se kerrotaan.
   const hsp=nve?.label==='low'?0.70:nve?.label==='high'?0.15:0.38;
   // RF: ensisijainen Nokisenkoski-virtaama (Q / saman vuodenpäivän mediaani
   // 1994-2025) - mittaa suoraan veden läpivirtausta, ei sadanta-proxya.
@@ -675,12 +703,20 @@ function computeHEPP(nve,iis,fmi){
   // vedenkorkeutta - sama signaali kahdesti). NVE (Norja) -fallback jos
   // Iisveden virtaamaa ei ole (esim. Muonio-osiossa, missa Iisveden
   // rf_flow ei sovellu).
-  const rf=iis?.rfFlow!=null?iis.rfFlow:(nve?.rf!=null?Math.max(0,Math.min(1,1-nve.rf)):0.40);
+  // KORJAUS 2026-10-15: ensisijaisesti §00:n mitattu Nokisenkosken
+  // lahtovirtaama suhteessa saman vuodenpaivan normaaliin. Aiemmin
+  // iisvesi.json:n puuttuessa kaytettiin NVE:n hydro_RF:aa, jolloin Norjan
+  // vesivarannot olivat kaavassa kahdesti (RF ja HSP).
+  let rf;
+  if(now?.flowRatio!=null){rf=Math.max(0,Math.min(1,1-now.flowRatio));rfSrc='Nokisenkoski '+Math.round(now.flowRatio*100)+' % normaalista';}
+  else if(iis?.rfFlow!=null){rf=iis.rfFlow;rfSrc='iisvesi.json rf_flow';}
+  else if(nve?.rf!=null){rf=Math.max(0,Math.min(1,1-nve.rf));rfSrc='varapolku: NVE hydro_RF (Norja kahdesti kaavassa)';}
+  else {rf=0.40;rfSrc='neutraali 0.40';}
   // EP-anomalia: Thornthwaite PET nykykuukaudelle vs. 1961-2010-normaali.
   // Fallback 0.30 (neutraali) jos fmi-data ei riita laskentaan.
   const ep = fmi ? computeEPAnomaly(fmi) : null;
   const epVal = ep != null ? ep : 0.30;
-  return{val:+(0.35*sd+0.25*epVal+0.25*rf+0.15*hsp).toFixed(2),sd:+sd.toFixed(2),ep:+epVal.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2),epFallback:ep==null};
+  return{val:+(0.35*sd+0.25*epVal+0.25*rf+0.15*hsp).toFixed(2),sd:+sd.toFixed(2),ep:+epVal.toFixed(2),hsp:+hsp.toFixed(2),rf:+rf.toFixed(2),epFallback:ep==null,sdSrc,rfSrc,epMonth:ep!=null?_epMonth:null};
 }
 
 function hCol(v){return v>=HEPP_T.high?'var(--sr)':v>=HEPP_T.elev?'var(--sy)':'var(--ink)'}
@@ -800,7 +836,7 @@ async function drawCharts(fmi){
   const serT=Object.keys(mt).sort().map(ym=>({ym,mo:mt[ym].mo,val:+(mt[ym].vals.reduce((a,b)=>a+b,0)/mt[ym].vals.length).toFixed(1)}));
   const serP=Object.keys(mp).sort().map(ym=>({ym,mo:mp[ym].mo,val:+mp[ym].vals.reduce((a,b)=>a+b,0).toFixed(0)}));
 
-  drawEnvelope('ct',serT,bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Kuukausikeskilämpötila · harmaa=p10-p90 (2016-2023)');
+  drawEnvelope('ct',serT,bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Kuukausikeskilämpötila · harmaa=p10-p90 (1961-2010)');
   drawEnvelope('cp',serP,bands_p,'val','#4a8f5f',v=>Math.round(v)+'mm','Kuukausisademäärä mm');
   // Viimeiset 36kk
   drawEnvelope('cm',serT.slice(-36),bands_t,'val','#2a5f8f',v=>v.toFixed(1)+'°','Lämpötila 36kk · mediaaninauha');
@@ -833,7 +869,7 @@ async function fetchMuonio() {
     const mhw = document.getElementById('muo-mhw');
     if (mhw) mhw.textContent = 'MHW ' + MHW_M.toFixed(2);
     if (det) det.innerHTML =
-      (isForecastFallback ? 'Ennuste (kevathuippu, EI havainto)' : 'Havaittu') + ': ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
+      (isForecastFallback ? 'WSFS-ennuste (ennustejakson huippu, EI havainto)' : 'Havaittu') + ': ' + (wl ? wl.toFixed(2) : '—') + ' m NN' +
       ' · ka ' + (NORM_M.toFixed(2)) + ' m' +
       ' · Huippu ' + (d.peak_date_mean ?? d.f14?.peak_date_mean ?? '—') +
       (obs?.sd_kevat!=null ? ' · SD_kevät ' + obs.sd_kevat : '') +
@@ -849,15 +885,27 @@ async function fetchMuonio() {
 
 async function fetchAll(){
   setText('s-ts','…');
-  const[nve,iis,fmi]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI()]);
+  const[nve,iis,fmi,now]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI(),loadIisvesiNow()]);
   fetchNordicReservoirs();
   fetchMuonio();
-  const h=computeHEPP(nve,iis,fmi);
+  // 2026-10-15: jos iisvesi.json:ssa ei ole havaintoa, ylakortti nayttaa
+  // §00:n mitatun arvon eika WSFS-ennustetta.
+  if(now?.level!=null&&iis&&iis.isForecastFallback){
+    setText('c-iis',now.level.toFixed(2));
+    setText('c-iis2','Havaittu '+now.date+' (SYKE, asema 1966)');
+    setText('s-iis',now.level.toFixed(2)+' m');
+  }
+  const h=computeHEPP(nve,iis,fmi,now);
   const col=hCol(h.val);
   setText('hval',h.val.toFixed(2));document.getElementById('hval').style.color=col;
   setText('hregime',hReg(h.val));document.getElementById('hregime').style.color=col;
   document.getElementById('hbadge').style.borderColor=col;
   setText('hsd',h.sd);setText('hep',h.ep);setText('hhsp',h.hsp);setText('hrf',h.rf);
+  // 2026-10-15: komponenttien lahde nakyviin (hover)
+  const tip=(id,t)=>{const e=document.getElementById(id);if(e)e.title=t;};
+  tip('hsd','SD: '+h.sdSrc); tip('hrf','RF: '+h.rfSrc);
+  tip('hep','EP: '+(h.epMonth?'Thornthwaite-PET '+h.epMonth+' vs. 1961–2010':'neutraali 0.30 (FMI-data ei riittänyt)'));
+  tip('hhsp','HSP: NVE-luokka '+(nve?.label??'—')+' (hydro_RF '+(nve?.rf??'—')+'; low < 0.80)');
   fetchBemE(h.val);
 
   // Komponenttikohtainen halytys - riippumaton HEPP-kokonaisluokasta.
@@ -888,7 +936,9 @@ async function fetchAll(){
   }
 
   setText('hdesc',(nve?`NVE täyttöaste ${nve.pct}% (hist.med ${nve.medianPct??'—'}%). `:'')+
-    (iis?.wl?`Iisvesi ${iis.wl.toFixed(2)} m NN, vajaus ${iis.deficit} m normaalista. `:'')+
+    // KORJAUS 2026-10-15: vajaus saman vuodenpaivan normaalista (§00),
+    // ei keväthuippunormaalista 98.01 m.
+    (now?.level!=null?`Iisvesi ${now.level.toFixed(2)} m NN (${now.date}), ${((now.level-now.normal)*100>=0?'+':'')}${((now.level-now.normal)*100).toFixed(0)} cm saman päivän normaalista. `:'')+
     (fmi?.temp!=null?`Kuopio ${fmi.temp.toFixed(1)} °C.`:''));
   drawCharts(fmi);
   setText('s-ts',new Date().toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit'}));
@@ -909,8 +959,12 @@ async function fetchHEPP(){
     let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-size="9" font-family="ui-monospace,monospace">`;
     // Taustavyöhykkeet
     const y65=P.t+h*(1-HEPP_T.high),y45=P.t+h*(1-HEPP_T.elev);
-    s+=`<rect x="${P.l}" y="${P.t}" width="${w}" height="${(y45-P.t).toFixed(0)}" fill="#fee" opacity=".3"/>`;
-    s+=`<rect x="${P.l}" y="${y45.toFixed(0)}" width="${w}" height="${(y65-y45).toFixed(0)}" fill="#ffd" opacity=".3"/>`;
+    // KORJAUS 2026-10-15: nauhat olivat vaarin pain (punainen ulottui
+    // Elevated-rajaan asti ja keltaisen korkeus oli negatiivinen -> selaimen
+    // virhe "negative height"). Punainen = High-rajan ylapuoli, keltainen =
+    // Elevated..High.
+    s+=`<rect x="${P.l}" y="${P.t}" width="${w}" height="${Math.max(0,y65-P.t).toFixed(0)}" fill="#fee" opacity=".3"/>`;
+    s+=`<rect x="${P.l}" y="${y65.toFixed(0)}" width="${w}" height="${Math.max(0,y45-y65).toFixed(0)}" fill="#ffd" opacity=".3"/>`;
     // Gridviivat
     [0.15,HEPP_T.elev,HEPP_T.high].forEach(v=>{
       const y=P.t+h*(1-v);
@@ -1189,15 +1243,17 @@ async function loadIisvesiNow(){
     t+='</table><span style="color:var(--muted)">Talvi ja kevät ovat vetisemmiksi muuttuneet, kesä ja syksy ilman trendiä: kausijakauma muuttuu, kokonaisvaluma ei pienene. Yksittäinen kuiva kesä (esim. 2026) ei ole trendi.</span>';
     document.getElementById('iv-trend').innerHTML=t;
     dot('iis', dev < -(n[0]-n[1])*100 ? 'warn' : 'ok');
+    return { level: last.v, normal: n[0], date: last.t.split('-').reverse().join('.'),
+             flowRatio: o ? o.p.v / o.nn[0] : null };
   }catch(e){
     setText('iv-date','Virhe: '+e.message);
+    return null;
   }
 }
 
-fetchAll();
+fetchAll();   // kutsuu myos loadIisvesiNow():n (§00) ja kayttaa sen mittauksia HEPP:ssa
 fetchHEPP();
 drawTemporalCharts();
-loadIisvesiNow();
 
 </script>
 </body>
