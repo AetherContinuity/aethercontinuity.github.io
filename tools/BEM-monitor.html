@@ -263,8 +263,8 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 <div class="cores">
   <div class="core f">
     <div class="clbl">D_f · Fragmentaatio</div>
-    <div class="cval" id="df-val">0.520</div>
-    <div class="cbar"><i id="df-bar" style="width:52%"></i></div>
+    <div class="cval" id="df-val">—</div>
+    <div class="cbar"><i id="df-bar" style="width:0%"></i></div>
     <div class="csub" id="df-sub">Proxy · CORINE</div>
   </div>
   <div class="core s">
@@ -280,9 +280,9 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
     <div class="csub" id="dc-sub">hakkuut + pysyvä muutos</div>
   </div>
   <div class="core r">
-    <div class="clbl">R · Palautuminen</div>
-    <div class="cval" id="r-val">0.380</div>
-    <div class="cbar"><i id="r-bar" style="width:38%"></i></div>
+    <div class="clbl" title="Suojellun pinta-alan osuus pisteotannasta. Rakenteellinen suure, ei palautumisen mittaus.">R · Suojeluosuus</div>
+    <div class="cval" id="r-val">—</div>
+    <div class="cbar"><i id="r-bar" style="width:0%"></i></div>
     <div class="csub" id="r-sub">Suojelualueet</div>
   </div>
 </div>
@@ -293,22 +293,24 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 </div>
 <div class="map-cap">
   <span>Pilottialue: <b>Rautalammin reitti</b> · 26.00–27.50E, 62.40–63.50N</span>
-  <span>Kaikki §01–§03 data haetaan tästä rajatusta alueesta</span>
+  <span>§01–§03 data haetaan tästä rajatusta alueesta (§01b on tapaustutkimus alueen ulkopuolelta)</span>
 </div>
 
 <div class="shdr"><span class="snum">§ 01</span><span class="stit">Indikaattorilajit — FinBIF live</span></div>
 <div class="sp-row head">
-  <div>Laji</div><div>Ref/v 2000–10</div><div>Nyk/v 2020–26</div><div>Norm. suhde</div><div>Trendi</div>
+  <div>Laji</div><div>Ref 2000–10 yht.</div><div>Nyk 2020–26 yht.</div><div>Norm. suhde</div><div>Trendi</div>
 </div>
 <div id="sp-body">
   <div class="sp-row"><div class="st" style="grid-column:1/-1">Ladataan FinBIF-dataa…</div></div>
 </div>
-<p class="note">Normalisointi: havaintoaktiivisuuden kasvu ×1.8. Aikajaksojen pituus normalisoitu vuosikeskiarvoihin.</p>
+<p class="note"><span id="sp-norm-live">Normalisointia haetaan…</span><br>
+Luvut ovat jaksojen havaintomääriä yhteensä, eivät vuosikeskiarvoja (jaksot 11 v ja noin 6,8 v).<br>
+<b>Tarkistus 2026-10-15:</b> kaikkia lintuhavaintoja alueelta on FinBIFissä 2000–10 noin 86 600 ja 2020–26 noin 86 100. Kokonaismäärien suhde on siis noin 1,0, ei 1,8: kiinteä kerroin aliarvioi jokaisen lajin suhteen ja kallisti D_s:n laskuun (0,386 vs. 0,286 osuusnormalisoinnilla). Viitejaksoon osuu Lintuatlas 3 (2006–10), ja metson ja tavin havainnot hyppäävät vuodesta 2022 alkaen, mikä viittaa aineistolähteen muutokseen eikä kannan kasvuun. Liito-oravan havaintojen sijainteja karkeistetaan. D_s mittaa toistaiseksi raportointia yhtä paljon kuin lajistoa.</p>
 
 <div class="shdr"><span class="snum">§ 01b</span><span class="stit">Tapaustutkimus — Kukkiajärvi: tummuminen ja näkövaraiset saalistajat</span></div>
 <div class="dbox">
   <p style="margin-top:0">
-    <strong>Kukkiajärvi (Pälkäne/Hauho, Pirkanmaa)</strong> — 44 km², syvyys 5–35 m, 400+ saarta.
+    <strong>Kukkiajärvi (Pälkäne/Hauho, Pirkanmaa; pilottialueen ulkopuolella)</strong> — 44 km², syvyys 5–35 m, 400+ saarta.
     Yle-artikkeli (30.7.2026, T. Virkkala 40 v. lintulaskenta) dokumentoi harvinaisen
     suoran yhteyden veden näkösyvyyden ja pesimälintukantojen välillä.
   </p>
@@ -321,9 +323,11 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
     <tr><td style="padding:4px 6px">Sinisorsa, kuikka</td><td colspan="2" style="text-align:center;padding:4px 6px;color:var(--muted)">ennallaan</td><td style="text-align:right;padding:4px 6px">—</td></tr>
   </table>
   <p style="font-size:.82rem">
-    <strong>Mekanismi eroaa Karttulanlahden tapauksesta (ks. HEM):</strong> Kukkian ravinnetaso
-    ei ole huonontunut — syy on metsien avohakkuiden aiheuttama hiilen liukeneminen maaperästä,
-    ei ravinnekuormitus. Tulos on kuitenkin sama fysikaalinen ilmiö kuin rehevöitymisessä:
+    <strong>Mekanismi eroaa Karttulanlahden tapauksesta (ks. HEM):</strong> artikkelin mukaan
+    Kukkian ravinnetaso ei ole huonontunut, ja syyksi esitetään metsien avohakkuiden
+    aiheuttama hiilen liukeneminen maaperästä, ei ravinnekuormitus. Tummumiseen vaikuttavat
+    yleisesti myös sademäärä ja happamoittavan laskeuman väheneminen; niiden osuutta ei
+    tässä ole erotettu. Tulos on kuitenkin sama fysikaalinen ilmiö kuin rehevöitymisessä:
     valon läpäisy heikkenee. Tämä osuu erityisen kovaa <strong>näköaistin varassa
     saalistaviin lajeihin</strong> (telkkä, tukkakoskelo) — sinisorsa ja kuikka, jotka
     käyttävät muita aistinvaraisia strategioita, ovat säilyneet ennallaan.
@@ -346,12 +350,15 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
   </p>
 </div>
 
-<div class="shdr"><span class="snum">§ 02</span><span class="stit">BEPP-trajektori 2010–2026</span></div>
+<div class="shdr"><span class="snum">§ 02</span><span class="stit">Historia — vain D_c laskettavissa</span></div>
 <div class="dbox">
-  <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px">Poikkileikkaus — kolme mitattua vuotta, väri = kynnysluokka</div>
+  <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px">D_c kolmena vuotena (data/bem-dc-2004-2025.json)</div>
   <div class="core-strip" id="traj-bars"></div>
-  <div style="font-family:var(--mono);font-size:.74rem">
-    dS/dt: <span id="dsdt-val">—</span> &nbsp; Tipping risk T(t): <span id="tipping-val">—</span> &nbsp; Trendi: <span id="trend-val">—</span>
+  <div style="font-size:.74rem;color:var(--muted);line-height:1.55">
+    Historiallista BEPP:tä ei voi laskea: D_f:lle, D_s:lle ja R:lle ei ole vuosien 2010 ja 2018 havaintoja.
+    Vuosien 2010 ja 2018 D_c on aliarvio, koska palautuvan komponentin 20 vuoden ikkuna täyttyy vasta 2023.
+    Korjaus 2026-10-15: aiempi trajektori (0,005 → 0,020 → 0,043, "heikkeneminen") käytti
+    näille vuosille käsin asetettuja paikkalukuja, ks. §04.
   </div>
 </div>
 
@@ -396,7 +403,7 @@ Laskeuma (Bq/m²) ja annosnopeus (µSv/h) ovat eri suureita: nykyinen annosnopeu
 BEPP v2 = (D_f^1.2 * D_s^1.0 * D_c^0.8) * (1-R)^1.5<br>
 dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
 T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
-D_s: FinBIF — liito-orava, palokärki, kalasääski · <b>live</b><br>
+D_s: FinBIF — liito-orava, palokärki, kalasääski, metso, tukkasotka, telkkä, tavi · <b>live</b> · lajin stressi 0,1 / 0,3 / 0,6 / 0,9 norm. suhteen mukaan, keskiarvo<br>
 D_f: CORINE 2018 -ruudukko (metsäosuus) + Sentinel-2 NDVI-hajonta (aci-corine-proxy) · <b style="color:var(--spruce)">live (2026-07-08 lähtien)</b><br>
 D_c: kaksi komponenttia (data/bem-dc-2004-2025.json) · <b style="color:var(--spruce)">laskettu aineistosta (2026-09-21)</b><br>
 <div id="dc-detail" style="margin:.3rem 0 .5rem 1.2rem;font-size:.9em;line-height:1.55">
@@ -405,25 +412,28 @@ D_c: kaksi komponenttia (data/bem-dc-2004-2025.json) · <b style="color:var(--sp
 &nbsp;&nbsp;D_c = 0,5·min(1, palautuva %/20) + 0,5·min(1, pysyvä %/2) [A]
 </div>
 R:   SYKE inspire_ps suojelualueet (Natura2000 SAC/SPA + valtion/yksityiset LSA), 3x otanta eri offseteilla · <b style="color:var(--spruce)">live (2026-07-08 lähtien)</b><br><br>
-<span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tama on v0.1-prototyyppi (TN-015: "Pre-development").
-BEPP-kaava on toteutettu tarkalleen dokumentoidun mukaisesti. D_s, D_f ja R
-haetaan nyt oikeasti live-lahteista: D_s FinBIF:sta, D_f kahdesta
-riippumattomasta lahteesta (SYKE CORINE-ruudukko + Sentinel Hub
-Statistical API NDVI-hajonta), R SYKE:n suojelualue-WMS:sta (aci-corine-proxy).
-D_f = 0.6*(1-metsaosuus) + 0.4*min(1, NDVI-stDev/0.30) - dokumentoitu<br>
-<b style="color:var(--rust)">Kertova muoto rajaa indeksin:</b> koska D_s, D_c &le; 1 ja R &ge; 0, BEPP &le; D_f^1.2.
-Metsaosuudella 65 % ja NDVI-hajonnalla 0.234 katto on 0.46, joten luokat Critical (&ge;0.50) ja BP-like (&ge;0.75)
-ovat aritmeettisesti ulottumattomissa. Kynnykset on asetettu olettaen vapaasti varioivat komponentit.
-Kynnysten kalibrointi vaatii nollajakauman (mita BEPP oli tunnetusti hyvana/huonona vuonna) - sita ei ole.
-Siihen asti: lue komponentit, ala indeksia. (Havainto ulkopuolisesta tarkastuksesta 2026-09-23, varmistettu koodista.)
-approksimaatio, ei validoitu todellista fragmentaatiomittausta vasten.
-R = suojellun pinta-alan piste-otantaosuus, kolme erillista 7x7-ruudukkoa
-eri offseteilla (0.25/0.5/0.75) yhdistettyna otantavirheen vahentamiseksi -
-edelleen pieni otos (nykyinen alue ~2-4 osumaa/147 pistetta), tulkittava
-varoen. D_c (2026-09-21) lasketaan tallennetusta aineistosta, ei live-hausta:
-2004–2025 vaatii n. 700 rajapintakutsua. Vuosien 2010 ja 2018 D_c on aliarvio
-(palautuvan komponentin 20 v ikkuna tayttyy vasta 2023), joten dS/dt (2018->2026)
-yliarvioi D_c:n kasvua. Kaikki nelja komponenttia perustuvat nyt havaintodataan.</span><br><br>
+<span style="color:var(--muted);font-size:0.85em">Huom (2026-07-08): tämä on v0.1-prototyyppi (TN-015: "Pre-development").
+BEPP-kaava on toteutettu dokumentoidun mukaisesti. D_s haetaan FinBIF:sta, D_f kahdesta
+lähteestä (SYKE CORINE -ruudukko + Sentinel Hub Statistical API NDVI-hajonta), R SYKE:n
+suojelualue-WMS:stä (aci-corine-proxy).
+D_f = 0,6·(1 − metsäosuus) + 0,4·min(1, NDVI-hajonta/0,30) — dokumentoitu approksimaatio,
+ei validoitu todellista fragmentaatiomittausta vasten. Ilman NDVI:tä D_f = 1 − metsäosuus;
+arvot eivät ole keskenään vertailukelpoisia (65 %:n metsäosuudella 0,35 vastaan noin 0,52).<br>
+<b style="color:var(--rust)">Kertova muoto rajaa indeksin (2026-09-23):</b> koska D_s, D_c &le; 1 ja R &ge; 0, BEPP &le; D_f^1.2;
+katto näkyy yläkortissa. Luokat Critical (&ge;0,50) ja BP-like (&ge;0,75) ovat käytännössä ulottumattomissa.
+Kynnykset on asetettu olettaen vapaasti varioivat komponentit. Kynnysten kalibrointi vaatii nollajakauman
+(mitä BEPP oli tunnetusti hyvänä/huonona vuonna), jota ei ole. Siihen asti: lue komponentit, älä indeksiä.
+(Havainto ulkopuolisesta tarkastuksesta, varmistettu koodista.)<br>
+R = suojellun pinta-alan piste-otantaosuus, kolme erillistä 7×7-ruudukkoa eri offseteilla
+(0,25/0,5/0,75). Otos on pieni (2–4 osumaa / 147 pistettä); 95 %:n luottamusväli näkyy kortissa.
+D_c (2026-09-21) lasketaan tallennetusta aineistosta, ei live-hausta: 2004–2025 vaatii n. 700 rajapintakutsua.<br>
+<b style="color:var(--rust)">Korjaus 2026-10-15:</b> §02:n BEPP-trajektori, dS/dt, T(t) ja trendi "heikkeneminen" poistettu.
+Vuosien 2010 ja 2018 D_f, D_s ja R olivat käsin asetettuja paikkalukuja, ja R:n paikkaluvut (0,48 ja 0,42)
+olivat yli kymmenkertaisia mitattuun (0,027). Pelkkä R:n ero selitti nousun 0,020 → 0,043: samalla R:llä
+vuoden 2018 arvo olisi ollut 0,042. Komponenttihälytys "R matala" poistettu: kynnys 0,25 ylittyi aina, koska
+suojeluosuus on alueella muutamia prosentteja. R-kortin otsikko "Palautuminen" → "Suojeluosuus": suure on
+rakenteellinen, ei palautumisen mittaus. Copernicus-tila näyttää "osittain", kun NDVI puuttuu.
+§01:n sarakeotsikot ("/v") ja normalisointiteksti vastasivat väärin koodia, ks. §01.</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>
@@ -448,9 +458,11 @@ var SERIES = [
   // Dc 2026-09-21: laskettu (data/bem-dc-2004-2025.json, pilot_area). 2010 ja 2018
   // aliarvioituja: palautuvan komponentin 20 v ikkuna tayttyy vasta 2023 (data 2004->).
   // Fallback-arvot; loadDc() korvaa ne tiedostosta.
-  {year:2010, Df:0.28, Ds:0.30, Dc:0.138, R:0.48},
-  {year:2018, Df:0.41, Ds:0.38, Dc:0.259, R:0.42},
-  {year:2026, Df:0.52, Ds:0.44, Dc:0.318, R:0.38}
+  // 2026-10-15: vuosien 2010 ja 2018 Df/Ds/R olivat paikkalukuja (0.28/0.30/0.48,
+  // 0.41/0.38/0.42) -> historiallinen BEPP poistettu, vain Dc on laskettu.
+  {year:2010, Dc:0.138},
+  {year:2018, Dc:0.259},
+  {year:2026, Df:null, Ds:null, Dc:0.318, R:null, dcYear:2025}
 ];
 
 function beppV2(Df, Ds, Dc, R) {
@@ -488,26 +500,43 @@ function updateBEPP(Ds, Df, R) {
   if (Ds != null) SERIES[2].Ds = Ds;
   if (Df != null) SERIES[2].Df = Df;
   if (R != null) SERIES[2].R = R;
-  var vals = SERIES.map(function(s) {
-    return { year: s.year, S: beppV2(s.Df, s.Ds, s.Dc, s.R) };
-  });
-  var latest = vals[2];
-  var prev   = vals[1];
-  var dSdt   = (latest.S - prev.S) / 8;
-  var T      = latest.S * Math.max(0, dSdt) * (1 - SERIES[2].R);
-  var cls    = classify(latest.S);
+  var cur = SERIES[2];
 
-  setText('bepp-val', latest.S.toFixed(3));
+  // D_c-historia (ainoa historiallisesti laskettu komponentti)
+  var html = '';
+  for (var k = 0; k < SERIES.length; k++) {
+    var dc = SERIES[k].Dc;
+    var yr = SERIES[k].dcYear || SERIES[k].year;
+    html += '<div class="core-yr">' +
+      '<span class="yrlbl">' + yr + '</span>' +
+      '<div class="fill" style="height:' + Math.max(4, Math.round(dc * 68)) + 'px;background:var(--peat)"></div>' +
+      '<span class="vallbl">' + dc.toFixed(3) + '</span>' +
+      '</div>';
+  }
+  var tb = document.getElementById('traj-bars'); if (tb) tb.innerHTML = html;
+  setText('c-dc', cur.Dc.toFixed(3));
+
+  // BEPP vasta kun kaikki live-komponentit ovat saapuneet
+  if (cur.Df == null || cur.Ds == null || cur.R == null) {
+    setText('bepp-val', '—');
+    if (cur.Df != null) setText('c-df', cur.Df.toFixed(3));
+    if (cur.Ds != null) setText('c-ds', cur.Ds.toFixed(3));
+    if (cur.R  != null) setText('c-r',  cur.R.toFixed(3));
+    return;
+  }
+  var S   = beppV2(cur.Df, cur.Ds, cur.Dc, cur.R);
+  var cls = classify(S);
+
+  setText('bepp-val', S.toFixed(3));
   // 2026-09-23: kertova muoto -> D_f rajaa indeksin. Saavutettava maksimi =
-  // D_f^1.2 (D_s, D_c <= 1, R >= 0). Naytetaan katto ja kerrotaan, mitkä
-  // luokat ovat sen ulkopuolella, ettei luokkia lueta vapaasti varioiviksi.
+  // D_f^1.2 (D_s, D_c <= 1, R >= 0).
   var capEl = document.getElementById('bepp-cap');
   if (capEl) {
-    var Smax = Math.pow(SERIES[2].Df, 1.2);
+    var Smax = Math.pow(cur.Df, 1.2);
     var unreachable = [];
     if (Smax < 0.75) unreachable.push('BP-like ≥ 0,75');
     if (Smax < 0.50) unreachable.push('Critical ≥ 0,50');
-    capEl.innerHTML = 'saavutettava maksimi ' + Smax.toFixed(3) + ' (D_f = ' + SERIES[2].Df.toFixed(3) + ')' +
+    capEl.innerHTML = 'saavutettava maksimi ' + Smax.toFixed(3) + ' (D_f = ' + cur.Df.toFixed(3) + ')' +
       (unreachable.length ? '<br><span style="color:var(--rust)">ulottumattomissa: ' + unreachable.reverse().join(' · ') + '</span>' : '');
   }
   var regimeEl = document.getElementById('bepp-regime');
@@ -517,19 +546,18 @@ function updateBEPP(Ds, Df, R) {
 
   var arc = document.getElementById('ring-arc');
   if (arc) {
-    var frac = Math.max(0, Math.min(1, latest.S));
+    var frac = Math.max(0, Math.min(1, S));
     arc.setAttribute('stroke-dasharray', (frac*RING_CIRC).toFixed(1) + ' ' + RING_CIRC.toFixed(1));
     arc.style.stroke = cls.color;
   }
 
-  setText('c-df', SERIES[2].Df.toFixed(3));
-  setText('c-ds', SERIES[2].Ds.toFixed(3));
-  setText('c-dc', SERIES[2].Dc.toFixed(3));
-  setText('c-r',  SERIES[2].R.toFixed(3));
+  setText('c-df', cur.Df.toFixed(3));
+  setText('c-ds', cur.Ds.toFixed(3));
+  setText('c-r',  cur.R.toFixed(3));
 
-  var dfBar = document.getElementById('df-bar'); if (dfBar) dfBar.style.width = (SERIES[2].Df*100).toFixed(0) + '%';
-  var dsBar = document.getElementById('ds-bar'); if (dsBar) dsBar.style.width = (SERIES[2].Ds*100).toFixed(0) + '%';
-  var rBar  = document.getElementById('r-bar');  if (rBar)  rBar.style.width  = (SERIES[2].R*100).toFixed(0) + '%';
+  var dfBar = document.getElementById('df-bar'); if (dfBar) dfBar.style.width = (cur.Df*100).toFixed(0) + '%';
+  var dsBar = document.getElementById('ds-bar'); if (dsBar) dsBar.style.width = (cur.Ds*100).toFixed(0) + '%';
+  var rBar  = document.getElementById('r-bar');  if (rBar)  rBar.style.width  = (cur.R*100).toFixed(0) + '%';
 
   var bands = ['t-normal','t-elevated','t-critical','t-bp'];
   for (var i = 0; i < bands.length; i++) {
@@ -538,35 +566,6 @@ function updateBEPP(Ds, Df, R) {
   }
   var active = document.getElementById(cls.id);
   if (active) active.classList.add('active');
-
-  var maxS = 0;
-  for (var j = 0; j < vals.length; j++) { if (vals[j].S > maxS) maxS = vals[j].S; }
-  if (maxS === 0) maxS = 0.1;
-
-  var html = '';
-  for (var k = 0; k < vals.length; k++) {
-    var v  = vals[k];
-    var h  = Math.max(10, Math.round(v.S / maxS * 68));
-    var c  = classify(v.S);
-    html += '<div class="core-yr">' +
-      '<span class="yrlbl">' + v.year + '</span>' +
-      '<div class="fill" style="height:' + h + 'px;background:' + c.color + '"></div>' +
-      '<span class="vallbl">' + v.S.toFixed(3) + '</span>' +
-      '</div>';
-  }
-  document.getElementById('traj-bars').innerHTML = html;
-
-  var dsEl = document.getElementById('dsdt-val');
-  if (dsEl) {
-    dsEl.textContent = (dSdt >= 0 ? '+' : '') + dSdt.toFixed(5) + '/v';
-    dsEl.style.color = dSdt > 0 ? 'var(--rust)' : 'var(--spruce)';
-  }
-  setText('tipping-val', T.toFixed(6));
-  var trEl = document.getElementById('trend-val');
-  if (trEl) {
-    trEl.textContent = dSdt > 0 ? 'heikkeneminen' : 'elpyminen';
-    trEl.style.color = dSdt > 0 ? 'var(--rust)' : 'var(--spruce)';
-  }
   checkComponentAlerts();
 }
 
@@ -578,14 +577,12 @@ function checkComponentAlerts() {
     if (val > 0.75) alerts.push(name + ' BP-like (' + val.toFixed(3) + ')');
     else if (val > 0.50) alerts.push(name + ' Critical (' + val.toFixed(3) + ')');
   }
-  function checkLowBad(name, val) {
-    if (val < 0.25) alerts.push(name + ' matala (' + val.toFixed(3) + ') — oma tulkinta, ei TN-015-standardi');
-  }
 
   checkHighBad('D_s', s.Ds);
   checkHighBad('D_f', s.Df);
   checkHighBad('D_c', s.Dc);
-  checkLowBad('R', s.R);
+  // 2026-10-15: 'R matala' (< 0.25) poistettu: suojeluosuus on alueella muutamia
+  // prosentteja, joten halytys oli aina paalla eika kertonut mitaan.
 
   var box = document.getElementById('comp-alert');
   if (!box) return;
@@ -608,9 +605,20 @@ function fetchSpecies() {
       setDot('d-finbif', 'ok');
       setText('s-finbif', 'OK');
 
-      var Ds = d.D_s || 0.44;
-      setText('ds-val', Ds.toFixed(3));
-      setText('ds-class', d.D_s_classification || '');
+      var Ds = (d.D_s != null) ? d.D_s : null;
+      setText('ds-val', Ds != null ? Ds.toFixed(3) : '—');
+      // 2026-10-15: proxy v0.2 -> D_s_validated, normalisointi, effort, huomiot
+      setText('ds-class', d.D_s_validated === false ? 'ei validoitu · FinBIF' : (d.D_s_classification || ''));
+      var nEl = document.getElementById('sp-norm-live');
+      if (nEl) {
+        if (d.normalisointi && d.effort && d.effort.ratio != null) {
+          nEl.innerHTML = '<b>Proxyn normalisointi:</b> ' + d.normalisointi + ' (lintuhavaintoja ' +
+            d.effort.ref_total + ' → ' + d.effort.cur_total + ', suhde ' + d.effort.ratio.toFixed(2) + ').' +
+            (d.huomiot ? '<br>' + d.huomiot.join('<br>') : '');
+        } else {
+          nEl.textContent = 'Proxy käyttää vielä kiinteää kerrointa 1,8 (norm. suhde = nyk./ref./1,8).';
+        }
+      }
       updateBEPP(Ds);
 
       var sp   = d.species || {};
@@ -870,10 +878,11 @@ function fetchCorineDf() {
     var combined = computeCombinedDf(corine, ndvi);
     updateBEPP(null, combined.D_f);
     setText('df-val', combined.D_f.toFixed(3));
-    setText('df-sub', 'CORINE+NDVI live · ' + corine.grid_size);
-
-    setDot('d-cop', 'ok');
-    setText('s-cop', 'OK');
+    var ndviOk = combined.heterogeneity_component != null;
+    setText('df-sub', ndviOk ? 'CORINE+NDVI live · ' + corine.grid_size
+                             : 'vain CORINE · NDVI puuttuu, eri kaava');
+    setDot('d-cop', ndviOk ? 'ok' : 'warn');
+    setText('s-cop', ndviOk ? 'OK' : 'osittain');
     if (box) {
       var msg = 'D_f live: metsä ' + (corine.forest_fraction*100).toFixed(0) + '% (CORINE, ' + corine.grid_size + ')';
       if (combined.heterogeneity_component != null) {
@@ -912,7 +921,11 @@ function fetchR() {
     var R = totalValid > 0 ? totalHits / totalValid : 0;
     updateBEPP(null, null, R);
     setText('r-val', R.toFixed(3));
-    setText('r-sub', 'SYKE suojelu, ' + totalHits + '/' + totalValid + ' (' + okCount + '/3 kutsua)');
+    var z = 1.96, n = totalValid, ph = R;
+    var den = 1 + z*z/n, mid = (ph + z*z/(2*n)) / den;
+    var half = z * Math.sqrt(ph*(1-ph)/n + z*z/(4*n*n)) / den;
+    setText('r-sub', 'SYKE suojelu, ' + totalHits + '/' + totalValid + ' · 95 % LV ' +
+      Math.max(0, mid-half).toFixed(3) + '–' + Math.min(1, mid+half).toFixed(3) + ' (' + okCount + '/3 kutsua)');
   });
 }
 
@@ -962,6 +975,7 @@ function loadDc() {
     if (by[2010]) SERIES[0].Dc = by[2010].dc_normalized;
     if (by[2018]) SERIES[1].Dc = by[2018].dc_normalized;
     SERIES[2].Dc = last.dc_normalized;
+    SERIES[2].dcYear = last.year;
     setText('dc-val', last.dc_normalized.toFixed(3));
     var bar = document.getElementById('dc-bar'); if (bar) bar.style.width = (last.dc_normalized*100).toFixed(0) + '%';
     setText('dc-sub', 'palautuva ' + last.dc_recoverable_pct_land.toFixed(1) + ' % · pysyvä ' +
