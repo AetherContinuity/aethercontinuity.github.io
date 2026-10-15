@@ -206,21 +206,21 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
   <div class="card" style="border-color:#888">
     <div class="clbl">Episodi 1978–79</div>
-    <div class="cval" style="font-size:1.1rem;color:#555">0.13</div>
+    <div class="cval ep-val" data-y="1978–79" style="font-size:1.1rem;color:#555">—</div>
     <div class="cunit">HEPP-vuosikeskiarvo</div>
-    <div class="csub">Sadanta 436–546 mm<br>Lämpötila 1.5–3.1 °C<br><span style="color:var(--sg)">Normaali</span></div>
+    <div class="csub">Sadanta 436–546 mm<br>Lämpötila 1.5–3.1 °C<br><span class="ep-cls"></span></div>
   </div>
   <div class="card" style="border-color:#888">
     <div class="clbl">Episodi 1959–60</div>
-    <div class="cval" style="font-size:1.1rem;color:#555">0.18</div>
+    <div class="cval ep-val" data-y="1959–60" style="font-size:1.1rem;color:#555">—</div>
     <div class="cunit">HEPP-vuosikeskiarvo</div>
-    <div class="csub">Sadanta 437–475 mm<br>Lämpötila 3.1–3.4 °C<br><span style="color:var(--sg)">Normaali</span></div>
+    <div class="csub">Sadanta 437–475 mm<br>Lämpötila 3.1–3.4 °C<br><span class="ep-cls"></span></div>
   </div>
-  <div class="card" style="border-color:var(--sy)">
+  <div class="card" style="border-color:#888">
     <div class="clbl">Episodi 2024–25</div>
-    <div class="cval" style="font-size:1.1rem;color:var(--sy)">0.34</div>
+    <div class="cval ep-val" data-y="2024–25" style="font-size:1.1rem;color:#555">—</div>
     <div class="cunit">HEPP-vuosikeskiarvo</div>
-    <div class="csub">Sadanta 536–549 mm<br>Lämpötila 5.5–6.3 °C<br><span style="color:var(--sy)">Kohonnut</span></div>
+    <div class="csub">Sadanta 536–549 mm<br>Lämpötila 5.5–6.3 °C<br><span class="ep-cls"></span></div>
   </div>
 </div>
 
@@ -230,8 +230,11 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   <svg id="cs" width="100%" height="180" style="display:block"></svg>
 </div>
 <div class="dbox" style="font-size:.68rem">
-  <b>Havainto:</b> Sama sadanta tuottaa korkeamman HEPP:n 2010-luvun jälkeen kuin aiemmilla vuosikymmenillä.<br>
-  Mekanismi: lämpötila +2–3 °C → haihduntapaine kasvaa → sama sademäärä riittää vähemmän recharge-pulssiin.<br>
+  <b>Korjaus 15.10.2026:</b> episodikortit ja §07 käyttivät vanhaa, ennen 24.9.2026 laskettua sarjaa (SD keväthuipun normaalista).
+  Mitatun vedenkorkeuden sarjassa (§05) 2024–25 on samaa tasoa kuin 1959–60, joten aiempi havainto
+  "sama sadanta, korkeampi HEPP 2010-luvun jälkeen" ei pidä episodien osalta. Arvot lasketaan nyt §05:n sarjasta.<br>
+  Huom: EP-komponentti mitataan lämpötilasta suhteessa 1961–2010-normaaliin, joten lämpeneminen nostaa HEPP:iä
+  rakenteellisesti samalla sadannalla. Se ei yksin osoita hydrologisen palautumisen heikkenemistä.<br>
   Lähde: FMI Kuopio 1959–2026 · HEPP ref. 1961–2010 (WMO) · Thornthwaite 1948
 </div>
 
@@ -249,12 +252,7 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   </div>
 </div>
 
-<div class="dbox" style="font-size:.68rem">
-  <b>Rakenteellinen murtuma ~2000:</b> Elevated-frekvenssi kasvoi 1.7–5.5% → 15–22% (kolminkertaistui).<br>
-  <b>Baseline drift:</b> Järjestelmän lepotilamediaani 0.13 (1960–1990) → 0.29 (2000–2026). Kaksinkertaistunut.<br>
-  <b>Tulkinta:</b> Sama meteorologinen paine tuottaa korkeamman hydrologisen stressin kuin 40 vuotta sitten.<br>
-  Mekanismi: lämpötila ↑ → haihduntapaine ↑ → palautumiskyky ↓ → baseline ↑
-</div>
+<div class="dbox" style="font-size:.68rem" id="temporal-text">Lasketaan §05:n sarjasta…</div>
 
 <div class="shdr"><span class="snum">§ 08</span><span class="stit">Datalähteet ja laskentamenetelmät</span></div>
 <div class="dbox" style="line-height:2.1">
@@ -270,7 +268,7 @@ Säännöstelemätön järvi: lähtövirtaama määräytyy vedenkorkeudesta (R²
   <b>FMI Avoin data — Kuopio</b> — päivittäinen lämpötila (tday, °C) + sade (rrday, mm)<br>
   &nbsp;&nbsp;Lähde: <a href="https://opendata.fmi.fi/wfs" style="color:var(--accent)">opendata.fmi.fi</a> · place=Kuopio · storedquery daily::simple · CC BY 4.0<br>
   &nbsp;&nbsp;Aikasarja: 1959–nykypäivä (67 vuotta) · GitHub Actions päivittää päivittäin<br>
-  &nbsp;&nbsp;Rooli: EP-laskenta (Thornthwaite 1948) + RF-tuki<br>
+  &nbsp;&nbsp;Rooli: EP-laskenta (Thornthwaite 1948)<br>
   <br>
   <b>HEPP-laskenta</b> — Hydrological Endurance Pressure Proxy<br>
   &nbsp;&nbsp;HEPP = 0.35·SD + 0.25·EP_anomalia + 0.25·RF + 0.15·HSP<br>
@@ -888,6 +886,8 @@ async function fetchAll(){
   const[nve,iis,fmi,now]=await Promise.all([fetchNVE(),fetchIisvesi(),fetchFMI(),loadIisvesiNow()]);
   fetchNordicReservoirs();
   fetchMuonio();
+  // 2026-10-15: §06-hajontakuvaa ei kutsuttu koskaan (funktio oli olemassa, kaavio tyhja)
+  if(fmi) drawEpisodeScatter(fmi);
   // 2026-10-15: jos iisvesi.json:ssa ei ole havaintoa, ylakortti nayttaa
   // §00:n mitatun arvon eika WSFS-ennustetta.
   if(now?.level!=null&&iis&&iis.isForecastFallback){
@@ -1097,37 +1097,61 @@ async function drawEpisodeScatter(fmi) {
 }
 
 
-const TEMPORAL_URL = RAW+'/hepp_temporal.json';
-
+// 2026-10-15: §06-§07 lasketaan §05:n sarjasta (hepp_monthly_v2.json). Aiempi
+// hepp_temporal.json ja kovakoodatut luvut olivat vanhasta sarjasta (hepp_old).
 async function drawTemporalCharts() {
-  let data;
+  let rows;
   try {
-    data = await (await fetch(TEMPORAL_URL + '?t=' + Date.now())).json();
+    rows = (await (await fetch(HEPP_URL + '?t=' + Date.now())).json()).rows;
   } catch(e) { return; }
+  if (!rows || !rows.length) return;
+  const med = a => { const b=[...a].sort((x,y)=>x-y), m=b.length>>1; return b.length%2?b[m]:(b[m-1]+b[m])/2; };
+  const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
 
-  const ds = data.decade_stats;
-  const dm = data.decade_baseline_median;
-  if (!ds || !dm) return;
+  // Vuosikymmenet
+  const by = {};
+  rows.forEach(r => { const d = Math.floor(+r.month.slice(0,4)/10)*10; (by[d] = by[d] || []).push(r); });
+  const decs = Object.keys(by).map(Number).sort((a,b)=>a-b).filter(d => by[d].length >= 60);
+  const decEl = decs.map(d => ({dec:d, pct: 100*by[d].filter(r=>r.hepp>=HEPP_T.elev).length/by[d].length}));
+  const decBl = decs.map(d => ({dec:d, med: med(by[d].map(r=>r.hepp))}));
+  drawDecadeBar('cd', decEl.map(d=>d.dec+'s'), decEl.map(d=>d.pct), v=>v.toFixed(0)+'%',
+    d => d.pct > 10 ? '#c07010' : '#2a5f8f', '2000');
+  drawDecadeBar('cb', decBl.map(d=>d.dec+'s'), decBl.map(d=>d.med), v=>v.toFixed(3),
+    d => d.med >= HEPP_T.elev ? '#c07010' : '#2a5f8f', '2000');
 
-  // Elevated frekvenssi
-  const decEl = Object.entries(ds)
-    .filter(([d,v]) => v.n >= 12)
-    .map(([d,v]) => ({dec: +d, pct: v.el_pct}));
+  // Komponenttien osuus: HEPP_hist = (0.35 SD + 0.25 EP + 0.25 RF) / 0.85
+  const span = (a,b) => rows.filter(r => { const y=+r.month.slice(0,4); return y>=a && y<=b; });
+  const contrib = rr => ({
+    sd: mean(rr.map(r=>0.35*r.sd_obs/0.85)), ep: mean(rr.map(r=>0.25*r.ep_anom/0.85)),
+    rf: mean(rr.map(r=>0.25*r.rf/0.85)), h: mean(rr.map(r=>r.hepp)),
+    el: 100*rr.filter(r=>r.hepp>=HEPP_T.elev).length/rr.length });
+  const A = contrib(span(1960,1999)), B = contrib(span(2000,2009)), C = contrib(span(2010,2100));
+  const f = v => v.toFixed(3), sg = v => (v>=0?'+':'') + v.toFixed(3);
+  const el = document.getElementById('temporal-text');
+  if (el) el.innerHTML =
+    `<b>Elevated-osuus (HEPP ≥ ${HEPP_T.elev.toFixed(2)}):</b> 1960–1999 ${A.el.toFixed(1)} % · 2000–2009 ${B.el.toFixed(1)} % · 2010→ ${C.el.toFixed(1)} % kuukausista.<br>` +
+    `<b>Keskiarvo ja komponentit</b> (painotettu osuus HEPP:stä): 1960–1999 ${f(A.h)} (SD ${f(A.sd)}, EP ${f(A.ep)}, RF ${f(A.rf)}) · ` +
+    `2000–2009 ${f(B.h)} (SD ${f(B.sd)}, EP ${f(B.ep)}, RF ${f(B.rf)}) · 2010→ ${f(C.h)} (SD ${f(C.sd)}, EP ${f(C.ep)}, RF ${f(C.rf)}).<br>` +
+    `<b>Tulkinta:</b> 2000-luvun huippu on kuivuusvuosikymmen (2002–2006), jota RF ja SD kantavat. ` +
+    `2010 jälkeen ero 1960–1999-tasoon on ${sg(C.h-A.h)}, josta EP ${sg(C.ep-A.ep)}, SD ${sg(C.sd-A.sd)} ja RF ${sg(C.rf-A.rf)}. ` +
+    `Nousu tulee siis lämpötilasta (EP mitataan suhteessa 1961–2010-normaaliin), ei mitatusta vedenkorkeudesta; ` +
+    `§00:n trendien mukaan talvi- ja kevättasot ovat nousseet ja kesä–syksy ilman trendiä. ` +
+    `Väite "palautumiskyky heikentynyt" ei saa tukea mitatusta vedenkorkeudesta.<br>` +
+    `<span style="color:var(--muted)">Korjaus 15.10.2026: aiempi teksti ("lepotilamediaani 0,13 → 0,29, kaksinkertaistunut", ` +
+    `"Elevated 1,7–5,5 % → 15–22 %") ja kaaviot olivat vanhasta sarjasta (SD keväthuipun normaalista).</span>`;
 
-  drawDecadeBar('cd', decEl.map(d=>d.dec+'s'), decEl.map(d=>d.pct),
-    v => v.toFixed(0)+'%',
-    d => d.pct > 10 ? '#c07010' : '#2a5f8f',
-    '2000');
-
-  // Baseline mediaani
-  const decBl = Object.entries(dm)
-    .map(([d,v]) => ({dec: +d, med: v}))
-    .sort((a,b) => a.dec - b.dec);
-
-  drawDecadeBar('cb', decBl.map(d=>d.dec+'s'), decBl.map(d=>d.med),
-    v => v.toFixed(3),
-    d => d.med > 0.20 ? '#c07010' : '#2a5f8f',
-    '2000');
+  // §06 episodikortit
+  document.querySelectorAll('.ep-val').forEach(node => {
+    const [y1, y2s] = node.dataset.y.split('–'); const a = +y1, b = +(y1.slice(0,2) + y2s);
+    const rr = span(a, b); if (!rr.length) return;
+    const h = mean(rr.map(r=>r.hepp));
+    const col = h >= HEPP_T.high ? '#c04040' : h >= HEPP_T.elev ? 'var(--sy)' : '#555';
+    node.textContent = h.toFixed(2); node.style.color = col;
+    const card = node.closest('.card'); if (card) card.style.borderColor = h >= HEPP_T.elev ? col : '#888';
+    const cl = card && card.querySelector('.ep-cls');
+    if (cl) { cl.textContent = h >= HEPP_T.high ? 'Korkea' : h >= HEPP_T.elev ? 'Kohonnut' : 'Normaali';
+              cl.style.color = h >= HEPP_T.elev ? col : 'var(--sg)'; }
+  });
 }
 
 function drawDecadeBar(id, labels, values, fmtFn, colorFn, breakLabel) {
