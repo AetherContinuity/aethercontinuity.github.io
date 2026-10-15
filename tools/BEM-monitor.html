@@ -305,7 +305,7 @@ footer a{color:var(--water);text-decoration:none;border-bottom:1px dotted var(--
 </div>
 <p class="note"><span id="sp-norm-live">Normalisointia haetaan…</span><br>
 Luvut ovat jaksojen havaintomääriä yhteensä, eivät vuosikeskiarvoja (jaksot 11 v ja noin 6,8 v).<br>
-<b>Tarkistus 2026-10-15:</b> kaikkia lintuhavaintoja alueelta on FinBIFissä 2000–10 noin 86 600 ja 2020–26 noin 86 100. Kokonaismäärien suhde on siis noin 1,0, ei 1,8: kiinteä kerroin aliarvioi jokaisen lajin suhteen ja kallisti D_s:n laskuun (0,386 vs. 0,286 osuusnormalisoinnilla). Viitejaksoon osuu Lintuatlas 3 (2006–10), ja metson ja tavin havainnot hyppäävät vuodesta 2022 alkaen, mikä viittaa aineistolähteen muutokseen eikä kannan kasvuun. Liito-oravan havaintojen sijainteja karkeistetaan. D_s mittaa toistaiseksi raportointia yhtä paljon kuin lajistoa.</p>
+<span style="color:var(--muted)">Korjaus 2026-10-15: proxy normalisoi aiemmin kiinteällä kertoimella 1,8, vaikka lintuhavaintojen kokonaismäärä ei ole kasvanut (suhde noin 1,0). Kerroin aliarvioi jokaisen lajin suhteen ja kallisti D_s:n laskuun (0,386 → 0,286 osuusnormalisoinnilla).</span></p>
 
 <div class="shdr"><span class="snum">§ 01b</span><span class="stit">Tapaustutkimus — Kukkiajärvi: tummuminen ja näkövaraiset saalistajat</span></div>
 <div class="dbox">
@@ -401,8 +401,8 @@ Laskeuma (Bq/m²) ja annosnopeus (µSv/h) ovat eri suureita: nykyinen annosnopeu
 <div class="shdr"><span class="snum">§ 04</span><span class="stit">Metodologia</span></div>
 <div class="dbox">
 BEPP v2 = (D_f^1.2 * D_s^1.0 * D_c^0.8) * (1-R)^1.5<br>
-dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2<br>
-T(t)  = S(t) * max(0, dS/dt) * (1-R(t))<br><br>
+dS/dt = P(t) - lambda*R(t)*S(t) - mu*S(t)^2 &nbsp;<span style="color:var(--muted)">(TN-015-malli, ei laskettu: ei aikasarjaa)</span><br>
+T(t)  = S(t) * max(0, dS/dt) * (1-R(t)) &nbsp;<span style="color:var(--muted)">(ei laskettu)</span><br><br>
 D_s: FinBIF — liito-orava, palokärki, kalasääski, metso, tukkasotka, telkkä, tavi · <b>live</b> · lajin stressi 0,1 / 0,3 / 0,6 / 0,9 norm. suhteen mukaan, keskiarvo<br>
 D_f: CORINE 2018 -ruudukko (metsäosuus) + Sentinel-2 NDVI-hajonta (aci-corine-proxy) · <b style="color:var(--spruce)">live (2026-07-08 lähtien)</b><br>
 D_c: kaksi komponenttia (data/bem-dc-2004-2025.json) · <b style="color:var(--spruce)">laskettu aineistosta (2026-09-21)</b><br>
@@ -433,7 +433,7 @@ olivat yli kymmenkertaisia mitattuun (0,027). Pelkkä R:n ero selitti nousun 0,0
 vuoden 2018 arvo olisi ollut 0,042. Komponenttihälytys "R matala" poistettu: kynnys 0,25 ylittyi aina, koska
 suojeluosuus on alueella muutamia prosentteja. R-kortin otsikko "Palautuminen" → "Suojeluosuus": suure on
 rakenteellinen, ei palautumisen mittaus. Copernicus-tila näyttää "osittain", kun NDVI puuttuu.
-§01:n sarakeotsikot ("/v") ja normalisointiteksti vastasivat väärin koodia, ks. §01.</span><br><br>
+§01:n sarakeotsikot ("/v") ja normalisointiteksti vastasivat väärin koodia, ks. §01. Komponenttikohtaiset hälytykset (D_f/D_s/D_c "Critical") poistettu: ne käyttivät kokonaisindeksin luokkarajoja kalibroimattomiin komponentteihin, ja D_f ylitti rajan aina NDVI:n kanssa. §03c:n "kuiva kesä" poistettu: FMI Kuopion kesä–elokuun 2026 sademäärä oli mediaanin yläpuolella; Iisveden matalaan vedenkorkeuteen vaikutti vähäluminen talvi (TN-014).</span><br><br>
 Pilottialue: Rautalammin reitti · 26.00–27.50E, 62.40–63.50N<br>
 Instrumenttiperhe: WEM · HEM · BEM
 </div>
@@ -573,14 +573,11 @@ function checkComponentAlerts() {
   var s = SERIES[2];
   var alerts = [];
 
-  function checkHighBad(name, val) {
-    if (val > 0.75) alerts.push(name + ' BP-like (' + val.toFixed(3) + ')');
-    else if (val > 0.50) alerts.push(name + ' Critical (' + val.toFixed(3) + ')');
-  }
-
-  checkHighBad('D_s', s.Ds);
-  checkHighBad('D_f', s.Df);
-  checkHighBad('D_c', s.Dc);
+  // 2026-10-15: komponenttikohtaiset halytykset poistettu. Ne kayttivat
+  // BEPP-kokonaisindeksin luokkarajoja (0.50/0.75) yksittaisiin komponentteihin,
+  // joille ei ole kalibrointia: D_f on NDVI:n kanssa aina noin 0.52-0.54
+  // (63-65 % metsaa), joten 'D_f Critical' oli pysyvasti paalla. Sama syy
+  // kuin 'R matala' -halytyksen poistossa.
   // 2026-10-15: 'R matala' (< 0.25) poistettu: suojeluosuus on alueella muutamia
   // prosentteja, joten halytys oli aina paalla eika kertonut mitaan.
 
@@ -770,7 +767,7 @@ function loadCO2() {
       '<b>Vuorokausivaihtelu</b> = kesän päivän sidonnan ja yön hengityksen ero, paikallisen ekosysteemin signaali. ' +
       'Kasvu +' + d.definitions.growth_ppm_per_year.toFixed(1) + ' ppm/v on globaali, ei alueellinen. ' +
       'Pitoisuus ei ole hiilivuo: tuuli ja sekoittuminen vaikuttavat. <b>Ei BEPP-komponentti.</b> ' +
-      '* 2025: toukokuu puuttuu. Kesän 2026 (kuiva kesä) tulos vasta seuraavassa ICOS L2 -julkaisussa. ' +
+      '* 2025: toukokuu puuttuu. Kesän 2026 tulos vasta seuraavassa ICOS L2 -julkaisussa. ' +
       'Lähde: ICOS ATC L2-2026.1, Puijo 84 m (IL / UEF), CC BY 4.0.</div>';
     if (d.ch4) {
       var hr = d.ch4.years.filter(function(y){ return y.year < 2026; }).map(function(y){
