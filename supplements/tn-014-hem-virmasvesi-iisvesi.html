@@ -70,7 +70,7 @@ tr:last-child td{border-bottom:none;}
     <span><strong>Date</strong> May 2026</span>
     <span><strong>Domain</strong> D-3 · D-5 · HEM</span>
     <span><strong>Basis</strong> SP-007 · CN-010 · TN-009 · WEM</span>
-    <span><strong>Status</strong> Published</span>
+    <span><strong>Status</strong> Published · erratum 15 Oct 2026</span>
     <span><strong>Location</strong> Pohjois-Savo, Finland</span>
   </div>
 </div>
@@ -78,6 +78,27 @@ tr:last-child td{border-bottom:none;}
 <div class="abstract">
   <div class="abstract-label">Abstract</div>
   <p>Virmasvesi/Iisvesi, a mid-sized boreal lake in Pohjois-Savo, has maintained water levels near the historical minimum winter level (MNW, ~97.45 m NN) through spring 2026 — a period when levels should have recovered following winter. The proximate cause is a low-snow winter (2025–2026) producing minimal snowmelt recharge. The structural cause is institutional: the Rautalammin reitti — the waterway of which Iisvesi is part — is entirely unregulated under Finnish nature conservation law. No weirs exist; no outflow adjustment is possible; no operator holds a licence that could be reviewed or revised. The lake responds to meteorological conditions without any institutional buffer. This case is the founding pilot for the Hydrological Endurance Monitor (HEM). It demonstrates the three-gap structure (measurement gap, sanction gap, correction gap) in a water resource management context where the correction gap is absolute: no mechanism for active intervention exists at any timescale. It also illustrates how an endurance-based early warning index — HEPP — would have detected the emerging multi-layer storage deficit weeks before conventional thresholds registered the condition as anomalous.</p>
+</div>
+
+<div class="finding" id="erratum-2026-10-15" style="border-color:#b0571e">
+  <h3 style="margin-top:0">Erratum — 15 October 2026</h3>
+  <p>The long-run findings in this note (baseline drift, elevated-frequency increase, gain change, the 2016–2026 validation table) were computed from the v1 HEPP series. Two errors in that series affect them; the original text below is left unchanged.</p>
+  <p><strong>1. SD component.</strong> v1 used a temperature-based fallback for SD instead of measured water level. The v2 series (24 Sep 2026) recomputed SD from measured Iisvesi levels (SYKE station 1966) against the same-day 1991–2020 normal.</p>
+  <p><strong>2. Missing precipitation.</strong> FMI Kuopio daily precipitation is missing for June 2001 – June 2005 (49 months). Both v1 and v2 read the gap as zero precipitation, giving RF = 1.0 and adding about +0.29 to HEPP for the entire period. The "2000s drought cluster" was largely this artefact. Those months now use HEPP = (0.35·SD + 0.25·EP)/0.60.</p>
+  <table>
+    <thead><tr><th>Claim in this note</th><th>As published (v1)</th><th>Corrected series</th></tr></thead>
+    <tbody>
+      <tr><td>Decade median HEPP, 1960s–1990s → 2000s–2020s</td><td>0.13–0.15 → 0.22–0.30 ("doubled")</td><td>0.051–0.077 → 0.096–0.102</td></tr>
+      <tr><td>Elevated frequency (HEPP ≥ 0.30), 1960s–1990s → 2000s–2020s</td><td>1.7–5.5 % → 15–22 %</td><td>2.5–3.6 % → 7.3–9.9 %</td></tr>
+      <tr><td>Gain change: mean annual HEPP, years with 500–620 mm, before → after 2000</td><td>0.158 → 0.274 (+73 %)</td><td>0.093 → 0.162 (n = 16 / 8 years); weighted difference EP +0.038, SD +0.028, RF +0.004</td></tr>
+      <tr><td>2016–2026 peak month</td><td>0.677 (2026-03)</td><td>0.535 (2018-11); 2026-03 = 0.432</td></tr>
+      <tr><td>2016–2023 mean → 2024 / 2025 / 2026</td><td>0.154 → 0.229 / 0.223 / 0.342</td><td>0.104 → 0.136 / 0.195 / 0.263 (Jan–Sep)</td></tr>
+      <tr><td>Thresholds</td><td>0.45 / 0.65, later 0.30 / 0.47</td><td>0.26 / 0.43 (p90 / p99 of the corrected 1959–2026 series)</td></tr>
+    </tbody>
+  </table>
+  <p><strong>What survives.</strong> HEPP is higher after 2000 than before, and the step from 2024 to 2026 is visible. The increase is about +0.03 in the decade medians, not a doubling. In normal-precipitation years, roughly half of the post-2000 difference comes from EP, which is measured against the 1961–2010 temperature normal and rises with warming by construction. About 40 % comes from measured water-level deficit (SD). The gain-change result rests on 8 post-2000 years, because 2001–2005 lack precipitation data.</p>
+  <p><strong>What does not survive.</strong> The "doubled resting state" (§ recovery condition, Summary claim 2) and the 2000s drought cluster as evidence of a regime shift.</p>
+  <p style="font-size:.8rem;color:var(--muted,#666)">Corrected series: <code>hepp_monthly_v2.json</code> in the HEM repository, extended monthly by <code>scripts/build_hepp_monthly.py</code>. The HEM page §05–§07 compute directly from it.</p>
 </div>
 
 <div class="wl-box">
