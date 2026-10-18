@@ -1212,9 +1212,14 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <th class="rh">EPP</th><th class="rh">Luokka</th>
       <th class="rh">ECI</th><th class="rh">SP</th><th class="rh">DC</th>
       <th class="rh">Pisteet</th>
+      <th class="rh" title="Ylössäätöhinta − day-ahead ≥ 200 €/MWh, tunteja">Preemio ≥200 h</th>
+      <th class="rh" title="Ylössäätöhinta ≥ 500 €/MWh, tunteja">Ylös ≥500 h</th>
+      <th class="rh" title="DS 336 shortage status ≠ 0, pisteitä">DS 336</th>
+      <th class="rh" title="RP_margin min (DS 373/342, 3/2025 alkaen)">RP min</th>
     </tr></thead><tbody id="btBody">
-      <tr><td colspan="8" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
+      <tr><td colspan="12" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
     </tbody></table></div>
+    <div id="btPhys" style="display:none;font-size:.7rem;line-height:1.6;margin:.6rem 0;padding:.6rem .7rem;border:1px solid var(--rule);background:#fff"></div>
     <div class="bt-sig" id="btSig" style="display:none;">
       <div class="bt-sig-card" style="opacity:.5;">
         <div class="bt-sig-lbl">Recall / Precision / F1</div>
@@ -3829,7 +3834,7 @@ async function loadBTWindows() {
     const preOL3 = w.window_end.slice(0, 10) < OL3_COMMERCIAL;
     return { id: k, label: k.slice(0, 7), start: k, stress: null,
       event: (tAvg != null ? 'ka ' + tAvg.toFixed(1) + ' °C' : '') + (preOL3 ? ' · ennen OL3:a' : ''),
-      note: '168 h → ' + w.window_end.slice(0, 16).replace('T', ' ') + ' UTC · Fingrid + ERA5' };
+      note: '168 h → ' + w.window_end.slice(0, 16).replace('T', ' ') + ' UTC · Fingrid + ERA5', phys: w.phys || null };
   });
   BT_PERIODS.push({ id:'current', label:'Nykyinen', start:null, stress:null, event:'Live W168 (tämä hetki)', note:'Laskettu live-datasta' });
   return BT_WINDOWS;
@@ -4121,6 +4126,10 @@ function renderBTTable(results) {
       <td class="rh">${r.sp != null ? (r.sp * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.dc != null ? (r.dc * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh" style="color:${r.pts != null && r.pts < 20 ? 'var(--so)' : 'var(--muted)'};" title="Datan laatu: ${r.dataQuality ?? '—'}">${r.pts ?? '—'} <span style="font-size:.5rem;">${r.dataQuality ? '('+(r.dataQuality.length > 30 ? r.dataQuality.slice(0,30)+'…' : r.dataQuality)+')' : ''}</span></td>
+      <td class="rh" style="${r.phys && r.phys.prem_ge200_h >= 10 ? 'color:#8b1010;font-weight:500;' : ''}">${r.phys ? r.phys.prem_ge200_h : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys ? r.phys.up_ge500_h : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys ? (r.phys.ds336_points ? r.phys.ds336_nonzero : 'ei dataa') : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys && r.phys.rp_margin_min != null ? (r.phys.rp_margin_min * 100).toFixed(0) + ' %' : '—'}</td>
     </tr>`);
   });
 }
@@ -4134,7 +4143,39 @@ function renderBTTable(results) {
 // kun fyysinen kriteeri (DS 336 shortage status, tehoreservin
 // aktivoinnit, tai ERAA:n LOLE-tunnit) on kaytossa - eri projekti kuin
 // tuntidatan haku.
+// 2026-10-18: EPP fyysisia lopputuloksia vasten. Spearman EPP vs. preemiotunnit.
+function btSpearman(a, b) {
+  const rank = x => { const idx = x.map((v, i) => i).sort((i, j) => x[i] - x[j]); const r = new Array(x.length);
+    for (let i = 0; i < idx.length;) { let j = i; while (j + 1 < idx.length && x[idx[j + 1]] === x[idx[i]]) j++;
+      for (let q = i; q <= j; q++) r[idx[q]] = (i + j) / 2; i = j + 1; } return r; };
+  const ra = rank(a), rb = rank(b), m = v => v.reduce((s, x) => s + x, 0) / v.length;
+  const ma = m(ra), mb = m(rb); let n = 0, da = 0, db = 0;
+  for (let i = 0; i < ra.length; i++) { n += (ra[i] - ma) * (rb[i] - mb); da += (ra[i] - ma) ** 2; db += (rb[i] - mb) ** 2; }
+  return da && db ? n / Math.sqrt(da * db) : null;
+}
+function renderBTPhys(results) {
+  const el = document.getElementById('btPhys'); if (!el) return;
+  const rr = results.filter(r => r.phys && r.epp != null);
+  if (rr.length < 5) { el.style.display = 'none'; return; }
+  const rho = btSpearman(rr.map(r => r.epp), rr.map(r => r.phys.prem_ge200_h));
+  const post = rr.filter(r => r.id >= OL3_COMMERCIAL);
+  const rhoP = post.length >= 5 ? btSpearman(post.map(r => r.epp), post.map(r => r.phys.prem_ge200_h)) : null;
+  const hits = rr.filter(r => r.phys.prem_ge200_h >= 10);
+  const bp = rr.filter(r => r.epp >= 0.75);
+  const ds = rr.filter(r => r.phys.ds336_points > 0), dsNz = ds.filter(r => r.phys.ds336_nonzero > 0).length;
+  el.style.display = 'block';
+  el.innerHTML = `<b>EPP fyysisiä lopputuloksia vasten (${rr.length} ikkunaa):</b> Spearman EPP ~ preemiotunnit (ylössäätö − day-ahead ≥ 200 €/MWh) ` +
+    `<b>${rho != null ? rho.toFixed(2) : '—'}</b>` + (rhoP != null ? `, OL3:n jälkeen (${post.length}) ${rhoP.toFixed(2)}` : '') + `. ` +
+    `Ikkunat, joissa ≥ 10 preemiotuntia: ${hits.map(r => r.label + ' (' + r.phys.prem_ge200_h + ' h, EPP ' + r.epp.toFixed(2) + ')').join(', ') || '—'}. ` +
+    `EPP ≥ 0,75: ${bp.map(r => r.label + ' (' + r.phys.prem_ge200_h + ' h)').join(', ') || '—'}. ` +
+    `DS 336 ≠ 0: ${dsNz}/${ds.length} ikkunassa. ` +
+    `<br><span style="color:var(--muted)">Tulkinta: EPP ei järjestä ikkunoita fyysisen niukkuuden mukaan. Ainoa selvä osuma on pakkasviikko 2024-01; ` +
+    `kylmin myöhempi viikko 2026-02 (EPP 0,80) ei näkynyt säätömarkkinalla (RP_margin min 49 %). Ylössäätöhinta ≥ 500 €/MWh ilman preemiokorjausta ` +
+    `mittaa 2022:ssa spot-tasoa (2022-12: 34 h ≥ 500, 0 preemiotuntia). Otos on pieni ja valikoitu; tämä on ensimmäinen fyysinen vertailu, ei validointi. ` +
+    `Lähde: data/wem-backtest-windows.json physical_criteria (2026-10-18).</span>`;
+}
 function renderBTSignal(results) {
+  renderBTPhys(results);
   // ECI delta: first non-null vs last non-null
   const eciSeries = results.filter(r => r.eci != null);
   if (eciSeries.length >= 2) {
