@@ -4083,7 +4083,7 @@ function drawBTTimeline(results) {
     }
     // X label
     h += `<text x="${x.toFixed(1)}" y="${H - 28}" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#0e0d0b" font-weight="500">${r.label}</text>`;
-    h += `<text x="${x.toFixed(1)}" y="${H - 16}" text-anchor="middle" font-family="DM Mono" font-size="7" fill="#7a7468">${r.stress === true ? '⚡ stressi' : r.stress === false ? 'baseline' : 'live'}</text>`;
+    h += `<text x="${x.toFixed(1)}" y="${H - 16}" text-anchor="middle" font-family="DM Mono" font-size="7" fill="#7a7468">${r.id === 'current' ? 'live' : (r.event && r.event.includes('ennen OL3') ? 'ennen OL3' : '')}</text>`;
   });
 
   // Y axis ticks
@@ -4472,8 +4472,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.16.3';
-const WEM_BUILD   = '2026-10-15b'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.4';
+const WEM_BUILD   = '2026-10-18a'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
