@@ -828,6 +828,51 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       </div>
     </div>
 
+    <!-- Empiirinen ankkuri 2: Dunkelflaute 2/2026 (2.16.5) -->
+    <div id="dunkelflaute-2026-02" style="border:1px solid var(--rule);border-left:3px solid var(--accent);padding:.85rem 1.1rem;margin-bottom:1rem;background:var(--tag-bg)">
+      <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">Empiirinen ankkuri — Dunkelflaute 8.–14.2.2026</div>
+      <div style="font-size:.86rem;line-height:1.65;">
+        Huoltoseisokki mittasi FS:n. Tämä mittaa toisen asian: <strong>paljonko litteää lisäkuormaa
+        järjestelmä olisi kantanut sinä viikkona, jota instrumentti on rakennettu tutkimaan.</strong><br><br>
+
+        Olosuhteet (168 h): yhtäjaksoinen kylmä ja tyyni jakso (T&lt;&minus;5 °C, tuuli &lt;1 GW)
+        <strong>106 h</strong>; tuuli keskimäärin 886 MW; kulutus enimmillään 14 456 MW; CHP keskimäärin
+        3 795 MW; nettotuonti 2 017 MW. Ruotsin rajat olivat rajoittavia (FI-hinta yli naapurin):
+        <strong>SE1 127 h, SE3 107 h</strong>. Ylimääräistä tuontia ei siis ollut saatavilla suurimman osan viikosta.<br><br>
+
+        Pelivara tunneittain = vapaa tuontikapasiteetti (vain ei-rajoittavina tunteina) + Viroon
+        menevä vienti (käännettävissä kotimaahan) + käyttämätön mFRR-ylössäätötarjous (DS 373 &minus; DS 342).
+
+        <table class="rt" style="margin:.7rem 0">
+          <thead><tr><th>Litteä lisäkuorma</th><th style="text-align:right">Vajetunnit: tuonti + EE</th>
+            <th style="text-align:right">Vajetunnit: + koko mFRR</th><th style="text-align:right">Suurin vaje</th></tr></thead>
+          <tbody>
+            <tr><td>250 MW</td><td style="font-family:var(--mono);text-align:right">23 h</td><td style="font-family:var(--mono);text-align:right">0 h</td><td style="font-family:var(--mono);text-align:right">0 MW</td></tr>
+            <tr><td>500 MW</td><td style="font-family:var(--mono);text-align:right">36 h</td><td style="font-family:var(--mono);text-align:right">2 h</td><td style="font-family:var(--mono);text-align:right">39 MW</td></tr>
+            <tr><td>1 000 MW</td><td style="font-family:var(--mono);text-align:right">100 h</td><td style="font-family:var(--mono);text-align:right">18 h</td><td style="font-family:var(--mono);text-align:right">539 MW</td></tr>
+            <tr><td>1 500 MW</td><td style="font-family:var(--mono);text-align:right">150 h</td><td style="font-family:var(--mono);text-align:right">58 h</td><td style="font-family:var(--mono);text-align:right">1 039 MW</td></tr>
+            <tr><td>3 000 MW</td><td style="font-family:var(--mono);text-align:right">168 h</td><td style="font-family:var(--mono);text-align:right">166 h</td><td style="font-family:var(--mono);text-align:right">2 539 MW</td></tr>
+          </tbody>
+        </table>
+
+        <strong>Pienin pelivara oli noin 460 MW</strong> (13.2.2026 klo 10 Suomen aikaa). Silloin tuontia ei ollut vapaana,
+        Viron-vientiä oli 30 MW ja käyttämätöntä mFRR:ää 430 MW. Viikko kantoi noin <strong>0,5 GW</strong> litteää lisäkuormaa
+        vain, jos koko vapaa mFRR-tarjous käytetään kuorman kattamiseen. Ilman sitä vajetunteja kertyy jo 250 MW:lla.<br><br>
+
+        <strong>Rajoitukset, joista ensimmäinen kääntää tulkinnan:</strong>
+        mFRR on häiriöreservi. Kun sillä katetaan kuormaa, poistuu varaus suurimman yksikön
+        (OL3, 1 600 MW) irtoamisen varalle. Sarake "+ koko mFRR" on siksi <em>yläraja</em>, ei käyttövara.<br>
+        Toiseksi laskelma on staattinen. Hinnan nousu olisi tuonut kysyntäjoustoa ja akkupurkua, mutta
+        myös nostanut hintaa koko viikon. Lisäkuorma ei olisi ollut "ilmaista" silloinkaan, kun vajetta ei syntynyt.<br>
+        Kolmanneksi tuontikapasiteetiksi on otettu viikon suurin toteutunut tuonti (SE1 1 963 MW, SE3 1 194 MW).
+        Se on todellisen siirtokapasiteetin alaraja, mutta rajoittavina tunteina tällä ei ole merkitystä.<br><br>
+
+        Aineisto: <a class="hlink" href="data/wem-dunkelflaute-2026-02.json">wem-dunkelflaute-2026-02.json</a>
+        (168 tuntiriviä, menetelmä ja lähteet tiedostossa). Lähteet: Fingrid DS 87, 61, 187, 140 (rajasiirrot), 373 ja 342 (mFRR)
+        sekä ENTSO-E day-ahead FI, SE1 ja SE3.
+      </div>
+    </div>
+
     <div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;">EPP W168 — skenaariovertailu (PROJEKTIO, ei live-havainto lukuun ottamatta "Nykytila"-korttia)</div>
     <p class="snote" style="margin:-.4rem 0 .75rem"><strong>chpPct-parametrista:</strong>
       kaksi viimeistä riviä antavat <strong>identtisen FS 42,8 %</strong> vaikka CHP eroaa
@@ -4513,8 +4558,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.16.4';
-const WEM_BUILD   = '2026-10-18a'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.5';
+const WEM_BUILD   = '2026-10-19a'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
