@@ -108,3 +108,13 @@ S&P seuraava arvio: **lokakuu 2026**
 
 Versio: 4.1 | Päivitetty: 26.4.2026
 URL: https://aethercontinuity.org/papers/suomen-energiajarjestelman-rakenteellinen-lukkiutuminen.html
+
+---
+
+## Kuopion energiajärjestelmä — hankeseuranta (perustettu 21.10.2026)
+
+Sivu: `tools/kuopio-seuranta.html` · aineisto: `tools/data/kuopio-seuranta.json`
+
+Seurataan, miten etusijalaki, Mustakorven datakeskus (Polarnode), Kuopion Energian LDR-50 ja Volaghyn eSAF etenevät omissa putkissaan ja miten kaupungin päätökset muovaavat lopputuloksen. Ennakkokirjaukset K1–K5 lukittu 21.10.2026; uudet havainnot vain päivättyinä lokimerkintöinä JSON-tiedoston `log`-taulukkoon. Kirjauksen tilaa (`avoin` → `vahvistui` / `kumoutui`) muutetaan vain lokimerkinnän perusteella, ja merkintä viittaa kirjaukseen (`refs`).
+
+Lähteet: ymparisto.fi (YVA), kuopio.oncloudos.com (kaupungin esityslistat), hankeikkuna / eduskunta (TEM043:00/2026), Kuopion Energian tiedotteet ja vastuullisuusraportti.
