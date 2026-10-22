@@ -1199,11 +1199,11 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
   <!-- §09 Backtest -->
   <div class="bt-section">
-    <div class="shdr"><span class="snum">&sect; 09</span><span class="stit">EPP Backtest — signaalivalidointi 2022–2025</span></div>
-    <p class="snote"><b>Huom:</b> periodeilta 2022–2024 puuttuu tuulidata, joten niiden C_exp jää ilman tuulitermiä (182 MW/GW) ja DP_t on systemaattisesti matalampi kuin live-arvossa. Periodit eivät siksi ole vertailukelpoisia live-lukeman kanssa. Backtest laskee EPP:n kahdeksalle historialliselle periodille. Historialliset periodit (2022–2024) käyttävät sisäänrakennettuja kuukausikeskiarvoja (rekonstruoitu: Fingrid statistiikka, Energiateollisuus, Statistics Finland) + synteettistä tuntiprofiilia. Nykyinen periodi käyttää live-dataa. Validointimittarit (Recall/Precision/F1) on poistettu, koska vertailukriteeri oli hinta eikä fyysinen niukkuus. <a class="hlink" href="wem-historia.html#backtest-validointi" target="_blank" rel="noopener">historia&nbsp;↗</a> Huom: EPP on ex-post-laskenta — se ei ole ennuste.</p>
+    <div class="shdr"><span class="snum">&sect; 09</span><span class="stit">EPP Backtest — oikeat ikkunat 2022–2026</span></div>
+    <p class="snote"><b>Päivitetty 2026-10-18:</b> backtest laskee EPP:n 20 tallennetusta oikeasta 168 tunnin ikkunasta 2022–2026 (Fingrid DS 124, 192, 188, 191, 181, 201, 202 tuntikeskiarvoina; lämpötilat ERA5 Helsinki/Kuopio/Rovaniemi) sivun omalla laskennalla, joten kaava on sama kuin livessä. Aineisto <code>data/wem-backtest-windows.json</code>, ajankohdat samat kuin C_exp-kalibroinnin otosikkunoissa. Aiempi versio laski seitsemän jaksoa kuukausikeskiarvoista ja synteettisestä tuntiprofiilista. <b>Tulkinta:</b> ennen OL3:n kaupallista käyttöä (16.4.2023) SP on rakenteellisen tuonnin takia lähes aina 100 %; otos on valikoitu (kuukausittaisia ikkunoita ja tunnettuja pakkasjaksoja), ei satunnainen. Tämä ei ole validointi: kohdemuuttuja puuttuu, kunnes fyysinen kriteeri (RP_margin, DS 336, tehoreservin aktivointi) on käytössä. <a class="hlink" href="wem-historia.html#backtest-validointi" target="_blank" rel="noopener">historia&nbsp;↗</a> EPP on ex-post-laskenta, ei ennuste.</p>
     <div class="bt-controls">
       <button class="btn-bt" id="btnBT" onclick="runBacktest()">&#9654;&nbsp; Aja backtest</button>
-      <div class="bt-progress" id="btProgress">8 periodita · DS 124 + DS 192 · ~20 s</div>
+      <div class="bt-progress" id="btProgress">20 tallennettua ikkunaa + live · ei hakuja</div>
     </div>
     <div id="btDPRawPanel" style="display:none;font-family:var(--mono);font-size:.65rem;line-height:1.5;color:var(--muted);background:var(--bg-y,#faf6e8);border:1px solid var(--sy,#7a6010);border-radius:3px;padding:.6rem .7rem;margin-bottom:.8rem;white-space:pre-wrap;"></div>
     <div class="bt-timeline-wrap"><svg id="chBT" style="width:100%;height:100%;"><text x="50%" y="50%" text-anchor="middle" font-family="DM Mono" font-size="11" fill="#c8bfad">Aja backtest nähdäksesi aikajana</text></svg></div>
@@ -1212,16 +1212,21 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
       <th class="rh">EPP</th><th class="rh">Luokka</th>
       <th class="rh">ECI</th><th class="rh">SP</th><th class="rh">DC</th>
       <th class="rh">Pisteet</th>
+      <th class="rh" title="Ylössäätöhinta − day-ahead ≥ 200 €/MWh, tunteja">Preemio ≥200 h</th>
+      <th class="rh" title="Ylössäätöhinta ≥ 500 €/MWh, tunteja">Ylös ≥500 h</th>
+      <th class="rh" title="DS 336 shortage status ≠ 0, pisteitä">DS 336</th>
+      <th class="rh" title="RP_margin min (DS 373/342, 3/2025 alkaen)">RP min</th>
     </tr></thead><tbody id="btBody">
-      <tr><td colspan="8" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
+      <tr><td colspan="12" style="color:var(--muted);padding:1.5rem .6rem;font-family:var(--mono);font-size:.7rem;">Backtestia ei ole ajettu — klikkaa "Aja backtest"</td></tr>
     </tbody></table></div>
+    <div id="btPhys" style="display:none;font-size:.7rem;line-height:1.6;margin:.6rem 0;padding:.6rem .7rem;border:1px solid var(--rule);background:#fff"></div>
     <div class="bt-sig" id="btSig" style="display:none;">
       <div class="bt-sig-card" style="opacity:.5;">
         <div class="bt-sig-lbl">Recall / Precision / F1</div>
         <div class="bt-sig-val" style="font-size:1rem;color:var(--muted);">POISTETTU</div>
         <div class="bt-sig-sub">Poistettu kokonaan, ei vain piilotettu (ks. §07 Rakenteellinen rajoite 3). Stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa. Palautetaan kun fyysinen kriteeri (DS 336, tehoreservi, ERAA LOLE) on kaytossa.</div>
       </div>
-      <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub">2022-01 → 2024-12<br>OL3-vaikutus ECI:hin</div></div>
+      <div class="bt-sig-card"><div class="bt-sig-lbl">ECI-muutos</div><div class="bt-sig-val" id="btECIdelta">—</div><div class="bt-sig-sub" id="btECIsub">—</div></div>
     </div>
     <div id="btF1Warn" style="display:none;font-family:var(--mono);font-size:.68rem;color:#8b3a10;margin:.4rem 0;padding:.4rem .6rem;background:#faf0e8;border:1px solid #8b3a10;border-radius:3px;">
       ⚠ 2022 oli hintakriisi, ei kapasiteettikriisi — stressikriteeri (NordPool &gt;200 €/MWh) mittasi vaaraa asiaa, joten TP/FP/FN/TN-luokittelu ja Recall/Precision/F1 on poistettu kokonaan (ei vain nakymasta) kunnes kriteeri korvataan fyysisella mittarilla (esim. DS 336 shortage status, tehoreservin aktivoinnit, tai ERAA:n LOLE-tunnit).
@@ -1304,7 +1309,7 @@ Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea n
       <li>Tämä instrumentti on diagnostinen, ei operatiivinen — se ei ole virallinen hälytysjärjestelmä eikä ennusta yksittäisiä katkoja tai spot-hinnan kehitystä.</li>
       <li>EPP on synteettinen indeksi — komponenttiarvot (FS, WR, SP, DP_s) ovat ensisijainen tulkinnan lähde. Kokonaisindeksi on tiivistys, ei totuus.</li>
       <li>Stability ≠ endurance. Hetkellinen tasapaino ei implikoi monipäiväistä kestävyyttä — juuri tämä on WP-001:n perusargumentti.</li>
-      <li><strong>Backtest käyttää synteettistä rekonstruktiota tietoisesti, ei väliaikaisena varapolkuna:</strong> useiden istuntojen ja kymmenien tuntien yritysten jälkeen (verkkoasetukset, erillinen hakutyökalu, Fingridin oma avoin data -latauslomake — kaikki kohtasivat aitoja, dokumentoituja esteitä: resoluutioerot 3 min vs. tunti vs. 15 min 13.6.2023 jälkeen, proxyn sivutusparametrin arvaamattomuus, mobiiliselaimen tausta-ajastimen hidastus pitkien hakujen aikana, Fingridin dataset-ID:iden muuttuminen) päätettiin luopua oikean historiadatan hakuyrityksestä tällä hetkellä. Backtest-periodit 2022–2024 käyttävät sisäänrakennettuja kuukausikeskiarvoja + synteettistä tuntiprofiilia — tämä on nyt ensisijainen ja ainoa polku, ei väliaikainen. Hakulogiikka (fetchHistorical, fetchRealHistoricalPeriod) on säilytetty koodissa testattuna mutta kutsumattomana, jos päätös joskus muuttuu.</li>
+      <li><strong>Backtest käyttää oikeaa dataa (2026-10-18 alkaen):</strong> 20 tallennettua 168 tunnin ikkunaa 2022–2026 (Fingrid + ERA5), haettu aikaviipaleina sen jälkeen, kun proxyn sivutusongelma ratkesi (2.12.2). Aiemmin backtest käytti kuukausikeskiarvoja ja synteettistä tuntiprofiilia, koska oikean historiadatan haku kaatui toistuvasti (resoluutioerot, sivutus, rate limit, mobiiliselaimen taustahidastus). Sama aineisto kattaa C_exp-kalibroinnin ikkunat, joten DP_t on nyt vertailukelpoinen ikkunoiden välillä; tuulidata on mukana kaikissa ikkunoissa.</li>
       <li>Fingrid-data on tuntiresoluutiota. Proxy voi palauttaa aukkoja tai viivästynyttä dataa. Tarkista aina datapisteiden määrä status-palkista.</li>
       <li><strong>Ydinvoiman vuosihuollot — rakenteellinen Es-vaihtelu:</strong> Olkiluodon kolmen laitosyksikön (OL1 ~900 MW, OL2 ~900 MW, OL3 ~1 600 MW) vuosihuollot aiheuttavat toistuvan Es-notkahduksen. TVO:n julkisen aikataulun mukaan OL1 on huollossa 55 vrk (19.4.–13.6.2026), OL3 50 vrk (10.9.–30.10.2026). Yksittäinen huolto vähentää ydinvoimakomponenttia 900–1 600 MW. WEM laskee FS:n hetkellistä laitoksen tuotantoa käyttäen — vuosihuoltojen vaikutus näkyy suoraan FS:ssä. Alkuperäinen suunnitelma kahdesta rinnakkaisesta EPR-reaktorista (OL3 + OL4) olisi vähentänyt huoltoseisokki-haavoittuvuutta merkittävästi; toteutunut yhden reaktorin ratkaisu kasvattaa yksittäisen huoltoseisokin suhteellista vaikutusta järjestelmään.
       <br><br><strong>Loviisan vuosihuollot:</strong> LO1 ja LO2, noin 507 MW kumpikin. Fortumin julkinen aikataulu (fortum.com, haettu 29.7.2026): 2026: LO2 2.8.–21.9., LO1 26.9.–18.10. · 2027: LO2 15.8.–3.9., LO1 11.9.–28.9. · 2028: LO2 6.8.–29.8., LO1 9.9.–21.10. (pisin, ~6 vk) · 2029: LO2 19.8.–7.9., LO1 15.9.–2.10. <em>Suunnitelma ei ole toteuma:</em> vuonna 2026 LO2:n huolto venyi laajennetun tarkastuksen vuoksi — täysi seisokki 29.9. asti ja porrastettu paluu 4.10. asti (Nord Pool UMM, 8 päivitystä).<br><br><strong>Päällekkäisyys syksyllä 2026:</strong> OL3:n huolto (10.9.–30.10.) meni päällekkäin molempien Loviisan yksiköiden kanssa: LO2 10.–29.9. ja LO1 26.9.–18.10. 26.–29.9. kaikki kolme yksikköä olivat poissa yhtä aikaa, noin 2 600 MW. FS laskee pudotuksen live-datasta automaattisesti. Laajemmat vuosihuollot 4 vuoden välein, laajimmat 8 vuoden välein (painesäiliötarkastus). <a class="hlink" href="wem-historia.html#loviisa" target="_blank" rel="noopener">historia&nbsp;↗</a></li>
@@ -3796,7 +3801,9 @@ function renderV4(w168, rawSlice) {
 // ── §09 Backtest ──────────────────────────────────────────────────────────────
 
 // Known stress periods — ground truth for validation
-const BT_PERIODS = [
+// 2026-10-18: synteettinen lista korvataan tallennetuilla oikeilla ikkunoilla
+// (loadBTWindows). Alkuperainen lista sailyy vain dokumentaationa.
+const BT_PERIODS_SYNTH = [
   { id:'2022-01', label:'2022-01', start:'2022-01-10T00:00:00Z', stress:false, event:'Talvibaseline — ennen energiakriisiä',      note:'NordPool FI ~80–120 €/MWh' },
   { id:'2022-08', label:'2022-08', start:'2022-08-08T00:00:00Z', stress:true,  event:'Energiakriisi käynnistyy',                  note:'NordPool FI >200 €/MWh, Venäjä-kaasu' },
   { id:'2022-11', label:'2022-11', start:'2022-11-07T00:00:00Z', stress:true,  event:'Kriisikärki — hintahuippu',                 note:'NordPool FI >300 €/MWh useina vrk' },
@@ -3806,6 +3813,46 @@ const BT_PERIODS = [
   { id:'2024-12', label:'2024-12', start:'2024-12-09T00:00:00Z', stress:false, event:'Ensimmäinen täysi OL3-talvi',              note:'ECI firm parantunut merkittävästi' },
   { id:'current', label:'Nykyinen', start:null,                   stress:null,  event:'Live W168 (tämä hetki)',                   note:'Laskettu live-datasta' },
 ];
+let BT_PERIODS = [];
+let BT_WINDOWS = null;
+const BT_DATA_URL = 'data/wem-backtest-windows.json';
+const OL3_COMMERCIAL = '2023-04-16';
+// 2026-10-18: §09 kayttaa tallennettuja OIKEITA 168 h ikkunoita (Fingrid +
+// ERA5, 20 ikkunaa 2022–2026, samat ajankohdat kuin wem-epp-windows.json).
+// EPP lasketaan niista sivun omalla calcWindow():lla, joten kaava on aina
+// sama kuin livessa. Synteettinen rekonstruktio poistettu kaytosta.
+async function loadBTWindows() {
+  if (BT_WINDOWS) return BT_WINDOWS;
+  const r = await fetch(BT_DATA_URL + '?v=' + WEM_BUILD);
+  if (!r.ok) throw new Error('backtest-aineisto HTTP ' + r.status);
+  BT_WINDOWS = await r.json();
+  const keys = Object.keys(BT_WINDOWS.windows).sort();
+  BT_PERIODS = keys.map(k => {
+    const w = BT_WINDOWS.windows[k];
+    const ts = btRowsToData(w.rows).map(x => x.temp).filter(v => v != null);
+    const tAvg = ts.length ? ts.reduce((a, b) => a + b, 0) / ts.length : null;
+    const preOL3 = w.window_end.slice(0, 10) < OL3_COMMERCIAL;
+    return { id: k, label: k.slice(0, 7), start: k, stress: null,
+      event: (tAvg != null ? 'ka ' + tAvg.toFixed(1) + ' °C' : '') + (preOL3 ? ' · ennen OL3:a' : ''),
+      note: '168 h → ' + w.window_end.slice(0, 16).replace('T', ' ') + ' UTC · Fingrid + ERA5', phys: w.phys || null };
+  });
+  BT_PERIODS.push({ id:'current', label:'Nykyinen', start:null, stress:null, event:'Live W168 (tämä hetki)', note:'Laskettu live-datasta' });
+  return BT_WINDOWS;
+}
+function btTempW(x) {
+  // Sama painotus kuin livessa (TEMP_STATIONS 0.45/0.30/0.25), puuttuvat pois
+  const parts = [[x.tHki, 0.45], [x.tKuo, 0.30], [x.tRov, 0.25]].filter(([v]) => v != null);
+  const w = parts.reduce((a, [, k]) => a + k, 0);
+  return w > 0 ? parts.reduce((a, [v, k]) => a + v * k, 0) / w : null;
+}
+function btRowsToData(rows) {
+  return rows.filter(x => x.c != null && x.p != null).map(x => ({
+    time: new Date(x.t + ':00:00Z'), c: x.c, p: x.p, gap: x.c - x.p,
+    nuc: x.nuc, hyd: x.hyd, wnd: x.wnd,
+    chp: (x.chpDH != null || x.chpInd != null) ? (x.chpDH ?? 0) + (x.chpInd ?? 0) : null,
+    temp: btTempW(x), tempHki: x.tHki, tempKuo: x.tKuo, tempRov: x.tRov,
+  }));
+}
 
 const EPP_STRESS_THRESHOLD = 0.50; // EPP ≥ 0.50 = Elevated+ = signal flagged
 
@@ -3963,10 +4010,11 @@ async function fetchPeriodData(period) {
   // tulevaisuudessa (esim. jos joku saa Fingridin CSV-latauksen
   // toimimaan ja haluaa syottaa sen kasin, tai jos verkkoasetukset
   // joskus toimivat).
-  if (BT_BASELINES[period.id]) {
-    return { data: generateFromBaseline(BT_BASELINES[period.id], period.start), dataQuality: 'rekons.' };
-  }
-  throw new Error('baseline puuttuu periodille ' + period.id);
+  // 2026-10-18: tallennetut oikeat ikkunat (ks. loadBTWindows). Ylla oleva
+  // paatos 2026-08 on kumottu: aineisto haettiin 18.10.2026 aikaviipaleina.
+  const w = BT_WINDOWS && BT_WINDOWS.windows[period.id];
+  if (w) return { data: btRowsToData(w.rows), dataQuality: 'oikea (tallennettu)' };
+  throw new Error('ikkuna puuttuu aineistosta: ' + period.id);
 }
 
 function drawBTTimeline(results) {
@@ -4040,7 +4088,7 @@ function drawBTTimeline(results) {
     }
     // X label
     h += `<text x="${x.toFixed(1)}" y="${H - 28}" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#0e0d0b" font-weight="500">${r.label}</text>`;
-    h += `<text x="${x.toFixed(1)}" y="${H - 16}" text-anchor="middle" font-family="DM Mono" font-size="7" fill="#7a7468">${r.stress === true ? '⚡ stressi' : r.stress === false ? 'baseline' : 'live'}</text>`;
+    h += `<text x="${x.toFixed(1)}" y="${H - 16}" text-anchor="middle" font-family="DM Mono" font-size="7" fill="#7a7468">${r.id === 'current' ? 'live' : (r.event && r.event.includes('ennen OL3') ? 'ennen OL3' : '')}</text>`;
   });
 
   // Y axis ticks
@@ -4078,6 +4126,10 @@ function renderBTTable(results) {
       <td class="rh">${r.sp != null ? (r.sp * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh">${r.dc != null ? (r.dc * 100).toFixed(1) + '%' : '—'}</td>
       <td class="rh" style="color:${r.pts != null && r.pts < 20 ? 'var(--so)' : 'var(--muted)'};" title="Datan laatu: ${r.dataQuality ?? '—'}">${r.pts ?? '—'} <span style="font-size:.5rem;">${r.dataQuality ? '('+(r.dataQuality.length > 30 ? r.dataQuality.slice(0,30)+'…' : r.dataQuality)+')' : ''}</span></td>
+      <td class="rh" style="${r.phys && r.phys.prem_ge200_h >= 10 ? 'color:#8b1010;font-weight:500;' : ''}">${r.phys ? r.phys.prem_ge200_h : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys ? r.phys.up_ge500_h : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys ? (r.phys.ds336_points ? r.phys.ds336_nonzero : 'ei dataa') : '—'}</td>
+      <td class="rh" style="color:var(--muted);">${r.phys && r.phys.rp_margin_min != null ? (r.phys.rp_margin_min * 100).toFixed(0) + ' %' : '—'}</td>
     </tr>`);
   });
 }
@@ -4091,7 +4143,39 @@ function renderBTTable(results) {
 // kun fyysinen kriteeri (DS 336 shortage status, tehoreservin
 // aktivoinnit, tai ERAA:n LOLE-tunnit) on kaytossa - eri projekti kuin
 // tuntidatan haku.
+// 2026-10-18: EPP fyysisia lopputuloksia vasten. Spearman EPP vs. preemiotunnit.
+function btSpearman(a, b) {
+  const rank = x => { const idx = x.map((v, i) => i).sort((i, j) => x[i] - x[j]); const r = new Array(x.length);
+    for (let i = 0; i < idx.length;) { let j = i; while (j + 1 < idx.length && x[idx[j + 1]] === x[idx[i]]) j++;
+      for (let q = i; q <= j; q++) r[idx[q]] = (i + j) / 2; i = j + 1; } return r; };
+  const ra = rank(a), rb = rank(b), m = v => v.reduce((s, x) => s + x, 0) / v.length;
+  const ma = m(ra), mb = m(rb); let n = 0, da = 0, db = 0;
+  for (let i = 0; i < ra.length; i++) { n += (ra[i] - ma) * (rb[i] - mb); da += (ra[i] - ma) ** 2; db += (rb[i] - mb) ** 2; }
+  return da && db ? n / Math.sqrt(da * db) : null;
+}
+function renderBTPhys(results) {
+  const el = document.getElementById('btPhys'); if (!el) return;
+  const rr = results.filter(r => r.phys && r.epp != null);
+  if (rr.length < 5) { el.style.display = 'none'; return; }
+  const rho = btSpearman(rr.map(r => r.epp), rr.map(r => r.phys.prem_ge200_h));
+  const post = rr.filter(r => r.id >= OL3_COMMERCIAL);
+  const rhoP = post.length >= 5 ? btSpearman(post.map(r => r.epp), post.map(r => r.phys.prem_ge200_h)) : null;
+  const hits = rr.filter(r => r.phys.prem_ge200_h >= 10);
+  const bp = rr.filter(r => r.epp >= 0.75);
+  const ds = rr.filter(r => r.phys.ds336_points > 0), dsNz = ds.filter(r => r.phys.ds336_nonzero > 0).length;
+  el.style.display = 'block';
+  el.innerHTML = `<b>EPP fyysisiä lopputuloksia vasten (${rr.length} ikkunaa):</b> Spearman EPP ~ preemiotunnit (ylössäätö − day-ahead ≥ 200 €/MWh) ` +
+    `<b>${rho != null ? rho.toFixed(2) : '—'}</b>` + (rhoP != null ? `, OL3:n jälkeen (${post.length}) ${rhoP.toFixed(2)}` : '') + `. ` +
+    `Ikkunat, joissa ≥ 10 preemiotuntia: ${hits.map(r => r.label + ' (' + r.phys.prem_ge200_h + ' h, EPP ' + r.epp.toFixed(2) + ')').join(', ') || '—'}. ` +
+    `EPP ≥ 0,75: ${bp.map(r => r.label + ' (' + r.phys.prem_ge200_h + ' h)').join(', ') || '—'}. ` +
+    `DS 336 ≠ 0: ${dsNz}/${ds.length} ikkunassa. ` +
+    `<br><span style="color:var(--muted)">Tulkinta: EPP ei järjestä ikkunoita fyysisen niukkuuden mukaan. Ainoa selvä osuma on pakkasviikko 2024-01; ` +
+    `kylmin myöhempi viikko 2026-02 (EPP 0,80) ei näkynyt säätömarkkinalla (RP_margin min 49 %). Ylössäätöhinta ≥ 500 €/MWh ilman preemiokorjausta ` +
+    `mittaa 2022:ssa spot-tasoa (2022-12: 34 h ≥ 500, 0 preemiotuntia). Otos on pieni ja valikoitu; tämä on ensimmäinen fyysinen vertailu, ei validointi. ` +
+    `Lähde: data/wem-backtest-windows.json physical_criteria (2026-10-18).</span>`;
+}
 function renderBTSignal(results) {
+  renderBTPhys(results);
   // ECI delta: first non-null vs last non-null
   const eciSeries = results.filter(r => r.eci != null);
   if (eciSeries.length >= 2) {
@@ -4099,6 +4183,8 @@ function renderBTSignal(results) {
     const delta = last - first;
     const el = document.getElementById('btECIdelta');
     el.textContent = (delta >= 0 ? '+' : '') + (delta * 100).toFixed(1) + ' pp';
+    const sub = document.getElementById('btECIsub');
+    if (sub) sub.innerHTML = eciSeries[0].label + ' → ' + eciSeries[eciSeries.length - 1].label + '<br>ensimmäinen → viimeinen ikkuna';
     el.style.color = delta > 0.03 ? '#2d6b3a' : delta < -0.03 ? '#8b1010' : '#7a6010';
   }
 
@@ -4117,10 +4203,12 @@ async function runBacktest() {
   btn.disabled = true;
 
   const results = [];
+  try { await loadBTWindows(); }
+  catch (e) { prog.textContent = 'Aineiston lataus epäonnistui: ' + e.message; prog.style.color = 'var(--so)'; btn.disabled = false; return; }
 
   for (let i = 0; i < BT_PERIODS.length; i++) {
     const p = BT_PERIODS[i];
-    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label} (haetaan oikeaa historiadataa…)`;
+    prog.textContent = `Periodi ${i + 1} / ${BT_PERIODS.length} — ${p.label}`;
     prog.style.color = 'var(--sy)';
 
     await new Promise(r => setTimeout(r, 200)); // allow UI update
@@ -4128,7 +4216,7 @@ async function runBacktest() {
     try {
       const { data, dataQuality: dq } = await fetchPeriodData(p);
       // Pieni viive periodien valilla — 7 datasettia jo haettu sisaisesti omalla viiveellaan
-      if (i < BT_PERIODS.length - 1) await new Promise(r => setTimeout(r, 800)); // kasvatettu 300->800ms
+      // ei hakuja: aineisto on tallennettu
 
       if (data.length < 3) throw new Error(`vain ${data.length} datapistettä`);
       const isReal = dq.startsWith('oikea');
@@ -4425,8 +4513,8 @@ window.addEventListener('resize', () => {
 setInterval(init, 30 * 60 * 1000);
 
 // ── Version & build stamp ─────────────────────────────────────────────────────
-const WEM_VERSION = '2.16.3';
-const WEM_BUILD   = '2026-10-15b'; // päivitä aina kun teet muutoksia
+const WEM_VERSION = '2.16.4';
+const WEM_BUILD   = '2026-10-18a'; // päivitä aina kun teet muutoksia
 // HUOM (2026-07-08): WEM_VERSION oli aiemmin kiinteasti '2.7.2' vaikka
 // changelog listasi jo muutoksia versioihin 2.7.3-2.7.5 asti, ja nama
 // ominaisuudet (persistenssipreemio, DS 188 Loviisa-korjaus, NTC-korjaus)
