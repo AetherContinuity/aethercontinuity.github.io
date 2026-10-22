@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kuopion energiajärjestelmä — hankeseuranta | ACI</title>
+<meta name="description" content="Kuopion energiahankkeiden (etusijalaki, Mustakorven datakeskus, LDR-50, Volaghy eSAF) eteneminen ja päivätyt ennakkokirjaukset."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0d0b;--paper:#f5f0e8;--paper-2:#ede7d8;--paper-3:#e4dccb;
+  --accent:#8b4513;--muted:#6f695e;--rule:#c8bfad;--ok:#1d6a2d;--warn:#8b6010;--bad:#8b2500;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#ece6da;--paper:#16140f;--paper-2:#1e1b15;--paper-3:#29251d;--accent:#d08a55;
+  --muted:#a59e90;--rule:#3d372c;--ok:#6fbf7f;--warn:#d8a945;--bad:#e07a5a;}}
+:root[data-theme="dark"]{--ink:#ece6da;--paper:#16140f;--paper-2:#1e1b15;--paper-3:#29251d;--accent:#d08a55;
+  --muted:#a59e90;--rule:#3d372c;--ok:#6fbf7f;--warn:#d8a945;--bad:#e07a5a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.65;font-size:17px}
+a{color:var(--accent)}
+.dih{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.1rem 1rem 1rem;max-width:960px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.8rem}
+.dih-inst{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.dih-ser{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
+.dih-ser span{color:var(--accent)}
+.dih-meta{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-align:right;line-height:1.9}
+.wrap{max-width:960px;margin:0 auto;padding:1.5rem 1rem 4rem}
+h1{font-weight:500;font-size:1.9rem;line-height:1.2;margin-bottom:.6rem}
+h2{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.35rem;margin:2.2rem 0 .9rem}
+.lede{font-size:1.1rem;max-width:44em}
+.rule{border-left:3px solid var(--accent);background:var(--paper-2);padding:.7rem 1rem;margin:1.2rem 0;font-size:.95rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:.4rem .5rem;border-bottom:1px solid var(--paper-3)}
+th{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.mono{font-family:var(--mono);font-size:.78rem}
+.src{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.tw{overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.card{border:1px solid var(--rule);background:var(--paper-2);padding:.9rem 1rem}
+.card h3{font-weight:500;font-size:1.12rem;line-height:1.25}
+.card .who{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin:.2rem 0 .5rem}
+.card p{font-size:.92rem;margin-bottom:.6rem}
+.ms{list-style:none;border-top:1px solid var(--rule);padding-top:.4rem}
+.ms li{display:grid;grid-template-columns:5.6rem 1fr;gap:.5rem;font-size:.86rem;padding:.15rem 0}
+.ms .d{font-family:var(--mono);font-size:.68rem;color:var(--muted);padding-top:.15rem}
+.ms li.done{color:var(--muted)}
+.ms li.done .w::before{content:"✓ ";color:var(--ok)}
+.ms li.pending .w::before{content:"○ ";color:var(--warn)}
+.hyp{border:1px solid var(--rule);padding:.8rem 1rem;margin-bottom:.7rem;background:var(--paper-2)}
+.hyp-h{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:baseline}
+.hyp-id{font-family:var(--mono);font-weight:500;font-size:.85rem}
+.badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;padding:.05rem .45rem}
+.st-avoin{color:var(--warn)}.st-vahvistui{color:var(--ok)}.st-kumoutui{color:var(--bad)}
+.hyp p{margin:.35rem 0 .2rem}
+.hyp .f{font-size:.86rem;color:var(--muted)}
+.log li{list-style:none;display:grid;grid-template-columns:6.2rem 1fr;gap:.6rem;padding:.45rem 0;border-bottom:1px solid var(--paper-3);font-size:.93rem}
+.log .d{font-family:var(--mono);font-size:.7rem;color:var(--muted);padding-top:.2rem}
+.ref{font-family:var(--mono);font-size:.64rem;color:var(--accent);margin-left:.3rem}
+.err{color:var(--bad);font-family:var(--mono);font-size:.8rem}
+@media (max-width:560px){.ms li{grid-template-columns:4.6rem 1fr}.log li{grid-template-columns:1fr;gap:.1rem}}
+</style>
+</head>
+<body>
+<div class="dih">
+  <div>
+    <div class="dih-inst">Aether Continuity Institute</div>
+    <div class="dih-ser">Hankeseuranta · <span>Kuopio</span></div>
+  </div>
+  <div class="dih-meta" id="meta">Perustettu 21.10.2026<br>Ennakkokirjaukset lukittu</div>
+</div>
+<div class="wrap">
+  <h1>Kuopion energiajärjestelmä: erilliset putket, yksi verkko</h1>
+  <p class="lede" id="question"></p>
+  <div class="rule" id="rule"></div>
+
+  <h2>Ennakkokirjaukset</h2>
+  <div id="hyps"></div>
+
+  <h2>Hankkeet ja ratkaisukohdat</h2>
+  <div class="grid" id="projects"></div>
+
+  <h2>Seurantaloki</h2>
+  <ul class="log" id="log"></ul>
+
+  <h2>Lähtötilanne</h2>
+  <div class="tw"><table id="baseline"><thead><tr><th>Suure</th><th>Arvo</th><th>Lähde</th></tr></thead><tbody></tbody></table></div>
+
+  <h2>Yhteydenotot</h2>
+  <div class="tw"><table id="contacts"><thead><tr><th>Pvm</th><th>Kohde</th><th>Asia</th><th>Tila</th></tr></thead><tbody></tbody></table></div>
+
+  <p class="src" style="margin-top:2rem">Aineisto: <a href="data/kuopio-seuranta.json">data/kuopio-seuranta.json</a>.
+    Liittyy: <a href="ldr50-bci-finland.html">LDR-50 Rationality Field</a> · <a href="ACI-INSTRUMENT-v2.html">WEM</a>.</p>
+</div>
+<script>
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fd=d=>/^\d{4}-\d{2}-\d{2}$/.test(d)?d.split('-').reverse().map(x=>x.replace(/^0/,'')).join('.'):d;
+fetch('data/kuopio-seuranta.json',{cache:'no-store'}).then(r=>r.json()).then(D=>{
+  document.getElementById('question').textContent=D.question;
+  document.getElementById('rule').innerHTML='<strong>Kirjaussääntö.</strong> '+esc(D.rule);
+  const last=D.log.length?D.log[D.log.length-1].d:D.created;
+  document.getElementById('meta').innerHTML='Perustettu '+fd(D.created)+'<br>Viimeisin merkintä '+fd(last)+'<br>'+D.hypotheses.length+' ennakkokirjausta';
+  document.getElementById('hyps').innerHTML=D.hypotheses.map(h=>`
+    <div class="hyp" id="${esc(h.id)}"><div class="hyp-h"><span class="hyp-id">${esc(h.id)} · kirjattu ${fd(h.registered)}</span>
+    <span class="badge st-${esc(h.status)}">${esc(h.status)}</span></div>
+    <p>${esc(h.text)}</p><div class="f"><em>Kumoutuu, jos:</em> ${esc(h.falsified_if)}</div></div>`).join('');
+  document.getElementById('projects').innerHTML=D.projects.map(p=>`
+    <div class="card"><h3>${esc(p.name)}</h3><div class="who">${esc(p.owner)}${p.tunnus?' · '+esc(p.tunnus):''}</div>
+    <p>${esc(p.role)}</p><ul class="ms">${p.milestones.map(m=>`<li class="${esc(m.status)}"><span class="d">${esc(fd(m.d))}</span><span class="w">${esc(m.what)}</span></li>`).join('')}</ul>
+    ${p.sources.length?'<div class="src" style="margin-top:.5rem">'+p.sources.map((s,i)=>`<a href="${esc(s)}" rel="noopener">lähde ${i+1}</a>`).join(' · ')+'</div>':''}</div>`).join('');
+  document.getElementById('log').innerHTML=D.log.slice().reverse().map(l=>`<li><span class="d">${fd(l.d)}</span><span>${esc(l.text)}${(l.refs||[]).map(r=>`<a class="ref" href="#${esc(r)}">${esc(r)}</a>`).join('')}</span></li>`).join('');
+  document.querySelector('#baseline tbody').innerHTML=D.baseline.facts.map(f=>`<tr><td>${esc(f.k)}</td><td class="mono">${esc(f.v)}</td><td class="src"><a href="${esc(f.url)}" rel="noopener">${esc(f.src)}</a></td></tr>`).join('');
+  document.querySelector('#contacts tbody').innerHTML=D.contacts.map(c=>`<tr><td class="mono">${fd(c.d)}</td><td>${esc(c.to)}</td><td>${esc(c.what)}</td><td class="mono">${esc(c.status)}</td></tr>`).join('');
+}).catch(e=>{document.getElementById('hyps').innerHTML='<p class="err">Aineiston lataus epäonnistui: '+esc(e.message)+'</p>';});
+</script>
+</body>
+</html>
