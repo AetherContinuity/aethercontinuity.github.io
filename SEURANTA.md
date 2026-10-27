@@ -132,3 +132,5 @@ RAPID ilmoitti 23.10.2026 päivityksestä v2024-2 (huhtikuu 2004 – marraskuu 2
 **Lisäksi kirjataan ennen analyysiä:** versioiden v2024.1a ja v2024-2 erot päällekkäisellä jaksolla 2004–3/2024 raportoidaan ennen kuin uutta jaksoa analysoidaan. Jos aiemmat arvot ovat muuttuneet, §01h lasketaan uudelleen koko sarjalle v2024-2:lla.
 
 Huom.: ennuste esitettiin keskustelussa 23.10.2026, mutta se kirjattiin repoon vasta tällä commitilla 27.10.2026. Data ei ollut kumpanakaan päivänä saatavilla.
+
+**Tulos 27.10.2026 (lisätty, kirjausta ei muutettu):** A1 vahvistui. Jaksolla 28.3.–25.11.2024 r = 0,08 viiveellä −11 vrk, Neff 40, p = 0,64; 0/61 viivettä merkitsevä (BH); surrogaatti-p 0,63. Kausisykli poistettuna r = −0,22, p = 0,53. Versioerot v2024.1a ↔ v2024-2 raportoitiin ensin: harha +0,16 Sv, r = 0,985 (5 vrk), joten aiemmat tulokset pysyvät. Poikkeamat: v2024-2:ssa ei päiväsarjaa (5 vrk interpoloitu), jakso päättyy 25.11., komponentit puuttuvat. AMOC-monitori §01i; `tools/data/amoc-a1-results.json`.

@@ -72,12 +72,48 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     <span style="margin-left:auto">Lähde: aci-amoc-proxy</span>
   </div>
 
+  <div class="shdr"><span class="snum">§ 01i</span><span class="stit">RAPID v2024-2 ja ennakkokirjaus A1 — uusi jakso, sama tulos</span></div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p style="font-size:.85rem;margin-bottom:.7rem;">
+      RAPID julkaisi 23.10.2026 version v2024-2, joka jatkuu marraskuuhun 2024 (aiempi v2024.1a päättyi
+      maaliskuuhun 2024). Ennen datan lataamista kirjattiin ennuste (SEURANTA.md, A1, 27.10.2026):
+      SST ↔ RAPID_MOC -korrelaatio viiveellä −11 vrk on uudella jaksolla merkitsemätön.
+    </p>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+      <tr style="border-bottom:1px solid var(--rule)"><th style="text-align:left;padding:5px 6px">Testi</th><th style="text-align:left;padding:5px 6px">Tulos</th></tr>
+      <tr><td style="padding:5px 6px">Versiovertailu v2024.1a ↔ v2024-2, 2004–3/2024</td><td style="padding:5px 6px">harha +0,16 Sv, RMS 0,74 Sv, r=0,985 (5 vrk), r=0,997 (kk); trendi −0,95 → −0,93 Sv/vuosikymmen. Aiemmat tulokset eivät muutu.</td></tr>
+      <tr><td style="padding:5px 6px">Alkuperäinen ikkuna uudella versiolla</td><td style="padding:5px 6px">r=0,551 viiveellä −11, p=0,002 — havainto toistuu samassa ikkunassa</td></tr>
+      <tr><td style="padding:5px 6px"><strong>A1: uusi jakso 28.3.–25.11.2024, raaka</strong></td><td style="padding:5px 6px"><strong>r=0,08 viiveellä −11, Neff 40, p=0,64; 0/61 viivettä merkitsevä; surrogaatti-p 0,63</strong></td></tr>
+      <tr><td style="padding:5px 6px">Sama, kausisykli poistettu</td><td style="padding:5px 6px">r=−0,22 viiveellä −11, p=0,53; 0/61 merkitsevä</td></tr>
+      <tr><td style="padding:5px 6px">Sama, natiivi 5 vrk:n aikaväli</td><td style="padding:5px 6px">r=0,06 viiveellä −10 vrk, p=0,75</td></tr>
+    </table>
+    </div>
+    <p style="font-size:.85rem;margin-top:.9rem;margin-bottom:.7rem;">
+      <strong>Tulkinta.</strong> Ennuste piti. Yhteys löytyy yhä alkuperäisestä ikkunasta, mutta ei aineistosta,
+      jota kumpikaan aiempi analyysi ei nähnyt. Tämä on vahvempi näyttö §01h:n johtopäätökselle kuin
+      vuosittainen toisto, koska testi oli kirjattu ennen dataa.
+    </p>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:0;">
+      Poikkeamat ennakkokirjauksesta: v2024-2 julkaisee vain 5 vrk:n ja kuukausiarvot, joten päiväsarja
+      interpoloitiin lineaarisesti; jakso päättyy 25.11. (viimeinen 5 vrk:n arvo) eikä 30.11.; uudessa
+      tiedostossa ei ole komponentteja (Ekman, UMO, Golfvirta), joten Ekman-erottelua ja SLA↔UMO-testiä
+      ei voi jatkaa. Toistettavissa:
+      <a href="https://github.com/AetherContinuity/aethercontinuity.github.io/blob/main/scripts/amoc_a1_v2024_2.py" style="color:var(--accent)">skripti</a>,
+      <a href="data/rapid-v2024-2.json" style="color:var(--accent)">RAPID v2024-2 (5 vrk, kk)</a>,
+      <a href="data/amoc-sst-2024-ext.json" style="color:var(--accent)">SST 2024</a>,
+      <a href="data/amoc-a1-results.json" style="color:var(--accent)">tulokset</a>.
+      Data: RAPID-MOCHA-WBTS v2024-2, Moat ym. (2026), doi:10.5285/5c39bf4e-5140-5546-e063-7086abc027bc.
+      <span style="display:block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sr);">→ A1 vahvistui: ei näyttöä yhteydestä riippumattomalla jaksolla.</span>
+    </p>
+  </div>
+
   <div class="card" style="margin-bottom:2rem;border-left:3px solid var(--so);">
     <p style="font-size:.85rem;margin-bottom:.5rem;"><strong>Tila 5.10.2026.</strong>
       Yksikään testatuista sarjoista ei ole validoitunut AMOC-proksiksi. Aiemmin ainoana
       validoituna pidetty pari (SST ↔ RAPID_MOC) ei toistunut, kun sama testi ajettiin
       jokaiselle 19 vuodelle erikseen, ja katosi myös alkuperäisestä ikkunasta, kun kausisykli
-      poistettiin (§01h). RAPID:n oma mittaus päättyy maaliskuuhun 2024.</p>
+      poistettiin (§01h). Ennakkokirjattu testi uudella jaksolla 3–11/2024 ei myöskään löytänyt yhteyttä (§01i, 27.10.2026). RAPID:n mittaus ulottuu nyt marraskuuhun 2024 (v2024-2).</p>
     <p style="font-size:.8rem;color:var(--muted);margin-bottom:0;">
       Sivu on tässä tilassa menetelmäpäiväkirja ja validointiloki, ei AMOC:n tilaa seuraava
       monitori. Kortit näyttävät lähdesarjojen tuoreimmat arvot; ne eivät kerro kierron tilasta.
@@ -143,7 +179,7 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
   <div class="card" style="margin-bottom:2rem;">
     <p style="font-size:.85rem;margin-bottom:.7rem;">
       <strong>RAPID:</strong> ainoa suora AMOC-mittaus näistä neljästä. Kortti näyttää 2004–2024
-      viitekeskiarvon (ei live — uusin virallinen data ulottuu maaliskuuhun 2024). Historiallinen
+      viitekeskiarvon (ei live — uusin virallinen data, v2024-2, ulottuu marraskuuhun 2024; ks. §01i). Historiallinen
       päiväaikasarja (2004–2024, neljä komponenttia) on nyt käytettävissä <code>/compare</code>-työkalun
       kautta, ks. §01b.
     </p>
@@ -503,7 +539,7 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
   <p class="snote">
     Tämä on ensimmäinen, tarkoituksella yksinkertainen versio — neljä itsenäistä korttia,
     ei yhdistelmäindeksiä. RAPID-kortti näyttää yhä vain viitetilastot (ei live-arvoa) —
-    virallinen data ei ole päivittynyt maaliskuun 2024 jälkeen. Grönlanti-kortti mittaa
+    uusin virallinen data (v2024-2) päättyy marraskuuhun 2024. Grönlanti-kortti mittaa
     eri suuretta (pintamassatase) kuin alun perin tavoiteltu GRACE-kokonaismassatase, koska
     PO.DAAC vaatii aidon NASA Earthdata -kirjautumisen. Itä–länsi-gradientti ei validoitunut
     (§01b) luotettavaksi AMOC-proksiksi tässä validointitestissä — säilytetty näytöllä
