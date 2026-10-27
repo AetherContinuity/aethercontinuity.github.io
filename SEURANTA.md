@@ -118,3 +118,17 @@ Sivu: `tools/kuopio-seuranta.html` · aineisto: `tools/data/kuopio-seuranta.json
 Seurataan, miten etusijalaki, Mustakorven datakeskus (Polarnode), Kuopion Energian LDR-50 ja Volaghyn eSAF etenevät omissa putkissaan ja miten kaupungin päätökset muovaavat lopputuloksen. Ennakkokirjaukset K1–K5 lukittu 21.10.2026; uudet havainnot vain päivättyinä lokimerkintöinä JSON-tiedoston `log`-taulukkoon. Kirjauksen tilaa (`avoin` → `vahvistui` / `kumoutui`) muutetaan vain lokimerkinnän perusteella, ja merkintä viittaa kirjaukseen (`refs`).
 
 Lähteet: ymparisto.fi (YVA), kuopio.oncloudos.com (kaupungin esityslistat), hankeikkuna / eduskunta (TEM043:00/2026), Kuopion Energian tiedotteet ja vastuullisuusraportti.
+
+---
+
+## AMOC — ennakkokirjaus ennen RAPID v2024-2 -dataa (27.10.2026)
+
+RAPID ilmoitti 23.10.2026 päivityksestä v2024-2 (huhtikuu 2004 – marraskuu 2024, doi:10.5285/5c39bf4e-5140-5546-e063-7086abc027bc). Repon nykyinen `tools/moc_transports.nc` on v2024.1a ja päättyy 27.3.2024. Uutta dataa ei ole vielä ladattu eikä nähty.
+
+**Ennuste (A1):** SST↔RAPID_MOC-korrelaatio viiveellä −11 vrk on jaksolla 28.3.–30.11.2024 tilastollisesti merkitsemätön (p > 0,05, efektiivisellä otoskoolla korjattuna), samoin kuin koko sarjassa (AMOC-monitori §01h). Menetelmä sama kuin §01h:ssa: sama SST-piste ja -lähde (`/sst-anomaly`), sama Neff-korjaus, viiveet −30…+30 vrk raportoidaan kaikki.
+
+**Kumoutuu, jos:** viiveellä −11 vrk p < 0,05 Neff-korjattuna uudella jaksolla.
+
+**Lisäksi kirjataan ennen analyysiä:** versioiden v2024.1a ja v2024-2 erot päällekkäisellä jaksolla 2004–3/2024 raportoidaan ennen kuin uutta jaksoa analysoidaan. Jos aiemmat arvot ovat muuttuneet, §01h lasketaan uudelleen koko sarjalle v2024-2:lla.
+
+Huom.: ennuste esitettiin keskustelussa 23.10.2026, mutta se kirjattiin repoon vasta tällä commitilla 27.10.2026. Data ei ollut kumpanakaan päivänä saatavilla.
