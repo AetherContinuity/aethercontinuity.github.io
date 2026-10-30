@@ -152,3 +152,19 @@ Kaikki parit kuukausianomalioina (kausisykli poistettu), Pearson viiveittäin, N
 **Voimarajoitus kirjattu etukäteen:** N = 71, kuukausisarjoissa Neff todennäköisesti 15–35; vain |r| ≳ 0,4 voi tulla merkitseväksi. Nollatulos B1a/B1b:ssä ei siis osoita, ettei yhteyttä ole, vaan ettei tällä aineistolla havaittavaa yhteyttä ole.
 
 **Tulos 30.10.2026 (lisätty, kirjausta ei muutettu):** B1 piti, kaksi osaa niukasti. B1a: paras r = −0,41 viiveellä −1 kk (nimellinen p = 0,04), Neff 26, 0/13 BH-merkitsevä. B1b: suurin |r| = 0,295 viiveellä −6 kk (nimellinen p = 0,02), Neff 64, 0/25 BH-merkitsevä; raja |r| < 0,3 täyttyi 0,005:n marginaalilla. B1c toistui: r(ALL, EAST) = 0,91, r(ALL, WEST) = 0,42. B1a:n negatiivinen yhteys on hypoteesi OSNAP 2020–2022 -aineistolle, ei tulos. AMOC-monitori §01j; `tools/data/amoc-b1-results.json`.
+
+---
+
+## BEM-E — ennakkokirjaus D ennen Karttulanlahden aikasarjaa (30.10.2026)
+
+Tausta: käyttäjän havainto 30.10.2026, että Virmasveden Karttulanlahdella (62°53'22"N 26°58'24"E, Kuopio) on koettu samantyyppinen kehitys kuin Kolvosessa. NDCI-arvoja ei ole laskettu ennen tätä kirjausta. Kesäkuvia ei ole katsottu; polygonin rajaamiseen käytettiin vain toukokuun kuvaa.
+
+**Polygoni (kiinnitetty):** `tools/data/bem-e/karttulanlahti_m40.geojson` (sha256 alkaa 08f8309dff733598). Sentinel-2 SCL = 6, 11.5.2025 (35VMK), leikattu UTM35-ikkunaan 498141–499441 E, 6972130–6973980 N (lahden suu eteläreunassa), suurin yhtenäinen vesialue, −40 m puskuri: 0,175 km² (raaka 0,341 km²). **Mittari** kuten C: `/lake-timeseries`, NDCI, touko–syyskuun P10D-mediaani, 2018–2026. **Vertailu:** Iisvesi-polygoni (`iisvesi`, −40 m, 137 km², sisältää Virmasveden; lahden osuus < 0,2 %).
+
+**D1.** Ainakin yhden vuoden 2023–2025 NDCI ylittää perusjakson 2018–2021 suurimman arvon. *Ennuste:* toteutuu. *Kumoutuu, jos:* kaikki 2023–2025 ≤ max(2018–2021).
+
+**D2.** Ero lahti − Iisvesi: vuosien 2023–2025 keskiarvo ylittää perusjakson 2018–2021 suurimman eron. *Ennuste:* toteutuu. *Kumoutuu, jos:* ei ylitä. D2 erottaa lahden oman kehityksen koko järven ja sään vaihtelusta, joten se on D1:tä vahvempi testi.
+
+**D0 (kuvaileva).** Vuoden 2026 sijoitus jaksolla 2018–2026; Karttulanlahdelta ei ole kirjattua tietoa kesän 2026 kukinnasta, joten ennustetta ei anneta.
+
+**Rajoitukset kirjattu etukäteen:** lahti on kapea (puskuroituna noin 150 m leveä), joten 20 m:n pikseleissä rannan vaikutus on suurempi kuin Kolvosessa; ennuste nojaa osin käyttäjän havaintoon, ei riippumattomaan lähteeseen.
