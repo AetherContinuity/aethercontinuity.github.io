@@ -168,3 +168,10 @@ Tausta: käyttäjän havainto 30.10.2026, että Virmasveden Karttulanlahdella (6
 **D0 (kuvaileva).** Vuoden 2026 sijoitus jaksolla 2018–2026; Karttulanlahdelta ei ole kirjattua tietoa kesän 2026 kukinnasta, joten ennustetta ei anneta.
 
 **Rajoitukset kirjattu etukäteen:** lahti on kapea (puskuroituna noin 150 m leveä), joten 20 m:n pikseleissä rannan vaikutus on suurempi kuin Kolvosessa; ennuste nojaa osin käyttäjän havaintoon, ei riippumattomaan lähteeseen.
+
+**Tulos 30.10.2026 (lisätty, kirjausta ei muutettu):** D1 ja D2 kumoutuivat. Karttulanlahden NDCI: 2018 0,035 · 2019 0,023 · 2020 0,028 · 2021 0,024 · 2022 0,018 · 2023 0,011 · 2024 0,029 · 2025 0,014 · 2026 0,024.
+- D1: perusjakson maksimi 0,035 (2018); yksikään vuosi 2023–2025 ei ylitä sitä.
+- D2: ero Iisveteen 2023–2025 keskimäärin 0,022, perusjakson suurin ero 0,071 (2018).
+- D0: 2026 sijalla 4/9.
+
+Lahti on koko jakson ajan Iisvettä tuottavampi (ero 0,003–0,071), mutta nousua ei näy. Mahdollisia syitä, joita tämä mittari ei erota: kapean lahden rantasekoittuminen, touko–syyskuun mediaanin laimennus, tai havaittu muutos koskee muuta kuin kasviplanktonia (vesikasvillisuus, näkösyvyys, liettyminen). `tools/data/bem-e/karttulanlahti-tulos.json`.
