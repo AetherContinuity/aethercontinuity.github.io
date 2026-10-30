@@ -168,3 +168,10 @@ Tausta: Yle 29.10.2026 — Kolvonen (Enonkoski/Savonlinna, järvinumero 04.297.1
 **C2 (kuvaileva).** NDCI:n Spearmanin ρ vuoden kanssa 2018–2025 > 0. Ei merkitsevyysrajaa (n = 8).
 
 **Rajoitukset kirjattu etukäteen:** touko–syyskuun mediaani laimentaa lyhyen loppukesän kukinnan; pienessä järvessä rantasekoittuminen 20 m:n pikseleillä; pintakukinta nostaa myös lähi-infrapunaa, joten NDCI voi käyttäytyä kukinnassa epälineaarisesti (C0 testaa tämän). Metsänkäyttöilmoitukset ja vedenkorkeus (SYKE-asema Paikka 2925) raportoidaan kuvailevina, ilman ennustetta.
+
+**Tulos 30.10.2026 (lisätty, kirjausta ei muutettu):** Kolvosen NDCI (touko–syyskuun P10D-mediaani, −40 m polygoni 1,19 km²): 2018 0,016 · 2019 −0,003 · 2020 0,028 · 2021 −0,011 · 2022 0,013 · 2023 0,041 · 2024 0,040 · 2025 0,029 · 2026 0,061.
+- C0 piti: 2026 on jakson suurin.
+- C1 piti: 2023 (0,041) ja 2024 (0,040) ylittävät perusjakson maksimin (0,028); 2025 vain niukasti (0,029).
+- C2: ρ = 0,60 (2018–2025), kuvaileva.
+
+Verrokit (lisätty jälkikäteen, ei ennakkokirjattu): Iisvesi ei näytä nousua 2022 jälkeen (2023–2026: 0,008, −0,004, −0,015, −0,031), joten Sentinel-2:n käsittelyversion vaihto 2022 ei selitä Kolvosen nousua. Lähijärvi 3 km lännessä (0,23 km²): 2023–2025 ei ylitä omaa perusjaksoaan, mutta 2026 on myös sen suurin (0,082) — vuoden 2026 kukinta oli osin alueellinen, varoitusmerkki 2023–2024 ei. Metsänkäyttöilmoitukset (järvi + 2 km): noin 150–310 ha/v 2010–2026 ilman nousevaa trendiä; LVV:n väite lisääntyneistä metsätaloustoimista ei näy ilmoituksissa tällä rajauksella. Vedenkorkeus: SYKE:n Kolvosen asemalla ei havaintoja 2015 jälkeen. `tools/data/bem-e-kolvonen.json`.
