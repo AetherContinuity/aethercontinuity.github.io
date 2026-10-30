@@ -108,6 +108,41 @@ footer{max-width:1060px;margin:0 auto;padding:1.5rem 2rem;font-family:var(--mono
     </p>
   </div>
 
+  <div class="shdr"><span class="snum">§ 01j</span><span class="stit">OSNAP ja ennakkokirjaus B1 — subpolaarinen kierto, 2014–2020</span></div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p style="font-size:.85rem;margin-bottom:.7rem;">
+      §01h:n perusongelma oli maantieteellinen: SST-piste 60°N 30°W on yli 4 000 km RAPID-linjan pohjoispuolella.
+      OSNAP mittaa kiertoa subpolaarisella Pohjois-Atlantilla, ja piste on OSNAP Eastin alueella. Testit kirjattiin
+      ennen datan lukemista (SEURANTA.md B1, 30.10.2026). Aineisto: OSNAP v2023, kuukausiarvot 8/2014–6/2020 (71 kk),
+      MOC tiheyskoordinaateissa; vertailuun RAPID v2024-2:n samassa koordinaatissa laskettu sarja (σ<sub>0</sub>).
+    </p>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+      <tr style="border-bottom:1px solid var(--rule)"><th style="text-align:left;padding:5px 6px">Testi</th><th style="text-align:left;padding:5px 6px">Tulos</th><th style="text-align:left;padding:5px 6px">Ennuste</th></tr>
+      <tr><td style="padding:5px 6px">B1a: SST ↔ OSNAP East, ±6 kk</td><td style="padding:5px 6px">paras r=−0,41 viiveellä −1 kk (nimellinen p=0,04), samanaikainen r=−0,37; Neff 26; 0/13 BH-merkitsevä</td><td style="padding:5px 6px">piti (niukasti)</td></tr>
+      <tr><td style="padding:5px 6px">B1b: OSNAP koko ↔ RAPID σ<sub>0</sub>, ±12 kk</td><td style="padding:5px 6px">samanaikainen r=−0,09; suurin |r|=0,30 viiveellä −6 kk (nimellinen p=0,02); Neff 64; 0/25 BH-merkitsevä</td><td style="padding:5px 6px">piti (niukasti, raja |r|&lt;0,3)</td></tr>
+      <tr><td style="padding:5px 6px">B1c: toistotarkistus</td><td style="padding:5px 6px">r(koko, East)=0,91, r(koko, West)=0,42 — kokonaiskierto seuraa itäosaa, kuten Lozier ym. (2019)</td><td style="padding:5px 6px">toistui</td></tr>
+    </table>
+    </div>
+    <p style="font-size:.85rem;margin-top:.9rem;margin-bottom:.7rem;">
+      <strong>Tulkinta.</strong> Kaikki kirjatut ennusteet pitivät, mutta kaksi niukasti, ja se on raportoitava sellaisenaan.
+      B1a:n −0,41 on vahvin tähän mennessä nähty SST-yhteys, ja sen etumerkki on eri kuin §01d:ssä: lämpimämpi pinta
+      kulkee heikomman itäisen kierron kanssa samassa tai seuraavassa kuussa. Monivertailukorjauksen jälkeen se ei ole
+      merkitsevä, eikä 71 kuukauden aineisto riitä erottamaan sitä sattumasta. Se on hypoteesi uudelle aineistolle
+      (OSNAP 2020–2022), ei tulos. B1b ei tue ajatusta, että subpolaarinen ja subtrooppinen kierto vaihtelisivat
+      kuukausitasolla yhdessä; tämä vastaa OSNAP:n aiempia havaintoja.
+    </p>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:0;">
+      Voimarajoitus kirjattiin etukäteen: vain |r| ≳ 0,4 voi tulla merkitseväksi. Nollatulos tarkoittaa, ettei tällä
+      aineistolla havaittavaa yhteyttä ole, ei sitä, ettei yhteyttä ole. Uudempaa OSNAP-versiota (8/2014–7/2022, 2025)
+      ei käytetty. Toistettavissa:
+      <a href="https://github.com/AetherContinuity/aethercontinuity.github.io/blob/main/scripts/amoc_b1_osnap.py" style="color:var(--accent)">skripti</a>,
+      <a href="data/amoc-b1-results.json" style="color:var(--accent)">tulokset</a>.
+      Data: OSNAP (Fu, Lozier ym. 2023), www.o-snap.org; RAPID-MOCHA-WBTS v2024-2.
+      <span style="display:block;margin-top:.4rem;font-family:var(--mono);font-size:.72rem;color:var(--sy);">→ B1 piti. B1a:n raja-arvoinen negatiivinen yhteys kirjataan testattavaksi uudella OSNAP-aineistolla.</span>
+    </p>
+  </div>
+
   <div class="card" style="margin-bottom:2rem;border-left:3px solid var(--so);">
     <p style="font-size:.85rem;margin-bottom:.5rem;"><strong>Tila 5.10.2026.</strong>
       Yksikään testatuista sarjoista ei ole validoitunut AMOC-proksiksi. Aiemmin ainoana

@@ -150,3 +150,5 @@ Kaikki parit kuukausianomalioina (kausisykli poistettu), Pearson viiveittäin, N
 **B1c (toistotarkistus, ei hypoteesi).** OSNAP koko MOC:n vaihtelu seuraa East-osaa enemmän kuin West-osaa (Lozier ym. 2019): r(ALL, EAST) > r(ALL, WEST) samanaikaisesti.
 
 **Voimarajoitus kirjattu etukäteen:** N = 71, kuukausisarjoissa Neff todennäköisesti 15–35; vain |r| ≳ 0,4 voi tulla merkitseväksi. Nollatulos B1a/B1b:ssä ei siis osoita, ettei yhteyttä ole, vaan ettei tällä aineistolla havaittavaa yhteyttä ole.
+
+**Tulos 30.10.2026 (lisätty, kirjausta ei muutettu):** B1 piti, kaksi osaa niukasti. B1a: paras r = −0,41 viiveellä −1 kk (nimellinen p = 0,04), Neff 26, 0/13 BH-merkitsevä. B1b: suurin |r| = 0,295 viiveellä −6 kk (nimellinen p = 0,02), Neff 64, 0/25 BH-merkitsevä; raja |r| < 0,3 täyttyi 0,005:n marginaalilla. B1c toistui: r(ALL, EAST) = 0,91, r(ALL, WEST) = 0,42. B1a:n negatiivinen yhteys on hypoteesi OSNAP 2020–2022 -aineistolle, ei tulos. AMOC-monitori §01j; `tools/data/amoc-b1-results.json`.
