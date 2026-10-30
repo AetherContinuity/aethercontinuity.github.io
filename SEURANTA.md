@@ -195,3 +195,21 @@ Tausta: käyttäjän havainto 30.10.2026, että Virmasveden Karttulanlahdella (6
 - D0: 2026 sijalla 4/9.
 
 Lahti on koko jakson ajan Iisvettä tuottavampi (ero 0,003–0,071), mutta nousua ei näy. Mahdollisia syitä, joita tämä mittari ei erota: kapean lahden rantasekoittuminen, touko–syyskuun mediaanin laimennus, tai havaittu muutos koskee muuta kuin kasviplanktonia (vesikasvillisuus, näkösyvyys, liettyminen). `tools/data/bem-e/karttulanlahti-tulos.json`.
+
+---
+
+## BEM-E — ennakkokirjaus E: ennustaako NDCI vesienhoidon 4. kauden luokituksen heikkenemisen? (30.10.2026)
+
+**Kysymys.** Erottaako Sentinel-2:n NDCI-muutos 2018–2023 ne järvet, joiden ekologisen tilan luokka heikkenee vesienhoidon 4. kaudella (2028–2033), niistä joiden ei? 4. kauden luokitus on keskeneräinen; tarkemmat tiedot julkaistaan Pohjois-Karjalan YTR:n muistion (25.5.2026) mukaan joulukuussa 2026 kuulemisen yhteydessä. Kukaan ei siis tiedä tulosta tätä kirjattaessa, eikä NDCI-arvoja ole laskettu.
+
+**Järvijoukko (kiinnitetty, `tools/data/bem-e/vh4/vh4_jarvet.json`, sha256 bd95e32a3605503d; polygonit `vh4_polygonit.json`, 386d3589f4aeb0a8).** Lähde Syken WFS `jarvet_ekologinen_tila_2022` (3. kausi). Kelpoisuus: ELY POS, ESA, POK, KAS tai KES; pinta-ala 1–50 km²; ei voimakkaasti muutettu eikä keinotekoinen; luokitustaso vedenlaatuluokitus, suppea tai laaja ekologinen luokitus (ei pelkkä asiantuntija-arvio); luokka erinomainen–huono. Kelpoisia 760. Otos: kaikki 16 järveä, joiden luokka heikkeni 3. kaudella todellisen tilan muutoksen vuoksi, ja 240 muuta yksinkertaisella satunnaisotannalla (Python `random.Random(20261030).sample`, järjestys vpdtunnuksen mukaan) — yhteensä 256. Polygoni: Syken vesimuodostuma −40 m, URL-pituuden vuoksi lisäkutistus ja yksinkertaistus samalla toleranssilla (pysyy rajauksen sisällä; 216 järvellä 10 m, enintään 100+ m).
+
+**Altiste.** `/lake-timeseries`, NDCI, touko–syyskuun P10D-mediaani vuosille 2018–2023. Δ = ka(2021–2023) − ka(2018–2020); vähintään kaksi kelvollista vuotta kummassakin puoliskossa, muuten järvi pois (kirjataan).
+
+**Vaste (kun 4. kausi julkaistaan).** Y = 1, jos 4. kauden ekologinen tila on huonompi kuin 3. kauden (`ekoltila`) samalle vesimuodostumalle; yhdistys vpdtunnuksella, toissijaisesti nimi + kunta. Ensisijainen: mikä tahansa luokan heikkeneminen. Toissijainen: vain heikkenemiset, jotka Syke merkitsee todelliseksi tilan muutokseksi (jos 4. kauden aineisto erottelee sen).
+
+**E1 (ensisijainen).** Δ:n AUC vasteelle Y on > 0,5, yksisuuntainen Mann–Whitney p < 0,05. *Ennuste:* toteutuu, AUC noin 0,6. *Kumoutuu, jos:* p ≥ 0,05.
+**E2.** Δ:n ylimpään neljännekseen kuuluvissa järvissä heikkenemisosuus on suurempi kuin muissa, yksisuuntainen Fisher p < 0,05.
+**Ennustelista.** Ylimmän neljänneksen järvet julkaistaan erillisenä committina NDCI-laskennan jälkeen ja ennen 4. kauden luokituksen julkaisua.
+
+**Rajoitukset kirjattu etukäteen.** (1) 4. kaudella arviointiperusteet muuttuivat (Luke/Syke-raportti), joten osa luokkamuutoksista johtuu menetelmästä eikä järvestä — tämä heikentää kaikkia yhteyksiä nollaa kohti; toissijainen vaste rajaa tätä. (2) 4. kauden aineistojakso ei ole tiedossa; oletus 2018–2023. (3) Heikkenemisiä odotetaan vähän (3. kaudella todellisia 16/760 ≈ 2 %; kaikki heikkenemiset 32/760 ≈ 4 %), joten testin voima voi jäädä pieneksi — jos Y = 1 alle 8 järvellä, tulos raportoidaan kuvailevana. (4) Määräaika: jos 4. kauden luokitusta ei ole saatavilla 30.6.2027 mennessä, tila raportoidaan tuolloin.
