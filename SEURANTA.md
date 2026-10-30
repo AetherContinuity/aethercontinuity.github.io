@@ -134,3 +134,19 @@ RAPID ilmoitti 23.10.2026 päivityksestä v2024-2 (huhtikuu 2004 – marraskuu 2
 Huom.: ennuste esitettiin keskustelussa 23.10.2026, mutta se kirjattiin repoon vasta tällä commitilla 27.10.2026. Data ei ollut kumpanakaan päivänä saatavilla.
 
 **Tulos 27.10.2026 (lisätty, kirjausta ei muutettu):** A1 vahvistui. Jaksolla 28.3.–25.11.2024 r = 0,08 viiveellä −11 vrk, Neff 40, p = 0,64; 0/61 viivettä merkitsevä (BH); surrogaatti-p 0,63. Kausisykli poistettuna r = −0,22, p = 0,53. Versioerot v2024.1a ↔ v2024-2 raportoitiin ensin: harha +0,16 Sv, r = 0,985 (5 vrk), joten aiemmat tulokset pysyvät. Poikkeamat: v2024-2:ssa ei päiväsarjaa (5 vrk interpoloitu), jakso päättyy 25.11., komponentit puuttuvat. AMOC-monitori §01i; `tools/data/amoc-a1-results.json`.
+
+---
+
+## AMOC — ennakkokirjaus B1 ennen OSNAP-analyysiä (30.10.2026)
+
+Aineisto: `OSNAP_MOC_MHT_MFT_TimeSeries_201408_202006_2023.nc` (Fu ym., luotu 24.4.2023), kuukausiarvot 8/2014–6/2020 (71 kk), MOC tiheyskoordinaateissa (σθ). Tiedosto saatiin 30.10.2026; tämä kirjaus tehtiin ennen kuin arvoja luettiin tai laskettiin. Uudempi versio (8/2014–7/2022, 2025) on olemassa mutta ei käytössä.
+
+Kaikki parit kuukausianomalioina (kausisykli poistettu), Pearson viiveittäin, Neff ACF:stä, p t-jakaumasta, Benjamini–Hochberg α = 0,05, kuten §01h. RAPID-vertailussa käytetään v2024-2:n sarjaa `amoc_sigma0_1m` (sama koordinaatti kuin OSNAP).
+
+**B1a.** SST 60°N 30°W ↔ OSNAP East MOC, viiveet −6…+6 kk. *Ennuste:* ei BH-merkitsevää viivettä. *Kumoutuu, jos:* vähintään yksi viive BH-merkitsevä.
+
+**B1b.** OSNAP koko MOC ↔ RAPID AMOCσ0, viiveet −12…+12 kk. *Ennuste:* ei BH-merkitsevää viivettä, ja |r| < 0,3 kaikilla viiveillä. *Kumoutuu, jos:* jokin viive BH-merkitsevä tai |r| ≥ 0,3.
+
+**B1c (toistotarkistus, ei hypoteesi).** OSNAP koko MOC:n vaihtelu seuraa East-osaa enemmän kuin West-osaa (Lozier ym. 2019): r(ALL, EAST) > r(ALL, WEST) samanaikaisesti.
+
+**Voimarajoitus kirjattu etukäteen:** N = 71, kuukausisarjoissa Neff todennäköisesti 15–35; vain |r| ≳ 0,4 voi tulla merkitseväksi. Nollatulos B1a/B1b:ssä ei siis osoita, ettei yhteyttä ole, vaan ettei tällä aineistolla havaittavaa yhteyttä ole.
