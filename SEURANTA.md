@@ -213,3 +213,7 @@ Lahti on koko jakson ajan Iisvettä tuottavampi (ero 0,003–0,071), mutta nousu
 **Ennustelista.** Ylimmän neljänneksen järvet julkaistaan erillisenä committina NDCI-laskennan jälkeen ja ennen 4. kauden luokituksen julkaisua.
 
 **Rajoitukset kirjattu etukäteen.** (1) 4. kaudella arviointiperusteet muuttuivat (Luke/Syke-raportti), joten osa luokkamuutoksista johtuu menetelmästä eikä järvestä — tämä heikentää kaikkia yhteyksiä nollaa kohti; toissijainen vaste rajaa tätä. (2) 4. kauden aineistojakso ei ole tiedossa; oletus 2018–2023. (3) Heikkenemisiä odotetaan vähän (3. kaudella todellisia 16/760 ≈ 2 %; kaikki heikkenemiset 32/760 ≈ 4 %), joten testin voima voi jäädä pieneksi — jos Y = 1 alle 8 järvellä, tulos raportoidaan kuvailevana. (4) Määräaika: jos 4. kauden luokitusta ei ole saatavilla 30.6.2027 mennessä, tila raportoidaan tuolloin.
+
+### E — ennustelista julkaistu (30.10.2026, kirjausta ei muutettu)
+
+NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; ensimmäisen ajon CDSE 429 -virheet ajettiin uudelleen, lopullisessa aineistossa ei puuttuvia vuosia). Pois jääneitä 0. Δ-mediaani +0,0065 (p25 −0,0023, max +0,0474). Ylimmän neljänneksen raja Δ ≥ 0,0149; listalla 64 järveä: `tools/data/bem-e/vh4/vh4_ennustelista.json`. Laskenta `scripts/bem_e_vh4_delta.py`, kaikki Δ:t `vh4_delta.json`. Kuvaileva huomio, ei testi: 3. kaudella heikentyneistä 16 järvestä 5 osuu ylimpään neljännekseen (odotus 4). Testi E1/E2 ajetaan, kun 4. kauden luokitus julkaistaan.
