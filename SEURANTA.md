@@ -175,3 +175,23 @@ Tausta: Yle 29.10.2026 — Kolvonen (Enonkoski/Savonlinna, järvinumero 04.297.1
 - C2: ρ = 0,60 (2018–2025), kuvaileva.
 
 Verrokit (lisätty jälkikäteen, ei ennakkokirjattu): Iisvesi ei näytä nousua 2022 jälkeen (2023–2026: 0,008, −0,004, −0,015, −0,031), joten Sentinel-2:n käsittelyversion vaihto 2022 ei selitä Kolvosen nousua. Lähijärvi 3 km lännessä (0,23 km²): 2023–2025 ei ylitä omaa perusjaksoaan, mutta 2026 on myös sen suurin (0,082) — vuoden 2026 kukinta oli osin alueellinen, varoitusmerkki 2023–2024 ei. Metsänkäyttöilmoitukset (järvi + 2 km): noin 150–310 ha/v 2010–2026 ilman nousevaa trendiä; LVV:n väite lisääntyneistä metsätaloustoimista ei näy ilmoituksissa tällä rajauksella. Vedenkorkeus: SYKE:n Kolvosen asemalla ei havaintoja 2015 jälkeen. `tools/data/bem-e-kolvonen.json`.
+## BEM-E — ennakkokirjaus D ennen Karttulanlahden aikasarjaa (30.10.2026)
+
+Tausta: käyttäjän havainto 30.10.2026, että Virmasveden Karttulanlahdella (62°53'22"N 26°58'24"E, Kuopio) on koettu samantyyppinen kehitys kuin Kolvosessa. NDCI-arvoja ei ole laskettu ennen tätä kirjausta. Kesäkuvia ei ole katsottu; polygonin rajaamiseen käytettiin vain toukokuun kuvaa.
+
+**Polygoni (kiinnitetty):** `tools/data/bem-e/karttulanlahti_m40.geojson` (sha256 alkaa 08f8309dff733598). Sentinel-2 SCL = 6, 11.5.2025 (35VMK), leikattu UTM35-ikkunaan 498141–499441 E, 6972130–6973980 N (lahden suu eteläreunassa), suurin yhtenäinen vesialue, −40 m puskuri: 0,175 km² (raaka 0,341 km²). **Mittari** kuten C: `/lake-timeseries`, NDCI, touko–syyskuun P10D-mediaani, 2018–2026. **Vertailu:** Iisvesi-polygoni (`iisvesi`, −40 m, 137 km², sisältää Virmasveden; lahden osuus < 0,2 %).
+
+**D1.** Ainakin yhden vuoden 2023–2025 NDCI ylittää perusjakson 2018–2021 suurimman arvon. *Ennuste:* toteutuu. *Kumoutuu, jos:* kaikki 2023–2025 ≤ max(2018–2021).
+
+**D2.** Ero lahti − Iisvesi: vuosien 2023–2025 keskiarvo ylittää perusjakson 2018–2021 suurimman eron. *Ennuste:* toteutuu. *Kumoutuu, jos:* ei ylitä. D2 erottaa lahden oman kehityksen koko järven ja sään vaihtelusta, joten se on D1:tä vahvempi testi.
+
+**D0 (kuvaileva).** Vuoden 2026 sijoitus jaksolla 2018–2026; Karttulanlahdelta ei ole kirjattua tietoa kesän 2026 kukinnasta, joten ennustetta ei anneta.
+
+**Rajoitukset kirjattu etukäteen:** lahti on kapea (puskuroituna noin 150 m leveä), joten 20 m:n pikseleissä rannan vaikutus on suurempi kuin Kolvosessa; ennuste nojaa osin käyttäjän havaintoon, ei riippumattomaan lähteeseen.
+
+**Tulos 30.10.2026 (lisätty, kirjausta ei muutettu):** D1 ja D2 kumoutuivat. Karttulanlahden NDCI: 2018 0,035 · 2019 0,023 · 2020 0,028 · 2021 0,024 · 2022 0,018 · 2023 0,011 · 2024 0,029 · 2025 0,014 · 2026 0,024.
+- D1: perusjakson maksimi 0,035 (2018); yksikään vuosi 2023–2025 ei ylitä sitä.
+- D2: ero Iisveteen 2023–2025 keskimäärin 0,022, perusjakson suurin ero 0,071 (2018).
+- D0: 2026 sijalla 4/9.
+
+Lahti on koko jakson ajan Iisvettä tuottavampi (ero 0,003–0,071), mutta nousua ei näy. Mahdollisia syitä, joita tämä mittari ei erota: kapean lahden rantasekoittuminen, touko–syyskuun mediaanin laimennus, tai havaittu muutos koskee muuta kuin kasviplanktonia (vesikasvillisuus, näkösyvyys, liettyminen). `tools/data/bem-e/karttulanlahti-tulos.json`.
