@@ -226,9 +226,12 @@ kontrollihuoneen kartassa):
     vuorokauden keskihinnat: FI 107,8 · SE1 54,1 · SE3 275,3 · EE 305,1 · PL 459,5
     FI–EE-hintaero yli 1 €: 82/96 varttia, suurin ero 475 €
 
-Suomi oli halpa lenkki kahden kalliin alueen välissä ja vei molempiin:
-EstLink 1 018 MW ja Fenno-Skan 565 MW vientiä, SE1:stä tuontia 1 707 MW
-(SvK:n kartta, fyysinen virta). Hintaero FI–EE 432 € × 1 018 MW on noin
+Suomi oli halpa lenkki kalliiden alueiden välissä ja toimi siirtoreittinä.
+Fingridin mittaus klo 15.45 (+ vienti, − tuonti): EstLink +1 016 MW (DS 140),
+FI–SE3 −433 MW (DS 61), FI–SE1 noin −1 750…−1 900 MW (DS 87). Sähkö virtasi
+siis SE3:sta Suomeen, vaikka SE3:n hinta oli 248 € Suomea korkeampi: hintaeroa
+vastaan kulkeva virta, joka on mahdollinen flow-based-laskennassa. Syytä ei
+ole selvitetty. Hintaero FI–EE 432 € × 1 016 MW on noin
 440 000 € pullonkaulatuloa tunnissa, joka jaetaan Fingridin ja Eleringin
 kesken. Niukka tekijä on siirtoyhteys, ja sen vuokra kertyy verkonhaltijalle.
 Illalla FI nousi EE:n tasolle (klo 19: 322,5 vs. 322,9), eli sama yhteys
