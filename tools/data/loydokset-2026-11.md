@@ -6,6 +6,7 @@ Istunnon muisti. Jokainen laskettu luku on jäljitettävissä tallennettuun aine
 
     tools/data/da-fi-2025-11_2026-10.json     4f80f0f3c713   day-ahead FI, 15 min, 35 040 pistettä
     tools/data/wind-fi-2025-11_2026-10.json   9f2a35c630a0   maatuuli FI, 15 min, 35 040 pistettä
+    tools/data/da-se1-2025-11_2026-10.json    e4c0a2bd5046   day-ahead SE1, 15 min, 35 040 pistettä
     tools/data/rp-244-talvi-2025-2026.json    527f60ca2a97   ylössäätöhinta (aiempi aineisto)
     tools/laskenta/                           skriptit; ajetaan hakemistosta tools/laskenta, lukevat ../data
 
@@ -208,3 +209,34 @@ kannattavuus piikeillä, biokaasu säätövoimaloissa, kunnan rahallinen
 tappio myynnissä ja "PtX:stä ei löydy tietoa". Kaksi vahvistui: TN-022:n
 kate ja tuulen kannibalisaatio. **Arvio ja laskelma erosivat suunnaltaan
 vain siellä, missä arvio perustui periaatteeseen eikä lukuun.**
+
+---
+
+## 10 · Lisäys: tilannekuva 10.11.2026 klo 15.45
+
+Day-ahead-hinnat vartilla 15.45–16.00 (ENTSO-E A44; samat luvut kuin SvK:n
+kontrollihuoneen kartassa):
+
+    SE1    91,06 €/MWh
+    FI     99,08
+    SE3   347,19
+    EE    530,74
+    PL    858,40
+
+    vuorokauden keskihinnat: FI 107,8 · SE1 54,1 · SE3 275,3 · EE 305,1 · PL 459,5
+    FI–EE-hintaero yli 1 €: 82/96 varttia, suurin ero 475 €
+
+Suomi oli halpa lenkki kahden kalliin alueen välissä ja vei molempiin:
+EstLink 1 018 MW ja Fenno-Skan 565 MW vientiä, SE1:stä tuontia 1 707 MW
+(SvK:n kartta, fyysinen virta). Hintaero FI–EE 432 € × 1 018 MW on noin
+440 000 € pullonkaulatuloa tunnissa, joka jaetaan Fingridin ja Eleringin
+kesken. Niukka tekijä on siirtoyhteys, ja sen vuokra kertyy verkonhaltijalle.
+Illalla FI nousi EE:n tasolle (klo 19: 322,5 vs. 322,9), eli sama yhteys
+toi Manner-Euroopan hinnan Suomeen heti kun pullonkaula lakkasi sitomasta.
+
+Ennakkokirjaukset F1–F3 (SEURANTA.md) tehtiin samana päivänä.
+
+**Euroopan aikataulu** [M, asetus (EU) 2026/261]: venäläisen LNG:n
+pitkäaikaiset sopimukset kielletään 1.1.2027, putkikaasun 30.9.2027
+(viimeistään 1.11.2027). 1.1.2027 on sama päivä, jona Meri-Pori siirtyy
+markkinalle (F1).
