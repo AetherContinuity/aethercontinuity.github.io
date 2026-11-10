@@ -284,3 +284,29 @@ KHI:n painot 2026: 04.5 on 50,2 ‰ ja 07.2.2 on 30,1 ‰, yhteensä noin 8 %.
 Rajoitukset: Kulutustutkimus on tehty viimeksi 2022, joten tuloluokittaista
 tietoa hintahuipun jälkeen ei ole. Keskiarvo peittää pörssisähköasiakkaan
 ja sähkölämmittäjän talvikuukaudet.
+
+### Korjaus kohtaan 11: polttoaineet eivät ole palanneet
+
+Lause "sähkö ja polttoaineet ovat palanneet yleisen hintatason tuntumaan"
+pitää vain sähköstä. Indeksin 12 kuukauden keskiarvo peitti kevään 2026
+nousun. Kuukausikeskihinnat (`polttonesteiden-hinnat-2021-2026.json`, c49db0b624b8) [M]:
+
+                          10/2025    10/2026    muutos
+    diesel, €/l             1,61       2,49     +55 %
+    bensiini 95 E10, €/l    1,71       2,28     +33 %
+    kevyt polttoöljy, €/l   1,20       2,04     +70 %
+    paineist. biokaasu, €/kg 1,85      2,19     +18 %
+    nesteyt. biokaasu, €/kg  1,86      2,20     +18 %
+
+Dieselin lokakuun hinta ylittää vuoden 2022 keskiarvon (2,16). Nousu alkoi
+maaliskuussa 2026 (1,80 → 2,08 → 2,34). Diesel on kallistunut selvästi
+bensiiniä enemmän, eli paine on keskitisleissä: tavaraliikenne, maatalous,
+metsäkoneet ja haketuksen ketju.
+
+Energiasisällöllä verrattuna [L; diesel 9,96 kWh/l, biometaani 13,9 kWh/kg, A]:
+
+    10/2025   diesel 0,162 €/kWh   biokaasu 0,133 €/kWh   biokaasu 18 % halvempi
+    10/2026   diesel 0,250 €/kWh   biokaasu 0,158 €/kWh   biokaasu 37 % halvempi
+
+Vertailu on pumppuhinnoin veroineen eikä ota huomioon moottorien
+hyötysuhde-eroa.
