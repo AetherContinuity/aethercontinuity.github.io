@@ -243,3 +243,44 @@ Ennakkokirjaukset F1–F3 (SEURANTA.md) tehtiin samana päivänä.
 pitkäaikaiset sopimukset kielletään 1.1.2027, putkikaasun 30.9.2027
 (viimeistään 1.11.2027). 1.1.2027 on sama päivä, jona Meri-Pori siirtyy
 markkinalle (F1).
+
+---
+
+## 11 · Energian paino kotitalouksien taloudessa
+
+Aineisto: `kotitalouksien-energiamenot-2012-2026.json` (7a975363926e). [M] Tilastokeskus.
+
+**Osuus kulutusmenoista 2022** (Kulutustutkimus; sähkö, kaasu ja muut
+polttoaineet 04.5 + ajoneuvopolttoaineet 07.2.2):
+
+    kaikki            7,5 %   (2 993 €/v)
+    I pienituloisin   6,2 %   (1 212 €)
+    II                8,2 %
+    III               7,4 %
+    IV                8,3 %
+    V suurituloisin   7,1 %   (4 606 €)
+
+    2012: 7,6 %  ·  2016: 6,4 %  ·  2022: 7,5 %
+
+Osuus on pienin pienituloisimmalla viidenneksellä, ei suurin. Syy on
+mittaustapa: kerrostalon lämpö sisältyy vuokraan ja vastikkeeseen eikä
+kirjaudu energiaksi, ja autottomia on enemmän. Asumisen koko pääryhmä (04)
+näyttää eron: I 38,6 %, V 30,0 %. Energian hinta osuu pienituloiseen
+asumiskulun kautta ja viiveellä, ei energialaskuna.
+
+**Hintamuutos, vuoden 2021 keskiarvo → 10/2025–9/2026** (KHI):
+
+    kokonaisindeksi                +17,4 %
+    sähkö                          +20,5 %   (huippu 2023: +46 %)
+    muu lämpö (kaukolämpö)         +29,3 %   (noussut joka vuosi)
+    ajoneuvopolttoaineet           +17,0 %   (viim. 12 kk +13 % vuodesta 2025)
+
+Sähkö ja polttoaineet ovat palanneet yleisen hintatason tuntumaan.
+Kaukolämpö on ainoa, joka on kallistunut reaalisesti (noin +10 %) ja ilman
+laskuvaihetta. Se on myös ainoa, jossa asiakas ei voi vaihtaa toimittajaa.
+
+KHI:n painot 2026: 04.5 on 50,2 ‰ ja 07.2.2 on 30,1 ‰, yhteensä noin 8 %.
+
+Rajoitukset: Kulutustutkimus on tehty viimeksi 2022, joten tuloluokittaista
+tietoa hintahuipun jälkeen ei ole. Keskiarvo peittää pörssisähköasiakkaan
+ja sähkölämmittäjän talvikuukaudet.
