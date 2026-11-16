@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-022 — Datakeskusten rahavirrat: kuka maksaa, kuka saa | ACI</title>
+<meta name="description" content="Kolmen skenaarion (1,5 / 2,5 / 4,0 GW) vuosittaiset rahavirrat datakeskuskuormasta: sähkövero, yhteisövero, kantaverkkomaksut ja sähkön hintavaikutus. Kuka maksaa ja kuka saa."/>
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .75rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+  .formula { font-family: 'Courier New',monospace; font-size: .85rem; background: var(--tag-bg); border: 1px solid var(--rule); padding: .5rem 1rem; margin: .75rem 0; }
+</style>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-022-datakeskusten-rahavirrat.html"/>
+</head>
+<body>
+<nav>
+  <span class="nav-left">Aether Continuity Institute</span>
+  <span class="nav-right"><a href="/">Home</a><a href="/papers/">Papers</a><a href="/research.html">Research</a></span>
+</nav>
+<div class="doc-header">
+  <div class="doc-series">Synthesis Memo · SM-022 · Domain D-1 · D-3</div>
+  <div class="doc-meta-grid">
+    <span><strong>Status</strong>Working Draft v0.1</span>
+    <span><strong>Language</strong>FI</span>
+    <span><strong>Date</strong>16.11.2026</span>
+    <span><strong>Relates to</strong>SM-012, SM-016, WEM, DEMO-001</span>
+    <span><strong>Basis</strong>Fingrid, VaVM 28/2025, AFRY/Mattila 2025, datakeskushankerekisteri</span>
+    <span><strong>Laskenta</strong><a href="/scripts/sm022_datakeskusten_rahavirrat.py">sm022_datakeskusten_rahavirrat.py</a></span>
+  </div>
+  <h1 class="doc-title">Datakeskusten rahavirrat</h1>
+  <p class="doc-subtitle">Kuka maksaa ja kuka saa, kun Suomeen tulee 1,5–4 GW datakeskuskuormaa</p>
+  <p class="doc-abstract">Muistio kokoaa samaan laskelmaan neljä vuosittaista rahavirtaa: sähkövero, datakeskusyhtiöiden yhteisövero, kantaverkkomaksut ja sähkön hintavaikutus muille käyttäjille. Tulos: valtion suurin tulo on sähkövero ja suurin yksityinen siirto on hintavaikutus muilta sähkönkäyttäjiltä tuottajille. Ne ovat samaa suuruusluokkaa. Kantaverkon kautta ei synny merkittävää siirtoa, jos hankkeet toteutuvat. Merkinnät: [M] mitattu tai lähteestä, [L] laskettu, [A] oletus.</p>
+</div>
+<div class="paper">
+
+<div class="section"><span class="section-marker">§ 01</span><h2>Skenaariot</h2>
+<p>Lisäkuorma 1,5, 2,5 tai 4,0 GW, käyttöaste 80 % [A]. 2,5 GW on AFRYn vuoden 2030 skenaario [M]. 4,0 GW vastaa datakeskushankerekisterin rakenteilla olevia hankkeita (4,1 GW ilmoitettua, 16.11.2026) [M]. Vuosikulutus 10,5 / 17,5 / 28,0 TWh [L]; vertailuna Suomen kulutus 2025 noin 85 TWh [M].</p></div>
+
+<div class="section"><span class="section-marker">§ 02</span><h2>Tulos</h2>
+<table>
+<tr><th>M€ / vuosi</th><th>1,5 GW</th><th>2,5 GW</th><th>4,0 GW</th><th>Kenelle</th></tr>
+<tr><td>Sähkövero, luokka I (22,4 €/MWh) [M]/[L]</td><td>235</td><td>392</td><td>628</td><td>Valtio</td></tr>
+<tr><td>— jos luokka II (0,5 €/MWh)</td><td>5</td><td>9</td><td>14</td><td>Valtio</td></tr>
+<tr><td>Yhteisövero, datakeskukset [A]</td><td>17</td><td>29</td><td>46</td><td>Valtio</td></tr>
+<tr><td>Hintavaikutus muille käyttäjille [A]</td><td>−207</td><td>−344</td><td>−551</td><td>Käyttäjiltä tuottajille</td></tr>
+<tr><td>ALV kotitalouksien hinnannoususta [A]</td><td>13</td><td>22</td><td>35</td><td>Valtio</td></tr>
+<tr><td>Kantaverkkomaksut, datakeskukset maksavat [L]</td><td>50</td><td>84</td><td>134</td><td>Fingrid</td></tr>
+<tr><td>Uusista kantaverkkoinvestoinneista datakeskuksille kohdistuva osuus [A]</td><td>42</td><td>71</td><td>113</td><td>Fingrid</td></tr>
+</table>
+<div class="finding"><div class="finding-label">Havainto 1</div>Valtion tulo on lähes kokonaan sähköveroa. Yhteisövero on alle kymmenesosa siitä, koska datakeskusyhtiöt toimivat kululisämallilla (vrt. Tuike Finland Oy: liikevoitto 5–6 % kuluista 2022–2025). Jos tuleva tukimalli toteutetaan sähköveron huojennuksena, valtion tulo putoaa lähes nollaan.</div>
+<div class="finding"><div class="finding-label">Havainto 2</div>Suurin yksityinen siirto on hintavaikutus: muut sähkönkäyttäjät maksavat tuottajille 2,5 GW:n skenaariossa noin 340 M€ vuodessa enemmän. Se on samaa suuruusluokkaa kuin sähköveron tuotto (390 M€). Laskelma ei kerro, miten valtio tulonsa käyttää; se kertoo, että tulo ja hintavaikutus ovat yhtä suuret.</div>
+<div class="finding"><div class="finding-label">Havainto 3</div>Kantaverkko ei ole merkittävä siirtokanava, jos hankkeet toteutuvat. Tasaisella kuormalla datakeskus maksaa energiaperusteisia kantaverkkomaksuja (4,79 €/MWh [L]) enemmän kuin sille kohdistuva osuus uusien investointien vuosikulusta. Tämä korjaa SM-016:n Fingrid-osion ja aiemman oletuksen, että verkkokustannus siirtyisi muille. Riski on toteutumatta jäävissä hankkeissa: investointi tehdään, mutta maksajaa ei tule.</div>
+</div>
+
+<div class="section"><span class="section-marker">§ 03</span><h2>Oletukset ja lähteet</h2>
+<table>
+<tr><th>Suure</th><th>Arvo</th><th>Tyyppi ja lähde</th></tr>
+<tr><td>Sähkövero I / II</td><td>22,4 / 0,5 €/MWh</td><td>[M] VaVM 28/2025 vp</td></tr>
+<tr><td>Hintavaikutus</td><td>+10 % keskihintaan 2,5 GW:lla, skaalattu lineaarisesti</td><td>[M] AFRY 2025 (Mattilan tiekartta); skaalaus [A]. AFRY oletti tuotannon kasvavan kulutuksen tahdissa.</td></tr>
+<tr><td>Keskihinta</td><td>40,5 €/MWh (2025)</td><td>[M] Fingrid</td></tr>
+<tr><td>Muu kulutus, joka kohtaa hinnan</td><td>85 TWh</td><td>[A] koko nykykulutus; kiinteät sopimukset siirtävät vaikutusta ajallisesti, eivät poista sitä</td></tr>
+<tr><td>Kotitalouksien osuus</td><td>25 %</td><td>[A] ALV-rivi; tarkistettava Tilastokeskuksesta</td></tr>
+<tr><td>Kantaverkkomaksu</td><td>10,47 / 2,97 + 1,07 €/MWh, talviarkipäivien osuus 10 %</td><td>[M] Fingrid 2026; osuus [A]</td></tr>
+<tr><td>Kantaverkkoinvestoinnit</td><td>5,2 mrd € 2026–2035, annuiteetti 5 % / 40 v = 303 M€/v</td><td>[M] Fingrid; annuiteetti [A]</td></tr>
+<tr><td>Datakeskusten osuus</td><td>kulutuksen kasvusta 85 → 160 TWh</td><td>[M] Fingrid kehittämissuunnitelma; kohdistus energian mukaan [A]</td></tr>
+<tr><td>Yhteisövero</td><td>11,6 k€/MW/v (kululisä 5 %, kulupohja 1,16 M€/MW)</td><td>[A], suuruusluokka tarkistettu Tuike Finland Oy:n tilinpäätöksistä</td></tr>
+</table></div>
+
+<div class="section"><span class="section-marker">§ 04</span><h2>Mitä laskelma ei kata</h2>
+<ul>
+<li>Tuottajien voiton jakautumista: osa jää Suomeen (yhteisövero, valtion osinko Fortumilta), osa ulkomaisille omistajille. Tätä ei ole eritelty.</li>
+<li>Jakeluverkkoja ja niiden maksuja.</li>
+<li>Kysyntäjoustoa: AFRYn mukaan 20 %:n jousto vähentää hintapiikkejä merkittävästi. Fingrid edellyttää yli 30 MW:n laitoksilta 30 %:n joustoa. Toteutunutta joustoa ei ole mitattu.</li>
+<li>Rakennusvaiheen tuloja ja ALV:tä (ALV-palautus on ajoitusilmiö, ks. SM-016:n korjaus).</li>
+<li>Kantaverkkomaksujen rakenneuudistusta, josta Fingrid päättää vuoden 2026 lopussa.</li>
+<li>Hintavaikutuksen epälineaarisuutta yli 2,5 GW:n: lineaarinen skaalaus voi ali- tai yliarvioida.</li>
+</ul></div>
+
+<div class="section"><span class="section-marker">§ 05</span><h2>Seurattavat muuttujat</h2>
+<ol>
+<li>Datakeskusten tukimallin muoto: sähköverohuojennus vai muu tuki.</li>
+<li>Rakenteilla olevien hankkeiden toteutuminen (datakeskushankerekisteri).</li>
+<li>Suomen vuosikeskihinta suhteessa SE1:een ja SE3:een (aci-entsoe-proxy /day-ahead-price).</li>
+<li>Kantaverkkomaksujen rakenneuudistuksen päätös.</li>
+</ol></div>
+
+<div class="section"><span class="section-marker">Lähteet</span>
+<ul class="ref-list">
+<li>Eduskunta: VaVM 28/2025 vp (sähköveron muutos, verotuotto ja yhteisöverovaikutus)</li>
+<li>AFRY Management Consulting (2025): Report on impacts of data centers on Finnish electricity market; Yle 4.11.2025</li>
+<li>Fingrid: Kantaverkkopalvelumaksut 2026; Kantaverkon kehittämissuunnitelma 2026–2035; kantaverkkopalvelumaksujen rakenneuudistuksen kysymykset ja vastaukset (keskihinta 2025)</li>
+<li>Kuntamonitori / Datakeskushankkeiden kansallinen rekisteri (CC BY 4.0), haettu 16.11.2026</li>
+<li>Tuike Finland Oy, tilinpäätöstiedot 2022–2025 (Asiakastieto, Vainu)</li>
+</ul></div>
+</div>
+</body>
+</html>
