@@ -2,7 +2,7 @@
 # [M] mitattu/lähde, [L] laskettu, [A] oletus.
 LF = 0.80                    # [A] käyttöaste
 SAHKOVERO_I = 22.4           # [M] €/MWh, VaVM 28/2025
-SAHKOVERO_II = 0.5           # [M] €/MWh
+SAHKOVERO_II = 0.5           # [M] €/MWh, voimassa datakeskuksille 30.6.2026 asti (vastaskenaario)
 YHTEISOVERO_PER_MW = 11.6e3  # [A] €/MW/v: kululisä 5 % kulupohjasta 1,16 M€/MW (sähkö+poistot), 20 %
 KV_TALVI, KV_MUU, KV_OTTO = 10.47, 2.97, 1.07   # [M] Fingrid 2026 €/MWh
 TALVI_OSUUS = 0.10           # [A] talviarkipäivätuntien osuus vuodesta (~64 pv x 14 h)
@@ -29,6 +29,8 @@ def skenaario(gw):
     out['hinnannousu_EUR_MWh'] = dp
     out['siirto_kuluttajilta'] = dp*MUU_KULUTUS*1e6
     out['alv_kotitaloudet'] = out['siirto_kuluttajilta']*KOTIT_OSUUS*ALV
+    for m in (0.02, 0.05, 0.10):       # [A] kululisäherkkyys
+        out[f'yhteisovero_{int(m*100)}pct'] = gw*1000*1.16e6*m*0.20
     return out
 
 if __name__ == '__main__':
@@ -38,4 +40,5 @@ if __name__ == '__main__':
         print(f'\n== {gw} GW lisäkuormaa, {o["kulutus_TWh"]:.1f} TWh/v')
         print(f'Valtio: sähkövero I {M("sahkovero_I"):.0f} M€ (luokka II olisi {M("sahkovero_II"):.0f}), yhteisövero DC {M("yhteisovero_dc"):.0f} M€, ALV kotitalouksien hinnannoususta {M("alv_kotitaloudet"):.0f} M€')
         print(f'Kantaverkko: DC maksaa {M("kv_maksut_dc"):.0f} M€, DC:lle kohdistuva investointikulu {M("kv_kustannus_dc"):.0f} M€ -> muille {M("kv_kustannus_dc")-M("kv_maksut_dc"):.0f} M€')
-        print(f'Hinta: +{o["hinnannousu_EUR_MWh"]:.1f} €/MWh -> muilta kuluttajilta tuottajille {M("siirto_kuluttajilta"):.0f} M€')
+        print(f'Yhteisövero kululisällä 2/5/10 %: {M("yhteisovero_2pct"):.0f} / {M("yhteisovero_5pct"):.0f} / {M("yhteisovero_10pct"):.0f} M€')
+        print(f'Hinta: +{o["hinnannousu_EUR_MWh"]:.1f} €/MWh -> muiden sähkönkäyttäjien laskennallinen kustannusvaikutus {M("siirto_kuluttajilta"):.0f} M€')
