@@ -561,7 +561,7 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
 
     <div class="snote" style="margin-top:.75rem;">
       <strong>Lähde:</strong> Fingrid Open Data (uusi API) · DS 60 SE1→FI reaaliaikainen (15min) · DS 30 P1-siirto · DS 336 shortage status · DS 177 taajuus · DS 369 mFRR-suunta
-&nbsp;·&nbsp; <em>Huom: datalogin sarake vaihtui TRR:stä BCI:hin 25.8.2026 — arvot eivät ole vertailukelpoisia yli tuon rajan. Sitä ennen TRR-arvot ennen 5.5.2026 on laskettu vanhalla NTC:llä (~1500 MW). Nykyinen NTC ~2300 MW Aurora Linen myötä (käyttöön 13.11.2025). Vanhat lukemat 103–105% vastaavat noin 65–70% uudella NTC:llä.</em> &nbsp;·&nbsp;
+&nbsp;·&nbsp; <em>Huom: datalogin sarake vaihtui TRR:stä BCI:hin 25.8.2026 — arvot eivät ole vertailukelpoisia yli tuon rajan. Sitä ennen TRR-arvot ennen 5.5.2026 on laskettu vanhalla NTC:llä (~1500 MW). Aurora Linen (käyttöön 13.11.2025) jälkeen rajan enimmäiskapasiteetti on 1900 MW molempiin suuntiin (Fingrid 2025; UMM Messaure–Viitajärvi). Vanhat lukemat 103–105% vastaavat noin 81–83% tästä. <b>Korjattu 2026-11-16:</b> aiemmin tässä luki 2300 MW ja 65–70 %.</em> &nbsp;·&nbsp;
       <strong>BCI:</strong> pullonkaulan sitovuus = niiden tuntien osuus, joina FI:n ja SE1:n day-ahead-hinnat eroavat yli 0,5 €/MWh (ENTSO-E). <em>Korvasi TRR:n 25.8.2026: Pohjoismaat siirtyivät NTC:stä flow-basediin 29.10.2024, eikä kahdenvälistä NTC:tä enää ole — TRR:n nimittäjää ei ollut olemassa. Lukemat ennen ja jälkeen eivät ole vertailukelpoisia.</em> &nbsp;·&nbsp;
       <strong>Energia-alijäämä:</strong> Σ max(0, kulutus−tuotanto) 72h:ssa &nbsp;·&nbsp;
       Yhteys: <a href="/decisions/dt-001-capacity-mechanism-finland.html">DT-001 v1.1 §3</a>
@@ -1294,11 +1294,11 @@ footer{border-top:1px solid var(--rule);padding:2rem;max-width:1060px;margin:0 a
     <div class="shdr"><span class="snum">&sect; 07</span><span class="stit">Instrumentin rajaukset</span></div>
     <ul class="bounds-list">
       <li><strong>Aurora Line -huomio:
-Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marraskuussa 2025, puolitoista kuukautta etuajassa. Se lisäsi SE1→FI-kapasiteettia +800 MW (1 500 MW → ~2 300 MW). WEM §12 NTC päivitetty vastaavasti. Aurora Line 2 on erillinen projekti, vasta selvitysvaiheessa — selvitys valmistuu 2026.
+Aurora Line (400 kV, 380 km, Pyhänselkä–Messaure) otettiin käyttöön marraskuussa 2025, puolitoista kuukautta etuajassa. Fingridin mukaan rajan enimmäiskapasiteetti on nyt 1 900 MW molempiin suuntiin; käytettävissä oleva kapasiteetti vaihtelee järjestelmän tilan mukaan. WEM §12 päivitetty vastaavasti (korjattu 2026-11-16: aiemmin 2 300 MW). Aurora Line 2 on erillinen projekti, vasta selvitysvaiheessa — selvitys valmistuu 2026.
 
 SE1-vientimarginaali ei ole staattinen: Aurora Line lisäsi SE1→FI fyysistä siirtokapasiteettia, mutta SE1-alueen samanaikainen teollinen sähköistymispaine (Stegra 700 MW elektrolyysi Bodenissa, HYBRIT vetyteräs Gällivaressa) voi pitkällä aikavälillä pienentää käytettävissä olevaa vientimarginaalia erityisesti matalan hydro- ja tuulituotannon periodeina. WEM käsittelee SE1-kapasiteettia toistaiseksi eksogeenisena resurssina — malli ei diskonttaa Pohjois-Ruotsin kasvavaa omaa teollista kuormaa FS(p)- tai TRR-logiikassa. Kehitystarve tunnistettu.
     Kehityssuunnitelma — ENTSO-E Transparency Platform (2026-07, ei viela toteutettu):
-    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria. <b>Tila 2026-10-15:</b> aci-entsoe-proxy on käytössä: Nordic-WR (§11), rajasiirrot, day-ahead-hinta ja A72-vesivarannot (§01 SOURCE, FS(p)). SE-tarjousalueiden kulutus (kohta 2) ei vielä ole mukana. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). NTC 2 300 MW on fyysinen kapasiteetti — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
+    Kaksi jo tunnistettua aukkoa voisi sulkea samalla datalahteella. (1) <strong>Nordic-laajuinen Dunkelflaute-tarkistus:</strong> WP-001:n oma Black Period -maaritelma edellyttaa "koko Pohjoismaiden samanaikaista stressia" (ks. Rakenteellinen rajoite 1 ylla), mutta WEM:n nykyinen WR-komponentti mittaa VAIN Suomen tuulivoimaa (DS 181) - se EI voi todentaa onko matala tuuli VAIN Suomessa vai koko Pohjolassa samanaikaisesti. ENTSO-E Transparency Platform tarjoaa tuulivoimatuotannon KAIKILLE Pohjoismaiden tarjousalueille (SE1-SE4, NO1-NO5, DK1-DK2) samassa formaatissa - tama mahdollistaisi AIDON Nordic-WR-komponentin (nykyisen NVE-reservaaeahaun rinnalle, ei sen tilalle). (2) <strong>SE1:n oma teollinen kuorma suoraan naikyviin:</strong> talla hetkella Stegra/HYBRIT-kuorman kasvu nakyisi WEM:ssa VAIN valillisesti, TRR:n kiristymisen kautta jalkikateen - ENTSO-E:n SE-tarjousalueen oma kulutusdata (vastaava kuin Fingridin DS 124 mutta Ruotsin puolelle) antaisi TAMAN kuorman NAKYA suoraan, ennen kuin se ehtii puristaa Suomen omaa tuontimarginaalia. Kaytannon rajoite: ENTSO-E Transparency Platform vaatii oman rekisteroidyn API-tokenin (sama secret-mallikuvio kuin Copernicus-tunnukset BEM:n NDVI-tyossa) - EI vaadi uutta infrastruktuuria. <b>Tila 2026-10-15:</b> aci-entsoe-proxy on käytössä: Nordic-WR (§11), rajasiirrot, day-ahead-hinta ja A72-vesivarannot (§01 SOURCE, FS(p)). SE-tarjousalueiden kulutus (kohta 2) ei vielä ole mukana. Flow-based-kapasiteetinlaskenta: Pohjoismaat siirtyivät NTC-menetelmästä flow-based-menetelmään 29.10.2024 (vuorokausimarkkinat), 31.10.2025 (Y-1) ja 8.4.2026 (M-1). Enimmäiskapasiteetti 1 900 MW (Fingrid) on raja-arvo, ei NTC — kaupallinen kapasiteetti lasketaan koko pohjoismaisen verkon fyysisten rajoitteiden perusteella ja voi olla tilanteesta riippuen NTC:tä korkeampi tai matalampi. WEM:n TRR seuraa kaupallista kapasiteettia: TRR > 100 % ei tarkoita fyysistä ylikuormitusta vaan markkinaehtoisen kapasiteetin täyttymistä.
 
 Rakenteellinen rajoite 1 — Tuonti ≠ stressi:</strong> NIR kohtelee kaikkea nettomaahantuontia endurance-ongelmana. Suomi tuo rakenteellisesti 1 000–2 500 MW Ruotsista ja Norjasta normaalin markkinalogiikan mukaisesti. WP-001:n Black Period -skenaario edellyttää koko Pohjoismaiden samanaikaista stressiä — tätä NIR ei erottele. EPP v3 korvaa NIR:n FS+WR-parilla, mutta myös se on vain approksimaatio.</li>
       <li><strong>Käsitteiden suhde — Black Period vs. Dunkelflaute:</strong> "Black Period" (WP-001) on WEM:n oma, järjestelmätason analyyttinen konstruktio: 168 tunnin ikkuna jossa endurance-marginaalit ovat kriittisen ohuet, mitattuna EPP:llä. "Dunkelflaute" on kansainvälisesti vakiintunut, meteorologis-energeettinen termi sille fyysiselle säätilalle (samanaikainen matala tuuli- ja aurinkotuotanto, usein kylmällä säällä) joka tyypillisimmin laukaisee Black Period -tyyppisen tilan. Ne eivät ole synonyymejä: Dunkelflaute on yksi — todennäköisin — Black Periodin syy, mutta Black Period voisi periaatteessa syntyä myös muista syistä (esim. laaja tuotantovajaus ilman tuulikatoa). WEM:n WR-komponentti (WindRisk) on lähin suora Dunkelflaute-indikaattori instrumentissa.</li>
@@ -3545,8 +3545,10 @@ async function init() {
     if (avgHyd > 0 && (avgHyd < 100 || avgHyd > 5000))
       checks.push(`⚠ Vesivoima ${Math.round(avgHyd)} MW epärealistinen`);
 
-    // Tuulivoima: 0–7000 MW (Suomen kapasiteetti kasvaa)
-    if (avgWnd > 7000)
+    // Tuulivoima: W24-keskiarvo ei voi ylittää asennettua kapasiteettia.
+    // 9 535 MW 30.6.2026 (Suomen uusiutuvat). Korjattu 16.11.2026: raja oli 7000,
+    // joka laukesi aiheettomasti (7042 MW). Päivitä puolivuosittain.
+    if (avgWnd > 9600)
       checks.push(`⚠ Tuulivoima ${Math.round(avgWnd)} MW yli kapasiteetin`);
 
     // Kulutus: 5000–15000 MW
@@ -4982,7 +4984,7 @@ async function renderS12(rawData) {
     await new Promise(r => setTimeout(r, 1000));
     try {
       const connections = [
-        { label: 'SE1  (Pohj. Ruotsi)', ds: 60,  ntc: 2300, note: 'Aurora Line' },
+        { label: 'SE1  (Pohj. Ruotsi)', ds: 60,  ntc: 1900, note: 'Aurora Line, max (Fingrid)' },
         { label: 'SE3  (Keski-Ruotsi)', ds: 89,  ntc: 1200, note: '' },
         { label: 'EE   (Estlink 1+2)',  ds: 180, ntc: 1016, note: 'Estlink 1+2' },
         { label: 'NO   (Norja)',         ds: 187, ntc:  100, note: '' },
@@ -5057,20 +5059,20 @@ function drawS12Chart(data) {
 
   const vals = data.map(d => Math.abs(d.value||0));
   if (!vals.length) return;
-  const mx = Math.max(...vals, 500);
+  const mx = Math.max(...vals, 1900);
 
   ctx.fillStyle = '#f0f0ec';
   ctx.fillRect(0,0,W,H);
 
-  // NTC viiva ~900 MW
-  const ntcY = H - (900/mx)*H*0.85 - 5;
+  // Rajan enimmäiskapasiteetti 1900 MW (korjattu 16.11.2026: viiva oli 900, teksti 1500)
+  const ntcY = H - (1900/mx)*H*0.85 - 5;
   ctx.strokeStyle = '#e07000';
   ctx.lineWidth = 1;
   ctx.setLineDash([4,3]);
   ctx.beginPath(); ctx.moveTo(0,ntcY); ctx.lineTo(W,ntcY); ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle = '#e07000'; ctx.font = '9px sans-serif';
-  ctx.fillText('NTC ~1500', 4, ntcY-3);
+  ctx.fillText('max 1900', 4, ntcY-3);
 
   // Siirtokäyrä
   ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5;
@@ -5439,7 +5441,7 @@ function renderRP(up, dn, act, bidUp, bidDn){
 // (pörssitulos) eikä fyysinen. Kaupallinen sarja ulottuu
 // tulevaisuuteen ja on nolla kun kauppaa ei ole tehty.
 const XB = [
-  { id:87,  nimi:'FI–SE1',  tark:'400 kV AC',   ntc:2300, step:3  },
+  { id:87,  nimi:'FI–SE1',  tark:'400 kV AC',   ntc:1900, step:3  }, // max molempiin suuntiin (Fingrid 2025, UMM); korjattu 16.11.2026, oli 2300
   { id:61,  nimi:'FI–SE3',  tark:'Fenno-Skan',  ntc:1200, step:15 },
   { id:187, nimi:'FI–NO',   tark:'220 kV AC',   ntc:100,  step:3  },
   { id:140, nimi:'FI–EE',   tark:'EstLink 1+2', ntc:1016, step:15 },
