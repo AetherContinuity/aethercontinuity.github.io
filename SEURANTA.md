@@ -500,3 +500,40 @@ Kohdan 7 tulkintasäännössä "I1+I3" korvataan "I1+I3a". I3b raportoidaan kont
 **3. I1:n sarakkeet ja kaksoislaskenta.** Sama maarivi toistuu C-1:ssä usean taulukon (määrärahatili, yhteenveto) alla. Sääntö: käytetään sitä saraketta, jonka taulukon otsikko on budjettipyyntö kyseiselle FY:lle (C-1:n otsikkorivi luetaan, kohderivejä ei); identtiset rivit samasta FY:stä lasketaan kerran. Jos otsikkoa ei voida yksiselitteisesti liittää riviin, raportoidaan rivit sellaisinaan ilman summaa.
 
 **4. Kokoamisrajaus ennallaan.** PSC-osittelu tehdään maatasolla; PSC-kohtaisia rivejä ei tallenneta, vain kolme summaa (I3a, I3b, I3c) maata ja FY:tä kohden.
+
+### I — lähtötaso, osa 1: I1 ja I3 (17.11.2026)
+
+Aineisto: ogas3 `data/us/i_lahtotaso_2026-11-17.json` (ajot 44153127569 ja 44155030338). Vain maatason summat.
+
+**I1 (C-1, $K).** Jokainen C-1 sisältää "Summary for FY" -taulukot edelliselle, kuluvalle ja pyyntövuodelle sarakkeilla Auth Amount / Amount (pyyntö) / Appn Amount / TOA Amount. Sama maarivi esiintyy kokonaistaulukossa ja määrärahatilin taulukossa (Air Force tai Navy); lasketaan kerran (poikkeama 1, kohta 3). Arvo = Appn Amount uusimmasta C-1:stä, jossa kyseinen FY esiintyy.
+
+| FY | Suomi | Ruotsi | Norja | Tanska |
+|---|---|---|---|---|
+| 2023 | – | – | 8 200 | – |
+| 2024 | – | – | 119 000 | – |
+| 2025 | – | – | 8 000 | 106 200 |
+| 2026 | – | – | 72 000 | – |
+| 2027 (pyyntö) | – | – | – | – |
+
+Rajoite: "Unspecified Locations" -rivi (FY2025: 1,53 mrd $) ei kohdistu maahan; sitä ei jyvitetä.
+
+**I3 (USAspending, DoD-velvoitteet suorituspaikan mukaan, M$; I3a läsnäolo / I3b tavarat / I3c muut palvelut).** FY2026 keskeneräinen (poikkeama 1, kohta 2).
+
+| Maa | FY2022 | FY2023 | FY2024 | FY2025 | FY2026* |
+|---|---|---|---|---|---|
+| Suomi | 1,0 / 14,0 / 7,8 | 0,2 / 3,0 / 8,1 | 0,1 / 0,9 / 6,9 | 0,4 / 1,5 / 2,2 | 0,0 / 0,0 / 5,3 |
+| Ruotsi | 1,8 / 319,8 / 4,6 | 1,1 / 268,9 / 11,0 | 0,1 / 195,6 / 31,6 | 0,5 / 591,6 / 50,3 | 0,0 / 58,0 / 149,8 |
+| Norja | 5,4 / 3,8 / 27,8 | 9,5 / 22,9 / 19,5 | 3,9 / 108,6 / 23,2 | 13,5 / 589,0 / 22,7 | 8,2 / 1 006,1 / 21,3 |
+| Tanska | 1,9 / 9,2 / 2,5 | 1,3 / 3,2 / 2,5 | 0,8 / 12,3 / 3,2 | 0,6 / 3,6 / 54,3 | 0,0 / 0,7 / 0,1 |
+
+Havainto ilman tulkintaa (kohta 7 vaatii kaksi peräkkäistä FY:tä mittausjakson ajalta): Suomella ja Ruotsilla ei ole Yhdysvaltain rakennushankkeita FY2023–FY2027; Norjalla ja Tanskalla on. I3a on kaikissa maissa pieni (≤ 13,5 M$/v), joten sen erottelukyky on heikko; läsnäolon kustannukset kulkevat pääosin henkilöstö- ja toimintamenoina, jotka eivät näy maakohtaisina sopimuksina.
+
+### I — poikkeama 2 (17.11.2026, ennen I4:n laskentaa)
+
+Kohta 4 määritteli I4:n lähteeksi "Puolustusvoimien tiedotteet" ilman aineiston rajausta tai koodaussääntöä. Kiinnitetään ennen laskentaa:
+- **Aineisto:** Puolustusvoimien ja puolustusministeriön tiedotteet puolustusvoimat.fi:ssä ja valtioneuvosto.fi:ssä, julkaistu 1.1.2024–31.12.2026, haettu koneellisesti (GitHub Actions). Uutismedia ei kuulu aineistoon.
+- **Yksikkö:** harjoitus nimellä (esim. "Cold Response 26"); sama harjoitus useassa tiedotteessa lasketaan kerran, vuosi = harjoituksen alkamisvuosi.
+- **Ehto:** tiedotteen tekstin mukaan (1) harjoitus tai sen osa toteutetaan Suomen alueella ja (2) Yhdysvaltain asevoimat osallistuu. Pelkkä Naton tai "liittolaisten" maininta ei riitä. Kansalliskaarti (esim. Virginian kansalliskaarti) lasketaan.
+- **Lisäksi** raportoidaan erikseen tiedotteet, jotka koskevat Yhdysvaltain läsnäoloa ilman nimettyä harjoitusta; ne eivät kuulu I4:n lukuun.
+- **Validiteettirajoite:** I4 mittaa tiedotettua harjoitustoimintaa, ei läsnäolon kestoa tai vahvuutta. Tiedotuskäytännön muutos näkyy I4:ssä kuin toiminnan muutos.
+- **Kokoamisrajaus:** paikkoja ja päivämääriä ei tallenneta; vain harjoituksen nimi ja vuosi.
