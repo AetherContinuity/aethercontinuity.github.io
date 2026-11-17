@@ -278,3 +278,18 @@ NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; 
 6. *Työpaikat ja palkkojen verot:* datakeskukset 120 työpaikkaa/TWh (Tuike 2025, kulutus 1 TWh [A]); P2X 100 työpaikkaa/laitos [A] (VolagHy 100+, ETFuels 60 ilmoitettu). Työvoimakustannus 70 k€/v, josta S13:lle 40 % [A]. Nettouusi osuus 0/50/100 % (sääntö 3).
 7. *Vertailuero:* BKT 2025 281,8 mrd € (Tilastokeskus 15a9) kasvatettuna VM:n reaalikasvuilla (2026 0,8 %, 2027–28 1,7 %, 2029–30 1,5 %) ja deflaattorilla 2 % [A]; erotus 1,4 %-yks. (alijäämä 4,4 % 2030).
 8. *Lukitun ulkopuolella:* kiinteistövero (kuntien tulo) ei kuulunut sääntöön 2; raportoidaan erillisenä huomiona, ei summaan.
+
+### G — tulos (17.11.2026, laskettu lisäysten 1–3 jälkeen, kirjausta ei muutettu)
+
+Laskenta `scripts/ekasvu_g_laskenta.py`, tuloste `tools/data/ekasvu/g_tulos_2026-11-17.txt`. Vertailuero 2030: noin 4,7 mrd € (BKT noin 334 mrd € [L]).
+
+| | Lisäys S0:aan | Nettovaikutus S13 | Osuus vertailuerosta | Väli (käyttöaste, nettouusi työ, P2X-yhteisövero) |
+|---|---|---|---|---|
+| S1 kohtalainen | muu +3,2 TWh (Arctic Sisu, osa Freijaa) | 52 M€ | 1,1 % | 4–52 M€ (0,1–1,1 %) |
+| S2 erinomainen | DC +13,7, muu +7,5 TWh | 492 M€ | 10,5 % | 351–496 M€ (7,5–10,6 %) |
+
+S2:sta 307 M€ (62 %) on datakeskusten sähköveroa luokassa I. P2X:n yhteisövero on yläraja (metallien jalostuksen taso miinus verohyvitys 10 %/v); alaraja 0. Luokan II menetetty sähkövero P2X-kulutukselta: S1 70 M€, S2 164 M€ (ei vähennetty, sääntö 4).
+
+Herkkyydet: S1 vaihtoehtoisella tulkinnalla (muu 5,2 TWh) 74 M€ (1,6 %). Pelkät datakeskukset ET:n 11–18 TWh:lla: 204–401 M€ (4,4–8,6 %).
+
+Lukitun ulkopuolella, ei summassa: kiinteistövero (kunnat).
