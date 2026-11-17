@@ -239,3 +239,18 @@ NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; 
 **Avoin ennen laskentaa (kirjataan tähän lisäyksenä ennen tuloksia):** skenaarioiden tarkka määrittely sektoreittain. Datakeskuksille vähintään VM/TEM 3,8 TWh (lähde ja vuosi tarkistettava, onko päivitetty syksyn 2026 ennusteeseen) ja SM-022:n 17,5 TWh. Muille sektoreille nimetyt hankkeet (puhtaan siirtymän verohyvityslista 12/2025, Fingridin liittymissopimukset).
 
 **Jo nähty ennen kirjausta.** Toimialojen tasot 2022–2024 (Tilastokeskus 12bu, 15ad; Verohallinto verot_304; yrtt 13zn): arvonlisäys, palkat ja yhteisövero per sähkö-MWh, luokan II verotuki noin 756 M€/v [L], maksetut suorat tuet teollisuudelle 220–400 M€/v. Lisäksi Tuike Finland Oy:n tilinpäätösluvut. Nämä ovat tasotietoja, eivät inkrementaalisia tuloksia. Laskenta: `scripts/ekasvu_hae.py`, `scripts/ekasvu_toimialat.py`.
+
+### G — lisäys 1: skenaariot (17.11.2026, ennen laskentaa)
+
+**Kehys.** Fingridin teollisuuden ja datakeskusten sähkönkulutus (ennuste 9/2025): noin 38 TWh (2025) → 45 TWh (2030 kohtalainen kilpailukyky) / 63 TWh (2030 erinomainen). Lisäys +7 / +25 TWh. Arvojen kohdistus luettu kaavion tekstistä; tarkistetaan alkuperäisestä ennen laskentaa, ja mahdollinen korjaus kirjataan tähän.
+
+**Skenaariot vuodelle 2030** (lisävaikutus lasketaan suhteessa S0:aan):
+- S0 perusura: VM:n syksyn 2026 ennuste; datakeskukset 3,8 TWh (TEM:n energiatase).
+- S1 kohtalainen: teollisuus + datakeskukset +7 TWh; datakeskukset 3,8 TWh; loput vety, e-polttoaineet ja materiaalit.
+- S2 erinomainen: +25 TWh; datakeskukset 17,5 TWh (SM-022, 2,5 GW, 80 %); loput 7,5 TWh muut sektorit.
+
+**Sektorijako** datakeskusten ulkopuolella: puhtaan siirtymän verohyvityksen saaneet 40 hanketta (Business Finland, päivitys 25.2.2026; 2 264 M€: P2X/uusiutuva 17 kpl 1 544 M€, varastot 18 kpl 311 M€, materiaalit 5 kpl 410 M€). Hankkeiden sähköteho (MW) haetaan YVA-asiakirjoista ja hankkeiden omista tiedoista; lähde kirjataan hankekohtaisesti. Hankkeet järjestetään toteutumisjärjestykseen (lopullinen investointipäätös > rakenteilla > lupavaihe), ja kunkin skenaarion TWh täytetään tässä järjestyksessä.
+
+**Verohyvityksen vähennys 2030:** 10 % myönnetystä hyvityksestä niille hankkeille, jotka on täytetty skenaarioon (yläraja; edellyttää verotettavaa voittoa). Energiavarastot lasketaan kustannuseränä, mutta ei kulutuslisäyksenä.
+
+**Kirjattu ristiriita:** omaan datakeskustaulukkoon "rakenteilla" kirjattu 4,1 GW vastaisi noin 29 TWh:ta, enemmän kuin S2:n koko lisäys. Raportoidaan tuloksena, ei soviteta.
