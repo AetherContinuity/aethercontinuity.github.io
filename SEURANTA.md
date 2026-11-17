@@ -305,3 +305,27 @@ Lähtötiedot: energiatuotteiden tuonti 10,0 mrd € ja vienti 5,6 mrd € (2025
 Mittarit: energian nettotuonti tuotteittain (ehk-taulukot proxyn kautta); polttoaineveron menetys korvattua litraa kohden; kustannusero €/MWh ETS2:n kanssa ja ilman; Suomeen jäävä osuus omistusmalleittain (ulkomainen, eläkeyhtiö, kunnallinen, osuuskunta); huoltovarmuusarvo omana eränä. Liittyy: TN-017, TN-018, ennakkokirjaus G.
 
 Tehdään energiaintensiivisen kasvun muistion jälkeen; ennakkokirjaus ennen laskentaa.
+
+### G — toteutusseloste (17.11.2026, laskennan ja katselmoinnin jälkeen; lukittuja lukuja ei muuteta)
+
+Kimi K3.1 Pro katselmoi kirjauksen ja laskennan vastaavuuden (ogas3 `katselmoinnit/g-energiaintensiivinen-vastaus-2026-11-17.md`, PR #33). Löydökset tarkistettiin koodia vasten; kaikki pitivät. Tämä seloste tarkentaa tulkintaa, ei muuta tulosta.
+
+**1. Pääluvut ovat ylärajoja.** Tulostaulukon 52 M€ (S1) ja 492 M€ (S2) on laskettu nettouusilla työpaikoilla 100 % ja P2X-yhteisöverolla metallien jalostuksen tasolla. G ei lukinnut raportoitavaa pistearvoa. Keskiarvio (nettouusi 50 %, P2X-yhteisövero 0) samalla koodilla: S1 6 M€ (0,1 %), S2 381 M€ (8,1 %). Väli 4–52 / 351–496 M€ on ehdollinen herkkyysväli kolmelle oletukselle, ei epävarmuusväli.
+
+**2. Toteuttamatta jääneet kohdat:**
+- *Energiavarastot kustannuksena (lisäys 1):* ei laskettu. Yläraja 10 % × 311,4 M€ = 31 M€/v, jos kaikki 18 varastoa ovat käytössä ja voitollisia 2030. Varastot eivät kuulu S1/S2-kulutuslisäykseen, joten erä raportoidaan erillisenä.
+- *Työeläkemaksut omana rivinä (sääntö 2):* ei eritelty; 40 %:n S13-osuus sisältää ne erottelematta.
+- *Suorat tuet:* ei vähennetty, koska hankekohtaisia S13-rahoitteisia tukia ei ole koottu. EU:n Innovaatiorahaston tuet (Koppö, Vetyalfa) eivät ole S13:n kustannus.
+- *Hankintaketju ja rakennusvaihe (sääntö 6):* ei arvioitu.
+- *Hankeputken ylitys (lisäys 2):* koodin "kehyksestä jäi" on täyttämättä jäänyt kehys, ei ylitys. Ylitys [L]: täyttöjärjestyksen nimetyt hankkeet yhteensä 16,0 TWh vs. S1 3,2 / S2 7,5 TWh → 12,8 / 8,5 TWh jää kehyksen ulkopuolelle; lisäksi esiselvitysvaiheen Plug Power (2,2 GW ≈ 11,6 TWh) ja ETFuels (≈ 1,6 TWh).
+- *S0:n päällekkäisyys:* ei varmistettu, sisältääkö VM:n perusura jo osan hankkeista.
+- *Ehto (sääntö 8):* tulos edellyttää, että kulutuksen lisäys toteutuu ja että tuotanto kasvaa sen tahdissa; hintavaikutusta ei mallinneta.
+
+**3. Muut tarkennukset:**
+- Osittain täytetyn hankkeen hyvitys ja työpaikat skaalattiin lineaarisesti kulutusosuudella (koodi rivi 28); valinta ei ollut lukittu.
+- Verohyvityksen raja "enintään verosta" tehtiin yhteenlasketulle P2X-verolle; hankekohtaisesti tulos on sama tässä ajossa, koska jokaisen täytetyn hankkeen brutto ylittää 10 % sen hyvityksestä.
+- Arctialin 1 000 työpaikkaa (rivi 20) on ilman lähdettä; ei vaikuta tuloksiin, koska Arctial ei täyty kumpaankaan skenaarioon.
+- Vuoden 2030 BKT on johdettu reaalikasvuista ja 2 %:n deflaattorista, ei VM:n julkaistusta nimellisarvosta; vaikuttaa vain prosenttiosuuksiin.
+- Vaihtoehtoisen S1-tulkinnan datakeskustaso 2,0 TWh (2025) on oletus [A] (vrt. 1,3 TWh 2024 TEM; 1,6 TWh 2024 Daily Finland).
+
+**4. Seuraava laskenta tehdään uudella ennakkokirjauksella (H),** joka lukitsee ennen laskentaa: raportoitavan pistearvon oletukset; hankkeiden toteutumis- ja viivästymisskenaariot (ei automaattista korvaamista seuraavalla hankkeella); S0:n sisällön; hankekohtaiset tuet ja hyvitykset; jaon valtioon, kuntiin, hyvinvointialueisiin ja työeläkelaitoksiin; TyEL-rivin; kiinteistöveron, rakennusvaiheen ja hankintaketjun erilliset arviot.
