@@ -254,3 +254,11 @@ NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; 
 **Verohyvityksen vähennys 2030:** 10 % myönnetystä hyvityksestä niille hankkeille, jotka on täytetty skenaarioon (yläraja; edellyttää verotettavaa voittoa). Energiavarastot lasketaan kustannuseränä, mutta ei kulutuslisäyksenä.
 
 **Kirjattu ristiriita:** omaan datakeskustaulukkoon "rakenteilla" kirjattu 4,1 GW vastaisi noin 29 TWh:ta, enemmän kuin S2:n koko lisäys. Raportoidaan tuloksena, ei soviteta.
+
+### G — lisäys 2: muuntokertoimet ja täyttöjärjestys (17.11.2026, ennen laskentaa)
+
+- Elektrolyysin käyttöaste 60 % [A], herkkyys 40 / 80 %. Vedyn sähkönkulutus 55 MWh/t H₂ [A].
+- Hankkeen, jonka teho ei ole julkinen, kulutus johdetaan tuotemäärästä ja ilmoitetaan [L]-merkittynä.
+- Täyttöjärjestys tilan mukaan (FID > rakenteilla > lupa/FEED > esiselvitys); saman tilan sisällä tavoitevuoden mukaan. Lopetettuja hankkeita (NordFuel) ei täytetä, eikä niiden hyvitystä vähennetä.
+- Kuluttuaan kehykseen (S1 +7, S2 +25 TWh) täyttö loppuu; ylimenevä osa raportoidaan hankeputken ja kehyksen erona.
+- Hanketaulukko: `tools/data/ekasvu/hankkeet-2026-11-17.md`.
