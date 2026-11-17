@@ -552,3 +552,11 @@ Harjoitukset Suomen alueella, joihin Yhdysvaltain asevoimat osallistuu tiedottee
 Ei laskettu (ehto ei täyty löydetyssä tekstissä): Nordic Response 24, Freezing Winds 25, Southern Griffin 25 ja Protective Fence 26 (Yhdysvaltain osallistumista ei mainittu); kolmenvälinen ilmavoimaharjoitus 2025 ja hävittäjien Lapin-harjoitus 5/2026 (nimi puuttuu löydetystä tekstistä). Läsnäolo ilman nimettyä harjoitusta, raportoidaan erikseen: Baltic Sentry -merijalkaväkiosasto (2/2025); merijalkaväen joukkueet ja kalustokoulutus (7/2025→).
 
 Aineisto on haun tuloksista riippuvainen alaraja; vuosien välinen ero on suuntaa antava. Seuraava mittaus kaikille indikaattoreille: FY2028:n budjettipyyntö (kevät 2027) ja I3:n FY2026 uudelleenhaku 2/2027.
+
+### I — poikkeama 4 (17.11.2026, lähtötason jälkeen, ennen ensimmäistä seurantamittausta)
+
+Ulkoisen luennan (DeepSeek) jälkeen; ei muuta lähtötason lukuja.
+
+1. **Tulkintarajaus.** I1 ja I3a mittaavat Yhdysvaltain upotettuja investointeja Suomeen, eivät sitoutumisen uskottavuutta kokonaisuutena. Kohdan 7 tulkinnat koskevat vain upotettuja investointeja; niistä ei päätellä puolustustahtoa eikä 5 artiklan uskottavuutta.
+2. **Ennakkovarastointi on mittaamaton.** EDI:n "Enhanced Prepositioning" -rahoitusta ei kohdisteta maille, kalusto ei näy I1:ssä eikä luotettavasti I3:ssa, ja DCA 4.1:n ennakkoilmoitukset menevät Puolustusvoimille, eivät julkisuuteen. Vain Yhdysvaltain rahoittama varastoinfrastruktuuri näkyy I1:ssä. Julkisesti tiedotettu ennakkovarastointi Suomeen kirjataan erikseen laadullisena havaintona (vain tieto tapahtumasta ja vuosi, ei paikkaa eikä määrää, kohta 5).
+3. **Joukkojen pysyvyys on mittaamaton.** I4 laskee harjoituksia, ei läsnäolon kestoa tai pysyvää sijoittamista. Tiedotettu pysyvä tai jatkuva Yhdysvaltain joukko-osasto Suomessa kirjataan samoin erikseen laadullisena havaintona.
