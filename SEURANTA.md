@@ -262,3 +262,19 @@ NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; 
 - Täyttöjärjestys tilan mukaan (FID > rakenteilla > lupa/FEED > esiselvitys); saman tilan sisällä tavoitevuoden mukaan. Lopetettuja hankkeita (NordFuel) ei täytetä, eikä niiden hyvitystä vähennetä.
 - Kuluttuaan kehykseen (S1 +7, S2 +25 TWh) täyttö loppuu; ylimenevä osa raportoidaan hankeputken ja kehyksen erona.
 - Hanketaulukko: `tools/data/ekasvu/hankkeet-2026-11-17.md`.
+
+### G — lisäys 3: tarkistukset ja lukitsematta jääneet laskentavalinnat (17.11.2026, ennen laskentaa)
+
+**Tarkistukset (lisäys 1 edellytti):**
+- Fingridin kaavion 2030-kohdistusta ei voitu tarkistaa alkuperäisestä: fingrid.fi on estetty työtilan verkosta, eikä tekstimuunnos erottele kaavion sarjoja. Ristiintarkistus: Fingridin kokonaiskulutusarvio 2030 on 106–123 TWh nykyisestä noin 88 TWh:sta (Taloustaito/Leskelä 2026), eli kokonaislisäys +18…+35 TWh, johon sisältyvät myös lämmitys ja liikenne. Kehys +7 / +25 TWh teollisuudelle ja datakeskuksille pidetään; epävarmuus raportoidaan.
+- 3,8 TWh: lähde on TEM:n energiatase VM:n vuoden 2025 lausuntoaineistossa (tuki 83 M€ vuonna 2030 ↔ 3,8 TWh × 21,9 €/MWh). Päivitystä syksyn 2026 ennusteeseen ei löytynyt. Vertailuna: Energiateollisuuden Leskelä arvioi datakeskusten osuudeksi 10–15 % kulutuksesta 2030 (noin 11–18 TWh); Daily Finland 5–6 TWh. Raportoidaan rinnakkain, S0 pysyy 3,8:ssa.
+
+**Laskentavalinnat, joita G ei vielä lukinnut:**
+1. *S1:n muu kulutus* lasketaan samalla tavalla kuin lisäys 1 laski S2:n: kehys − datakeskusten taso = 7 − 3,8 = 3,2 TWh. (Tulkinta käyttää datakeskusten tasoa eikä lisäystä 2025→2030; vaihtoehtoinen tulkinta raportoidaan herkkyytenä.) Lisäys suhteessa S0:aan: S1 = datakeskukset 0 + muu 3,2 TWh; S2 = datakeskukset +13,7 + muu 7,5 TWh.
+2. *Täyttöjärjestys lupa/FEED-luokassa tavoitevuoden mukaan:* Arctic Sisu (2028–) → Freija (2029, YVA VE1 160 MW ensimmäisenä vaiheena) → VolagHy (2030) → Koppö → Vetyalfa (VE1 500 MW) → Arctial. Esiselvitysvaiheen hankkeita ei tarvita, jos kehys täyttyy.
+3. *Tuotemäärästä johdettu kulutus:* Arctic Sisu 56,1 kt H₂ × 55 MWh/t; VolagHy 50 kt eSAF × 0,5 t H₂/t eSAF [A] × 55 MWh/t.
+4. *Sähkövero:* datakeskukset luokka I 22,4 €/MWh, P2X/teollisuus luokka II 0,5 €/MWh. Huoltovarmuusmaksu 0,85 €/MWh omana rivinä (Huoltovarmuusrahasto kuuluu valtionhallintoon). Luokan II verotukea ei vähennetä uudelleen (sääntö 4), mutta se raportoidaan menetettynä tulona.
+5. *Yhteisövero:* datakeskukset SM-022:n kululisämalli (5 %, 1,16 M€/MW, 20 %). Uudet P2X-laitokset: väli 0 (ei verotettavaa voittoa käynnistysvuosina) … metallien jalostuksen taso 19 €/MWh (verot_304, 2022–2024), josta vähennetään verohyvitys 10 %/v enintään verosta.
+6. *Työpaikat ja palkkojen verot:* datakeskukset 120 työpaikkaa/TWh (Tuike 2025, kulutus 1 TWh [A]); P2X 100 työpaikkaa/laitos [A] (VolagHy 100+, ETFuels 60 ilmoitettu). Työvoimakustannus 70 k€/v, josta S13:lle 40 % [A]. Nettouusi osuus 0/50/100 % (sääntö 3).
+7. *Vertailuero:* BKT 2025 281,8 mrd € (Tilastokeskus 15a9) kasvatettuna VM:n reaalikasvuilla (2026 0,8 %, 2027–28 1,7 %, 2029–30 1,5 %) ja deflaattorilla 2 % [A]; erotus 1,4 %-yks. (alijäämä 4,4 % 2030).
+8. *Lukitun ulkopuolella:* kiinteistövero (kuntien tulo) ei kuulunut sääntöön 2; raportoidaan erillisenä huomiona, ei summaan.
