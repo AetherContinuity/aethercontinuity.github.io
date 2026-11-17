@@ -402,3 +402,31 @@ Kaikilla P1–P2-hankkeilla käyttöönotto 2030 paitsi Freija (2029) → ajoitu
 **Erillisarviot:** rakennusvaiheen kotimainen osuus ja hankintaketju Tilastokeskuksen panos-tuotostaulukoista (StatFin/pt: 14yp tuonnin käyttötaulukko, 14yt Leontiefin käänteismatriisi, 14yr työpanoskertoimet; 2021–2023). Datakeskusten kiinteistöverolle ei löytynyt lähdettä rakennusosan arvosta per MW → ei arviota (H kohta 8). Varastojen läpivirtausta ei löytynyt → häviöt kuvataan sanallisesti.
 
 **Vertailuero:** VM:n syksyn 2026 nimellistä 2030 BKT:ta ei löytynyt; käytetään G:n johtoa (≈ 334 mrd €, erotus 1,4 %-yks. ≈ 4,68 mrd €).
+
+### H — tulos (17.11.2026, laskettu lisäyksen 1 jälkeen, kirjausta ei muutettu)
+
+Laskenta `scripts/ekasvu_h_laskenta.py`, tuloste `tools/data/ekasvu/h_tulos_2026-11-17.txt`, solut JSON:na. Vertailuero ≈ 4 678 M€. **Osittainen fiskaalinen vaikutus**, ei nettovaikutus.
+
+Pääarvo (ajoitus 50 %, nettouusi työ 50 %, P2X-yhteisövero 0, käyttöaste 60 %, DC 120 tp/TWh), M€ ja osuus vertailuerosta:
+
+| | P0 (FID) | P1 (+lupa/FEED) | P2 (+esiselvitys) |
+|---|---|---|---|
+| D0 TEM 3,8 | 0 (0,0 %) | 6 (0,1 %) | 9 (0,2 %) |
+| D0b Statnett 4 | 5 (0,1 %) | 11 (0,2 %) | 14 (0,3 %) |
+| D1 tiekartta 5–6 | 32–59 (0,7–1,3 %) | 38–64 | 41–68 (0,9–1,4 %) |
+| D2 ET 11–18 | 192–378 (4,1–8,1 %) | 197–384 | 201–388 (4,3–8,3 %) |
+| D3 SM-022 17,5 | 365 (7,8 %) | 371 | 374 (8,0 %) |
+
+Kaikkien yhdistelmien välit (ajoitus 0/50/100, nettouusi 0/50/100, P2X-yhteisövero 0/yläraja, käyttöaste 40/60/80, DC-työpaikat 120/400 per TWh): esim. D0 × P2 1–112 M€; D3 × P2 342–612 M€; täysi matriisi tulosteessa.
+
+Havainnot:
+- Hankevaihe (P0→P2) muuttaa pääarvoa enintään 9 M€; datakeskustaso (D0→D2b) 378 M€. Tulos määräytyy lähes kokonaan datakeskusten kulutuksesta ja niiden luokan I sähköverosta.
+- P0 = 0: yhdelläkään P2X-hankkeella ei ole lopullista investointipäätöstä jäädytyspäivänä.
+- P2X 3,6 TWh (P2) tuottaa pääarvolla alle 10 M€; luokan II menetetty sähkövero samalta kulutukselta 79 M€ (ei vähennetty, raportoitu).
+- Alasektorit: lähes kaikki valtiolle (sähkövero). Esim. D2b × P2: valtio 360, kunnat 10, työeläkelaitokset 15, muut sosiaaliturvarahastot 3 M€.
+
+Erillisarviot (ei summaan):
+- Energiavarastot: verohyvitys ≤ 31 M€/v; häviöitä ei laskettu (läpivirtausta ei saatavilla).
+- Rakennusvaihe, investointikysynnän tuontiosuudet 2023 (Tilastokeskus 14yp/14ym): tietokoneet ja elektroniikka (26) 92 %, koneet (28) 79 %, sähkölaitteet (27) 66 %, tekniset palvelut (71) 26 %, metallituotteet (25) 9 %, rakentaminen (41–43) ≈ 0 %. Kotimainen osuus investoinnista hankintarakenteen mukaan [A, laskentahetkellä]: datakeskus ilman palvelimia ~65 %, palvelimet mukana ~35 %; P2X ~52 %.
+- Hankintaketju: Leontiefin käänteismatriisin sarakesummat 2022 (14yt): kemia (20) 1,37, metallien jalostus (24) 1,64, tietojenkäsittely (62–63) 1,46, rakentaminen 1,88. Euromääräistä arviota ei tehty, koska hankkeiden tuotosta ei tunneta.
+- Kiinteistövero: ei arviota (lähdettä ei löytynyt).
