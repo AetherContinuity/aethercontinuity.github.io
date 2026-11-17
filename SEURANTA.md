@@ -446,3 +446,41 @@ Kimi K3.1 Pro katselmoi H:n (ogas3 `katselmoinnit/h-energiaintensiivinen-vastaus
 5. **Erillisarviot:** rakennusvaiheen hankintapainot [A, laskentahetkellä]: datakeskus ilman palvelimia 41–43 45 %, 27 20 %, 28 25 %, 71 10 % → kotimainen ~65 %; palvelimet mukana 26 50 %, 41–43 20 %, 27 10 %, 28 15 %, 71 5 % → ~35 %; P2X 28 45 %, 27 15 %, 41–43 30 %, 71 10 % → ~52 %. Ei oletusväliä eikä euromäärää. Varastojen kolmijakoa ei eritelty tuloksessa.
 6. **Seuraavaan kierrokseen (ennakkokirjaus ennen laskentaa):** DC-työintensiteetin pääarvo, veroparametrien lähteet numeroina, hyvityksen vuosikäyttö, työpaikkojen käynnistysprofiili, käyttöasteen kohdehankkeet, D0b:n kattavuus ja tarkka luku, D2:n alkuperä, Plugin sivustotehot suorista lähteistä, P2X:n perusura ja sähköveron vastafaktuaali.
 7. **Muistion SM-023 v0.2 katselmointi (Kimi, 17.11.2026, `ogas3/katselmoinnit/sm023-vastaus-2026-11-17.md`).** Muistion päätaulukko ja alasektorit vastaavat H:n tulostetta. Tarkistettu löydös: hanketaulukon (`tools/data/ekasvu/hankkeet-2026-11-17.md`) rivi "Muut 6 uusiutuva + 3 materiaalia" on 274,4 M€, oikea summa Business Finlandin listasta on 321,7 M€ (uusiutuvat 212,0 + materiaalit 109,7); taulukon rivit summautuvat siksi 2 217,3 M€:oon, ei 2 264 M€:oon. Rivi on yhteenvetorivi, eikä H:n laskenta käytä sitä; jäädytettyä taulukkoa ei muuteta. Muistiossa korjattiin väitteiden rajaus (laskennan kattavuus, ei todennäköisyyksiä, kaikkien yhdistelmien yläraja 630 M€ = 13,5 %), Fingrid-kehyksen vertailukohta (muu kulutus 3,2–7,5 TWh), 1,5 GW / 5–6 TWh -tulkinta (yhteensopivat 38–46 %:n käyttöasteella) ja oletusmerkinnät. Avoimeksi jäi laskentajälki 71 M€:n verkkojyvitykselle, Tuike-palkoille ja rakennusvaiheen kotimaisuusosuuksille sekä P1-hankkeiden vaihenäyttö.
+
+## DCA:n epäsymmetria ja Yhdysvaltain sitoutuminen Suomeen — ennakkokirjaus I (17.11.2026)
+
+Kirjattu ennen indikaattoridatan hakua. Lähtökohta on Stubbin FT-haastattelu (17.11.2026: Euroopan Venäjä-yhteyksien ulkoistaminen Yhdysvalloille on "vastuutonta") ja Bildin raportti (13.11.2026) Venäjän vaatimuksesta Suomen Nato-erosta rauhanneuvotteluissa.
+
+**1. Sopimusperusta (tarkistettu sanatarkasti 17.11.2026).** SopS 70/2024, Finlex avoin data `akn/fi/act/treaty/2024/70/fin@/media/8114.pdf` (aci-policy-proxy, PR #10); PDF ja sarake-erotellut tekstit `tools/data/dca/`, sha256 `78647198…a427e8e3`. Kirjauksen kannalta olennaiset määräykset:
+- 3.1 ja 4.1–4.2: Yhdysvalloilla on oikeuksia ("authorized unimpeded access", "may … preposition", "unencumbered right to remove … at any time"). Yksikään "U.S. forces shall" / "United States shall" -lause ei velvoita läsnäoloon tai alueiden käyttöön.
+- 3.4 ja 3.6: Suomi antaa sovitut alueet käyttöön ilman vuokraa ja pyrkii pyydettäessä helpottamaan pääsyä muihin satamiin, lentokenttiin ja teihin ilman kustannuksia Yhdysvalloille.
+- 29.1: "All obligations under this Agreement shall be subject to the availability of appropriated funds." 29.5–6: riidat ratkaistaan neuvotellen, ei tuomioistuimessa eikä kolmannella osapuolella.
+- 30.3: alkuvaihe 10 vuotta, sen jälkeen irtisanominen vuoden ilmoitusajalla. 30.4: liitettä A (15 aluetta) voivat muuttaa osapuolet tai toimeenpanijat kirjallisesti.
+- Rakenne on Yhdysvaltain mallisopimus (PuVL 7/2024, UaVM 5/2024): sama Norjan, Ruotsin ja Tanskan sopimuksissa.
+
+**2. Hypoteesi.** Sopimus sallii Yhdysvaltain sitoutumisen ohentamisen irtisanomatta, Suomi on sidottu vähintään 31.8.2034 asti. Jos Yhdysvallat käyttää tätä liikkumavaraa rauhanneuvottelujen aikana, sen pitäisi näkyä ensin Yhdysvaltain rahavirroissa (29.1) ja vasta sitten läsnäolossa. Hypoteesi ei väitä painostusta; se väittää, että ohentaminen olisi havaittavissa julkisesta datasta.
+
+**3. Vertailuasetelma.** Lähtötaso Suomessa on matala, joten absoluuttinen väheneminen ei ole testattavissa. Vertailu tehdään samalla mallisopimuksella toimiviin maihin: Norja, Ruotsi, Tanska. Kuvaileva, ei kausaalinen: vertailumaiden kehitystä ei voi kohdistaa neuvotteluihin.
+
+**4. Indikaattorit (vain vuositason kokonaissummat ja lukumäärät).**
+- I1 Rakennushankkeet: C-1 (Construction Programs), maakohtainen summa, pyyntö ja hyväksytty, $K, FY2024→. Suomi, NO, SE, DK.
+- I2 EDI: onko EDI budjetissa omana kokonaisuutenaan; maakohtainen summa, jos eritelty. Muuten vain Euroopan kokonaissumma.
+- I3 Puolustusministeriön sopimusvelvoitteet, suorituspaikka maa (USAspending/FPDS), FY-summa, samat neljä maata.
+- I4 Harjoitukset Suomessa Yhdysvaltain osallistumisella: kappalemäärä kalenterivuodessa Puolustusvoimien tiedotteista.
+- I5 (konteksti, ei läsnäolo) DSCA:n asekauppailmoitukset Suomelle: lukumäärä ja $ — mittaa riippuvuutta, ei sitoutumista.
+
+**5. Rajaus: kokoamisen vaikutus.** Ei kerätä eikä julkaista aluekohtaisia tietoja: ei hankkeiden sijainteja, ennakkovarastoinnin paikkoja, harjoitusten paikkoja tai ajoituksia, ei yksittäisiä joukkojen liikkeitä. Jos lähde antaa tiedon vain aluekohtaisesti, se summataan maatasolle ennen tallennusta eikä alkuperäistä riviä tallenneta. Testattava kysymys ("kasvaako Yhdysvaltain sitoutuminen Suomeen suhteessa vertailumaihin") ei vaadi sijaintitietoa.
+
+**6. Lähtötaso ja mittausajat.** Lähtötaso FY2024–FY2026 (I1–I3, I5) ja 2024–2026 (I4). Mittaus vuosittain: seuraava, kun FY2028:n budjettipyyntö julkaistaan (kevät 2027) ja FY2027:n määrärahat on hyväksytty.
+
+**7. Tulkinta lukitaan etukäteen (mittapuu, ei kynnys).**
+- Ohentamisen kanssa yhteensopiva: Suomen I1+I3 laskee tai pysyy, kun vertailumaiden keskiarvo kasvaa, kahtena peräkkäisenä FY:nä; tai I4 laskee lähtötason alle.
+- Ohentamisen kanssa ristiriitainen: Suomen I1+I3 kasvaa vähintään vertailumaiden tahtia, ja I4 pysyy lähtötasolla tai kasvaa.
+- Muut yhdistelmät raportoidaan sellaisinaan ilman tulkintaa.
+- EDI:n poistuminen (I2) koskee koko Eurooppaa; se raportoidaan erikseen, ei Suomen ohentamisena.
+
+**8. Ei tehdä.** Ei väitetä painostusta eikä syy-yhteyttä neuvotteluihin. Ei mallinneta sotilaallista kykyä. Ei käytetä luokiteltua tai vuotanutta aineistoa.
+
+**9. Jo nähty ennen kirjausta (ilmoitetaan).** C-1 FY2027:n maayhteenvedot luettu osittain hakutyökalulla: Suomea ei mainittu FY2025–FY2027-yhteenvedoissa, Norjalla ilmavoimien rakennushankkeita (FY2025 8 000 $K, FY2026 72 000 $K, lukema epävarma). Bloomberg (2023): Suomeen kohdistuneen sopimustyön arvo kymmenkertaistui FY2021→FY2022. FY2027 alkoi väliaikaisella rahoituspäätöksellä (CRS). Nämä tarkistetaan kokonaan lähtötasomittauksessa.
+
+**10. Tekninen edellytys.** comptroller.war.gov ja api.usaspending.gov eivät ole työtilan sallittujen joukossa; haku proxyn kautta (uusi worker tai reitti), sama kertaluonteinen tallennus kuin muissa ACI-lähteissä.
