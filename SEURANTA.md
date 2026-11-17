@@ -369,3 +369,36 @@ Muistion tiivistelmälauseessa käytetään keskiarviota (työ 50 %, P2X-yhteis�
 **9. Vertailuero.** VM:n syksyn 2026 ennusteen 2030 nimellinen BKT, jos löytyy; muuten G:n johto merkittynä.
 
 **10. Järjestys.** (1) tämä kirjaus; (2) lisäys 1: hankeliite, parametrit, D2:n attribuutio ja D4:n varmistus, jäädytyspäivä; (3) laskenta ja tulos erikseen; (4) Kimin katselmointi ennen muistiota.
+
+### H — lisäys 1: lähteet, hankeliite ja parametrit (17.11.2026, ennen laskentaa). Jäädytyspäivä 17.11.2026.
+
+**Datakeskusten tasot (harmonisoitu):**
+- D0 3,8 TWh — TEM:n energiatase (VM:n perusura).
+- D0b ~4 TWh — Statnett, pohjoismainen datakeskusennuste (Argus 26.3.2026). Siirtoverkkoyhtiön oma malli; Fingrid-riippuvuutta ei tiedetä. Lisätty, koska se on ainoa löydetty TSO-tason datakeskuskohtainen luku.
+- D1 5 / 6 TWh — datakeskusten kansallinen tiekartta (HE 282/2026 toistaa; FDCA 4/2026 toistaa; Daily Finland ja Nordea eivät ole itsenäisiä tasoja). Molemmat päät lasketaan.
+- D2 11 / 18 TWh — Energiateollisuus (Leskelä, Taloustaito 2026, 10–15 % kulutuksesta). Alkuperä (ET:n oma vai Fingridin) ei selvinnyt; attribuutio ET. Molemmat päät lasketaan.
+- D3 17,5 TWh — SM-022 (ACI).
+- D4 VTT/FDCA — **ei mukana**: 2030-kulutuslukua ei varmistettu raportista jäädytyspäivään mennessä. Saatavilla oleva kapasiteettiluku (FDCA, Poikola: jopa 2 800 MW 2030) raportoidaan hankeputken mittarina.
+- ERAA 2025 / TYNDP: ei käytetä tasona; kansalliset kysyntäsyötteet ovat siirtoverkkoyhtiöiden (Suomessa Fingrid), eikä datakeskuserittelyä löytynyt. SvK KMA2025 käytetään vain Pohjoismaiden tasekontekstina, ei Suomen datakeskustasona.
+
+**Hankeliite (P-tasot):**
+
+| Hanke | Taso | Käyttöönotto (uusin lähde) | Kulutus 2030 (60 %) | Hyvitys M€ | Työpaikat | Lähde |
+|---|---|---|---|---|---|---|
+| Arctic Sisu, Kotka | P1 | 1. vaihe: 2028 (Cursor 6/2025) → mahdollisesti 2030 (Argus 8/2026); uusin lähde → 2030 | 1. vaihe = 1/3 × 56,1 kt H₂ × 55 MWh/t = 1,03 TWh [L/A: kolme samankokoista vaihetta] | 150,0 (1/3 kohdistuu 1. vaiheeseen [A]) | 100 [A] | Argus, Cursor |
+| Freija, Nokia | P1 | ensituotanto 2029 (FID-tavoite 2026) | VE1 160 MW → 0,84 TWh | 110,6 | 100 [A] | LVV 2.4.2026, h2-view |
+| VolagHy, Kuopio | P1 | käyttöönotto 2030 | 50 kt eSAF × 0,5 t H₂/t × 55 = 1,38 TWh [A] | 150,0 | 100 (ilmoitettu 100+) | Business Kuopio, chemXplore |
+| ETFuels, Ranua | P2 | COD 2030 | 300 MW → 1,58 TWh | 118,6 | 60 (ilmoitettu) | carbonstorage.io, Kaleva |
+| Plug Power site 1 + 2 | P2 | vuosikymmenen loppu (2023), FID-tavoite 2025/26 ei vahvistettu; → 2030 | sivustokohdistus tuntematon: teho johdetaan hyvityksestä: 2,55 M€/MW (5,6 mrd € / 2,2 GW), hyvitys = 20 % → site 1 87 MW, site 2 207 MW [L] → 1,55 TWh | 44,2 + 105,8 | 1 000 / 2,2 GW × 294 MW = 134 [L] | Plug Power 2023, Business Finland |
+
+Kaikilla P1–P2-hankkeilla käyttöönotto 2030 paitsi Freija (2029) → ajoitus 0/50/100 % koskee Arctic Sisua, VolagHya, ETFuelsia ja Plugia. Hankeputki ilman laskentaa: Koppö (200 MW), Vetyalfa (500–1 000 MW), Northern Green Fuels, Arctial (~7 TWh), Sakatti, Norsk e-Fuel (80 kt), Arctic Sisu vaiheet 2–3.
+
+**Datakeskusten työpaikat (rinnakkain):** 120 / TWh (Tuike Finland Oy, oma henkilöstö) ja 400 / TWh (Haminan kampus ml. urakoitsijat, Google/Yle) [kulutus 1 TWh A].
+
+**Palkkaparametrit 2026:** vuosipalkka 60 000 € [A]. Työeläkelaitokset: TyEL 24,4 % (työnantaja keskim. 17,10 %, työntekijä 7,30 %; ETK 2026). Muut sosiaaliturvarahastot: työttömyysvakuutus 1,23 % + 0,89 %; sairausvakuutus työnantaja 1,91 % + palkansaajan päivärahamaksu 0,88 % (Varma 2026). Valtio: valtion tulovero ja yle-vero 12 % palkasta [A]; kunnat: kunnallisvero 7,0 % palkasta [A] (keskimääräinen kunnallisvero-% 7,57, efektiivinen alempi vähennysten vuoksi). Kirkollisvero ja sairaanhoitomaksu jätetään pois [A].
+
+**Yhteisöveron jako 2026:** valtio 77,15 %, kunnat 22,85 % (laki 706/2024 muutettuna HE 59/2026 mukaisesti; 1.6.2026 voimaan tullut laki 394/2026).
+
+**Erillisarviot:** rakennusvaiheen kotimainen osuus ja hankintaketju Tilastokeskuksen panos-tuotostaulukoista (StatFin/pt: 14yp tuonnin käyttötaulukko, 14yt Leontiefin käänteismatriisi, 14yr työpanoskertoimet; 2021–2023). Datakeskusten kiinteistöverolle ei löytynyt lähdettä rakennusosan arvosta per MW → ei arviota (H kohta 8). Varastojen läpivirtausta ei löytynyt → häviöt kuvataan sanallisesti.
+
+**Vertailuero:** VM:n syksyn 2026 nimellistä 2030 BKT:ta ei löytynyt; käytetään G:n johtoa (≈ 334 mrd €, erotus 1,4 %-yks. ≈ 4,68 mrd €).
