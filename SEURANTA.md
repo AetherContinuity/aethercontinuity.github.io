@@ -293,3 +293,15 @@ S2:sta 307 M€ (62 %) on datakeskusten sähköveroa luokassa I. P2X:n yhteisöv
 Herkkyydet: S1 vaihtoehtoisella tulkinnalla (muu 5,2 TWh) 74 M€ (1,6 %). Pelkät datakeskukset ET:n 11–18 TWh:lla: 204–401 M€ (4,4–8,6 %).
 
 Lukitun ulkopuolella, ei summassa: kiinteistövero (kunnat).
+
+---
+
+## Seurattava muistioaihe: kotimaiset polttoaineet, vaihtotase ja verokohtelu (kirjattu 17.11.2026)
+
+Kysymys: voiko kotimaisten polttoaineiden tuotanto ja käyttö kotimaan liikenteessä ja varavoimassa korvata fossiilisten tuontia niin, että vaihtotase ja kansantalous paranevat pitkällä aikavälillä, ja millä verokohtelulla tämä ei heikennä julkista taloutta?
+
+Lähtötiedot: energiatuotteiden tuonti 10,0 mrd € ja vienti 5,6 mrd € (2025, Tilastokeskus); fossiilisten osuus sähköntuotannosta alle 2 %; energiaverot 3,8 mrd € (2025), uusiutuvien CO₂-vero puolitettu; ETS2 noin +20 snt/l 2027.
+
+Mittarit: energian nettotuonti tuotteittain (ehk-taulukot proxyn kautta); polttoaineveron menetys korvattua litraa kohden; kustannusero €/MWh ETS2:n kanssa ja ilman; Suomeen jäävä osuus omistusmalleittain (ulkomainen, eläkeyhtiö, kunnallinen, osuuskunta); huoltovarmuusarvo omana eränä. Liittyy: TN-017, TN-018, ennakkokirjaus G.
+
+Tehdään energiaintensiivisen kasvun muistion jälkeen; ennakkokirjaus ennen laskentaa.
