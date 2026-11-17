@@ -430,3 +430,18 @@ Erillisarviot (ei summaan):
 - Rakennusvaihe, investointikysynnän tuontiosuudet 2023 (Tilastokeskus 14yp/14ym): tietokoneet ja elektroniikka (26) 92 %, koneet (28) 79 %, sähkölaitteet (27) 66 %, tekniset palvelut (71) 26 %, metallituotteet (25) 9 %, rakentaminen (41–43) ≈ 0 %. Kotimainen osuus investoinnista hankintarakenteen mukaan [A, laskentahetkellä]: datakeskus ilman palvelimia ~65 %, palvelimet mukana ~35 %; P2X ~52 %.
 - Hankintaketju: Leontiefin käänteismatriisin sarakesummat 2022 (14yt): kemia (20) 1,37, metallien jalostus (24) 1,64, tietojenkäsittely (62–63) 1,46, rakentaminen 1,88. Euromääräistä arviota ei tehty, koska hankkeiden tuotosta ei tunneta.
 - Kiinteistövero: ei arviota (lähdettä ei löytynyt).
+
+### H — toteutusseloste (17.11.2026, laskennan ja katselmoinnin jälkeen; lukittuja lukuja ei muuteta)
+
+Kimi K3.1 Pro katselmoi H:n (ogas3 `katselmoinnit/h-energiaintensiivinen-vastaus-2026-11-17.md`). Löydökset tarkistettiin koodia vasten; kaikki pitivät.
+
+1. **Kaikki yhdistelmät julkaistu** (H §5 edellytti): `tools/data/ekasvu/h_yhdistelmat_2026-11-17.csv`, 2 268 riviä, alasektoreittain; `scripts/ekasvu_h_yhdistelmat.py` käyttää samaa laskentaa.
+2. **Lukitsematta jääneet laskentasäännöt, jotka koodi toteuttaa:**
+   - Verohyvityksen vuosikäyttö enintään 10 % myönnetystä (Business Finlandin ehto, G:n kartoitus) — ei kirjattu H:hon; vaikuttaa vain P2X-yhteisöveron ylärajaan, ei pääarvoon (yhteisövero 0).
+   - Ajoituskerroin skaalaa kulutuksen lisäksi työpaikat ja hyvityksen; H §4 määräsi vain kulutuksen. Työpaikkojen skaalaus pienentää palkkatuloja.
+   - Käyttöaste koskee vain MW-pohjaisia hankkeita (Freija, ETFuels, Plug); tuotemäärästä johdetut (Arctic Sisu, VolagHy) ovat kiinteitä.
+   - Pääarvon DC-työpaikkaintensiteetti 120/TWh on funktion oletus; lisäys 1 esitti 120 ja 400 rinnakkain nimeämättä pääarvoa. 400 nostaisi pääarvoa kaikilla tasoilla D0:n yläpuolella.
+3. **Lähdetasot:** D0b (~4 TWh) käsitellään 4,0:na; 0,2 TWh:n lisäys ja siitä seuraava ~5 M€ ovat pyöristysherkkiä eikä niitä tulkita itsenäiseksi vahvistukseksi. D2 11/18 TWh on johdettu 10–15 %:sta Fingridin kokonaiskulutuksella 106–123 TWh [L]; D2:n alkuperä on julkaisuattribuutio, ei osoitettu itsenäisyys.
+4. **Tulkintarajat:** "tulos määräytyy datakeskusten kulutuksesta" pätee pääarvoon tasoilla D1–D3; D0–D0b:llä tulos tulee pääosin P2X:stä, ja D0 × P2 -välin (1–112 M€) määräävät P2X-oletukset. "Menetetty luokan II vero" (P2: 79 M€) on laskennallinen ero luokan I veroon, ei menetys VM:n perusuraan nähden.
+5. **Erillisarviot:** rakennusvaiheen hankintapainot [A, laskentahetkellä]: datakeskus ilman palvelimia 41–43 45 %, 27 20 %, 28 25 %, 71 10 % → kotimainen ~65 %; palvelimet mukana 26 50 %, 41–43 20 %, 27 10 %, 28 15 %, 71 5 % → ~35 %; P2X 28 45 %, 27 15 %, 41–43 30 %, 71 10 % → ~52 %. Ei oletusväliä eikä euromäärää. Varastojen kolmijakoa ei eritelty tuloksessa.
+6. **Seuraavaan kierrokseen (ennakkokirjaus ennen laskentaa):** DC-työintensiteetin pääarvo, veroparametrien lähteet numeroina, hyvityksen vuosikäyttö, työpaikkojen käynnistysprofiili, käyttöasteen kohdehankkeet, D0b:n kattavuus ja tarkka luku, D2:n alkuperä, Plugin sivustotehot suorista lähteistä, P2X:n perusura ja sähköveron vastafaktuaali.
