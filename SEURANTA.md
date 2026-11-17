@@ -537,3 +537,7 @@ Kohta 4 määritteli I4:n lähteeksi "Puolustusvoimien tiedotteet" ilman aineist
 - **Lisäksi** raportoidaan erikseen tiedotteet, jotka koskevat Yhdysvaltain läsnäoloa ilman nimettyä harjoitusta; ne eivät kuulu I4:n lukuun.
 - **Validiteettirajoite:** I4 mittaa tiedotettua harjoitustoimintaa, ei läsnäolon kestoa tai vahvuutta. Tiedotuskäytännön muutos näkyy I4:ssä kuin toiminnan muutos.
 - **Kokoamisrajaus:** paikkoja ja päivämääriä ei tallenneta; vain harjoituksen nimi ja vuosi.
+
+### I — poikkeama 3 (17.11.2026, ennen I4:n laskentaa)
+
+Poikkeama 2:n koneellinen haku ei onnistu: puolustusvoimat.fi, valtioneuvosto.fi ja defmin.fi torjuvat automaattisen haun (GitHub Actions 403; Cloudflare-bottitarkistus proxylle). Tarkistusta ei kierretä. I4 kootaan käsin verkkohaulla löytyvistä Puolustusvoimien ja puolustushallinnon tiedotteista sekä niitä sanatarkasti referoivista uutisista ("Puolustusvoimat kertoo tiedotteessa"). Koodaussääntö ja kokoamisrajaus ennallaan. Aineisto on epätäydellinen ja haun tuloksista riippuvainen: I4 on alaraja, ja vuosien välinen vertailu on suuntaa antava. Jo nähty ennen kirjausta: haun tulokset Cold Response 26, Karelian Sword 26, Rock Sisu / Sword 26 ja Protective Fence 26.
