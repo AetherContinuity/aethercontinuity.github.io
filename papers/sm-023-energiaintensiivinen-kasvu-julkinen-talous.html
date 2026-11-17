@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-023 — Energiaintensiivinen kasvu ja julkinen talous | ACI</title>
+<meta name="description" content="Kuinka paljon datakeskukset, vety ja e-polttoaineet kasvattavat julkisyhteisöjen tuloja vuonna 2030 suhteessa julkisen talouden korjaustarpeeseen. Ennakkokirjattu rinnakkaislaskenta."/>
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .75rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+  .formula { font-family: 'Courier New',monospace; font-size: .85rem; background: var(--tag-bg); border: 1px solid var(--rule); padding: .5rem 1rem; margin: .75rem 0; }
+</style>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-023-energiaintensiivinen-kasvu-julkinen-talous.html"/>
+</head>
+<body>
+<nav>
+  <span class="nav-left">Aether Continuity Institute</span>
+  <span class="nav-right"><a href="/">Home</a><a href="/papers/">Papers</a><a href="/research.html">Research</a></span>
+</nav>
+<div class="doc-header">
+  <div class="doc-series">Synthesis Memo · SM-023 · Domain D-1 · D-3</div>
+  <div class="doc-meta-grid">
+    <span><strong>Status</strong>Working Draft v0.1 — katselmoitavana</span>
+    <span><strong>Language</strong>FI</span>
+    <span><strong>Date</strong>Marraskuu 2026</span>
+    <span><strong>Relates to</strong>SM-012, SM-016, SM-020, SM-022, WP-015</span>
+    <span><strong>Ennakkokirjaukset</strong><a href="/SEURANTA.md">SEURANTA.md: G ja H</a></span>
+    <span><strong>Laskenta</strong><a href="/scripts/ekasvu_h_laskenta.py">ekasvu_h_laskenta.py</a>, <a href="/tools/data/ekasvu/h_yhdistelmat_2026-11-17.csv">kaikki yhdistelmät</a></span>
+  </div>
+  <h1 class="doc-title">Energiaintensiivinen kasvu ja julkinen talous</h1>
+  <p class="doc-subtitle">Kuinka suuren osan julkisen talouden korjaustarpeesta datakeskukset, vety ja e-polttoaineet kattavat vuonna 2030</p>
+  <p class="doc-abstract">Muistio laskee, kuinka paljon energiaintensiivinen kasvu kasvattaa julkisyhteisöjen tuloja vuonna 2030 VM:n perusuraan verrattuna, ja suhteuttaa tuloksen alijäämän ja EU:n 3 %:n viitearvon eroon (noin 4,7 mrd €). Laskentasäännöt kirjattiin ennen laskentaa, ja tulos lasketaan rinnakkain datakeskusten kulutusarvion ja hankkeiden vaiheen mukaan. Tulos on osittainen: sähkön hintavaikutus, syrjäytyminen ja verkkokustannukset puuttuvat. Pääoletuksilla vaikutus on 0–2 % vertailuerosta, jos datakeskusten kulutus jää TEM:n, Statnettin tai kansallisen tiekartan tasolle (4–6 TWh), ja 4–8 %, jos se nousee Energiateollisuuden tai SM-022:n tasolle (11–18 TWh). Tulos riippuu lähes kokonaan datakeskusten kulutuksesta ja niiden luokan I sähköverosta. Yhdelläkään verohyvityksen saaneella vety- tai e-polttoainehankkeella ei ole lopullista investointipäätöstä, ja niiden yhteenlaskettu vaikutus jää pääoletuksilla alle 10 M€:n. Energiaintensiivinen kasvu ei ole julkisen talouden korjausmekanismi; nykyinen tukirakenne kohdistaa julkista rahaa sektoreille, jotka tuottavat vähiten arvonlisää ja verotuloa sähkö-MWh:ta kohden. Merkinnät: [M] mitattu tai lähteestä, [L] laskettu, [A] oletus.</p>
+</div>
+<div class="paper">
+
+<div class="section"><span class="section-marker">§ 01</span><h2>Kysymys, rajaus ja menetelmä</h2>
+<p>Kysymys: kuinka paljon energiaintensiivinen kasvu — datakeskukset, vety ja e-polttoaineet, akkumateriaalit ja teollisuuden sähköistyminen — kasvattaa julkisyhteisöjen (S13: valtio, kunnat, työeläkelaitokset ja muut sosiaaliturvarahastot) tuloja vuonna 2030 VM:n perusuraan verrattuna?</p>
+<p>Vertailukohta on VM:n ennusteen vuoden 2030 alijäämän (4,4 % BKT:sta) ja EU:n 3 %:n viitearvon erotus, noin 1,4 %-yksikköä eli noin 4,7 mrd € [L]. Erotus on laskennallinen mittatikku, ei EU:n korjausvelvoite; sitova ohjaus on nettomenopolku.</p>
+<p>Tulos on <strong>osittainen fiskaalinen vaikutus</strong>. Mukana ovat sähkövero, huoltovarmuusmaksu, yhteisövero sekä palkkojen verot ja sosiaalivakuutusmaksut; vähennettynä puhtaan siirtymän verohyvitys. Pois jäävät sähkön hintavaikutus muille käyttäjille, työvoiman ja pääoman syrjäytyminen muilta toimialoilta, verkkokustannukset, kiinteistövero ja hankintaketju. Kyse ei siis ole nettovaikutuksesta.</p>
+<p>Menetelmä: laskentasäännöt kirjattiin julkisesti ennen laskentaa (ennakkokirjaukset G ja H, SEURANTA.md). Ensimmäinen kierros (G) täytti ennalta määrätyn kulutuskehyksen hankkeilla; riippumaton katselmointi osoitti, että se esitti ylärajaoletukset pääarvona ja korvasi toteutumattomat hankkeet automaattisesti. Toinen kierros (H) laskee rinnakkain kaksi ulottuvuutta eikä täytä kehystä. Tämä muistio perustuu H:hon; G raportoidaan liitteessä.</p></div>
+
+<div class="section"><span class="section-marker">§ 02</span><h2>Lähtötilanne marraskuussa 2026</h2>
+<ul>
+<li><strong>Julkinen talous.</strong> VM:n mukaan alijäämä on 4,4 % BKT:sta vielä vuonna 2030; kasvua jarruttavat puolustus- ja korkomenot [M].</li>
+<li><strong>Sähkövero.</strong> Vuonna 2024 sähköveroa kertyi 910 M€, josta luokasta I 892 M€ ja luokasta II 18 M€ [M]. Luokan II vero on 0,5 €/MWh, luokan I 22,4 €/MWh. Teollisuuden ja kaivostoiminnan sähkönkäyttö oli 34,5 TWh (2022–2024) [M]; alemman veroluokan laskennallinen verotuki on noin 0,76 mrd € vuodessa [L]. Datakeskukset siirtyivät luokkaan I 1.7.2026 (VM: +47 M€ vuoden 2026 tasolla, 74 M€ 2029) ja kaivokset 1.1.2026 [M].</li>
+<li><strong>Puhtaan siirtymän verohyvitys.</strong> Business Finland myönsi vuonna 2025 hyvityksen 40 hankkeelle, yhteensä 2 264 M€ [M]: uusiutuva energia ja e-polttoaineet 17 hanketta (1 544 M€), energiavarastot 18 (311 M€), akkumateriaalit ja raaka-aineet 5 (410 M€) [L]. Hyvitys vähennetään yhteisöverosta valmistumisvuodesta alkaen enintään 10 % vuodessa 20 vuoden ajan. Jatko vuosille 2027–2028 on valmisteltu.</li>
+<li><strong>Kulutuksen kehys.</strong> Fingrid arvioi kokonaiskulutuksen 103–123 TWh:ksi vuonna 2030 ja teollisen kulutuksen (datakeskukset mukaan lukien) alle 40 TWh:sta 44–96 TWh:iin vuonna 2035 [M].</li>
+<li><strong>Pohjoismainen tase.</strong> Svenska kraftnätin mukaan Pohjoismaiden ylijäämä supistuu noin 53 TWh:sta (2026) 29 TWh:iin (2030), Ruotsin 12 TWh:iin [M]. Suomen kulutuksen kasvu ei voi nojata Ruotsin ylijäämään.</li>
+<li><strong>Liittymien sääntely.</strong> Sähkömarkkinalain etusijamenettely (TEM043:00/2026) ratkaisee, mitkä hankkeet liitetään ja millä joustoehdoilla. Muistio ei oleta lain sisältöä.</li>
+</ul></div>
+
+<div class="section"><span class="section-marker">§ 03</span><h2>Arvonlisä ja verot sähkö-MWh:ta kohden</h2>
+<p>Ennen laskentaa tarkasteltiin, mitä nykyiset sähköintensiiviset toimialat tuottavat käyttämäänsä sähköä kohden (keskiarvo 2022–2024; Tilastokeskus, Verohallinto) [M]/[L]:</p>
+<table>
+<tr><th>Toimiala</th><th>Sähkö GWh</th><th>Arvonlisäys €/MWh</th><th>Palkat €/MWh</th><th>Yhteisövero €/MWh</th></tr>
+<tr><td>Metsäteollisuus (16–17)</td><td>14 881</td><td>299</td><td>158</td><td>20</td></tr>
+<tr><td>Metallien jalostus (24)</td><td>6 000</td><td>379</td><td>144</td><td>19</td></tr>
+<tr><td>Kemia (19–22)</td><td>6 323</td><td>1 139</td><td>366</td><td>62</td></tr>
+<tr><td>Kone- ja metallituote</td><td>1 937</td><td>6 759</td><td>4 136</td><td>249</td></tr>
+<tr><td>Elektroniikka (26–27)</td><td>652</td><td>11 402</td><td>4 773</td><td>313</td></tr>
+<tr><td><strong>Teollisuus ja kaivos yhteensä</strong></td><td>34 517</td><td>1 194</td><td>603</td><td>56</td></tr>
+</table>
+<p>Eniten sähköä käyttävät toimialat tuottavat vähiten arvonlisää ja palkkoja megawattituntia kohden. Uusi energiaintensiivinen kasvu muistuttaa taulukon ylimpiä rivejä. Datakeskuksen (Tuike Finland Oy, 2025: liikevaihto 574 M€, liikevoitto 30 M€, 120 henkeä [M]) palkat ovat 9–24 €/MWh, kun kulutukseksi oletetaan 0,5–1,3 TWh [A] — 6–17 kertaa vähemmän kuin metallien jalostuksessa.</p></div>
+
+<div class="section"><span class="section-marker">§ 04</span><h2>Tulos</h2>
+<p>Rinnakkaislaskenta: rivit ovat julkaistuja arvioita datakeskusten kulutuksesta 2030, sarakkeet muiden hankkeiden vaiheita. P0 = lopullinen investointipäätös tai rakenteilla; P1 = lisäksi lupa- tai FEED-vaihe ja ilmoitettu käyttöönotto viimeistään 2030 (Arctic Sisu 1. vaihe, Freija, VolagHy); P2 = lisäksi esiselvitysvaihe (ETFuels, Plug Power). Hanketiedot jäädytettiin 17.11.2026.</p>
+<p>Pääoletukset: vuonna 2030 käyttöön otettavat hankkeet puolella vuosikulutuksella, puolet työpaikoista nettouusia, P2X-laitoksilla ei vielä verotettavaa voittoa, elektrolyysin käyttöaste 60 %, datakeskukset 120 työpaikkaa/TWh.</p>
+<table>
+<tr><th>Datakeskusten kulutus 2030</th><th>P0</th><th>P1</th><th>P2</th></tr>
+<tr><td>TEM 3,8 TWh (VM:n perusura)</td><td>0 M€ (0,0 %)</td><td>6 M€ (0,1 %)</td><td>9 M€ (0,2 %)</td></tr>
+<tr><td>Statnett ~4 TWh</td><td>5 (0,1 %)</td><td>11 (0,2 %)</td><td>14 (0,3 %)</td></tr>
+<tr><td>Kansallinen tiekartta 5–6 TWh</td><td>32–59 (0,7–1,3 %)</td><td>38–64</td><td>41–68 (0,9–1,4 %)</td></tr>
+<tr><td>Energiateollisuus 11–18 TWh</td><td>192–378 (4,1–8,1 %)</td><td>197–384</td><td>201–388 (4,3–8,3 %)</td></tr>
+<tr><td>SM-022 17,5 TWh (ACI)</td><td>365 (7,8 %)</td><td>371</td><td>374 (8,0 %)</td></tr>
+</table>
+<p>Kaikki 2 268 oletusyhdistelmää on julkaistu. Esimerkiksi TEM × P2 vaihtelee 1–112 M€ ja SM-022 × P2 342–612 M€ sen mukaan, oletetaanko P2X-laitoksille yhteisöveroa, työpaikat nettouusiksi ja vuoden 2030 hankkeet täysiksi vuosiksi.</p>
+<div class="finding"><div class="finding-label">Havainto</div>Datakeskusten kulutustaso muuttaa tulosta 378 M€, hankevaihe enintään 9 M€. Kaksi viranomais- ja siirtoverkkotason arviota (TEM 3,8 ja Statnett ~4 TWh) päätyvät alimmalle tasolle; toimialan ja Energiateollisuuden arviot ovat 3–5-kertaisia. Ero itsessään on tulos: julkisen talouden suunnittelu ja investointikeskustelu käyttävät eri kulutusoletuksia.</div>
+<p>Alasektorit: lähes kaikki tulo menee valtiolle sähköveron kautta. Esimerkiksi Energiateollisuuden ylätasolla (18 TWh) × P2: valtio 360 M€, kunnat 10, työeläkelaitokset 15, muut sosiaaliturvarahastot 3 M€. Hyvinvointialueille ei jyvitetä tuloja, koska niillä ei ole verotusoikeutta. Työeläkemaksut kuuluvat S13:n rahoitusasemaan ja siten vertailueroon, mutta kasvattavat myös tulevia eläkevastuita.</p>
+<p>Tulkinnan rajat: väite, että datakeskukset ratkaisevat tuloksen, pätee kansallisen tiekartan tasosta ylöspäin. Alimmilla tasoilla tulos tulee pääosin P2X-hankkeista ja riippuu niiden oletuksista.</p></div>
+
+<div class="section"><span class="section-marker">§ 05</span><h2>Datakeskukset</h2>
+<p><strong>Sähkövero</strong> on datakeskusten ainoa merkittävä julkinen tulo: 22,4 €/MWh energiaveroa valtiolle ja 0,85 €/MWh huoltovarmuusmaksua Huoltovarmuusrahastoon [M]. Luokassa II sama kulutus tuottaisi energiaveroa noin 2 % luokan I määrästä [L].</p>
+<p><strong>Yhteisövero</strong> on pieni, koska suuret datakeskukset toimivat kululisämallilla: Tuike Finland Oy:n liikevoitto on noin 5 % liikevaihdosta [M]. Mallissa kulupohja on 1,16 M€/MW/v [A]: sähkö verkko- ja veromaksuineen noin 82 €/MWh × 7 008 MWh/MW sekä poistot 10 M€/MW 17 vuodessa [A]; 5 %:n kululisä ja 20 %:n verokanta antavat noin 11,6 k€/MW/v eli 1,7 €/MWh [L]. Kululisä 2–10 % muuttaa tulosta suhteessa; investoinnin koko vaikuttaa poistojen kautta.</p>
+<p><strong>Työpaikat.</strong> Tuike Finland Oy:n palkkalistoilla on 120 henkeä; Haminan kampus työllistää urakoitsijat mukaan lukien noin 400 [M]. Tämä on rinnakkaisten oletusten 120/400 työpaikkaa per TWh peruste [A].</p>
+<p><strong>Kantaverkko.</strong> 2,5 GW:n kuorma maksaisi kantaverkkomaksuja noin 84 M€ vuodessa (tasaiselle kuormalle 4,79 €/MWh) [L]. Fingridin 5,2 mrd €:n investointiohjelman annuiteetti (5 %, 40 v) on noin 303 M€ vuodessa, josta kulutuksen kasvun suhteessa datakeskuksille jyvitettäisiin noin 71 M€ [L]. Lukuja ei esitetä taseena: maksut kattavat myös käyttö-, häviö- ja reservikustannuksia sekä olemassa olevan verkon pääomaa, ja jyvitys on laskentasääntö, ei syy-seuraussuhde. Annuiteetti on omaisuuden laskennallinen vuosikustannus, ei Fingridin vuotuinen investointimeno.</p>
+<p><strong>Kunnat.</strong> Kiinteistövero jää kokonaan kunnalle, mutta laitteet eivät ole kiinteistöveron alaisia, eikä rakennusosan arvolle per MW löytynyt lähdettä; arviota ei tehty. Mittakaavan antaa Hamina: Googlen noin viiden miljardin investoinneista huolimatta kaupunki on säästökuurilla ja kunnallisveroprosentti 9,40, selvästi yli keskiarvon [M].</p></div>
+
+<div class="section"><span class="section-marker">§ 06</span><h2>Vety, e-polttoaineet ja verohyvitys</h2>
+<p>Vety- ja e-polttoainehankkeet maksavat sähköveroa luokan II mukaan. P2:n 3,6 TWh tuottaa pääoletuksilla alle 10 M€ vuodessa; sama kulutus luokan I verolla tuottaisi 79 M€ enemmän [L]. Ero on laskennallinen eikä menetys VM:n perusuraan nähden, mutta se kertoo tukirakenteen suuruusluokan.</p>
+<p>Hankekannan tila 17.11.2026 [M]:</p>
+<ul>
+<li>Yhdelläkään verohyvityksen saaneella P2X-hankkeella ei ole julkista lopullista investointipäätöstä.</li>
+<li>NordFuelin Haapaveden biojalostamo (hyvitys 125,9 M€) lopetettiin kesällä 2026 rahoituksen puutteeseen.</li>
+<li>Hyvitys ei ole laatusuodatin: Business Finlandin mukaan se ei ole harkinnanvarainen, vaan se myönnetään kaikille kriteerit täyttäville. Esimerkiksi Northern Green Fuels Oy (109,9 M€) ei kerro julkisesti sijaintia, tehoa, investoinnin kokoa eikä aikataulua.</li>
+<li>Nimettyjen hankkeiden kulutus (noin 16 TWh täyttöjärjestyksessä sekä Plug Power noin 11,6 ja ETFuels noin 1,6 TWh) ylittää Fingridin vuoden 2030 kehyksen moninkertaisesti [L]. Hankelista kuvaa hakijoita, ei toteutuvaa kulutusta.</li>
+</ul>
+<p><strong>Ajoitus.</strong> Rakennusvaiheen hyöty tulee nyt; verohyvitys vähentää yhteisöveroa käyttövaiheessa jopa 20 vuoden ajan. Valtio maksaa rakennusvaiheen piristyksen myöhemmin. Uusien laitosten nettoyhteisövero voi olla lähellä nollaa 10–20 vuotta.</p></div>
+
+<div class="section"><span class="section-marker">§ 07</span><h2>Sähkön hinta ja tuotanto ehtona</h2>
+<p>Sähkön hintaa ei mallinneta. Datakeskusten tai P2X:n osuutta hinnasta ei voi erottaa havaitusta hinnasta, vaan ainoastaan vertailumallinnuksella, jossa kaikki muu pidetään samana. Hinta riippuu tuulesta, vesitilanteesta, siirtoyhteyksistä sekä Suomen ja Ruotsin kulutuksen kasvusta; Ruotsin ylijäämän supistuminen (§ 02) heikentää tuontipuskuria.</p>
+<p>Jokainen tämän muistion tulos edellyttää, että kulutuksen kasvu toteutuu ja että tuotanto kasvaa samaa tahtia. Jos kulutus kasvaa tuotantoa nopeammin, kustannus siirtyy muille sähkönkäyttäjille hinnan kautta, ja julkisen talouden tulo on silloin osittain muiden käyttäjien maksama. Etusijamenettely on tässä keskeinen ohjauskeino.</p></div>
+
+<div class="section"><span class="section-marker">§ 08</span><h2>Erillisarviot (ei summassa)</h2>
+<ul>
+<li><strong>Energiavarastot.</strong> Verohyvitykset vähentävät yhteisöveroa enintään 31 M€ vuodessa, jos kaikki 18 varastoa ovat käytössä ja voitollisia [L]. Varastot eivät lisää loppukulutusta; lataus- ja purkuhäviöt lisäävät verkosta otettavaa sähköä, mutta läpivirtausta ei ollut saatavilla.</li>
+<li><strong>Rakennusvaihe.</strong> Investointikysynnän tuontiosuudet 2023 (Tilastokeskus) [M]: tietokoneet ja elektroniikka 92 %, koneet 79 %, sähkölaitteet 66 %, tekniset palvelut 26 %, rakentaminen noin 0 %. Hankintarakenteesta riippuen [A] datakeskusinvestoinnista jää kotimaahan noin 35 % (palvelimet mukana) tai 65 % (ilman), P2X-investoinnista noin 52 %. Rakennusvaihe on kertaluonteinen.</li>
+<li><strong>Hankintaketju.</strong> Tilastokeskuksen tuotoskertoimet 2022 [M]: kemia 1,37, metallien jalostus 1,64, tietojenkäsittely 1,46. Euromääräistä arviota ei tehty, koska hankkeiden tuotosta ei tunneta.</li>
+</ul></div>
+
+<div class="section"><span class="section-marker">§ 09</span><h2>Johtopäätökset</h2>
+<ol>
+<li><strong>Energiaintensiivinen kasvu ei korjaa julkista taloutta.</strong> Todennäköisimmillä kulutustasoilla (4–6 TWh) se kattaa vuonna 2030 alle 2 % vertailuerosta; korkeimmillakin arvioilla noin 8 %. Tulos on osittainen ja edellyttää, että tuotanto kasvaa kulutuksen tahdissa.</li>
+<li><strong>Tuotto tulee sähköverosta, ei toiminnasta.</strong> Datakeskusten tulo on lähes kokonaan luokan I sähköveroa, ja se on poliittinen päätös. Vety- ja e-polttoainehankkeiden tuotto on pieni, ja niiden yhteisövero kuittautuu verohyvityksellä pitkälle tulevaisuuteen.</li>
+<li><strong>Tukirakenne kohdistuu heikoimmin tuottaviin kohteisiin.</strong> Teollisuuden alempi sähköveroluokka (~0,76 mrd €/v) ja puhtaan siirtymän verohyvitykset (2,3 mrd €) suuntaavat julkista rahaa toimialoille, jotka tuottavat vähiten arvonlisää ja palkkoja sähkö-MWh:ta kohden. Hyvitys ei erottele toteutuskelpoisia hankkeita.</li>
+</ol></div>
+
+<div class="section"><span class="section-marker">§ 10</span><h2>Mitä muistio ei kata ja mitä seurataan</h2>
+<ul>
+<li>Nettovaikutus: hinta, syrjäytyminen, verkkokustannukset ja kiinteistövero vaativat erillisen ennakkokirjatun kierroksen. Avoimet kohdat on lueteltu H:n toteutusselosteessa (SEURANTA.md).</li>
+<li>Suomeen jäävä osuus: ulkomainen omistus ja voittojen kotiutuminen (SM-016 T→∞). Mittari: maksutaseen sijoitustulot ja toimialakohtainen kotimaisuusaste.</li>
+<li>Kotimaiset polttoaineet, vaihtotase ja verokohtelu: seuraava muistioaihe (SEURANTA.md, kirjattu 17.11.2026).</li>
+<li>Seurattavat: etusijamenettelyn hallituksen esitys; datakeskusrekisteri (HE 282/2026); P2X-hankkeiden investointipäätökset; VTT/FDCA-selvityksen kulutusluku; VM:n perusuran päivitys datakeskusten osalta.</li>
+</ul></div>
+
+<div class="section"><span class="section-marker">Liite A</span><h2>Ensimmäinen kierros (G) ja katselmoinnit</h2>
+<p>G laski kehyksen täytöllä: kohtalainen skenaario 52 M€ (1,1 %) ja erinomainen 492 M€ (10,5 %). Katselmointi (Kimi K3.1 Pro) osoitti, että luvut olivat ylärajoja; keskiarviolla 6 M€ (0,1 %) ja 381 M€ (8,1 %). G on säilytetty muuttamattomana ja sen toteutusseloste kirjattu. H:n katselmointi löysi lukitsematta jääneitä laskentasääntöjä (hyvityksen vuosikäyttö, ajoituksen ulottaminen työpaikkoihin, datakeskusten työpaikkojen pääarvo), joista mikään ei muuta pääarvon suuruusluokkaa; ne on kirjattu toteutusselosteeseen. Katselmoinnit ovat lausuntoja, eivät mittauksia; jokainen löydös tarkistettiin koodia vasten.</p></div>
+
+<div class="section"><span class="section-marker">Liite B</span><h2>Keskeiset oletukset</h2>
+<table>
+<tr><th>Suure</th><th>Arvo</th><th>Tyyppi ja lähde</th></tr>
+<tr><td>Vertailuero 2030</td><td>1,4 %-yks. × BKT ≈ 4,7 mrd €</td><td>[M] VM 4,4 %; BKT johdettu [L]</td></tr>
+<tr><td>Sähkövero I / II, HVM</td><td>22,4 / 0,5 / 0,85 €/MWh</td><td>[M]</td></tr>
+<tr><td>Vety</td><td>55 MWh/t; eSAF 0,5 t H₂/t</td><td>[A]</td></tr>
+<tr><td>Elektrolyysin käyttöaste</td><td>40 / 60 / 80 %</td><td>[A], rinnakkain</td></tr>
+<tr><td>P2X-yhteisövero</td><td>0 / 18,9 €/MWh − hyvitys</td><td>[A]; yläraja metallien jalostus [M]</td></tr>
+<tr><td>Palkka, maksut</td><td>60 000 €; TyEL 24,4 %; tvr 2,12 %; sv 2,79 %; valtio 12 %; kunta 7 %</td><td>[A] palkka ja verot; maksut [M] 2026</td></tr>
+<tr><td>Yhteisöveron jako 2026</td><td>valtio 77,15 %, kunnat 22,85 %</td><td>[M]</td></tr>
+<tr><td>Datakeskusten työpaikat</td><td>120 / 400 per TWh</td><td>[A] Tuike / Haminan kampus</td></tr>
+<tr><td>Nettouusi työ</td><td>0 / 50 / 100 %</td><td>[A], rinnakkain</td></tr>
+</table></div>
+
+<div class="section"><span class="section-marker">Lähteet</span>
+<ul class="ref-list">
+<li>VM: Taloudellinen katsaus kevät, kesä ja syksy 2026; Tilastokeskus: kansantalouden tilinpito (15a9, 15ad), teollisuuden energiankäyttö (12bu), panos-tuotos (14yp, 14ym, 14yt, 2021–2023)</li>
+<li>Verohallinto: yhteisöjen verot toimialoittain (verot_304); Tilastokeskus: yritystuet (13zn)</li>
+<li>Eduskunta: HE 156/2025, VaVM 28/2025, HE 97/2025, HE 59/2026, HE 282/2026, HE 249/2026</li>
+<li>Business Finland: Tax credits for large clean transition investments awarded to 40 companies (päivitetty 25.2.2026); verohyvityksen ehdot 24.3.2025</li>
+<li>Fingrid: Sähkön tuotannon ja kulutuksen kehitysnäkymät Q3/2025; Kantaverkon kehittämissuunnitelma 2026–2035; kantaverkkopalvelumaksut 2026</li>
+<li>Svenska kraftnät: KMA2025 (maaliskuu 2026); Statnett via Argus Media 26.3.2026</li>
+<li>Datakeskusten kansallinen tiekartta (VN:n selvityshenkilö); FDCA tiedotteet 2026; Taloustaito/Leskelä 2026</li>
+<li>Hankkeet: YVA-aineistot (ymparisto.fi, LVV), yhtiöiden ja Business Kuopion, Kalevan, Ylen, Argusin, h2-view'n tiedot; hanketaulukko tools/data/ekasvu/hankkeet-2026-11-17.md</li>
+<li>Tuike Finland Oy: tilinpäätöstiedot 2025 (Asiakastieto); ETK ja Varma: sosiaalivakuutusmaksut 2026</li>
+<li>Ennakkokirjaukset G ja H sekä katselmoinnit: SEURANTA.md; AetherContinuity/ogas3 katselmoinnit/</li>
+</ul></div>
+</div>
+</body>
+</html>
