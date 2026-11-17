@@ -552,3 +552,28 @@ Harjoitukset Suomen alueella, joihin Yhdysvaltain asevoimat osallistuu tiedottee
 Ei laskettu (ehto ei täyty löydetyssä tekstissä): Nordic Response 24, Freezing Winds 25, Southern Griffin 25 ja Protective Fence 26 (Yhdysvaltain osallistumista ei mainittu); kolmenvälinen ilmavoimaharjoitus 2025 ja hävittäjien Lapin-harjoitus 5/2026 (nimi puuttuu löydetystä tekstistä). Läsnäolo ilman nimettyä harjoitusta, raportoidaan erikseen: Baltic Sentry -merijalkaväkiosasto (2/2025); merijalkaväen joukkueet ja kalustokoulutus (7/2025→).
 
 Aineisto on haun tuloksista riippuvainen alaraja; vuosien välinen ero on suuntaa antava. Seuraava mittaus kaikille indikaattoreille: FY2028:n budjettipyyntö (kevät 2027) ja I3:n FY2026 uudelleenhaku 2/2027.
+
+### I — poikkeama 5 (17.11.2026, Kimin katselmoinnin jälkeen, ennen ensimmäistä seurantamittausta)
+
+Katselmointi: ogas3 `katselmoinnit/i-dca-drd-vastaus-2026-11-17.md` (lausunto, ei mittaus; löydökset tarkistettu tätä tekstiä ja dataa vasten). Lukittua tekstiä ei muuteta.
+
+1. **Lähtötason I1-taulukko oli ristiriidassa poikkeama 1:n kanssa.** Poikkeama 1 (kohta 3) määräsi pyyntösarakkeen; lähtötaso käytti Appn Amountia. Virhe on raportoinnissa, ei datassa. Jatkossa raportoidaan molemmat erikseen ($K):
+
+   | FY | Pyyntö (FY:n oma C-1, "Amount") | Hyväksytty (Appn, uusin C-1) | Huom. |
+   |---|---|---|---|
+   | 2023 | ei haettu (FY2023 C-1) | NO 8 200 | |
+   | 2024 | NO 119 000 | NO 119 000 | |
+   | 2025 | DK 110 000; NO ei riviä | DK 106 200; NO 8 000 | NO: kongressin lisäys, ei pyyntöä |
+   | 2026 | NO 72 000 | NO 72 000 | |
+   | 2027 | ei riviä yhdelläkään maalla | ei hyväksytty (väliaikainen rahoitus) | |
+
+   Suomi ja Ruotsi: **"maariviä ei löytynyt"** FY2024–FY2027 C-1:issä. Puuttuva tieto koodataan jatkossa kolmella arvolla: *vahvistettu nolla* (lähde ilmoittaa nollan), *maariviä ei löytynyt* (maayhteenveto haettu, maata ei ole), *aineisto puutteellinen tai keskeneräinen*. Aiempia viivoja ei muuteta nolliksi.
+2. **Yksikkö.** Kaikki I1- ja I3-luvut muunnetaan vertailussa miljooniksi dollareiksi (M$). I1 ja I3a raportoidaan erikseen; kohdan 7 "I1+I3a" lasketaan vain M$-summana, ja se on indeksi, ei kokonaisrahavirta (sama hanke voi esiintyä molemmissa eri vaiheissa).
+3. **Vertailu.** Suomea verrataan kuhunkin vertailumaahan erikseen ja niiden **mediaaniin**, ei keskiarvoon (yksi suuri hanke ei ratkaise).
+4. **"Kaksi peräkkäistä FY:tä".** Tarkoittaa kahta peräkkäistä FY:tä, joiden hyväksytty I1 ja valmis I3 ovat saatavilla lähtötasojakson (FY2024–FY2026) jälkeen, eli FY2027 ja FY2028. Kohdan 7 tulkinta on mahdollinen aikaisintaan, kun FY2028 on valmis (n. 2/2029). Kevään 2027 mittaus on kuvaileva päivitys (FY2026:n I3 valmis, FY2028:n pyyntö), ei tulkintapiste.
+5. **I4 on määrittämätön kohdan 7 tulkinnassa.** Lähtötaso on haun tuloksista riippuva alaraja (2/1/4), eikä vertailukohtaa voi valita ilman tulosperäistä valintaa. I4 raportoidaan kuvailevasti. Toistettavuutta varten 17.11.2026 käytetyt haut kirjataan: "Puolustusvoimien kansainväliset harjoitukset vuonna 2026 Suomessa Yhdysvallat osallistuu luettelo"; "\"Puolustusvoimien kansainvälinen harjoitustoiminta vuonna 2026\""; "sttinfo.fi uutishuone Puolustusvoimat tiedote harjoitus Yhdysvaltojen joukot"; "Rissala harjoitus alkaa Yhdysvallat marraskuu 2026 Karjalan lennosto"; "Puolustusvoimat tiedote harjoitus Suomessa yhdysvaltalaisia sotilaita 2024"; "Puolustusvoimat tiedote harjoitus Suomessa Yhdysvaltojen joukot osallistuvat 2025". Jatkossa samat haut vuosiluvulla, sisällytys- ja poissulkuperuste kirjataan harjoituksittain.
+6. **Aikajärjestysväitettä ei testata.** Kohdan 2 väite, että ohentaminen näkyisi "ensin rahavirroissa (29.1) ja vasta sitten läsnäolossa", ei seuraa artiklasta 29.1 (määrärahaehto, koskee molempia osapuolia) eikä ole asetelmalla testattavissa. Signaalin puuttuminen ei osoita ohentamisen puuttumista.
+7. **Nimet.** I3a = "valitut kiinteistö- ja rakennussopimukset" (ei "läsnäolo"); I5 = "DSCA-ilmoitusaktiivisuus".
+8. **Kokonaistulkinnan raja.** Aineisto tukee muotoilua "DCA ei takaa Yhdysvaltain läsnäoloa Suomessa". Se ei tue väitettä Suomen yksipuolisesta sidonnaisuudesta (29.1 ja 30.3 koskevat molempia; F-35-riippuvuutta ei mitata) eikä Yhdysvaltain kokonaissitoutumisen tai 5 artiklan uskottavuudesta.
+
+Kimin ehdottamia DRD-perusteisia lisäindikaattoreita (kansallinen jatkuvuusharjoittelu, huoltovarmuuden rahoitus) ei oteta I:hin; ne kuuluvat DRD-sarjaan. Katselmointi löysi myös DRD-09:n laskuvirheen (korjaus v1.1, erillinen PR).
