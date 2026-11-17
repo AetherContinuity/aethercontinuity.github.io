@@ -537,3 +537,18 @@ Kohta 4 määritteli I4:n lähteeksi "Puolustusvoimien tiedotteet" ilman aineist
 - **Lisäksi** raportoidaan erikseen tiedotteet, jotka koskevat Yhdysvaltain läsnäoloa ilman nimettyä harjoitusta; ne eivät kuulu I4:n lukuun.
 - **Validiteettirajoite:** I4 mittaa tiedotettua harjoitustoimintaa, ei läsnäolon kestoa tai vahvuutta. Tiedotuskäytännön muutos näkyy I4:ssä kuin toiminnan muutos.
 - **Kokoamisrajaus:** paikkoja ja päivämääriä ei tallenneta; vain harjoituksen nimi ja vuosi.
+
+### I — poikkeama 3 (17.11.2026, ennen I4:n laskentaa)
+
+Poikkeama 2:n koneellinen haku ei onnistu: puolustusvoimat.fi, valtioneuvosto.fi ja defmin.fi torjuvat automaattisen haun (GitHub Actions 403; Cloudflare-bottitarkistus proxylle). Tarkistusta ei kierretä. I4 kootaan käsin verkkohaulla löytyvistä Puolustusvoimien ja puolustushallinnon tiedotteista sekä niitä sanatarkasti referoivista uutisista ("Puolustusvoimat kertoo tiedotteessa"). Koodaussääntö ja kokoamisrajaus ennallaan. Aineisto on epätäydellinen ja haun tuloksista riippuvainen: I4 on alaraja, ja vuosien välinen vertailu on suuntaa antava. Jo nähty ennen kirjausta: haun tulokset Cold Response 26, Karelian Sword 26, Rock Sisu / Sword 26 ja Protective Fence 26.
+
+### I — lähtötaso, osa 2: I4 (17.11.2026, poikkeama 3:n mukaan, alaraja)
+
+Harjoitukset Suomen alueella, joihin Yhdysvaltain asevoimat osallistuu tiedotteen tai sitä referoivan uutisen mukaan (vain nimi ja vuosi):
+- 2024: Northern Forest 24; ALTAH Pohjoinen 24 → **2**
+- 2025: Lively Sabre 25 → **1**
+- 2026: Cold Response 26; Rock Sisu (Sword 26); Karelian Sword 26 (Virginian kansalliskaarti); Saber Strike 26, Suomen osuus → **4**
+
+Ei laskettu (ehto ei täyty löydetyssä tekstissä): Nordic Response 24, Freezing Winds 25, Southern Griffin 25 ja Protective Fence 26 (Yhdysvaltain osallistumista ei mainittu); kolmenvälinen ilmavoimaharjoitus 2025 ja hävittäjien Lapin-harjoitus 5/2026 (nimi puuttuu löydetystä tekstistä). Läsnäolo ilman nimettyä harjoitusta, raportoidaan erikseen: Baltic Sentry -merijalkaväkiosasto (2/2025); merijalkaväen joukkueet ja kalustokoulutus (7/2025→).
+
+Aineisto on haun tuloksista riippuvainen alaraja; vuosien välinen ero on suuntaa antava. Seuraava mittaus kaikille indikaattoreille: FY2028:n budjettipyyntö (kevät 2027) ja I3:n FY2026 uudelleenhaku 2/2027.
