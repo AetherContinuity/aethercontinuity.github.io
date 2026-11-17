@@ -484,3 +484,19 @@ Kirjattu ennen indikaattoridatan hakua. Lähtökohta on Stubbin FT-haastattelu (
 **9. Jo nähty ennen kirjausta (ilmoitetaan).** C-1 FY2027:n maayhteenvedot luettu osittain hakutyökalulla: Suomea ei mainittu FY2025–FY2027-yhteenvedoissa, Norjalla ilmavoimien rakennushankkeita (FY2025 8 000 $K, FY2026 72 000 $K, lukema epävarma). Bloomberg (2023): Suomeen kohdistuneen sopimustyön arvo kymmenkertaistui FY2021→FY2022. FY2027 alkoi väliaikaisella rahoituspäätöksellä (CRS). Nämä tarkistetaan kokonaan lähtötasomittauksessa.
 
 **10. Tekninen edellytys.** comptroller.war.gov ja api.usaspending.gov eivät ole työtilan sallittujen joukossa; haku proxyn kautta (uusi worker tai reitti), sama kertaluonteinen tallennus kuin muissa ACI-lähteissä.
+
+### I — poikkeama 1 (17.11.2026, lähtötasohaun jälkeen, ennen I3:n osittelua ja ennen mitään tulkintaa)
+
+**Mitä on jo nähty.** Lähtötasohaku (ogas3 `us-lahteet`, ajo 44151879753, `data/us/i_lahtotaso_2026-11-17.json`): I1:n maayhteenvetorivit ja I3:n kokonaissummat FY2019–FY2026 neljälle maalle. Haku tehtiin GitHub Actionsilla, koska Cloudflare-proxy sai DoD:lta 403 ja USAspendingilta 525 (kohta 10 toteutui eri reittiä).
+
+**1. I3 ei mittaa läsnäoloa.** Suorituspaikka kertoo, missä maassa sopimus toteutetaan, ei Yhdysvaltain läsnäoloa. Kokonaissummaan sisältyvät Yhdysvaltain hankinnat maan puolustusteollisuudelta. I3 jaetaan USAspendingin tuote- ja palvelukoodin (PSC) ensimmäisen merkin mukaan:
+- **I3a läsnäolo:** Y (rakentaminen), Z (kiinteistöjen huolto ja korjaus), X (tilojen vuokra), S (yhdyskuntapalvelut ja kiinteistönhoito), M (valtion tilojen käyttö).
+- **I3b tavarat:** numeeriset PSC-koodit.
+- **I3c muut palvelut:** muut kirjaimet (mm. J, R, V, A). Raportoidaan, ei tulkita.
+Kohdan 7 tulkintasäännössä "I1+I3" korvataan "I1+I3a". I3b raportoidaan kontekstina kuten I5.
+
+**2. Viive.** DoD:n sopimustiedot julkaistaan USAspendingissa noin 90 päivän viiveellä. Tilivuosi luetaan valmiiksi vasta seuraavan kalenterivuoden tammikuun jälkeen; FY2026 merkitään lähtötasossa keskeneräiseksi ja haetaan uudelleen 2/2027.
+
+**3. I1:n sarakkeet ja kaksoislaskenta.** Sama maarivi toistuu C-1:ssä usean taulukon (määrärahatili, yhteenveto) alla. Sääntö: käytetään sitä saraketta, jonka taulukon otsikko on budjettipyyntö kyseiselle FY:lle (C-1:n otsikkorivi luetaan, kohderivejä ei); identtiset rivit samasta FY:stä lasketaan kerran. Jos otsikkoa ei voida yksiselitteisesti liittää riviin, raportoidaan rivit sellaisinaan ilman summaa.
+
+**4. Kokoamisrajaus ennallaan.** PSC-osittelu tehdään maatasolla; PSC-kohtaisia rivejä ei tallenneta, vain kolme summaa (I3a, I3b, I3c) maata ja FY:tä kohden.
