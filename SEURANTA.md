@@ -217,3 +217,25 @@ Lahti on koko jakson ajan Iisvettä tuottavampi (ero 0,003–0,071), mutta nousu
 ### E — ennustelista julkaistu (30.10.2026, kirjausta ei muutettu)
 
 NDCI laskettu kaikille 256 järvelle (`tools/data/bem-e/vh4/vh4_ndci_raw.json`; ensimmäisen ajon CDSE 429 -virheet ajettiin uudelleen, lopullisessa aineistossa ei puuttuvia vuosia). Pois jääneitä 0. Δ-mediaani +0,0065 (p25 −0,0023, max +0,0474). Ylimmän neljänneksen raja Δ ≥ 0,0149; listalla 64 järveä: `tools/data/bem-e/vh4/vh4_ennustelista.json`. Laskenta `scripts/bem_e_vh4_delta.py`, kaikki Δ:t `vh4_delta.json`. Kuvaileva huomio, ei testi: 3. kaudella heikentyneistä 16 järvestä 5 osuu ylimpään neljännekseen (odotus 4). Testi E1/E2 ajetaan, kun 4. kauden luokitus julkaistaan.
+
+---
+
+## Energiaintensiivinen kasvu ja julkinen talous — ennakkokirjaus G ennen inkrementaalista laskentaa (17.11.2026)
+
+**Kysymys.** Kuinka paljon energiaintensiivinen kasvu (datakeskukset, vety ja e-polttoaineet, akkuteollisuus, teollisuuden sähköistyminen) parantaa julkisyhteisöjen rahoitusasemaa vuonna 2030 suhteessa VM:n perusuraan? SM-022 (datakeskusten rahavirrat) siirtyy tämän muistion datakeskusosioksi.
+
+**Ei kyllä/ei-kynnystä.** Tulos raportoidaan osuutena vertailuerosta. Lukitaan mittatikku, ei johtopäätöstä.
+
+**Lukitut säännöt.**
+1. *Kohde:* inkrementaalinen nettovaikutus julkisyhteisöjen (S13: valtio, kunnat, hyvinvointialueet, sosiaaliturvarahastot) rahoitusasemaan vuonna 2030. Lasketaan skenaarion ja VM:n perusuran erotus. VM:n perusuraan jo sisältyvää toimintaa ei lasketa uudelleen.
+2. *Tulot:* sähkövero, yhteisövero, palkkojen tuloverot sekä työnantaja- ja työntekijämaksut siltä osin kuin ne ovat S13:n tuloja. Työeläkemaksut raportoidaan omana rivinään, koska ne kasvattavat myös tulevia eläkevastuita.
+3. *Palkkojen inkrementaalisuus:* palkkojen verot ja maksut lasketaan vain nettouudelle työllisyydelle. Osuus on oletus, joka esitetään herkkyytenä 0 / 50 / 100 %. Muilta toimialoilta siirtyvä työvoima ei tuo lisätuloa.
+4. *Vähennykset:* suorat tuet, sähköveron verotuki (luokka II vs. luokka I) ja puhtaan siirtymän verohyvitykset. Ei kaksinkertaista vähentämistä: jos tulo lasketaan jo toteutuvalla verokohtelulla, samaa tukea ei vähennetä uudelleen.
+5. *Vertailuero:* VM:n syksyn 2026 ennusteen vuoden 2030 alijäämän ja EU:n 3 %:n viitearvon erotus (ennusteessa 4,4 % → 1,4 %-yks.). Euroina lasketaan saman ennusteen vuoden 2030 nimellisestä BKT:sta. Erotus on laskennallinen vertailukohta, ei EDP:n korjausvelvoite (sitova ohjaus on nettomenopolku).
+6. *Suorat ja välilliset erikseen:* toimipaikan suora vaikutus, hankintaketju erillisenä arviona ja rakennusvaihe erillisenä, ei summata vakiintuneeseen vuoteen.
+7. *Raportointi:* M€/v, osuus vertailuerosta ja epävarmuusväli.
+8. *Rajaus:* sähkön hintavaikutusta ei mallinneta; se mainitaan ehtona (kasvaako tuotanto kulutuksen tahdissa).
+
+**Avoin ennen laskentaa (kirjataan tähän lisäyksenä ennen tuloksia):** skenaarioiden tarkka määrittely sektoreittain. Datakeskuksille vähintään VM/TEM 3,8 TWh (lähde ja vuosi tarkistettava, onko päivitetty syksyn 2026 ennusteeseen) ja SM-022:n 17,5 TWh. Muille sektoreille nimetyt hankkeet (puhtaan siirtymän verohyvityslista 12/2025, Fingridin liittymissopimukset).
+
+**Jo nähty ennen kirjausta.** Toimialojen tasot 2022–2024 (Tilastokeskus 12bu, 15ad; Verohallinto verot_304; yrtt 13zn): arvonlisäys, palkat ja yhteisövero per sähkö-MWh, luokan II verotuki noin 756 M€/v [L], maksetut suorat tuet teollisuudelle 220–400 M€/v. Lisäksi Tuike Finland Oy:n tilinpäätösluvut. Nämä ovat tasotietoja, eivät inkrementaalisia tuloksia. Laskenta: `scripts/ekasvu_hae.py`, `scripts/ekasvu_toimialat.py`.
