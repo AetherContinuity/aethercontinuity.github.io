@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TN-025 — Hiilenkierron oppimisalusta: mitä instituutio tuottaa ja mitä se maksaa | ACI</title>
+<link rel="canonical" href="https://aethercontinuity.org/supplements/tn-025-hiilenkierron-oppimisalusta.html"/>
+<style>
+:root{--ink:#0e0d0b;--paper:#f5f0e8;--paper-2:#ede7d8;--paper-3:#e4dccb;
+  --accent:#8b4513;--muted:#7a7468;--rule:#c8bfad;
+  --serif:'EB Garamond',Georgia,serif;--mono:'DM Mono','Courier New',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:1.05rem;line-height:1.75;max-width:780px;margin:0 auto;padding:2rem 1.5rem 5rem}
+nav{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.75rem;margin-bottom:2rem}
+nav a{color:var(--accent);text-decoration:none;margin-right:1rem}
+.dih{border:1px solid var(--rule);padding:1.25rem 1.5rem;margin-bottom:2rem;
+  background:var(--paper-2);display:grid;grid-template-columns:1fr auto;gap:1rem}
+.dih-institute{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--muted);display:block;margin-bottom:.25rem}
+.dih-series{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
+.dih-meta{font-family:var(--mono);font-size:.7rem;line-height:1.8;color:var(--muted);text-align:right}
+.dih-meta strong{color:var(--ink)}
+h1{font-size:1.5rem;font-weight:400;margin-bottom:.35rem}
+.subtitle{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:1.75rem}
+.abstract{border-left:3px solid var(--accent);padding:.75rem 1.25rem;
+  background:var(--paper-3);margin-bottom:2rem;font-size:.95rem}
+h2{font-size:1.1rem;font-weight:500;margin:2rem 0 .6rem;
+  border-bottom:1px solid var(--rule);padding-bottom:.3rem}
+h3{font-size:1rem;font-weight:600;margin:1.25rem 0 .5rem}
+p{margin-bottom:.9rem}
+ul,ol{padding-left:1.5rem;margin-bottom:.9rem}
+li{margin-bottom:.35rem}
+table{width:100%;border-collapse:collapse;font-size:.84rem;margin:1rem 0}
+th{text-align:left;padding:6px 10px;border-bottom:2px solid var(--ink);
+  font-family:var(--mono);font-size:.7rem;text-transform:uppercase}
+td{padding:6px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.finding{border-left:3px solid var(--accent);padding:.5rem 1rem;
+  margin:1rem 0;background:var(--paper-2)}
+.finding strong{color:var(--accent)}
+.tag{font-family:var(--mono);font-size:.7rem;color:var(--accent)}
+.draft{border:1px dashed var(--accent);padding:.6rem 1rem;margin-bottom:1.5rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.ref-block{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1.5rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:2}
+.ref-block a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/supplements/">Supplements</a>
+  <a href="/research.html">Research</a>
+</nav>
+
+<div class="draft">LUONNOS v0.1 · 23.11.2026 · ei julkaistu · katselmoitava ennen julkaisua
+(Kimi K3.1 Pro, ogas3/katselmoinnit) · luvut ja koodi: ogas3/tools/frg_lcom.py</div>
+
+<div class="dih">
+  <div class="dih-left">
+    <span class="dih-institute">Aether Continuity Institute</span>
+    <span class="dih-series">Technical Note · TN-025</span>
+    <h1>Hiilenkierron oppimisalusta</h1>
+    <p class="subtitle">Mitä instituutio tuottaa ja mitä se maksaa ·
+    CO₂-talteenotto · elektrolyysi · metanointi · huoltovarmuus · osaaminen</p>
+  </div>
+  <div><div class="dih-meta">
+    <strong>Päiväys</strong> 2026-11-23<br>
+    <strong>Domain</strong> D-1 · D-2 · D-3 · D-4<br>
+    <strong>Jatkaa</strong> WP-019 · TN-017 · TN-018 · SM-010<br>
+    <strong>Tila</strong> Luonnos
+  </div></div>
+</div>
+
+<div class="abstract">
+  <strong>Tiivistelmä.</strong> WP-019 havaitsi viisi suomalaista kehityspolkua, jotka ovat
+  päätyneet osittaiseen SGFA-toiminnallisuuteen toisistaan riippumatta, ja kysyi, miksi yksikään
+  ei ole edennyt täyteen integraatioon. TN-025 kysyy kysymyksen toisin: mitä nykyinen
+  järjestelmä — markkina, investointituki ja ostosopimukset — jo tuottaa, mitä se jättää
+  tuottamatta, ja paljonko puuttuvan osan tuottaminen maksaa. Vastaus ei ole tuotto-odotus
+  vaan hinta tuotosta kohden. Esimerkkilaskelma 50 MW:n e-metanolisolmulle FI day-ahead
+  -hinnoilla (11/2025–10/2026) antaa hinnoiteltujen tuottojen jälkeiseksi jäännöseroksi
+  noin 14–18 M€ vuodessa eli 88–109 €/MWh kotimaista polttoainetta. Tätä ei kata
+  työllisyysvaikutus, joten solmun perustelu on huoltovarmuus ja oppiminen — ja niille on
+  annettava hinta, jonka päättäjä hyväksyy tai hylkää.
+</div>
+
+<p class="tag">Alkuperämerkinnät: [D] oma laskelma datasta · [L] ulkoinen lähde ·
+[I] ACI:n sisäinen dokumentti · [A] oletus. Luku ilman merkintää on johdettu
+samassa kappaleessa merkityistä luvuista.</p>
+
+<h2>§ 01 — Kysymys</h2>
+
+<p>ACI:n aiemmat instituutiomallit vastaavat kukin eri ongelmaan: SP-002 rahoituksen
+kokoamiseen kuntasolmuille, WP-019 riskin jakamiseen ankkurin ja toimittajien kesken,
+TN-018 teknologioiden vaiheittaiseen kytkemiseen ja SM-010 valtion välineisiin. Yhteinen
+lähtökohta on TN-017:n diagnoosi: koordinaatio ei synny, ellei joku ole nimetty siihen.
+Yhdestäkään mallista ei kuitenkaan käy ilmi, <em>mitä</em> instituutio on velvollinen
+tuottamaan ja miten tuotos mitataan. Siksi keskustelu on ajautunut sijoittajan
+tuottoluvuksi (IRR), joka on ainoa valmis mittari mutta väärä kysymys: yksityinen tuotto
+ei kerro mitään huoltovarmuudesta tai osaamisesta.</p>
+
+<p>TN-025 määrittelee instituution tuotosten kautta ja hinnoittelee ne
+jäännöserona (§ 05). Mallit SP-002, WP-019, TN-018 ja SM-010 eivät ole tässä hylättyjä
+vaan vaihtoehtoisia organisaatiomuotoja, joiden välillä valitaan sen mukaan, mikä tuottaa
+määritellyt tuotokset halvimmalla (§ 06).</p>
+
+<h2>§ 02 — Mitä nykyinen järjestelmä jo rakentaa</h2>
+
+<p>Ennen kuin instituutiolle annetaan tehtävä, on todettava, mitä syntyy ilman sitä.</p>
+
+<ul>
+  <li><strong>Nordic Ren-Gas.</strong> Tampereen e-metaanilaitoksen rakentamisen odotetaan
+  alkavan vuoden 2026 viimeisellä neljänneksellä; Euroopan investointipankki nosti yhtiön
+  rahoituskehyksen 680 miljoonaan euroon [L1]. Tuotannosta on tehty noin miljardin euron
+  pitkäaikainen ostosopimus sveitsiläisen avanca Energyn kanssa [L2], ja Gasumin kanssa
+  aiemmin 160 GWh:n vuosisopimus [L3]. Yhtiö kehittää kuutta laitosta; Gasgridin mukaan
+  Lahden, Kotkan, Keravan ja Tampereen laitokset sijoittuvat kaasun siirtoverkon varrelle [L4].
+  Yhtiön sivuilla mainitaan lisäksi Mikkeli ja Pori [L5].</li>
+  <li><strong>P2X Solutions, Harjavalta.</strong> 20 MW vedyntuotanto käytössä
+  helmikuusta 2025, ensimmäinen ISCC RFNBO -sertifioitu Suomessa [I WP-019 § 03].</li>
+  <li><strong>Oulu, Varkaus, Vantaa.</strong> Osittaisia polkuja: Oulun 100 MW
+  elektrolyysin investointipäätös viivästynyt, Varkaudessa ekosysteemi ilman PtX:ää,
+  Vantaan hiilidioksidin talteenotto riippuu EU-sääntelyn muutoksesta [I WP-019 § 03].</li>
+</ul>
+
+<div class="finding">
+  <strong>Havainto 1.</strong> Kun ankkuriasiakas, investointituki ja ostosopimus ovat
+  olemassa, markkina rakentaa e-metaanikapasiteettia ilman erillistä instituutiota.
+  Rakentuva verkosto seuraa kaasun siirtoverkkoa, koska tuote syötetään verkkoon.
+  Instituution lisäarvo voi siis olla vain siinä, mitä tämä mekanismi ei tuota.
+</div>
+
+<h2>§ 03 — Mitä se ei tuota</h2>
+
+<p>Neljä aukkoa. Jokainen on hypoteesi, jolle on annettu testi.</p>
+
+<table>
+<tr><th>Aukko</th><th>Miksi markkina ei tuota</th><th>Testi</th></tr>
+<tr><td>Alueellinen kattavuus</td>
+<td>Verkkoon syöttävä tuottaja sijoittuu siirtoverkon varrelle. Huoltovarmuus vaatii
+kykyä myös sen ulkopuolella (Pohjois-Savo, Pohjois-Karjala, Kainuu).</td>
+<td>Kartoitetaan suunnitellut PtX-hankkeet ja kaasun siirtoverkko; lasketaan
+taattu kotimainen kyky maakunnittain.</td></tr>
+<tr><td>Osaamisen siirtyminen</td>
+<td>Hankkeen n oppi on yhtiön omaisuutta. Kukaan ei ole velvollinen siirtämään sitä
+hankkeelle n+1 toisen yhtiön tai kunnan alueelle.</td>
+<td>Verrataan peräkkäisten suomalaisten hankkeiden toteutusaikaa ja kustannusta
+(€/kW, kuukautta luvasta käyttöönottoon).</td></tr>
+<tr><td>Työvoimaputki</td>
+<td>Operaattoreita ja asentajia ei kouluteta ennen kuin laitos on olemassa,
+jolloin heitä ei ole saatavilla.</td>
+<td>Selvitetään toisen asteen ja AMK:n PtX-, prosessi- ja kaasuturvallisuuskoulutuksen
+aloituspaikat suhteessa suunniteltuihin laitoksiin.</td></tr>
+<tr><td>Sääntelyaukot</td>
+<td>Yksittäinen hanke ei pysty muuttamaan sääntöä (esim. jätteenpolton biogeenisen
+CO₂:n tukikelpoisuus, WP-019 / Vantaa).</td>
+<td>Listataan hankkeiden ilmoittamat sääntelyesteet ja niiden käsittelijä.</td></tr>
+</table>
+
+<h2>§ 04 — Instituution tuotokset ja mittarit</h2>
+
+<table>
+<tr><th>Tuotos</th><th>Mittari</th><th>Nykyinen vertailumeno</th></tr>
+<tr><td>Taattu kotimainen kyky</td><td>MWh/vrk maakunnittain, varastoitavana tai tuotettavana
+ilman tuontia</td><td>Turpeen huoltovarmuusperusteinen tuotantotuki 8 M€/v ja HVK:n
+varmuusvarastointi 10 M€ (huhtikuun 2026 kehys) [I WP-019 § 2.1, SM-010]</td></tr>
+<tr><td>Koulutetut tekijät</td><td>henkilöä/v, jotka pätevöityvät operaattoreiksi,
+asentajiksi tai suunnittelijoiksi</td><td>Työllisyyden julkistaloudellinen vaikutus:
+VM:n mukaan 10 000 työllisen lisäys vahvistaa julkista taloutta hieman yli
+200 M€ eli noin 20 000 €/henkilö/v [L6]</td></tr>
+<tr><td>Siirtynyt osaaminen</td><td>hankkeen n+1 kustannus- ja aikaetu hankkeeseen n</td>
+<td>T&amp;K-tuki (vertailuluku puuttuu, hankittava)</td></tr>
+<tr><td>Talteen otettu biogeeninen CO₂</td><td>t/v hyödynnettynä tai varastoituna</td>
+<td>Hiilenpoistohyvitykset (hinta hankittava)</td></tr>
+</table>
+
+<h2>§ 05 — Arvottaminen jäännöserona</h2>
+
+<p>Menetelmä: (1) lasketaan solmun vuosikustannus; (2) vähennetään hinnoitellut tuotot;
+(3) vähennetään varjohinnoitellut tuotot; (4) jäljelle jäävä jäännösero R on summa,
+jonka hinnoittelemattomien hyötyjen — huoltovarmuuden ja oppimisen — on vähintään oltava,
+jotta solmu on perusteltu. Päättäjä ottaa kantaa R:n suuruuteen, ei hyötylistaan.</p>
+
+<h3>Esimerkki: 50 MW e-metanolisolmu</h3>
+
+<p>Tuotantokustannus (LCOM) on laskettu FI day-ahead -hinnoilla 1.11.2025–31.10.2026,
+35 132 vartin hintaa ENTSO-E:stä [D]. Elektrolyysi ajaa vartteina, joina hinta alittaa
+kynnyksen; optimikynnys 80 €/MWh, käyntiaste 73 %, tuotanto 29,4 kt/v [D].
+Oletukset [A]: elektrolyysi 1 900 €/kW (eurooppalaisen PEM-järjestelmän taso [L7]),
+synteesi ja puskuri 50 M€, WACC 7 %, 20 v, ominaiskulutus 55 kWh/kg H₂, CO₂ 80 €/t,
+verkkomaksu ja sähkövero 8 €/MWh.</p>
+
+<table>
+<tr><th>Erä</th><th>€/t</th><th>M€/v</th></tr>
+<tr><td>Pääoma ja kiinteä ylläpito</td><td>613</td><td>18,0</td></tr>
+<tr><td>Sähkö</td><td>377</td><td>11,1</td></tr>
+<tr><td>CO₂ (talteenotto, 80 €/t)</td><td>117</td><td>3,4</td></tr>
+<tr><td>Lämpöhyvitys</td><td>−48</td><td>−1,4</td></tr>
+<tr><td><strong>LCOM</strong></td><td><strong>1 058</strong></td><td><strong>31,1</strong></td></tr>
+<tr><td>Fossiilisen metanolin markkinahinta (Rotterdam spot, heinäkuu 2026 [L8])</td><td>405</td><td>11,9</td></tr>
+<tr><td><strong>Ero markkinahintaan</strong></td><td><strong>653</strong></td><td><strong>19,2</strong></td></tr>
+<tr><td>− FCR-D ylös, 50 MW × 30 600 €/MW/v [I WP-019 § 2.2]</td><td></td><td>−1,5</td></tr>
+<tr><td>− CO₂ biokaasun jalostuksesta (lähes puhdasta, talteenottokustannus ≈ 0) [A]</td><td></td><td>−3,4</td></tr>
+<tr><td><strong>Jäännösero R</strong></td><td></td><td><strong>14,3–17,7</strong></td></tr>
+</table>
+
+<p>Tuotanto vastaa noin 163 GWh polttoainetta vuodessa (metanolin lämpöarvo
+5,53 MWh/t), joten R ≈ <strong>88–109 €/MWh</strong> kotimaista polttoainetta.</p>
+
+<div class="finding">
+  <strong>Havainto 2.</strong> Yhden 50 MW:n solmun jäännösero on noin kaksinkertainen
+  koko turpeen huoltovarmuusperusteiseen tuotantotukeen (8 M€/v) verrattuna.
+</div>
+
+<div class="finding">
+  <strong>Havainto 3.</strong> Työllisyys ei kata jäännöseroa. VM:n noin 20 000 €/henkilö/v
+  julkistaloudellisella vaikutuksella R vastaa 710–890 henkilötyövuotta, mikä on
+  monikymmenkertainen solmun suoraan työllistämään määrään. Työllisyys on perustelu
+  vain osana kokonaisuutta, ei sellaisenaan.
+</div>
+
+<div class="finding">
+  <strong>Havainto 4.</strong> Pääomakustannuksen poistaminen kokonaan ei yksinään vie
+  sellutehtaan CO₂:een perustuvaa metanolia markkinahintaan: muuttuvat kulut
+  (sähkö + CO₂ − lämpö) ovat 445 €/t, yli 405 €/t:n markkinahinnan. Biokaasun CO₂:lla
+  muuttuvat kulut ovat 329 €/t. Oppimisen ja pääomakustannuksen laskun on siis mahdollista
+  sulkea ero vain reitillä, jossa CO₂ on halpaa. Tämä puoltaa biokaasun CO₂:n metanointia
+  ensimmäiseksi moduuliksi.
+</div>
+
+<h3>Mitä R:stä jää jäljelle</h3>
+
+<p>R:n kattamiseen jäävät huoltovarmuus ja oppiminen. Ne eivät ole erillisiä hyötyjä
+kotimaisen polttoaineen ja hajautuksen lisäksi: kotimainen polttoaine ja hajautus
+<em>ovat</em> huoltovarmuuden sisältö. Niiden laskeminen erikseen toisi saman hyödyn
+kolmeen kertaan. Siksi R esitetään yhtenä lukuna kahden hyödyn yhteishintana.</p>
+
+<p>Huoltovarmuuden hinnalle on kaksi tarkistettavaa vertailukohtaa: (1) varmuusvarastoinnin
+kustannus samalle energiamäärälle ja kestolle (hankittava HVK:lta), (2) toteutuneen
+tuontisokin hintavaikutus. Jälkimmäisestä tiedetään, että Hormuzin sulun aikana
+fossiilisen metanolin hintasokki oli Euroopassa lyhyt, koska tuonti reitittyi
+uudelleen; kaasun sokki oli suurempi [I WP-019 § 08]. Itämeren sulussa uudelleenreititystä
+ei olisi, ja juuri sitä skenaariota vertailuluvut eivät mittaa.</p>
+
+<h2>§ 06 — Instituution muoto</h2>
+
+<p>Lähin toteutunut esikuva oppimisalustasta on norjalainen Technology Centre Mongstad
+(TCM): vuonna 2012 avattu, maailman suurin CO₂-talteenoton testauskeskus, jossa
+teknologiatoimittajat koeajavat ratkaisujaan teollisessa ympäristössä ja jonka
+tarkoitus on alentaa talteenoton kustannuksia ja riskejä [L9]. Valtio omistaa
+keskuksesta Gassnovan kautta 43,6 % kaudella 2026–2027 [L10]. Kaksi opetusta:</p>
+
+<ul>
+  <li>Avoimen testausalustan malli toimii: keskuksessa on tehty yli 28 testikampanjaa
+  ja yli 70 000 tuntia koeajoa [L11].</li>
+  <li>Malli ei ole pysyvästi itsekantava: toiminnan jatkuminen vuoden 2027 loppuun
+  edellyttää vahvempaa kaupallista painotusta, ja Shell on vetäytynyt [L11]. Valtion
+  rooli on ehto, ei vaihe.</li>
+</ul>
+
+<p>Suomalaisista malleista TN-018:n adaptiivinen aggregaattori (pysyvä alusta,
+moduulit sopimuksina) sopii runkoon parhaiten, koska tuotokset (§ 04) eivät riipu
+yksittäisestä teknologiasta. TCM:n kaltainen avoin testausmandaatti lisätään sen
+tehtäväksi. WP-019:n ekosysteemimalli on toteutusmuoto paikallisesti: ankkuri
+tuo CO₂:n ja lämmön, toimittajat teknologian, oppilaitokset (esim. Savonia, Sakky)
+koulutuksen.</p>
+
+<h2>§ 07 — Vastaväitteet</h2>
+
+<ol>
+  <li><strong>Osaaminen valuu muualle.</strong> Jos alustan tuottama oppi siirtyy
+  ulkomaisille teknologiatoimittajille ja tuotto syntyy niiden kotimaissa, Suomen
+  maksama R ostaa osaamista muille. Ehto: alustan sopimuksiin avoin julkaisuvelvoite
+  (kuten TCM) ja koulutusvelvoite kotimaiselle työvoimalle. Tämä ei estä valumaa,
+  mutta tekee siitä mitattavan.</li>
+  <li><strong>Markkina tekee tämän jo.</strong> Ren-Gas rakentaa kuuden laitoksen
+  verkostoa. Vastaus: § 03:n aukot ovat juuri niitä, joita yhtiön liiketoimintamalli ei
+  tuota. Jos testit osoittavat, että aukkoja ei ole, instituutiota ei tarvita — se on
+  hyväksyttävä tulos.</li>
+  <li><strong>Turvetuki on halvempi.</strong> Pitää paikkansa euroina. Vertailu on
+  kuitenkin epätäydellinen: turpeen kyky kutistuu tuotannon loppuessa, ja tuki ostaa
+  fossiilista kykyä. R on tämän eron hinta.</li>
+  <li><strong>Esimerkkilaskelma on yhden vuoden ja yhden tuotteen.</strong> Pitää
+  paikkansa. Metanointi, monivuotinen hintadata ja synteesin osakuorman rajoitteet
+  puuttuvat (§ 08).</li>
+</ol>
+
+<h2>§ 08 — Rajaukset ja seuraavat askeleet</h2>
+
+<ul>
+  <li>LCOM-malli on yksinkertaistettu: synteesin minimikuorma, vetypuskurin mitoitus,
+  vesi, kompressointi ja RFNBO:n tuntikorrelaatio vuodesta 2030 puuttuvat. Malli ja
+  data: <code>ogas3/tools/frg_lcom.py</code>, katselmoitavana.</li>
+  <li>Metanointireitti lasketaan erikseen; vertailuhinnaksi biometaani, ei maakaasu.</li>
+  <li>Hankittavat vertailuluvut: HVK:n varmuusvarastoinnin kustannus per MWh ja kesto,
+  hiilenpoistohyvitysten hinta, PtX-koulutuksen aloituspaikat.</li>
+  <li>Aiempien SGFA-dokumenttien IRR-luvut (SP-002, SM-003, TN-022, WP-019 § 06)
+  eivät ole tämän muistion lähteitä; niiden alkuperä tarkistetaan erikseen
+  (ogas3/katselmoinnit/lukuinventaario-2026-11-23.md).</li>
+</ul>
+
+<div class="finding">
+  <strong>Ydinväite.</strong> Kotimaisen hiilenkierron kyky ei ole sijoituskohde
+  vaan julkinen tuotos, jolla on hinta. Esimerkkisolmulle hinta on noin
+  90–110 €/MWh kotimaista polttoainetta. Kysymys päättäjälle ei ole, kannattaako solmu,
+  vaan onko huoltovarmuus ja oppiminen tämän hinnan arvoista.
+</div>
+
+<div class="ref-block">
+  ACI · <a href="/papers/wp-019-sgfa-retrofit-regional-economics.html">WP-019</a> ·
+  <a href="/supplements/tn-017-aggregator-gap.html">TN-017</a> ·
+  <a href="/supplements/tn-018-adaptive-aggregator.html">TN-018</a> ·
+  <a href="/papers/sm-010-financing-instruments-energy-clusters.html">SM-010</a><br>
+  [L1] Modern Power Systems: EIB increases Nordic Ren-Gas framework to €680M ·
+  <a href="https://www.modernpowersystems.com/?p=39410">modernpowersystems.com</a><br>
+  [L2] Nordic Ren-Gas and avanca, 16.7.2026 ·
+  <a href="https://www.giignl.org/news/nordic-ren-gas-and-avanca-sign-long-term-e-methane-offtake-agreement">giignl.org</a><br>
+  [L3] Gasum ja Nordic Ren-Gas, 160 GWh/v ·
+  <a href="https://naturalgasworld.com/gasum-pens-renewable-e-methane-supply-pact-with-nordic-ren-gas-117074">naturalgasworld.com</a><br>
+  [L4] Gasgrid ja Nordic Ren-Gas ·
+  <a href="https://gasgrid.fi/en/bulletins/gasgrid-and-nordic-ren-gas-to-deliver-tenfold-increase-in-renewable-gas-availability/">gasgrid.fi</a><br>
+  [L5] Ren-Gas, projektit · <a href="https://ren-gas.com/?p=462">ren-gas.com</a><br>
+  [L6] Verkkouutiset: VM:n laskelma työllisyyden julkistaloudellisesta vaikutuksesta ·
+  <a href="https://www.verkkouutiset.fi/a/tyottomyyden-karmea-luku-petteri-orpo-kertoo-laskelmat-illle/">verkkouutiset.fi</a><br>
+  [L7] Systemiq: Electrolyser (EU/US PEM-järjestelmäkustannus 2024) ·
+  <a href="https://systemiq.earth/wp-content/uploads/2025/02/ELECTROLYSER.pdf">systemiq.earth</a><br>
+  [L8] Argus: OMV agrees e-methanol offtake from Denmark's Kasso ·
+  <a href="https://www.argusmedia.com/en/news-and-insights/latest-market-news/2867470-omv-agrees-e-methanol-offtake-from-denmark-s-kasso">argusmedia.com</a><br>
+  [L9] Gassnova: Technology Centre Mongstad · <a href="https://gassnova.no/en/technology">gassnova.no</a><br>
+  [L10] Gassnova: TCM to continue operations through 2027 ·
+  <a href="https://gassnova.no/en/news/tcm-to-continue-operations-through-2027">gassnova.no</a><br>
+  [L11] Gassnova: TCM-uutinen · <a href="https://gassnova.no/?p=15773">gassnova.no</a><br>
+  [D] ENTSO-E Transparency Platform, A44 day-ahead FI, aci-entsoe-proxyn kautta
+</div>
+
+</body>
+</html>
