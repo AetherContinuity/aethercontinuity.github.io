@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SM-024 — Pohjoinen solmu: reitit, runkorata ja kuka omistaa kokonaisuuden | ACI</title>
+<meta name="description" content="Suomi ei voita datakeskusten ja teollisuuden mittakaavakilpailussa; sen kärki on kokonaisuuden toimivuus. Pohjoinen solmu yhdistää Göteborgin maasillan, pohjoisen ro-ron ja kotimaan runkoradan, jonka suunta kääntyy Suomenlahden häiriössä. Muistio kokoaa CN-008:n, WP-020:n ja CN-030:n."/>
+<style>
+  :root {
+    --ink: #1a1a1a; --mid: #555; --light: #888;
+    --rule: #ddd; --bg: #fafaf8; --tag-bg: #f0f0ec;
+    --accent: #8b2500;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
+  body { font-family: 'Georgia','Times New Roman',serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  nav { border-bottom: 1px solid var(--rule); padding: .75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .78rem; letter-spacing: .04em; color: var(--mid); }
+  nav a { color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .nav-left { font-weight: 600; color: var(--ink); }
+  .nav-right { display: flex; gap: 1.5rem; }
+  .doc-header { border-bottom: 1px solid var(--rule); padding: 2.5rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
+  .doc-series { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); margin-bottom: 1.2rem; }
+  .doc-meta-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: .5rem 2rem; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .75rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .doc-meta-grid span { display: block; }
+  .doc-meta-grid strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: .1rem; }
+  h1.doc-title { font-size: 1.75rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: .75rem; }
+  .doc-subtitle { font-size: 1.05rem; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; line-height: 1.5; }
+  .doc-abstract { font-size: .92rem; color: var(--mid); border-left: 3px solid var(--rule); padding-left: 1.25rem; line-height: 1.65; }
+  .paper { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .section { margin-bottom: 2.75rem; }
+  .section-marker { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--light); display: block; margin-bottom: .5rem; }
+  .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+  .section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 .6rem; color: var(--mid); }
+  .section p { margin-bottom: 1rem; }
+  .section p:last-child { margin-bottom: 0; }
+  .finding { background: var(--tag-bg); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .finding-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--light); margin-bottom: .4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 1.25rem 0; }
+  th { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--light); text-align: left; padding: .5rem .6rem; border-bottom: 2px solid var(--rule); }
+  td { padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  td.op { color: #1a6b3a; font-weight: 600; }
+  td.gap { color: var(--accent); font-weight: 600; }
+  td.open { color: var(--light); font-style: italic; }
+  ol, ul { margin: .75rem 0 1rem 1.4rem; }
+  li { margin-bottom: .4rem; }
+  .ref-list { font-size: .85rem; color: var(--mid); }
+  .ref-list a { color: var(--mid); }
+  .formula { font-family: 'Courier New',monospace; font-size: .85rem; background: var(--tag-bg); border: 1px solid var(--rule); padding: .5rem 1rem; margin: .75rem 0; }
+
+.note{font-size:.92em;opacity:.78;}
+.tbd{font-variant:all-small-caps;letter-spacing:.04em;opacity:.7;}
+.callout{background:var(--tag-bg);border:1px solid var(--rule);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:1.25rem 0;}
+.callout p:last-child{margin-bottom:0;}
+</style>
+<link rel="canonical" href="https://aethercontinuity.org/papers/sm-024-pohjoinen-solmu.html"/>
+<meta property="og:title" content="SM-024 — Pohjoinen solmu: reitit, runkorata ja kuka omistaa kokonaisuuden" />
+<meta property="og:description" content="Suomi ei voita datakeskusten ja teollisuuden mittakaavakilpailussa; sen kärki on kokonaisuuden toimivuus. Pohjoinen solmu yhdistää Göteborgin maasillan, pohjoisen ro-ron ja kotimaan runkoradan, jonka suunta kääntyy Suomenlahden häiriössä. Muistio kokoaa CN-008:n, WP-020:n ja CN-030:n." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://aethercontinuity.org/papers/sm-024-pohjoinen-solmu.html" />
+<meta property="og:site_name" content="Aether Continuity Institute" />
+</head>
+<body>
+
+<nav>
+  <span class="nav-left">Aether Continuity Institute</span>
+  <span class="nav-right">
+    <a href="/">Home</a>
+    <a href="/papers/">Papers</a>
+    <a href="/research.html">Research</a>
+  </span>
+</nav>
+
+<div class="doc-header">
+  <div class="doc-series">Synthesis Memo · SM-024 · Domain D-2 · D-3 · D-4 · Alueellinen synteesi</div>
+  <div class="doc-meta-grid">
+    <span><strong>Status</strong>Working Draft v0.1</span>
+    <span><strong>Language</strong>FI</span>
+    <span><strong>Date</strong>2026-11-26</span>
+    <span><strong>Aineisto</strong>Tilastokeskus 11ra, 12bd, 12be, 115h; Fingrid; New North (2025); Väylävirasto 81–85/2025; Yle 26.11.2026</span>
+    <span><strong>Relates to</strong>CN-030, WP-020, CN-008, CN-007, SM-015, CN-028, SM-021</span>
+    <span><strong>Menetelmä</strong>Lähteiden ristiinluenta + omat laskelmat tilastoista (§&nbsp;02, §&nbsp;03)</span>
+  </div>
+  <h1 class="doc-title">Pohjoinen solmu</h1>
+  <p class="doc-subtitle">Reitit, runkorata ja kuka omistaa kokonaisuuden</p>
+  <p class="doc-abstract">Suomi ei voita mittakaavakilpailua datakeskuksista tai energiaintensiivisestä teollisuudesta. Sen kärki voi olla vain kokonaisuuden toimivuus: liittymät ajallaan, lämpö käyttöön, jousto liittymäehtoihin ja kuljetusreitit, jotka toimivat myös häiriössä. Tällä hetkellä osat suunnitellaan erikseen. Muistio kokoaa CN-008:n, WP-020:n ja CN-030:n yhdeksi kuvaksi: Etelä-Suomen rajoitteet työntävät, pohjoinen valuma-alue vetää, ja pohjoinen solmu yhdistää kolme reittiä, joiden pettämiskohdat ovat eri tilanteissa. Kotimaan runkorata Vuosaari–Oulu kantaa normaalisti tavaraa pohjoiseen ja Suomenlahden häiriössä etelään. Lähtöhavainto on Maerskin marraskuussa 2026 avaama Haaparanta–Göteborg-konttijuna, länsikäytävän ensimmäinen kaupallinen arkikäyttö.</p>
+</div>
+
+<div class="paper">
+
+<div class="section">
+<span class="section-marker">§ 00</span>
+<h2>Rajaus</h2>
+<p>Muistio on synteesi. Omat laskelmat ovat § 02:n ja § 03:n tilastojohdannaiset sekä mittakaava-arviot, jotka on merkitty. Merkinnät: <code>[M]</code> mitattu tai julkaistu, <code>[L]</code> laskettu, <code>[A]</code> arvio, <code>[—]</code> tuntematon.</p>
+<p>Muistio ei ole hankesuositus. Se kuvaa, miten jo tutkitut osat liittyvät toisiinsa ja mitä niiden yhdistelmästä puuttuu. Osat on käsitelty tarkemmin aiemmissa papereissa: raideleveys ja kalusto CN-030:ssa, energiasolmu ja ro-ro WP-020:ssa, koordinaatiovaje CN-007:ssä ja CN-008:ssa, omistusrakenne CN-028:ssa ja SM-015:ssä.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 01</span>
+<h2>Lähtöhavainto: Maerskin juna Haaparannasta Göteborgiin</h2>
+<p>Maersk avasi marraskuun alussa 2026 junayhteyden Haaparannasta Göteborgin satamaan. Kontit tuodaan Oulusta Suomen radalla Haaparannalle ja nostetaan rajalla ruotsalaiseen junaan. Göteborgissa ne lastataan suoraan Aasiaan kulkeviin valtamerialuksiin. Junia on kaksi viikossa, junan kapasiteetti on 76 TEU, ja tavoite on neljä viikkovuoroa vuoden 2027 puoliväliin mennessä. Maerskin mukaan matka-aika Oulusta Aasiaan lyhenee kahdeksalla päivällä, ja yhteys on avattu ensisijaisesti kaupallisin perustein <code>[M]</code>.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Suure</th><th>Arvo</th><th>Merkintä</th></tr></thead>
+<tbody>
+<tr><td>Konttien osuus Perämerenkaaren kuljetuskäytävällä</td><td>0,3 % (kappaletavara ja perävaunut 10 %, irtolasti 6 %)</td><td><code>[M]</code> Itäradan tavaraliikenneselvitys 2024; perusta tarkistamatta</td></tr>
+<tr><td>Lasti junaa kohden</td><td>noin 900–1&nbsp;000 t; vaunuineen noin 1&nbsp;400–1&nbsp;500 t</td><td><code>[A]</code></td></tr>
+<tr><td>Uumaja–Luulaja-osuuden suurin junapaino</td><td>1&nbsp;600 t</td><td><code>[M]</code> CN-030 § 8.2</td></tr>
+<tr><td>Virta neljällä viikkovuorolla</td><td>noin 550 t/vrk, noin 16&nbsp;000 TEU/v</td><td><code>[L]</code></td></tr>
+<tr><td>Kontin nosto rajalla</td><td>2–3 h, 40–50 €/kontti</td><td><code>[M]</code> New North 2025</td></tr>
+</tbody>
+</table></div>
+<p>Junan koko on todennäköisesti lähellä Ruotsin yksiraiteisen osuuden rajaa, joten kasvu tulee vuorovälistä. Virta on pieni: noin 2 % CN-030:n portaan C mitoituksesta (25&nbsp;000 t/vrk). Merkitys on muualla. Yhteys on länsikäytävän ensimmäinen kaupallinen arkikäyttö, eli juuri se, mitä CN-030:n § 8.6 vaatii varareitin osalta: arkikäyttö, joka pitää sen toimintakunnossa kriisien välillä.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 02</span>
+<h2>Työntö: Etelä-Suomen rajoitteet</h2>
+<p>Sähkön tuotanto ja kulutus ovat Suomessa eri paikoissa. Fingridin mukaan tuotannosta yli 70 % sijoittuu länsirannikolle ja pohjoiseen, kun taas yli 50 % sähköstä kulutetaan Etelä-Suomessa <code>[M]</code>. Kulutuksen liityntäkyselyistä 50 % kohdistuu Varsinais-Suomeen, Uudellemaalle, Satakuntaan, Pirkanmaalle, Päijät-Hämeeseen ja Kymenlaaksoon, ja Fingrid on joutunut väliaikaisesti rajoittamaan kulutuksen ja sähkövarastojen liittämistä Etelä-Suomessa <code>[M]</code>. Teollisen mittakaavan investointeja, joiden liittymisestä ei ole jo sovittu, ei voida liittää vuosina 2025–2027 Uudellamaalla, Varsinais-Suomessa tai Hämeessä (MTV Verkkouutisten mukaan, Fingridin tiedote 21. tammikuuta; vuosi 2025 päätelty rajoitusjaksosta) <code>[M]</code>.</p>
+<p>Fingrid sanoo seurauksen suoraan: tuotantopainotteisella alueella uuden kulutuksen liittäminen voi olla vuosia nopeampaa kuin kulutuspainotteisessa Etelä-Suomessa (selvitys 9/2026) <code>[M]</code>. Etusijamenettely kannustaa Fingridin mukaan suuria hankkeita sijoittumaan alueille, joilla kapasiteettia on paremmin saatavilla (tiedote 9.10.2026) <code>[M]</code>.</p>
+<p>Talouden kehitys kertoo samasta erosta. Uudenmaan kasvu on tullut väestöstä, Pohjois-Pohjanmaan tuottavuudesta:</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Maakunta</th><th>Väkiluku 2015–2024</th><th>BKT:n volyymi 2015–2024</th><th>BKT asukasta kohden</th></tr></thead>
+<tbody>
+<tr><td>Uusimaa</td><td>+10,0 %</td><td>+10,2 %</td><td class="gap">+0,2 %</td></tr>
+<tr><td>Pirkanmaa</td><td>+7,3 %</td><td>+20,6 %</td><td>+12,4 %</td></tr>
+<tr><td>Pohjois-Pohjanmaa</td><td>+2,0 %</td><td>+19,7 %</td><td class="op">+17,3 %</td></tr>
+<tr><td>Pohjois-Savo</td><td>&minus;1,7 %</td><td>+6,4 %</td><td>+8,3 %</td></tr>
+<tr><td>Koko maa</td><td>+2,7 %</td><td>+9,2 %</td><td>+6,3 %</td></tr>
+</tbody>
+</table></div>
+<p class="note">Tilastokeskus 11ra (väestö 31.12.) ja 12bd (BKT markkinahintaan, vuosittaiset volyymimuutokset ketjutettu 2016–2024) <code>[L]</code>.</p>
+<p>Ruuhkat, asumiskustannukset suhteessa tuloihin ja työvoiman saatavuus ovat muut työntötekijät, joista energiaintensiiviset toimijat ja logistiikkayritykset puhuvat. Niitä ei ole tähän muistioon mitattu <code>[—]</code>.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 03</span>
+<h2>Veto: pohjoinen valuma-alue</h2>
+<p>Pohjoisen veto ei ole väestöä vaan teollisuutta. Kauppa purkaa Aasian-tuonnin etelän keskusvarastoissa, joten väkiluku ei synnytä tuontikontteja. Kontteja ottavat vastaan tuotantolaitokset, kaivokset ja suuret työmaat.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Maakunta</th><th>BKT:n volyymi 2015–2024</th><th>Investoinnit / BKT 2020–2024</th><th>Jalostuksen osuus investoinneista</th></tr></thead>
+<tbody>
+<tr><td>Pohjois-Pohjanmaa</td><td>+19,7 %</td><td>26,2 %</td><td>37,7 %</td></tr>
+<tr><td>Kainuu</td><td>+18,0 %</td><td>23,9 %</td><td>48,9 %</td></tr>
+<tr><td>Pohjanmaa</td><td>+8,7 %</td><td>18,6 %</td><td>36,9 %</td></tr>
+<tr><td>Pohjois-Savo</td><td>+6,4 %</td><td>25,7 %</td><td>19,5 %</td></tr>
+<tr><td>Lappi</td><td>+6,1 %</td><td>23,3 %</td><td>37,3 %</td></tr>
+<tr><td>Keski-Pohjanmaa</td><td>+1,7 %</td><td>21,5 %</td><td>37,9 %</td></tr>
+<tr><td>Koko maa</td><td>+9,2 %</td><td>22,4 %</td><td>25,9 %</td></tr>
+</tbody>
+</table></div>
+<p class="note">Tilastokeskus 12bd ja 12be (kiinteän pääoman bruttomuodostus, käypiin hintoihin) <code>[L]</code>.</p>
+<p>Jalostusinvestoinnit kohdistuvat pohjoiseen laajemmin kuin kasvu: Kokkolan, Kemi-Tornion ja Lapin teollisuus investoi, vaikka väestö vähenee. Ylä-Savo on tiheämpi teollisuusalue kuin Kuopio: Vieremällä teollisuuden osuus työpaikoista on 46,3 % ja Iisalmessa 20,3 %, Kuopiossa 6,6 % (Tilastokeskus 115h, 2024) <code>[M]</code>. Absoluuttisesti Kuopion teollisuus on suurempi (3&nbsp;665 työpaikkaa, Iisalmi ja Vieremä yhteensä 2&nbsp;563). Ylä-Savo on radalla Kajaanin kautta Ouluun; Iisalmesta Haaparantaan on rataa noin 400 km ja Vuosaareen maantietä noin 470 km, Kuopiosta vastaavasti noin 500 ja 380 km <code>[A]</code>. Itä-Suomelle Göteborgin junareitti ei ole kilpailukykyinen: New Northin vertailussa Joensuu–Haaparanta–Göteborg on kuudesta reitistä kallein, 164 €/t <code>[M]</code>.</p>
+<p>Etelän purkuperinne ei ole pysyvä. Keskusvarasto sijoittuu maahantulosataman ja kulutuksen painopisteen väliin, ja Suomessa molemmat ovat etelässä. Purkupaikka siirtyy vasta, jos tuontiportti siirtyy osin pohjoiseen ja pohjoinen kasvaa samaan aikaan. Muutos näkyy ensin logistiikkakeskusinvestointeina Oulun seudulle tai Kemi-Tornioon.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 04</span>
+<h2>Solmu, jossa reitit kohtaavat</h2>
+<p>Hubin arvo on siinä, että siihen tulee useampi reitti, joiden pettämiskohdat ovat eri tilanteissa. CN-030:n § 8.6 sovelsi tätä kalustoon; sama kriteeri pätee reitteihin.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Reitti</th><th>Mihin se pettää</th><th>Arkikäyttö nyt</th></tr></thead>
+<tbody>
+<tr><td>Maasilta Haaparanta–Göteborg</td><td>Ruotsin yksiraiteinen rata, rajan läpäisy, yhden operaattorin varassa</td><td class="op">Maersk, 2 junaa/vko</td></tr>
+<tr><td>Narvik</td><td>Malmbanan: yksiraiteinen, malmi etusijalla, 28 kohtauspaikasta 12 liian lyhyitä (New North)</td><td class="open">Satunnainen</td></tr>
+<tr><td>Ro-ro suoraan pohjoisiin satamiin</td><td>Jäät, varustamon vetäytyminen (Transfennica lopetti Kemin; WP-020)</td><td class="gap">Ohut</td></tr>
+<tr><td>Runkorata Vuosaari–Oulu</td><td>Kuormakorkeus, paluukuormat, kaluston omistus (CN-030 § 5)</td><td class="gap">Yhdistetty kuljetus päättyi 2014</td></tr>
+</tbody>
+</table></div>
+<p>Ro-ro ja runkorata kärsivät Suomenlahden häiriöstä eri tavoin, maasilta ei lainkaan. Jäät koskevat ro-roa, eivät maasiltaa. Solmu, johon kaikki tulevat, saa kyvyn vaihtaa reittiä tilanteen mukaan. Juuri tätä CN-030:n § 8.5 haki raidekalustosta, ja solmu saa sen ilman uutta vaunuteknologiaa.</p>
+<p>Kaikki reitit kohtaavat kahdessa paikassa: Oulussa (satama, pääradan pää, rata Haaparantaan) ja Kemi-Torniossa (Ajos, Röyttä, raja, raideleveyden vaihto). WP-020 sijoitti solmun Ouluun energian vuoksi. Raideleveyden vaihto vetää Kemi-Tornioon, koska kokoaminen tapahtuu siellä, missä yksikkö nostetaan. Väyläviraston rinnakkaisraide Haaparannasta Kemiin, mahdollisesti Ouluun ja Rovaniemelle, siirtäisi vaihtokohdan sisämaahan (rakentaminen aikaisintaan 2028) <code>[M]</code>. Ratkaisu ei juuri muuta konttivirran kustannusta, mutta se ratkaisee solmun sijainnin.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 05</span>
+<h2>Runkoradan suunnan kääntyminen</h2>
+<p>Normaalioloissa runkorata Vuosaari–Oulu vie etelän satamien tuontia pohjoiseen. Jos Suomenlahti ja eteläinen Itämeri ovat poikki (CN-030:n porras B), Vuosaareen ei tule laivoja. Rata ei silti menetä merkitystään, vaan sen suunta kääntyy: Göteborgin maasillan ja pohjoisten satamien kautta tuleva tavara kulkee junalla Oulusta etelään, jossa ovat keskusvarastot ja kulutus. Rekalla tuhannen kilometrin matka kuluttaa kriisissä niukkaa dieseliä; junalla se on sähköllä kulkeva runkokuljetus.</p>
+<p>Esteet ovat tunnettuja eivätkä tekniikkaa:</p>
+<ul>
+<li><strong>Korkeus.</strong> Suomen radalla kuorman suurin korkeus on 5&nbsp;300 mm (RATO 2), mutta nykykalusto sallii vain 4,0–4,2 m:n yksikön, ja maantien yksikkö on 4,4 m <code>[M]</code>. Pussivaunussa (Sdggmrss, T3000) perävaunu seisoo noin 0,3 m:n korkeudella <code>[A]</code>, joten 4,4 m:n yksikkö mahtuu. Nosturikelvottomille perävaunuille on vaakalastausjärjestelmiä (CargoBeamer, Modalohr, Megaswing, Nikrasa). Vain noin 11 % eurooppalaisista puoliperävaunuista on nosturikelpoisia <code>[M]</code>.</li>
+<li><strong>Telit ja hyväksyntä.</strong> Pussivaunut ovat 1&nbsp;435 mm:n kalustoa. Y25-telien vaihto on Väyläviraston mukaan suhteellisen yksinkertaista, mutta vaunu on tyypitettävä ja hyväksyttävä Suomeen.</li>
+<li><strong>Omistus.</strong> Koko yhdistettyyn kuljetukseen soveltuva vaunukanta (195 vaunua) on VR:n <code>[M]</code>. Pussivaunuja vuokraavat Euroopassa useat kalustonhaltijat; CN-030:n § 9 porras 3 on juuri tämä testi.</li>
+<li><strong>Kynnys.</strong> VR Transpointin suunnittelukynnys on 20 yhdistelmää tai 30 perävaunua arkipäivässä suuntaansa <code>[M]</code>.</li>
+</ul>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 06</span>
+<h2>Sähköinen jakelu solmun ympärillä</h2>
+<p>Pitkän matkan sähkörekka tarvitsee latausverkon valtateiden varteen, ja verkon puute pitää kalustomäärän pienenä: Suomessa on noin 250 raskasta sähkökuorma-autoa, alle 50 perävaunullisena (WP-020) <code>[M]</code>. Kun runkokuljetus kulkee sähköradalla, jakelu solmusta hoituu 150–250 km:n säteellä autoilla, jotka ladataan omalla varikolla <code>[A]</code>. Ongelma muuttuu latausverkosta varikkokysymykseksi.</p>
+<p>Varikkolataus on joustavaa kuormaa: yölataus sopii tuulisähköön ja voidaan siirtää pois hintapiikeistä. Pakkasella toimintamatka lyhenee, joten säde on mitoitettava talven mukaan. Huoltovarmuuden kannalta sähköinen jakelu ei riipu dieselistä, jonka Itämeren häiriö katkaisee ensimmäisenä; CN-030:n porras C laski, että maantiesilta kuluttaisi noin 13 % maan dieselistä <code>[L]</code>. Tieliikenteen päästökauppa vuodesta 2028 nostaa dieseliä noin 11 c/l (SKAL) <code>[M]</code>. Radalle siirtyvä perävaunu vähentää noin 0,87 t CO₂ tuhannelta kilometriltä (CN-030 § 8.4) <code>[L]</code>.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 07</span>
+<h2>Pohjoismainen yhteistyö ja yhteinen pullonkaula</h2>
+<p>Yhteistyö on edennyt strategioista ensimmäisiin konkreettisiin sopimuksiin:</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Konkreettista</th><th>Puuttuvaa</th></tr></thead>
+<tbody>
+<tr><td>Pohjoismaiden liikennejärjestelmän varautumisstrategia 3/2026, sisältää Haaparannan, Tornion ja Kemin eurooppalaisen raiteen (CN-030 § 7)</td><td>Ruotsin ratakapasiteetin jako häiriössä Ruotsin, Norjan, Suomen ja Naton kesken</td></tr>
+<tr><td>Traficomin ja Transportstyrelsenin sopimus 2026 tavanomaisesta kalustosta kaksoisraidealueella</td><td>Hyväksyntäreitti raideleveyttä vaihtavalle kalustolle</td></tr>
+<tr><td>Aurora Line, 400 kV, käyttöön 13.11.2025; siirtokapasiteetti Pohjois-Ruotsiin +35 % (Fingrid) <code>[M]</code></td><td>Yhteinen tehon riittävyyden arvio; SM-021:n mukaan alueen talvivarmuus nojaa samoihin yhteyksiin</td></tr>
+<tr><td>Maerskin juna: ruotsalainen satama, suomalainen lähettäjä, tanskalainen varustamo</td><td>Pohjoisen solmun omistaja, missään maassa</td></tr>
+</tbody>
+</table></div>
+<p>Ruotsin radat ovat kolmen maan yhteinen pullonkaula. Narvikin rata on yhteydessä vain Ruotsin verkkoon, joten Etelä-Norjan junaliikenne Narvikiin kulkee Malmbanania pitkin <code>[M]</code>. Etelässä Oslon ja Göteborgin liikenne käyttää Göteborgin ympäristön ratoja, joilla New Northin mukaan "no major capacity uplift is expected with the known investments" <code>[M]</code>. Itämeren häiriössä samoista ratapaikoista kilpailisivat Ruotsin oma huolto ja vienti (malmi etusijalla), Norjan pohjoinen huolto, Suomen tuonti ja Naton kuljetukset. CN-030:n § 8.3 ei sisällä Ruotsin eikä Norjan tarvetta.</p>
+<p>Suomen asema jonossa on heikoin: Ruotsi omistaa radan, Norjalla on vakiintunut riippuvuus Narvikin kautta, Suomella kaksi kaupallista junaa viikossa. Siksi kaupallinen arkikäyttö on arvokasta. Vakiintunut liikenne tuo vakiintuneet ratapaikat.</p>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 08</span>
+<h2>Miksi kokonaisuutta ei ole rakennettu</h2>
+<p>Maakuntaliittojen New North -selvitys (Interreg Aurora, 5/2025) on lähin kokonaistarkastelu. Se vertaa reittejä, toteaa, että tehokkaat kuljetusjärjestelmät ovat usein heikosti häiriönsietoisia, ja suosittelee vaihtoehtoisten reittien säännöllistä käyttöä. Kotimaan runkorataa kokonaisuutena, solmua, sähköistä jakelua tai reitinvaihtoa järjestelmän ominaisuutena se ei käsittele. Oulun yliopiston logistiikkatutkimus kohdistuu osiin: satama-automaatioon, maaseudun tavaraliikenteeseen, alkutuotannon toimitusketjuun ja vetyrekkaan. Luulajan teknillinen yliopisto tutki solmuja ja kuivasatamia Pohjanlahden käytävällä jo 2011–2014 (BGLC).</p>
+<p>Yrityksiltä kysyttynä kuva on sama. New Northin kyselyssä 49 vastaajasta 44 %:lla oli kriisisuunnitelma logistiikkaketjuille, 46 %:lla ei <code>[M]</code>. Halukkuudesta siirtää kuljetuksia kalliimmalle reitille vastaukset jakautuivat 31 %, 22 % ja 47 %; vastausvaihtoehtojen järjestys on luettu kuvaajasta ja tarkistettava <code>[M]</code>. Valtioneuvoston päätös huoltovarmuuden tavoitteista (568/2024) olettaa kuljetusten hoituvan markkinaehtoisesti myös poikkeusoloissa. Kun jokainen yritys varautuu omaan tarpeeseensa eikä maksa valmiudesta etukäteen, reitin kokonaiskapasiteettiin ei varaudu kukaan.</p>
+<p>Rakenne on sama kuin CN-007:ssä ja SM-015:ssä: rata, terminaali, varikko, liittymä ja lämpö kuuluvat eri omistajille, ja jokainen päätös on erikseen perusteltu. CN-028:n omistuskysymys toistuu: kuka omistaa vaunupoolin, solmun terminaalin ja varikon. Sähköjärjestelmällä on järjestelmävastaava ja julkinen riittävyysarvio; kuljetusreiteillä ei ole kumpaakaan.</p>
+<div class="callout">
+<p><strong>Kärki on kokonaisuudessa.</strong> Etelän liittymäjonot, luvitettu datakeskus ilman lämmön käyttäjää ja kuljetusreitit markkinan varassa ovat saman puutteen oireita. Pohjoisessa kokonaisuuden voi vielä rakentaa alusta: solmu, runkorata, sähköinen jakelu, liittymät ja lämpö samaan aikaan, ennen kuin ne lukittuvat erillisiksi.</p>
+</div>
+</div>
+
+<div class="section">
+<span class="section-marker">§ 09</span>
+<h2>Mitä mitataan ja mikä on auki</h2>
+<p>Seurattavat:</p>
+<ol>
+<li><strong>CN-030:n ennakkokirjaukset M1 ja M2</strong> (luku 11): neljä viikkovuoroa ja viikoittainen tuontikonttivirta 30.6.2027.</li>
+<li><strong>Logistiikkakeskus- ja terminaali-investoinnit</strong> Oulun seudulle tai Kemi-Tornioon. Ensimmäinen merkki purkupaikan siirtymisestä.</li>
+<li><strong>Rinnakkaisraiteen päätepiste</strong> (Kemi, Oulu, Rovaniemi). Ratkaisee solmun sijainnin.</li>
+</ol>
+<p>Avoimet kohdat:</p>
+<ol>
+<li>Ruuhkien, asumiskustannusten ja työvoiman saatavuuden mittarit pääkaupunkiseudulla. <code>[—]</code></li>
+<li>Perämerenkaaren osuuslukujen perusta Itäradan selvityksessä. <code>[—]</code></li>
+<li>Ylä-Savon konepajojen nykyiset kuljetusmuodot ja satamat. <code>[—]</code></li>
+<li>Ruotsin ratakapasiteetin jako häiriössä: onko sitä sovittu ei-julkisesti. <code>[—]</code></li>
+<li>Pussivaunun Suomen-hyväksynnän reitti ja kesto. <code>[—]</code></li>
+</ol>
+</div>
+
+<div class="section">
+<span class="section-marker">References</span>
+<h2>Aineisto ja lähteet</h2>
+<ul class="ref-list">
+<li><strong>Yle</strong> (26.11.2026, J. Tiihonen): Suomesta avattiin uusi rahtireitti Aasiaan: väistää jäät ja Itämeren kiristyneen turvallisuustilanteen</li>
+<li><strong>Tilastokeskus</strong> — StatFin 11ra (väestö), 12bd (tulot ja tuotanto alueittain), 12be (investoinnit alueittain), 115h (työpaikat toimialoittain), aci-pxweb-proxy, haettu 26.11.2026</li>
+<li><strong>Fingrid</strong> — <a href="https://www.sttinfo.fi/tiedote/72289680/fingridin-selvitys-teollisuuskulutuksen-sijoittuminen-lahelle-sahkontuotantoa-lisaa-kantaverkon-liitettavyytta-merkittavasti?lang=fi">Teollisuuskulutuksen sijoittuminen lähelle sähköntuotantoa lisää kantaverkon liitettävyyttä merkittävästi</a> (9/2026); <a href="https://www.fingrid.fi/globalassets/dokumentit/fi/kantaverkko/kantaverkon-kehittaminen/etela-suomen_materiaali_fingrid-kantaverkon-kehittamissuunnitelma-2026--2035.pdf">Kantaverkon kehittämissuunnitelma 2026–2035, Etelä-Suomen aluetilaisuus</a> (11/2025); <a href="https://www.sttinfo.fi/tiedote/72402238/sahkoverkkoon-liittamisen-etusijamenettely-tarvitaan-nopeasti-kayttoon?lang=fi">Sähköverkkoon liittämisen etusijamenettely tarvitaan nopeasti käyttöön</a> (9.10.2026); <a href="https://www.fingrid.fi/en/news/news/2025/aurora-line-power-transmission-connection-to-be-commissioned-on-november-13/">Aurora Line to be commissioned on November 13</a> (2025)</li>
+<li><strong>Verkkouutiset / MTV</strong> — <a href="https://www.verkkouutiset.fi/a/mtv-sahkoverkon-pullonkaula-uhkaa-investointeja-etela-suomessa/">Sähköverkon pullonkaula uhkaa investointeja Etelä-Suomessa</a> (julkaisupäivä ei näy; todennäköisesti 1/2025)</li>
+<li><strong>New North</strong> (Interreg Aurora, Pohjois-Karjalan ja Lapin liitot) — <a href="https://pohjois-karjala.fi/wp-content/uploads/2025/06/New-North-report-27.5.2025.pdf">Detailed analysis of the rail transport, port infrastructure and logistics in general from North Karelia and East &amp; North Finland to Sweden and Norway</a> (27.5.2025). Luvut luettu tiivistävällä lukutyökalulla ja tarkistettu lainauksina; kuvaajien järjestys tarkistettava alkuperäisestä.</li>
+<li><strong>Itärata Oy</strong> — Itäradan tavaraliikenneselvitys, loppuraportti 04/2024</li>
+<li><strong>L. Ojala, J. Jokinen, R. Hellström</strong> — <a href="https://huoltovarmuuskeskus.fi/files/be404a1551e5c52c3ca67850cbd023316c700d97/suomen-satamien-lastinkasittelykapasiteetti-turun-yliopisto-e-sarja-13.2.2025.pdf">Suomen satamien lastinkäsittelykapasiteetti</a>, Turun kauppakorkeakoulu E-3:2025 (HVK:n tilaus)</li>
+<li><strong>Väylävirasto</strong> — julkaisut 81/2025 (kysyntäselvitys), 82/2025 (tekninen), 83/2025 (kalustotekninen), 85/2025 (pääselvitys); ks. CN-030</li>
+<li><strong>Luleå tekniska universitet</strong> — <a href="https://www.ltu.se/en/research/centres-of-excellence-and-collaborations/lulea-railway-research-center/research-projects/projekt/2023-12-12-bothnian-green-logistic-corridor-bglc">Bothnian Green Logistic Corridor (BGLC)</a>, 2011–2014</li>
+<li><strong>Oulun yliopisto</strong> — Port Automation / OuluZone (4/2026); MATAVA-hanke; väitöskirja alkutuotannon toimitusketjusta (9/2026); VISIOK-vetyrekka</li>
+<li><strong>ACI</strong> — CN-030 (raideleveys, kalusto, häiriönsieto, luku 11), WP-020, CN-008, CN-007, SM-015, CN-028, SM-021</li>
+</ul>
+</div>
+
+</div>
+
+</body>
+</html>
