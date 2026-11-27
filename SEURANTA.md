@@ -590,6 +590,7 @@ countertest:
 ```
 
 - Ei pakollinen. `[A]`-väitteille lähtökohtaisesti tarpeellinen; jos kunnollista ehtoa ei pystytä määrittelemään, kirjataan `not_specified` eikä keksitä falsifioijaa.
+- `tested` tarkoittaa, että määritelty testi on suoritettu, ei että väite olisi vahvistettu. Tulos luetaan `note`-kentästä.
 - Vastanäyttö ei ole kumoaminen: havainto voi heikentää väitettä kumoamatta sitä. Väitteen tilaa ei muuteta automaattisesti; muutoksen tekee ihminen ja kirjaa sen.
 - Ei automaattista arviointilogiikkaa tässä vaiheessa.
 
