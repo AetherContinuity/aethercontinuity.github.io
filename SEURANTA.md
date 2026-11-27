@@ -601,3 +601,59 @@ Rajaus: rekisteri on työkalu, ei uusi paperisarja. Aloitus pienenä: SM-024, WP
 ### SM-024 — ennakkokirjaus T1 (26.11.2026)
 
 Suomenlahden talvimerenkulku, tarkistus 30.6.2027. Teksti ja kynnykset: `papers/sm-024-pohjoinen-solmu.html` § 06; mittauskoodi ja koosteet `AetherContinuity/ogas3`: `tools/talvimeri.py`, `data/talvimeri/`.
+
+## Väiterekisteri — hyväksymistesti H1: WP-020 Finding 3 (ennakkokirjaus 27.11.2026)
+
+Odotettu tulosjoukko kirjattu ennen rekisterin toteutusta. Joukkoa ei muuteta rekisterin löydösten perusteella; puutteet kirjataan uutena lisäyksenä päivämäärineen.
+
+**Testattava väite (F3).** WP-020 § 06, Finding 3: "Neither pathway has stalled for technical or financial reasons. Both have stalled because no actor owns the integrated outcome."
+
+**Korpuksen rajaus.** `AetherContinuity/aethercontinuity.github.io`, main @ `8ed6eb0` (27.11.2026). Hakemistot `papers/`, `supplements/`, `tools/`, `decisions/`, tiedostot `*.html` ja `*.md`. Pois: hakemistosivut (`index.html`, `papers-index.html`, `Oldindex.html`) ja `tools/ACI-INSTRUMENT-*`.
+
+**Hakumenetelmä.**
+1. Termihaku A (kirjainkoko ei ratkaise): `WP-020|CN-008|Perämer|Gulf of Bothnia|Laanila` → 9 tiedostoa.
+2. Termihaku B (kirjainkoko ratkaisee): `Transfennica|RoRo|[Rr]o-ro|Haaparan|Haparanda|Oulun satam|Port of Oulu|maasilta|land bridge|länsikäytäv|länsireit` → 4 tiedostoa (WP-020, CN-008, CN-030, SM-024).
+3. Jokaisen osuman konteksti luettu (±200 merkkiä); WP-019, SM-007 ja CN-030 § 8 luettu erikseen ylävirran ja rinnakkaisuuden tarkistamiseksi.
+4. Hylätty termi: `Kemi` ilman rajausta (osuu sanoihin kemikaali, kemia).
+
+Rajoite: haku löytää vain sanastoltaan samankaltaiset kohdat. Väite, joka nojaa F3:een eri sanoin ja ilman viittausta, voi puuttua joukosta.
+
+**Varmasti riippuvaiset (alavirta).**
+
+| # | Kohta | Väite | Peruste |
+|---|---|---|---|
+| D1 | WP-020 § 06, Recommendations for state actors | "Assign coordination responsibility for the integrated Laanila–logistics hub development to a named entity" | Suositus johdetaan suoraan F3:sta |
+| D2 | CN-008, tiivistelmä | "Suljettu kiertotalousmalli on teknisesti valmis ja taloudellisesti kannattava. Pullonkaula on koordinaatio." | Sama johtopäätös; CN-008 nimeää WP-020:n laajemmaksi analyysiksi |
+| D3 | CN-008, "Miksi tämä ei etene" | Transfennica-reitti "lakkautettiin kun koordinoiva tahto hävisi, ei teknisten tai taloudellisten syiden takia" | Sama premissi kuin F3:ssa |
+| D4 | CN-008, "Mitä tarvitaan" | "Volyymi on olemassa jos toimijat koordinoivat." | Olettaa, että este on koordinaatio |
+
+Huomio D2–D4: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. Riippuvuuden suunta on epäselvä; väite on sama kahdessa esiintymässä. Rekisterin pitää näyttää ne saman väitteen esiintyminä tai riippuvuutena, ei kahtena erillisenä väitteenä.
+
+**Ylävirta (F3:n premissit; testin pitää näyttää nämä ylävirtana, ei riippuvaisina).**
+
+| # | Kohta | Väite |
+|---|---|---|
+| U1 | WP-020 § 01.1 | Laanila "technically ready, economically viable, institutionally stalled" (viittaa WP-019 § 3) |
+| U2 | WP-020 § 01, Historical Context | Transfennican vetäytyminen "reflects the same coordination failure" |
+| U3 | WP-020 § 03 | Kolmen vajeen diagnoosi (SM-009) logistiikka–energia-integraatiolle |
+| U4 | WP-019, Oulu-polku; SM-009; CN-007 | Koordinaatiovaje elektrolyysi-investoinnin ja reservimarkkinasopimuksen välillä; kolmen vajeen malli |
+
+**Rajatapaukset.**
+
+| # | Kohta | Miksi epävarma |
+|---|---|---|
+| R1 | CN-030 § 8, "Kuka omistaa kokonaisuuden" | Yhteensopiva F3:n kanssa, mutta perustuu huoltovarmuuden tavoitepäätökseen (568/2024), ei F3:een; WP-020 mainitaan vain laajempana kontekstina |
+| R2 | SM-024 v0.2 § 02, "Mitä tämä tarkoittaa korpukselle" | Viittaa F3:een ja rajaa sen; ei nojaa siihen. Suhde on rajaava, ei riippuva |
+| R3 | WP-020 § 06, Finding 5 | Eri väite (reittikohtainen peruste), sama polku; ei kumoudu, vaikka F3 kumoutuisi logistiikan osalta |
+| R4 | WP-020 rajaushuomio ja CN-008 rajaushuomio (27.11.2026) | Rajaavat F3:a kuten R2 |
+
+**Poissuljetut osumat.** SM-021 (Perämeren LNG voimalan polttoaineena), WP-019:n Laanila-taulukot ja investointiluvut (energiapolun tila, ei F3:n väitettä; WP-019:n koordinaatiokohta on U4), TN-001 (CN-008 mainittu ruokobiomassan lähteenä), `ACI-STRUCTURE.md` (numerointi).
+
+**Hyväksymiskriteerit rekisterin toteutukselle.**
+1. Löytää D1–D4.
+2. Näyttää U1–U4 ylävirtana eikä alavirtana.
+3. Nostaa R1–R4 erikseen tarkistettaviksi; R2 ja R4 rajaavana suhteena.
+4. Ei esitä poissuljettuja osumia riippuvuuksina.
+5. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
+
+Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Marko hyväksyy tai korjaa ennen toteutusta.
