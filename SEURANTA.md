@@ -579,6 +579,22 @@ Käyttö:
 - `[—]`-kohdat ajetaan määräajoin uudelleen (ogas3:n vahdin tapaan)
 - ennakkokirjaukset (SM-024 T1, CN-030 M1/M2, WEM F, AMOC A/B, BEM-E C–E, G) samaan rekisteriin tarkistuspäivineen
 
+Valinnainen kenttä `countertest` (vasta-analyysi):
+
+```yaml
+countertest:
+  condition: "Mikä havainto heikentäisi tai kumoaisi väitteen?"
+  evidence_required: "Mistä ja millä menetelmällä havainto saataisiin?"
+  status: not_specified | not_tested | tested
+  note: "Mitä testi näytti, lähde ja päivä (vain kun status = tested)"
+```
+
+- Ei pakollinen. `[A]`-väitteille lähtökohtaisesti tarpeellinen; jos kunnollista ehtoa ei pystytä määrittelemään, kirjataan `not_specified` eikä keksitä falsifioijaa.
+- Vastanäyttö ei ole kumoaminen: havainto voi heikentää väitettä kumoamatta sitä. Väitteen tilaa ei muuteta automaattisesti; muutoksen tekee ihminen ja kirjaa sen.
+- Ei automaattista arviointilogiikkaa tässä vaiheessa.
+
+Järjestys (27.11.2026): ensin tarkistuksen muisti (rekisteri), sitten määräaikainen seuranta (`[—]`-kohdat vahdilla), generatiivinen toiminta vasta niiden päälle. Muuten tuotantokyky kasvaa nopeammin kuin virheiden havaitsemiskyky.
+
 Rajaus: rekisteri on työkalu, ei uusi paperisarja. Aloitus pienenä: SM-024, WP-020, CN-008, CN-030.
 
 ### SM-024 — ennakkokirjaus T1 (26.11.2026)
