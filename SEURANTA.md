@@ -709,7 +709,7 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 |---|---|---|---|---|
 | R1 | CN-030 luku 9 | "Kapasiteettiketjun viisi lukua (8.2). Ne ovat viranomaisten ja satamien julkista tai pyydettävissä olevaa tietoa." ja poolauskysymys | `related` tai rekonstruoitu `depends_on` T | Asetelma laskee juuri sen, mikä T:n mukaan jää laskematta, mutta kumpikaan ei perustele itseään toisella |
 | U4 | CN-030 luku 4.1 | "Se ei vastaa kysymykseen, mitä uutta kysyntää monikäyttöinen kalusto voisi mahdollistaa. Jälkimmäistä ei ole arvioitu missään löydetyssä lähteessä." | T `depends_on` U4 (rekonstruoitu), `related` tai ei suhdetta | U4 koskee arvioimatonta lisäkysyntää, T poolausarvon ja pienimmän lenkin syntymistä yhteislaskennassa. T voi selittää U4:n havainnon tai olla siitä riippumaton johtopäätös; teksti ei ratkaise |
-| S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4, `related` tai ei suhdetta; ei `same_claim` eikä `depends_on` T:hen | Laskemattomuus (S1) ja arvioimaton lisäkysyntä (U4) eivät ole automaattisesti sama väite. T:hen suhde on varmempi: S1 toteaa laskemattomuuden, T selittää sen, joten ne eivät ole sama väite |
+| S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4, `related`, T `depends_on` S1 (rekonstruoitu) tai ei suhdetta; ei `same_claim` T:n kanssa | Laskemattomuus (S1) ja arvioimaton lisäkysyntä (U4) eivät ole automaattisesti sama väite. T:hen varmaa on vain se, etteivät S1 ja T ole sama väite: S1 toteaa laskemattomuuden, T selittää sen |
 | I1 | CN-030 luku 8, "Kuka omistaa kokonaisuuden" | "Kun jokainen varautuu omaan tarpeeseensa, reitin kokonaiskapasiteettiin ei varaudu kukaan. … Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa." | `related` tai rekonstruoitu `depends_on` T | Samansuuntainen kapasiteettipuolesta, mutta eri toimijat (yritykset ja valtio vs kolme viranomaista) ja eri kohde (varautuminen vs laskenta). Ei `same_claim`: T:ssä on poolauspuoli ja syyselitys |
 
 **Houkutusjoukko.** Samankaltaisuus houkuttelee yhdistämään. `related` tai puuttuminen hyväksytään; `depends_on` tai `same_claim` T:hen ei.
@@ -730,7 +730,7 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 3. Perusta: U2 ja U3 eivät ole `eksplisiittinen` eikä U1 ole `rekonstruoitu`. Puuttuva perusta ei täytä kriteeriä.
 4. Tunnistaa O1:n `same_claim`-suhteeksi I1:een.
 5. Luokittelee Q1:n `qualifies` T ja liittää P1:n U2:een eikä T:hen.
-6. Rajatapaukset R1, I1, U4 ja S1 taulukon hyväksyttyjen luokitusten mukaan. Eksplisiittinen `depends_on` ei täytä kriteeriä missään niistä; S1:n `same_claim` tai `depends_on` T:hen ei täytä kriteeriä.
+6. Rajatapaukset R1, I1, U4 ja S1 taulukon hyväksyttyjen luokitusten mukaan. Eksplisiittinen `depends_on` ei täytä kriteeriä missään niistä; S1:n `same_claim` T:n kanssa ei täytä kriteeriä.
 7. N1–N5 eivät ole `depends_on`- eikä `same_claim`-suhteessa T:hen. Testin tiukin kohta, kuten H1:n kriteeri 5.
 8. Ei esitä poissuljettuja osumia minkäänlaisina suhteina T:hen.
 9. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
