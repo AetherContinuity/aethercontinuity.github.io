@@ -639,6 +639,8 @@ Rajoite: haku löytää vain sanastoltaan samankaltaiset kohdat. Väite, joka no
 | I1 | CN-030 § 8, "Kuka omistaa kokonaisuuden" | Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa | `related` | Itsenäinen samansuuntainen havainto; peruste huoltovarmuuden tavoitepäätös (568/2024), ei F3 |
 | I2 | WP-020 § 06, Finding 5 | Reittikohtainen peruste vahvistuu energiapolusta riippumatta | `related` | Eri väite samasta polusta; ei kumoudu, vaikka F3 kumoutuisi logistiikan osalta |
 
+Huomio S2: `same_claim` koskee vain Transfennican lakkautuksen selitystä, ei koko CN-008:n koordinaatiodiagnoosia. Suhdeketju on `CN-008 S2 → same_claim → WP-020 U2 → premissi → WP-020 F3`. Rekisteri ei saa päätellä S2:n riippuvan suoraan F3:sta: S2 jakaa F3:n premissin, ei välttämättä samaa argumentointihistoriaa.
+
 Huomio S1–S2: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. Julkaisuaika ja keskinäiset viittaukset eivät ratkaise, kumpi on alkuperä; `same_claim` ei ota kantaa suuntaan.
 
 **Ylävirta (F3:n premissit; testin pitää näyttää nämä ylävirtana).**
@@ -661,4 +663,4 @@ Huomio S1–S2: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. J
 6. Ei esitä poissuljettuja osumia minkäänlaisina suhteina F3:een.
 7. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
 
-Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Katselmoinnin (ChatGPT, 27.11.2026) jälkeen D2–D4 jaettiin suhdelajeihin S1, S2, X1 ja X2, ja R1 ja R3 merkittiin itsenäisiksi (`related`, I1–I2). Marko hyväksyy ennen yhdistämistä.
+Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Katselmoinnin (ChatGPT, 27.11.2026) jälkeen D2–D4 jaettiin suhdelajeihin S1, S2, X1 ja X2, ja R1 ja R3 merkittiin itsenäisiksi (`related`, I1–I2). Marko hyväksyi S1/X1-jaon ja S2:n ylävirtaluokituksen 27.11.2026.
