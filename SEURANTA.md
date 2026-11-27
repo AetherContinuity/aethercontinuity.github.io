@@ -740,3 +740,13 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 - Täytön v2 pyynnön laatija ei näe H1:tä eikä H2:ta. Ensisijainen vertailu tehdään raakatulosta vastaan, kuten H1:ssä.
 - Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Kirjoittaja on nähnyt H1:n ja täytön 1 raakatuloksen, joten odotetun tuloksen muodostaminen on kontaminoitunut: H2 ei ole sokkona laadittu testi. Sokkous koskee vain täyttöä v2 (eri istunto). H2:n arvo on siinä, yleistyykö uusi poiminta toiseen kohteeseen.
 - Katselmoinnin (ChatGPT, 27.11.2026) jälkeen U4 ja S1 siirrettiin pakollisista suhteista rajatapauksiksi ennen täyttöä v2. Tämän jälkeen H2:ta ei muuteta.
+
+### H2 — lisäys 1: raportointi (27.11.2026, täytön v2 pyynnön lukemisen jälkeen, ennen raakatuloksen avaamista)
+
+Täytön v2 pyyntö (ogas3 #49) ohjeistaa: "related ei ole riippuvuus. Älä käytä sitä riippuvuuden heikompana muotona … älä kirjaa depends_on-suhdetta äläkä korvaa sitä related-suhteella." Ohje juontuu luovutusviestistä, jonka tämän kirjauksen tekijä kirjoitti ("related ei ole riippuvuus"). Ohje todennäköisesti vähentää related-suhteita. Lisäksi pyyntö käskee kirjaamaan epävarman perustan rekonstruoiduksi.
+
+Kriteereitä ei muuteta. Raportointi tarkentuu kahdella tavalla:
+- Kriteerissä 6 R1:n ja I1:n tulos jaetaan luokkiin "hyväksytty", "väärä luokitus" ja "puuttuu". Puuttuminen ei edelleenkään täytä kriteeriä, mutta se raportoidaan erikseen, koska pyyntö ohjasi pois related-suhteista.
+- Kriteerissä 3 raportoidaan erikseen, johtuuko U1:n mahdollinen `rekonstruoitu` epävarmuussäännöstä (perustelu toteaa epävarmuuden) vai luokituksesta.
+
+H1:n toteutus (`tools/vaiterekisteri_h1.py`) raportoi related-suhteen jo valmiiksi tietona eikä läpäisyehtona; sitä ei muuteta.
