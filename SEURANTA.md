@@ -694,22 +694,22 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 | U1 | CN-030 luku 10, sama kohta, 1.–2. virke | "Väylävirasto arvioi rajanylitystä, VR kotimaan yhdistettyä kuljetusta, Huoltovarmuuskeskus varastoja ja tonnistoa. Kukin tekee oman osansa." | T `depends_on` U1 | eksplisiittinen | Työnjakopremissi samassa kappaleessa |
 | U2 | CN-030 luku 4.2 | "useampi virta tuottaa yhdessä kalustolle paremman käyttöprofiilin kuin erilliset järjestelmät"; ΔN = Σᵢ maxₜ Dᵢ(t) − maxₜ Σᵢ Dᵢ(t) | T `depends_on` U2 | rekonstruoitu | Määritelmä tekee poolausarvosta yhteislaskennan tuloksen; luku 10 ei viittaa lukuun 4.2 |
 | U3 | CN-030 luku 8.2, "Kapasiteettiketjun lenkki" | "Käytävän arvo häiriössä on sen heikoimman lenkin välityskyky." | T `depends_on` U3 | rekonstruoitu | Pienin lenkki selviää vasta viiden lenkin vertailusta |
-| U4 | CN-030 luku 4.1 | "Se ei vastaa kysymykseen, mitä uutta kysyntää monikäyttöinen kalusto voisi mahdollistaa. Jälkimmäistä ei ole arvioitu missään löydetyssä lähteessä." | T `depends_on` U4 | rekonstruoitu | Aineistohavainto, jonka T selittää ("tätä" = laskematon kokonaisuus) |
 
 **Muut odotetut suhteet.**
 
 | # | Kohta | Väite | Suhde | Peruste |
 |---|---|---|---|---|
-| S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4 | Sama havainto. Ei T:n `same_claim`: tiivistelmä toteaa laskemattomuuden, T selittää sen |
 | Q1 | CN-030 luku 10, sama kohta, 4.–5. virke | "Tämä ei ole hankesuositus. Lopputulos voi olla 'ei kannata' yhtä hyvin kuin 'tässä on jotain'." | `qualifies` T | Rajaa T:n: laskematon arvo ei ole osoitettu arvo |
 | P1 | CN-030 luku 12 (kaksi kohtaa) | "…mikä kasvattaa luvun 4 poolausarvoa [A]"; "Nootin oma lisä on poolausarvo: … [A]" | `depends_on` U2 (eksplisiittinen); ei suhdetta T:hen | Käyttää poolausarvon käsitettä, ei T:n selitystä |
 | O1 | SM-024 v0.2 § 01 | "CN-030: länsikäytävän läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa (§ 8)." | `same_claim` I1 | Nimetty viittaus |
 
-**Rajatapaukset (kaksi hyväksyttyä luokitusta).**
+**Rajatapaukset (useampi hyväksytty luokitus).**
 
 | # | Kohta | Väite | Hyväksytty | Peruste |
 |---|---|---|---|---|
 | R1 | CN-030 luku 9 | "Kapasiteettiketjun viisi lukua (8.2). Ne ovat viranomaisten ja satamien julkista tai pyydettävissä olevaa tietoa." ja poolauskysymys | `related` tai rekonstruoitu `depends_on` T | Asetelma laskee juuri sen, mikä T:n mukaan jää laskematta, mutta kumpikaan ei perustele itseään toisella |
+| U4 | CN-030 luku 4.1 | "Se ei vastaa kysymykseen, mitä uutta kysyntää monikäyttöinen kalusto voisi mahdollistaa. Jälkimmäistä ei ole arvioitu missään löydetyssä lähteessä." | T `depends_on` U4 (rekonstruoitu), `related` tai ei suhdetta | U4 koskee arvioimatonta lisäkysyntää, T poolausarvon ja pienimmän lenkin syntymistä yhteislaskennassa. T voi selittää U4:n havainnon tai olla siitä riippumaton johtopäätös; teksti ei ratkaise |
+| S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4, `related` tai ei suhdetta; ei `same_claim` eikä `depends_on` T:hen | Laskemattomuus (S1) ja arvioimaton lisäkysyntä (U4) eivät ole automaattisesti sama väite. T:hen suhde on varmempi: S1 toteaa laskemattomuuden, T selittää sen, joten ne eivät ole sama väite |
 | I1 | CN-030 luku 8, "Kuka omistaa kokonaisuuden" | "Kun jokainen varautuu omaan tarpeeseensa, reitin kokonaiskapasiteettiin ei varaudu kukaan. … Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa." | `related` tai rekonstruoitu `depends_on` T | Samansuuntainen kapasiteettipuolesta, mutta eri toimijat (yritykset ja valtio vs kolme viranomaista) ja eri kohde (varautuminen vs laskenta). Ei `same_claim`: T:ssä on poolauspuoli ja syyselitys |
 
 **Houkutusjoukko.** Samankaltaisuus houkuttelee yhdistämään. `related` tai puuttuminen hyväksytään; `depends_on` tai `same_claim` T:hen ei.
@@ -726,11 +726,11 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 
 **Hyväksymiskriteerit.** Kattavuus 1–5, tarkkuus 6–8, alkuperä 9; raportoidaan erikseen.
 1. Löytää U1 suhteella T `depends_on`, perusta `eksplisiittinen`.
-2. Löytää U2–U4 suhteella T `depends_on` ja näyttää ne T:n ylävirtana.
-3. Perusta: U2–U4 eivät ole `eksplisiittinen` eikä U1 ole `rekonstruoitu`. Puuttuva perusta ei täytä kriteeriä.
-4. Tunnistaa S1:n `same_claim`-suhteeksi U4:ään (ei T:hen) ja O1:n I1:een.
+2. Löytää U2 ja U3 suhteella T `depends_on` ja näyttää ne T:n ylävirtana.
+3. Perusta: U2 ja U3 eivät ole `eksplisiittinen` eikä U1 ole `rekonstruoitu`. Puuttuva perusta ei täytä kriteeriä.
+4. Tunnistaa O1:n `same_claim`-suhteeksi I1:een.
 5. Luokittelee Q1:n `qualifies` T ja liittää P1:n U2:een eikä T:hen.
-6. R1 ja I1: `related` tai rekonstruoitu `depends_on`. Eksplisiittinen `depends_on` tai `same_claim` ei täytä kriteeriä.
+6. Rajatapaukset R1, I1, U4 ja S1 taulukon hyväksyttyjen luokitusten mukaan. Eksplisiittinen `depends_on` ei täytä kriteeriä missään niistä; S1:n `same_claim` tai `depends_on` T:hen ei täytä kriteeriä.
 7. N1–N5 eivät ole `depends_on`- eikä `same_claim`-suhteessa T:hen. Testin tiukin kohta, kuten H1:n kriteeri 5.
 8. Ei esitä poissuljettuja osumia minkäänlaisina suhteina T:hen.
 9. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
@@ -738,4 +738,5 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 **Vertailun ehdot.**
 - CN-030 oli mukana täytössä 1. Vertailuraportti toteaa tämän ja ajaa H2:n myös täytön 1 raakatulosta vastaan lähtötasona; ero täyttöön v2 näyttää pyynnön muutoksen vaikutuksen.
 - Täytön v2 pyynnön laatija ei näe H1:tä eikä H2:ta. Ensisijainen vertailu tehdään raakatulosta vastaan, kuten H1:ssä.
-- Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Kirjoittaja on nähnyt H1:n ja täytön 1 raakatuloksen. H2:ta ei muodostettu täytön 1 CN-030-esiintymien pohjalta, mutta kirjoittaja ei ole sokko.
+- Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Kirjoittaja on nähnyt H1:n ja täytön 1 raakatuloksen, joten odotetun tuloksen muodostaminen on kontaminoitunut: H2 ei ole sokkona laadittu testi. Sokkous koskee vain täyttöä v2 (eri istunto). H2:n arvo on siinä, yleistyykö uusi poiminta toiseen kohteeseen.
+- Katselmoinnin (ChatGPT, 27.11.2026) jälkeen U4 ja S1 siirrettiin pakollisista suhteista rajatapauksiksi ennen täyttöä v2. Tämän jälkeen H2:ta ei muuteta.
