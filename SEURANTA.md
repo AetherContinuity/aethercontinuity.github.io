@@ -577,7 +577,7 @@ Käyttö:
 
 - korjauksen jälkeen haku kertoo, mitkä muut väitteet on tarkistettava
 - `[—]`-kohdat ajetaan määräajoin uudelleen (ogas3:n vahdin tapaan)
-- ennakkokirjaukset (SM-024 T1, CN-030 M1/M2, WEM F, AMOC A/B, BEM-E C–E, G) samaan rekisteriin tarkistuspäivineen
+- ennakkokirjaukset (SM-024 T1, CN-030 M1/M2, AMOC A/B, BEM-E C–E, G) samaan rekisteriin tarkistuspäivineen. (Korjaus 27.11.2026: alkuperäisessä listassa oli "WEM F", jota ei ole olemassa; WEM:n ensimmäinen rekisteröinti on WEM-L1 alla.)
 
 Valinnainen kenttä `countertest` (vasta-analyysi):
 
@@ -752,3 +752,19 @@ Kriteereitä ei muuteta. Raportointi tarkentuu kahdella tavalla:
 - Kriteerissä 3 raportoidaan erikseen, johtuuko U1:n mahdollinen `rekonstruoitu` epävarmuussäännöstä (perustelu toteaa epävarmuuden) vai luokituksesta.
 
 H1:n toteutus (`tools/vaiterekisteri_h1.py`) raportoi related-suhteen jo valmiiksi tietona eikä läpäisyehtona; sitä ei muuteta.
+
+## WEM-L1 — fyysisten lopputulosten ennakkorekisteröinti (27.11.2026, ei ennuste)
+
+WEM:n EPP-jäädytys (30.9.2026) edellyttää, että uusi yhdistelmäindeksi tehdään vain ennakkorekisteröitynä fyysistä lopputulosta vastaan. Tämä kirjaus lukitsee lopputulosmuuttujat. Se ei ole väite eikä ennuste, eikä sillä testata WEM:n ennustekykyä.
+
+- Ikkuna: 1.10.2026–31.3.2027.
+- Muuttujat ovat sisäkkäisiä, eikä niitä lasketa yhteen. Kaava ja kelpoisuussäännöt ovat samat kuin vertailutasossa.
+  - RP_margin < 20 % (varttia)
+  - RP_margin < 5 % (varttia)
+  - RP_margin < 0 (varttia)
+  - ylössäätöhinta ≥ 500 €/MWh (varttia)
+- Vertailutaso: `tools/data/rp-margin-talvi-2025-2026.json` (lukittu 16.9.2026). Arvot 16 / 6 / 0 / 77, kelpaavia vartteja 17 470. Arvoja ei muuteta.
+- Puuttuva vartti ei ole nollahavainto. Puuttuvat raportoidaan muuttujittain. Lähteiden määritelmämuutokset kirjataan poikkeamina.
+- Pois rajattu: DS 336 ja tehoreservin aktivointi. Ne lisätään vain uutena rekisteröintinä ennen kuin niiden data on nähty.
+- Ajoitus: ikkuna alkoi ennen kirjausta. Kirjaaja ei ole hakenut ikkunan dataa.
+- Määrittely, koodi ja keruu: `AetherContinuity/ogas3` `data/wem-lopputulos/rekisterointi.json`, `tools/wem_lopputulos.py`, workflow `wem-lopputulos`. Tilat ovat MITATTU ja HAVAINTO_PUUTTUU.
