@@ -560,3 +560,44 @@ Ulkoisen luennan (DeepSeek) jälkeen; ei muuta lähtötason lukuja.
 1. **Tulkintarajaus.** I1 ja I3a mittaavat Yhdysvaltain upotettuja investointeja Suomeen, eivät sitoutumisen uskottavuutta kokonaisuutena. Kohdan 7 tulkinnat koskevat vain upotettuja investointeja; niistä ei päätellä puolustustahtoa eikä 5 artiklan uskottavuutta.
 2. **Ennakkovarastointi on mittaamaton.** EDI:n "Enhanced Prepositioning" -rahoitusta ei kohdisteta maille, kalusto ei näy I1:ssä eikä luotettavasti I3:ssa, ja DCA 4.1:n ennakkoilmoitukset menevät Puolustusvoimille, eivät julkisuuteen. Vain Yhdysvaltain rahoittama varastoinfrastruktuuri näkyy I1:ssä. Julkisesti tiedotettu ennakkovarastointi Suomeen kirjataan erikseen laadullisena havaintona (vain tieto tapahtumasta ja vuosi, ei paikkaa eikä määrää, kohta 5).
 3. **Joukkojen pysyvyys on mittaamaton.** I4 laskee harjoituksia, ei läsnäolon kestoa tai pysyvää sijoittamista. Tiedotettu pysyvä tai jatkuva Yhdysvaltain joukko-osasto Suomessa kirjataan samoin erikseen laadullisena havaintona.
+
+## Idea: korpuksen väiterekisteri (kirjattu 27.11.2026, ei toteutettu)
+
+Lähtökohta: SM-024:n kierros 26.–27.11.2026 osoitti, että yhden paperin korjaus (WP-020 Finding 3, CN-008:n "taloudellisesti kannattava") koskee väitteitä muissakin papereissa, ja ne löytyivät muistista eivätkä hausta.
+
+Ehdotus: jokaisen paperin väitteet koneluettavaan rekisteriin (esim. `data/vaitteet.json`), yksi rivi väitettä kohden:
+
+- paperi ja kohta (§), väitteen teksti
+- merkintä `[M]` / `[L]` / `[A]` / `[—]`
+- lähde ja hakupäivä
+- tila: voimassa / rajattu / korjattu / kumottu, ja viittaus korjaukseen
+- riippuvuudet: mitkä muiden papereiden väitteet nojaavat tähän
+
+Käyttö:
+
+- korjauksen jälkeen haku kertoo, mitkä muut väitteet on tarkistettava
+- `[—]`-kohdat ajetaan määräajoin uudelleen (ogas3:n vahdin tapaan)
+- ennakkokirjaukset (SM-024 T1, CN-030 M1/M2, WEM F, AMOC A/B, BEM-E C–E, G) samaan rekisteriin tarkistuspäivineen
+
+Valinnainen kenttä `countertest` (vasta-analyysi):
+
+```yaml
+countertest:
+  condition: "Mikä havainto heikentäisi tai kumoaisi väitteen?"
+  evidence_required: "Mistä ja millä menetelmällä havainto saataisiin?"
+  status: not_specified | not_tested | tested
+  note: "Mitä testi näytti, lähde ja päivä (vain kun status = tested)"
+```
+
+- Ei pakollinen. `[A]`-väitteille lähtökohtaisesti tarpeellinen; jos kunnollista ehtoa ei pystytä määrittelemään, kirjataan `not_specified` eikä keksitä falsifioijaa.
+- `tested` tarkoittaa, että määritelty testi on suoritettu, ei että väite olisi vahvistettu. Tulos luetaan `note`-kentästä.
+- Vastanäyttö ei ole kumoaminen: havainto voi heikentää väitettä kumoamatta sitä. Väitteen tilaa ei muuteta automaattisesti; muutoksen tekee ihminen ja kirjaa sen.
+- Ei automaattista arviointilogiikkaa tässä vaiheessa.
+
+Järjestys (27.11.2026): ensin tarkistuksen muisti (rekisteri), sitten määräaikainen seuranta (`[—]`-kohdat vahdilla), generatiivinen toiminta vasta niiden päälle. Muuten tuotantokyky kasvaa nopeammin kuin virheiden havaitsemiskyky.
+
+Rajaus: rekisteri on työkalu, ei uusi paperisarja. Aloitus pienenä: SM-024, WP-020, CN-008, CN-030.
+
+### SM-024 — ennakkokirjaus T1 (26.11.2026)
+
+Suomenlahden talvimerenkulku, tarkistus 30.6.2027. Teksti ja kynnykset: `papers/sm-024-pohjoinen-solmu.html` § 06; mittauskoodi ja koosteet `AetherContinuity/ogas3`: `tools/talvimeri.py`, `data/talvimeri/`.
