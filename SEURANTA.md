@@ -703,7 +703,7 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 | S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4 | Sama havainto. Ei T:n `same_claim`: tiivistelmä toteaa laskemattomuuden, T selittää sen |
 | Q1 | CN-030 luku 10, sama kohta, 4.–5. virke | "Tämä ei ole hankesuositus. Lopputulos voi olla 'ei kannata' yhtä hyvin kuin 'tässä on jotain'." | `qualifies` T | Rajaa T:n: laskematon arvo ei ole osoitettu arvo |
 | P1 | CN-030 luku 12 (kaksi kohtaa) | "…mikä kasvattaa luvun 4 poolausarvoa [A]"; "Nootin oma lisä on poolausarvo: … [A]" | `depends_on` U2 (eksplisiittinen); ei suhdetta T:hen | Käyttää poolausarvon käsitettä, ei T:n selitystä |
-| O1 | SM-024 v0.2 § 04 | "CN-030: länsikäytävän läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa (§ 8)." | `same_claim` I1 | Nimetty viittaus |
+| O1 | SM-024 v0.2 § 01 | "CN-030: länsikäytävän läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa (§ 8)." | `same_claim` I1 | Nimetty viittaus |
 
 **Rajatapaukset (kaksi hyväksyttyä luokitusta).**
 
