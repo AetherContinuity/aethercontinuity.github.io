@@ -745,6 +745,8 @@ Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
 
 Täytön v2 pyyntö (ogas3 #49) ohjeistaa: "related ei ole riippuvuus. Älä käytä sitä riippuvuuden heikompana muotona … älä kirjaa depends_on-suhdetta äläkä korvaa sitä related-suhteella." Ohje juontuu luovutusviestistä, jonka tämän kirjauksen tekijä kirjoitti ("related ei ole riippuvuus"). Ohje todennäköisesti vähentää related-suhteita. Lisäksi pyyntö käskee kirjaamaan epävarman perustan rekonstruoiduksi.
 
+Kirjaaja on nähnyt raakatuloksen yhteenvetotilastot (related 0, depends_on 18, joista rekonstruoituja 5) mutta ei esiintymiä eikä suhteita. Lisäys ei siis ole sokko related-suhteiden määrän osalta.
+
 Kriteereitä ei muuteta. Raportointi tarkentuu kahdella tavalla:
 - Kriteerissä 6 R1:n ja I1:n tulos jaetaan luokkiin "hyväksytty", "väärä luokitus" ja "puuttuu". Puuttuminen ei edelleenkään täytä kriteeriä, mutta se raportoidaan erikseen, koska pyyntö ohjasi pois related-suhteista.
 - Kriteerissä 3 raportoidaan erikseen, johtuuko U1:n mahdollinen `rekonstruoitu` epävarmuussäännöstä (perustelu toteaa epävarmuuden) vai luokituksesta.
