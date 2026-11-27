@@ -664,3 +664,79 @@ Huomio S1–S2: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. J
 7. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
 
 Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Katselmoinnin (ChatGPT, 27.11.2026) jälkeen D2–D4 jaettiin suhdelajeihin S1, S2, X1 ja X2, ja R1 ja R3 merkittiin itsenäisiksi (`related`, I1–I2). Marko hyväksyi S1/X1-jaon ja S2:n ylävirtaluokituksen 27.11.2026.
+
+## Väiterekisteri — hyväksymistesti H2: CN-030 "Miksi tätä ei ole laskettu" (ennakkokirjaus 27.11.2026)
+
+Odotettu tulosjoukko kirjattu ennen täyttöä v2. Joukkoa ei muuteta täytön löydösten perusteella; puutteet kirjataan uutena lisäyksenä päivämäärineen. H1:tä ei muuteta.
+
+**Mitä H2 mittaa.** H1 mittasi papereiden välisiä suhteita, ja täyttö 1 poimi lähinnä ristiviittauksia. H2 mittaa paperin sisäistä argumenttiketjua (aineistohavainto → välipäätelmä → johtopäätös) ja suhteen `perusta`-kentän käyttöä (ogas3 PR #48).
+
+**Testattava väite (T).** CN-030 luku 10, kohta "Miksi tätä ei ole laskettu", 3. virke: "Poolausarvo ja kapasiteettiketjun pienin lenkki eivät kuulu yhdenkään tehtävään, koska ne syntyvät vasta, kun osat lasketaan yhdessä."
+
+Huomio: kohdeväite valittiin Markon kollegalta saadun kuvauksen perusteella. Kuvaus oli parafraasi ("kumpikaan", "VR Transpoint"); sanatarkkaa muotoa ei ole korpuksessa. Lainaus yllä on korpuksesta, ja sen premissi nimeää kolme toimijaa.
+
+**Korpuksen rajaus.** `AetherContinuity/aethercontinuity.github.io`, main @ `adb800b` (27.11.2026), sama kuin täytössä 1. Hakemistot ja poisrajaukset kuten H1:ssä. SM-024 on mukana (tiedosto korpuksessa, piilotettu hakemistosta).
+
+**Hakumenetelmä.**
+1. Termihaku A (kirjainkoko ratkaisee): `[Pp]oolausarvo|[Pp]oolattu|vaunupool|kapasiteettiketju|pienin lenkki|yhdenkään tehtävään|kenenkään tehtävä|pooling value` → 1 tiedosto (CN-030).
+2. Termihaku B (kirjainkoko ei ratkaise): `kenenkään tehtäv|ei kuulu kenell|yhdenkään tehtäv|integrated outcome|owns the|kukaan ei laske|ei laske kukaan|kokonaiskapasiteet|ei omistajaa|syntyvät vasta|lasketaan yhdessä|poolau|pooli` → 23 tiedostoa. CN-030:n ulkopuolella osumat ovat muotoa "no actor/institution owns the …", sanaa `pooli` eri merkityksessä tai SM-015:n "ei kuulu kenellekään" / "ei omistajaa".
+3. CN-030:n sisällä lisäksi `kapasiteettiketj|lenkki|laskematta|ei ole arvioitu|mittaamatta|kokonaisuu|työnjak`. Luvut 4, 8.2, 8 "Kuka omistaa kokonaisuuden", 9, 10 ja 12 luettu kokonaan; SM-024:n CN-030-viittaukset luettu.
+4. Hylätty: `pooli` CN-030:n ulkopuolella (CN-003:n poolimenetelmä on koordinaatioryhmä, SM-005:n riskien poolaus eri käsite).
+
+Rajoite kuten H1:ssä: haku löytää vain sanastoltaan samankaltaiset kohdat.
+
+**Suhdelajit ja perusta.** H1:n neljä suhdelajia. Lisäksi `perusta` (ogas3 PR #48): `eksplisiittinen` = argumentti ilmaisee yhteyden yksiselitteisesti, suhdetta nimeävää sanaa ei vaadita; `rekonstruoitu` = yhteys on pääteltävä erillisistä kohdista tai välivaiheista.
+
+**Ylävirta (T:n premissit).**
+
+| # | Kohta | Väite | Suhde | Perusta | Peruste |
+|---|---|---|---|---|---|
+| U1 | CN-030 luku 10, sama kohta, 1.–2. virke | "Väylävirasto arvioi rajanylitystä, VR kotimaan yhdistettyä kuljetusta, Huoltovarmuuskeskus varastoja ja tonnistoa. Kukin tekee oman osansa." | T `depends_on` U1 | eksplisiittinen | Työnjakopremissi samassa kappaleessa |
+| U2 | CN-030 luku 4.2 | "useampi virta tuottaa yhdessä kalustolle paremman käyttöprofiilin kuin erilliset järjestelmät"; ΔN = Σᵢ maxₜ Dᵢ(t) − maxₜ Σᵢ Dᵢ(t) | T `depends_on` U2 | rekonstruoitu | Määritelmä tekee poolausarvosta yhteislaskennan tuloksen; luku 10 ei viittaa lukuun 4.2 |
+| U3 | CN-030 luku 8.2, "Kapasiteettiketjun lenkki" | "Käytävän arvo häiriössä on sen heikoimman lenkin välityskyky." | T `depends_on` U3 | rekonstruoitu | Pienin lenkki selviää vasta viiden lenkin vertailusta |
+
+**Muut odotetut suhteet.**
+
+| # | Kohta | Väite | Suhde | Peruste |
+|---|---|---|---|---|
+| Q1 | CN-030 luku 10, sama kohta, 4.–5. virke | "Tämä ei ole hankesuositus. Lopputulos voi olla 'ei kannata' yhtä hyvin kuin 'tässä on jotain'." | `qualifies` T | Rajaa T:n: laskematon arvo ei ole osoitettu arvo |
+| P1 | CN-030 luku 12 (kaksi kohtaa) | "…mikä kasvattaa luvun 4 poolausarvoa [A]"; "Nootin oma lisä on poolausarvo: … [A]" | `depends_on` U2 (eksplisiittinen); ei suhdetta T:hen | Käyttää poolausarvon käsitettä, ei T:n selitystä |
+| O1 | SM-024 v0.2 § 01 | "CN-030: länsikäytävän läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa (§ 8)." | `same_claim` I1 | Nimetty viittaus |
+
+**Rajatapaukset (useampi hyväksytty luokitus).**
+
+| # | Kohta | Väite | Hyväksytty | Peruste |
+|---|---|---|---|---|
+| R1 | CN-030 luku 9 | "Kapasiteettiketjun viisi lukua (8.2). Ne ovat viranomaisten ja satamien julkista tai pyydettävissä olevaa tietoa." ja poolauskysymys | `related` tai rekonstruoitu `depends_on` T | Asetelma laskee juuri sen, mikä T:n mukaan jää laskematta, mutta kumpikaan ei perustele itseään toisella |
+| U4 | CN-030 luku 4.1 | "Se ei vastaa kysymykseen, mitä uutta kysyntää monikäyttöinen kalusto voisi mahdollistaa. Jälkimmäistä ei ole arvioitu missään löydetyssä lähteessä." | T `depends_on` U4 (rekonstruoitu), `related` tai ei suhdetta | U4 koskee arvioimatonta lisäkysyntää, T poolausarvon ja pienimmän lenkin syntymistä yhteislaskennassa. T voi selittää U4:n havainnon tai olla siitä riippumaton johtopäätös; teksti ei ratkaise |
+| S1 | CN-030 tiivistelmä | "Poolattu, monikäyttöinen kalusto on laskematta, ei kielteisesti testattu (luvut 4–6)." | `same_claim` U4, `related`, T `depends_on` S1 (rekonstruoitu) tai ei suhdetta; ei `same_claim` T:n kanssa | Laskemattomuus (S1) ja arvioimaton lisäkysyntä (U4) eivät ole automaattisesti sama väite. T:hen varmaa on vain se, etteivät S1 ja T ole sama väite: S1 toteaa laskemattomuuden, T selittää sen |
+| I1 | CN-030 luku 8, "Kuka omistaa kokonaisuuden" | "Kun jokainen varautuu omaan tarpeeseensa, reitin kokonaiskapasiteettiin ei varaudu kukaan. … Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa." | `related` tai rekonstruoitu `depends_on` T | Samansuuntainen kapasiteettipuolesta, mutta eri toimijat (yritykset ja valtio vs kolme viranomaista) ja eri kohde (varautuminen vs laskenta). Ei `same_claim`: T:ssä on poolauspuoli ja syyselitys |
+
+**Houkutusjoukko.** Samankaltaisuus houkuttelee yhdistämään. `related` tai puuttuminen hyväksytään; `depends_on` tai `same_claim` T:hen ei.
+
+| # | Kohta | Väite | Miksi ei riippuvuus |
+|---|---|---|---|
+| N1 | WP-020 § 06, Finding 3 | "Both have stalled because no actor owns the integrated outcome." | CN-030 viittaa WP-020:een, mutta T ei nojaa F3:een eikä toista sitä: F3 selittää hankkeen pysähtymisen, T laskennan puuttumisen |
+| N2 | SM-007; CN-004 § 01 | "No one owns the complete picture." / "no actor owns the whole" | Korpuksen yleinen rakennehavainto; CN-030 ei viittaa |
+| N3 | SM-009; SM-010 | "No actor owns the aggregate." / "no actor owns the aggregate exposure" | Sama |
+| N4 | SM-015 | "Silmukka kulkee kaikkien näiden rajojen läpi — se ei kuulu kenellekään." | Lähin suomenkielinen sanamuoto; eri ilmiö (poliittinen takaisinkytkentä) |
+| N5 | WP-013 | "They have not happened because no institution owns the compound problem." | Sama kuin N2 |
+
+**Poissuljetut osumat.** CN-003 (poolimenetelmä), SM-005 (riskien poolaus), hakemistosivujen `pooli`-osumat, muut "owns the" -osumat (CN-025, SM-014, SM-003, SP-007, synthesis-memo-finland-2030, DA-007, TN-009, TN-012, TN-013).
+
+**Hyväksymiskriteerit.** Kattavuus 1–5, tarkkuus 6–8, alkuperä 9; raportoidaan erikseen.
+1. Löytää U1 suhteella T `depends_on`, perusta `eksplisiittinen`.
+2. Löytää U2 ja U3 suhteella T `depends_on` ja näyttää ne T:n ylävirtana.
+3. Perusta: U2 ja U3 eivät ole `eksplisiittinen` eikä U1 ole `rekonstruoitu`. Puuttuva perusta ei täytä kriteeriä.
+4. Tunnistaa O1:n `same_claim`-suhteeksi I1:een.
+5. Luokittelee Q1:n `qualifies` T ja liittää P1:n U2:een eikä T:hen.
+6. Rajatapaukset R1, I1, U4 ja S1 taulukon hyväksyttyjen luokitusten mukaan. Eksplisiittinen `depends_on` ei täytä kriteeriä missään niistä; S1:n `same_claim` T:n kanssa ei täytä kriteeriä.
+7. N1–N5 eivät ole `depends_on`- eikä `same_claim`-suhteessa T:hen. Testin tiukin kohta, kuten H1:n kriteeri 5.
+8. Ei esitä poissuljettuja osumia minkäänlaisina suhteina T:hen.
+9. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
+
+**Vertailun ehdot.**
+- CN-030 oli mukana täytössä 1. Vertailuraportti toteaa tämän ja ajaa H2:n myös täytön 1 raakatulosta vastaan lähtötasona; ero täyttöön v2 näyttää pyynnön muutoksen vaikutuksen.
+- Täytön v2 pyynnön laatija ei näe H1:tä eikä H2:ta. Ensisijainen vertailu tehdään raakatulosta vastaan, kuten H1:ssä.
+- Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Kirjoittaja on nähnyt H1:n ja täytön 1 raakatuloksen, joten odotetun tuloksen muodostaminen on kontaminoitunut: H2 ei ole sokkona laadittu testi. Sokkous koskee vain täyttöä v2 (eri istunto). H2:n arvo on siinä, yleistyykö uusi poiminta toiseen kohteeseen.
+- Katselmoinnin (ChatGPT, 27.11.2026) jälkeen U4 ja S1 siirrettiin pakollisista suhteista rajatapauksiksi ennen täyttöä v2. Tämän jälkeen H2:ta ei muuteta.
