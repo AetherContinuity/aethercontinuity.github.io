@@ -618,18 +618,30 @@ Odotettu tulosjoukko kirjattu ennen rekisterin toteutusta. Joukkoa ei muuteta re
 
 Rajoite: haku löytää vain sanastoltaan samankaltaiset kohdat. Väite, joka nojaa F3:een eri sanoin ja ilman viittausta, voi puuttua joukosta.
 
-**Varmasti riippuvaiset (alavirta).**
+**Suhdelajit.** H1 luokittelee suhteet neljään lajiin (H1:n vaatimus, ei vielä tietomallin täydellinen määrittely):
 
-| # | Kohta | Väite | Peruste |
-|---|---|---|---|
-| D1 | WP-020 § 06, Recommendations for state actors | "Assign coordination responsibility for the integrated Laanila–logistics hub development to a named entity" | Suositus johdetaan suoraan F3:sta |
-| D2 | CN-008, tiivistelmä | "Suljettu kiertotalousmalli on teknisesti valmis ja taloudellisesti kannattava. Pullonkaula on koordinaatio." | Sama johtopäätös; CN-008 nimeää WP-020:n laajemmaksi analyysiksi |
-| D3 | CN-008, "Miksi tämä ei etene" | Transfennica-reitti "lakkautettiin kun koordinoiva tahto hävisi, ei teknisten tai taloudellisten syiden takia" | Sama premissi kuin F3:ssa |
-| D4 | CN-008, "Mitä tarvitaan" | "Volyymi on olemassa jos toimijat koordinoivat." | Olettaa, että este on koordinaatio |
+- `depends_on` — väite nojaa F3:een argumentissaan
+- `same_claim` — sama väite toisessa paikassa tai toisin sanoin
+- `qualifies` — väite rajaa tai tarkentaa F3:a
+- `related` — sama aihe tai argumenttikokonaisuus, riippuvuutta ei ole osoitettu; ei saa nousta riippuvuudeksi
 
-Huomio D2–D4: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. Riippuvuuden suunta on epäselvä; väite on sama kahdessa esiintymässä. Rekisterin pitää näyttää ne saman väitteen esiintyminä tai riippuvuutena, ei kahtena erillisenä väitteenä.
+**Odotettu tulosjoukko.**
 
-**Ylävirta (F3:n premissit; testin pitää näyttää nämä ylävirtana, ei riippuvaisina).**
+| # | Kohta | Väite | Suhde | Peruste |
+|---|---|---|---|---|
+| D1 | WP-020 § 06, Recommendations for state actors | "Assign coordination responsibility for the integrated Laanila–logistics hub development to a named entity" | `depends_on` F3 | Suositus johdetaan suoraan F3:sta |
+| S1 | CN-008, tiivistelmä, 2. virke | "Pullonkaula on koordinaatio." | `same_claim` F3 | Sama väite tiivistettynä |
+| S2 | CN-008, "Miksi tämä ei etene" | Transfennica-reitti "lakkautettiin kun koordinoiva tahto hävisi, ei teknisten tai taloudellisten syiden takia" | `same_claim` U2 | Sama historiallinen väite kuin WP-020:n historiaosiossa; F3:n premissi, ei siitä johdettu |
+| X1 | CN-008, tiivistelmä, 1. virke | "Suljettu kiertotalousmalli on teknisesti valmis ja taloudellisesti kannattava." | `related` | Kannattavuusväite; lähempänä WP-020:n Finding 1:tä kuin F3:a |
+| X2 | CN-008, "Mitä tarvitaan" | "Volyymi on olemassa jos toimijat koordinoivat." | `related` | Kysyntää koskeva ehtolause; samansuuntainen mekanismi, mutta ei osoitettu nojaavan F3:een |
+| Q1 | SM-024 v0.2 § 02, "Mitä tämä tarkoittaa korpukselle" | F3:n taloudellinen peruste rautatie- ja maasiltalogistiikassa ei osoitettu | `qualifies` F3 | Rajaa F3:n soveltamisalaa |
+| Q2 | WP-020 rajaushuomio ja CN-008 rajaushuomio (27.11.2026) | Sama rajaus | `qualifies` F3 (ja S1) | Rajaavat F3:a ja sen esiintymää CN-008:ssa |
+| I1 | CN-030 § 8, "Kuka omistaa kokonaisuuden" | Länsireitin läpäisykyvylle ei ole mittaria, tavoitetta eikä omistajaa | `related` | Itsenäinen samansuuntainen havainto; peruste huoltovarmuuden tavoitepäätös (568/2024), ei F3 |
+| I2 | WP-020 § 06, Finding 5 | Reittikohtainen peruste vahvistuu energiapolusta riippumatta | `related` | Eri väite samasta polusta; ei kumoudu, vaikka F3 kumoutuisi logistiikan osalta |
+
+Huomio S1–S2: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. Julkaisuaika ja keskinäiset viittaukset eivät ratkaise, kumpi on alkuperä; `same_claim` ei ota kantaa suuntaan.
+
+**Ylävirta (F3:n premissit; testin pitää näyttää nämä ylävirtana).**
 
 | # | Kohta | Väite |
 |---|---|---|
@@ -638,22 +650,15 @@ Huomio D2–D4: CN-008 (1.5.2026) ja WP-020 v0.1 (2.5.2026) ovat rinnakkaisia. R
 | U3 | WP-020 § 03 | Kolmen vajeen diagnoosi (SM-009) logistiikka–energia-integraatiolle |
 | U4 | WP-019, Oulu-polku; SM-009; CN-007 | Koordinaatiovaje elektrolyysi-investoinnin ja reservimarkkinasopimuksen välillä; kolmen vajeen malli |
 
-**Rajatapaukset.**
-
-| # | Kohta | Miksi epävarma |
-|---|---|---|
-| R1 | CN-030 § 8, "Kuka omistaa kokonaisuuden" | Yhteensopiva F3:n kanssa, mutta perustuu huoltovarmuuden tavoitepäätökseen (568/2024), ei F3:een; WP-020 mainitaan vain laajempana kontekstina |
-| R2 | SM-024 v0.2 § 02, "Mitä tämä tarkoittaa korpukselle" | Viittaa F3:een ja rajaa sen; ei nojaa siihen. Suhde on rajaava, ei riippuva |
-| R3 | WP-020 § 06, Finding 5 | Eri väite (reittikohtainen peruste), sama polku; ei kumoudu, vaikka F3 kumoutuisi logistiikan osalta |
-| R4 | WP-020 rajaushuomio ja CN-008 rajaushuomio (27.11.2026) | Rajaavat F3:a kuten R2 |
-
 **Poissuljetut osumat.** SM-021 (Perämeren LNG voimalan polttoaineena), WP-019:n Laanila-taulukot ja investointiluvut (energiapolun tila, ei F3:n väitettä; WP-019:n koordinaatiokohta on U4), TN-001 (CN-008 mainittu ruokobiomassan lähteenä), `ACI-STRUCTURE.md` (numerointi).
 
 **Hyväksymiskriteerit rekisterin toteutukselle.**
-1. Löytää D1–D4.
-2. Näyttää U1–U4 ylävirtana eikä alavirtana.
-3. Nostaa R1–R4 erikseen tarkistettaviksi; R2 ja R4 rajaavana suhteena.
-4. Ei esitä poissuljettuja osumia riippuvuuksina.
-5. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
+1. Löytää D1 suhteella `depends_on`.
+2. Tunnistaa S1 ja S2 suhteella `same_claim` (S2 suhteessa U2:een) eikä esitä niitä kahtena erillisenä väitteenä.
+3. Näyttää U1–U4 ylävirtana eikä alavirtana.
+4. Luokittelee Q1–Q2 suhteella `qualifies`.
+5. Pitää X1–X2 ja I1–I2 suhteessa `related` eikä nosta niitä riippuvuuksiksi. Tämä on testin tiukin kohta: se mittaa, osaako rekisteri jättää yhdistämättä väitteet, joiden samankaltaisuus houkuttelee yhdistämään.
+6. Ei esitä poissuljettuja osumia minkäänlaisina suhteina F3:een.
+7. Näyttää jokaiselle löydökselle perusteen ja alkuperän (tiedosto, kohta, lainaus).
 
-Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Marko hyväksyy tai korjaa ennen toteutusta.
+Kirjauksen teki Claude (Opus 5.5) haulla ja kontekstiluennalla; luokittelu on päätelmä, ei mittaus. Katselmoinnin (ChatGPT, 27.11.2026) jälkeen D2–D4 jaettiin suhdelajeihin S1, S2, X1 ja X2, ja R1 ja R3 merkittiin itsenäisiksi (`related`, I1–I2). Marko hyväksyy ennen yhdistämistä.
